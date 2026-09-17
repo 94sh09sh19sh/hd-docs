@@ -1,11 +1,9 @@
 # 血液透析平板照護輔助系統 — 完整手動測試手冊
 
 > 從 `git clone` 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-> 對應版本：迭代 6 · 107 條 API 路由 · 68 種稽核動作。
-> 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
-> **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--迭代-3-6-分冊)。
+> 對應版本：Iteration 2 · 43 條 API 路由 · 32 種稽核動作。
 
-本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。
+本頁的核取方塊在 GitHub 與 HackMD 上都可直接勾選，用來記錄你走到哪裡。
 
 ## 操作端色籤
 
@@ -20,7 +18,7 @@
 
 ## 00 · 開始之前
 
-這份手冊假設你手上有一台 Windows 或 macOS 開發機與 Chrome。資料庫是一個放在專案目錄外的 SQLite 檔案，全程只在本機執行，不需要任何資料庫伺服器或雲端服務。
+這份手冊假設你手上有一台 Windows 或 macOS 開發機、一個 Supabase 專案，以及 Chrome。全程只在本機執行，不需要任何雲端部署。
 
 | 服務 | 網址 | 說明 |
 |---|---|---|
@@ -30,14 +28,14 @@
 
 > **注意｜測試資料規範**
 >
-> 《資料庫使用規範》第 10 條：**絕對禁止**輸入任何接近真實病人的資訊。手冊中所有姓名、病歷號皆為虛構，請照抄或自行編造。
+> 《資料庫使用規範》第 7 條：**絕對禁止**輸入任何接近真實病人的資訊。手冊中所有姓名、病歷號皆為虛構，請照抄或自行編造。
 
 每個測試項目左側的色籤標示你要在**哪一端**操作：
 
 > **說明｜關於速度**
 >
-> 資料庫已於 2026-09-10 由雲端（Supabase，東京）改為**開發者本機的 SQLite**，Supabase 專案已於 2026-09-11 刪除。單次資料庫查詢往返約 **2 ms**，端到端（平板送出 → 護理端收到）約 **10 ms**，畫面操作幾乎沒有等待。
-> 若你看到單一動作卡超過 1 秒，那多半是別的問題，可以往 §10 疑難排解找。
+> 資料庫已於 2026-09-07 由孟買（`ap-south-1`）搬到**東京（`ap-northeast-1`）**。單次資料庫查詢往返約 **237 ms**，一次已驗證的 API 請求約 **700 ms**，端到端（平板送出 → 護理端收到）約 **1.9 秒**。
+> 畫面上仍會有短暫等待，但已不再是搬遷前那種數秒級的停頓。若你看到單一動作卡超過 5 秒，那多半是別的問題，可以往 §10 疑難排解找。
 
 ## 01 · 從 clone 到跑起來
 
@@ -74,26 +72,15 @@ cp .env.example .env
 # PowerShell：Copy-Item .env.example .env
 ```
 
-> **說明｜資料庫誰來建？你只要決定它放哪裡**
->
-> 這一步要填的 `DATABASE_URL` 是「**我希望資料庫檔案出現在哪裡**」，不是「請填入現有資料庫的位置」。
-> 本系統的資料庫是**一個 SQLite 檔案**，沒有資料庫伺服器、沒有帳號密碼、不必事先安裝或建立任何東西。
-> **資料夾與檔案都不必先建**：下一小節的 `npm run prisma:migrate`（`a7`）會依你填的路徑，把中間缺的資料夾與 `hd.db` 一起建出來。
-> 所以填完 `.env` 時磁碟上還看不到任何東西，是**正常的** — `a13` 會回頭確認它真的生出來了。
->
-> 順序只有一條規則：**先 `prisma:migrate`，再 `npm run dev`。** 跳過 migrate 直接啟動後端，
-> 後端不會幫你建檔案，只會噴 `Error code 14: Unable to open the database file`。
-
-以下兩個變數是後端的**硬性必填**（缺了直接拒絕啟動），`SUPER_ADMIN_*` 兩個照本手冊走也等於必填，
-`BACKUP_DIR` 強烈建議一併填，其餘留空即用預設值：
+以下五個變數**必填**，其餘留空即用預設值：
 
 | 變數 | 怎麼取得 |
 |---|---|
-| `DATABASE_URL`（**硬性必填**） | SQLite 連線字串：`file:` 加**絕對路徑**，例如 `file:D:/hd-data/hd.db`。路徑必須在**專案目錄外**的本機磁碟（不得為網路磁碟或 OneDrive 等同步資料夾），否則後端與 seed 會拒絕啟動。**資料夾與檔案都不必事先建立**，`a7` 的 migration 會一起建出來 |
-| `JWT_SECRET`（**硬性必填**） | 自行產生，見下方指令 |
-| `SUPER_ADMIN_WORK_ID` | 初始最高權限帳號的工作ID，例如 `ADMIN001`（英數字、底線、連字號，3–32 字元）。**這兩個留空後端照樣起得來，但資料庫裡不會有任何帳號，護理端登不進去** |
+| `DATABASE_URL` | Supabase → Project Settings → Database → Connection string → 選 **Transaction pooler**（port 6543），結尾加上 `?pgbouncer=true&connection_limit=5` |
+| `DIRECT_URL` | 同一個 pooler 主機但 **port 5432**（Session pooler），不加 pgbouncer 參數。供 `prisma migrate` 使用 |
+| `JWT_SECRET` | 自行產生，見下方指令 |
+| `SUPER_ADMIN_WORK_ID` | 初始最高權限帳號的工作ID，例如 `ADMIN001`（英數字、底線、連字號，3–32 字元） |
 | `SUPER_ADMIN_INITIAL_PASSWORD` | 至少 8 字元。**首次登入後會被強制變更** |
-| `BACKUP_DIR`（建議） | 備份輸出目錄，同樣須在專案目錄外的本機磁碟，例如 `D:/hd-data/backups`，目錄不必先建。未填時無法備份：§12 的備份還原演練、[迭代 3 分冊](iteration-3.md) §3.8、`verify:iteration3` 與 `verify:iteration4` 都會卡住 |
 
 *在終端機執行 — 這是指令，不是要貼進 .env 的值*
 
@@ -109,25 +96,19 @@ node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 
 > **地雷｜常見地雷**
 >
-> `DATABASE_URL` 一定要用**絕對路徑**。寫成 `file:./dev.db` 這類相對路徑，後端會直接拒絕啟動——相對路徑會依 `schema.prisma` 所在位置解析，很容易落在專案目錄內，一不小心就把資料庫檔案提交進版控。
+> `DIRECT_URL` **不要**用 Supabase 的 Direct connection（`db.<ref>.supabase.co`）。那個主機只有 IPv6 記錄，在 IPv4-only 的網路會出現 `P1001 Can't reach database server`。一定要用 Session pooler 字串。
 
-- [ ] `a11` **［終端機］** 決定資料庫檔案要放哪裡，把絕對路徑填進 `DATABASE_URL`。
-  → 挑一個**專案目錄外**的本機路徑即可，例如 `D:\hd-data\hd.db`，`.env` 就寫成 `DATABASE_URL=file:D:/hd-data/hd.db`（路徑用正斜線 `/`，含空白時整串加引號）。**現在不必去建那個資料夾，也不必建檔案**；此刻 `D:\hd-data` 還不存在是正常的。
-- [ ] `a12` **［終端機］** 順手把 `BACKUP_DIR` 也填掉，例如 `BACKUP_DIR=D:/hd-data/backups`。
-  → 同樣不必先建目錄（第一次備份時自動建立）。現在跳過，等走到 §12 或迭代 3 分冊 §3.8 時得回頭改 `.env` 並重新啟動後端。
-- [ ] `a5` **［終端機］** 填完 `.env` 後，確認上表的五個變數都有值。
-  → `DATABASE_URL` 以 `file:` 開頭、後面是專案目錄外的絕對路徑；`JWT_SECRET` 是一串亂碼而不是 `node -e ...`；`SUPER_ADMIN_WORK_ID` 與 `SUPER_ADMIN_INITIAL_PASSWORD` 都有填。
+- [ ] `a5` **［終端機］** 填完 `.env` 後，確認五個必填變數都有值。
+  → `DATABASE_URL` 與 `DIRECT_URL` 是兩個不同 port（6543 / 5432）的字串。
 
 ### 建立資料庫與測試資料
 
 - [ ] `a6` **［終端機］** 先編譯共用型別套件（後端與前端都依賴它）。
   → `packages/shared/dist/` 產生 cjs 與 esm 兩份輸出。
 - [ ] `a7` **［終端機］** 建立資料庫 schema。
-  → **依 `DATABASE_URL` 建出中間缺的資料夾與 SQLite 檔案**，套用五個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`），最後顯示資料庫已同步。資料庫是空的時候 Prisma 會順便跑一次 seed，下一步再跑也不會重複建立。
+  → 套用兩個 migration（`init`、`iteration2_symptom_reports_help_requests`），最後顯示資料庫已同步。
 - [ ] `a8` **［終端機］** 產生合成測試資料。
   → 建立 **8 位病人**（`HD-TEST-0001`～`0008`）與 **15 台平板**（`TB-01`～`TB-15`），裝置金鑰寫入 `apps/api/.device-keys.json`。**這 15 台平板預設尚未納入 MDM**，稍後要手動註冊。
-- [ ] `a13` **［終端機］** 確認資料庫檔案真的生出來了。
-  → 你在 `a11` 指定的資料夾已經存在，裡面有 `hd.db`（seed 完約 700 KB 起跳）。看到它就代表「填路徑 → 檔案誕生」這件事完成了，可以往下啟動。後端跑起來之後（`a9`）旁邊會再多出 `hd.db-wal` 與 `hd.db-shm` 兩個 WAL 附屬檔，**要搬移或備份時三個是一組**，不要只拿主檔。
 
 ```bash
 npm run build:shared
@@ -135,27 +116,13 @@ npm run prisma:migrate
 npm run db:seed
 ```
 
-*`a13`：把路徑換成你在 `a11` 填的*
-
-```bash
-ls -l /d/hd-data            # Git Bash
-# PowerShell：Get-ChildItem D:\hd-data
-```
-
 這三行各做一件事，缺一不可：
 
 | 指令 | 在做什麼 | 為什麼需要 |
 |---|---|---|
-| `npm run build:shared` | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：問卷題庫、求助分派規則、68 種稽核動作代碼、權限碼。 | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。 |
-| `npm run prisma:migrate` | 讀 `apps/api/prisma/schema.prisma`，把資料表建到 `.env` 的 `DATABASE_URL` 指向的 SQLite 檔案，並產生 Prisma Client。本專案目前有五個 migration（迭代 3～6 各一個）。 | 你的資料庫一開始是**空的**。這步建出 nurses、patients、devices、device_bindings、symptom_reports、help_requests、audit_logs 等資料表。沒跑過，後續任何操作都會失敗。 |
+| `npm run build:shared` | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：問卷題庫、求助分派規則、26 種稽核動作代碼、權限碼。 | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。 |
+| `npm run prisma:migrate` | 讀 `apps/api/prisma/schema.prisma`，把資料表建到 `.env` 的 `DIRECT_URL` 指向的資料庫，並產生 Prisma Client。本專案目前有兩個 migration。 | 你的資料庫一開始是**空的**。這步建出 nurses、patients、devices、device_bindings、symptom_reports、help_requests、audit_logs 等資料表。沒跑過，後續任何操作都會失敗。 |
 | `npm run db:seed` | 灌入**虛構**測試資料：8 位病人（`HD-TEST-0001`～`0008`）與 15 台平板（`TB-01`～`TB-15`），並把平板金鑰寫到 `apps/api/.device-keys.json`。 | 沒有病人就不能建排班，沒有平板就不能指派。**它不建立任何護理師帳號** — 那是後端啟動時依 `.env` 自動建立的。可重複執行，已有資料時會自動略過。 |
-
-> **地雷｜`.device-keys.json` 只對應「最後一次 seed 的那顆資料庫」**
->
-> `db:seed` 寫出的 `apps/api/.device-keys.json` 是**明文金鑰**，而資料庫裡只存雜湊值。
-> 拿另一個 `DATABASE_URL` 再跑一次 `prisma:migrate` 或 `db:seed`（例如 §12 換資料庫、或臨時試另一個檔案），
-> 這個檔案會被**整份覆蓋**，原本那顆資料庫的平板金鑰就再也拿不回來，病人端只會停在「裝置尚未佈建」。
-> 補救只有兩條：在護理端「裝置管理」重新註冊幾台新平板（`f20`，會當場給新金鑰），或照 §11 重置資料庫重來。
 
 ### 啟動
 
@@ -163,7 +130,6 @@ ls -l /d/hd-data            # Git Bash
   → 三色標示的 log 同時輸出。後端出現「後端服務已啟動：http://localhost:3000/api」。
 - [ ] `a10` **［終端機］** 在後端 log 中找「已建立初始最高權限帳號」。
   → 全新資料庫會看到這行，代表 `.env` 的帳密已建立成 SUPER_ADMIN。若資料庫已有使用者則不會出現（正常）。
-  看到的若是黃字「資料庫中尚無任何使用者，但 .env 未設定 SUPER_ADMIN_WORK_ID / SUPER_ADMIN_INITIAL_PASSWORD⋯⋯」，代表 `a5` 那兩個變數漏填了 — **後端會照常啟動，但沒有任何帳號可以登入**。補進 `.env` 後重新啟動即可，資料庫不必重建。
 
 ```bash
 npm run dev
@@ -417,25 +383,16 @@ SRS 4.4 對離線行為有兩條**方向相反**的要求：症狀回報必須�
 
 ### 6.2 權限矩陣（SRS 4.2）
 
-| 權限 | 一般護理師 | 護理長 | 護理站管理者 | 最高權限 |
-|---|---|---|---|---|
-| 建立排班、指派／解除裝置 | ✓ | ✓ | ✓ | ✓ |
-| 檢視症狀回報、多病人即時總覽 | ✓ | ✓ | ✓ | ✓ |
-| 處理緊急通報（接手／到床邊／結案） | ✓ | ✓ | ✓ | ✓ |
-| 衛教內容管理、護理記錄簽核、SOP 查詢 | ✓ | ✓ | ✓ | ✓ |
-| 輪播第二層內容上下架 | ✓ | ✓ | ✓ | ✓ |
-| 審核護理師註冊 | 經授予後可 | 經授予後可 | ✓ | ✓ |
-| 病人資料維護 | — | — | ✓ | ✓ |
-| MDM 裝置管理 | — | — | ✓ | ✓ |
-| 稽核軌跡查詢 | — | — | ✓ | ✓ |
-| 功能開關（高風險、輪播、績效） | — | ✓ | ✓ | ✓ |
-| 臨床數值維護 | — | ✓ | ✓ | ✓ |
-| 班表與床位分配、成效基準、營運參數與選項清單 | — | ✓ | ✓ | ✓ |
-| 資料庫備份與還原 | — | — | ✓ | ✓ |
-| AI 相關開關與模型供應者設定 | — | — | — | ✓ |
-| 指派他人管理權限 | — | — | — | ✓ |
-
-另有兩個唯讀角色：**醫院管理層（唯讀）**在 L1 聚合儀表板（迭代 8）之前沒有任何權限，**稽核／法規（唯讀）**只讀得到稽核軌跡與 AI 呼叫紀錄。兩者的測試項在[迭代 3 分冊](iteration-3.md) `l11`–`l14`；後端對唯讀角色是**預設全擋**，只放行明確標示開放的端點。
+| 權限 | 一般護理師 | 護理站管理者 | 最高權限 |
+|---|---|---|---|
+| 建立排班、指派／解除裝置 | ✓ | ✓ | ✓ |
+| 檢視症狀回報、多病人即時總覽 | ✓ | ✓ | ✓ |
+| 處理緊急通報（接手／完成／取消） | ✓ | ✓ | ✓ |
+| 審核護理師註冊 | 經授予後可 | ✓ | ✓ |
+| 病人資料維護 | — | ✓ | ✓ |
+| MDM 裝置管理 | — | ✓ | ✓ |
+| 稽核軌跡查詢 | — | ✓ | ✓ |
+| 指派他人管理權限 | — | — | ✓ |
 
 - [ ] `f11` **［護理端］** 以一般護理師 `N001` 登入，檢查導覽列。
   → 看不到「帳號審核」與「稽核軌跡」。
@@ -445,13 +402,10 @@ SRS 4.4 對離線行為有兩條**方向相反**的要求：症狀回報必須�
   → 清單看得到（指派平板需要），但操作會跳出紅色橫幅「權限不足，缺少：device:manage」。
 - [ ] `f14` **［護理端］** 以管理者在「帳號審核」→「帳號與權限」表對 `N001` 按「**授予審核權限**」。
   → 審核權限欄由「無」變「有」。`N001` 重新登入後導覽列出現「帳號審核」— 這是 3.1 節第 4 點的權限分享。
-- [ ] `f15` **［護理端］** 在 `N001` 那一列右側的**角色下拉選單**選「護理站管理者」。
-  → 選單一改就立即送出（沒有另外的儲存鈕），提示「`N001` 的角色已改為「護理站管理者」」；角色欄變 `NURSE_MANAGER`，重新登入後可看到「稽核軌跡」、病人建立表單、MDM 操作可用。
-- [ ] `f16` **［護理端］** 讓 `N001` 保持登入，然後以管理者把同一個下拉選單改回「一般護理師」。
+- [ ] `f15` **［護理端］** 對 `N001` 按「**升為護理站管理者**」。
+  → 角色變 `NURSE_MANAGER`；重新登入後可看到「稽核軌跡」、病人建立表單、MDM 操作可用。
+- [ ] `f16` **［護理端］** 讓 `N001` 保持登入，然後以管理者按「**降為一般護理師**」。
   → `N001` 的下一次操作會得到 401 並被踢回登入頁 — **權限縮減會一併撤銷該帳號既有登入階段**，舊權杖不能沿用舊權限。
-- [ ] `f64` **［護理端］** 拉開那個角色下拉選單，數一下有幾個選項，然後把 `N001` 改成「**護理長／單位主管**」。
-  → 五個可指派的角色：護理站管理者、護理長／單位主管、一般護理師、醫院管理層（唯讀）、稽核／法規（唯讀）（最高權限不在選單裡，不能指派）。改成護理長後重新登入，導覽列出現「班表」「成效基準」「臨床數值」與「系統管理」，但**系統管理裡沒有「資料庫與備份」，AI 那兩個開關標「僅限系統管理者」**。
-  **迭代 3、5、6 三本分冊的前置都要一個護理長帳號，就是在這裡生出來的** — 建議另外申請一個 `N003` 專門當護理長，`N001` 留著當一般護理師。
 - [ ] `f17` **［護理端］** 在「帳號與權限」表找自己那一列，以及 SUPER_ADMIN 那一列。
   → 兩者的權限指派欄都顯示「—」：不可變更自己的權限，也不可變更最高權限帳號。
 
@@ -600,7 +554,7 @@ npm run prisma:studio
 ### 6.12 稽核軌跡（FR-S02）
 
 - [ ] `f59` **［護理端］** 展開「全部動作」下拉選單。
-  → 共 **68 種**動作，皆為中文標籤（迭代 1 的 26 種、迭代 2 的 6 種症狀／求助事件，加上迭代 3～6 陸續新增的功能開關、備份、AI 呼叫、臨床數值匯入、求助結案、班表、輪播等事件）。
+  → 共 **32 種**動作代碼，皆為中文標籤（Iteration 1 的 26 種＋Iteration 2 新增的 6 種症狀／求助事件）。
 - [ ] `f60` **［護理端］** 在「平板序號篩選」輸入 `TB-01`。
   → 只列出與該平板相關的事件（綁定、解除、Session 送達、清除、MDM 操作、症狀回報、求助）。
 - [ ] `f61` **［護理端］** 看「操作者」欄的三種型態。
@@ -612,20 +566,15 @@ npm run prisma:studio
 
 ## 07 · 自動化驗收腳本
 
-手動走完之後，用這幾支腳本做回歸。它們會建立少量以 `VERIFY` / `V2` / `V4` / `V5` / `V6` 標記的合成資料，並逐項斷言。
+手動走完之後，用兩支腳本做回歸。它們會建立少量以 `VERIFY` / `V2` 標記的合成資料，並逐項斷言。
 
 > **注意｜前置**
 >
 > 後端**必須先啟動**（`npm run dev` 或 `npm run dev:api`），腳本才連得上。
-> `verify:iteration3` 與 `verify:iteration4` 另外**要求 `.env` 有 `BACKUP_DIR`**（`a12`）：兩支都會做一次線上備份再用還原檔驗證，沒設定會直接判定該步驟失敗，而不是略過。
 
 ```bash
 npm run verify:acceptance   # Iteration 1
 npm run verify:iteration2   # Iteration 2
-npm run verify:iteration3   # 迭代 3（需設定 BACKUP_DIR）
-npm run verify:iteration4   # 迭代 4（需先 db:seed，並設定 BACKUP_DIR）
-npm run verify:iteration5   # 迭代 5
-npm run verify:iteration6   # 迭代 6
 ```
 
 - [ ] `g1` **［終端機］** 執行 Iteration 1 驗收。
@@ -633,18 +582,7 @@ npm run verify:iteration6   # 迭代 6
 - [ ] `g2` **［終端機］** 執行 Iteration 2 驗收。
   → 11 個步驟全部 ✓。涵蓋問卷送出、即時推送、求助、分派規則、趨勢摘要、接手處理、離線補傳與冪等去重、下機收斂、稽核事件。
 - [ ] `g3` **［終端機］** 看 Iteration 2 第 2 步印出的延遲基準，以及結尾有沒有「環境相關觀察」。
-  → 改用本機 SQLite 之後**不應該再出現「環境相關觀察」**（端到端約 10 ms，遠低於 5 秒門檻）。若又冒出來，代表資料庫變慢了 — 先確認 `DATABASE_URL` 指的是本機磁碟上的檔案，不是網路磁碟機或雲端同步資料夾。
-- [ ] `g4` **［終端機］** 執行迭代 4 驗收（AI 總開關須先關閉）。
-  → 18 個步驟全部 ✓。第 12 步會用備份還原檔另起一個 `LLM_PROVIDER=lab` 的後端（port 3998）驗證「只改設定就能切換供應者、真實病人資料被擋下」，約需一分鐘；腳本結束前會把 AI 總開關關回去。
-- [ ] `g5` **［終端機］** 執行迭代 5 驗收。
-  → 15 個步驟全部 ✓。涵蓋結案的結構化欄位擋下、確認與到達床邊兩個時間、再發標示、病人端已處理、班表建立與匯入、一般護理師只看得到自己的班、勞動條件擋下並說明違反哪一條、成效基準建檔與估算值標示、稽核紀錄。腳本會把它改過的營運參數改回原值。
-- [ ] `g6` **［終端機］** 執行迭代 6 驗收。
-  → 15 個步驟全部 ✓。涵蓋輪播三層的開關、卡片不含姓名與病歷號、第三層每筆都有資料時間、
-  問卷到期時輪播讓路、求助反應時間與非輪播狀態的比較、Excel 整批退回與逐列指出問題、
-  重複上傳擋下、欄位對應改名後仍可匯入、綁定解除後輪播斷源、瀏覽事件不含可識別內容。
-  腳本會把它改過的三個輪播開關與閒置門檻改回原值。
-- [ ] `g7` **［終端機］** 執行迭代 3 驗收。
-  → 十個步驟全部 ✓，結尾另提醒兩項需人工執行的實機驗收。涵蓋 SQLite 必開設定與唯讀連線、資料庫檔案位置、功能開關、模型供應者閘道、臨床資料來源介面層、唯讀角色、三處併發、備份與還原、零院外連線、稽核四類事件；逐項的手動測試在[迭代 3 分冊](iteration-3.md)。
+  → **搬到東京後應該不會再出現「環境相關觀察」**（端到端約 1.9 秒，遠低於 5 秒門檻）。若又冒出來，代表資料庫又變慢了 — 先確認 `.env` 指向的是東京的 pooler 主機。即時同步本身一律是個位數毫秒。
 
 ## 08 · 收工 — 正確關閉與重新啟動
 
@@ -702,7 +640,7 @@ taskkill //PID 33244 //F
 
 | 項目 | 關閉服務後會怎樣 |
 |---|---|
-| **所有資料**（帳號、病人、排班、綁定、問卷、求助、稽核） | 都在 `DATABASE_URL` 指向的 SQLite 檔案裡，**完全不受影響**。要搬移或備份時，主檔與 `-wal`／`-shm` 是一組，不要只拿主檔。 |
+| **所有資料**（帳號、病人、排班、綁定、問卷、求助、稽核） | 都在 Supabase，**完全不受影響**。本機只是應用程式。 |
 | **進行中的綁定** | **不會**因為關掉服務而失效，資料庫裡仍是 `ACTIVE`。下次啟動照常運作；若一直沒人管，超過 `BINDING_MAX_HOURS`（預設 6 小時）後，背景掃描會自動讓它逾時失效。 |
 | **病人端未送出的離線回報** | 存在瀏覽器的 IndexedDB，**關掉分頁不會遺失**。下次用同一台平板開啟、且該筆綁定仍有效時會自動補傳。但綁定若已被解除，補傳會被拒絕，資料會在清除流程中一併移除。 |
 | `.device-keys.json` | 留在 `apps/api/`，下次還能用。除非你重跑 `db:seed` 或重置資料庫。 |
@@ -728,7 +666,7 @@ taskkill //PID 33244 //F
 
 ## 09 · API 附錄
 
-後端啟動時會印出完整路由清單，目前共 **107 條**，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
+共 43 條路由。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
 
 ### 怎麼帶憑證
 
@@ -799,7 +737,7 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `GET /api/device/symptom-reports/mine` | 裝置＋Token | 本次綁定已送出的回報 |
 | `POST /api/device/help-requests` | 裝置＋Token | 送出求助 |
 | `GET /api/device/help-requests/mine` | 裝置＋Token | 本次綁定的求助狀態 |
-| `GET /api/symptom-reports/treatment-session/:treatmentSessionId` | patient:monitor | 某次療程的所有回報 |
+| `GET /api/symptom-reports/treatment-session/:id` | patient:monitor | 某次療程的所有回報 |
 | `GET /api/symptom-reports/trend/:patientId` | patient:monitor | 症狀趨勢摘要 |
 | `GET /api/help-requests?status=` | patient:monitor | 通報清單（含趨勢摘要） |
 | `GET /api/help-requests/:id` | patient:monitor | 單筆通報 |
@@ -807,75 +745,8 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `POST /api/help-requests/:id/resolve` | help-request:handle | 處理完成 |
 | `POST /api/help-requests/:id/cancel` | help-request:handle | 取消 |
 | `GET /api/overview?date=` | patient:monitor | 多病人即時總覽 |
-| `GET /api/realtime/stream` | patient:monitor | 即時串流（SSE，不是一般的 JSON 回應） |
+| `GET /api/realtime/stream` | patient:monitor | SSE 即時串流 |
 | `GET /api/audit-logs` | audit:read | 稽核軌跡（可篩 action／deviceSerialNo／日期／分頁） |
-| `GET /api/health` | 公開 | 健康檢查，不需要任何憑證 |
-| `GET /api/feature-flags/enabled` | 登入態（唯讀角色亦可） | （迭代 3）目前開著的功能開關，前端用來決定要不要畫出入口 |
-| `GET /api/feature-flags` | feature-flag:manage | （迭代 3）十個開關的完整狀態與開啟條件 |
-| `PUT /api/feature-flags/:key` | feature-flag:manage | （迭代 3）切換開關（需 reason；AI 那兩項另需 system:configure） |
-| `GET /api/ai/status` | system:configure | （迭代 3）目前供應者、健康檢查與可用模型 |
-| `POST /api/ai/test-invocations` | system:configure＋AI 開關 | （迭代 3）介面層連線測試，走與正式功能相同的閘道 |
-| `GET /api/ai/invocations` | ai-invocation:read（唯讀角色亦可） | （迭代 3）AI 呼叫紀錄 |
-| `GET /api/ops/database` | backup:manage | （迭代 3）SQLite 必開設定與檔案大小（**不含檔案路徑**） |
-| `GET /api/backups` | backup:manage | （迭代 3）備份歷程 |
-| `POST /api/backups` | backup:manage | （迭代 3）立即線上備份（`VACUUM INTO`） |
-| `POST /api/clinical-values/manual-entries` | clinical-value:manage | （迭代 3）人工輸入臨床數值，整批全有或全無 |
-| `GET /api/clinical-values` | patient:monitor | （迭代 3）臨床數值清單（含被覆蓋的前一版） |
-| `GET /api/clinical-value-imports` | clinical-value:manage | （迭代 3）最近的匯入批次 |
-| `GET /api/ai-jobs/:id` | patient:monitor | （迭代 4）背景工作進度 |
-| `GET /api/education/patients/:patientId` | patient:monitor | （迭代 4）衛教內容、完成紀錄、測驗與知識點 |
-| `POST /api/education/contents` | education:manage＋AI 開關 | （迭代 4）產生個人化衛教，排入佇列 |
-| `POST /api/education/discharge-summaries` | education:manage＋AI 開關 | （迭代 4）產生離院衛教重點，排入佇列 |
-| `POST /api/education/contents/:id/approve` | education:manage | （迭代 4）核可，病人端可見 |
-| `POST /api/education/contents/:id/reject` | education:manage | （迭代 4）退回（需 note） |
-| `GET /api/device/education` | 裝置＋Token | （迭代 4）已核可的衛教內容與適性測驗題目 |
-| `POST /api/device/education/contents/:id/complete` | 裝置＋Token | （迭代 4）我看完了 |
-| `POST /api/device/quiz-attempts` | 裝置＋Token | （迭代 4）送出測驗作答 |
-| `POST /api/device/feedback-responses` | 裝置＋Token | （迭代 4）送出情緒／滿意度回饋 |
-| `GET /api/device/feedback-responses/mine` | 裝置＋Token | （迭代 4）本次療程是否已填 |
-| `GET /api/psychosocial/overview` | patient:monitor | （迭代 4）心理社會彙總 |
-| `GET /api/psychosocial/patients/:patientId` | patient:monitor | （迭代 4）單一病人的回饋與暫定規則比對 |
-| `GET /api/adequacy/patients/:patientId` | patient:monitor | （迭代 4）透析適足性趨勢 |
-| `POST /api/adequacy/calculations` | clinical-value:manage | （迭代 4）計算 URR 與 spKt/V |
-| `GET /api/nursing-records?treatmentSessionId=` | patient:monitor | （迭代 4）護理記錄清單 |
-| `GET /api/nursing-records/:id` | patient:monitor | （迭代 4）單筆護理記錄 |
-| `POST /api/nursing-records/events` | nursing-record:write | （迭代 4）以快速範本建立事件記錄 |
-| `POST /api/nursing-records/prefills` | nursing-record:write | （迭代 4）依病人自報建立預填草稿 |
-| `POST /api/nursing-records/:id/ai-draft` | nursing-record:write＋AI 開關 | （迭代 4）AI 草擬初稿，排入佇列 |
-| `POST /api/nursing-records/:id/sign` | nursing-record:write | （迭代 4）簽核，之後不可修改 |
-| `GET /api/sop/documents` | sop:query | （迭代 4）收錄的文件 |
-| `POST /api/sop/queries` | sop:query | （迭代 4）SOP／藥品劑量查詢 |
-| `POST /api/help-requests/:id/arrive` | help-request:handle | （迭代 5）登記到達床邊時間，只能登記一次 |
-| `GET /api/help-requests/follow-ups/open` | patient:monitor | （迭代 5）待追蹤事項清單 |
-| `POST /api/help-requests/follow-ups/:followUpId/close` | help-request:handle | （迭代 5）結束追蹤事項（完成或取消） |
-| `GET /api/help-resolution-options` | 登入態 | （迭代 5）結案畫面用：只有啟用中的處理方式與處理結果 |
-| `GET /api/help-resolution-options/all` | operational-setting:manage | （迭代 5）設定畫面用：含已停用者 |
-| `PUT /api/help-resolution-options` | operational-setting:manage | （迭代 5）新增或停用一個選項（代號限大寫英數與底線） |
-| `GET /api/operational-settings` | 登入態 | （迭代 5）營運參數現值（再發判定期間、勞動條件上下限、輪播門檻等） |
-| `PUT /api/operational-settings/:key` | operational-setting:manage | （迭代 5）調整某一項營運參數（**理由必填**） |
-| `GET /api/shifts?from=&to=` | 登入態 | （迭代 5）班表；一般護理師只讀得到自己的班 |
-| `POST /api/shifts` | shift:manage | （迭代 5）手動建立班次，違反勞動條件即擋下 |
-| `POST /api/shifts/imports` | shift:manage | （迭代 5）班表檔案匯入，整批全有或全無 |
-| `POST /api/shifts/:id/beds` | shift:manage | （迭代 5）指定當班負責床位（整組取代，不累加） |
-| `POST /api/shifts/:id/cancel` | shift:manage | （迭代 5）取消班次（轉為已取消，不從表上消失） |
-| `GET /api/shifts/change-requests` | 登入態 | （迭代 5）調班申請；一般護理師只看得到自己送出的 |
-| `POST /api/shifts/change-requests` | 登入態 | （迭代 5）提出調班申請，**只能對自己的班次** |
-| `POST /api/shifts/change-requests/:id/decide` | shift:manage | （迭代 5）核准或駁回調班申請 |
-| `GET /api/baselines/metrics` | 登入態 | （迭代 5）五條成效指標的定義與量測方式 |
-| `GET /api/baselines/overview` | 登入態 | （迭代 5）建檔進度：還差幾項、哪幾項只有估算值 |
-| `GET /api/baselines` | 登入態 | （迭代 5）歷次建檔紀錄（含已被取代的） |
-| `POST /api/baselines` | baseline:manage | （迭代 5）建檔一條成效基準（背書者必填） |
-| `GET /api/device/carousel` | 裝置＋Token | （迭代 6）本次綁定的輪播內容與行為參數 |
-| `POST /api/device/carousel/view-events` | 裝置＋Token | （迭代 6）回報瀏覽事件（只有卡片種類、停留時間、點開次數） |
-| `GET /api/carousel/items` | carousel-content:manage | （迭代 6）第二層內容清單（含已下架） |
-| `POST /api/carousel/items` | carousel-content:manage | （迭代 6）新增或修改第二層內容（帶 id 為修改） |
-| `GET /api/carousel/view-stats?days=` | carousel-content:manage | （迭代 6）依卡片種類彙總的瀏覽狀況 |
-| `POST /api/clinical-values/file-imports` | clinical-value:manage | （迭代 6）Excel／CSV 匯入，整批全有或全無 |
-| `GET /api/import-field-mappings` | clinical-value:manage | （迭代 6）匯入欄位對應設定 |
-| `PUT /api/import-field-mappings/:targetField` | clinical-value:manage | （迭代 6）修改某一個欄位的對應名稱或啟停用 |
-
-> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)、[迭代 4](iteration-4.md)、[迭代 5](iteration-5.md)、[迭代 6](iteration-6.md) 四本分冊。
-> 本表逐條對齊後端啟動時印出的路由清單（目前 107 條）；日後新增端點時，以那份清單為準回頭補這張表。
 
 - [ ] `h1` **［終端機］** 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
   → 409「此排班仍有進行中的裝置綁定，請先解除綁定」。解除後再取消則成功，狀態變 `CANCELLED`。
@@ -889,12 +760,8 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | PowerShell 執行 curl 噴「找不到符合參數名稱 i 的參數」 | PowerShell 的 `curl` 是 `Invoke-WebRequest` 的別名。改打 `curl.exe`，或改用 Git Bash。 |
 | `npm install` 出現 EPERM／權限不足 | ① 關掉還在跑的 node 行程與編輯器；② 專案不要放在 OneDrive 等同步資料夾；③ 把資料夾加入防毒排除清單。仍失敗再以系統管理員身分開 PowerShell 重跑。 |
 | 用 .env 的帳密登入卻說「工作ID 或密碼錯誤」 | 最常見是**中文輸入法把 `!` 打成全形 `！`** — 改用複製貼上。其次是你已經走過強制變更密碼那步（.env 的初始密碼從此失效）。用 §03 的 node 指令可直接判斷是哪一種。 |
-| 後端起不來，噴 `Error code 14: Unable to open the database file` | **多半是跳過了 `npm run prisma:migrate` 就直接 `npm run dev`。** 建資料夾與建檔案是 migration 在做，後端自己不會建。先補跑 `a7`、`a8`（`a13` 確認檔案出現）再啟動。其次才是 `DATABASE_URL` 打錯：要是**絕對路徑**、用正斜線、含空白時整串加引號。 |
-| 後端起來了，但護理端怎麼登都不行，log 有黃字說未設定 `SUPER_ADMIN_*` | `.env` 漏填 `SUPER_ADMIN_WORK_ID` 或 `SUPER_ADMIN_INITIAL_PASSWORD`，資料庫裡沒有任何帳號。補進 `.env` 後重新啟動即可，**資料庫不必重建**（那段邏輯只在「資料庫尚無任何使用者」時執行）。 |
-| 病人端一直「裝置尚未佈建」，但金鑰是從 `.device-keys.json` 複製的 | 那份檔案對應的是**最後一次 seed 的那顆資料庫**。中途換過 `DATABASE_URL` 或在別的資料庫上跑過 `prisma:migrate`／`db:seed`，檔案就被覆蓋了，明文金鑰拿不回來（資料庫只存雜湊）。在「裝置管理」重新註冊一台取得新金鑰（`f20`），或照 §11 重置資料庫。 |
-| 每個動作都要等好幾秒 | 本機 SQLite 單次往返約 2 ms，慢下來多半是資料庫檔案放在網路磁碟機、OneDrive 之類的同步資料夾，或被防毒即時掃描。換到本機磁碟並加入防毒排除清單。 |
-| `prisma migrate reset` 噴 `database disk image is malformed`，資料庫剩 0 byte | 清空成功、建表失敗（多半是後端還開著，WAL 檔被抓住）。照 **§11** 的地雷框：關乾淨 → 把 `hd.db` 與 `-wal`／`-shm` 三個一起刪 → `prisma:deploy` + `db:seed` 重建。 |
-| 後端 log 出現 `SQLITE_BUSY` | 有第二個行程在寫同一個檔案（多半是上次沒關乾淨的後端，或開著的 Prisma Studio）。照 §08 查出 PID 收乾淨，後端是唯一的寫入者。 |
+| `P1001 Can't reach database server` | `DIRECT_URL` 用了 Direct connection（只有 IPv6）。改用 Session pooler 字串（同 pooler 主機、port 5432）。 |
+| 每個動作都要等好幾秒 | 先確認 `.env` 指向的是**東京**的 pooler 主機（`aws-0-ap-northeast-1...`）。若仍指向 `ap-south-1`（孟買），單次往返會是 1.7–2.2 秒而不是 237 ms — 照 §12 搬遷。正式環境資料庫在院內時不存在此成本。 |
 | `EADDRINUSE :::3000`（或 5173／5174） | 上次沒關乾淨，有殘留行程佔著 port。照 **§08** 查出 PID 再精準結束；**不要**一次砍光所有 node 行程。 |
 | 前端出現 CORS 錯誤 | `CORS_ORIGINS` 沒包含前端網址。預設是 `http://localhost:5173,http://localhost:5174`。 |
 | 操作到一半一直跳 401 | 權杖過期（`JWT_EXPIRES_IN` 預設 8h），或你剛變更密碼／被降權 — 兩者都會主動撤銷既有登入階段。重新登入即可。 |
@@ -916,116 +783,96 @@ cd apps/api
 npx dotenv -e ../../.env -- prisma migrate reset
 ```
 
-- [ ] `i1` **［終端機］** 先照 §08 把服務關乾淨，再執行重置（會要求你打字確認）。
-  → 刪除所有資料表 → 重新套用五個 migration → **自動重跑 seed**（8 位病人、15 台平板、新的 `.device-keys.json`）。
-  **後端沒關就跑，多半會停在下面那個 `malformed`。**
-- [ ] `i4` **［終端機］** 重置後確認資料庫檔案不是 0 byte。
-  → `DATABASE_URL` 指向的位置有一個數百 KB 的 `hd.db`。**若看到 0 byte，代表 `i1` 中途失敗了**，照下方的地雷框收拾。
+- [ ] `i1` **［終端機］** 執行重置（會要求你打字確認）。
+  → 刪除所有資料表 → 重新套用兩個 migration → **自動重跑 seed**（8 位病人、15 台平板、新的 `.device-keys.json`）。
 - [ ] `i2` **［終端機］** 重新啟動後端。
   → 因為資料庫已無任何使用者，後端會依 `.env` **重新建立 SUPER_ADMIN**，並且 `passwordChangeRequired` 回到 true — 下次登入會再次強制變更密碼。
 - [ ] `i3` **［護理端］** 從 §03 重新走一遍。
   → 全新環境，所有步驟的預期結果與手冊一致。
 
-> **地雷｜重置噴 `database disk image is malformed`，資料庫變成 0 byte**
->
-> `migrate reset` 是**兩段動作**：先清空、再建表。撞到殘留的 `-wal`／`-shm` 檔時，它會清完才失敗，
-> 於是你得到一個 **0 byte 的 `hd.db`**——舊資料已經沒了，新的也還沒建起來。看起來很嚇人，其實只是做到一半。
->
-> 最常見的成因是**後端還開著**（SQLite 只容許一個寫入者，WAL 檔還被它抓著），
-> 其次是上一次不正常結束留下的 WAL 檔。收拾方式固定三步，資料反正已經沒了，刪掉沒有損失：
->
-> ```bash
-> # ① 先照 §08 確認 3000／5173／5174／5555 都沒有行程監聽
-> # ② 把主檔與兩個附屬檔一起刪掉（路徑換成你的 DATABASE_URL）
-> rm -f /d/hd-data/hd.db /d/hd-data/hd.db-wal /d/hd-data/hd.db-shm
-> # PowerShell：Remove-Item D:\hd-data\hd.db*
->
-> # ③ 回專案根目錄重建（不必再跑 reset）
-> npm run prisma:deploy -w @hd/api
-> npm run db:seed
-> ```
->
-> 跑完的結果與 `i1` 成功時完全相同：五個 migration、8 位病人、15 台平板、新的 `.device-keys.json`。
-> **三個檔案一定要一起刪**，只刪主檔的話，殘留的 WAL 會再讓下一次建表失敗一次。
-
 > **補充｜你目前這個資料庫**
 >
-> 2026-09-10 改用本機 SQLite 時是從零開始建立的，Supabase 上的舊資料依《資料庫使用規範》第 15 條不遷移、直接捨棄。之後殘留的少量資料是驗收腳本留下的（工作ID 以 `VERIFY`／`V2`～`V6` 開頭、病歷號以 `HD-VERIFY`／`HD-V2`／`HD-TEST-V3` 之類的前置字開頭），不影響功能。
+> 2026-09-07 搬遷至東京後的實際狀態：**3 個帳號、10 位病人、19 台平板**（原本孟買那個庫累積到 13／21／40，搬遷時沒有帶資料過來，等於順便做了一次乾淨重置）。目前殘留的少量資料是驗收腳本留下的（工作ID 以 `VERIFY` / `V2` 開頭、病歷號以 `HD-VERIFY` / `HD-V2` 開頭），不影響功能。
 
-## 12 · 附錄 — 資料庫位置、備份與還原
+## 12 · 附錄 — 更換資料庫區域
 
-> **說明｜Supabase 已撤出**
+> **說明｜本專案已於 2026-09-07 完成搬遷**
 >
-> 測試資料庫曾放在 Supabase（2026-09-07 由孟買搬到東京）。2026-09-10 起改為開發者本機的 SQLite 檔案，Supabase 專案已於 2026-09-11 刪除。原本本節的「更換 Supabase 區域」步驟已不適用，改為以下內容。
+> 孟買（`ap-south-1`）→ **東京（`ap-northeast-1`）**。實測改善：
+> 單次資料庫查詢往返 **1,741–2,249 ms → 237 ms**；驗收腳本量測的 API 往返 **1,741–2,249 ms → 702 ms**；端到端（平板送出 → 護理端收到）**4,710–5,899 ms → 1,856–1,893 ms**。兩支驗收腳本皆全數通過，且「環境相關觀察」警告已消失。
+> 以下步驟保留供日後再次搬遷（或建立新環境）時參考。
 
-決定連到哪個資料庫的只有 `.env` 的 `DATABASE_URL` 一條字串。換位置＝換一個新檔案，舊資料不會跟過來。
+Supabase 不支援原地換區，做法是**開一個新專案再把 schema 建過去**。
 
-### 換一個新的資料庫檔案
+> **補充｜決定連到哪個資料庫的只有兩條字串**
+>
+> `DATABASE_URL`（應用程式走 Transaction pooler）與 `DIRECT_URL`（migration 走 Session pooler）。`.env.example` 裡的 `SUPABASE_PROJECT_URL` 與 `SUPABASE_SERVICE_ROLE_KEY` **沒有任何程式碼引用**，改不改都不影響執行。其餘變數（`JWT_SECRET`、`SUPER_ADMIN_*`、`BINDING_MAX_HOURS`…）一律不用動。
+
+### 步驟
 
 - [ ] `k1` **［終端機］** 先照 §08 把服務關乾淨。
-  → 3000／5173／5174／5555 都沒有行程監聽。後端是唯一的寫入者，換檔案前一定要先停。
-- [ ] `k2` **［終端機］** 把 `.env` 的 `DATABASE_URL` 改成新的絕對路徑（專案目錄外、本機磁碟）。
-  → 檔案不必事先存在。
-- [ ] `k3` **［終端機］** 建表並灌測試資料。
-  → 資料夾與檔案自動建出來，套用五個 migration、8 位病人、15 台平板，並**產生全新的** `apps/api/.device-keys.json`。舊的佈建網址全部作廢 — 這一步是**單向的**，原本那顆資料庫的平板明文金鑰不會留下副本（見 §01 `a13` 下方的地雷框）。要留著回頭用的話，先把舊的 `.device-keys.json` 另存一份再往下走。
-- [ ] `k4` **［終端機］** 啟動並看後端 log。
-  → 出現「已連線至 SQLite：journal_mode=WAL、foreign_keys=ON、busy_timeout=5000ms、synchronous=FULL」與「**已建立初始最高權限帳號**」。第一次登入會再次強制變更密碼。
+  → 3000／5173／5174／5555 都沒有行程監聽。
+- [ ] `k2` **［資料庫］** 在 Supabase 開新專案，區域選 **Tokyo（`ap-northeast-1`）**，設一組新的 database password 並記下來。
+  → 從台灣連，延遲大致是 Tokyo ≈ Seoul < Singapore ≪ Mumbai。等 provisioning 跑完再繼續。
+- [ ] `k3` **［資料庫］** Project Settings → Database → Connection string，取兩條字串。
+  → **Transaction pooler**（port 6543）→ 給 `DATABASE_URL`，結尾加 `?pgbouncer=true&connection_limit=5`；**Session pooler**（port 5432，同一個 pooler 主機）→ 給 `DIRECT_URL`，不加參數。主機名會變成 `aws-0-ap-northeast-1.pooler.supabase.com` 之類。
+- [ ] `k4` **［終端機］** 把兩條字串填進 `.env`，並把字串中的 `[YOUR-PASSWORD]` 換成實際密碼。
+  → 密碼若含特殊字元要 **URL-encode**：`@`→`%40`、`#`→`%23`、`/`→`%2F`。
+- [ ] `k5` **［終端機］** 對新資料庫建表。
+  → 套用既有的兩個 migration。用 `migrate deploy` 而非 `migrate dev`：對全新空庫它不會反問問題。
+- [ ] `k6` **［終端機］** 灌測試資料。
+  → 8 位病人、15 台平板，並**產生全新的** `apps/api/.device-keys.json`。
+- [ ] `k7` **［終端機］** 啟動並看後端 log。
+  → 應出現「**已建立初始最高權限帳號**」— 新資料庫沒有任何使用者，bootstrap 會重跑。第一次登入會再次強制變更密碼。
+- [ ] `k8` **［終端機］** 跑兩支驗收腳本。
+  → 全部通過。
+- [ ] `k9` **［終端機］** 看 `verify:iteration2` 第 2 步印出的「單次資料庫查詢往返約 X ms」。
+  → 拿它對照搬遷前的數字。若改善夠多，結尾的「環境相關觀察」警告會**直接消失**（端到端延遲降到 5 秒以內）。
 
-*步驟 k3–k4*
+*步驟 k5–k8*
 
 ```bash
 npm run prisma:deploy -w @hd/api
 npm run db:seed
 npm run dev
+
+# 另開一個終端機
+npm run verify:acceptance
+npm run verify:iteration2
 ```
 
-### 線上備份與還原演練
+### 三個會咬人的地方
 
-- [ ] `k5` **［護理端］** 以護理站管理者登入 →「系統管理」→「資料庫與備份」→「立即備份」。
-  → 備份歷程多一列「成功」，有檔名、大小與 SHA-256；稽核軌跡多一筆「資料庫線上備份」。
-- [ ] `k6` **［終端機］** 把剛才那份備份還原到另一個路徑。
-  → 依序印出雜湊比對相符、完整性檢查 ok、各資料表筆數。不會碰到使用中的資料庫。
-- [ ] `k7` **［終端機］** 把 `DATABASE_URL` 暫時指向還原出來的檔案，重新啟動後端並登入。
-  → 帳號、病人、稽核紀錄都在。演練完記得把 `DATABASE_URL` 改回正本。
+| 現象 | 原因與處理 |
+|---|---|
+| 病人端一直停在「裝置尚未佈建」 | **`.device-keys.json` 換過了。**舊金鑰對新資料庫無效，之前記下的佈建網址全部作廢，要用新 seed 產生的值。 |
+| 所有帳號、病人、排班、稽核都不見了 | **預期行為。**舊資料留在舊專案，不會跟過來。以測試環境來說這是好事 — 等於順便做了一次乾淨重置。 |
+| 登入又被要求變更密碼 | **預期行為。**新資料庫的 SUPER_ADMIN 是重新建立的，`passwordChangeRequired` 回到 true。 |
+| `P1001 Can't reach database server` | 又踩到 Direct connection（`db.<ref>.supabase.co`，只有 IPv6）。**這個坑跟區域無關**，換到東京還是要用 Session pooler 字串。 |
 
-*步驟 k6*
+### 如果真的想保留舊資料
+
+不建議 — 測試庫累積的多半是驗收腳本殘渣。真的需要的話用 `pg_dump` / `pg_restore`，並**跳過 k5、k6**（dump 裡已含資料表與 `_prisma_migrations`，再跑 migrate 會衝突）。本機需有 PostgreSQL client 工具，且 `pg_dump` 版本不可低於 Supabase 的 server 版本。
 
 ```bash
-npm run db:restore -- --from <BACKUP_DIR 裡的備份檔> --to <新的絕對路徑> --sha256 <備份歷程上的雜湊>
+pg_dump "舊的 DIRECT_URL" --no-owner --no-privileges -Fc -f backup.dump
+pg_restore -d "新的 DIRECT_URL" --no-owner --no-privileges backup.dump
 ```
 
-> **地雷｜不要直接複製資料庫檔案**
+> **說明｜不需要 commit 任何東西**
 >
-> 服務執行中直接複製 `.db` 可能拿到不一致的狀態，而且 WAL 模式的 `-wal`／`-shm` 與主檔是一組，只拿主檔會漏資料。備份一律用上面的線上備份（`VACUUM INTO`），備份檔也不得放到雲端硬碟或個人隨身碟（《資料庫使用規範》8.1）。
+> `.env` 已列入 `.gitignore`，換區域**不會產生任何需要提交的程式碼變更**。`.env.example` 本來就是空值範本，也不用動。
 
 ---
 
-## 13 · 迭代 3-6 分冊
+## 互動版
 
-迭代 3 之後的功能各自成冊。全部併進本頁會超過兩千行，翻起來反而找不到東西；分開之後每一冊都能單獨走完，前置條件寫在各冊開頭。
+同一份手冊另有可勾選的互動版本，勾選進度會自動保存在瀏覽器中：
 
-| 分冊 | 內容 | 項次 |
-|---|---|---|
-| [迭代 3 — 封閉網路化與資料層遷移](iteration-3.md) | SQLite 必開設定、零院外連線、唯讀角色、功能開關中心、模型供應者與臨床資料來源兩個介面層、備份與還原、常駐總覽螢幕、兩項實機驗收 | `l1`–`l55`、`m1`–`m11` |
-| [迭代 4 — AI 輔助內容與護理記錄](iteration-4.md) | 護理記錄與 AI 草擬、衛教與適性測驗、心情與滿意度、透析適足性、SOP 查詢、背景佇列 | `n1`–`n57` |
-| [迭代 5 — 求助處理紀錄、班表與成效基準](iteration-5.md) | 結案的結構化登記、兩個時間、再發標示、結果回饋、班表與床位分配、勞動條件硬性檢查、成效基準建檔 | `o1`–`o68` |
-| [迭代 6 — 閒置輪播與檔案匯入](iteration-6.md) | 輪播三層與主線保護、細節頁、夜間模式、Excel／CSV 匯入與可設定的欄位對應、瀏覽事件 | `p1`–`p63` |
+<https://claude.ai/code/artifact/a4ff6464-a012-4aed-9e7f-f95909926e98>
 
-走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。
-
-**開始任何一本分冊之前，先把這四樣東西準備好**（四本分冊的「前置」都建立在這些上面）：
-
-| 要準備的 | 在哪裡弄出來 |
-|---|---|
-| 最高權限帳號（SUPER_ADMIN） | `.env` 的 `SUPER_ADMIN_*`，後端首次啟動時自動建立（`a10`、`c1`–`c3`） |
-| 一位一般護理師 `N001` | 註冊申請＋核准（`c4`–`c7`） |
-| 一位**護理長**（例如 `N003`） | 另外申請一個帳號，核准後在「帳號審核 → 帳號與權限」用角色下拉選單改成「護理長／單位主管」（`f64`）。**迭代 3、5、6 都要它** |
-| `.env` 的 `BACKUP_DIR` | `a12`。迭代 3 §3.8 與 `verify:iteration3`／`verify:iteration4` 沒有它都過不了 |
-
-**兩件事請優先安排**：
-
-- 迭代 3 的兩項實機驗收（[迭代 3 分冊](iteration-3.md) §3.12）**尚未執行**，需要實機與 4 小時。
-- 迭代 6 有四項是自動化腳本驗不到、只能用手指確認的（[迭代 6 分冊](iteration-6.md) §6.3～§6.5、§6.9），輪播對病人開啟前請先走過。
+該連結為私人 artifact，僅專案持有者的 Claude 帳號可開啟，且勾選狀態只留在該裝置的瀏覽器。
+**本頁為真本**，內容一律以 repo 為準；互動版僅供個人跑測試時追蹤進度。
 
 ---
 
@@ -1033,7 +880,6 @@ npm run db:restore -- --from <BACKUP_DIR 裡的備份檔> --to <新的絕對路�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| [0916](https://94sh09sh19sh.github.io/hd-docs/0916/testing/manual-test-guide/) | 2026-09-16 | 拆成主手冊＋迭代 3～6 四本分冊（共 410 項），§13 改為分冊索引；補齊環境建置缺口、路由表補到 107 條，§11 補上重置失敗留下 0 byte 資料庫的收拾方式 |
-| [0909](https://hackmd.io/@94sh09sh19sh/hd-testing-0909) | 2026-09-09 | 首次定版 |
+| 0909 | 2026-09-09 | 首次定版 |
 
 [← 回進度首頁](../index.md)
