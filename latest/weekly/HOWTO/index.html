@@ -1553,7 +1553,17 @@ tag 釘住的是當下那個 commit——內容沒先推上去，凍到的就是
 </tbody>
 </table>
 <p>站台右上角有<strong>版本下拉選單</strong>，讀者可以自己在各週定版之間切換。
+凍結版只會往回指：它凍的是當時的內容，當時還不存在的後續版本，它的版本歷程裡自然沒有那一列。
+要從舊版跳到新版，用那個選單。</p>
+<blockquote>
+<p><strong>凍結版住在鏡像 repo，本地只留現行版。</strong></p>
+<p>每一版 = 鏡像 <code>main</code> 上的一個週次 tag（內容來源）＋ <code>gh-pages</code> 裡建好的 <code>/&lt;週次&gt;/</code>。
+<strong>本地 repo 不再收任何舊版目錄</strong>——同一份內容擺兩處，遲早有人改了其中一處，
+之後就分不出哪一份才是當初定版的那一份。</p>
+<p>要看某一版，開站上的 <code>/&lt;週次&gt;/</code>；要原始檔，從鏡像的 tag 取：
+<code>git -C .docs-mirror show &lt;週次&gt;:docs/&lt;路徑&gt;</code>。
 首頁只掛現行版，所以<strong>你給出去的連結永遠不會過期</strong>，也不必每週重發。</p>
+</blockquote>
 <p><strong>公開範圍</strong>：鏡像 repo 是 public、站台是公開網址，知道網址就看得到（跟以前的 HackMD 自訂網址一樣）。
 <code>robots.txt</code> 擋掉搜尋引擎收錄。程式碼、<code>README.md</code>、<code>.env</code> 都留在私有 repo，
 同步腳本只複製 <code>docs/</code> 與 <code>docs-site/</code> 兩個目錄，這條界線是結構上的，不是靠記得。</p>
@@ -1610,7 +1620,7 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:sync
 </tr>
 <tr>
 <td>凍結版</td>
-<td>0909 那批已取回、收進 <code>docs-snapshots/0909/</code> 並發佈到新站，版本歷程一律指向新站，<strong>不再依賴舊站</strong>；0916 那批因額度用盡沒有推成功，不影響新站</td>
+<td>0909 那批已取回並發佈到新站（只存在於鏡像 repo，本地不留），版本歷程一律指向新站，<strong>不再依賴舊站</strong>；0916 那批因額度用盡沒有推成功，不影響新站</td>
 </tr>
 </tbody>
 </table>
@@ -1744,7 +1754,12 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w"
 <tr>
 <td>想知道 0909 那一版是怎麼來的</td>
 <td>換站之前它發佈在 HackMD 上，repo 裡只有當天的 commit 樹，兩者不一定相同</td>
-<td>已用 <code>node scripts/snapshot-import.mjs 0909 --from-commit &lt;sha&gt;</code> 從舊站取回發佈出去的那一份，原樣收在 <code>docs-snapshots/0909/</code>，再以快照分支＋週次 tag 建成新站的 0909</td>
+<td>已用 <code>node scripts/snapshot-import.mjs 0909 --from-commit &lt;sha&gt;</code> 從舊站取回發佈出去的那一份，推成 <code>snapshot/0909</code> 分支＋<code>0909</code> tag 建成新站的該版。取回的檔案不留在本地</td>
+</tr>
+<tr>
+<td>想在本地找某一版的原始檔</td>
+<td>本地只有現行版，凍結版的家在鏡像 repo</td>
+<td><code>git -C .docs-mirror show &lt;週次&gt;:docs/&lt;路徑&gt;</code>；或直接開站上的 <code>/&lt;週次&gt;/</code></td>
 </tr>
 <tr>
 <td>想補建更早的週次</td>
