@@ -1610,7 +1610,7 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:sync
 </tr>
 <tr>
 <td>凍結版</td>
-<td>0909 那批留在舊站，網址沒有變動，各文件版本歷程的 0909 那一列會自動連過去；0916 因額度用盡沒有推成功，新站的凍結版自 0916 起算</td>
+<td>0909 那批已取回、收進 <code>docs-snapshots/0909/</code> 並發佈到新站，版本歷程一律指向新站，<strong>不再依賴舊站</strong>；0916 那批因額度用盡沒有推成功，不影響新站</td>
 </tr>
 </tbody>
 </table>
@@ -1742,9 +1742,14 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w"
 <td>跑 <code>npm run docs:freeze</code>。沒有對應凍結版時刻意維持純文字，不留死連結</td>
 </tr>
 <tr>
-<td>版本歷程的 0909 連到舊站去了</td>
-<td>那一版的凍結版建在舊的 HackMD 站，新站沒有這個版本</td>
-<td>這是刻意的。舊站那批 note 才是當時真正發佈出去的定版，所以直接連過去；網址取自 <code>docs/hackmd-map.json</code>，<strong>那份對應表因此不能刪</strong></td>
+<td>想知道 0909 那一版是怎麼來的</td>
+<td>換站之前它發佈在 HackMD 上，repo 裡只有當天的 commit 樹，兩者不一定相同</td>
+<td>已用 <code>node scripts/snapshot-import.mjs 0909 --from-commit &lt;sha&gt;</code> 從舊站取回發佈出去的那一份，原樣收在 <code>docs-snapshots/0909/</code>，再以快照分支＋週次 tag 建成新站的 0909</td>
+</tr>
+<tr>
+<td>想補建更早的週次</td>
+<td>那幾週的內容不在鏡像的 main 上</td>
+<td><strong>不要用 <code>docs:freeze</code></strong>——它會把 main（今天的內容）打上舊週次。照上一列的做法匯入該週真正發佈出去的版本</td>
 </tr>
 <tr>
 <td>PowerShell 讀出來的中文是亂碼</td>

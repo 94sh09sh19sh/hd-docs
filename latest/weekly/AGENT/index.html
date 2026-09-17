@@ -1791,9 +1791,15 @@ docs-site/                      站台設定（真本在此，由 docs:sync 複�
 ├── README.md                   鏡像 repo 的說明頁
 └── workflows/docs.yml          鏡像 repo 的 GitHub Actions
 
+docs-snapshots/                 換站之前發佈出去的凍結版，原樣收進版控
+└── 0909/
+    ├── docs/                   該週在舊站發佈的內容（取自 HackMD，不是 git 重建）
+    └── mkdocs.yml              該版的站台設定，nav 只收該版真的存在的頁
+
 scripts/
 ├── docs-mirror.mjs             docs:sync／docs:preview
-└── docs-freeze.mjs             docs:freeze
+├── docs-freeze.mjs             docs:freeze
+└── snapshot-import.mjs         把舊站的凍結版取回，收進 docs-snapshots/
 </code></pre></div>
 <h2 id="目錄職責">目錄職責<a class="headerlink" href="#目錄職責" title="Permanent link">&para;</a></h2>
 <table>
@@ -1866,8 +1872,13 @@ scripts/
 <td>有需要才動；改完要 <code>docs:sync</code> 才會生效</td>
 </tr>
 <tr>
-<td><code>scripts/docs-*.mjs</code></td>
-<td>同步與凍結工具</td>
+<td><code>docs-snapshots/&lt;週次&gt;/</code></td>
+<td>換站前發佈出去的凍結版，原封不動收在版控裡</td>
+<td><strong>不要改</strong>。它是既成紀錄，要修正就在新的一週寫明</td>
+</tr>
+<tr>
+<td><code>scripts/docs-*.mjs</code>、<code>snapshot-import.mjs</code></td>
+<td>同步、凍結與舊快照匯入工具</td>
 <td>有需要才動</td>
 </tr>
 </tbody>
@@ -1894,10 +1905,12 @@ scripts/
   尚未建立凍結版的週次維持純文字，不留死連結</li>
 <li>凍結版的網址由週次推導（<code>…/hd-docs/&lt;週次&gt;/&lt;該篇路徑&gt;/</code>），不需要任何對應表</li>
 <li>已建立的凍結版視為既成紀錄，不回頭改。要修正就在新的一週寫明</li>
-<li>0909 的凍結版留在舊的 HackMD 站，新站的凍結版自 <strong>0916</strong> 起算。版本歷程裡的 0909 那一列
-  由 <code>docs-mirror.mjs</code> 自動連回舊站那批 note（網址取自 <code>docs/hackmd-map.json</code> 的 <code>snapshots</code>）。
-  <strong>不要從 git 歷史重建一份 0909 放到新站</strong>：那批 note 是 0910 建立定版制度時才推上去的，
-  內容未必等於 0909 當天的 commit 樹，重建出來的是冒充定版的贗品</li>
+<li>換站之前的凍結版（0909）已由 <code>scripts/snapshot-import.mjs</code> 自舊站取回<strong>當時真正發佈出去的那一份</strong>，
+  原樣收在 <code>docs-snapshots/0909/</code>，並以 <code>snapshot/&lt;週次&gt;</code> 分支加週次 tag 發佈到新站。
+  版本歷程因此一律指向新站，不連舊站</li>
+<li><strong>舊週次一律不得用 <code>docs:freeze</code> 補建。</strong> 那支會把鏡像 main（今天的內容）打上舊週次，
+  生出掛著舊週次、裝著今日內容的贗品。也不要從 git 歷史重建：定版制度是 0910 才建立的，
+  當天的 commit 樹未必等於那週發佈出去的內容。正確做法只有一條——匯入該週發佈出去的版本</li>
 </ul>
 <h3 id="版本歷程的適用範圍">版本歷程的適用範圍<a class="headerlink" href="#版本歷程的適用範圍" title="Permanent link">&para;</a></h3>
 <p>有「版本歷程」表的只有<strong>需求文件、進度報告、參考文件、測試手冊（主手冊與四本分冊）</strong>這十六份，改了就要補一列。
@@ -2031,8 +2044,8 @@ scripts/
 </code></pre></div>
 <p>省略 <code>-Encoding UTF8</code> 會依系統預設編碼頁（本機為 big5）讀取，中文全部變亂碼。
 - 0909 的凍結版留在舊站；0916 那批因額度用盡未推成功，新站的凍結版自 0916 起算
-- <code>docs/hackmd-map.json</code> 有兩個用途，<strong>不要刪</strong>：舊站的上述指令要用，<code>docs-mirror.mjs</code> 也靠它的
-  <code>snapshots</code> 把各文件版本歷程的 0909 那一列連回舊站。它不會上新站（同步時略過 <code>.json</code>）</p>
+- <code>docs/hackmd-map.json</code> <strong>不要刪</strong>：舊站的上述指令要用，<code>scripts/snapshot-import.mjs</code> 也靠它的
+  <code>snapshots</code> 查出某一週在舊站有哪些凍結版 note 可以取回。它不會上新站（同步時略過 <code>.json</code>）</p>
 <h2 id="其他硬性規則">其他硬性規則<a class="headerlink" href="#其他硬性規則" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>連結一律用相對路徑</strong>寫在 <code>docs/</code> 裡。站台會自己處理，不要把 <code>https://…github.io/…</code>
