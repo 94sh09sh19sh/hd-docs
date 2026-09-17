@@ -182,6 +182,9 @@ npm run docs:freeze   # 再打週次 tag，建立凍結版
 不確定會做什麼就先看：`npm run docs:freeze -- --dry-run`。
 只想處理某一週：`npm run docs:freeze -- 0916`。
 
+凍結版建好之後**再跑一次 `npm run docs:sync`**：版本歷程第一欄的週次，要等該週凍結版真的存在，
+同步時才會換成連結；還不存在的維持純文字，不留死連結。
+
 #### 6. Commit
 
 ```bash

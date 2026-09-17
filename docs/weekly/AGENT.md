@@ -204,7 +204,8 @@ scripts/
 5. `npm run docs:sync -- --dry-run`，把清單交給使用者確認。
 6. 使用者同意後 `npm run docs:sync`。
 7. `npm run docs:freeze`，確認新週次都建立到。**定版日這一步要先問使用者**——凍下去不再更新。
-8. commit（訊息 `docs: 週報 MMDD`）。**私有 repo 的 git push 要等使用者指令**（見上方 git 規則）。
+8. 再跑一次 `npm run docs:sync`：版本歷程第一欄的新週次，要等該週凍結版存在，同步時才換得成連結。
+9. commit（訊息 `docs: 週報 MMDD`）。**私有 repo 的 git push 要等使用者指令**（見上方 git 規則）。
 
 ## 新增其他文件
 

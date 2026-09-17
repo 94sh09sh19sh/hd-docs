@@ -134,7 +134,7 @@ chrome --headless=new --disable-gpu --hide-scrollbars \
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0916 | 2026-09-16 | 兩張圖依 v2.0 重繪並更新到迭代 6：拿掉推播中繼與外部 LLM，改畫 SQLite、SSE、院內 AI 伺服器、營運與排班模組、閒置輪播三層；圖二未動——班表與輪播沒有新增任何機器或網路連線 |
+| [0916](https://94sh09sh19sh.github.io/hd-docs/0916/requirements/architecture-diagrams/) | 2026-09-16 | 兩張圖依 v2.0 重繪並更新到迭代 6：拿掉推播中繼與外部 LLM，改畫 SQLite、SSE、院內 AI 伺服器、營運與排班模組、閒置輪播三層；圖二未動——班表與輪播沒有新增任何機器或網路連線 |
 | 0909 | 2026-09-09 | 首次定版 |
 
 [← 回進度首頁](../index.md)
