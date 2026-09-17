@@ -412,6 +412,6 @@ SQLite 在本專案中的角色是「**一個檔案，裝著整個透析中心�
 | 定版 | 日期 | 異動 |
 |---|---|---|
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/requirements/database-policy/) | 2026-09-16 | 改版為 v2.0：測試與正式皆改為 SQLite、所有資料不出醫院網路；備份收緊為必須放院內另一台機器，部署相關敘述改指《部署規範》 |
-| [0909](https://hackmd.io/@94sh09sh19sh/hd-db-0909) | 2026-09-09 | 首次定版 |
+| [0909](https://94sh09sh19sh.github.io/hd-docs/0909/requirements/database-policy/) | 2026-09-09 | 首次定版 |
 
 [← 回進度首頁](../index.md)

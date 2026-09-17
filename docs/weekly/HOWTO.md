@@ -84,7 +84,7 @@ tag 釘住的是當下那個 commit——內容沒先推上去，凍到的就是
 | 指令 | `npm run docs:hackmd` 產生 `.hackmd-build/` → `npm run docs:hackmd:push` 推上去（加 `-- --dry-run` 先看清單）。要出凍結版再跑 `npm run docs:hackmd:freeze` |
 | 權杖 | `HACKMD_API_TOKEN` 留在 `.env`，不要刪，也不要貼進任何文件、截圖或訊息 |
 | 額度 | 免費方案每月 400 次，**目前已用盡**，訊息裡寫 `Resets at 2026-10-01`。收到 `429 quota_exceeded` 就停手，重試只會再吃掉配額 |
-| 凍結版 | 0909 那批留在舊站，網址沒有變動，各文件版本歷程的 0909 那一列會自動連過去；0916 因額度用盡沒有推成功，新站的凍結版自 0916 起算 |
+| 凍結版 | 0909 那批已取回、收進 `docs-snapshots/0909/` 並發佈到新站，版本歷程一律指向新站，**不再依賴舊站**；0916 那批因額度用盡沒有推成功，不影響新站 |
 
 手貼舊站時**一律貼 `.hackmd-build/` 底下的檔案，不要貼 `docs/` 原始檔**——兩者肉眼難辨，
 貼錯不會有任何錯誤訊息，但那篇的內部連結會全部變成死連結。
@@ -207,7 +207,8 @@ git add docs docs-site scripts package.json && git commit -m "docs: 週報 0916"
 | 在鏡像 repo 或站台上改的字不見了 | 同步是整份覆蓋，鏡像是單向的 | 內容一律改 `docs/`，鏡像只當展示 |
 | 預覽起不來，說找不到 mkdocs | 本機沒裝建站工具 | `pip install -r docs-site/requirements.txt`。只影響預覽，不影響同步 |
 | 版本歷程的週次沒有連結 | 那一週的凍結版還沒建立 | 跑 `npm run docs:freeze`。沒有對應凍結版時刻意維持純文字，不留死連結 |
-| 版本歷程的 0909 連到舊站去了 | 那一版的凍結版建在舊的 HackMD 站，新站沒有這個版本 | 這是刻意的。舊站那批 note 才是當時真正發佈出去的定版，所以直接連過去；網址取自 `docs/hackmd-map.json`，**那份對應表因此不能刪** |
+| 想知道 0909 那一版是怎麼來的 | 換站之前它發佈在 HackMD 上，repo 裡只有當天的 commit 樹，兩者不一定相同 | 已用 `node scripts/snapshot-import.mjs 0909 --from-commit <sha>` 從舊站取回發佈出去的那一份，原樣收在 `docs-snapshots/0909/`，再以快照分支＋週次 tag 建成新站的 0909 |
+| 想補建更早的週次 | 那幾週的內容不在鏡像的 main 上 | **不要用 `docs:freeze`**——它會把 main（今天的內容）打上舊週次。照上一列的做法匯入該週真正發佈出去的版本 |
 | PowerShell 讀出來的中文是亂碼 | 系統預設編碼頁是 big5 | 讀檔一律 `Get-Content -Raw -Encoding UTF8`，省略 `-Encoding` 就會壞 |
 | 編輯某一行時被支語 hook 擋下，但那行看起來沒問題 | 詞庫收了一些在醫學與公文語境屬正常用法的詞，整行寫入就會被擋 | 縮小編輯範圍，只改那個片段；或把該行從 `~/.claude/hooks/zhiyu-words.txt` 註解掉 |
 

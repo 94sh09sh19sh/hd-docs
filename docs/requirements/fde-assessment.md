@@ -470,6 +470,6 @@ LlmProviderPort（抽象介面）
 | 定版 | 日期 | 異動 |
 |---|---|---|
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/requirements/fde-assessment/) | 2026-09-16 | 改版為 v2.0：SaMD 邊界由整條排除改為有條件納入，選型理由改述為封閉網路與院內地端推論；待確認事項移交《尚待確認事項清冊》，部署相關敘述改指《部署規範》 |
-| [0909](https://hackmd.io/@94sh09sh19sh/hd-fde-0909) | 2026-09-09 | 首次定版 |
+| [0909](https://94sh09sh19sh.github.io/hd-docs/0909/requirements/fde-assessment/) | 2026-09-09 | 首次定版 |
 
 [← 回進度首頁](../index.md)

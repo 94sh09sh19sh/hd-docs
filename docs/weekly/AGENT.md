@@ -90,9 +90,15 @@ docs-site/                      站台設定（真本在此，由 docs:sync 複�
 ├── README.md                   鏡像 repo 的說明頁
 └── workflows/docs.yml          鏡像 repo 的 GitHub Actions
 
+docs-snapshots/                 換站之前發佈出去的凍結版，原樣收進版控
+└── 0909/
+    ├── docs/                   該週在舊站發佈的內容（取自 HackMD，不是 git 重建）
+    └── mkdocs.yml              該版的站台設定，nav 只收該版真的存在的頁
+
 scripts/
 ├── docs-mirror.mjs             docs:sync／docs:preview
-└── docs-freeze.mjs             docs:freeze
+├── docs-freeze.mjs             docs:freeze
+└── snapshot-import.mjs         把舊站的凍結版取回，收進 docs-snapshots/
 ```
 
 ## 目錄職責
@@ -111,7 +117,8 @@ scripts/
 | `docs/weekly/HOWTO.md`、`AGENT.md` | 維護流程本身 | 文件結構或流程一變就要同步，見上方「改完文件，回頭檢查這兩份指南」 |
 | `docs-site/mkdocs.yml` | 側欄列序與站台設定 | 新增文件時補 `nav` 一列，列序對齊首頁 |
 | `docs-site/workflows/docs.yml` | 鏡像的建站流程 | 有需要才動；改完要 `docs:sync` 才會生效 |
-| `scripts/docs-*.mjs` | 同步與凍結工具 | 有需要才動 |
+| `docs-snapshots/<週次>/` | 換站前發佈出去的凍結版，原封不動收在版控裡 | **不要改**。它是既成紀錄，要修正就在新的一週寫明 |
+| `scripts/docs-*.mjs`、`snapshot-import.mjs` | 同步、凍結與舊快照匯入工具 | 有需要才動 |
 
 ---
 
@@ -137,10 +144,12 @@ scripts/
   尚未建立凍結版的週次維持純文字，不留死連結
 - 凍結版的網址由週次推導（`…/hd-docs/<週次>/<該篇路徑>/`），不需要任何對應表
 - 已建立的凍結版視為既成紀錄，不回頭改。要修正就在新的一週寫明
-- 0909 的凍結版留在舊的 HackMD 站，新站的凍結版自 **0916** 起算。版本歷程裡的 0909 那一列
-  由 `docs-mirror.mjs` 自動連回舊站那批 note（網址取自 `docs/hackmd-map.json` 的 `snapshots`）。
-  **不要從 git 歷史重建一份 0909 放到新站**：那批 note 是 0910 建立定版制度時才推上去的，
-  內容未必等於 0909 當天的 commit 樹，重建出來的是冒充定版的贗品
+- 換站之前的凍結版（0909）已由 `scripts/snapshot-import.mjs` 自舊站取回**當時真正發佈出去的那一份**，
+  原樣收在 `docs-snapshots/0909/`，並以 `snapshot/<週次>` 分支加週次 tag 發佈到新站。
+  版本歷程因此一律指向新站，不連舊站
+- **舊週次一律不得用 `docs:freeze` 補建。** 那支會把鏡像 main（今天的內容）打上舊週次，
+  生出掛著舊週次、裝著今日內容的贗品。也不要從 git 歷史重建：定版制度是 0910 才建立的，
+  當天的 commit 樹未必等於那週發佈出去的內容。正確做法只有一條——匯入該週發佈出去的版本
 
 ### 版本歷程的適用範圍
 
@@ -295,8 +304,8 @@ scripts/
 
   省略 `-Encoding UTF8` 會依系統預設編碼頁（本機為 big5）讀取，中文全部變亂碼。
 - 0909 的凍結版留在舊站；0916 那批因額度用盡未推成功，新站的凍結版自 0916 起算
-- `docs/hackmd-map.json` 有兩個用途，**不要刪**：舊站的上述指令要用，`docs-mirror.mjs` 也靠它的
-  `snapshots` 把各文件版本歷程的 0909 那一列連回舊站。它不會上新站（同步時略過 `.json`）
+- `docs/hackmd-map.json` **不要刪**：舊站的上述指令要用，`scripts/snapshot-import.mjs` 也靠它的
+  `snapshots` 查出某一週在舊站有哪些凍結版 note 可以取回。它不會上新站（同步時略過 `.json`）
 
 ## 其他硬性規則
 
