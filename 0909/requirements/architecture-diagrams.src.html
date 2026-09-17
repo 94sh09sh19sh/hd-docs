@@ -1,0 +1,491 @@
+<title>透析照護系統架構圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+  :root{
+    --sheet:#FFFFFF;
+    --ground:#EDF1EF;
+    --ink:#0F1A17;
+    --muted:#5C6D68;
+    --muted-strong:#3F504B;
+    --rule:#D0D9D5;
+    --hair:#E4EAE7;
+    --teal:#0C7A6B;
+    --rust:#AF4922;
+    --ochre:#836416;
+    --node-fill:#FFFFFF;
+    --node-line:#8FA59F;
+    --screen-fill:#E9F1EE;
+    --zone-fill:#F4F8F6;
+    --zone-line:#8CA29C;
+    --ext-fill:#FBF2EE;
+    --ext-node-fill:#FCF1EB;
+    --legacy-fill:#FBF6E8;
+    --line:#6C807A;
+    --dot:#B7C6C1;
+    --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    --serif:"Noto Serif TC","Songti TC",serif;
+    --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --sheet:#131A18;
+      --ground:#090D0C;
+      --ink:#E9F0ED;
+      --muted:#94A7A1;
+      --muted-strong:#B6C6C1;
+      --rule:#26322E;
+      --hair:#1C2522;
+      --teal:#4FCCB6;
+      --rust:#EF9068;
+      --ochre:#DEB558;
+      --node-fill:#1B2422;
+      --node-line:#5C736D;
+      --screen-fill:#202C29;
+      --zone-fill:#182120;
+      --zone-line:#748F88;
+      --ext-fill:#221814;
+      --ext-node-fill:#2A1D17;
+      --legacy-fill:#251F0F;
+      --line:#8CA199;
+      --dot:#3A4B46;
+    }
+  }
+  :root[data-theme="dark"]{
+    --sheet:#131A18;
+    --ground:#090D0C;
+    --ink:#E9F0ED;
+    --muted:#94A7A1;
+    --muted-strong:#B6C6C1;
+    --rule:#26322E;
+    --hair:#1C2522;
+    --teal:#4FCCB6;
+    --rust:#EF9068;
+    --ochre:#DEB558;
+    --node-fill:#1B2422;
+    --node-line:#5C736D;
+    --screen-fill:#202C29;
+    --zone-fill:#182120;
+    --zone-line:#748F88;
+    --ext-fill:#221814;
+    --ext-node-fill:#2A1D17;
+    --legacy-fill:#251F0F;
+    --line:#8CA199;
+    --dot:#3A4B46;
+  }
+
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:56px 28px 96px;display:flex;flex-direction:column;gap:44px}
+
+  /* ---- masthead ---- */
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:20px;display:flex;flex-direction:column;gap:10px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(30px,4.6vw,46px);line-height:1.2;margin:0;text-wrap:balance;letter-spacing:.01em}
+  .dek{color:var(--muted-strong);max-width:62ch;margin:0;font-size:15.5px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 26px;font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:6px}
+  .meta b{font-weight:500;color:var(--muted-strong)}
+
+  /* ---- key ---- */
+  .key{background:var(--sheet);border:1px solid var(--rule);padding:22px 24px 18px;display:flex;flex-direction:column;gap:14px}
+  .key h2,.plate h2{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:500}
+  .key svg{width:100%;height:auto;display:block}
+  .lines{display:flex;flex-wrap:wrap;gap:10px 30px;border-top:1px solid var(--hair);padding-top:14px;font-size:13.5px;color:var(--muted-strong)}
+  .lines span{display:inline-flex;align-items:center;gap:9px}
+  .lines svg{width:52px;height:12px;flex:none}
+
+  /* ---- plates ---- */
+  .plate{background:var(--sheet);border:1px solid var(--rule);display:flex;flex-direction:column}
+  .plate-head{display:flex;align-items:baseline;gap:18px;padding:20px 24px 16px;border-bottom:1px solid var(--hair);flex-wrap:wrap}
+  .no{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--sheet);background:var(--ink);padding:3px 9px;flex:none}
+  .plate-head h3{font-family:var(--serif);font-weight:600;font-size:22px;margin:0;flex:none}
+  .claim{color:var(--muted);font-size:13.5px;margin:0;flex:1 1 260px;min-width:0}
+  figure{margin:0;padding:20px 24px 8px;overflow-x:auto}
+  figure svg{width:100%;min-width:760px;height:auto;display:block;font-family:var(--sans)}
+  figcaption{padding:14px 24px 22px;font-size:13.5px;color:var(--muted-strong);border-bottom:1px solid var(--hair);max-width:78ch}
+  .notes{list-style:none;margin:0;padding:18px 24px 24px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .notes li{display:flex;gap:11px;font-size:14px;line-height:1.6}
+  .notes b{font-family:var(--mono);font-size:11px;color:var(--teal);flex:none;padding-top:3px;letter-spacing:.06em}
+
+  /* ---- svg shared ---- */
+  .zone{fill:var(--zone-fill);stroke:var(--zone-line);stroke-width:2;stroke-dasharray:12 7}
+  .zone-ext{fill:var(--ext-fill);stroke:var(--rust);stroke-width:2;stroke-dasharray:12 7;opacity:.9}
+  .chip{fill:var(--sheet);stroke:none}
+  .t-zone{fill:var(--muted-strong);font-size:14px;font-weight:500;letter-spacing:.04em}
+  .t-zone-ext{fill:var(--rust);font-size:13.5px;font-weight:500;letter-spacing:.04em}
+  .node{fill:var(--node-fill);stroke:var(--node-line);stroke-width:1.8}
+  .node-hub{fill:var(--node-fill);stroke:var(--teal);stroke-width:2.4}
+  .node-ext{fill:var(--ext-node-fill);stroke:var(--rust);stroke-width:1.8}
+  .node-legacy{fill:var(--legacy-fill);stroke:var(--ochre);stroke-width:1.8}
+  .ghost{fill:var(--node-fill);stroke:var(--node-line);stroke-width:1.4;opacity:.45}
+  .screen{fill:var(--screen-fill);stroke:none}
+  .dot{fill:var(--dot)}
+  .t-title{fill:var(--ink);font-size:19px;font-weight:700}
+  .t-title-s{fill:var(--ink);font-size:17px;font-weight:700}
+  .t-title-ext{fill:var(--rust);font-size:18px;font-weight:700}
+  .t-title-legacy{fill:var(--ochre);font-size:18px;font-weight:700}
+  .t-sub{fill:var(--muted);font-size:13px}
+  .t-sub-s{fill:var(--muted);font-size:12.5px}
+  .t-lbl{fill:var(--muted);font-size:12.5px}
+  .t-lbl-ext{fill:var(--rust);font-size:12.5px}
+  .t-lbl-teal{fill:var(--teal);font-size:12.5px}
+  .link{fill:none;stroke:var(--line);stroke-width:2}
+  .link-push{fill:none;stroke:var(--teal);stroke-width:2;stroke-dasharray:9 6}
+  .link-ext{fill:none;stroke:var(--rust);stroke-width:2.2}
+  .mk-ink{fill:var(--line)}
+  .mk-teal{fill:var(--teal)}
+  .mk-rust{fill:var(--rust)}
+
+  /* ---- close ---- */
+  .close{display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .close h2{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:500}
+  .rules{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;counter-reset:r}
+  .rules li{counter-increment:r;display:flex;gap:12px;font-size:14.5px;line-height:1.65;border-top:1px solid var(--hair);padding-top:12px}
+  .rules li::before{content:counter(r);font-family:var(--mono);font-size:11px;color:var(--teal);padding-top:4px}
+  .diffs{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--muted-strong)}
+  .diffs li{border-top:1px solid var(--hair);padding-top:10px}
+  .diffs b{color:var(--ink);font-weight:500}
+  footer{font-family:var(--mono);font-size:11.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px;line-height:1.9}
+  @media (max-width:640px){
+    .wrap{padding:36px 16px 64px}
+    figure,figcaption,.notes,.plate-head{padding-left:16px;padding-right:16px}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">血液透析平板照護輔助系統 · 需求階段架構圖</div>
+    <h1>透析照護系統架構圖</h1>
+    <p class="dek">圖版一畫軟體元件之間怎麼互相呼叫，圖版二畫這些東西實際擺在哪裡、哪幾條線跨出醫院。兩張圖的院內網路是同一個框。</p>
+    <div class="meta">
+      <span><b>依據</b> SRS §4.3／§4.4／§7</span>
+      <span><b>約束</b> 資料庫使用規範 §2／§3／§4</span>
+      <span><b>重繪</b> 2026-09-09</span>
+    </div>
+  </header>
+
+  <section class="key">
+    <h2>形狀對照表</h2>
+    <svg viewBox="0 0 1320 128" role="img" aria-label="九種節點形狀與其代表的元件類型對照">
+      <!-- 1 tablet -->
+      <g>
+        <rect x="47" y="20" width="52" height="50" rx="7" class="node"/>
+        <rect x="54" y="27" width="38" height="32" rx="4" class="screen"/>
+        <rect x="63" y="63" width="20" height="3" rx="1.5" class="dot"/>
+        <text x="73" y="100" text-anchor="middle" class="t-sub-s">病人平板</text>
+      </g>
+      <!-- 2 monitor -->
+      <g>
+        <rect x="190" y="22" width="60" height="38" rx="4" class="node"/>
+        <rect x="197" y="29" width="46" height="24" rx="2" class="screen"/>
+        <polygon points="211,60 229,60 234,68 206,68" class="node"/>
+        <text x="220" y="100" text-anchor="middle" class="t-sub-s">護理端裝置</text>
+      </g>
+      <!-- 3 hexagon -->
+      <g>
+        <polygon points="333,45 348,24 386,24 401,45 386,66 348,66" class="node"/>
+        <text x="367" y="100" text-anchor="middle" class="t-sub-s">API 閘道</text>
+      </g>
+      <!-- 4 component -->
+      <g>
+        <rect x="486" y="26" width="56" height="40" rx="3" class="node"/>
+        <rect x="479" y="34" width="14" height="8" rx="2" class="node"/>
+        <rect x="479" y="50" width="14" height="8" rx="2" class="node"/>
+        <text x="513" y="100" text-anchor="middle" class="t-sub-s">後端服務</text>
+      </g>
+      <!-- 5 chip -->
+      <g>
+        <rect x="632" y="24" width="56" height="42" rx="5" class="node"/>
+        <rect x="640" y="32" width="40" height="26" rx="3" class="screen"/>
+        <rect x="626" y="32" width="6" height="5" class="node"/><rect x="626" y="42" width="6" height="5" class="node"/><rect x="626" y="52" width="6" height="5" class="node"/>
+        <rect x="688" y="32" width="6" height="5" class="node"/><rect x="688" y="42" width="6" height="5" class="node"/><rect x="688" y="52" width="6" height="5" class="node"/>
+        <text x="660" y="100" text-anchor="middle" class="t-sub-s">AI 服務</text>
+      </g>
+      <!-- 6 cylinder -->
+      <g>
+        <path d="M781,30 L781,58 A 26,9 0 0 1 833,58 L833,30 Z" class="node"/>
+        <ellipse cx="807" cy="30" rx="26" ry="9" class="node"/>
+        <text x="807" y="100" text-anchor="middle" class="t-sub-s">資料庫／快取</text>
+      </g>
+      <!-- 7 rack -->
+      <g>
+        <rect x="923" y="22" width="60" height="46" rx="5" class="node"/>
+        <rect x="931" y="29" width="44" height="8" rx="2" class="screen"/>
+        <rect x="931" y="41" width="44" height="8" rx="2" class="screen"/>
+        <rect x="931" y="53" width="44" height="8" rx="2" class="screen"/>
+        <text x="953" y="100" text-anchor="middle" class="t-sub-s">實體伺服器</text>
+      </g>
+      <!-- 8 cloud -->
+      <g>
+        <path d="M1068,63 A 11,11 0 0 1 1068,43 A 14,14 0 0 1 1090,35 A 13,13 0 0 1 1113,40 A 16,16 0 0 1 1131,63 Z" class="node-ext"/>
+        <text x="1100" y="100" text-anchor="middle" class="t-sub-s">院外服務</text>
+      </g>
+      <!-- 9 document -->
+      <g>
+        <path d="M1219,22 H1275 V58 c -9,8 -19,-8 -28,0 c -9,8 -19,-8 -28,0 Z" class="node-legacy"/>
+        <text x="1247" y="100" text-anchor="middle" class="t-sub-s">既有系統（唯讀）</text>
+      </g>
+    </svg>
+    <div class="lines">
+      <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link"/><polygon points="40,1 52,6 40,11" class="mk-ink"/></svg>請求／資料寫入（前端或上游發起）</span>
+      <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link-push"/><polygon points="40,1 52,6 40,11" class="mk-teal"/></svg>伺服器主動派送（前端不發問）</span>
+      <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link-ext"/><polygon points="40,1 52,6 40,11" class="mk-rust"/></svg>跨出醫院邊界（單向、去識別化）</span>
+    </div>
+  </section>
+
+  <!-- ================= PLATE 01 ================= -->
+  <section class="plate">
+    <div class="plate-head">
+      <span class="no">圖版 01</span>
+      <h3>全端架構與裝置綁定</h3>
+      <p class="claim">病人不登入：Session Token 由後端「推」到平板，前端永遠碰不到資料庫。兩個 PWA 都跑在院內裝置上。</p>
+    </div>
+    <figure>
+      <svg viewBox="0 -76 1320 1026" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、API Gateway，以及裝置綁定服務、AI Proxy、推播通知服務三個元件與醫院資料庫、即時狀態快取；跨出院內網路的請求有兩條，起點都在後端——AI Proxy 單向呼叫外部 LLM API，推播通知服務把不含內容的訊號送給推播中繼服務，再由推播中繼服務把通知回送給護理端 PWA。">
+        <defs>
+          <marker id="p1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
+          <marker id="p1-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
+          <marker id="p1-rust" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-rust"/></marker>
+          <path id="p1-cloud" d="M 45,118 A 38,38 0 0 1 45,50 A 46,46 0 0 1 120,22 A 44,44 0 0 1 196,40 A 55,55 0 0 1 255,118 Z"/>
+        </defs>
+
+        <!-- zone：與圖版 02 是同一個框，兩個 PWA 都在院內網段上 -->
+        <rect x="16" y="-40" width="1288" height="770" rx="18" class="zone"/>
+        <rect x="44" y="-54" width="122" height="28" class="chip"/>
+        <text x="56" y="-34" class="t-zone">醫院院內網路</text>
+
+        <!-- links (drawn under nodes) -->
+        <path d="M 320,138 V 200" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 960,138 V 200" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 320,292 V 344" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 640,292 V 344" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 960,292 V 344" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 320,470 V 532" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 560,470 V 506 H 500 V 532" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 960,470 V 532" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 700,470 V 802" class="link-ext" marker-end="url(#p1-rust)"/>
+        <path d="M 178,412 H 64 V 70 H 182" class="link-push" marker-end="url(#p1-teal)"/>
+        <path d="M 1090,440 H 1110 V 800" class="link-ext" marker-end="url(#p1-rust)"/>
+        <path d="M 1200,868 H 1256 V 70 H 1098" class="link-push" marker-end="url(#p1-teal)"/>
+
+        <!-- link labels -->
+        <text x="332" y="160" class="t-lbl">存取請求</text>
+        <text x="972" y="160" class="t-lbl">指派・審閱</text>
+        <text x="652" y="326" class="t-lbl">已驗證請求・路由至內部服務</text>
+        <text x="332" y="508" class="t-lbl">寫入綁定與稽核軌跡</text>
+        <text x="572" y="498" class="t-lbl">讀取匿名化資料</text>
+        <text x="972" y="506" class="t-lbl">更新病人／裝置狀態</text>
+        <text x="712" y="762" class="t-lbl-ext">去識別化文字・單向呼叫</text>
+        <text x="1122" y="762" class="t-lbl-ext">通知訊號・不含內容</text>
+        <text x="180" y="56" text-anchor="end" class="t-lbl-teal">派送限時 Session Token</text>
+        <text x="1100" y="56" class="t-lbl-teal">Web Push 求助與狀態通知</text>
+
+        <!-- 病人端 PWA : tablet -->
+        <rect x="190" y="28" width="260" height="110" rx="16" class="node"/>
+        <rect x="204" y="42" width="232" height="64" rx="6" class="screen"/>
+        <rect x="296" y="122" width="48" height="5" rx="2.5" class="dot"/>
+        <text x="320" y="73" text-anchor="middle" class="t-title">病人端 PWA</text>
+        <text x="320" y="96" text-anchor="middle" class="t-sub">無登入・等待指派畫面</text>
+
+        <!-- 護理端 PWA : workstation -->
+        <rect x="830" y="28" width="260" height="88" rx="8" class="node"/>
+        <rect x="842" y="40" width="236" height="64" rx="4" class="screen"/>
+        <polygon points="940,116 980,116 990,134 930,134" class="node"/>
+        <rect x="915" y="131" width="90" height="6" rx="3" class="node"/>
+        <text x="960" y="67" text-anchor="middle" class="t-title">護理端 PWA</text>
+        <text x="960" y="92" text-anchor="middle" class="t-sub">主控台・排班／指派</text>
+
+        <!-- Gateway : hexagon -->
+        <polygon points="200,251 248,210 1032,210 1080,251 1032,292 248,292" class="node-hub"/>
+        <text x="640" y="245" text-anchor="middle" class="t-title">後端 API Gateway ／ BFF</text>
+        <text x="640" y="270" text-anchor="middle" class="t-sub">驗證・路由・存取控制｜唯一對外入口</text>
+
+        <!-- 裝置綁定服務 : UML component -->
+        <rect x="190" y="350" width="260" height="120" rx="4" class="node"/>
+        <rect x="178" y="372" width="24" height="16" rx="2" class="node"/>
+        <rect x="178" y="404" width="24" height="16" rx="2" class="node"/>
+        <text x="326" y="398" text-anchor="middle" class="t-title">裝置綁定服務</text>
+        <text x="326" y="422" text-anchor="middle" class="t-sub-s">核發限時 Session Token</text>
+        <text x="326" y="443" text-anchor="middle" class="t-sub-s">病人 ID＋平板序號＋時段</text>
+
+        <!-- AI Proxy : chip -->
+        <rect x="510" y="350" width="260" height="120" rx="10" class="node"/>
+        <rect x="524" y="364" width="232" height="92" rx="6" class="screen"/>
+        <rect x="498" y="374" width="12" height="9" rx="2" class="node"/>
+        <rect x="498" y="405" width="12" height="9" rx="2" class="node"/>
+        <rect x="498" y="436" width="12" height="9" rx="2" class="node"/>
+        <rect x="770" y="374" width="12" height="9" rx="2" class="node"/>
+        <rect x="770" y="405" width="12" height="9" rx="2" class="node"/>
+        <rect x="770" y="436" width="12" height="9" rx="2" class="node"/>
+        <text x="640" y="398" text-anchor="middle" class="t-title">AI Proxy</text>
+        <text x="640" y="422" text-anchor="middle" class="t-sub-s">封裝 LLM 呼叫</text>
+        <text x="640" y="443" text-anchor="middle" class="t-sub-s">去識別化唯一收斂點</text>
+
+        <!-- 推播通知服務 : UML component -->
+        <rect x="830" y="350" width="260" height="120" rx="4" class="node"/>
+        <rect x="818" y="372" width="24" height="16" rx="2" class="node"/>
+        <rect x="818" y="404" width="24" height="16" rx="2" class="node"/>
+        <text x="966" y="398" text-anchor="middle" class="t-title">推播通知服務</text>
+        <text x="966" y="422" text-anchor="middle" class="t-sub-s">Web Push</text>
+        <text x="966" y="443" text-anchor="middle" class="t-sub-s">求助・狀態即時通知</text>
+
+        <!-- 醫院資料庫 : cylinder -->
+        <path d="M 260,564 L 260,666 A 140,24 0 0 0 540,666 L 540,564 Z" class="node"/>
+        <ellipse cx="400" cy="564" rx="140" ry="24" class="node"/>
+        <text x="400" y="618" text-anchor="middle" class="t-title">醫院資料庫</text>
+        <text x="400" y="642" text-anchor="middle" class="t-sub">匿名化・含綁定稽核軌跡</text>
+
+        <!-- 即時狀態快取 : cylinder -->
+        <path d="M 840,562 L 840,668 A 120,22 0 0 0 1080,668 L 1080,562 Z" class="node"/>
+        <ellipse cx="960" cy="562" rx="120" ry="22" class="node"/>
+        <text x="960" y="618" text-anchor="middle" class="t-title-s">即時狀態快取</text>
+        <text x="960" y="641" text-anchor="middle" class="t-sub-s">供多病人即時總覽</text>
+
+        <!-- 外部 LLM : cloud -->
+        <use href="#p1-cloud" x="0" y="0" transform="translate(550,790)" class="node-ext"/>
+        <text x="700" y="858" text-anchor="middle" class="t-title-ext">外部 LLM API</text>
+        <text x="700" y="882" text-anchor="middle" class="t-sub">不接收病人可識別資訊</text>
+
+        <!-- 推播中繼服務 : cloud -->
+        <use href="#p1-cloud" x="0" y="0" transform="translate(960,790)" class="node-ext"/>
+        <text x="1110" y="858" text-anchor="middle" class="t-title-ext">推播中繼服務</text>
+        <text x="1110" y="882" text-anchor="middle" class="t-sub">FCM／APNs・不帶通知內容</text>
+      </svg>
+      <figcaption>綠色虛線是反方向的：平板拿到 Session Token，不是因為它去要，而是護理師指派後由後端派送。護理端那條綠色虛線繞經推播中繼服務，是全圖唯一由院外回送院內的線。</figcaption>
+    </figure>
+  </section>
+
+  <!-- ================= PLATE 02 ================= -->
+  <section class="plate">
+    <div class="plate-head">
+      <span class="no">圖版 02</span>
+      <h3>實體架構與網路分區</h3>
+      <p class="claim">院內裝置與資料庫都不主動對外呼叫；唯一對外出口是應用伺服器的兩條線。</p>
+    </div>
+    <figure>
+      <svg viewBox="0 0 1240 1020" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的病人 Kiosk 平板、護理站的護理端裝置、以及機房內的 MDM 伺服器、應用伺服器、醫院資料庫與唯讀整合的 HIS/EMR；公有雲區的外部 LLM API 與推播中繼服務僅由應用伺服器單向呼叫，推播中繼服務再把不含內容的通知回送給護理端裝置。">
+        <defs>
+          <marker id="p2-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
+          <marker id="p2-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
+          <marker id="p2-rust" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-rust"/></marker>
+          <path id="p2-cloud" d="M 45,118 A 38,38 0 0 1 45,50 A 46,46 0 0 1 120,22 A 44,44 0 0 1 196,40 A 55,55 0 0 1 255,118 Z"/>
+        </defs>
+
+        <!-- zones -->
+        <rect x="50" y="40" width="1140" height="760" rx="20" class="zone"/>
+        <rect x="80" y="95" width="500" height="185" rx="14" class="zone"/>
+        <rect x="640" y="95" width="520" height="185" rx="14" class="zone"/>
+        <rect x="80" y="345" width="1080" height="315" rx="14" class="zone"/>
+        <rect x="250" y="825" width="810" height="165" rx="14" class="zone-ext"/>
+
+        <rect x="74" y="26" width="152" height="28" class="chip"/>
+        <text x="86" y="46" class="t-zone">醫院院內網路</text>
+        <rect x="104" y="82" width="130" height="26" class="chip"/>
+        <text x="116" y="100" class="t-zone">透析治療區</text>
+        <rect x="664" y="82" width="168" height="26" class="chip"/>
+        <text x="676" y="100" class="t-zone">護理站／行政區</text>
+        <rect x="104" y="332" width="200" height="26" class="chip"/>
+        <text x="116" y="350" class="t-zone">醫院機房／伺服器室</text>
+        <rect x="566" y="812" width="212" height="26" class="chip"/>
+        <text x="578" y="830" class="t-zone-ext">外部網際網路（公有雲）</text>
+
+        <!-- links -->
+        <path d="M 300,262 V 302 H 440 V 414" class="link" marker-end="url(#p2-ink)"/>
+        <path d="M 760,262 V 322 H 530 V 414" class="link" marker-end="url(#p2-ink)"/>
+        <path d="M 210,420 V 268" class="link" marker-end="url(#p2-ink)"/>
+        <path d="M 590,520 H 684" class="link" marker-end="url(#p2-ink)"/>
+        <path d="M 560,580 V 618 H 1040 V 582" class="link" marker-end="url(#p2-ink)"/>
+        <path d="M 420,580 V 872" class="link-ext" marker-end="url(#p2-rust)"/>
+        <path d="M 500,580 V 700 H 880 V 872" class="link-ext" marker-end="url(#p2-rust)"/>
+        <path d="M 970,912 H 1175 V 290 H 902 V 250" class="link-push" marker-end="url(#p2-teal)"/>
+
+        <text x="312" y="294" class="t-lbl">HTTPS・院內網段</text>
+        <text x="748" y="314" text-anchor="end" class="t-lbl">HTTPS・院內網段</text>
+        <text x="196" y="300" text-anchor="end" class="t-lbl">註冊／遠端鎖定</text>
+        <text x="637" y="472" text-anchor="middle" class="t-lbl">資料存取</text>
+        <text x="637" y="492" text-anchor="middle" class="t-lbl">Repository 層</text>
+        <text x="800" y="610" text-anchor="middle" class="t-lbl">唯讀查詢・不寫回</text>
+        <text x="408" y="742" text-anchor="end" class="t-lbl-ext">去識別化文字</text>
+        <text x="700" y="688" text-anchor="middle" class="t-lbl-ext">通知訊號・不含內容</text>
+        <text x="1160" y="742" text-anchor="end" class="t-lbl-teal">推播下行・回送護理端</text>
+        <text x="520" y="750" class="t-lbl">院內裝置與資料庫都不主動對外呼叫，唯一對外出口為應用伺服器</text>
+
+        <!-- 病人 Kiosk 平板 x15 : stacked tablets -->
+        <rect x="146" y="136" width="180" height="112" rx="14" class="ghost"/>
+        <rect x="153" y="143" width="180" height="112" rx="14" class="ghost"/>
+        <rect x="160" y="150" width="180" height="112" rx="14" class="node"/>
+        <rect x="172" y="162" width="156" height="66" rx="5" class="screen"/>
+        <rect x="234" y="245" width="32" height="4" rx="2" class="dot"/>
+        <text x="250" y="190" text-anchor="middle" class="t-title-s">病人 Kiosk 平板</text>
+        <text x="250" y="212" text-anchor="middle" class="t-sub-s">15 台・無登入介面</text>
+        <text x="372" y="176" class="t-sub-s">MDM 納管・Kiosk 鎖定</text>
+        <text x="372" y="202" class="t-sub-s">僅開放單一 PWA 網址</text>
+        <text x="372" y="228" class="t-sub-s">遺失可遠端鎖定／清除</text>
+
+        <!-- 護理端裝置 : monitor + phone -->
+        <rect x="660" y="150" width="200" height="88" rx="8" class="node"/>
+        <rect x="670" y="160" width="180" height="62" rx="4" class="screen"/>
+        <polygon points="745,238 775,238 785,254 735,254" class="node"/>
+        <rect x="725" y="252" width="70" height="6" rx="3" class="node"/>
+        <rect x="880" y="170" width="44" height="76" rx="9" class="node"/>
+        <rect x="886" y="178" width="32" height="56" rx="3" class="screen"/>
+        <text x="760" y="188" text-anchor="middle" class="t-title-s">護理端裝置</text>
+        <text x="760" y="210" text-anchor="middle" class="t-sub-s">工作站／平板／手機</text>
+        <text x="950" y="176" class="t-sub-s">響應式介面</text>
+        <text x="950" y="202" class="t-sub-s">排班・指派・簽核</text>
+        <text x="950" y="228" class="t-sub-s">多病人即時總覽</text>
+
+        <!-- MDM 伺服器 : rack -->
+        <rect x="110" y="420" width="200" height="160" rx="8" class="node"/>
+        <rect x="126" y="438" width="168" height="14" rx="3" class="screen"/>
+        <rect x="126" y="460" width="168" height="14" rx="3" class="screen"/>
+        <rect x="126" y="482" width="168" height="14" rx="3" class="screen"/>
+        <circle cx="282" cy="445" r="3" class="dot"/><circle cx="282" cy="467" r="3" class="dot"/><circle cx="282" cy="489" r="3" class="dot"/>
+        <text x="210" y="534" text-anchor="middle" class="t-title-s">MDM 伺服器</text>
+        <text x="210" y="558" text-anchor="middle" class="t-sub-s">裝置註冊／鎖定</text>
+
+        <!-- 應用伺服器 : rack (hub) -->
+        <rect x="370" y="420" width="220" height="160" rx="8" class="node-hub"/>
+        <rect x="388" y="438" width="184" height="14" rx="3" class="screen"/>
+        <rect x="388" y="460" width="184" height="14" rx="3" class="screen"/>
+        <rect x="388" y="482" width="184" height="14" rx="3" class="screen"/>
+        <circle cx="560" cy="445" r="3" class="dot"/><circle cx="560" cy="467" r="3" class="dot"/><circle cx="560" cy="489" r="3" class="dot"/>
+        <text x="480" y="534" text-anchor="middle" class="t-title">應用伺服器</text>
+        <text x="480" y="558" text-anchor="middle" class="t-sub-s">＝圖版 01 的整層後端</text>
+
+        <!-- 醫院資料庫 : cylinder -->
+        <path d="M 690,442 L 690,558 A 100,22 0 0 0 890,558 L 890,442 Z" class="node"/>
+        <ellipse cx="790" cy="442" rx="100" ry="22" class="node"/>
+        <text x="790" y="496" text-anchor="middle" class="t-title-s">醫院資料庫</text>
+        <text x="790" y="520" text-anchor="middle" class="t-sub-s">含即時狀態快取</text>
+
+        <!-- HIS／EMR : document -->
+        <path d="M 940,420 H 1140 V 556 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 Z" class="node-legacy"/>
+        <text x="1040" y="484" text-anchor="middle" class="t-title-legacy">HIS／EMR</text>
+        <text x="1040" y="508" text-anchor="middle" class="t-sub-s">既有系統・唯讀整合</text>
+
+        <!-- clouds -->
+        <use href="#p2-cloud" transform="translate(280,860) scale(0.92)" class="node-ext"/>
+        <text x="418" y="918" text-anchor="middle" class="t-title-ext">外部 LLM API</text>
+        <text x="418" y="942" text-anchor="middle" class="t-sub-s">不存病人識別資訊</text>
+        <use href="#p2-cloud" transform="translate(742,860) scale(0.92)" class="node-ext"/>
+        <text x="880" y="918" text-anchor="middle" class="t-title-ext">推播中繼服務</text>
+        <text x="880" y="942" text-anchor="middle" class="t-sub-s">FCM／APNs</text>
+      </svg>
+      <figcaption>沒畫出來的線和畫出來的一樣重要：平板、護理端裝置、資料庫都沒有任何一條主動打出去的線。唯一由院外進來的是推播中繼服務回送護理端的下行通知。</figcaption>
+    </figure>
+  </section>
+
+  <footer>
+    依據 SRS §4.3／§4.4／§7 與資料庫使用規範 §2／§3／§4 重繪
+  </footer>
+
+</div>

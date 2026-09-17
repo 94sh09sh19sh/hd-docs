@@ -1,0 +1,2047 @@
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="0909 定版">
+      
+      
+      
+        <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/0909/0909/requirements/srs/">
+      
+      
+        <link rel="prev" href="../fde-assessment/">
+      
+      
+        <link rel="next" href="../database-policy/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>血液透析中心平板照護輔助系統 — 軟體需求規格書（SRS） - 血液透析中心平板照護輔助系統</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#血液透析中心平板照護輔助系統--軟體需求規格書srs" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-header__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            血液透析中心平板照護輔助系統
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              血液透析中心平板照護輔助系統 — 軟體需求規格書（SRS）
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換為深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為淺色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換為淺色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-nav__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    血液透析中心平板照護輔助系統
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析中心平板照護輔助系統 — 進度首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    每週紀錄
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0909 週報 — Iteration 1＋2 完成、核心流程可完整執行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析中心平板照護輔助系統 — 開發進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析平板照護輔助系統 — 技術進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    需求文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    需求文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fde-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析中心平板專案：FDE數位化/數位優化評估報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析中心平板照護輔助系統 — 軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析中心平板照護輔助系統 — 軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-文件目的與範圍" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 文件目的與範圍
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-名詞定義與縮寫" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 名詞定義與縮寫
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-系統總覽" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 系統總覽
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 系統總覽">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-使用者角色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 使用者角色
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-系統邊界" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 系統邊界
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-使用者角色與權限模型本版修正重點" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 使用者角色與權限模型（本版修正重點）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 使用者角色與權限模型（本版修正重點）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-修正原則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 修正原則
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-權限矩陣節錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 權限矩陣（節錄）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-裝置與病人綁定流程取代原病人自行登入設計" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 裝置與病人綁定流程（取代原「病人自行登入」設計）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-例外情況" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 例外情況
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-功能性需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 功能性需求
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 功能性需求">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-病人端" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 病人端
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-護理端" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 護理端
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-系統管理" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 系統管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-非功能性需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 非功能性需求
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-系統架構需求摘要詳見附圖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 系統架構需求（摘要，詳見附圖）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-資料治理與法規遵循需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 資料治理與法規遵循需求
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-裝置管理需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 裝置管理需求
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-假設與限制" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 假設與限制
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-未來擴充項目" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 未來擴充項目
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#附錄a十大工作區塊分類節錄自前期評估" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附錄A：十大工作區塊分類（節錄自前期評估）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析平板照護輔助系統 — 資料庫使用規範（測試階段：Supabase）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementation-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析中心平板照護輔助系統 — 實作規格書（給AI Coding Agent）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架構圖
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    參考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    參考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data-dictionary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析平板照護輔助系統 — 資料字典
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tech-stack-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    這套系統是用什麼蓋的 — 給非技術背景的人
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手動測試
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    手動測試
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/manual-test-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    血液透析平板照護輔助系統 — 完整手動測試手冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    維護流程
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    維護流程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/HOWTO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄維護流程（人用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/AGENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件維護作業指示（agent 用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-文件目的與範圍" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 文件目的與範圍
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-名詞定義與縮寫" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 名詞定義與縮寫
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-系統總覽" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 系統總覽
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 系統總覽">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-使用者角色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 使用者角色
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-系統邊界" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 系統邊界
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-使用者角色與權限模型本版修正重點" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 使用者角色與權限模型（本版修正重點）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 使用者角色與權限模型（本版修正重點）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-修正原則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 修正原則
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-權限矩陣節錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 權限矩陣（節錄）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-裝置與病人綁定流程取代原病人自行登入設計" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 裝置與病人綁定流程（取代原「病人自行登入」設計）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-例外情況" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 例外情況
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-功能性需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 功能性需求
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 功能性需求">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-病人端" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 病人端
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-護理端" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 護理端
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-系統管理" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 系統管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-非功能性需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 非功能性需求
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-系統架構需求摘要詳見附圖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 系統架構需求（摘要，詳見附圖）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-資料治理與法規遵循需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 資料治理與法規遵循需求
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-裝置管理需求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 裝置管理需求
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-假設與限制" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 假設與限制
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-未來擴充項目" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 未來擴充項目
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#附錄a十大工作區塊分類節錄自前期評估" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附錄A：十大工作區塊分類（節錄自前期評估）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="血液透析中心平板照護輔助系統--軟體需求規格書srs">血液透析中心平板照護輔助系統 — 軟體需求規格書（SRS）<a class="headerlink" href="#血液透析中心平板照護輔助系統--軟體需求規格書srs" title="Permanent link">&para;</a></h1>
+<p>版本：v1.0　文件狀態：草案　適用對象：FDE工程團隊、醫院資訊室、護理部、法務/法規合規承辦人</p>
+<hr />
+<h2 id="1-文件目的與範圍">1. 文件目的與範圍<a class="headerlink" href="#1-文件目的與範圍" title="Permanent link">&para;</a></h2>
+<p>本文件定義「血液透析中心平板照護輔助系統」之軟體需求，涵蓋病人端15台Android平板、護理端多裝置應用、後端服務、AI輔助功能與資料治理規範。系統目標為在不取代任何臨床判斷與侵入性操作的前提下，將可數位化與可數位優化的護理工作流程（詳見附錄A十大工作區塊分類）予以實作。</p>
+<p>本文件<strong>不涵蓋</strong>：機台參數整合、藥局/HIS系統雙向寫入、透析機台硬體通訊協定（列為未來擴充項目）。</p>
+<hr />
+<h2 id="2-名詞定義與縮寫">2. 名詞定義與縮寫<a class="headerlink" href="#2-名詞定義與縮寫" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>詞彙</th>
+<th>定義</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FDE</td>
+<td>Forward Deployed Engineer，本專案之技術實作與現場迭代工程師</td>
+</tr>
+<tr>
+<td>PWA</td>
+<td>Progressive Web App，具離線快取與安裝能力之網頁式應用</td>
+</tr>
+<tr>
+<td>SaMD</td>
+<td>Software as a Medical Device，軟體醫療器材，本專案任二、四、九、八任務中之風險分層/預警/劑量建議功能可能觸及此範疇</td>
+</tr>
+<tr>
+<td>裝置綁定</td>
+<td>將特定病人身分與特定平板序號、當次療程時段建立一次性關聯之機制</td>
+</tr>
+<tr>
+<td>護理站主控台</td>
+<td>護理端應用中，具備排班管理、裝置指派、緊急總覽等管理功能之介面模組</td>
+</tr>
+<tr>
+<td>Session Token</td>
+<td>綁定後由後端核發、限時且限裝置使用之存取憑證</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-系統總覽">3. 系統總覽<a class="headerlink" href="#3-系統總覽" title="Permanent link">&para;</a></h2>
+<h3 id="31-使用者角色">3.1 使用者角色<a class="headerlink" href="#31-使用者角色" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>病人</td>
+<td>使用病人端平板進行症狀回報、衛教學習、求助；<strong>不具備任何登入或身分選擇操作</strong></td>
+</tr>
+<tr>
+<td>護理師</td>
+<td>使用護理端裝置進行排班指派、即時監看、記錄審閱簽核、緊急處置</td>
+</tr>
+<tr>
+<td>護理站管理者</td>
+<td>具備額外權限：MDM裝置管理、帳號權限設定、稽核紀錄查詢</td>
+</tr>
+<tr>
+<td>FDE工程師 / 系統管理者</td>
+<td>系統部署、模型與規則調整、資料治理設定，不具臨床資料存取權</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-系統邊界">3.2 系統邊界<a class="headerlink" href="#32-系統邊界" title="Permanent link">&para;</a></h3>
+<p>系統由病人端PWA、護理端PWA、後端API Gateway、AI Proxy Service、裝置綁定服務、推播通知服務、醫院資料庫（匿名化）、即時狀態快取，以及經治理閘道呼叫之外部LLM API所組成。詳細架構見第7章與附圖。</p>
+<hr />
+<h2 id="4-使用者角色與權限模型本版修正重點">4. 使用者角色與權限模型（本版修正重點）<a class="headerlink" href="#4-使用者角色與權限模型本版修正重點" title="Permanent link">&para;</a></h2>
+<h3 id="41-修正原則">4.1 修正原則<a class="headerlink" href="#41-修正原則" title="Permanent link">&para;</a></h3>
+<p><strong>病人端平板不提供任何登入介面（無帳號、密碼、生物辨識、或病人自選身分清單）。</strong> 病人於平板上能存取的所有資料與功能，其存取權限之啟用，一律由護理師在護理站主控台或當班護理端裝置上，透過「裝置指派」動作觸發。此設計理由：</p>
+<ol>
+<li>病人在透析情境下（可能虛弱、視力不佳、認知負荷高）不適合承擔身分驗證責任</li>
+<li>平板為機構共用裝置，若允許病人自行選擇/切換身分，會產生資料誤植給錯病人的風險</li>
+<li>從法規遵循角度，臨床資料的存取授權應可追溯到「哪一位護理師、何時、為哪一位病人」核准，而非病人自證身分</li>
+</ol>
+<h3 id="42-權限矩陣節錄">4.2 權限矩陣（節錄）<a class="headerlink" href="#42-權限矩陣節錄" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>病人（平板）</th>
+<th>護理師</th>
+<th>護理站管理者</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>症狀回報、求助</td>
+<td>可（僅限已被指派之當次療程）</td>
+<td>檢視</td>
+<td>檢視</td>
+</tr>
+<tr>
+<td>衛教內容瀏覽/測驗</td>
+<td>可（已指派後）</td>
+<td>檢視完成度</td>
+<td>檢視完成度</td>
+</tr>
+<tr>
+<td>護理記錄審閱簽核</td>
+<td>不可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>裝置-病人指派/解除</td>
+<td>不可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>多病人即時總覽</td>
+<td>不可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>MDM裝置鎖定設定</td>
+<td>不可</td>
+<td>不可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>AI規則/模型參數調整</td>
+<td>不可</td>
+<td>不可</td>
+<td>不可（僅FDE）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-裝置與病人綁定流程取代原病人自行登入設計">4.3 裝置與病人綁定流程（取代原「病人自行登入」設計）<a class="headerlink" href="#43-裝置與病人綁定流程取代原病人自行登入設計" title="Permanent link">&para;</a></h3>
+<p><strong>前置條件</strong>：護理站已建立當日排班表（病人-療程時段對應）。</p>
+<ol>
+<li>病人到達透析中心，護理師於護理站主控台（或當班護理端裝置）選取當日排班中的病人</li>
+<li>護理師選擇欲指派之平板序號（可透過清單選取、掃描病人手環條碼、或掃描平板背面QR碼三種方式擇一）</li>
+<li>護理師確認指派後，請求送至後端<strong>裝置綁定服務（Device Binding Service）</strong></li>
+<li>裝置綁定服務核發一組<strong>限時Session Token</strong>，同時綁定「病人ID＋平板序號＋當次療程時段」三項，並透過安全通道推送至該平板</li>
+<li>平板在收到有效Session前，僅顯示中性等待畫面（例如「請由護理人員為您開始使用」），不顯示任何病人可識別資訊、不提供輸入欄位</li>
+<li>Session啟用後，平板僅能存取「本次已綁定病人」之資料與功能，無法切換查看其他病人</li>
+<li>Session失效條件（三者擇一觸發）：</li>
+<li>護理師於主控台執行「下機/結束」正常流程</li>
+<li>護理師手動於主控台提前解除綁定（如需更換平板或病人提前離開）</li>
+<li>超過療程時間上限（可設定，預設6小時）系統自動失效</li>
+<li>Session失效後，平板本地暫存資料需清除，並回復至「等待指派」狀態，避免前一位病人資料殘留給下一位使用者</li>
+<li>每一次綁定與解除動作，系統須記錄操作護理師帳號、時間戳、病人ID、平板序號，寫入稽核軌跡，供事後追溯與法規稽核</li>
+</ol>
+<h3 id="44-例外情況">4.4 例外情況<a class="headerlink" href="#44-例外情況" title="Permanent link">&para;</a></h3>
+<ul>
+<li>平板離線期間無法完成新綁定；若原本已有效Session且平板離線，症狀回報可暫存本地（IndexedDB），恢復連線後同步，但求助/緊急功能於離線期間需明確提示「目前無法即時通知護理站」</li>
+<li>若同一病人短時間內被誤指派至兩台平板，系統應偵測並阻擋第二次綁定，提示護理師「該病人已有進行中之綁定」</li>
+</ul>
+<hr />
+<h2 id="5-功能性需求">5. 功能性需求<a class="headerlink" href="#5-功能性需求" title="Permanent link">&para;</a></h2>
+<p>以下依前期六項「部分協助」任務深度拆解（病人端：任務二/四/五；護理端：任務七/八/九）整理為需求編號，並標註優先權（P0必要／P1次要）與SaMD風險註記。</p>
+<h3 id="51-病人端">5.1 病人端<a class="headerlink" href="#51-病人端" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>編號</th>
+<th>需求描述</th>
+<th>優先權</th>
+<th>SaMD風險</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-P01</td>
+<td>平板於未綁定狀態僅顯示中性等待畫面，無登入介面</td>
+<td>P0</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FR-P02</td>
+<td>已綁定後，提供結構化透析前症狀問卷（水腫、喘、發燒、出血等）</td>
+<td>P0</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FR-P03</td>
+<td>系統依病人歷史體重增幅/血壓趨勢，標註當日風險提示供護理師參考</td>
+<td>P1</td>
+<td><strong>高</strong>（風險分層輸出）</td>
+</tr>
+<tr>
+<td>FR-P04</td>
+<td>提供個人化衛教內容（依透析史、衛教完成紀錄動態生成），支援多語言</td>
+<td>P1</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FR-P05</td>
+<td>透析中定時彈出式症狀問卷，並可依歷史同時段症狀模式提前預警</td>
+<td>P1</td>
+<td><strong>高</strong>（預警輸出）</td>
+</tr>
+<tr>
+<td>FR-P06</td>
+<td>提供求助按鈕，觸發時自動附帶近期症狀趨勢摘要給護理端</td>
+<td>P0</td>
+<td>中（僅摘要呈現，非診斷）</td>
+</tr>
+<tr>
+<td>FR-P07</td>
+<td>下機後提供個人化離院衛教重點與自適應測驗，標記需加強衛教之知識點</td>
+<td>P1</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FR-P08</td>
+<td>情緒/滿意度回饋問卷，長期趨勢異常時建議轉介社工</td>
+<td>P2</td>
+<td>中</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-護理端">5.2 護理端<a class="headerlink" href="#52-護理端" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>編號</th>
+<th>需求描述</th>
+<th>優先權</th>
+<th>SaMD風險</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-N01</td>
+<td>護理站主控台支援當日排班建立與裝置指派（見4.3流程）</td>
+<td>P0</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FR-N02</td>
+<td>多病人即時狀態總覽儀表板，顯示各病人當前療程進度與異常提示</td>
+<td>P0</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FR-N03</td>
+<td>緊急通報接收，含病人症狀趨勢背景摘要，依嚴重度分級路由</td>
+<td>P0</td>
+<td>中</td>
+</tr>
+<tr>
+<td>FR-N04</td>
+<td>事件當下快速點選式記錄範本，事後由AI草擬敘述初稿供審閱</td>
+<td>P1</td>
+<td>無（AI僅草擬，護理師簽核）</td>
+</tr>
+<tr>
+<td>FR-N05</td>
+<td>護理記錄自動預填草稿（依病人自報資料），護理師審閱簽核取代重新輸入</td>
+<td>P1</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FR-N06</td>
+<td>每月/每週抽血與Hb/EPO趨勢儀表板，AI標註異常軌跡病人並提供劑量調整參考建議</td>
+<td>P1</td>
+<td><strong>高</strong>（劑量建議）</td>
+</tr>
+<tr>
+<td>FR-N07</td>
+<td>透析適足性（Kt/V、URR）自動計算與趨勢預測</td>
+<td>P1</td>
+<td>中</td>
+</tr>
+<tr>
+<td>FR-N08</td>
+<td>心理社會風險趨勢彙總與轉介建議</td>
+<td>P2</td>
+<td>中</td>
+</tr>
+<tr>
+<td>FR-N09</td>
+<td>SOP/藥品劑量查詢介面，僅限醫院既有文件範圍內回答</td>
+<td>P1</td>
+<td>中</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-系統管理">5.3 系統管理<a class="headerlink" href="#53-系統管理" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>編號</th>
+<th>需求描述</th>
+<th>優先權</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-S01</td>
+<td>MDM整合，支援裝置Kiosk鎖定、遠端註冊與解除註冊</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-S02</td>
+<td>所有裝置綁定/解除、資料存取、AI輸出使用情形均需寫入稽核軌跡</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-S03</td>
+<td>AI API呼叫一律經後端閘道轉發，平板不持有任何API金鑰</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-S04</td>
+<td>病人可識別資訊不得直接傳送至外部LLM服務</td>
+<td>P0</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-非功能性需求">6. 非功能性需求<a class="headerlink" href="#6-非功能性需求" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>類別</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>效能</td>
+<td>症狀回報送出至護理端接收延遲需&lt;5秒（正常網路狀況下）</td>
+</tr>
+<tr>
+<td>可用性</td>
+<td>病人端療程期間介面需穩定運作4小時以上不當機；護理端多裝置存取一致</td>
+</tr>
+<tr>
+<td>安全性</td>
+<td>Session Token限時效、限裝置；所有API呼叫需TLS加密；病人資料傳輸與儲存均需符合醫院PHI規範</td>
+</tr>
+<tr>
+<td>離線韌性</td>
+<td>衛教靜態內容可離線瀏覽；症狀回報可離線暫存並於恢復連線後同步；求助功能離線時需明確告知限制</td>
+</tr>
+<tr>
+<td>多語言</td>
+<td>衛教內容與介面至少支援中文（繁體）；可擴充其他語言</td>
+</tr>
+<tr>
+<td>可擴充性</td>
+<td>前後端架構需可延伸支援未來護理站Dashboard，共用同一套API層</td>
+</tr>
+<tr>
+<td>感染管制</td>
+<td>平板共用需搭配醫院訂定之消毒SOP（非軟體範疇，僅提示）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-系統架構需求摘要詳見附圖">7. 系統架構需求（摘要，詳見附圖）<a class="headerlink" href="#7-系統架構需求摘要詳見附圖" title="Permanent link">&para;</a></h2>
+<ul>
+<li>前端採PWA架構，病人端搭配MDM/Kiosk鎖定；護理端為響應式設計，涵蓋工作站/平板/手機</li>
+<li>後端採API Gateway/BFF作為唯一對外入口，內部區分裝置綁定服務、AI Proxy Service、推播通知服務</li>
+<li>資料層區分醫院資料庫（匿名化，含稽核軌跡）與即時狀態快取（供多病人即時總覽使用）</li>
+<li>外部LLM API為醫院內部網路邊界外之服務，僅由AI Proxy Service單向呼叫，不接收病人可識別資訊</li>
+<li>詳細軟體全端架構圖與系統實體架構圖見本文件隨附之架構圖</li>
+</ul>
+<hr />
+<h2 id="8-資料治理與法規遵循需求">8. 資料治理與法規遵循需求<a class="headerlink" href="#8-資料治理與法規遵循需求" title="Permanent link">&para;</a></h2>
+<ul>
+<li>任務二、四、五、七、八、九中標註「高」SaMD風險之功能（風險分層、預警、劑量建議），上線前須與醫院法務/資訊室確認是否落入TFDA醫療器材軟體認證範疇</li>
+<li>AI輸出於介面上須明確標示「僅供決策輔助，非診斷結果」</li>
+<li>所有AI呼叫、資料存取、裝置綁定/解除動作須留存可稽核之操作紀錄，保留期限依醫院規範</li>
+<li>病人可識別資訊（PII/PHI）不得以任何形式直接傳送至外部LLM服務商，一律經後端閘道去識別化處理</li>
+</ul>
+<hr />
+<h2 id="9-裝置管理需求">9. 裝置管理需求<a class="headerlink" href="#9-裝置管理需求" title="Permanent link">&para;</a></h2>
+<ul>
+<li>15台平板須以MDM（如Android Enterprise/Samsung Knox）納管，鎖定為單一PWA網址之Kiosk模式</li>
+<li>支援遠端裝置註冊、解除註冊、韌體/應用更新推送</li>
+<li>裝置遺失或異常時，護理站管理者可遠端鎖定或清除本地暫存資料</li>
+</ul>
+<hr />
+<h2 id="10-假設與限制">10. 假設與限制<a class="headerlink" href="#10-假設與限制" title="Permanent link">&para;</a></h2>
+<ul>
+<li>假設醫院已同意匿名化資料可用於AI模型訓練與推論</li>
+<li>假設透析中心具備穩定之院內Wi-Fi網路覆蓋</li>
+<li>不假設病人具備操作智慧型裝置之熟練度，介面需保持極簡</li>
+<li>機台參數整合、藥局系統雙向寫入列為未來擴充，本版不實作</li>
+</ul>
+<hr />
+<h2 id="11-未來擴充項目">11. 未來擴充項目<a class="headerlink" href="#11-未來擴充項目" title="Permanent link">&para;</a></h2>
+<ul>
+<li>護理站端Dashboard大螢幕儀表板</li>
+<li>與HIS/EMR既有系統之唯讀整合</li>
+<li>透析機台資料直接整合（需評估藍牙/序列埠通訊，屆時可能需升級為Flutter混合式架構）</li>
+</ul>
+<hr />
+<h2 id="附錄a十大工作區塊分類節錄自前期評估">附錄A：十大工作區塊分類（節錄自前期評估）<a class="headerlink" href="#附錄a十大工作區塊分類節錄自前期評估" title="Permanent link">&para;</a></h2>
+<p>見專案前期文件《FDE數位化/數位優化評估報告》，本SRS之功能性需求章節（第5章）即依該文件之六項「部分協助」任務深度拆解而來。</p>
+<hr />
+<h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>定版</th>
+<th>日期</th>
+<th>異動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0909</td>
+<td>2026-09-09</td>
+<td>首次定版</td>
+</tr>
+</tbody>
+</table>
+<p><a href="../../">← 回進度首頁</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
