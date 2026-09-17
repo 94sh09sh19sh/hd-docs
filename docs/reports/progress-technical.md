@@ -656,6 +656,6 @@ npm run check:egress        # 零院外連線盤點（不需後端）
 | 定版 | 日期 | 異動 |
 |---|---|---|
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/reports/progress-technical/) | 2026-09-16 | 改寫到迭代 6：封閉網路化、AI 輔助與護理記錄、求助處理與班表、閒置輪播與檔案匯入；資料庫改為 SQLite、推播改為院內 SSE 與常駐總覽螢幕，並換上重繪的架構圖 |
-| 0909 | 2026-09-09 | 首次定版 |
+| [0909](https://hackmd.io/@94sh09sh19sh/hd-report-tech-0909) | 2026-09-09 | 首次定版 |
 
 [← 回進度首頁](../index.md)

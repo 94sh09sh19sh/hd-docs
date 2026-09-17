@@ -1034,6 +1034,6 @@ npm run db:restore -- --from <BACKUP_DIR 裡的備份檔> --to <新的絕對路�
 | 定版 | 日期 | 異動 |
 |---|---|---|
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/testing/manual-test-guide/) | 2026-09-16 | 拆成主手冊＋迭代 3～6 四本分冊（共 410 項），§13 改為分冊索引；補齊環境建置缺口、路由表補到 107 條，§11 補上重置失敗留下 0 byte 資料庫的收拾方式 |
-| 0909 | 2026-09-09 | 首次定版 |
+| [0909](https://hackmd.io/@94sh09sh19sh/hd-testing-0909) | 2026-09-09 | 首次定版 |
 
 [← 回進度首頁](../index.md)
