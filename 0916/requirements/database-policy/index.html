@@ -1,0 +1,2978 @@
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="需求、進度、參考與測試文件">
+      
+      
+      
+        <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/0916/requirements/database-policy/">
+      
+      
+        <link rel="prev" href="../srs/">
+      
+      
+        <link rel="next" href="../implementation-spec/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>資料庫使用規範 - 血液透析中心平板照護輔助系統</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#血液透析平板照護輔助系統--資料庫使用規範sqlite" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-header__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            血液透析中心平板照護輔助系統
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              資料庫使用規範
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換為深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為淺色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換為淺色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-nav__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    血液透析中心平板照護輔助系統
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    每週紀錄
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0916 — 迭代 3～6 完成，全程留在院內網路
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0909 — Iteration 1＋2 完成、核心流程可完整執行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/archive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    臨床端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    技術端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    需求文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    需求文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fde-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDE 數位化評估報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料庫使用規範
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料庫使用規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-背景與核心原則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 背景與核心原則
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 背景與核心原則">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-0910-的重大變更" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 0910 的重大變更
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-核心原則三條順序即優先權" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 核心原則（三條，順序即優先權）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-為什麼是-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 為什麼是 SQLite
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 為什麼是 SQLite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-為什麼它在這個場景是對的選擇" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 為什麼它在這個場景是對的選擇
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-它換來的四個問題本規範第-79-條就是在處理這些" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 它換來的四個問題（本規範第 7～9 條就是在處理這些）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-agent-行為規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Agent 行為規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-資料庫存取必須收斂在後端一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 資料庫存取必須收斂在後端一層
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-身分驗證與-session-一律自建" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 身分驗證與 Session 一律自建
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-存取控制邏輯必須寫在後端應用層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 存取控制邏輯必須寫在後端應用層
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-統一資料存取層repository-層--orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 統一資料存取層（Repository 層 / ORM）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-schema-設計原則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Schema 設計原則
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Schema 設計原則">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-沿用-0909-版的六條約束" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 沿用 0909 版的六條約束
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-sqlite-特有的型別注意事項" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 SQLite 特有的型別注意事項
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-agent-行為規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Agent 行為規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sqlite-運作設定必開項不是建議" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. SQLite 運作設定（必開項，不是建議）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. SQLite 運作設定（必開項，不是建議）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-單一寫入者的實作要求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 單一寫入者的實作要求
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-檔案位置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 檔案位置
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-備份還原與留存期限" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 備份、還原與留存期限
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. 備份、還原與留存期限">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-備份" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 備份
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-留存期限0910-新增0909-版沒有規範" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 留存期限（0910 新增，0909 版沒有規範）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-加密與實體安全" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 加密與實體安全
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-測試資料規範" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 測試資料規範
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-營運與績效資料的蒐集限制0910-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 營運與績效資料的蒐集限制（0910 新增）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. 營運與績效資料的蒐集限制（0910 新增）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-資料分級" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 資料分級
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-目的外利用的禁止" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 目的外利用的禁止
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-個人層級資料的啟用流程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 個人層級資料的啟用流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-資料釋出要離開院內的內容" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. 資料釋出（要離開院內的內容）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. 資料釋出（要離開院內的內容）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-唯一合法的釋出管道" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 唯一合法的釋出管道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-對外報表的硬性規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 對外報表的硬性規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123-對外展示環境" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 對外展示環境
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-外部資料匯入輪播第三層與臨床數值" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. 外部資料匯入（輪播第三層與臨床數值）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-ai-相關資料的儲存" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. AI 相關資料的儲存
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-從-supabase-撤出一次性作業" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. 從 Supabase 撤出（一次性作業）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-快速檢查清單給-agent-的執行前自我檢查" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. 快速檢查清單（給 Agent 的執行前自我檢查）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-總結" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. 總結
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementation-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    實作規格書
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../open-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    尚待確認事項清冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架構圖
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    參考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    參考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data-dictionary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料字典
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tech-stack-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    這套系統是用什麼蓋的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手動測試
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    手動測試
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/manual-test-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整手動測試手冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    維護流程
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    維護流程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/HOWTO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄維護流程（人用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/AGENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件維護作業指示（agent 用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-背景與核心原則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 背景與核心原則
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 背景與核心原則">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-0910-的重大變更" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 0910 的重大變更
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-核心原則三條順序即優先權" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 核心原則（三條，順序即優先權）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-為什麼是-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 為什麼是 SQLite
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 為什麼是 SQLite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-為什麼它在這個場景是對的選擇" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 為什麼它在這個場景是對的選擇
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-它換來的四個問題本規範第-79-條就是在處理這些" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 它換來的四個問題（本規範第 7～9 條就是在處理這些）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-agent-行為規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Agent 行為規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-資料庫存取必須收斂在後端一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 資料庫存取必須收斂在後端一層
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-身分驗證與-session-一律自建" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 身分驗證與 Session 一律自建
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-存取控制邏輯必須寫在後端應用層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 存取控制邏輯必須寫在後端應用層
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-統一資料存取層repository-層--orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 統一資料存取層（Repository 層 / ORM）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-schema-設計原則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Schema 設計原則
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Schema 設計原則">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-沿用-0909-版的六條約束" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 沿用 0909 版的六條約束
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-sqlite-特有的型別注意事項" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 SQLite 特有的型別注意事項
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-agent-行為規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Agent 行為規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sqlite-運作設定必開項不是建議" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. SQLite 運作設定（必開項，不是建議）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. SQLite 運作設定（必開項，不是建議）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-單一寫入者的實作要求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 單一寫入者的實作要求
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-檔案位置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 檔案位置
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-備份還原與留存期限" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 備份、還原與留存期限
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. 備份、還原與留存期限">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-備份" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 備份
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-留存期限0910-新增0909-版沒有規範" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 留存期限（0910 新增，0909 版沒有規範）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-加密與實體安全" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 加密與實體安全
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-測試資料規範" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 測試資料規範
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-營運與績效資料的蒐集限制0910-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 營運與績效資料的蒐集限制（0910 新增）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. 營運與績效資料的蒐集限制（0910 新增）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-資料分級" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 資料分級
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-目的外利用的禁止" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 目的外利用的禁止
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-個人層級資料的啟用流程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 個人層級資料的啟用流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-資料釋出要離開院內的內容" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. 資料釋出（要離開院內的內容）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. 資料釋出（要離開院內的內容）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-唯一合法的釋出管道" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 唯一合法的釋出管道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-對外報表的硬性規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 對外報表的硬性規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123-對外展示環境" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 對外展示環境
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-外部資料匯入輪播第三層與臨床數值" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. 外部資料匯入（輪播第三層與臨床數值）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-ai-相關資料的儲存" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. AI 相關資料的儲存
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-從-supabase-撤出一次性作業" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. 從 Supabase 撤出（一次性作業）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-快速檢查清單給-agent-的執行前自我檢查" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. 快速檢查清單（給 Agent 的執行前自我檢查）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-總結" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. 總結
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="血液透析平板照護輔助系統--資料庫使用規範sqlite">血液透析平板照護輔助系統 — 資料庫使用規範（SQLite）<a class="headerlink" href="#血液透析平板照護輔助系統--資料庫使用規範sqlite" title="Permanent link">&para;</a></h1>
+<p>版本：v2.0　適用範圍：本專案所有開發者與 AI coding agents
+目的：測試階段與正式部署皆採 SQLite，確保資料全程留在應該在的機器上，且未來若情勢改變仍能低成本轉移</p>
+<p>正式環境以容器部署，本規範的每一條在容器裡怎麼落實，見《<a href="../deployment-spec/">部署規範</a>》；兩者衝突時，資料治理以本規範為準。</p>
+<hr />
+<h2 id="0-背景與核心原則">0. 背景與核心原則<a class="headerlink" href="#0-背景與核心原則" title="Permanent link">&para;</a></h2>
+<h3 id="01-0910-的重大變更">0.1 0910 的重大變更<a class="headerlink" href="#01-0910-的重大變更" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>項次</th>
+<th>0909 版</th>
+<th>0910 版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>測試階段資料庫</td>
+<td>Supabase（PostgreSQL，東京）</td>
+<td><strong>SQLite（開發者本機檔案）</strong></td>
+</tr>
+<tr>
+<td>正式環境資料庫</td>
+<td>醫院既有 MSSQL</td>
+<td><strong>SQLite（院內伺服器檔案）</strong></td>
+</tr>
+<tr>
+<td>主要防範的風險</td>
+<td>平台鎖定、資料流向院外服務商</td>
+<td><strong>單檔資料庫的實體風險、內部誤用、留存期限失控</strong></td>
+</tr>
+<tr>
+<td>Supabase 上的既有資料</td>
+<td>—</td>
+<td><strong>不保留，不遷移。</strong> 全為合成測試資料，直接捨棄</td>
+</tr>
+</tbody>
+</table>
+<p><strong>正式部署也是 SQLite，不接醫院資料庫。</strong> 這是本版最重要的前提變更：過去所有為了「未來要遷到 MSSQL」而設的限制，現在的理由變成「萬一哪天要遷，不要被卡死」——優先權下降，但規則保留（見第 6 條）。</p>
+<h3 id="02-核心原則三條順序即優先權">0.2 核心原則（三條，順序即優先權）<a class="headerlink" href="#02-核心原則三條順序即優先權" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>資料不離開它該在的機器。</strong> 開發階段是開發者本機，正式階段是院內伺服器。備份、匯出、除錯用的複製檔一律適用這條。</li>
+<li><strong>SQLite 只是一個檔案格式，不是系統邏輯的一部分。</strong> 所有驗證、存取控制、業務邏輯留在自建後端程式碼中。這一條從 0909 版原封不動繼承——當時防的是 Supabase 平台功能，現在防的是「反正是本機檔案，直接開來改一下」這種捷徑。</li>
+<li><strong>稽核軌跡是不可否認的紀錄。</strong> 它同時被拿去算護理師績效（見第 11 條），因此更不能開放修改或刪除。</li>
+</ol>
+<p>任何 AI agent 在協助開發時都必須遵守以下規則，即使 SQLite 官方文件、Prisma 文件或範例建議了更方便的做法。</p>
+<hr />
+<h2 id="1-為什麼是-sqlite">1. 為什麼是 SQLite<a class="headerlink" href="#1-為什麼是-sqlite" title="Permanent link">&para;</a></h2>
+<h3 id="11-為什麼它在這個場景是對的選擇">1.1 為什麼它在這個場景是對的選擇<a class="headerlink" href="#11-為什麼它在這個場景是對的選擇" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>條件</th>
+<th>為什麼 SQLite 合適</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>單一透析中心，15 台平板加數台護理端裝置</td>
+<td>併發寫入量極低。尖峰時段的寫入是「幾位病人同時送出問卷」，不是每秒數千筆</td>
+</tr>
+<tr>
+<td>所有資料不得離開醫院網路</td>
+<td>沒有資料庫伺服器就沒有資料庫連接埠，暴露面比架一台 PostgreSQL 小得多</td>
+</tr>
+<tr>
+<td>醫院資訊室不見得有餘力維運一台資料庫伺服器</td>
+<td>SQLite 沒有伺服器行程、沒有帳號設定、沒有版本升級停機</td>
+</tr>
+<tr>
+<td>備份要簡單到不會有人偷懶</td>
+<td>備份就是複製一個檔案</td>
+</tr>
+<tr>
+<td>讀多寫少</td>
+<td>儀表板、總覽、輪播全是讀取，SQLite 的單機讀取效能非常好</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-它換來的四個問題本規範第-79-條就是在處理這些">1.2 它換來的四個問題（本規範第 7～9 條就是在處理這些）<a class="headerlink" href="#12-它換來的四個問題本規範第-79-條就是在處理這些" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>問題</th>
+<th>後果</th>
+<th>對策條號</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>同時只允許一個寫入者</strong></td>
+<td>寫入尖峰會出現 <code>SQLITE_BUSY</code>，處理不當就是使用者看到操作失敗</td>
+<td>第 7 條</td>
+</tr>
+<tr>
+<td><strong>整個資料庫是一個檔案</strong></td>
+<td>有讀取權限的人可以整份複製帶走；檔案毀損就是全毀</td>
+<td>第 8、9 條</td>
+</tr>
+<tr>
+<td><strong>不適合放在網路磁碟</strong></td>
+<td>放在 SMB／NFS 上的 SQLite 檔案，其檔案鎖行為不可靠，會造成資料毀損</td>
+<td>第 7 條</td>
+</tr>
+<tr>
+<td><strong>沒有內建的使用者權限機制</strong></td>
+<td>誰能讀寫完全由作業系統檔案權限決定，粒度太粗</td>
+<td>第 4、9 條</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-agent-行為規則">1.3 Agent 行為規則<a class="headerlink" href="#13-agent-行為規則" title="Permanent link">&para;</a></h3>
+<ul>
+<li>不得為了方便額外引進 Firebase／Firestore、MongoDB 或任何 NoSQL 服務作為主要資料儲存。</li>
+<li>不得為了解決併發寫入問題而自行改用其他資料庫，遇到問題先看第 7 條的設定是否做齊。</li>
+<li>不得在專案中同時存在兩個資料儲存來源（例如一部分資料寫檔案、一部分寫資料庫）。</li>
+</ul>
+<hr />
+<h2 id="2-資料庫存取必須收斂在後端一層">2. 資料庫存取必須收斂在後端一層<a class="headerlink" href="#2-資料庫存取必須收斂在後端一層" title="Permanent link">&para;</a></h2>
+<p><strong>與 0909 版相同，且因為改用 SQLite 而更加不可妥協。</strong></p>
+<ul>
+<li><strong>禁止</strong>前端（病人端 PWA、護理端 PWA）以任何方式接觸資料庫檔案。</li>
+<li>所有資料流向必須是：<strong>前端 → 自建後端 API（API Gateway／BFF）→ SQLite 檔案</strong>。</li>
+<li>後端程式是唯一開啟資料庫檔案的常駐行程。不得有第二個常駐行程同時開啟同一個檔案做寫入（腳本與備份工具的例外見第 7、8 條）。</li>
+</ul>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>生成前端程式碼時，不得引入 <code>sql.js</code>、<code>wa-sqlite</code>、<code>better-sqlite3</code> 或任何在瀏覽器端操作 SQL 的套件。</li>
+<li>病人端的離線暫存仍使用 IndexedDB。那是<strong>送出佇列</strong>不是資料庫副本，只放「尚未送出的自報內容」，不得把伺服器端的資料鏡像下來。</li>
+<li>所有資料庫查詢／寫入邏輯只能出現在後端服務程式碼中。</li>
+</ul>
+<hr />
+<h2 id="3-身分驗證與-session-一律自建">3. 身分驗證與 Session 一律自建<a class="headerlink" href="#3-身分驗證與-session-一律自建" title="Permanent link">&para;</a></h2>
+<ul>
+<li>本系統的身分機制是「病人不登入，由護理師在護理站主控台觸發裝置綁定，核發限時 Session Token」；護理端則是工作 ID 加密碼、經審核後啟用。</li>
+<li>SQLite 沒有內建使用者系統，這反而讓規則變簡單：<strong>沒有任何現成機制可以依賴，全部自己實作，也就沒有平台鎖定的問題。</strong></li>
+<li>Session Token 的產生、驗證、失效邏輯由後端裝置綁定服務自行實作與管理；Token 明文不寫入資料庫，只留雜湊或 jti。</li>
+</ul>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>密碼一律雜湊儲存（bcrypt／argon2），不得明碼儲存。</li>
+<li>不得把「使用者是否有權限」的判斷放在資料庫層或檔案權限上（見第 4 條）。</li>
+<li>不得引進任何第三方託管的身分驗證服務——它們一律在院外，違反核心原則第 1 條。</li>
+</ul>
+<hr />
+<h2 id="4-存取控制邏輯必須寫在後端應用層">4. 存取控制邏輯必須寫在後端應用層<a class="headerlink" href="#4-存取控制邏輯必須寫在後端應用層" title="Permanent link">&para;</a></h2>
+<p>SQLite 沒有 Row Level Security，也沒有資料庫層級的使用者。這代表<strong>存取控制只有一個地方可以放：後端應用層</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>不得用來當存取控制的東西</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>作業系統檔案權限</td>
+<td>粒度只到「能不能開這個檔案」，無法表達「這位護理師能看哪幾位病人」</td>
+</tr>
+<tr>
+<td>SQLite 的 <code>ATTACH</code> 分庫</td>
+<td>把資料切到不同檔案不等於做了授權，只是讓查詢變複雜</td>
+</tr>
+<tr>
+<td>前端的畫面隱藏</td>
+<td>沒有顯示不等於沒有回傳。授權要發生在 API 回應之前</td>
+</tr>
+<tr>
+<td>SQL 檢視表（View）</td>
+<td>可作為輔助，但不得是唯一的授權機制</td>
+</tr>
+</tbody>
+</table>
+<p>本系統要求「存取授權可追溯到哪一位護理師、何時、為哪一位病人核准」（SRS 4.1），這個邏輯必須在自己可完全掌控、可稽核的後端程式碼中。</p>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>實作存取控制時，一律寫在後端應用邏輯（API 層的 authorization middleware／service 層）。</li>
+<li>每一個回傳病人資料的 API，都必須在查詢前檢查「當前呼叫者是否有權取得這一位病人的資料」，不得只靠「前端不會呼叫到」當作保護。</li>
+<li>新增任務一的管理與績效資料，授權規則比臨床資料更嚴（見第 11 條），不得沿用「登入即可看」的判斷。</li>
+</ul>
+<hr />
+<h2 id="5-統一資料存取層repository-層--orm">5. 統一資料存取層（Repository 層 / ORM）<a class="headerlink" href="#5-統一資料存取層repository-層--orm" title="Permanent link">&para;</a></h2>
+<ul>
+<li>使用 Prisma（本專案既有選擇）或自建 Repository 層包裝所有資料庫操作。</li>
+<li>業務邏輯程式碼中不得散落原生 SQL 字串，更不得出現 SQLite 方言。</li>
+</ul>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>新增資料庫操作時，一律透過既有 Repository/DAO 層的介面，不得在 controller、service、路由處理函式中直接嵌入查詢語法。</li>
+<li>確實需要原生 SQL 時（例如統計查詢），一律集中在 Repository 層的具名方法中，並在註解寫明「為什麼 ORM 表達不了」。</li>
+<li><strong>SQLite 專屬函式</strong>（<code>json_extract</code>、SQLite 版本的 <code>strftime</code>、<code>rowid</code> 等）不得出現在業務邏輯。統計查詢若不得不用，須在該方法上方註解標記 <code>SQLITE-SPECIFIC</code>，方便日後盤點。</li>
+</ul>
+<hr />
+<h2 id="6-schema-設計原則">6. Schema 設計原則<a class="headerlink" href="#6-schema-設計原則" title="Permanent link">&para;</a></h2>
+<h3 id="61-沿用-0909-版的六條約束">6.1 沿用 0909 版的六條約束<a class="headerlink" href="#61-沿用-0909-版的六條約束" title="Permanent link">&para;</a></h3>
+<p>改用 SQLite 之後，這六條的理由從「將來要遷到 MSSQL」變成「不要被任何一種資料庫綁死」，優先權下降但一條都不放寬：</p>
+<ol>
+<li><strong>不使用 Prisma enum</strong> — 所有列舉值都是 <code>TEXT</code>，合法值由 <code>@hd/shared</code> 常數與 class-validator 在應用層把關。</li>
+<li><strong>不使用 JSON 欄位承載結構化關聯資料</strong> — 一律正規化成資料表與外鍵。SQLite 雖然有 <code>json_extract</code>，但用了就等於把查詢邏輯埋進方言裡。</li>
+<li><strong>不使用任何資料庫專屬預設值</strong> — UUID 由 Prisma client 在應用層產生。</li>
+<li><strong>命名</strong>：欄位 <code>snake_case</code>，資料表名複數 <code>snake_case</code>。</li>
+<li><strong>稽核欄位不因階段而省略</strong> — 誰、何時、對誰、做了什麼，設計時就納入。</li>
+<li><strong>級聯路徑只留一條</strong> — 這一條原本是為 SQL Server 而設，SQLite 沒有這個限制。<strong>仍然保留</strong>，因為多條級聯刪除路徑本身就難以推理，跟哪一種資料庫無關。</li>
+</ol>
+<h3 id="62-sqlite-特有的型別注意事項">6.2 SQLite 特有的型別注意事項<a class="headerlink" href="#62-sqlite-特有的型別注意事項" title="Permanent link">&para;</a></h3>
+<p>SQLite 只有五種儲存類別（NULL、INTEGER、REAL、TEXT、BLOB），與 PostgreSQL 的差異必須知道：</p>
+<table>
+<thead>
+<tr>
+<th>情況</th>
+<th>SQLite 的行為</th>
+<th>本專案的做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>沒有原生 <code>BOOLEAN</code></td>
+<td>存成 0／1 的 INTEGER</td>
+<td>交給 Prisma 處理，程式端一律當 <code>Boolean</code> 用，不得直接比對 0／1</td>
+</tr>
+<tr>
+<td>沒有原生 <code>DATETIME</code></td>
+<td>Prisma 存成毫秒整數</td>
+<td><strong>一律以 UTC 寫入</strong>，顯示時才轉當地時間。已經踩過一次的坑：<code>scheduled_date</code> 用「當日 00:00 UTC」，這個慣例不要改</td>
+</tr>
+<tr>
+<td>沒有原生 <code>DECIMAL</code></td>
+<td>用 REAL（浮點數）會失去精度</td>
+<td><strong>任何劑量、體重、超過濾量一律不得用浮點數</strong>。改用整數存最小單位（例如公克、毫升），或存 TEXT 再於應用層轉換</td>
+</tr>
+<tr>
+<td>字串比對預設區分大小寫</td>
+<td><code>LIKE</code> 對 ASCII 不分大小寫，其餘分</td>
+<td>工作 ID、病歷號的唯一性檢查，一律在應用層先正規化（統一轉大寫或小寫）再寫入，不依賴資料庫的比對規則</td>
+</tr>
+<tr>
+<td>外鍵預設不強制</td>
+<td>不開 <code>foreign_keys</code> 就形同沒有外鍵</td>
+<td>見第 7 條，這是必開項</td>
+</tr>
+<tr>
+<td>沒有嚴格型別（除非用 STRICT 表）</td>
+<td>欄位可以塞進任何型別的值</td>
+<td>應用層驗證是唯一防線，class-validator 不可省略</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-agent-行為規則">6.3 Agent 行為規則<a class="headerlink" href="#63-agent-行為規則" title="Permanent link">&para;</a></h3>
+<ul>
+<li>設計或修改資料表時，需同時確認是否已涵蓋稽核軌跡所需欄位（誰、何時、對誰、做了什麼）。</li>
+<li>新增任何帶小數的臨床數值欄位前，先讀 6.2 的 <code>DECIMAL</code> 那一列，不得便宜行事用 <code>Float</code>。</li>
+<li>Prisma 的部分批次操作在 SQLite provider 上的支援與 PostgreSQL 不同，使用前先確認當前 Prisma 版本的支援情況，不要假設兩邊一樣。</li>
+</ul>
+<hr />
+<h2 id="7-sqlite-運作設定必開項不是建議">7. SQLite 運作設定（必開項，不是建議）<a class="headerlink" href="#7-sqlite-運作設定必開項不是建議" title="Permanent link">&para;</a></h2>
+<p>以下設定若沒做齊，系統在多人同時操作時一定會出問題。後端在開啟資料庫連線時必須全部套用：</p>
+<table>
+<thead>
+<tr>
+<th>設定</th>
+<th>值</th>
+<th>為什麼非做不可</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>journal_mode</code></td>
+<td><code>WAL</code></td>
+<td>預設模式下，一個寫入會擋住所有讀取。護理站總覽是持續讀取的畫面，不開 WAL 就會在有人送出問卷時整頁卡住</td>
+</tr>
+<tr>
+<td><code>foreign_keys</code></td>
+<td><code>ON</code></td>
+<td>SQLite 預設<strong>不</strong>強制外鍵。不開這個，schema 上的所有關聯形同虛設</td>
+</tr>
+<tr>
+<td><code>busy_timeout</code></td>
+<td>至少 5000（毫秒）</td>
+<td>遇到寫入衝突時等待而不是立刻失敗。沒設這個，尖峰時段會出現莫名其妙的操作失敗</td>
+</tr>
+<tr>
+<td><code>synchronous</code></td>
+<td><code>FULL</code>（正式環境）</td>
+<td>這是臨床紀錄，不接受「斷電後掉最後幾筆」。開發環境可放寬為 <code>NORMAL</code> 換取速度</td>
+</tr>
+</tbody>
+</table>
+<h3 id="71-單一寫入者的實作要求">7.1 單一寫入者的實作要求<a class="headerlink" href="#71-單一寫入者的實作要求" title="Permanent link">&para;</a></h3>
+<ul>
+<li>後端必須是<strong>唯一的寫入來源</strong>。不得同時執行第二個會寫入的行程，包含 <code>prisma studio</code>、手動開啟的 SQLite 命令列工具、資料修補腳本。</li>
+<li>需要跑資料修補腳本時，<strong>先停掉後端服務</strong>，跑完再啟動。這一條在正式環境是硬性規定。</li>
+<li>寫入交易要短。不得在一個交易裡面呼叫語言模型或等待外部回應——那會把唯一的寫入位置佔住好幾秒。</li>
+<li>長時間的統計查詢（管理儀表板、對外報表）應在<strong>唯讀連線</strong>上執行，避免拿到寫入鎖。</li>
+</ul>
+<h3 id="72-檔案位置">7.2 檔案位置<a class="headerlink" href="#72-檔案位置" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>正式環境</strong>：資料庫檔案放在院內伺服器的<strong>本機磁碟</strong>，不得放在任何網路磁碟（SMB／NFS／雲端同步資料夾）。SQLite 的檔案鎖在網路檔案系統上不可靠，這是資料毀損最常見的原因。</li>
+<li><strong>開發環境</strong>：放在專案目錄外的固定路徑，並且<strong>必須加進 <code>.gitignore</code></strong>。資料庫檔案永遠不進版控。</li>
+<li>WAL 模式會另外產生 <code>-wal</code> 與 <code>-shm</code> 兩個檔案。它們與主檔是一組，複製、搬移、備份時不得只拿主檔。</li>
+</ul>
+<p><strong>0912 補充：容器化之後這一條怎麼落實。</strong> 正式環境以容器部署（《<a href="../deployment-spec/">部署規範</a>》DEP-07），本條規則一字未改，但要換個講法才對得上：</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>容器化後的具體做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>放在本機磁碟</td>
+<td>以<strong>繫結掛載</strong>把主機 NVMe 上的目錄掛進容器。不得放在映像檔層裡（容器一重建就沒了），也不得使用任何走網路的儲存驅動（DEP-08）</td>
+</tr>
+<tr>
+<td><code>-wal</code>／<code>-shm</code> 與主檔是一組</td>
+<td>三個檔案必須落在<strong>同一個掛載點</strong>，不得分開掛載（DEP-09）</td>
+</tr>
+<tr>
+<td>後端是唯一寫入行程</td>
+<td>不得同時啟動兩個後端容器指向同一個資料庫檔案。備份與資料修補走 <code>docker exec</code> 進入既有容器，不另起第二個（DEP-10）</td>
+</tr>
+<tr>
+<td>檔案權限只給後端執行帳號</td>
+<td>容器以非 root 執行，掛載目錄的擁有者要與容器內的執行帳號一致（DEP-12）。正式主機與其他專案共用，這一條比單機時嚴重</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-備份還原與留存期限">8. 備份、還原與留存期限<a class="headerlink" href="#8-備份還原與留存期限" title="Permanent link">&para;</a></h2>
+<h3 id="81-備份">8.1 備份<a class="headerlink" href="#81-備份" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>要求</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>不得用檔案總管直接複製</strong></td>
+<td>服務執行中直接複製 <code>.db</code> 檔可能拿到不一致的狀態。一律用 SQLite 的線上備份機制（<code>VACUUM INTO</code> 或 <code>.backup</code> 指令）</td>
+</tr>
+<tr>
+<td><strong>備份也不能離開院內</strong></td>
+<td>備份檔與正本適用同一條規則。不得備到雲端硬碟、不得寄信、不得拷到個人隨身碟</td>
+</tr>
+<tr>
+<td><strong>至少每日一次，保留數個世代</strong></td>
+<td>單檔資料庫的風險是「壞了就全壞」，只留最新一份等於沒有備份</td>
+</tr>
+<tr>
+<td><strong>備份目的地必須是院內另一台機器</strong></td>
+<td>0912 收緊。正式主機為 DGX Spark，沒有備援電源也沒有磁碟陣列，同機備份擋不住整機故障（DEP-06）</td>
+</tr>
+<tr>
+<td><strong>定期演練還原</strong></td>
+<td>沒有還原過的備份不算備份。建議每個里程碑至少實際還原一次到測試環境</td>
+</tr>
+<tr>
+<td><strong>備份動作寫入稽核軌跡</strong></td>
+<td>誰在什麼時候備份、備到哪裡</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-留存期限0910-新增0909-版沒有規範">8.2 留存期限（0910 新增，0909 版沒有規範）<a class="headerlink" href="#82-留存期限0910-新增0909-版沒有規範" title="Permanent link">&para;</a></h3>
+<p>無限期堆積本身就是風險。以下期限為建議值，<strong>實際期限須由醫院依《醫療法》病歷保留規定與個資法確認後定案</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>資料類別</th>
+<th>建議留存</th>
+<th>到期後</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>稽核軌跡</td>
+<td>依醫院規定，至少與病歷同期</td>
+<td>不刪除，轉為離線封存</td>
+</tr>
+<tr>
+<td>病人自報症狀與求助紀錄</td>
+<td>同病歷</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>AI 呼叫紀錄（提示與輸出）</td>
+<td>12 個月</td>
+<td>刪除內容，保留「發生過、用哪個模型」的統計列</td>
+</tr>
+<tr>
+<td>護理師績效彙整結果</td>
+<td>依人資規定</td>
+<td>刪除個人層級，保留單位層級聚合</td>
+</tr>
+<tr>
+<td>對外報表產出紀錄</td>
+<td>永久</td>
+<td>不刪除，這是釋出責任的證據</td>
+</tr>
+<tr>
+<td>開發／測試環境的合成資料</td>
+<td>無限制</td>
+<td>可隨時整份刪除</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Agent 行為規則</strong>：實作任何刪除或封存機制前，先確認醫院是否已定案期限；未定案前一律只做「標記」不做「實際刪除」。</p>
+<hr />
+<h2 id="9-加密與實體安全">9. 加密與實體安全<a class="headerlink" href="#9-加密與實體安全" title="Permanent link">&para;</a></h2>
+<p>單檔資料庫最大的風險是「整個系統的資料就是這一個檔案」。</p>
+<table>
+<thead>
+<tr>
+<th>層次</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>磁碟層</strong></td>
+<td>院內伺服器啟用全磁碟加密。<strong>0912 補充</strong>：正式主機的 4TB NVMe 具硬體自我加密，可滿足本條，但<strong>要確認它確實已啟用</strong>——出廠具備此能力不等於已經開著</td>
+</tr>
+<tr>
+<td><strong>檔案層</strong></td>
+<td>資料庫檔案的存取權限只給後端服務的執行帳號，不給一般登入者</td>
+</tr>
+<tr>
+<td><strong>資料庫層</strong></td>
+<td>若醫院要求資料庫檔案本身加密，可評估 SQLCipher 等方案。<strong>這會改變 Prisma 的連線方式，須先確認相容性再決定</strong>，不要在沒確認前寫進架構</td>
+</tr>
+<tr>
+<td><strong>備份檔</strong></td>
+<td>與正本同等保護。備份檔常常是最弱的一環</td>
+</tr>
+<tr>
+<td><strong>實體</strong></td>
+<td>伺服器機箱與機房門禁由醫院既有規範處理，本專案不另訂</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>不得把資料庫檔案路徑、加密金鑰或任何密碼寫入程式碼、文件、commit 訊息或終端機輸出。一律走環境變數。</li>
+<li>不得為了除錯方便，把正式環境的資料庫檔案複製到開發機。要重現問題請用合成資料重建情境。</li>
+</ul>
+<hr />
+<h2 id="10-測試資料規範">10. 測試資料規範<a class="headerlink" href="#10-測試資料規範" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>絕對禁止</strong>在任何開發或測試環境中使用真實病人的可識別資訊（真實姓名、真實病歷號、真實生命徵象數值組合）。</li>
+<li>測試資料一律使用<strong>完全虛構的合成資料</strong>：假名、隨機生成的病歷號格式（<code>HD-TEST-xxxx</code>）、隨機生成的數值。</li>
+<li><strong>理由的變化</strong>：0909 版的理由是「Supabase 主機在院外」。改用 SQLite 後這個理由消失，但規則不變，新理由有兩個：</li>
+<li>開發者本機不是院內環境，把真實資料放上去等於資料離開了它該在的機器（核心原則第 1 條）</li>
+<li>過渡期的 AI 走實驗室 API，那是院外服務。只要開發環境有真實資料，就有送出去的風險</li>
+</ul>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>產生測試資料／seed 腳本時，一律使用假資料產生器（faker 等）產生合成資料。</li>
+<li>若使用者提供看起來像真實病人資料的內容作為測試輸入，應提醒改用合成資料。</li>
+<li>對外展示環境（見第 12 條）一律使用合成資料，且必須與正式環境是不同的資料庫檔案、不同的機器。</li>
+</ul>
+<hr />
+<h2 id="11-營運與績效資料的蒐集限制0910-新增">11. 營運與績效資料的蒐集限制（0910 新增）<a class="headerlink" href="#11-營運與績效資料的蒐集限制0910-新增" title="Permanent link">&para;</a></h2>
+<p>新增任務一要蒐集護理師的工作表現資料，用於排班、獎勵與對外展現成效。<strong>同一批資料，用途不同，風險等級完全不同</strong>，因此需要一組獨立於臨床資料的規則。</p>
+<h3 id="111-資料分級">11.1 資料分級<a class="headerlink" href="#111-資料分級" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>級別</th>
+<th>內容</th>
+<th>誰能看</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>L1 單位聚合</strong></td>
+<td>全單位／全班次的統計量（回應時間中位數、當班求助總數）</td>
+<td>已登入的護理端使用者皆可</td>
+</tr>
+<tr>
+<td><strong>L2 班次層級</strong></td>
+<td>單一班次的統計量</td>
+<td>護理長以上</td>
+</tr>
+<tr>
+<td><strong>L3 個人層級</strong></td>
+<td>可對應到特定護理師的統計量</td>
+<td>護理長以上，且<strong>須經第 11.3 條的啟用流程</strong></td>
+</tr>
+<tr>
+<td><strong>L4 原始事件</strong></td>
+<td>稽核軌跡原始列，含操作者、時間戳</td>
+<td>護理站管理者與稽核角色，逐次查詢須留紀錄</td>
+</tr>
+</tbody>
+</table>
+<h3 id="112-目的外利用的禁止">11.2 目的外利用的禁止<a class="headerlink" href="#112-目的外利用的禁止" title="Permanent link">&para;</a></h3>
+<p>稽核軌跡的原始蒐集目的是<strong>法規遵循與事故追溯</strong>。拿它算績效屬於目的外利用，因此：</p>
+<ul>
+<li>L3 與 L4 的查詢，<strong>每一次都要寫入稽核軌跡</strong>（誰查了誰的資料、查詢區間、查詢當下宣告的用途）</li>
+<li>不得把績效彙整結果回寫到臨床資料表中，兩者永遠分開儲存</li>
+<li>不得建立「護理師×病人」的交叉評分資料表——那會把病人的臨床結果與特定護理師綁定，是明確的禁區（見《<a href="../fde-assessment/">FDE 評估報告</a>》5.4）</li>
+<li>對外報表一律不得包含 L3 與 L4</li>
+</ul>
+<h3 id="113-個人層級資料的啟用流程">11.3 個人層級資料的啟用流程<a class="headerlink" href="#113-個人層級資料的啟用流程" title="Permanent link">&para;</a></h3>
+<p>L3 預設<strong>關閉</strong>。要開啟必須同時滿足：</p>
+<ol>
+<li>護理部書面同意，且已向全體護理師公告計分規則</li>
+<li>系統設定中有一個明確的開關，開啟與關閉都寫入稽核軌跡</li>
+<li>已完成至少一個完整週期的「只看不算」觀察期</li>
+<li>每一位護理師都能查閱自己的原始計分事件並提出更正申請</li>
+</ol>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>實作任何會產生 L3 資料的查詢或報表前，必須先確認上述開關存在且已開啟，不得以「先做起來放著」為由跳過。</li>
+<li>不得在資料表設計中預留「總分」「排名」這類欄位。排名若有需要，一律於查詢時即時計算，不寫入資料表。</li>
+</ul>
+<hr />
+<h2 id="12-資料釋出要離開院內的內容">12. 資料釋出（要離開院內的內容）<a class="headerlink" href="#12-資料釋出要離開院內的內容" title="Permanent link">&para;</a></h2>
+<p>對應新增任務一之(4)「讓外部公司或機構判斷團隊實力」。<strong>任何要離開醫院網路的資料，都必須經過這一節。</strong></p>
+<h3 id="121-唯一合法的釋出管道">12.1 唯一合法的釋出管道<a class="headerlink" href="#121-唯一合法的釋出管道" title="Permanent link">&para;</a></h3>
+<ul>
+<li>一律經由系統內建的<strong>對外報表功能</strong>產生，不得以資料庫檔案複製、SQL 查詢結果貼上、螢幕截圖等方式取出。</li>
+<li>對外報表功能是一個獨立的模組，有自己的權限與稽核，不共用一般查詢的權限。</li>
+</ul>
+<h3 id="122-對外報表的硬性規則">12.2 對外報表的硬性規則<a class="headerlink" href="#122-對外報表的硬性規則" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>只輸出聚合值</strong></td>
+<td>不得輸出任何單筆紀錄</td>
+</tr>
+<tr>
+<td><strong>最小分母門檻</strong></td>
+<td>任何分組的樣本數少於 5 筆，該分組一律不呈現（避免反推到個人）</td>
+</tr>
+<tr>
+<td><strong>禁止欄位</strong></td>
+<td>姓名、病歷號、床號、工作 ID、可定位到單一療程的精確時間戳，一律不得出現</td>
+</tr>
+<tr>
+<td><strong>時間粒度限制</strong></td>
+<td>最細到「日」，不得輸出到分秒</td>
+</tr>
+<tr>
+<td><strong>核准後才能取出</strong></td>
+<td>由指定核准角色（建議護理部主管加資訊室）確認</td>
+</tr>
+<tr>
+<td><strong>全程留痕</strong></td>
+<td>誰產生、什麼時候、給誰、包含哪些指標、核准者是誰</td>
+</tr>
+</tbody>
+</table>
+<h3 id="123-對外展示環境">12.3 對外展示環境<a class="headerlink" href="#123-對外展示環境" title="Permanent link">&para;</a></h3>
+<p>若要提供可實際操作的展示環境給外部單位：</p>
+<ul>
+<li>必須是<strong>獨立的資料庫檔案、獨立的機器</strong>，與正式環境無任何連線</li>
+<li>資料全部由 faker 產生，不得由正式資料脫敏而來——脫敏後的資料仍可能保留可辨識的模式</li>
+<li>展示環境的建立與銷毀寫入稽核軌跡</li>
+</ul>
+<hr />
+<h2 id="13-外部資料匯入輪播第三層與臨床數值">13. 外部資料匯入（輪播第三層與臨床數值）<a class="headerlink" href="#13-外部資料匯入輪播第三層與臨床數值" title="Permanent link">&para;</a></h2>
+<p>對應新增任務二。院方可能提供 API，也可能提供 Excel，格式尚未確定。</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>統一入口</strong></td>
+<td>不論來源是 API 或檔案，一律經由 <code>ClinicalDataSourcePort</code> 進入，收斂成同一組內部資料表</td>
+</tr>
+<tr>
+<td><strong>全有或全無</strong></td>
+<td>一批匯入中只要有任何一筆解析失敗或驗證不過，<strong>整批不寫入</strong>。臨床數值只對一半比完全沒有更危險</td>
+</tr>
+<tr>
+<td><strong>來源可追溯</strong></td>
+<td>每一筆匯入資料都要記錄來源（檔名或 API 端點）、匯入時間、匯入者、批次編號</td>
+</tr>
+<tr>
+<td><strong>重複偵測</strong></td>
+<td>同一份檔案重複上傳必須被擋下，或明確標記為覆蓋並保留前一版</td>
+</tr>
+<tr>
+<td><strong>欄位對應可設定</strong></td>
+<td>Excel 欄位名稱會被人改動。欄位對應要能在管理介面調整，不得寫死在程式碼裡</td>
+</tr>
+<tr>
+<td><strong>不得直接餵給輪播</strong></td>
+<td>匯入的資料先進資料表、通過驗證，輪播才讀得到</td>
+</tr>
+<tr>
+<td><strong>時效標示</strong></td>
+<td>每一筆臨床數值都要有「這是什麼時候的資料」，輪播顯示時必須一併呈現，避免病人看到三週前的體重以為是今天的</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Agent 行為規則</strong>：不得為了先看到畫面而把 Excel 直接解析後塞進前端。介面層與資料表要先建立，即使一開始只有 <code>ManualEntryAdapter</code> 可用。</p>
+<hr />
+<h2 id="14-ai-相關資料的儲存">14. AI 相關資料的儲存<a class="headerlink" href="#14-ai-相關資料的儲存" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>資料</th>
+<th>存不存</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>送給模型的提示內容</td>
+<td>存</td>
+<td>已去識別化的版本才存。留存 12 個月（見 8.2）</td>
+</tr>
+<tr>
+<td>模型回傳的內容</td>
+<td>存</td>
+<td>同上。供事後查核「當時系統對護理師說了什麼」</td>
+</tr>
+<tr>
+<td>使用的模型名稱、參數、耗時</td>
+<td>存</td>
+<td>永久保留，這是成效與成本分析的基礎</td>
+</tr>
+<tr>
+<td>是否觸發去識別化過濾</td>
+<td>存</td>
+<td>永久保留，這是治理證據</td>
+</tr>
+<tr>
+<td>護理師是否採納 AI 輸出</td>
+<td>存</td>
+<td>對應 FDE 報告 R-6，永久保留</td>
+</tr>
+<tr>
+<td>原始（未去識別化）提示</td>
+<td><strong>不存</strong></td>
+<td>沒有任何理由需要保留它</td>
+</tr>
+<tr>
+<td>模型權重、快取檔</td>
+<td>不進資料庫</td>
+<td>放檔案系統，不佔資料庫檔案空間</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Agent 行為規則</strong>：</p>
+<ul>
+<li>去識別化必須發生在<strong>寫入資料庫之前</strong>，不是查詢時才遮蔽。</li>
+<li>三項高風險功能（風險分層、療程中預警、劑量調整參考）的計算<strong>不經語言模型</strong>（FDE 報告 R-1），因此它們的紀錄存的是「套用了哪一條規則、哪一個門檻、規則版本」，不是模型輸出。</li>
+</ul>
+<hr />
+<h2 id="15-從-supabase-撤出一次性作業">15. 從 Supabase 撤出（一次性作業）<a class="headerlink" href="#15-從-supabase-撤出一次性作業" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>確認 Supabase 專案中確實只有合成測試資料（依 0909 版第 7 條，本應如此）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>不做資料遷移。</strong> 既有測試資料直接捨棄，用 seed 腳本在 SQLite 上重建</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Prisma <code>datasource</code> provider 改為 <code>sqlite</code>，移除 <code>directUrl</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>重新產生 migration。SQLite 與 PostgreSQL 的 migration 檔不相容，舊的 migration 目錄整組重建</td>
+</tr>
+<tr>
+<td>5</td>
+<td>移除所有 Supabase 相關環境變數與套件相依</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>停用並刪除 Supabase 專案</strong>，確認雲端不再留有任何本專案資料</td>
+</tr>
+<tr>
+<td>7</td>
+<td>更新《<a href="../../reference/data-dictionary/">資料字典</a>》的環境標示與型別對照表</td>
+</tr>
+</tbody>
+</table>
+<p><strong>驗收</strong>：全新環境 clone 之後，只設定一個 <code>DATABASE_URL</code> 指向本機檔案，跑完 migration 與 seed 就能啟動，全程不需要任何網路連線。</p>
+<hr />
+<h2 id="16-快速檢查清單給-agent-的執行前自我檢查">16. 快速檢查清單（給 Agent 的執行前自我檢查）<a class="headerlink" href="#16-快速檢查清單給-agent-的執行前自我檢查" title="Permanent link">&para;</a></h2>
+<p>在協助撰寫任何與資料庫相關的程式碼前，Agent 應自我確認：</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這段程式碼是否讓前端直接碰資料庫檔案？→ 若是，改為透過後端 API</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 存取控制邏輯是否寫在後端應用層？→ 不得依賴檔案權限或前端隱藏</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 是否在業務邏輯中直接寫 SQL 或 SQLite 方言？→ 改走 Repository／ORM 層</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 新欄位若帶小數，是否誤用了浮點數？→ 臨床數值一律改整數最小單位或 TEXT</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 是否新增了第二個會寫入資料庫的行程？→ 不允許</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 測試資料是否為虛構合成資料？→ 若不是，一律替換</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Schema 是否包含稽核軌跡所需欄位？→ 若無，補齊後再實作</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這次的功能是否會產生 L3 個人層級績效資料？→ 若是，先確認第 11.3 條的開關</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這次的輸出是否可能離開院內？→ 若是，走第 12 條的對外報表模組</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 匯入外部資料時，是否做到全有或全無？→ 部分寫入不允許</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 送進 AI 的內容是否已去識別化？→ 去識別化要在寫入前發生</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 資料庫或備份的路徑是否寫死在程式裡？→ 一律由設定提供；正式環境是容器裡的掛載點，不是固定字串</li>
+</ul>
+<hr />
+<h2 id="17-總結">17. 總結<a class="headerlink" href="#17-總結" title="Permanent link">&para;</a></h2>
+<p>SQLite 在本專案中的角色是「<strong>一個檔案，裝著整個透析中心的照護紀錄</strong>」。這句話同時說明了它的優點與它的風險：簡單到不需要維運，也脆弱到一次疏忽就全毀、一次複製就全外流。</p>
+<p>因此本規範的重點從 0909 版的「不要被平台綁死」，轉為三件事：<strong>讓資料留在該在的地方</strong>（第 1、7.2、9、12 條）、<strong>讓它不會壞掉也不會丟掉</strong>（第 7、8 條）、<strong>讓它不被拿去做原本不該做的事</strong>（第 11 條）。</p>
+<p>所有驗證、授權、業務邏輯、Session 管理仍然全部留在自建後端。這一點從 0909 版到現在沒有變過，未來也不會因為換了哪一種資料庫而改變。</p>
+<hr />
+<h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>定版</th>
+<th>日期</th>
+<th>異動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://94sh09sh19sh.github.io/hd-docs/0916/requirements/database-policy/">0916</a></td>
+<td>2026-09-16</td>
+<td>改版為 v2.0：測試與正式皆改為 SQLite、所有資料不出醫院網路；備份收緊為必須放院內另一台機器，部署相關敘述改指《部署規範》</td>
+</tr>
+<tr>
+<td><a href="https://94sh09sh19sh.github.io/hd-docs/0909/requirements/database-policy/">0909</a></td>
+<td>2026-09-09</td>
+<td>首次定版</td>
+</tr>
+</tbody>
+</table>
+<p><a href="../../">← 回進度首頁</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
