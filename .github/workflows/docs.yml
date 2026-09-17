@@ -1,0 +1,70 @@
+# 鏡像 repo 的建置工作流程（複製到 hd-docs 的 .github/workflows/docs.yml）。
+#
+# 推到 main      → 更新現行版 latest（網址永遠不變）
+# 推週次 tag 0916 → 建立該週凍結版，建立後不再更新
+#
+# 沒有 API 額度這回事：這裡跑的是 git push。
+
+name: 建置文件站
+
+on:
+  push:
+    branches: [main]
+    tags: ['[0-9][0-9][0-9][0-9]']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: 設定 git 身分
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages --depth=1 || true
+
+      - name: 部署現行版（latest）
+        if: github.ref_type == 'branch'
+        run: |
+          mike deploy --push --update-aliases latest
+          mike set-default --push latest
+
+      - name: 部署凍結版（週次 tag）
+        if: github.ref_type == 'tag'
+        run: |
+          week="${GITHUB_REF_NAME}"
+          if mike list 2>/dev/null | grep -qE "(^|[^0-9])${week}([^0-9]|$)"; then
+            echo "::error::凍結版 ${week} 已經存在，不覆蓋。定版的意義就是不會再變。"
+            exit 1
+          fi
+          mike deploy --push --title "${week} 定版" "${week}"
+
+      - name: robots.txt — 不讓搜尋引擎收錄
+        run: |
+          tmp="$(mktemp -d)"
+          git worktree add "$tmp" gh-pages
+          printf 'User-agent: *\nDisallow: /\n' > "$tmp/robots.txt"
+          cd "$tmp"
+          git add robots.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: robots.txt 不收錄"
+            git push origin gh-pages
+          fi

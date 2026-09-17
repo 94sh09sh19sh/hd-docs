@@ -1,0 +1,97 @@
+# 文件站設定。真本在私有 repo 的 docs-site/，由 npm run docs:sync 複製進鏡像 repo。
+# 直接在鏡像 repo 上改這一份，下次同步就會被覆蓋。
+
+site_name: 血液透析中心平板照護輔助系統
+site_description: 需求、進度、參考與測試文件
+site_url: https://94sh09sh19sh.github.io/hd-docs/
+
+docs_dir: docs
+use_directory_urls: true
+
+theme:
+  name: material
+  language: zh-TW
+  features:
+    - navigation.instant
+    - navigation.top
+    - navigation.tracking
+    - toc.follow
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: 切換為深色
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: 切換為淺色
+
+# 版本下拉選單：latest 是現行版，每週定版各出一個凍結版（mike 產生）
+extra:
+  version:
+    provider: mike
+    default: latest
+
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - md_in_html
+  # slugify 一定要指定：MkDocs 預設的錨點會把中文整段去掉，
+  # 「## Q-10 · 常駐總覽螢幕的位置與硬體」會塌成 #q-10-，文件裡既有的內部連結會全部指不到。
+  # 這一組產生的錨點與 GitHub 一致（小寫、空白換成連字號、中文保留）。
+  - toc:
+      permalink: true
+      toc_depth: 3
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search:
+      lang:
+        - zh
+        - en
+
+# 列序照首頁那兩張表的讀者思考順序，不要重排（規則見 weekly/AGENT.md「首頁硬性上限」）。
+# 新增一篇週報或一份文件時，這裡要跟著加一列，否則站台側欄看不到。
+nav:
+  - 進度首頁: index.md
+  - 每週紀錄:
+      - 0916 — 迭代 3～6 完成，全程留在院內網路: weekly/2026-09-16.md
+      - 0909 — Iteration 1＋2 完成、核心流程可完整執行: weekly/2026-09-09.md
+      - 歷次週報: weekly/archive.md
+  - 進度報告:
+      - 臨床端進度報告: reports/progress-clinical.md
+      - 技術端進度報告: reports/progress-technical.md
+  - 需求文件:
+      - FDE 數位化評估報告: requirements/fde-assessment.md
+      - 軟體需求規格書（SRS）: requirements/srs.md
+      - 資料庫使用規範: requirements/database-policy.md
+      - 實作規格書: requirements/implementation-spec.md
+      - 部署規範: requirements/deployment-spec.md
+      - 尚待確認事項清冊: requirements/open-questions.md
+      - 架構圖: requirements/architecture-diagrams.md
+  - 參考:
+      - 資料字典: reference/data-dictionary.md
+      - 這套系統是用什麼蓋的: reference/tech-stack-explained.md
+  - 手動測試:
+      - 完整手動測試手冊: testing/manual-test-guide.md
+      - 迭代 3 分冊: testing/iteration-3.md
+      - 迭代 4 分冊: testing/iteration-4.md
+      - 迭代 5 分冊: testing/iteration-5.md
+      - 迭代 6 分冊: testing/iteration-6.md
+  - 維護流程:
+      - 每週紀錄維護流程（人用）: weekly/HOWTO.md
+      - 文件維護作業指示（agent 用）: weekly/AGENT.md
