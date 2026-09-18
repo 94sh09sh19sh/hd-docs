@@ -2200,6 +2200,13 @@ python<span class="w"> </span>-m<span class="w"> </span>mkdocs<span class="w"> <
 <span class="c1"># 首頁列序、兩份指南的列序清單、mkdocs.yml 的 nav，三處是否逐字一致</span>
 grep<span class="w"> </span>-n<span class="w"> </span><span class="s1">'](requirements/\|](reports/\|](reference/\|](testing/'</span><span class="w"> </span>docs/index.md
 </code></pre></div>
+<blockquote>
+<p><strong>這一段只驗文件。</strong> 專案另有四支與文件無關的盤點腳本（<code>check:egress</code>、<code>check:ui</code>、
+<code>check:offline</code>、<code>check:migration</code>，可用 <code>npm run check:all</code> 一次跑完）。
+它們不屬於文件維護流程，<strong>不要把它們加進上面的驗收段</strong>；
+它們的用途與輸出寫在《<a href="../../requirements/implementation-spec/">實作規格書</a>》第 8 章，
+介面那一支另見《<a href="../../notes/uiux-design-baseline/">介面設計基準</a>》第 6 節。</p>
+</blockquote>
 <p>相對連結是否還指得到檔案，可用：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>docs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s1">'*.md'</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">d</span><span class="o">=</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">'](\([^)]*\))'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/.*](//;s/)$//'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>l<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="se">\</span>
