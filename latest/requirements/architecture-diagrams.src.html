@@ -422,7 +422,7 @@
         <rect x="924" y="738" width="152" height="12" rx="3" class="screen"/>
         <circle cx="1066" cy="708" r="3" class="dot"/><circle cx="1066" cy="726" r="3" class="dot"/><circle cx="1066" cy="744" r="3" class="dot"/>
         <text x="1000" y="776" text-anchor="middle" class="t-title-s">院內 AI 伺服器</text>
-        <text x="1000" y="798" text-anchor="middle" class="t-sub-s">DGX Spark・不由本專案部署</text>
+        <text x="1000" y="798" text-anchor="middle" class="t-sub-s">另一台 DGX Spark・不由本專案部署</text>
 
         <!-- 實驗室 API : cloud -->
         <use href="#p1-cloud" transform="translate(1010,852)" class="node-ext"/>
@@ -441,7 +441,7 @@
       <p class="claim">院內裝置與資料庫一條對外連線都沒有；唯一出口是應用伺服器連到過渡期實驗室 API 的那條線。</p>
     </div>
     <figure>
-      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內的 MDM、部署於院內 DGX Spark 的應用伺服器容器、同機本機磁碟上的 SQLite 檔案、唯讀整合的 HIS/EMR、備份目的地與院內 AI 伺服器。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕。唯一跨出醫院的是應用伺服器連到過渡期實驗室 API 的線，只送合成資料。">
+      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內一台專用 Windows 工作站上的應用伺服器、同機本機 SSD 上的 SQLite 檔案、唯讀整合的 HIS/EMR、院內另一台機器上的備份目的地，以及另一台 DGX Spark 上的院內 AI 推論端點。平板不經 MDM，改以自包 WebView 外殼加螢幕固定。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕。唯一跨出醫院的是應用伺服器連到過渡期實驗室 API 的線，只送合成資料。">
         <defs>
           <marker id="p2-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p2-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
@@ -470,7 +470,6 @@
         <!-- links -->
         <path d="M 300,262 V 302 H 430 V 414" class="link" marker-end="url(#p2-ink)"/>
         <path d="M 710,258 V 322 H 470 V 414" class="link" marker-end="url(#p2-ink)"/>
-        <path d="M 200,420 V 268" class="link" marker-end="url(#p2-ink)"/>
         <path d="M 560,500 H 644" class="link" marker-end="url(#p2-ink)"/>
         <path d="M 530,580 V 612 H 1015 V 576" class="link" marker-end="url(#p2-ink)"/>
         <path d="M 370,580 V 672 H 296" class="link" marker-end="url(#p2-ink)"/>
@@ -481,7 +480,6 @@
 
         <text x="312" y="294" class="t-lbl">HTTPS・每 3 秒輪詢</text>
         <text x="698" y="314" text-anchor="end" class="t-lbl">HTTPS・院內網段</text>
-        <text x="188" y="300" text-anchor="end" class="t-lbl">註冊／遠端鎖定</text>
         <text x="1163" y="310" text-anchor="end" class="t-lbl-teal">SSE 即時推送・院內</text>
         <text x="605" y="472" text-anchor="middle" class="t-lbl">Repository 層</text>
         <text x="605" y="492" text-anchor="middle" class="t-lbl">單一寫入者</text>
@@ -499,7 +497,7 @@
         <rect x="234" y="245" width="32" height="4" rx="2" class="dot"/>
         <text x="250" y="190" text-anchor="middle" class="t-title-s">病人 Kiosk 平板</text>
         <text x="250" y="212" text-anchor="middle" class="t-sub-s">15 台・無登入介面</text>
-        <text x="372" y="176" class="t-sub-s">MDM 納管・Kiosk 鎖定</text>
+        <text x="372" y="176" class="t-sub-s">自包外殼・螢幕固定・免 MDM</text>
         <text x="372" y="202" class="t-sub-s">每 3 秒輪詢綁定狀態</text>
         <text x="372" y="228" class="t-sub-s">離線時問卷暫存平板</text>
 
@@ -522,15 +520,6 @@
         <text x="1010" y="198" text-anchor="middle" class="t-sub-s">不休眠・大字級・音效</text>
         <text x="1010" y="217" text-anchor="middle" class="t-sub-s">部署必要條件</text>
 
-        <!-- MDM : rack -->
-        <rect x="110" y="420" width="180" height="160" rx="8" class="node"/>
-        <rect x="124" y="438" width="152" height="14" rx="3" class="screen"/>
-        <rect x="124" y="460" width="152" height="14" rx="3" class="screen"/>
-        <rect x="124" y="482" width="152" height="14" rx="3" class="screen"/>
-        <circle cx="266" cy="445" r="3" class="dot"/><circle cx="266" cy="467" r="3" class="dot"/><circle cx="266" cy="489" r="3" class="dot"/>
-        <text x="200" y="534" text-anchor="middle" class="t-title-s">MDM</text>
-        <text x="200" y="556" text-anchor="middle" class="t-sub-s">介面層・方案待 Q-11</text>
-
         <!-- 應用伺服器 : rack (hub) -->
         <rect x="340" y="420" width="220" height="160" rx="8" class="node-hub"/>
         <rect x="356" y="438" width="188" height="14" rx="3" class="screen"/>
@@ -539,34 +528,34 @@
         <circle cx="530" cy="445" r="3" class="dot"/><circle cx="530" cy="467" r="3" class="dot"/><circle cx="530" cy="489" r="3" class="dot"/>
         <text x="450" y="528" text-anchor="middle" class="t-title">應用伺服器</text>
         <text x="450" y="550" text-anchor="middle" class="t-sub-s">＝圖版 01 的整層後端</text>
-        <text x="450" y="570" text-anchor="middle" class="t-sub-s">DGX Spark・linux/arm64 容器</text>
+        <text x="450" y="570" text-anchor="middle" class="t-sub-s">專用 Windows 工作站・離線安裝包</text>
 
         <!-- SQLite 檔案 : cylinder -->
         <path d="M 650,442 L 650,558 A 90,22 0 0 0 830,558 L 830,442 Z" class="node"/>
         <ellipse cx="740" cy="442" rx="90" ry="22" class="node"/>
         <text x="740" y="496" text-anchor="middle" class="t-title-s">SQLite 檔案</text>
         <text x="740" y="520" text-anchor="middle" class="t-sub-s">與應用伺服器同一台</text>
-        <text x="740" y="542" text-anchor="middle" class="t-sub-s">本機磁碟・非網路磁碟</text>
+        <text x="740" y="542" text-anchor="middle" class="t-sub-s">本機 SSD・非網路磁碟</text>
 
         <!-- HIS／EMR : document -->
         <path d="M 915,420 H 1115 V 556 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 Z" class="node-legacy"/>
         <text x="1015" y="480" text-anchor="middle" class="t-title-legacy">HIS／EMR</text>
         <text x="1015" y="504" text-anchor="middle" class="t-sub-s">既有系統・唯讀</text>
-        <text x="1015" y="526" text-anchor="middle" class="t-sub-s">臨床數值來源待 Q-09</text>
+        <text x="1015" y="526" text-anchor="middle" class="t-sub-s">臨床數值・院方唯讀 API</text>
 
         <!-- 備份目的地 : cylinder -->
         <path d="M 110,640 L 110,712 A 90,14 0 0 0 290,712 L 290,640 Z" class="node"/>
         <ellipse cx="200" cy="640" rx="90" ry="14" class="node"/>
         <text x="200" y="678" text-anchor="middle" class="t-title-s">備份目的地</text>
-        <text x="200" y="700" text-anchor="middle" class="t-sub-s">院內・不得雲端同步</text>
+        <text x="200" y="700" text-anchor="middle" class="t-sub-s">院內另一台機器・不得雲端同步</text>
 
         <!-- 院內 AI 伺服器 : rack -->
         <rect x="650" y="640" width="230" height="90" rx="8" class="node"/>
         <rect x="664" y="652" width="202" height="10" rx="3" class="screen"/>
         <rect x="664" y="668" width="202" height="10" rx="3" class="screen"/>
         <circle cx="856" cy="657" r="2.5" class="dot"/><circle cx="856" cy="673" r="2.5" class="dot"/>
-        <text x="765" y="702" text-anchor="middle" class="t-title-s">院內 AI 伺服器</text>
-        <text x="765" y="721" text-anchor="middle" class="t-sub-s">同一台 DGX Spark・不自行部署</text>
+        <text x="765" y="702" text-anchor="middle" class="t-title-s">院內 AI 推論端點</text>
+        <text x="765" y="721" text-anchor="middle" class="t-sub-s">另一台 DGX Spark・不自行部署</text>
 
         <!-- 實驗室 API : cloud -->
         <use href="#p2-cloud" transform="translate(330,852) scale(0.92)" class="node-ext"/>
@@ -596,12 +585,13 @@
         <li><b>新增元件。</b>臨床資料匯入、照護業務模組、備份目的地；規則引擎與對外報表服務以虛線標為規劃中。</li>
         <li><b>迭代 6 補上閒置輪播與正式主機。</b>輪播併在照護業務模組裡（卡片由後端組好再送到平板）；兩張圖的「院內 AI 伺服器」標上 DGX Spark，應用伺服器標上容器部署。<b>沒有新增任何機器或網路連線</b>，圖版 02 的分區與線一條未改。</li>
         <li><b>迭代 5 再加一個營運與排班模組。</b>它是本系統第一個蒐集「護理師自己的資料」的地方——班表、床位分配、成效基準。與其他模組寫同一個檔案，但自成資料表，<b>不回寫臨床資料表</b>（資料庫使用規範 §11.2）。</li>
+        <li><b>0919 第一次動到圖版 02 的分區與線。</b>應用伺服器由 DGX Spark 改為<b>院內一台專用 Windows 工作站</b>，以離線安裝包部署；AI 推論端點退成<b>另一台機器</b>，兩者之間只有一條院內 HTTP 呼叫；<b>MDM 整格拿掉</b>，平板改以自包 WebView 外殼加螢幕固定，那條「註冊／遠端鎖定」的線一併消失；臨床數值來源由「待確認」改為院方唯讀 API。前面幾次都只換標籤，這一次真的少了一台機器、少了一條線。</li>
       </ul>
     </div>
   </section>
 
   <footer>
-    依據 SRS v2.0 §3.2／§4.3／§7、實作規格書 v2.0 第 3 章與資料庫使用規範 §2／§7／§8／§11／§14 重繪（2026-09-11，對應迭代 5 完成時的程式）
+    依據 SRS v2.0 §3.2／§4.3／§7、實作規格書 v2.0 第 3 章與資料庫使用規範 §2／§7／§8／§11／§14 重繪（2026-09-19 更新：應用主機改為 Windows 工作站、AI 推論端點獨立成另一台機器、MDM 拿掉改為自包外殼與螢幕固定）
   </footer>
 
 </div>

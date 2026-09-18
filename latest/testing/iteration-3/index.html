@@ -945,6 +945,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/uiux-design-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介面設計基準
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2011,7 +2039,17 @@ ls<span class="w"> </span>apps/api/prisma/migrations
 <blockquote>
 <p><strong>說明｜為什麼另外列</strong></p>
 <p>4.1 節七條驗收標準中，第 1 條（全新環境離線建置）與第 5 條（常駐總覽螢幕連續 4 小時、拔網路示警與自動重連）需要實機與實際時間，無法由驗收腳本代勞，其餘五條已由 <code>verify:iteration3</code> 涵蓋並通過。
-<strong>狀態：兩項皆尚未執行（2026-09-11）。</strong> 開發環境已先做過模擬：停掉後端後總覽螢幕數秒內出現紅框與斷線橫幅，後端恢復後自動回到「即時連線中」；伺服器不在時重新載入頁面，也不會掉回登入畫面。</p>
+<strong>狀態（2026-09-19 更新）：驗收 1 已執行並失敗，驗收 5 已執行並通過。</strong></p>
+<ul>
+<li><strong>驗收 1 失敗</strong>：<code>npm run prisma:migrate</code> 噴
+  <code>request to https://binaries.prisma.sh/... failed, reason: getaddrinfo ENOTFOUND binaries.prisma.sh</code>。
+  原因是 <strong>Prisma 的執行引擎不在 npm 套件裡</strong>，是安裝套件時由安裝後腳本另外下載的（約 40MB）；
+  只要 <code>node_modules</code> 是在沒有成功下載引擎的情況下產生的，第一次用到 Prisma 指令時就會現場去下載。
+  <strong>這不是設定錯誤，是一個「套件裝好了不代表可以用」的相依</strong>，對策見《部署規範》DEP-30，
+  實作排在迭代 7。修好之前，這一條驗收維持「未通過」。</li>
+<li><strong>驗收 5 通過</strong>：連續四小時不休眠、不斷線，拔網路後出現紅框與斷線橫幅，接回後自動重連。</li>
+</ul>
+<p>以下原有的說明保留（2026-09-11 當時的狀況）： 開發環境已先做過模擬：停掉後端後總覽螢幕數秒內出現紅框與斷線橫幅，後端恢復後自動回到「即時連線中」；伺服器不在時重新載入頁面，也不會掉回登入畫面。</p>
 </blockquote>
 <h3 id="驗收-1--全新環境只設-database_url全程離線建置">驗收 1 · 全新環境只設 DATABASE_URL，全程離線建置<a class="headerlink" href="#驗收-1--全新環境只設-database_url全程離線建置" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -2022,7 +2060,9 @@ ls<span class="w"> </span>apps/api/prisma/migrations
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>m3</code> <strong>［終端機］</strong> 建立 <code>.env</code>，只填 <code>DATABASE_URL</code>（指向一個尚不存在、專案目錄外的檔案）、<code>JWT_SECRET</code> 與兩個 <code>SUPER_ADMIN_*</code>。
   → 其餘一律留空，採程式內預設值。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>m4</code> <strong>［終端機］</strong> 依序執行 <code>build:shared</code>、<code>prisma:migrate</code>、<code>db:seed</code>。
-  → 三個步驟都成功，沒有任何連線逾時或下載失敗；<code>DATABASE_URL</code> 指向的檔案被建立出來。</li>
+  → 三個步驟都成功，沒有任何連線逾時或下載失敗；<code>DATABASE_URL</code> 指向的檔案被建立出來。
+  → <strong>2026-09-19 實測：這一步失敗。</strong> 錯誤為 <code>getaddrinfo ENOTFOUND binaries.prisma.sh</code>。
+  修好之後這一步的驗收方式也要跟著改——見下方「0919 的新驗收方式」。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>m5</code> <strong>［終端機］</strong> 執行 <code>npm run dev</code>，看後端 log。
   → 出現「已連線至 SQLite：journal_mode=WAL、foreign_keys=ON、busy_timeout=5000ms、synchronous=FULL」與「已建立初始最高權限帳號」；三個網址都能開啟並登入。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>m6</code> <strong>［終端機］</strong> 執行零院外連線盤點。
@@ -2044,6 +2084,20 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <span class="c1"># 另開一個終端機</span>
 npm<span class="w"> </span>run<span class="w"> </span>check:egress
 </code></pre></div>
+<h4 id="0919-的新驗收方式修好之後照這個走">0919 的新驗收方式（修好之後照這個走）<a class="headerlink" href="#0919-的新驗收方式修好之後照這個走" title="Permanent link">&para;</a></h4>
+<p>上面那份流程有一個沒被注意到的假設：<strong>它假設「連網時裝好的東西，離線時就一定用得起來」。</strong>
+Prisma 引擎打破了這個假設——<code>npm install</code> 成功不代表引擎真的躺在 <code>node_modules</code> 裡。</p>
+<p>正式環境的交付形態也已經改了（不再是在主機上 clone 加安裝，而是<strong>解開一份自帶執行期的離線安裝包</strong>，
+見《部署規範》第 3、6 章），因此這條驗收要改成貼近正式流程的版本：</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 在<strong>連網的開發機</strong>上建置離線安裝包（含 Node.js 執行期、建置產物、<strong>Prisma 引擎</strong>、遷移檔）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 把安裝包複製到<strong>一台乾淨的 Windows 機器</strong>——沒有開發環境、沒有全域安裝的 Node.js、沒有這個專案的殘留</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>中斷那台機器的網路</strong>，確認真的連不出去</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 解開安裝包 → 填 <code>.env</code> → 套用既有遷移 → 啟動服務
+  → 全程不出現任何一次對外請求，服務正常啟動，三個網址都開得起來</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 跑零院外連線盤點 → 0 筆</li>
+</ul>
+<p><strong>「在開發機上解壓來測」不算通過</strong>：那樣測到的是開發機，不是安裝包（DEP-22）。</p>
 <h3 id="驗收-5--常駐總覽螢幕連續-4-小時拔網路明顯示警恢復後自動重連">驗收 5 · 常駐總覽螢幕連續 4 小時，拔網路明顯示警、恢復後自動重連<a class="headerlink" href="#驗收-5--常駐總覽螢幕連續-4-小時拔網路明顯示警恢復後自動重連" title="Permanent link">&para;</a></h3>
 <p>用預定放在護理站的那台螢幕或平板做（位置與硬體待 Q-10 確認；確認前可用任一台會長時間開著的電腦）。</p>
 <ul class="task-list">

@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/">
       
       
-        <link rel="prev" href="../../notes/mdm-offline-plan/">
+        <link rel="prev" href="../../notes/uiux-design-baseline/">
       
       
         <link rel="next" href="../iteration-3/">
@@ -932,6 +932,34 @@
     
   
     平板管控：免 MDM 的全院內方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/uiux-design-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介面設計基準
   
 
     
@@ -4016,6 +4044,18 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <tr>
 <td>PowerShell 執行 curl 噴「找不到符合參數名稱 i 的參數」</td>
 <td>PowerShell 的 <code>curl</code> 是 <code>Invoke-WebRequest</code> 的別名。改打 <code>curl.exe</code>，或改用 Git Bash。</td>
+</tr>
+<tr>
+<td><code>prisma:migrate</code> 噴 <code>getaddrinfo ENOTFOUND binaries.prisma.sh</code></td>
+<td><strong>Prisma 的執行引擎不在 npm 套件裡</strong>，是安裝套件時由安裝後腳本另外下載的（約 40MB）。只要 <code>node_modules</code> 是在沒有成功下載引擎的情況下產生的——離線安裝、跳過安裝後腳本、或從別處複製過來而排除了二進位檔——第一次用到 Prisma 指令時就會現場去下載</td>
+</tr>
+<tr>
+<td>病人端在本機開了好幾個分頁，結果只有最後一個認得出自己是哪一台平板</td>
+<td><strong>同一個瀏覽器的所有分頁共用同一份儲存空間</strong>，後佈建的裝置序號與金鑰會蓋掉先佈建的。這是本機測試環境特有的，正式環境一台平板一支 App、各自獨立</td>
+</tr>
+<tr>
+<td>護理端找不到「解除綁定」的按鈕，但裝置管理頁看得到那台平板正綁著人</td>
+<td>解除的入口掛在「當日排班」清單上，而那份清單依<strong>排班日期</strong>篩選（預設今天）。綁定的排班日期不是今天時，那一列不會出現</td>
 </tr>
 <tr>
 <td><code>npm install</code> 出現 EPERM／權限不足</td>
