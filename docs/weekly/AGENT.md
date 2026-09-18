@@ -352,6 +352,12 @@ python -m mkdocs build -f .docs-preview/mkdocs.yml
 grep -n '](requirements/\|](reports/\|](reference/\|](testing/' docs/index.md
 ```
 
+> **這一段只驗文件。** 專案另有四支與文件無關的盤點腳本（`check:egress`、`check:ui`、
+> `check:offline`、`check:migration`，可用 `npm run check:all` 一次跑完）。
+> 它們不屬於文件維護流程，**不要把它們加進上面的驗收段**；
+> 它們的用途與輸出寫在《[實作規格書](../requirements/implementation-spec.md)》第 8 章，
+> 介面那一支另見《[介面設計基準](../notes/uiux-design-baseline.md)》第 6 節。
+
 相對連結是否還指得到檔案，可用：
 
 ```bash
