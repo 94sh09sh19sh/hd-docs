@@ -68,7 +68,7 @@
 
 | 文件 | 內容 | 本週定版 |
 |---|---|---|
-| [平板管控：免 MDM 的全院內方案](notes/mdm-offline-plan.md) | 為什麼 SSE 繞不過 MDM，以及改用 Android 內建螢幕固定的理由與代價 | 新增 · 修訂中 |
+| [平板管控：免 MDM 的全院內方案](notes/mdm-offline-plan.md) | 為什麼 SSE 繞不過 MDM；病人端為何選 PWA 裝在自包 WebView 外殼裡，以及部署與日常維運要做哪些事 | 新增 · 修訂中 |
 
 ---
 
