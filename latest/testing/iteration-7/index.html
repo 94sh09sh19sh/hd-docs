@@ -16,7 +16,7 @@
         <link rel="prev" href="../iteration-6/">
       
       
-        <link rel="next" href="../../weekly/HOWTO/">
+        <link rel="next" href="../iteration-8/">
       
       
         
@@ -1346,10 +1346,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#710--自動化驗收" class="md-nav__link">
+  <a href="#710--共用主機上的隔離連接埠目錄磁碟空間dep-37" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.10 · 自動化驗收
+        7.10 · 共用主機上的隔離：連接埠、目錄、磁碟空間（DEP-37）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#711--自動化驗收" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.11 · 自動化驗收
       
     </span>
   </a>
@@ -1371,6 +1382,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1630,10 +1669,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#710--自動化驗收" class="md-nav__link">
+  <a href="#710--共用主機上的隔離連接埠目錄磁碟空間dep-37" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.10 · 自動化驗收
+        7.10 · 共用主機上的隔離：連接埠、目錄、磁碟空間（DEP-37）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#711--自動化驗收" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.11 · 自動化驗收
       
     </span>
   </a>
@@ -1676,6 +1726,11 @@
 </blockquote>
 <p><strong>FR-S12 版本更新不得破壞既有資料、DEP-15 時區、DEP-24 AI 端點可關、DEP-30 引擎隨包攜帶、DEP-31 遷移指令分離，以及《實作規格書》3.15 的解除綁定缺陷。</strong></p>
 <p><strong>這一冊沒有新功能。</strong> 它驗的是三件「不修就不能部署」的事：解除綁定找不到入口、離線建置失敗、更新會弄壞資料庫。前兩件在畫面與終端機上看得出來，第三件只有在真的走過一次更新流程時才看得出來——<strong>§7.6 是本冊最重要的一節，請不要跳過</strong>。</p>
+<blockquote>
+<p><strong>0919 補記</strong>：正式主機由「本專案專用」更正為「與其他專案共用」之後，§7.10 是新加的一節（DEP-37）。
+共用主機上最常見的失敗不是效能不夠，而是別的專案把磁碟寫滿、或先佔走了本系統要用的連接埠——
+<strong>這兩種情形在測試階段一次都不會出現</strong>，只能靠設定上先擋住。</p>
+</blockquote>
 <h2 id="這一冊有什麼">這一冊有什麼<a class="headerlink" href="#這一冊有什麼" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1733,6 +1788,11 @@
 </tr>
 <tr>
 <td>§7.10</td>
+<td>共用主機上的隔離：連接埠、目錄、磁碟空間</td>
+<td>DEP-37</td>
+</tr>
+<tr>
+<td>§7.11</td>
 <td>自動化驗收</td>
 <td>—</td>
 </tr>
@@ -1825,7 +1885,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q18</code> <strong>［終端機］</strong> 看後端啟動時的那幾行。
   → 有一行寫著「伺服器時區：Asia/Taipei（現在 ⋯⋯）｜執行身分：帳號@主機名稱」。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q19</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份，最上面的「執行環境」。
-  → 時區、現在時間、服務執行身分、執行環境（正式／開發）、版本標記、資料庫引擎六項都看得到，時區那一格是勾的。</li>
+  → 時區、現在時間、服務執行身分、執行環境（正式／開發）、監聽連接埠、版本標記、資料庫引擎七項都看得到，時區那一格是勾的。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q20</code> <strong>［終端機］</strong> 用不符的時區啟動一次（<strong>這一項會讓服務起不來，是預期的</strong>）：
   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/api
 <span class="c1"># PowerShell：$env:DEPLOYMENT_ENV='production'; $env:TZ='UTC'; node dist/main.js</span>
@@ -1918,13 +1978,50 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q46</code> 把環境變數改回 <code>LLM_PROVIDER=mock</code> 並重新啟動。
   → 回到平常的狀態。</li>
 </ul>
-<h2 id="710--自動化驗收">7.10 · 自動化驗收<a class="headerlink" href="#710--自動化驗收" title="Permanent link">&para;</a></h2>
+<h2 id="710--共用主機上的隔離連接埠目錄磁碟空間dep-37">7.10 · 共用主機上的隔離：連接埠、目錄、磁碟空間（DEP-37）<a class="headerlink" href="#710--共用主機上的隔離連接埠目錄磁碟空間dep-37" title="Permanent link">&para;</a></h2>
+<p>正式主機與其他專案共用，院方確保本系統的資源額度足夠。<strong>但「資源足夠」是一句承諾，不是一個設定</strong>——
+隔離要自己在安裝包層級做到：自帶執行期、埠登記後固定、目錄是自己的、權限只給服務帳號。
+這一節驗得到前三項的設定面；第四項（目錄權限）只有部署當天以實際帳號才確認得了。</p>
+<p><strong>連接埠（DEP-37 第 2 項）</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q47</code> <strong>［終端機］</strong> 後端開著，執行 <code>npm run verify:iteration7</code>
-  → 10 個步驟全部 ✓，最後顯示「驗收結果：全部通過」。它會自己建立一顆隔離的資料庫複本來跑更新流程，不會動到你的開發資料庫。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q48</code> <strong>［終端機］</strong> 依序重跑 <code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>iteration6</code>。
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q50</code> <strong>［終端機］</strong> 正式環境設定下、不給埠啟動一次（<strong>這一項會讓服務起不來，是預期的</strong>）：
+  <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/api
+<span class="c1"># PowerShell：$env:DEPLOYMENT_ENV='production'; $env:API_PORT=''; node dist/main.js</span>
+<span class="nv">DEPLOYMENT_ENV</span><span class="o">=</span>production<span class="w"> </span><span class="nv">API_PORT</span><span class="o">=</span><span class="w"> </span>node<span class="w"> </span>dist/main.js
+</code></pre></div>
+  → <strong>拒絕啟動</strong>，訊息說的是「要先向資訊室登記、再寫進主機的 .env 固定下來」，不是只說缺變數。
+  沒寫等於賭沒有人先佔走 3000，而那多半在某次重新開機、兩個服務的啟動順序對調時才發作。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q51</code> 把 <code>API_PORT</code> 填回去，照平常啟動。→ 正常起來。<strong>開發機不填照舊用 3000</strong>，只有正式環境設定會擋。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q52</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份 → 執行環境的「監聽連接埠」。
+  → 看得到埠號，以及它是「主機設定檔指定」還是「程式預設值」。正式主機上必須是前者。</li>
+</ul>
+<p><strong>目錄（DEP-37 第 3 項）</strong></p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q53</code> <strong>［終端機］</strong> 把 <code>.env</code> 的 <code>BACKUP_DIR</code> 暫時改成 <code>C:/Temp/hd-backups</code> 後啟動。
+  → <strong>拒絕啟動</strong>，訊息說它位於共用目錄底下：那些位置別的專案的清理腳本掃得到、一般登入者也讀得到。
+  把 <code>DATABASE_URL</code> 改到 <code>C:/Users/Public/…</code> 也是同樣的結果。改回原值後恢復正常。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q54</code> ⚠️ <strong>部署當天才做得到的一項</strong>：在正式主機上，用<strong>另一個一般登入帳號</strong>去開資料庫目錄與備份目錄。
+  → <strong>連讀都不行</strong>。共用主機上別的專案的維運人員也登得進這台機器，預設權限等於把病人資料攤開。
+  這一項同時是部署前置檢查清單 9.1 第 9 條。</li>
+</ul>
+<p><strong>磁碟空間（DEP-37）</strong></p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q55</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份 → 「資料庫磁碟可用空間」。
+  → 看得到目前可用空間與下限（預設 1GB，由 <code>DB_DISK_MIN_FREE_MB</code> 設定）。
+  下限的實際數字待資訊室議定（Q-27）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q56</code> <strong>［終端機］</strong> 把 <code>DB_DISK_MIN_FREE_MB</code> 暫時設成一個大於目前可用空間的值（例如 <code>99999999</code>），
+  重新整理 <code>q55</code> 的畫面，再執行一次 <code>npm run db:update</code>。
+  → 畫面上那一格變成 ✗；更新流程在備份<strong>之前</strong>就停下，訊息算得出這次需要多少（備份與驗證複本各一份＋保留下限），
+  並提醒主機是共用的，先確認是誰把空間佔掉了。<strong>資料庫沒有被改動。</strong> 改回原值後恢復正常。</li>
+</ul>
+<hr />
+<h2 id="711--自動化驗收">7.11 · 自動化驗收<a class="headerlink" href="#711--自動化驗收" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q57</code> <strong>［終端機］</strong> 後端開著，執行 <code>npm run verify:iteration7</code>
+  → 11 個步驟全部 ✓，最後顯示「驗收結果：全部通過」。它會自己建立一顆隔離的資料庫複本來跑更新流程，不會動到你的開發資料庫。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q58</code> <strong>［終端機］</strong> 依序重跑 <code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>iteration6</code>。
   → 六支全綠。<strong>迭代 7 沒有改動任何既有行為</strong>：解除綁定的回應多了兩個欄位，既有欄位一個都沒有動。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q49</code> <strong>［終端機］</strong> <code>npm run check:all</code>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q59</code> <strong>［終端機］</strong> <code>npm run check:all</code>
   → 四支盤點腳本一起跑。零院外連線 0 筆、離線可部署性 0 項阻擋、遷移安全只剩舊迭代的既有紀錄（這次新增的那一份是純加法）、介面技術識別的既有項次未增加（那一批排在迭代 9）。</li>
 </ul>
 <hr />

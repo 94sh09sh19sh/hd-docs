@@ -965,6 +965,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-8介面重新設計0919" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 8：介面重新設計（0919）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#規模" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1853,6 +1864,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2418,6 +2457,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-8介面重新設計0919" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 8：介面重新設計（0919）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#規模" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2625,11 +2675,11 @@
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
 <p><strong>適用讀者</strong>：接手或協作的工程師
 <strong>報告日期</strong>：2026-09-19
-<strong>版本</strong>：迭代 7 完成（master）
+<strong>版本</strong>：迭代 8 完成（master）
 <strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
 <blockquote>
 <p>本版由 0909 定版（Iteration 2 時點）改寫。0909 之後的主要變化：需求於 0910 改為 v2.0（SaMD 三項改為有條件納入、資料庫改 SQLite、封閉網路）；
-迭代 3 完成資料層遷移與四個平台機制；迭代 4 完成 AI 輔助內容與護理記錄；迭代 5 完成求助處理完整紀錄、護理師班表與成效基準；迭代 6 完成閒置輪播與檔案匯入；迭代 7 完成部署前的缺陷修正與版本更新的資料保護。
+迭代 3 完成資料層遷移與四個平台機制；迭代 4 完成 AI 輔助內容與護理記錄；迭代 5 完成求助處理完整紀錄、護理師班表與成效基準；迭代 6 完成閒置輪播與檔案匯入；迭代 7 完成部署前的缺陷修正與版本更新的資料保護；迭代 8 完成兩端介面重新設計。
 迭代編號沿用《實作規格書》v2.0：迭代 1、2 已完成，3～8 為 0910 重排後的規劃。</p>
 </blockquote>
 <hr />
@@ -3440,8 +3490,146 @@
 <td><code>modules/llm/http-llm.provider.ts</code></td>
 <td>健康檢查的逾時與單次生成分開（預設 5 秒）並短暫快取，端點掛掉時功能開關頁不會卡著等</td>
 </tr>
+<tr>
+<td>共用主機上的隔離</td>
+<td><code>config/configuration.ts</code>、<code>infra/prisma/sqlite.ts</code>、<code>scripts/db-update.mjs</code>、<code>modules/ops/*</code></td>
+<td>0919 同日補做（見下）：埠不得沿用預設值、資料與備份不得落在共用目錄、磁碟可用空間要看得見且擋得住更新</td>
+</tr>
 </tbody>
 </table>
+<p><strong>0919 同日補做：正式主機是共用的（DEP-37）。</strong> 主機由「本專案專用」更正為「與其他專案共用」之後，
+v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器層級改為安裝包層級。這件事對本迭代的實作有三處影響，
+共同點是它們原本都預設「這台機器只有本系統在用」：</p>
+<table>
+<thead>
+<tr>
+<th>原本</th>
+<th>為什麼在共用主機上不成立</th>
+<th>改成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>API_PORT</code> 沒填就套 3000</td>
+<td>與別的專案搶同一個埠，服務起不來；而且多半在某次重新開機、兩個服務的啟動順序對調時才發作，測試階段一次都不會出現</td>
+<td>正式環境設定下<strong>不套預設值</strong>，沒填就拒絕啟動並說明要先向資訊室登記（Q-27）。開發機不受影響</td>
+</tr>
+<tr>
+<td>資料庫與備份路徑只擋網路磁碟、專案目錄、雲端同步資料夾</td>
+<td>暫存、公用、桌面、文件、下載這些位置別的專案的清理腳本掃得到，一般登入者也讀得到</td>
+<td>多一條共用目錄的判定，後端啟動與 <code>db:update</code> <strong>共用同一條規則</strong>，兩邊不會判得不一樣</td>
+</tr>
+<tr>
+<td>沒有人在看磁碟</td>
+<td>磁碟不是本系統一個人在寫，而 SQLite 在磁碟寫滿時是<strong>寫入失敗</strong>，不是逐步變慢——症狀回報按下去會直接錯誤</td>
+<td>可用空間與下限顯示在資料庫狀態上；更新流程在備份<strong>之前</strong>先量，不夠就停下，不會讓備份做到一半壞掉</td>
+</tr>
+</tbody>
+</table>
+<p><strong>第 4 項（目錄權限只給服務帳號與系統管理員）程式驗不到</strong>，它是部署當天以實際帳號確認的事，
+列在部署前置檢查清單 9.1 第 9 條。埠號與磁碟下限的實際數字同樣待資訊室答覆（Q-27）——
+數字下來之後改的是 <code>.env</code>，不是程式。</p>
+<h3 id="迭代-8介面重新設計0919">迭代 8：介面重新設計（0919）<a class="headerlink" href="#迭代-8介面重新設計0919" title="Permanent link">&para;</a></h3>
+<p>依《實作規格書》4.6 節與《<a href="../../notes/uiux-design-baseline/">介面設計基準</a>》。
+<strong>這個迭代沒有動任何後端行為</strong>：沒有新端點、沒有 schema 變更、既有七支驗收腳本一行都沒有改。
+它改的是「長什麼樣」；「有哪些、放在哪」是迭代 9 的事，兩件事刻意分開做——
+混在一起出問題時分不清是版面壞了還是開關壞了。</p>
+<p><strong>最重要的一件事是結構性的，不是視覺上的。</strong> 0919 之前求助按鈕會蓋住輪播的字，
+真正的原因不是按鈕太大：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>0919 之前</th>
+<th>現在</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>求助按鈕在哪</td>
+<td>首頁版面裡的第二顆按鈕，位置由首頁內容多寡決定</td>
+<td><strong>外框的一列</strong>，位置只由 <code>--dock-h</code> 決定</td>
+</tr>
+<tr>
+<td>輪播蓋住什麼</td>
+<td>整個畫面（<code>position: fixed</code>），只能「猜」按鈕在下半部然後把卡片往上推</td>
+<td><strong>內容區</strong>（<code>position: absolute</code> 相對 <code>.app-content</code>），下緣就是求助區的上緣</td>
+</tr>
+<tr>
+<td>靠什麼保證不遮擋</td>
+<td>輪播開始時把按鈕的 <code>z-index</code> 抬高</td>
+<td>內容區的高度＝畫面高度<strong>扣掉</strong>求助區，結構上畫不到那裡</td>
+</tr>
+</tbody>
+</table>
+<p>「位置固定」被實作成「層級固定」，這是兩件事。新做法讓 FR-P13 從一條要小心維護的規則，
+變成一件<strong>做不到違反</strong>的事。瀏覽器實測：輪播中與非輪播時求助區量到的矩形完全一致
+（x 0、y 532、寬 638、高 132），輪播內所有文字的最低點 464，求助區上緣 532。</p>
+<table>
+<thead>
+<tr>
+<th>工作項</th>
+<th>位置</th>
+<th>做法重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>設計語彙</td>
+<td><code>apps/*/src/design-tokens.css</code></td>
+<td>兩端<strong>共用同一組語意名稱</strong>（一般／注意／警示／完成），數值不同。色碼與字級只能出現在這兩個檔裡</td>
+</tr>
+<tr>
+<td>求助區版面契約</td>
+<td><code>patient-pwa/src/PatientShell.tsx</code></td>
+<td>已綁定的每一個畫面都包在同一個外框裡；已經在求助畫面上時它留在原位改為狀態說明，不是消失也不是多一顆按鈕</td>
+</tr>
+<tr>
+<td>未指派時沒有求助區</td>
+<td><code>patient-pwa/src/App.tsx</code></td>
+<td>平板還沒指派給任何人，求助送出去護理站不知道是誰按的。改成直接寫「請按床邊呼叫鈴」——<strong>一顆按了會失敗的按鈕比沒有按鈕更糟</strong></td>
+</tr>
+<tr>
+<td>病人端全面重做</td>
+<td>全部畫面</td>
+<td>內文 20px 起、觸控 64px 起、選中的選項多一個「✓」（顏色不是唯一線索）、離線訊息改寫成人話</td>
+</tr>
+<tr>
+<td>護理端 N-1</td>
+<td><code>nurse-pwa/pages/OverviewPage.tsx</code></td>
+<td>總覽最上面一條橫幅直接寫出結論。四個數字方塊回答得了「現在需要我嗎」，但要先讀完四個數字才知道哪一個重要</td>
+</tr>
+<tr>
+<td>護理端 N-5</td>
+<td><code>nurse-pwa/components.tsx</code> 的 <code>ConfirmButton</code></td>
+<td>兩段式確認，第二段寫的是<strong>後果</strong>不是動作名稱；8 秒沒下一步自己收回（護理師常常按到一半被叫走）。解除鎖定不加阻力——那是把限制拿掉</td>
+</tr>
+<tr>
+<td>常駐總覽螢幕</td>
+<td><code>--wall-scale</code></td>
+<td>整面牆的字級相對這一個倍率。觀看距離待 Q-10，確定後改一個數字，不必回頭調每一條規則</td>
+</tr>
+<tr>
+<td>介面檢查腳本</td>
+<td><code>scripts/check-ui-design.mjs</code></td>
+<td>對比度、觸控目標尺寸、裸色碼</td>
+</tr>
+<tr>
+<td><code>check:all</code> 改寫</td>
+<td><code>scripts/check-all.mjs</code></td>
+<td>見下</td>
+</tr>
+</tbody>
+</table>
+<p><strong>為什麼不用瀏覽器的 <code>confirm</code>。</strong> 它會凍住整個分頁——即時總覽的串流也跟著停；
+而且它說的話是瀏覽器的措辭：「確定要執行此操作嗎」對護理師沒有意義，
+「解除後病人的平板會立刻回到等待畫面」才有。</p>
+<p><strong>順手修掉一個沉默的問題：<code>check:all</code> 從來沒有跑完過。</strong> 它原本是五支用 <code>&amp;&amp;</code> 串起來的指令，
+而 <code>check:ui</code> 只要還有任何一筆技術識別殘留就回結束狀態 1——那一批的清除排在迭代 9，
+所以它現在必然是 1，<strong>後面三支因此從來沒有被 <code>check:all</code> 跑到過</strong>。
+畫面上看起來只是「check:ui 有 22 筆」，不像「另外三支根本沒跑」。
+改成每一支都跑完、最後給一張總表。<strong>一支會擋住後面全部的檢查，比沒有那支檢查更糟——
+它讓人以為全部都跑過了。</strong></p>
 <h3 id="規模">規模<a class="headerlink" href="#規模" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3515,7 +3703,8 @@
 </table>
 <p>（迭代 6 沒有新增功能開關：輪播三層的開關在迭代 3 就已建好並預設關閉，這次做的是把它們的
 「開啟條件」從「功能尚未實作」換成實際判定。迭代 7 只多一張 <code>update_runs</code> 與兩個維運端點，
-新增的六種稽核動作全是更新流程與遷移防呆留下的軌跡。）</p>
+新增的六種稽核動作全是更新流程與遷移防呆留下的軌跡。DEP-37 的三處補做沒有動到任何一張表，
+改的是啟動時的判定與兩個維運端點多回傳的幾個欄位。）</p>
 <h3 id="共用常數的角色">共用常數的角色<a class="headerlink" href="#共用常數的角色" title="Permanent link">&para;</a></h3>
 <p><code>packages/shared</code> 不只是型別。以下<strong>業務規則</strong>放在這裡，前後端共用同一份定義：</p>
 <ul>
@@ -3668,7 +3857,9 @@ npm<span class="w"> </span>run<span class="w"> </span>dev<span class="w">       
 </code></pre></div>
 <p><strong>必填環境變數</strong>：<code>DATABASE_URL</code>（<code>file:</code> 加絕對路徑）、<code>JWT_SECRET</code>、<code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>。</p>
 <p><strong>常用選填</strong>：<code>BACKUP_DIR</code>（備份輸出）、<code>LLM_PROVIDER</code>（<code>mock</code>／<code>lab</code>／<code>onprem</code>，預設 <code>mock</code>）與 <code>LLM_ENDPOINT</code>／<code>LLM_API_KEY</code>／<code>LLM_MODEL_ID</code>、<code>LLM_MOCK_LATENCY_MS</code>（預設 1200）、<code>JWT_EXPIRES_IN</code>（預設 8 小時）、<code>BINDING_MAX_HOURS</code>（預設 6）。</p>
-<p><strong>迭代 7 新增的四個（只有正式環境會用到）</strong>：<code>DEPLOYMENT_ENV=production</code> 把這台機器標成正式環境（時區不符即拒絕啟動、開發用的遷移指令被擋下）、<code>REQUIRED_TIME_ZONE</code>（預設 <code>Asia/Taipei</code>）、<code>PRISMA_ENGINES_DIR</code>（指向安裝包內的 Prisma 引擎，DEP-30）、<code>LLM_HEALTH_TIMEOUT_SECONDS</code>（健康檢查逾時，預設 5 秒，與單次生成的 <code>LLM_TIMEOUT_SECONDS</code> 分開）。</p>
+<p><strong>迭代 8 沒有新增任何環境變數。</strong> 它一個端點都沒加，設定面完全沒動。</p>
+<p><strong>迭代 7 新增的五個（只有正式環境會用到）</strong>：<code>DEPLOYMENT_ENV=production</code> 把這台機器標成正式環境（時區不符即拒絕啟動、開發用的遷移指令被擋下、<code>API_PORT</code> 沒填即拒絕啟動）、<code>REQUIRED_TIME_ZONE</code>（預設 <code>Asia/Taipei</code>）、<code>PRISMA_ENGINES_DIR</code>（指向安裝包內的 Prisma 引擎，DEP-30）、<code>LLM_HEALTH_TIMEOUT_SECONDS</code>（健康檢查逾時，預設 5 秒，與單次生成的 <code>LLM_TIMEOUT_SECONDS</code> 分開）、<code>DB_DISK_MIN_FREE_MB</code>（資料庫磁碟保留空間下限，預設 1024，DEP-37）。</p>
+<p>既有的 <code>API_PORT</code> 在正式環境的行為也變了：<strong>開發機留空照舊用 3000，正式環境留空即拒絕啟動</strong>（DEP-37 第 2 項）。</p>
 <blockquote>
 <p>資料庫檔案與 <code>BACKUP_DIR</code> 必須在<strong>專案目錄外的本機磁碟</strong>。相對路徑、專案目錄內、網路路徑、雲端同步資料夾，後端與 seed 一律拒絕啟動。
 後端是唯一的寫入者：跑 <code>prisma:migrate</code>、<code>db:seed</code>、<code>db:restore</code> 或任何資料修補腳本前，<strong>先停掉後端</strong>。</p>
@@ -3683,7 +3874,10 @@ npm<span class="w"> </span>run<span class="w"> </span>verify:iteration6<span cla
 npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w">        </span><span class="c1"># 零院外連線盤點（不需後端）</span>
 </code></pre></div>
 <p>腳本都會建立少量標記過的合成資料並逐項斷言，涵蓋主線流程、錯誤路徑、權限隔離、冪等去重、稽核事件。<strong>改動後請全部跑過。</strong></p>
-<p>最近一次執行（2026-09-19，本機 SQLite，迭代 7 完成後）：<strong>七支皆全數通過；四支盤點腳本中，零院外連線 0 筆、離線可部署性 0 項阻擋</strong>。</p>
+<p>最近一次執行（2026-09-19，本機 SQLite，迭代 8 完成後）：<strong>八支皆全數通過</strong>
+（<code>verify:iteration8</code> 不需要後端在跑，它驗的東西全部在前端原始碼與樣式表裡）；
+<strong>五支盤點腳本中，零院外連線 0 筆、介面設計基準全部通過、離線可部署性 0 項阻擋</strong>。
+介面技術識別仍是既有的 22 筆，清除排在迭代 9；遷移安全的 1 筆是迭代 5 留下的歷史紀錄。</p>
 <p>其中 <code>verify:iteration2</code> 改了一處，而且只有這一處：FR-N10 讓「只填自由文字即可結案」不再成立，那一段跟著改成新的結案方式。<strong>迭代 2 原本要驗的行為一條都沒有放寬</strong>——狀態轉換、留下處理者、總覽不再顯示待處理，斷言全部保留。這是目前唯一一次刻意改動既有驗收腳本，理由記在《實作規格書》1.1 節；其餘情況一律不得以「配合新功能」為由修改既有腳本。迭代 6 與迭代 7 都沒有再動過任何一支——迭代 7 的解除綁定回應只多了兩個欄位，既有欄位一個都沒有動，因此既有斷言原封不動仍然成立。</p>
 <p>完整的手動測試步驟（17 章、286 個可勾選的測試項）另有<a href="../../testing/manual-test-guide/">測試手冊</a>。其中四部分尚未執行：</p>
 <ul>
@@ -3691,7 +3885,8 @@ npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w
 <li><strong>第 14 章</strong> 迭代 4 需要人眼確認的 27 項（非診斷標示、進度提示、病人端閱讀與作答體驗）</li>
 <li><strong>第 15 章</strong> 迭代 5 的 50 項，其中需要人眼判斷的是：床邊按「我到床邊了」順不順手、班表被擋下時的提示讀不讀得懂、平板結案後「已處理」擺的位置對不對</li>
 <li><strong>第 16 章</strong> 迭代 6 的 48 項，其中<strong>四節是腳本驗不到、只能用手指確認的</strong>：觸碰立即中止、求助按鈕位置與尺寸不變、細節頁自動退回、夜間模式調暗。輪播對病人開啟前應先走過這四節</li>
-<li><strong><a href="../../testing/iteration-7/">迭代 7 分冊</a></strong> 的 49 項，其中 §7.6 的更新流程要先停掉後端才走得完；另有兩項只有到部署當天（以服務執行帳號確認主機時區）或迭代 10（乾淨機器上的全程離線安裝）才做得到</li>
+<li><strong><a href="../../testing/iteration-7/">迭代 7 分冊</a></strong> 的 59 項，其中 §7.6 的更新流程要先停掉後端才走得完；另有三項只有到部署當天（以服務執行帳號確認主機時區、以一般登入帳號確認讀不到資料庫與備份目錄）或迭代 10（乾淨機器上的全程離線安裝）才做得到</li>
+<li><strong><a href="../../testing/iteration-8/">迭代 8 分冊</a></strong> 的 43 項。這一冊大半要用眼睛看、最好用手指碰：<strong>標了 ⚠️ 的十一項請不要用滑鼠在開發機上帶過</strong>——躺著看得不看得清楚、單手做不做得完、從護理站走過來兩秒內知不知道有事，腳本一句話都說不出來</li>
 </ul>
 <hr />
 <h2 id="11-迭代-34-接手的人值得知道的決定">11. 迭代 3、4 接手的人值得知道的決定<a class="headerlink" href="#11-迭代-34-接手的人值得知道的決定" title="Permanent link">&para;</a></h2>
@@ -3711,12 +3906,12 @@ npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w
 <p><strong>新增待確認事項</strong>：Q-23（衛教主題與題庫）、Q-24（回饋題目與偏離判定）、Q-25（事件範本）、Q-26（適足性公式與輸入來源），全部為 D 級，已用暫定值實作。</p>
 <hr />
 <h2 id="12-下一階段">12. 下一階段<a class="headerlink" href="#12-下一階段" title="Permanent link">&para;</a></h2>
-<p>迭代 7 已完成（2026-09-19）。成效基準的建檔介面自迭代 5 就緒，<strong>現在等的仍是現場的數字</strong>：</p>
+<p>迭代 7、8 已完成（2026-09-19）。成效基準的建檔介面自迭代 5 就緒，<strong>現在等的仍是現場的數字</strong>：</p>
 <blockquote>
 <p>⏰ <strong>成效基準的量測（Q-01）有時效性。</strong> 這不是開發端能做的事。系統正式啟用前沒測到，之後所有「省下 X 分鐘」的說法都只能靠估算。</p>
 </blockquote>
 <h3 id="迭代-7120919-重排">迭代 7～12（0919 重排）<a class="headerlink" href="#迭代-7120919-重排" title="Permanent link">&para;</a></h3>
-<p><strong>本週四個（部署前修正）</strong>，迭代 7 已完成，其餘三個依序進行：</p>
+<p><strong>本週四個（部署前修正）</strong>，迭代 7、8 已完成，其餘兩個依序進行：</p>
 <table>
 <thead>
 <tr>
@@ -3736,8 +3931,8 @@ npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w
 <tr>
 <td>8</td>
 <td>介面重新設計</td>
-<td><strong>可以</strong></td>
-<td>無（Q-31 現場試用不擋實作）</td>
+<td><strong>已完成（0919）</strong></td>
+<td>無（Q-31 現場試用不擋實作，但<strong>要排在首波試用開始之前</strong>——族群分析要被現場打臉過一次才算數，事後才問等於沒問）</td>
 </tr>
 <tr>
 <td>9</td>

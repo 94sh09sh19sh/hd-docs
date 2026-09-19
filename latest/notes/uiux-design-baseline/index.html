@@ -1280,6 +1280,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#64-這份基準落在程式碼的哪裡0919-迭代-8-實作後補" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 這份基準落在程式碼的哪裡（0919 迭代 8 實作後補）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#7-尚待確認" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1519,6 +1530,34 @@
     
   
     迭代 7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
   
 
     
@@ -1938,6 +1977,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-這份基準落在程式碼的哪裡0919-迭代-8-實作後補" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 這份基準落在程式碼的哪裡（0919 迭代 8 實作後補）
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2516,6 +2566,59 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 在目標裝置的實際尺寸下截圖檢查過，不是只在開發機的視窗裡看過</li>
 </ul>
 <hr />
+<h2 id="64-這份基準落在程式碼的哪裡0919-迭代-8-實作後補">6.4 這份基準落在程式碼的哪裡（0919 迭代 8 實作後補）<a class="headerlink" href="#64-這份基準落在程式碼的哪裡0919-迭代-8-實作後補" title="Permanent link">&para;</a></h2>
+<p>前面五章講的是規則，這一節講<strong>規則現在住在哪一個檔案裡</strong>。
+下一個要改介面的人從這張表開始看，比從任何一章開始都快。</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>落在哪</th>
+<th>怎麼被擋住</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1 顏色、4.2 字級、4.3 觸控</td>
+<td><code>apps/patient-pwa/src/design-tokens.css</code>、<code>apps/nurse-pwa/src/design-tokens.css</code></td>
+<td><strong>色碼與字級只能出現在這兩個檔裡。</strong> 樣式表裡出現任何裸色碼（含 <code>rgba()</code>）<code>npm run check:ui:design</code> 就會紅</td>
+</tr>
+<tr>
+<td>4.1 對比度門檻</td>
+<td>同上＋<code>scripts/check-ui-design.mjs</code> 的搭配清單</td>
+<td>腳本直接從色碼算 WCAG 對比度。<strong>半透明的顏色算不出來，所以一律不准用</strong></td>
+</tr>
+<tr>
+<td>2.2 求助區的版面契約</td>
+<td><code>apps/patient-pwa/src/PatientShell.tsx</code></td>
+<td><code>npm run verify:iteration8</code> 驗結構：兩列的 grid、輪播是 <code>absolute</code> 不是 <code>fixed</code>、求助按鈕規則裡沒有 <code>z-index</code>、求助按鈕只有一個出處</td>
+</tr>
+<tr>
+<td>N-5 破壞性動作的阻力</td>
+<td><code>apps/nurse-pwa/src/components.tsx</code> 的 <code>ConfirmButton</code></td>
+<td>驗收腳本檢查它有被用到，而且沒有人改用瀏覽器的 <code>confirm</code></td>
+</tr>
+<tr>
+<td>4.5 常駐總覽螢幕的字級</td>
+<td><code>--wall-scale</code>（護理端語彙）</td>
+<td>整面牆的字級相對這一個倍率。觀看距離確定後（Q-10）改一個數字</td>
+</tr>
+</tbody>
+</table>
+<p><strong>新增一組顏色或一個字級時，順序是</strong>：先在本文第 4 章補一條語彙 → 再加到 <code>design-tokens.css</code> →
+若它是「某個字疊在某個底色上」，<strong>回到 <code>scripts/check-ui-design.mjs</code> 的搭配清單補一列</strong>。
+漏掉第三步，那組顏色就沒有被任何人檢查過——腳本推不出來誰疊在誰上面，那份清單是人維護的契約。</p>
+<p><strong>兩個刻意的決定，寫下來免得日後被當成疏漏：</strong></p>
+<ol>
+<li><strong>常駐總覽螢幕斷線時的紅框仍然持續閃爍</strong>，雖然 4.4 說「不得持續閃爍到令人疲勞」。
+   那一條講的是<strong>新通報的進場強調</strong>——那種東西閃久了會被學會忽略。斷線不是通報，
+   是一個持續存在的故障狀態：它一直在，示警就應該一直在。畫面上另有一條「連線中斷」的橫幅，
+   顏色不是唯一線索；開了「減少動態效果」時閃爍會停，紅框仍然留著。</li>
+<li><strong>病人端未指派時沒有求助區。</strong> 平板還沒指派給任何人，求助送出去護理站不知道是誰按的。
+   那個畫面改成直接寫「需要護理人員時，請按床邊的呼叫鈴」——
+   <strong>一顆按了會失敗的按鈕，比沒有按鈕更糟。</strong></li>
+</ol>
+<hr />
 <h2 id="7-尚待確認">7. 尚待確認<a class="headerlink" href="#7-尚待確認" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2541,6 +2644,7 @@
 </table>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<p>本文件於 0919 週中新增，尚未定版。0919 迭代 8 實作後補上 6.4 節（規則落在程式碼的哪裡）。</p>
 <table>
 <thead>
 <tr>
