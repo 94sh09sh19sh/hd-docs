@@ -80,7 +80,8 @@ docs/
 │   ├── iteration-4.md          迭代 4 分冊（0912 新增）
 │   ├── iteration-5.md          迭代 5 分冊（0912 新增）
 │   ├── iteration-6.md          迭代 6 分冊（0912 新增）
-│   └── iteration-7.md          迭代 7 分冊（0919 新增）
+│   ├── iteration-7.md          迭代 7 分冊（0919 新增）
+│   └── iteration-8.md          迭代 8 分冊（0919 新增）
 └── weekly/
     ├── _template.md            新一週的空白範本（底線開頭，不會上站）
     ├── archive.md              歷次週報總表
@@ -159,7 +160,7 @@ scripts/
 
 ### 版本歷程的適用範圍
 
-有「版本歷程」表的只有**需求文件（六份）、架構圖、進度報告（兩份）、參考文件（兩份）、`notes/` 的單篇方案評估（兩份）、測試手冊（主手冊與五本分冊）**這十九份，改了就要補一列。
+有「版本歷程」表的只有**需求文件（六份）、架構圖、進度報告（兩份）、參考文件（兩份）、`notes/` 的單篇方案評估與設計基準（兩份）、測試手冊（主手冊與六本分冊）**這二十份，改了就要補一列。
 以下五種沒有這張表，改了**不補、也不出凍結版**，但一樣要同步：
 
 - `index.md`（狀態靠「本週定版」與修訂中標記表達）
@@ -353,8 +354,9 @@ python -m mkdocs build -f .docs-preview/mkdocs.yml
 grep -n '](requirements/\|](reports/\|](reference/\|](testing/' docs/index.md
 ```
 
-> **這一段只驗文件。** 專案另有四支與文件無關的盤點腳本（`check:egress`、`check:ui`、
-> `check:offline`、`check:migration`，可用 `npm run check:all` 一次跑完）。
+> **這一段只驗文件。** 專案另有五支與文件無關的盤點腳本（`check:egress`、`check:ui`、
+> `check:ui:design`、`check:offline`、`check:migration`，可用 `npm run check:all` 一次跑完；
+> 0919 起它們**全部都會跑完再一起算帳**，不會因為其中一支回非零就停住）。
 > 它們不屬於文件維護流程，**不要把它們加進上面的驗收段**；
 > 它們的用途與輸出寫在《[實作規格書](../requirements/implementation-spec.md)》第 8 章，
 > 介面那一支另見《[介面設計基準](../notes/uiux-design-baseline.md)》第 6 節。
