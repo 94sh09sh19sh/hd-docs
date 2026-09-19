@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 39 張表、408 個欄位、5 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 40 張表、422 個欄位、6 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -62,6 +62,8 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 十一、SOP 文件與查詢（迭代 4） | `sop_documents`、`sop_sections`、`sop_queries`、`sop_query_citations` | 查詢範圍內的文件原文，以及每一次查詢引用了哪幾段 |
 | 十二、求助處理與可設定的暫代值（迭代 5） | `help_resolution_options`、`operational_settings`、`help_request_follow_ups` | 求助結案時選的是哪一項處理方式與結果、那份清單本身、以及外部答覆未到前的各項暫定參數 |
 | 十三、護理師班表與成效基準（迭代 5） | `nurse_shifts`、`shift_bed_assignments`、`shift_change_requests`、`baseline_measurements` | 誰上哪一班、負責哪幾床、調班的來龍去脈；以及系統啟用前的人工量測結果 |
+| 十四、閒置輪播與檔案匯入（迭代 6） | `carousel_items`、`carousel_view_events`、`import_field_mappings` | 輪播第二層播什麼、哪一類卡片有人看、匯入檔案的欄位怎麼對上 |
+| 十五、版本更新紀錄（迭代 7） | `update_runs` | 每一次版本更新前備份了什麼、驗證還原成不成功、套用了哪幾個遷移、誰執行的 |
 
 ### 每張表都有的三個欄位
 
@@ -232,7 +234,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ## 四、病人自述內容
 
-> ⚠️ **這一類全部是「病人自己說的」**。這幾張表**不存**風險分層、趨勢預警或嚴重度推論——那屬 FR-P03／FR-P05，迭代 7 以規則引擎實作，受功能開關與書面確認閘門約束，結果另存專屬資料表。任何看起來像「分級」的欄位（`present`、`severity`、`routed_to`）在下方都有明確說明它為什麼**不是**臨床判斷。
+> ⚠️ **這一類全部是「病人自己說的」**。這幾張表**不存**風險分層、趨勢預警或嚴重度推論——那屬 FR-P03／FR-P05，迭代 11 以規則引擎實作（0919 編號重排前稱迭代 7），受功能開關與書面確認閘門約束，結果另存專屬資料表。任何看起來像「分級」的欄位（`present`、`severity`、`routed_to`）在下方都有明確說明它為什麼**不是**臨床判斷。
 
 ### `symptom_reports` — 透析前症狀問卷送出紀錄（13 欄）
 
@@ -269,7 +271,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `symptom_report_id` | `TEXT` | 屬於哪一份問卷 | 外鍵 → `symptom_reports.id`，`ON DELETE CASCADE` |
 | `item_code` | `TEXT` | 題目的識別字。10 題分別是水腫、喘、發燒、通路出血、通路紅腫痛、胸悶、頭暈、抽筋、噁心、皮膚癢 | 合法值取自 `PRE_DIALYSIS_SYMPTOM_QUESTIONS`：`EDEMA` `DYSPNEA` `FEVER` `ACCESS_BLEEDING` `ACCESS_ABNORMAL` `CHEST_DISCOMFORT` `DIZZINESS` `CRAMP` `NAUSEA` `ITCHING`。有索引。題目中文與白話說明查 `SYMPTOM_QUESTION_BY_CODE` |
 | `answer_value` | `TEXT` | 病人選的答案。多數題目是四級（沒有／輕微／中等／嚴重），發燒與通路出血是二選一（沒有／有） | 合法值 `NONE` `MILD` `MODERATE` `SEVERE` `NO` `YES`（`SYMPTOM_ANSWER_VALUES`）。**量表由題目決定**：`SEVERITY` 題只能用前四個，`YES_NO` 題只能用後兩個，對照表在 `SYMPTOM_SCALE_OPTIONS` |
-| `present` | `BOOL` | 病人是否表示「有這個症狀」。**這只是把答案原樣轉成是／否方便計數與顯示，不是嚴重度分級，也不是任何風險判斷** | 由 `SYMPTOM_PRESENT_VALUES`（`MILD` `MODERATE` `SEVERE` `YES`）機械式推導。⛔ **禁止**在此欄之上疊加任何加權、評分或門檻邏輯 — 那屬 FR-P03 風險分層，只能經由迭代 7 的規則引擎 |
+| `present` | `BOOL` | 病人是否表示「有這個症狀」。**這只是把答案原樣轉成是／否方便計數與顯示，不是嚴重度分級，也不是任何風險判斷** | 由 `SYMPTOM_PRESENT_VALUES`（`MILD` `MODERATE` `SEVERE` `YES`）機械式推導。⛔ **禁止**在此欄之上疊加任何加權、評分或門檻邏輯 — 那屬 FR-P03 風險分層，只能經由迭代 11 的規則引擎 |
 | `created_at` | `TS` | 寫入時間 | 見共通欄位 |
 
 **唯一約束**：`(symptom_report_id, item_code)` — 同一份問卷的同一題只能有一個答案。
@@ -419,7 +421,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `trigger` | `TEXT` | 手動觸發或每日排程 | 合法值 `MANUAL` / `SCHEDULED`（`BackupTrigger`） |
+| `trigger` | `TEXT` | 手動觸發、每日排程，或版本更新前的強制備份 | 合法值 `MANUAL` / `SCHEDULED` / `BEFORE_UPDATE`（`BackupTrigger`）。第三種於迭代 7 新增，由更新腳本觸發（規範 18.1 第一關） |
 | `status` | `TEXT` | 進行中、成功、失敗 | 合法值 `RUNNING` / `SUCCEEDED` / `FAILED`（`BackupRunStatus`）。服務在備份途中停止留下的 `RUNNING` 列，啟動時會收斂為 `FAILED` |
 | `started_at` | `TS` | 開始時間 | `DEFAULT CURRENT_TIMESTAMP`，有索引 |
 | `finished_at` | `TS?` | 結束時間 | |
@@ -672,7 +674,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 
 ### `adequacy_calculations` — 透析適足性計算結果（13 欄）
 
-**蒐集的意義**：FR-N07。依院方提供（或人工輸入）的五個數值計算 URR 與 spKt/V。計算本身是公式（Daugirdas 第二代單池公式，Q-26 待確認），**不含任何判讀**；本迭代只畫趨勢，不預測（預測於迭代 7 併入規則引擎）。每一個結果都指回五筆原始數值，事後可追溯。
+**蒐集的意義**：FR-N07。依院方提供（或人工輸入）的五個數值計算 URR 與 spKt/V。計算本身是公式（Daugirdas 第二代單池公式，Q-26 待確認），**不含任何判讀**；本迭代只畫趨勢，不預測（預測於迭代 11 併入規則引擎）。每一個結果都指回五筆原始數值，事後可追溯。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1005,6 +1007,42 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 ---
 
+## 十五、版本更新紀錄（迭代 7）
+
+FR-S12、規範第 18 條。**第一次正式部署之後，每一次更新面對的都是真實病人資料，而那份資料只有一個檔案。**
+這一類只有一張表，記的是「更新這件事本身」——與第八條的日常備份是兩回事。
+
+### `update_runs` — 版本更新紀錄（14 欄）
+
+**蒐集的意義**：規範 18.4。沒有這份紀錄，半年後發現資料對不上時，沒有人答得出「那是哪一次更新帶進來的」。
+每一次執行更新流程（`npm run db:update`）留一列，**成功與中止都留**。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `status` | `TEXT` | 進行中、完成、中止 | 合法值 `RUNNING` / `SUCCEEDED` / `FAILED`（`UpdateRunStatus`） |
+| `started_at` | `TS` | 開始時間 | `DEFAULT CURRENT_TIMESTAMP`，有索引 |
+| `finished_at` | `TS?` | 結束時間 | |
+| `from_version` | `TEXT?` | 更新前的版本標記 | 取自上一筆成功的 `to_version`；第一次更新為空 |
+| `to_version` | `TEXT` | 更新後的版本標記 | 取自 `apps/api/package.json` 的 `version` |
+| `backup_file_name` | `TEXT?` | 更新前那份備份的檔名 | ⛔ 同 `backup_runs`：**只記檔名**，目錄由 `BACKUP_DIR` 決定（第 9 條）。空代表備份根本沒做成，那次更新不該往下走 |
+| `backup_size_bytes` | `BIGINT?` | 備份檔大小 | |
+| `backup_sha256` | `TEXT?` | 備份檔的雜湊值 | 還原時拿來比對 |
+| `backup_verified_at` | `TS?` | 備份**實際還原並通過完整性檢查**的時間 | 規範 18.1 第一關。空代表沒有通過，流程會停在遷移之前 |
+| `backup_verify_result` | `TEXT?` | 驗證結果：完整性檢查與各主要資料表的筆數 | 驗證用的暫存檔檢查完即刪，只留這句結論 |
+| `applied_migrations` | `TEXT?` | 這次套用了哪幾個遷移 | 以換行分隔；沒有待套用的遷移時為空字串。**這是「遷移只能前滾」留下的唯一證據** |
+| `operator_label` | `TEXT` | 誰執行的 | **作業系統帳號＠主機名稱**，不是護理端帳號——更新進行時服務是停著的，沒有人登入 |
+| `error_message` | `TEXT?` | 中止原因 | 已把資料庫與備份目錄的實際路徑換成設定名稱（第 9 條） |
+
+**索引**：`started_at`
+**誰寫這張表**：只有更新腳本。**後端只讀不寫**（`UpdateRunRepository` 走唯讀連線），
+護理端「系統管理 → 資料庫與備份」最下方呈現它。
+**同一次更新在稽核軌跡留下的**：`DATABASE_UPDATE_STARTED`、`DATABASE_BACKUP_CREATED`、
+`DATABASE_BACKUP_VERIFIED`、`DATABASE_UPDATE_COMPLETED`（或 `DATABASE_UPDATE_FAILED`）。
+在正式環境誤用開發用遷移指令而被擋下時，另留一筆 `DATABASE_MIGRATION_BLOCKED`。
+
+---
+
 ## 附錄 A：資料不流向哪裡
 
 同樣重要的是**沒有**蒐集什麼。以下都不在資料庫裡，且都是刻意的：
@@ -1012,7 +1050,7 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | 沒有蒐集 | 原因 |
 |---|---|
 | 生命徵象、透析處方、透析機台參數 | 本系統不是電子病歷；機台整合屬未來擴充。院方臨床數值只收輪播第三層需要的少數幾種，且每筆帶資料時間與來源批次 |
-| 風險分數、嚴重度分級、趨勢預警 | 屬 FR-P03／FR-P05／FR-N06，迭代 7 以規則引擎實作並受書面確認閘門約束，不會寫進現有的任何一張表 |
+| 風險分數、嚴重度分級、趨勢預警 | 屬 FR-P03／FR-P05／FR-N06，迭代 11 以規則引擎實作並受書面確認閘門約束，不會寫進現有的任何一張表 |
 | 未去識別化的 AI 提示 | 規範第 14 條：沒有任何理由需要保留它，去識別化在寫入之前完成 |
 | 密碼明文、Session Token 明文、平板 API 金鑰明文 | 一律只存雜湊或 jti |
 | 資料庫檔案與備份檔的完整路徑 | 規範第 9 條：不寫進資料庫、日誌、稽核或 API 回應；`backup_runs` 只記檔名 |
