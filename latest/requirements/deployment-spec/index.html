@@ -794,15 +794,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-正式環境院內一台專用-windows-工作站" class="md-nav__link">
+  <a href="#2-正式環境院內一台共用-windows-工作站" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. 正式環境：院內一台專用 Windows 工作站
+        2. 正式環境：院內一台共用 Windows 工作站
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. 正式環境：院內一台專用 Windows 工作站">
+    <nav class="md-nav" aria-label="2. 正式環境：院內一台共用 Windows 工作站">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1833,15 +1833,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-正式環境院內一台專用-windows-工作站" class="md-nav__link">
+  <a href="#2-正式環境院內一台共用-windows-工作站" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. 正式環境：院內一台專用 Windows 工作站
+        2. 正式環境：院內一台共用 Windows 工作站
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. 正式環境：院內一台專用 Windows 工作站">
+    <nav class="md-nav" aria-label="2. 正式環境：院內一台共用 Windows 工作站">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2210,8 +2210,8 @@
 <tbody>
 <tr>
 <td>應用主機</td>
-<td>NVIDIA DGX Spark，ARM64，<strong>與其他專案共用</strong></td>
-<td><strong>院內一台專用 Windows 工作站</strong>，x86-64</td>
+<td>NVIDIA DGX Spark，ARM64，與其他專案共用</td>
+<td><strong>院內另一台 Windows 工作站</strong>，x86-64；<strong>仍與其他專案共用</strong>，院方確保本系統資源足夠</td>
 </tr>
 <tr>
 <td>規格</td>
@@ -2245,7 +2245,8 @@
 </tr>
 </tbody>
 </table>
-<p><strong>受影響的 DEP 條款</strong>：DEP-02（理由改變、結論不變）、DEP-04（保留並加嚴）、DEP-05（<strong>作廢</strong>）、DEP-06（保留）、DEP-07（<strong>改寫</strong>）、DEP-08～DEP-14（<strong>改寫為安裝包版本</strong>）、DEP-15（保留，落實方式改）、DEP-16（保留並強化）、DEP-18～DEP-19（<strong>改寫</strong>）。新增 DEP-21～DEP-36。</p>
+<p><strong>換機器沒有換掉「共用」這件事。</strong> 新主機同樣是一台與其他專案共用的機器，差別在於院方確保本系統可用的處理器、記憶體與磁碟額度足夠。因此 v1.0 為共用主機寫的隔離要求<strong>整條保留</strong>，只是落實方式由容器層級改為安裝包層級（DEP-37）。<strong>逼出安裝包的是「容器在 Windows 上會撞到資料庫規範」，不是「主機變專用了」</strong>（見 3.1）。</p>
+<p><strong>受影響的 DEP 條款</strong>：DEP-02（理由改變、結論不變）、DEP-04（保留並加嚴）、DEP-05（<strong>作廢</strong>）、DEP-06（保留）、DEP-07（<strong>改寫</strong>）、DEP-08～DEP-14（<strong>改寫為安裝包版本</strong>）、DEP-15（保留，落實方式改）、DEP-16（保留並強化）、DEP-18～DEP-19（<strong>改寫</strong>）。新增 DEP-21～DEP-37。</p>
 <hr />
 <h2 id="1-三個環境">1. 三個環境<a class="headerlink" href="#1-三個環境" title="Permanent link">&para;</a></h2>
 <table>
@@ -2262,7 +2263,7 @@
 <td>機器</td>
 <td>FDE 的 Windows 筆電</td>
 <td>實驗室主機（院外）</td>
-<td><strong>院內一台專用 Windows 工作站</strong></td>
+<td><strong>院內一台共用 Windows 工作站</strong></td>
 </tr>
 <tr>
 <td>架構</td>
@@ -2346,7 +2347,7 @@
 <p><strong>這件事對本專案有一個直接的好處</strong>：實驗室給的是相容端點，院內推論服務（不論 Ollama 或其他）大多也是同一組相容介面。因此 <code>LabApiProvider</code> 與 <code>OnPremiseProvider</code> 共用同一份 HTTP 實作，差別只有端點位址與模型識別字，<strong>切換供應者真的只是設定變更</strong>（實作規格書 3.4 硬性規則第 1 條）。</p>
 <p><strong>DEP-03｜不得為實驗室 API 寫專屬邏輯。</strong> 過渡期若發現端點格式與相容規格有出入，改的是 <code>HttpLlmProvider</code> 的組裝與解析，不是在業務邏輯裡分支判斷現在接的是誰。</p>
 <hr />
-<h2 id="2-正式環境院內一台專用-windows-工作站">2. 正式環境：院內一台專用 Windows 工作站<a class="headerlink" href="#2-正式環境院內一台專用-windows-工作站" title="Permanent link">&para;</a></h2>
+<h2 id="2-正式環境院內一台共用-windows-工作站">2. 正式環境：院內一台共用 Windows 工作站<a class="headerlink" href="#2-正式環境院內一台共用-windows-工作站" title="Permanent link">&para;</a></h2>
 <h3 id="21-已確認的硬體事實">2.1 已確認的硬體事實<a class="headerlink" href="#21-已確認的硬體事實" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2381,19 +2382,53 @@
 <td>不需要。本系統不做任何本機推論（DEP-16）</td>
 </tr>
 <tr>
-<td>專用性</td>
-<td><strong>本專案專用</strong>，不與其他專案共用</td>
+<td>共用狀況</td>
+<td><strong>與其他專案共用</strong>，院方確保本系統的處理器、記憶體與磁碟額度足夠。實際額度、同機還有哪些專案、誰有這台機器的登入權限，仍待資訊室答覆（Q-27）</td>
 </tr>
 </tbody>
 </table>
-<p><strong>這台機器對本系統來說是過剩的，而那是好事。</strong> 本系統的負載是 15 床、三班、尖峰同時請求個位數、資料庫是一個以 MB 計的 SQLite 檔案。64GB 記憶體與 i7 處理器遠超需求，代表<strong>效能不會是上線初期的問題來源</strong>，注意力可以全部放在資料安全與流程正確上。</p>
+<p><strong>這台機器的規格對本系統來說仍然寬裕，而那是好事。</strong> 本系統的負載是 15 床、三班、尖峰同時請求個位數、資料庫是一個以 MB 計的 SQLite 檔案。即使與其他專案分享這台機器，只要院方承諾的額度到位，<strong>效能不會是上線初期的問題來源</strong>，注意力可以全部放在資料安全與流程正確上。</p>
+<p><strong>但「資源足夠」是一句承諾，不是一個設定。</strong> 它要落到數字上才擋得住事：本系統拿得到多少記憶體、資料庫那顆磁碟保留多少可用空間、可以佔用哪幾個連接埠，都要有人寫下來（Q-27）。共用主機上最常見的失敗不是效能不夠，而是<strong>某一天別的專案把磁碟寫滿、或先佔走了本系統要用的連接埠</strong>——這兩種情形都不會在測試階段出現。</p>
 <h3 id="22-四個後果">2.2 四個後果<a class="headerlink" href="#22-四個後果" title="Permanent link">&para;</a></h3>
-<p><strong>後果一：主機是專用的。</strong> v1.0 花了大篇幅處理「共用主機」帶來的隔離需求，這一整條現在不存在。</p>
-<p><strong>DEP-04｜本系統仍不得對正式主機的全域環境有任何要求。</strong>（保留並加嚴）即使主機是專用的，也<strong>不得要求院方預先安裝 Node.js、npm 或任何執行期相依</strong>。理由從「怕跟別人衝突」換成更根本的一條：<strong>院方主機上裝了什麼、什麼時候被更新、被誰更新，都不在開發端的掌握裡</strong>。執行期一律隨安裝包帶進去。</p>
+<p><strong>後果一：主機仍然是共用的。</strong> v1.0 花了大篇幅處理「共用主機」帶來的隔離需求，<strong>這一整條完整保留</strong>；換了機器只是換了它的落實方式——由容器層級改為安裝包層級（DEP-37）。</p>
+<p><strong>DEP-04｜本系統不得對正式主機的全域環境有任何要求。</strong>（保留並加嚴）<strong>不得要求院方預先安裝 Node.js、npm 或任何執行期相依</strong>，也不得要求院方為本系統調整任何全域設定。理由有兩條：<strong>主機上還有別的專案，全域裝了什麼、升級到哪一版，不由本系統決定</strong>；以及更根本的一條——<strong>院方主機上裝了什麼、什麼時候被更新、被誰更新，都不在開發端的掌握裡</strong>。執行期一律隨安裝包帶進去。</p>
+<p><strong>DEP-37｜共用主機上的隔離一律在安裝包層級做到，不要求作業系統層級的隔離。</strong> 四件事一起做，缺一件就不算隔離：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>要做到</th>
+<th>不做會怎樣</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>執行期隨包攜帶</strong>，不使用主機上任何全域安裝的 Node.js</td>
+<td>別的專案升級或移除全域 Node.js，本系統跟著壞，而且看起來像是本系統自己壞的</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>連接埠向資訊室登記後固定下來</strong>，值寫在主機的 <code>.env</code>，不寫死在程式碼</td>
+<td>與其他專案搶同一個埠，服務起不來；而且多半在某次重新開機、兩個服務的啟動順序對調時才發作</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>安裝目錄、資料庫目錄、備份目錄三者都在本系統自己的路徑底下</strong>，不放共用的暫存或文件目錄</td>
+<td>別的專案的清理腳本掃得到本系統的檔案</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>資料庫與備份目錄的權限只給服務帳號與系統管理員</strong>（DEP-12），其他登入者連讀都不行</td>
+<td>共用主機上別的專案的維運人員也登得進這台機器，預設權限等於把病人資料攤開</td>
+</tr>
+</tbody>
+</table>
+<p><strong>另外要有一條磁碟空間下限。</strong> 本系統不是這台機器上唯一在寫磁碟的人，而 SQLite 在磁碟寫滿時的行為是寫入失敗，不是逐步降級。資料庫所在磁碟的保留空間與監看方式列入 Q-27 一併問清楚。</p>
 <p><strong>後果二：架構與開發機相同。</strong></p>
 <p><strong>DEP-05｜（0919 作廢）</strong> v1.0 的「正式環境的映像檔一律為 <code>linux/arm64</code>」不再適用。取代它的是 DEP-22。</p>
 <p><strong>DEP-22｜安裝包必須在一台乾淨的 Windows 機器上實際啟動過，只確認建置成功不算。</strong> 「乾淨」的意思是那台機器上沒有開發環境、沒有全域安裝的 Node.js、沒有這個專案的任何殘留。<strong>在開發機上解壓來測，測到的是開發機，不是安裝包。</strong></p>
-<p><strong>後果三：仍然是一台桌上型機器。</strong> 沒有備援電源、沒有磁碟陣列、記憶體不具 ECC。<strong>兩顆 SSD 不等於磁碟陣列，除非院方另外做了設定；預設情況下它們只是兩顆各自獨立的磁碟。</strong></p>
+<p><strong>後果三：仍然是一台桌上型機器。</strong> 沒有備援電源、沒有磁碟陣列、記憶體不具 ECC。<strong>兩顆 SSD 不等於磁碟陣列，除非院方另外做了設定；預設情況下它們只是兩顆各自獨立的磁碟。</strong> 而且這兩顆磁碟是和其他專案一起用的——第二顆 SSD 要當備份的第一落點，得先確認它不是別的專案的資料碟。</p>
 <p><strong>DEP-06｜備份目的地必須是院內另一台機器。</strong>（保留）第二顆 SSD 可以作為備份的第一落點——快、方便、一天可以做很多次——但<strong>不得是唯一落點</strong>。整機故障、遭勒索軟體加密、或有人誤刪整個資料夾時，同一台機器上的兩顆磁碟一起沒。</p>
 <p><strong>後果四：它是 Windows。</strong> 這是 v1.0 完全沒處理過的一類問題。</p>
 <p><strong>DEP-21｜Windows 特有的三件事，部署前必須逐項確認：</strong></p>
@@ -2424,11 +2459,12 @@
 </tbody>
 </table>
 <p>另外兩件也要做，但後果沒有上面三件嚴重：關閉該機的自動休眠，以及確認系統更新的重新啟動時段不落在透析班次中。</p>
+<p><strong>主機是共用的，這五件事更容易被推翻。</strong> 防毒排除清單、休眠設定、更新時段，別的專案的維運人員一樣改得動，而改掉之後本系統不會收到任何通知。部署紀錄上要寫明這幾項是誰設的、由誰保管，以及改動前要知會誰。</p>
 <hr />
 <h2 id="3-部署形態離線安裝包">3. 部署形態：離線安裝包<a class="headerlink" href="#3-部署形態離線安裝包" title="Permanent link">&para;</a></h2>
 <p><strong>DEP-07｜（0919 改寫）正式環境以離線安裝包部署，以 Windows 服務常駐。容器降為備案。</strong></p>
 <h3 id="31-為什麼改掉容器">3.1 為什麼改掉容器<a class="headerlink" href="#31-為什麼改掉容器" title="Permanent link">&para;</a></h3>
-<p>v1.0 選容器有三個理由。0919 之後，三個裡有兩個消失了：</p>
+<p>v1.0 選容器有三個理由。0919 之後，三個裡只有一個消失，剩下兩個都還在——但那兩個都不必靠容器達成：</p>
 <table>
 <thead>
 <tr>
@@ -2439,7 +2475,7 @@
 <tbody>
 <tr>
 <td>共用主機需要隔離</td>
-<td><strong>消失。</strong> 主機是專用的</td>
+<td><strong>仍在。</strong> 但它逼出的不是容器：安裝包自帶執行期、裝在自己的目錄、以專用低權限帳號與登記過的連接埠執行，隔離在安裝包層級就做到了（DEP-37）</td>
 </tr>
 <tr>
 <td>跨架構（開發 x86、正式 ARM64）需要一個確定的產物</td>
@@ -2486,14 +2522,14 @@
 <p><strong>DEP-09｜<code>-wal</code> 與 <code>-shm</code> 必須與主檔在同一個目錄。</strong> 它們與主檔是一組，分開處理會毀損資料庫。</p>
 <p><strong>DEP-10｜後端仍然是唯一開啟資料庫檔案做寫入的行程。</strong> 不得同時啟動兩個服務執行個體指向同一個資料庫檔案；備份與資料修補在服務停止後執行，或使用後端自己提供的線上備份端點。</p>
 <p><strong>DEP-11｜不得在正式主機上執行 <code>npm install</code> 或任何建置步驟。</strong>（保留）建置全部在開發端完成。理由：正式主機沒有對外連線，而且現場不該有任何「這一步失敗了怎麼辦」的空間。</p>
-<p><strong>DEP-12｜（0919 改寫）服務以專用的低權限帳號執行</strong>，資料庫與備份目錄的存取權限只給該帳號與系統管理員，一般登入者不得讀寫。</p>
+<p><strong>DEP-12｜（0919 改寫）服務以專用的低權限帳號執行</strong>，資料庫與備份目錄的存取權限只給該帳號與系統管理員，一般登入者不得讀寫。<strong>主機是共用的，這一條因此不是形式</strong>：同一台機器上別的專案的維運人員也有登入權限，而他們不該讀得到病人資料（DEP-37 第 4 項）。</p>
 <p><strong>DEP-13｜安裝包不得包含 <code>.env</code>、資料庫檔案、備份檔或任何真實資料。</strong>（保留）設定一律於安裝時以主機上的 <code>.env</code> 提供。與《資料庫使用規範》第 9 條「不得把資料庫路徑或密碼寫入程式碼」是同一件事的延伸。</p>
 <p><strong>DEP-14｜安裝包啟動時不得連往院外。</strong>（保留）零院外連線盤點（<code>npm run check:egress</code>）的掃描範圍涵蓋安裝包的設定檔與啟動腳本。</p>
 <h3 id="33-容器備案的啟用條件">3.3 容器備案的啟用條件<a class="headerlink" href="#33-容器備案的啟用條件" title="Permanent link">&para;</a></h3>
 <p>容器設定（<code>Dockerfile</code>、<code>docker-compose.yml</code>）保留在 repo 中，不刪除。<strong>只在下列任一情形發生時才改走容器路線</strong>：</p>
 <ul>
 <li>院方資訊室明確要求以容器形式交付</li>
-<li>本系統日後要與其他專案共用主機</li>
+<li>DEP-37 的安裝包層級隔離經實際運行後證明不夠，院方要求作業系統層級的隔離</li>
 <li>正式主機改為 Linux</li>
 </ul>
 <p><strong>DEP-23｜改走容器路線時，資料庫檔案不得落在 Windows 目錄的繫結掛載上</strong>，必須放在 Linux 檔案系統的具名資料卷裡，並另外安排一條把備份送到主機可見目錄的路徑。這一條是 3.1 那張表的結論，換路線時不得重新討論。</p>
@@ -2843,13 +2879,23 @@
 </tr>
 <tr>
 <td>9</td>
-<td>服務以專用低權限帳號執行，目錄權限正確</td>
-<td>DEP-12</td>
+<td>服務以專用低權限帳號執行，目錄權限正確，其他登入者不得讀寫</td>
+<td>DEP-12、DEP-37</td>
 </tr>
 <tr>
 <td>10</td>
-<td>自動休眠與系統更新的重新啟動時段已調整</td>
+<td>自動休眠與系統更新的重新啟動時段已調整，並寫明由誰保管</td>
 <td>DEP-21</td>
+</tr>
+<tr>
+<td>11</td>
+<td>本系統使用的連接埠已向資訊室登記並固定，與同機其他專案無衝突</td>
+<td>DEP-37</td>
+</tr>
+<tr>
+<td>12</td>
+<td>資料庫所在磁碟的保留空間門檻已議定，並有人負責監看</td>
+<td>DEP-37</td>
 </tr>
 </tbody>
 </table>
@@ -2864,37 +2910,37 @@
 </thead>
 <tbody>
 <tr>
-<td>11</td>
+<td>13</td>
 <td>路線 A 的失敗紀錄已完成</td>
 <td>DEP-25</td>
 </tr>
 <tr>
-<td>12</td>
+<td>14</td>
 <td>安裝包進院前後各掃描一次，結果留存</td>
 <td>DEP-26</td>
 </tr>
 <tr>
-<td>13</td>
+<td>15</td>
 <td>雜湊值核對通過</td>
 <td>DEP-27</td>
 </tr>
 <tr>
-<td>14</td>
+<td>16</td>
 <td>隨身碟已清除，並在部署紀錄上寫明</td>
 <td>DEP-28</td>
 </tr>
 <tr>
-<td>15</td>
+<td>17</td>
 <td><code>npm run check:egress</code> 全綠，含安裝包設定檔與啟動腳本</td>
 <td>FR-S07、DEP-14</td>
 </tr>
 <tr>
-<td>16</td>
+<td>18</td>
 <td>全程離線從解壓到服務啟動成功，不出現任何對外請求</td>
 <td>DEP-30</td>
 </tr>
 <tr>
-<td>17</td>
+<td>19</td>
 <td>遷移以「套用既有遷移」的指令執行，不是開發用的那支</td>
 <td>DEP-31</td>
 </tr>
@@ -2911,37 +2957,37 @@
 </thead>
 <tbody>
 <tr>
-<td>18</td>
+<td>20</td>
 <td>首波要關閉的功能全部確認為關，且介面上完全不出現入口</td>
 <td>DEP-29、DEP-34</td>
 </tr>
 <tr>
-<td>19</td>
+<td>21</td>
 <td>AI 端點關閉時，主線功能完整可用</td>
 <td>DEP-24</td>
 </tr>
 <tr>
-<td>20</td>
+<td>22</td>
 <td>常駐總覽螢幕就位且不進入休眠</td>
 <td>FR-N12</td>
 </tr>
 <tr>
-<td>21</td>
+<td>23</td>
 <td>透析區 Wi-Fi 覆蓋實測通過</td>
 <td>Q-12</td>
 </tr>
 <tr>
-<td>22</td>
+<td>24</td>
 <td>平板佈建：先兩三台跑完一個班次，再佈建其餘</td>
 <td>DEP-36</td>
 </tr>
 <tr>
-<td>23</td>
+<td>25</td>
 <td>CA 與 APK 簽名金鑰已異地備份並寫進交接文件</td>
 <td>DEP-35</td>
 </tr>
 <tr>
-<td>24</td>
+<td>26</td>
 <td>院方臨床資料 API 可連線，抓取失敗時輪播第三層顯示上次成功的值</td>
 <td>FR-S05</td>
 </tr>
@@ -2984,7 +3030,7 @@
 </tr>
 <tr>
 <td>Q-27</td>
-<td>Windows 主機的安裝權限、服務註冊方式、開機自動啟動</td>
+<td>Windows 主機的安裝權限、服務註冊方式、開機自動啟動，以及共用之下的資源額度、連接埠與磁碟保留空間</td>
 </tr>
 <tr>
 <td>Q-29</td>

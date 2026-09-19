@@ -2369,7 +2369,7 @@
 <td>1</td>
 <td>應用主機</td>
 <td>院內 NVIDIA DGX Spark（ARM64、共用）</td>
-<td><strong>院內一台專用 Windows 工作站</strong>（x86-64、64GB、2TB SSD ×2）。DGX Spark 只剩「透過 API 呼叫的地端推論端點」一個身分</td>
+<td><strong>院內另一台 Windows 工作站</strong>（x86-64、64GB、2TB SSD ×2，仍與其他專案共用，院方確保資源足夠）。DGX Spark 只剩「透過 API 呼叫的地端推論端點」一個身分</td>
 </tr>
 <tr>
 <td>2</td>
@@ -3465,7 +3465,7 @@
 </tr>
 <tr>
 <td>可移植性</td>
-<td>系統不得對正式主機的全域環境有任何要求：<strong>不得要求院方預先安裝 Node.js、npm 或任何執行期相依</strong>，執行期隨交付物一起帶進去。<strong>0919 修正</strong>：正式主機改為 x86-64 Windows 專用機，與開發環境同架構；ARM64 的限制取消，「不假設全域環境」這一條保留並更嚴格（DEP-04）</td>
+<td>系統不得對正式主機的全域環境有任何要求：<strong>不得要求院方預先安裝 Node.js、npm 或任何執行期相依</strong>，執行期隨交付物一起帶進去。<strong>0919 修正</strong>：正式主機改為 x86-64 Windows 工作站，與開發環境同架構；ARM64 的限制取消。<strong>那台主機與其他專案共用</strong>，因此「不假設全域環境」這一條不但保留，還更嚴格（DEP-04），隔離改在安裝包層級做到（DEP-37）</td>
 <td><strong>0912 新增，0919 修正</strong></td>
 </tr>
 <tr>
@@ -3493,7 +3493,7 @@
 <li>資料層為單一 SQLite 檔案，置於院內伺服器本機磁碟；即時狀態由後端行程內部維護，不另設快取服務</li>
 <li><strong>無任何主動連向院外的元件</strong>。原架構圖中的推播中繼與外部 LLM 兩條跨院外連線，於本版全部移除</li>
 <li>地端 AI 推論服務部署於院內伺服器；過渡期改指向實驗室 API，切換方式為設定變更（FR-S06）</li>
-<li>~~<strong>0912</strong>：正式環境以容器部署於院內 NVIDIA DGX Spark（ARM64、128GB 統一記憶體、與其他專案共用）~~ → <strong>0919 取代</strong>：正式環境為<strong>院內一台專用 Windows 工作站</strong>（Intel i7-14700、64GB 記憶體、2TB SSD ×2、x86-64），以<strong>離線安裝包</strong>部署，資料庫檔案置於該機本機磁碟。容器降為備案，詳見《<a href="../deployment-spec/">部署規範</a>》</li>
+<li>~~<strong>0912</strong>：正式環境以容器部署於院內 NVIDIA DGX Spark（ARM64、128GB 統一記憶體、與其他專案共用）~~ → <strong>0919 取代</strong>：正式環境為<strong>院內一台 Windows 工作站</strong>（Intel i7-14700、64GB 記憶體、2TB SSD ×2、x86-64，<strong>與其他專案共用</strong>，院方確保本系統資源足夠），以<strong>離線安裝包</strong>部署，資料庫檔案置於該機本機磁碟。容器降為備案，詳見《<a href="../deployment-spec/">部署規範</a>》</li>
 <li><strong>0912 新增，0919 強化</strong>：地端推論服務<strong>不由本系統部署或啟動</strong>。它在<strong>另一台機器</strong>（DGX Spark）上，對本系統而言只是一個可設定的 HTTP 端點；本系統不需要 GPU 存取權限，也不需要與它同機（DEP-16）</li>
 <li><strong>0919 新增</strong>：病人端平板<strong>不經 MDM 管理</strong>。PWA 由一支自包 WebView 外殼 App 載入，Kiosk 靠 Android 內建的螢幕固定，院內自簽 CA 打包進該 App。系統端不含任何裝置管理通道，只保留佈建狀態的紀錄與逸出偵測（FR-S01）</li>
 </ul>
@@ -3585,7 +3585,7 @@
 </tr>
 <tr>
 <td>11</td>
-<td>~~正式環境以容器部署，交付物為離線映像檔~~ → <strong>0919 改寫：正式環境為院內一台專用 Windows 工作站</strong>（Intel i7-14700、64GB、2TB SSD ×2、x86-64），以<strong>離線安裝包</strong>部署；院內主機不需要對外連線即可安裝。開發環境維持本機直跑。容器降為備案</td>
+<td>~~正式環境以容器部署，交付物為離線映像檔~~ → <strong>0919 改寫：正式環境為院內一台 Windows 工作站</strong>（Intel i7-14700、64GB、2TB SSD ×2、x86-64，與其他專案共用），以<strong>離線安裝包</strong>部署；院內主機不需要對外連線即可安裝。開發環境維持本機直跑。容器降為備案</td>
 <td><strong>0912 新增，0919 改寫</strong></td>
 </tr>
 <tr>
