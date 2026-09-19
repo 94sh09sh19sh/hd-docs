@@ -1015,10 +1015,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#315-已知缺陷解除綁定在某些條件下找不到入口0919" class="md-nav__link">
+  <a href="#315-已知缺陷解除綁定在某些條件下找不到入口0919當日修正" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919）
+        3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919，當日修正）
       
     </span>
   </a>
@@ -1813,6 +1813,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2262,10 +2290,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#315-已知缺陷解除綁定在某些條件下找不到入口0919" class="md-nav__link">
+  <a href="#315-已知缺陷解除綁定在某些條件下找不到入口0919當日修正" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919）
+        3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919，當日修正）
       
     </span>
   </a>
@@ -3463,7 +3491,13 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <li>每一次增刪改寫入稽核軌跡</li>
 </ol>
 <p><strong>為什麼要連問卷題目都資料化</strong>：附錄 C.1 的兩個目的（對個別病人客製化、用大量資料訓練）都要求選項固定且可比較。<strong>寫在程式裡的題目，每改一次就要重新部署一次；而重新部署的門檻高到最後大家就不改了</strong>——不改的結果不是穩定，是護理部放棄使用這個系統的這一部分。</p>
-<h3 id="315-已知缺陷解除綁定在某些條件下找不到入口0919">3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919）<a class="headerlink" href="#315-已知缺陷解除綁定在某些條件下找不到入口0919" title="Permanent link">&para;</a></h3>
+<h3 id="315-已知缺陷解除綁定在某些條件下找不到入口0919當日修正">3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919，<strong>當日修正</strong>）<a class="headerlink" href="#315-已知缺陷解除綁定在某些條件下找不到入口0919當日修正" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-19 已於迭代 7 修正。</strong> 三件修法全數完成，次要原因 1 的冪等解除也一併做了；
+驗收方式那一條已寫進 <code>verify:iteration7</code>，不是只寫在手動測試手冊裡。
+次要原因 2 依原判斷不改程式，改在測試手冊寫明要用不同的瀏覽器設定檔。
+以下保留缺陷的定位過程——<strong>同一個入口設計再出現時，要認得出它</strong>。</p>
+</blockquote>
 <p><strong>回報症狀</strong>：在本機測試時，護理端有時無法解除某個綁定。懷疑的情境有很多種——未解除就關閉病人端或護理端、斷網、伺服器重新啟動、在本機綁定多台病人端裝置。</p>
 <p><strong>定位結果：主因只有一個，而且與上面列的情境都無關。</strong></p>
 <p><strong>解除綁定的唯一入口，掛在「當日排班」清單的每一列上，而那份清單是依排班日期篩選的（預設今天）。</strong> 因此只要一筆有效綁定所屬的排班日期不是畫面上選的那一天，<strong>那一列根本不會出現，自然沒有按鈕可按</strong>。會踏進這個狀況的情境至少三種：</p>
@@ -3565,7 +3599,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tbody>
 <tr>
 <td>7</td>
-<td><strong>擋住上線的缺陷與資料安全</strong></td>
+<td><strong>擋住上線的缺陷與資料安全</strong>（0919 完成）</td>
 <td>解除綁定找不到入口、離線建置失敗、更新會弄壞資料庫——這三件不修，部署當天會出事</td>
 </tr>
 <tr>
@@ -4011,6 +4045,12 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <p><strong>驗收結果</strong>：<code>npm run verify:iteration6</code> 全部通過（十條驗收標準對應腳本的十五個步驟，另含欄位對應可設定性與「瀏覽事件不含可識別內容」的驗證）。既有五支腳本 <code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>iteration5</code> 一併重跑，全綠；<code>npm run check:egress</code> 仍為 0 筆。</p>
 <p><strong>無法由 API 驗證的四項</strong>（觸碰立即中止、求助按鈕位置固定、細節頁自動退回、夜間模式）逐條列在《<a href="../../testing/manual-test-guide/">完整手動測試手冊</a>》迭代 6 一節，需在實機上確認。</p>
 <h3 id="45-迭代-7擋住上線的缺陷與資料安全0919-新增本週">4.5 迭代 7：擋住上線的缺陷與資料安全（0919 新增，本週）<a class="headerlink" href="#45-迭代-7擋住上線的缺陷與資料安全0919-新增本週" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-19 完成。</strong> 十條驗收標準以 <code>npm run verify:iteration7</code> 逐條驗過，既有六支驗收腳本全綠；
+手動測試步驟見《<a href="../../testing/iteration-7/">完整手動測試手冊</a>》迭代 7 分冊（<code>q1</code>–<code>q49</code>）。
+其中兩項本迭代驗不完，已標明去處：乾淨 Windows 機器上的全程離線安裝排在迭代 10（DEP-22）、
+以服務執行帳號確認主機時區只能在部署當天做（DEP-15、部署前置檢查清單第 2 條）。</p>
+</blockquote>
 <p><strong>目標</strong>：把三件「不修就不能部署」的事做完。這個迭代<strong>不新增任何使用者可見的新功能</strong>，但它是後面三個迭代的安全網。</p>
 <table>
 <thead>
@@ -4768,8 +4808,9 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <p><strong>0919 首次執行的結果：22 筆，分成 5 類。</strong> 這 22 筆就是迭代 9 那一項工作的清單。</p>
 <h3 id="83-checkoffline-首次執行就抓到一個真的問題">8.3 <code>check:offline</code> 首次執行就抓到一個真的問題<a class="headerlink" href="#83-checkoffline-首次執行就抓到一個真的問題" title="Permanent link">&para;</a></h3>
 <p><code>prisma</code> 與 <code>@prisma/client</code> 宣告的是 <code>^6.5.0</code>，<strong>實際安裝到的是 6.19.3</strong>。
-浮動的版本範圍讓引擎與 CLI 有機會在某次重新安裝後對不起來，而症狀會是一個看起來毫不相干的錯誤。
-迭代 7 要把它鎖成確定版本（DEP-30 第 3 點）。</p>
+浮動的版本範圍讓引擎與 CLI 有機會在某次重新安裝後對不起來，而症狀會是一個看起來毫不相干的錯誤。</p>
+<p><strong>0919 已於迭代 7 鎖成 <code>6.19.3</code></strong>（DEP-30 第 3 點），同一支腳本另外多了兩項檢查：
+開發用的遷移指令有沒有加上防呆、更新流程有沒有可執行的入口。目前 0 項阻擋。</p>
 <h3 id="84-還沒有工具要靠人的四件事">8.4 還沒有工具、要靠人的四件事<a class="headerlink" href="#84-還沒有工具要靠人的四件事" title="Permanent link">&para;</a></h3>
 <p><strong>寫出來是為了不要假裝腳本涵蓋了全部。</strong></p>
 <table>
