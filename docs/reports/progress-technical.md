@@ -25,7 +25,7 @@
 | [`open-questions.md`](../requirements/open-questions.md) | 唯一的待確認事項總表（Q-01～Q-31）。程式裡的暫定值多半對應其中一項 |
 | [`../notes/uiux-design-baseline.md`](../notes/uiux-design-baseline.md) | 介面設計基準（0919 新增）。**動介面前先讀**，可執行版在 `.claude/skills/hd-uiux/` |
 
-動工前請至少讀完前三份。這個專案有不少「看起來繞路」的設計，幾乎都源自這些文件的硬性約束。系統實體與邏輯架構見[架構圖](../requirements/architecture-diagrams.md)（**2026-09-19 重繪**：應用主機由 DGX Spark 改為院內一台專用的 Windows 工作站並以離線安裝包部署，AI 推論端點退成另一台機器，**MDM 整格拿掉**改為自包 WebView 外殼加螢幕固定，臨床數值來源改標為院方唯讀 API。這是第一次真的動到圖二的分區與線）。圖片走 repo 相對路徑，文件站上就是 repo 裡的這兩個檔案。
+動工前請至少讀完前三份。這個專案有不少「看起來繞路」的設計，幾乎都源自這些文件的硬性約束。系統實體與邏輯架構見[架構圖](../requirements/architecture-diagrams.md)（**2026-09-19 重繪**：應用主機由 DGX Spark 改為院內另一台 Windows 工作站（仍與其他專案共用）並以離線安裝包部署，AI 推論端點退成另一台機器，**MDM 整格拿掉**改為自包 WebView 外殼加螢幕固定，臨床數值來源改標為院方唯讀 API。這是第一次真的動到圖二的分區與線）。圖片走 repo 相對路徑，文件站上就是 repo 裡的這兩個檔案。
 
 ---
 

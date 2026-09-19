@@ -441,7 +441,7 @@
       <p class="claim">院內裝置與資料庫一條對外連線都沒有；唯一出口是應用伺服器連到過渡期實驗室 API 的那條線。</p>
     </div>
     <figure>
-      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內一台專用 Windows 工作站上的應用伺服器、同機本機 SSD 上的 SQLite 檔案、唯讀整合的 HIS/EMR、院內另一台機器上的備份目的地，以及另一台 DGX Spark 上的院內 AI 推論端點。平板不經 MDM，改以自包 WebView 外殼加螢幕固定。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕。唯一跨出醫院的是應用伺服器連到過渡期實驗室 API 的線，只送合成資料。">
+      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內一台與其他專案共用的 Windows 工作站上的應用伺服器、同機本機 SSD 上的 SQLite 檔案、唯讀整合的 HIS/EMR、院內另一台機器上的備份目的地，以及另一台 DGX Spark 上的院內 AI 推論端點。平板不經 MDM，改以自包 WebView 外殼加螢幕固定。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕。唯一跨出醫院的是應用伺服器連到過渡期實驗室 API 的線，只送合成資料。">
         <defs>
           <marker id="p2-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p2-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
@@ -528,7 +528,7 @@
         <circle cx="530" cy="445" r="3" class="dot"/><circle cx="530" cy="467" r="3" class="dot"/><circle cx="530" cy="489" r="3" class="dot"/>
         <text x="450" y="528" text-anchor="middle" class="t-title">應用伺服器</text>
         <text x="450" y="550" text-anchor="middle" class="t-sub-s">＝圖版 01 的整層後端</text>
-        <text x="450" y="570" text-anchor="middle" class="t-sub-s">專用 Windows 工作站・離線安裝包</text>
+        <text x="450" y="570" text-anchor="middle" class="t-sub-s">共用 Windows 工作站・離線安裝包</text>
 
         <!-- SQLite 檔案 : cylinder -->
         <path d="M 650,442 L 650,558 A 90,22 0 0 0 830,558 L 830,442 Z" class="node"/>
@@ -585,7 +585,7 @@
         <li><b>新增元件。</b>臨床資料匯入、照護業務模組、備份目的地；規則引擎與對外報表服務以虛線標為規劃中。</li>
         <li><b>迭代 6 補上閒置輪播與正式主機。</b>輪播併在照護業務模組裡（卡片由後端組好再送到平板）；兩張圖的「院內 AI 伺服器」標上 DGX Spark，應用伺服器標上容器部署。<b>沒有新增任何機器或網路連線</b>，圖版 02 的分區與線一條未改。</li>
         <li><b>迭代 5 再加一個營運與排班模組。</b>它是本系統第一個蒐集「護理師自己的資料」的地方——班表、床位分配、成效基準。與其他模組寫同一個檔案，但自成資料表，<b>不回寫臨床資料表</b>（資料庫使用規範 §11.2）。</li>
-        <li><b>0919 第一次動到圖版 02 的分區與線。</b>應用伺服器由 DGX Spark 改為<b>院內一台專用 Windows 工作站</b>，以離線安裝包部署；AI 推論端點退成<b>另一台機器</b>，兩者之間只有一條院內 HTTP 呼叫；<b>MDM 整格拿掉</b>，平板改以自包 WebView 外殼加螢幕固定，那條「註冊／遠端鎖定」的線一併消失；臨床數值來源由「待確認」改為院方唯讀 API。前面幾次都只換標籤，這一次真的少了一台機器、少了一條線。</li>
+        <li><b>0919 第一次動到圖版 02 的分區與線。</b>應用伺服器由 DGX Spark 改為<b>院內另一台 Windows 工作站</b>（仍與其他專案共用），以離線安裝包部署；AI 推論端點退成<b>另一台機器</b>，兩者之間只有一條院內 HTTP 呼叫；<b>MDM 整格拿掉</b>，平板改以自包 WebView 外殼加螢幕固定，那條「註冊／遠端鎖定」的線一併消失；臨床數值來源由「待確認」改為院方唯讀 API。前面幾次都只換標籤，這一次真的少了一台機器、少了一條線。</li>
       </ul>
     </div>
   </section>
