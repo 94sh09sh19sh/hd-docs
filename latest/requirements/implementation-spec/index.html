@@ -1869,6 +1869,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3471,6 +3499,12 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <li><strong>預設值寫在共用常數裡，不是寫在資料庫的 seed 裡</strong>。全新環境第一次啟動時要能長出正確的預設版位</li>
 <li><strong>「需手持裝置的功能」是一個群組，不是一個一個的開關。</strong> 護理師拿到行動裝置那天要能一次開啟，不是去找七個地方各開一次</li>
 </ol>
+<p><strong>0919 迭代 9 實作結果</strong>：版位存在 <code>nav_placement_settings</code>，17 項功能各一列；
+守衛 <code>NavItemGuard</code> 掛在全域，控制器標上 <code>@RequireNavItem()</code> 即納管。
+第 2 條實作出來是這樣：<strong>關閉的功能回 404 並寫一筆稽核，未實作的功能連路由都沒有</strong>
+——前者在軌跡上查得到，後者查不到，因為它從來沒有被呼叫過。
+另外補了一條規格沒寫、但寫程式時才看得出來的限制：<strong>主列滿 7 項時，第 8 項移不進去</strong>，
+會被擋下並說「請先把其中一項改到更多選單」。上限若只寫在文件裡，半年後主列就會有 9 項。</p>
 <h3 id="314-選項與題庫改為資料0919-新增">3.14 選項與題庫改為資料（0919 新增）<a class="headerlink" href="#314-選項與題庫改為資料0919-新增" title="Permanent link">&para;</a></h3>
 <p>對應 SRS 附錄 C。<strong>院方授權先採用 AI 產生的預設內容，並要求可在護理端調整</strong>，因此這些內容必須從程式常數搬進資料表。</p>
 <table>
@@ -3519,6 +3553,46 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <li>每一次增刪改寫入稽核軌跡</li>
 </ol>
 <p><strong>為什麼要連問卷題目都資料化</strong>：附錄 C.1 的兩個目的（對個別病人客製化、用大量資料訓練）都要求選項固定且可比較。<strong>寫在程式裡的題目，每改一次就要重新部署一次；而重新部署的門檻高到最後大家就不改了</strong>——不改的結果不是穩定，是護理部放棄使用這個系統的這一部分。</p>
+<p><strong>0919 迭代 9 實作結果</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>硬性規則</th>
+<th>實作在哪裡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1、2</td>
+<td>識別碼是 upsert 的 where 條件，改了就是新增一個；服務層沒有任何 delete</td>
+</tr>
+<tr>
+<td>3</td>
+<td>三組帶版本號的內容各有一張版本表。<strong>改一題＝整份複製成新版本再套上改動，在同一個交易裡完成</strong>——半成品的版本比沒有版本更難查</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>is_other</code> 欄位。後端擋（回 409）、前端不出現那顆按鈕</td>
+</tr>
+<tr>
+<td>5</td>
+<td>舊常數只剩一個用途：把迭代 9 之前那一版補寫成第 1 版，讓既有作答還原得出當時的題目。<strong>全新環境不會寫入那一份</strong>，版本號直接從 2 起算——同一個版本字串在任何一套環境裡都要指同一份題目</td>
+</tr>
+<tr>
+<td>6</td>
+<td>每一次增刪改都要填理由，理由連同新舊值進稽核軌跡</td>
+</tr>
+</tbody>
+</table>
+<p><strong>三件規格沒寫、實作時才浮出來的事</strong>：</p>
+<ol>
+<li><strong>平板拿著舊版題目送出時要擋下。</strong> 默默拿新版的題目去解讀舊版的答案，比拒收更危險——
+   同一個識別碼在兩版之間可能換過選項，對不起來的是資料本身</li>
+<li><strong>求助類別的顯示文字要留一份快照在紀錄上。</strong> 識別碼不變、文字可改是對的，
+   但事後回頭看那一筆求助時，要知道病人按的是哪一個按鈕上的<strong>哪幾個字</strong></li>
+<li><strong>回饋的冪等要排在題目檢查之前。</strong> 第一次送出之後每月加問的兩題就不再到期，
+   拿當下該問的題目去檢查重送的那一份，會把自己的成功回應判成錯誤</li>
+</ol>
 <h3 id="315-已知缺陷解除綁定在某些條件下找不到入口0919當日修正">3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919，<strong>當日修正</strong>）<a class="headerlink" href="#315-已知缺陷解除綁定在某些條件下找不到入口0919當日修正" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>2026-09-19 已於迭代 7 修正。</strong> 三件修法全數完成，次要原因 1 的冪等解除也一併做了；
@@ -4299,6 +4373,13 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 驗收腳本對後者用的是一條棘輪：<strong>不得增加</strong>，迭代 9 清完後把基準線改成 0。</p>
 <p><strong>外部依賴</strong>：Q-31（現場試用人選）。<strong>沒有它這個迭代仍可完成</strong>，但族群分析要被現場打臉過一次才算數——<strong>這件事排在首波試用開始之前，事後才問等於沒問。</strong></p>
 <h3 id="47-迭代-9導覽版位功能開關與內容資料化0919-新增本週">4.7 迭代 9：導覽版位、功能開關與內容資料化（0919 新增，本週）<a class="headerlink" href="#47-迭代-9導覽版位功能開關與內容資料化0919-新增本週" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-19 完成。</strong> 十條驗收標準以 <code>npm run verify:iteration9</code> 逐條驗過（10 個步驟全過），
+既有八支驗收腳本全綠，<code>npm run check:all</code> 五支全綠。
+手動測試步驟見《<a href="../../testing/iteration-9/">完整手動測試手冊</a>》迭代 9 分冊（<code>s1</code>–<code>s41</code>）。</p>
+<p><strong><code>check:ui</code> 的基準線已從 22 降到 0</strong>（迭代 8 的棘輪至此收完），
+<code>verify:iteration8</code> 裡那條基準線也一併改成 0：之後只能往下，不能往上。</p>
+</blockquote>
 <p><strong>目標</strong>：讓「哪些功能出現、出現在哪裡、選項有哪些」全部變成可設定的資料，不必改程式。</p>
 <table>
 <thead>
@@ -4367,6 +4448,126 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tbody>
 </table>
 <p><strong>Schema 變更</strong>：新增導覽版位設定、求助類別、問卷題目與版本、題庫題目與知識點、回饋題目與版本等資料表。<strong>依《資料庫使用規範》18.2，這個迭代只做加法</strong>——共用常數改為首次啟動時寫入的預設值，舊的常數在下一版才移除。</p>
+<p><strong>實際怎麼做的</strong>（0919）：</p>
+<table>
+<thead>
+<tr>
+<th>做了什麼</th>
+<th>位置</th>
+<th>重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>導覽版位</td>
+<td><code>nav_placement_settings</code>＋<code>NavItemGuard</code></td>
+<td>版位存資料，<strong>守衛掛在全域</strong>：<code>@RequireNavItem()</code> 標過的控制器，版位為關閉時一律 404 並留一筆稽核。前端連路由都不註冊</td>
+</tr>
+<tr>
+<td>主列上限</td>
+<td><code>NAV_PRIMARY_MAX = 7</code></td>
+<td>第 8 項要進主列會被擋下並說明「請先把其中一項改到更多選單」。<strong>上限是規則，不是建議</strong></td>
+</tr>
+<tr>
+<td>需手持裝置的功能群組</td>
+<td>功能開關 <code>HANDHELD_FEATURES</code></td>
+<td>一個群組一次開關，目前涵蓋「我到床邊了」。它的開啟條件系統驗不到（護理師手上有沒有裝置），因此條件視為成立，把關落在「切換必須登記核准依據」那一條</td>
+</tr>
+<tr>
+<td>離院衛教拆成獨立一頁</td>
+<td><code>pages/DischargeEducationPage.tsx</code></td>
+<td>不是為了頁面太長：混在「衛教」裡就沒辦法乾淨地只關掉其中一件</td>
+</tr>
+<tr>
+<td>求助類別資料化</td>
+<td><code>help_categories</code></td>
+<td>含分派表預設急迫度與「對應的常見併發症」。<strong>併發症那一欄不送給任何畫面</strong>——顯示了就變成系統在給診斷提示</td>
+</tr>
+<tr>
+<td>求助類別的分派規則</td>
+<td><code>routeHelpRequest(group, severity)</code></td>
+<td>輸入從「類別」換成「組別」，組別存在資料表裡。仍是靜態表，不讀歷史資料</td>
+</tr>
+<tr>
+<td>三組帶版本號的內容</td>
+<td><code>questionnaire_*</code>、<code>quiz_bank_*</code>、<code>feedback_form_*</code></td>
+<td>改一題＝<strong>整份複製成新版本再套上改動</strong>，在同一個交易裡完成。舊版本原封不動，既有作答仍指向它</td>
+</tr>
+<tr>
+<td>處理方式可複選並記順序</td>
+<td><code>help_request_methods</code></td>
+<td>「先平躺再回填食鹽水」和「先回填再平躺」是不同的處置路徑。<code>handling_method_code</code> 保留為「第一個做的」，既有查詢照舊</td>
+</tr>
+<tr>
+<td>求助類別的文字快照</td>
+<td><code>help_requests.category_label</code></td>
+<td>護理部改了類別的文字之後，<strong>既有紀錄仍顯示按下當時的措辭</strong>。事後回頭看要知道病人按的是哪幾個字</td>
+</tr>
+<tr>
+<td>代號 → 文字的解析</td>
+<td><code>common/content-labels.ts</code>＋<code>ContentLabelService</code></td>
+<td>mapper 是純函式、注入不進服務，因此改成由呼叫端把一份快照傳進來。快取 30 秒，發布內容時直接失效</td>
+</tr>
+<tr>
+<td>平板端的離線</td>
+<td><code>patient-pwa/src/device.ts</code></td>
+<td>題目與類別存在 <code>hd.content.*</code>，<strong>刻意不掛在 Session 前綴底下</strong>——它們不是病人資料；跟著清掉的話，下一位病人接手時剛好斷網就連問卷都開不出來</td>
+</tr>
+<tr>
+<td>版本不符一律拒收</td>
+<td><code>symptoms.service.ts</code>、<code>education.service.ts</code>、<code>feedback.service.ts</code></td>
+<td>平板拿著舊版題目送出會被擋下。<strong>拿新題目去解讀舊答案，比拒收更危險</strong></td>
+</tr>
+<tr>
+<td>四條護欄</td>
+<td><code>content.service.ts</code>＋<code>SystemContentPanel.tsx</code></td>
+<td>後端擋一次、前端擋一次。前端那一次是「按鈕不出現」，不是「按了才說不行」</td>
+</tr>
+<tr>
+<td>抽題規則</td>
+<td><code>education/quiz.ts</code></td>
+<td>附錄 C.6 的四個順位，前三個各有一個可設定的上限——<strong>「個人化」不是把五題全部塞給同一個知識點</strong></td>
+</tr>
+<tr>
+<td>趨勢偏離改寫</td>
+<td><code>feedback/psychosocial-rule.ts</code></td>
+<td>改成附錄 C.7 的做法：<strong>這位病人自己</strong>近六次的移動中位數，連續兩次低於它達 2 分才標示。三個門檻全部可設定</td>
+</tr>
+<tr>
+<td>介面技術識別清零</td>
+<td>前端各頁</td>
+<td>22 筆清完。盤點腳本新增一份<strong>逐行列出的已知例外</strong>：內容與選項那一頁的識別碼欄位——護理長看不到它，就不知道自己改的是文字還是新增了一個選項</td>
+</tr>
+<tr>
+<td>驗收腳本改成問後端</td>
+<td><code>scripts/lib/questionnaire.ts</code></td>
+<td>既有六支腳本原本照共用常數湊答案。<strong>把答案寫死在腳本裡，護理長改過題目之後那支腳本就會開始亂報</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>三件刻意沒有做的事</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>沒做</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>沒有在管理介面提供刪除</td>
+<td>停用是唯一的移除方式（附錄 C.0 規則 2）。刪掉之後既有紀錄就指向一個不存在的識別碼</td>
+</tr>
+<tr>
+<td>沒有讓識別碼可以改</td>
+<td>識別碼一改，這個選項之前累積的所有紀錄就與之後的對不起來（規則 1）</td>
+</tr>
+<tr>
+<td>沒有把附錄 C 的內容留在程式裡當執行期來源</td>
+<td>那會變成「程式讀常數、介面讀資料表」的雙軌（3.14 第 5 條）。舊常數只留給「把迭代 9 之前那一版補寫成第 1 版」用</td>
+</tr>
+</tbody>
+</table>
 <p><strong>驗收標準</strong>：</p>
 <ol>
 <li>導覽主列 7 項、順序與基準 3.3 一致</li>
@@ -4933,6 +5134,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 不是 <code>replace(/\/\/.*$/)</code>——後者會把網址裡的 <code>//</code> 當成註解開頭，
 把整行後半段吃掉，於是真正的違規反而掃不到。</p>
 <p><strong>0919 首次執行的結果：22 筆，分成 5 類。</strong> 這 22 筆就是迭代 9 那一項工作的清單。</p>
+<p><strong>0919 迭代 9 完成後：0 筆。</strong> 基準線同步降到 0（<code>verify:iteration8</code> 裡那條棘輪也改了），
+之後只能往下，不能往上。</p>
+<p><strong>唯一的例外寫在腳本裡，而且逐行列出。</strong> 「系統管理 → 內容與選項」那一頁看得到識別碼，
+這是刻意的：依附錄 C.0 第 1 條「識別碼不可改，顯示文字可改」，
+<strong>護理長看不到識別碼，就不知道自己改的是文字（安全）還是新增了一個選項（會讓歷史資料斷開）</strong>。
+例外一律逐行列出並寫明理由——不開放整個檔案，也不接受「加個註解就跳過」那種寫法。</p>
 <h3 id="83-checkoffline-首次執行就抓到一個真的問題">8.3 <code>check:offline</code> 首次執行就抓到一個真的問題<a class="headerlink" href="#83-checkoffline-首次執行就抓到一個真的問題" title="Permanent link">&para;</a></h3>
 <p><code>prisma</code> 與 <code>@prisma/client</code> 宣告的是 <code>^6.5.0</code>，<strong>實際安裝到的是 6.19.3</strong>。
 浮動的版本範圍讓引擎與 CLI 有機會在某次重新安裝後對不起來，而症狀會是一個看起來毫不相干的錯誤。</p>
@@ -4982,6 +5189,11 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>0923</td>
+<td>2026-09-19</td>
+<td>補上迭代 9 的實作結果：4.7 標為完成，3.13、3.14 各補一段「實作出來是什麼樣」，8.2 記錄介面技術識別由 22 筆降到 0 並說明唯一的例外</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/0916/requirements/implementation-spec/">0916</a></td>
 <td>2026-09-16</td>

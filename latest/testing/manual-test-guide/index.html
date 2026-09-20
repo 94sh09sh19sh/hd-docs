@@ -1644,10 +1644,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#13--迭代-3-7-分冊" class="md-nav__link">
+  <a href="#13--迭代-3-9-分冊" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13 · 迭代 3-7 分冊
+        13 · 迭代 3-9 分冊
       
     </span>
   </a>
@@ -1829,6 +1829,34 @@
     
   
     迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
   
 
     
@@ -2534,10 +2562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#13--迭代-3-7-分冊" class="md-nav__link">
+  <a href="#13--迭代-3-9-分冊" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13 · 迭代 3-7 分冊
+        13 · 迭代 3-9 分冊
       
     </span>
   </a>
@@ -2575,9 +2603,9 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 6 · 107 條 API 路由 · 68 種稽核動作。
+對應版本：迭代 9 · 126 條 API 路由 · 164 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
-<strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-7-分冊">§13 分冊索引</a>。</p>
+<strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-9-分冊">§13 分冊索引</a>。</p>
 </blockquote>
 <p>本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。</p>
 <h2 id="操作端色籤">操作端色籤<a class="headerlink" href="#操作端色籤" title="Permanent link">&para;</a></h2>
@@ -2767,7 +2795,7 @@ npm<span class="w"> </span>run<span class="w"> </span>db:seed
 <tbody>
 <tr>
 <td><code>npm run build:shared</code></td>
-<td>把 <code>packages/shared</code> 的 TypeScript 編譯成 JS。裡面是<strong>前後端共用的型別與常數</strong>：問卷題庫、求助分派規則、68 種稽核動作代碼、權限碼。</td>
+<td>把 <code>packages/shared</code> 的 TypeScript 編譯成 JS。裡面是<strong>前後端共用的型別與常數</strong>：求助分派規則、164 種稽核動作的代號、權限碼、導覽版位的預設值。</td>
 <td>後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。<strong>之後每次改動 shared 都要重跑</strong>（<code>npm run dev</code> 會自動先跑一次）。</td>
 </tr>
 <tr>
@@ -3506,7 +3534,7 @@ taskkill<span class="w"> </span>//PID<span class="w"> </span><span class="m">332
 <p>改了後端程式碼時，<code>npm run dev</code> 用的是 <code>nest start --watch</code>，會<strong>自動重新編譯並重新啟動</strong>，不必手動關。此時護理端的即時總覽會短暫顯示「串流中斷，改為定時更新」，後端起來後自動變回「即時連線中」。</p>
 </blockquote>
 <h2 id="09--api-附錄">09 · API 附錄<a class="headerlink" href="#09--api-附錄" title="Permanent link">&para;</a></h2>
-<p>後端啟動時會印出完整路由清單，目前共 <strong>107 條</strong>，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
+<p>後端啟動時會印出完整路由清單，目前共 <strong>126 條</strong>，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
 <h3 id="怎麼帶憑證">怎麼帶憑證<a class="headerlink" href="#怎麼帶憑證" title="Permanent link">&para;</a></h3>
 <p>護理端用 <strong>JWT</strong>；病人端平板用<strong>三個標頭</strong>（序號＋金鑰，寫入資料時再加 Session Token）。</p>
 <p><em>取得護理端權杖並呼叫（bash）</em></p>
@@ -3797,6 +3825,16 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>（迭代 3）SQLite 必開設定與檔案大小（<strong>不含檔案路徑</strong>）</td>
 </tr>
 <tr>
+<td><code>GET /api/ops/runtime</code></td>
+<td>backup:manage</td>
+<td>（迭代 7）服務實際跑在哪個時區、哪個帳號底下，Prisma 引擎是不是自帶的</td>
+</tr>
+<tr>
+<td><code>GET /api/ops/updates</code></td>
+<td>backup:manage</td>
+<td>（迭代 7）歷次版本更新紀錄；由更新腳本寫入，這裡只讀</td>
+</tr>
+<tr>
 <td><code>GET /api/backups</code></td>
 <td>backup:manage</td>
 <td>（迭代 3）備份歷程</td>
@@ -4076,11 +4114,96 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>clinical-value:manage</td>
 <td>（迭代 6）修改某一個欄位的對應名稱或啟停用</td>
 </tr>
+<tr>
+<td><code>GET /api/navigation</code></td>
+<td>登入態</td>
+<td>（迭代 9）護理端畫導覽列用的清單。<strong>關閉的功能不會出現在這裡</strong></td>
+</tr>
+<tr>
+<td><code>GET /api/navigation/placements</code></td>
+<td>nav-placement:manage</td>
+<td>（迭代 9）設定畫面用：含關閉的功能、目前版位與上一次的理由</td>
+</tr>
+<tr>
+<td><code>PUT /api/navigation/placements/:key</code></td>
+<td>nav-placement:manage</td>
+<td>（迭代 9）改一項功能的版位（主列／更多選單／關閉），<strong>理由必填</strong></td>
+</tr>
+<tr>
+<td><code>GET /api/content/help-categories</code></td>
+<td>登入態</td>
+<td>（迭代 9）求助類別（只有啟用中的），畫面上顯示文字用</td>
+</tr>
+<tr>
+<td><code>GET /api/content/help-categories/all</code></td>
+<td>content:manage</td>
+<td>（迭代 9）求助類別全部，含已停用</td>
+</tr>
+<tr>
+<td><code>PUT /api/content/help-categories</code></td>
+<td>content:manage</td>
+<td>（迭代 9）新增或修改一個求助類別（帶識別碼為修改）</td>
+</tr>
+<tr>
+<td><code>GET /api/content/questionnaire</code></td>
+<td>登入態</td>
+<td>（迭代 9）目前生效的透析前問卷與它的版本號</td>
+</tr>
+<tr>
+<td><code>PUT /api/content/questionnaire/items</code></td>
+<td>content:manage</td>
+<td>（迭代 9）改一題問卷題目，<strong>整份複製成新版本再套上改動</strong></td>
+</tr>
+<tr>
+<td><code>GET /api/content/quiz-bank</code></td>
+<td>登入態</td>
+<td>（迭代 9）目前生效的衛教題庫與知識點</td>
+</tr>
+<tr>
+<td><code>PUT /api/content/quiz-topics</code></td>
+<td>content:manage</td>
+<td>（迭代 9）新增或修改一個衛教知識點</td>
+</tr>
+<tr>
+<td><code>PUT /api/content/quiz-questions</code></td>
+<td>content:manage</td>
+<td>（迭代 9）改一題題庫題目，版本號跟著遞增</td>
+</tr>
+<tr>
+<td><code>GET /api/content/feedback-form</code></td>
+<td>登入態</td>
+<td>（迭代 9）目前生效的回饋題目與三個門檻</td>
+</tr>
+<tr>
+<td><code>PUT /api/content/feedback-items</code></td>
+<td>content:manage</td>
+<td>（迭代 9）改一題回饋題目，版本號跟著遞增</td>
+</tr>
+<tr>
+<td><code>GET /api/content/other-usage</code></td>
+<td>content:manage</td>
+<td>（迭代 9）「其他」被選用的次數；用得太多代表清單不夠用</td>
+</tr>
+<tr>
+<td><code>GET /api/education/topics</code></td>
+<td>education:manage</td>
+<td>（迭代 9）產生衛教內容時可選的主題（停用的不出現）</td>
+</tr>
+<tr>
+<td><code>GET /api/device/content/questionnaire</code></td>
+<td>裝置＋Token</td>
+<td>（迭代 9）平板取問卷題目；取到之後存在本機供離線使用</td>
+</tr>
+<tr>
+<td><code>GET /api/device/content/help-categories</code></td>
+<td>裝置＋Token</td>
+<td>（迭代 9）平板取求助類別；改過的文字下一次取得就生效</td>
+</tr>
 </tbody>
 </table>
 <blockquote>
-<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>、<a href="../iteration-4/">迭代 4</a>、<a href="../iteration-5/">迭代 5</a>、<a href="../iteration-6/">迭代 6</a>、<a href="../iteration-7/">迭代 7</a>、<a href="../iteration-8/">迭代 8</a> 六本分冊。
-本表逐條對齊後端啟動時印出的路由清單（目前 107 條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>、<a href="../iteration-4/">迭代 4</a>、<a href="../iteration-5/">迭代 5</a>、<a href="../iteration-6/">迭代 6</a>、<a href="../iteration-7/">迭代 7</a>、<a href="../iteration-8/">迭代 8</a>、<a href="../iteration-9/">迭代 9</a> 七本分冊。
+本表逐條對齊後端啟動時印出的路由清單（目前 126 條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>h1</code> <strong>［終端機］</strong> 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
@@ -4254,7 +4377,7 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <p>服務執行中直接複製 <code>.db</code> 可能拿到不一致的狀態，而且 WAL 模式的 <code>-wal</code>／<code>-shm</code> 與主檔是一組，只拿主檔會漏資料。備份一律用上面的線上備份（<code>VACUUM INTO</code>），備份檔也不得放到雲端硬碟或個人隨身碟（《資料庫使用規範》8.1）。</p>
 </blockquote>
 <hr />
-<h2 id="13--迭代-3-7-分冊">13 · 迭代 3-7 分冊<a class="headerlink" href="#13--迭代-3-7-分冊" title="Permanent link">&para;</a></h2>
+<h2 id="13--迭代-3-9-分冊">13 · 迭代 3-9 分冊<a class="headerlink" href="#13--迭代-3-9-分冊" title="Permanent link">&para;</a></h2>
 <p>迭代 3 之後的功能各自成冊。全部併進本頁會超過兩千行，翻起來反而找不到東西；分開之後每一冊都能單獨走完，前置條件寫在各冊開頭。</p>
 <table>
 <thead>
@@ -4295,10 +4418,15 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <td>求助區的版面契約、字級與觸控目標、顏色不是唯一線索、說人話、沒有手勢與裝飾性動畫、護理端一眼看出有沒有事、破壞性動作的阻力、常駐總覽螢幕的字級倍率</td>
 <td><code>r1</code>–<code>r43</code></td>
 </tr>
+<tr>
+<td><a href="../iteration-9/">迭代 9 — 導覽版位、功能開關與內容資料化</a></td>
+<td>主列 7 項與「更多」選單、「關閉」是整個不提供（含後端擋下與稽核）、求助類別資料化、內容與選項的四條護欄、問卷與題庫的版本號、透析前問卷的分頁與條件追問、介面上不再有內部技術識別</td>
+<td><code>s1</code>–<code>s41</code></td>
+</tr>
 </tbody>
 </table>
 <p>走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。</p>
-<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（六本分冊的「前置」都建立在這些上面）：</p>
+<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（七本分冊的「前置」都建立在這些上面）：</p>
 <table>
 <thead>
 <tr>

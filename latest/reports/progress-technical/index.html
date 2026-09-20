@@ -976,6 +976,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-9導覽版位功能開關與內容資料化0919" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 9：導覽版位、功能開關與內容資料化（0919）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#規模" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1892,6 +1903,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2468,6 +2507,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-9導覽版位功能開關與內容資料化0919" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 9：導覽版位、功能開關與內容資料化（0919）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#規模" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2675,11 +2725,11 @@
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
 <p><strong>適用讀者</strong>：接手或協作的工程師
 <strong>報告日期</strong>：2026-09-19
-<strong>版本</strong>：迭代 8 完成（master）
+<strong>版本</strong>：迭代 9 完成（master）
 <strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
 <blockquote>
 <p>本版由 0909 定版（Iteration 2 時點）改寫。0909 之後的主要變化：需求於 0910 改為 v2.0（SaMD 三項改為有條件納入、資料庫改 SQLite、封閉網路）；
-迭代 3 完成資料層遷移與四個平台機制；迭代 4 完成 AI 輔助內容與護理記錄；迭代 5 完成求助處理完整紀錄、護理師班表與成效基準；迭代 6 完成閒置輪播與檔案匯入；迭代 7 完成部署前的缺陷修正與版本更新的資料保護；迭代 8 完成兩端介面重新設計。
+迭代 3 完成資料層遷移與四個平台機制；迭代 4 完成 AI 輔助內容與護理記錄；迭代 5 完成求助處理完整紀錄、護理師班表與成效基準；迭代 6 完成閒置輪播與檔案匯入；迭代 7 完成部署前的缺陷修正與版本更新的資料保護；迭代 8 完成兩端介面重新設計；迭代 9 完成導覽版位、功能開關與內容資料化。
 迭代編號沿用《實作規格書》v2.0：迭代 1、2 已完成，3～8 為 0910 重排後的規劃。</p>
 </blockquote>
 <hr />
@@ -3630,6 +3680,145 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 畫面上看起來只是「check:ui 有 22 筆」，不像「另外三支根本沒跑」。
 改成每一支都跑完、最後給一張總表。<strong>一支會擋住後面全部的檢查，比沒有那支檢查更糟——
 它讓人以為全部都跑過了。</strong></p>
+<h3 id="迭代-9導覽版位功能開關與內容資料化0919">迭代 9：導覽版位、功能開關與內容資料化（0919）<a class="headerlink" href="#迭代-9導覽版位功能開關與內容資料化0919" title="Permanent link">&para;</a></h3>
+<p>依《實作規格書》4.7 節與 SRS 附錄 C。<strong>這個迭代的一句話是：「哪些功能出現、出現在哪裡、
+選項有哪些」全部變成資料。</strong> 迭代 8 改的是「長什麼樣」，這一個改的是「有哪些、放在哪」——
+兩件事刻意分開做，混在一起出問題時分不清是版面壞了還是開關壞了。</p>
+<p><strong>最重要的一件事：「關閉」不是把連結藏起來。</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>一般的做法</th>
+<th>這裡的做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前端</td>
+<td>連結不顯示</td>
+<td><strong>路由不註冊</strong>。網址列直接輸入會落回首頁，不是一個「功能未啟用」的空白頁</td>
+</tr>
+<tr>
+<td>後端</td>
+<td>通常沒管</td>
+<td><code>NavItemGuard</code> 掛在全域，標了 <code>@RequireNavItem()</code> 的控制器一律回 404</td>
+</tr>
+<tr>
+<td>軌跡</td>
+<td>沒有</td>
+<td>被擋下時留一筆。<strong>「已實作但關閉」與「根本沒有這個功能」在稽核上是兩件事</strong></td>
+</tr>
+</tbody>
+</table>
+<p>只藏前端等於沒關——知道網址的人直接打得進去。這一條在 DEP-34 寫得很清楚，
+但它寫的是「不要出現停用的入口」，實作時真正的難點是後端那一半。</p>
+<p><strong>版本號是這個迭代的另一半。</strong> 問卷、題庫、回饋題目三組內容各有一張版本表，
+改一題不是就地改那一列，而是<strong>整份複製成新版本再套上改動，在同一個交易裡完成</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>為什麼要這樣</th>
+<th>不這樣會怎樣</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>舊作答仍指向舊版本</td>
+<td>改過題目之後的趨勢圖就是把兩種不同的問題畫在同一條線上</td>
+</tr>
+<tr>
+<td>版本要嘛整份成立、要嘛完全不存在</td>
+<td>半成品的版本比沒有版本更難查</td>
+</tr>
+<tr>
+<td>平板拿著舊版題目送出時擋下</td>
+<td><strong>默默拿新題目去解讀舊答案，比拒收更危險</strong>——同一個識別碼在兩版之間可能換過選項</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>工作項</th>
+<th>位置</th>
+<th>做法重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>導覽版位</td>
+<td><code>nav_placement_settings</code>、<code>modules/navigation/</code></td>
+<td>17 項功能各一列，三種版位。預設值寫在共用常數，<strong>第一次啟動時才寫進資料表</strong>，之後一律以資料表為準——否則每次重新部署都會把護理長的調整洗掉</td>
+</tr>
+<tr>
+<td>主列上限</td>
+<td><code>NAV_PRIMARY_MAX = 7</code></td>
+<td>滿了之後第 8 項移不進去，會說「請先把其中一項改到更多選單」。<strong>上限若只寫在文件裡，半年後主列就會有 9 項</strong></td>
+</tr>
+<tr>
+<td>需手持裝置的功能</td>
+<td>開關 <code>HANDHELD_FEATURES</code></td>
+<td>一個群組一次開關（DEP-29）。它的開啟條件系統驗不到——護理師手上有沒有裝置是護理長知道、系統不知道的事實。因此條件視為成立，把關落在「切換必須登記核准依據」。<strong>把它寫成一個永遠不成立的條件只會逼人繞過檢查</strong></td>
+</tr>
+<tr>
+<td>求助類別</td>
+<td><code>help_categories</code></td>
+<td>依附錄 C.2 重新設計，臨床 11 項、非臨床 4 項，含分派表預設急迫度。<strong>「對應的常見併發症」那一欄不送給任何畫面</strong>——顯示了就變成系統在給診斷提示</td>
+</tr>
+<tr>
+<td>求助類別的文字快照</td>
+<td><code>help_requests.category_label</code></td>
+<td>改了類別的文字之後，既有紀錄仍顯示<strong>按下當時</strong>的措辭。事後回頭看要知道病人按的是哪幾個字</td>
+</tr>
+<tr>
+<td>處理方式可複選並記順序</td>
+<td><code>help_request_methods</code></td>
+<td>「先平躺再回填食鹽水」和「先回填再平躺」是不同的處置路徑</td>
+</tr>
+<tr>
+<td>三組帶版本號的內容</td>
+<td><code>questionnaire_*</code>、<code>quiz_bank_*</code>、<code>feedback_form_*</code></td>
+<td>見上表</td>
+</tr>
+<tr>
+<td>代號 → 文字</td>
+<td><code>common/content-labels.ts</code></td>
+<td>mapper 是純函式、注入不進服務，改成由呼叫端把一份快照傳進來。快取 30 秒，發布內容時直接失效——<strong>護理長改完要立刻看到結果，TTL 只是兜底</strong></td>
+</tr>
+<tr>
+<td>抽題規則</td>
+<td><code>education/quiz.ts</code></td>
+<td>附錄 C.6 的四個順位，前三個各有一個可設定的上限。<strong>「個人化」不是把五題全部塞給同一個知識點</strong>，那樣病人只會看到一直重複的題目</td>
+</tr>
+<tr>
+<td>趨勢偏離改寫</td>
+<td><code>feedback/psychosocial-rule.ts</code></td>
+<td>從「近三次平均比先前平均低」改成附錄 C.7：<strong>這位病人自己</strong>近六次的移動中位數，連續兩次低於它達 2 分才標示。三個門檻全部可設定</td>
+</tr>
+<tr>
+<td>平板端的離線</td>
+<td><code>patient-pwa/src/device.ts</code></td>
+<td>題目與類別存在 <code>hd.content.*</code>，<strong>刻意不掛在 Session 前綴底下</strong>——它們不是病人資料；跟著清掉的話，下一位病人接手時剛好斷網就連問卷都開不出來</td>
+</tr>
+<tr>
+<td>介面技術識別清零</td>
+<td>前端各頁</td>
+<td>22 筆清完，基準線降到 0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>四條護欄是後端擋一次、前端擋一次</strong>，而前端那一次的做法是「按鈕不出現」，
+不是「按了才說不行」：識別碼在編輯時是純文字而非輸入框、整頁沒有刪除按鈕、
+「其他」那一列沒有停用按鈕、版本提示寫在按下去之前。</p>
+<p><strong>介面技術識別盤點留了一份逐行列出的已知例外。</strong> 「內容與選項」那一頁看得到識別碼，
+這是刻意的：依附錄 C.0 第 1 條，<strong>護理長看不到識別碼，就不知道自己改的是文字（安全）
+還是新增了一個選項（會讓歷史資料斷開）</strong>。例外逐行列出並寫明理由——
+不開放整個檔案，也不接受「加個註解就跳過」那種寫法。</p>
+<p><strong>順手修掉一件事：<code>check:all</code> 的遷移安全那一支永遠是紅的。</strong> 它掃的是全部的遷移，
+而已經套用出去的遷移改不動（規範 18.1 第 2 關），所以掃出來只會得到一份改不動的清單。
+改成只掃「上一次部署之後新增的那幾份」，基準線寫在 <code>check-all.mjs</code> 裡，每次部署後往前移。
+<strong>一支永遠是紅的檢查，跟沒有那支檢查一樣：沒有人會再看它一眼。</strong></p>
 <h3 id="規模">規模<a class="headerlink" href="#規模" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3640,6 +3829,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <th>迭代 5 完成</th>
 <th>迭代 6 完成</th>
 <th>迭代 7 完成</th>
+<th>迭代 9 完成</th>
 </tr>
 </thead>
 <tbody>
@@ -3650,6 +3840,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>90</td>
 <td>107</td>
 <td>109</td>
+<td>116</td>
 </tr>
 <tr>
 <td>資料表</td>
@@ -3658,6 +3849,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>36</td>
 <td>39</td>
 <td>40</td>
+<td>54</td>
 </tr>
 <tr>
 <td>稽核動作</td>
@@ -3666,6 +3858,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>66</td>
 <td>68</td>
 <td>74</td>
+<td>82</td>
 </tr>
 <tr>
 <td>權限碼</td>
@@ -3674,10 +3867,12 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>20</td>
 <td>21</td>
 <td>21</td>
+<td>23</td>
 </tr>
 <tr>
 <td>角色</td>
 <td>3</td>
+<td>6</td>
 <td>6</td>
 <td>6</td>
 <td>6</td>
@@ -3690,6 +3885,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>10</td>
 <td>10</td>
 <td>10</td>
+<td>11</td>
 </tr>
 <tr>
 <td>營運參數</td>
@@ -3698,18 +3894,26 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>6</td>
 <td>12</td>
 <td>12</td>
+<td>20</td>
 </tr>
 </tbody>
 </table>
 <p>（迭代 6 沒有新增功能開關：輪播三層的開關在迭代 3 就已建好並預設關閉，這次做的是把它們的
 「開啟條件」從「功能尚未實作」換成實際判定。迭代 7 只多一張 <code>update_runs</code> 與兩個維運端點，
 新增的六種稽核動作全是更新流程與遷移防呆留下的軌跡。DEP-37 的三處補做沒有動到任何一張表，
-改的是啟動時的判定與兩個維運端點多回傳的幾個欄位。）</p>
+改的是啟動時的判定與兩個維運端點多回傳的幾個欄位。<strong>迭代 8 一張表都沒動、一個端點都沒加</strong>，
+因此表上沒有它那一欄。）</p>
+<p><strong>迭代 9 一次多了 14 張表</strong>，但它們幾乎都是同一個形狀：三組「版本表加題目表加選項表」。
+新增的 8 個營運參數也是同一類東西——<strong>「其他」的提醒門檻、每月加問的間隔、趨勢偏離的三個門檻、
+抽題規則的三個上限</strong>，全部是護理長會想調、而工程師不該替他決定的數字。</p>
 <h3 id="共用常數的角色">共用常數的角色<a class="headerlink" href="#共用常數的角色" title="Permanent link">&para;</a></h3>
 <p><code>packages/shared</code> 不只是型別。以下<strong>業務規則</strong>放在這裡，前後端共用同一份定義：</p>
 <ul>
-<li><code>PRE_DIALYSIS_SYMPTOM_QUESTIONS</code> — 10 題題庫。放前端才能離線作答，後端用 <code>questionnaireVersion</code> 驗證版本一致</li>
-<li><code>routeHelpRequest()</code> — 求助分派規則。前端顯示的分派結果與後端計算結果保證一致</li>
+<li><code>navigation.ts</code> — 迭代 9：17 項功能的<strong>預設版位</strong>與主列上限。只在第一次啟動時寫進資料表</li>
+<li><code>content.ts</code> — 迭代 9：SRS 附錄 C 的全部預設內容（求助類別、處理方式與結果、問卷題目、
+  衛教題庫 35 題、回饋題目）。<strong>這是「第一次啟動時寫進資料表的預設值」，不是執行期的資料來源</strong></li>
+<li><code>routeHelpRequest()</code> — 求助分派規則。前端顯示的分派結果與後端計算結果保證一致。
+  迭代 9 起輸入從「類別」換成「組別」，組別存在資料表裡</li>
 <li><code>AuditAction</code> / <code>Permission</code> / <code>NurseRole</code> — 動作識別字、權限碼與角色</li>
 <li><code>SYMPTOM_TREND_DISCLAIMER</code> — 非診斷結果提示文字</li>
 <li><code>platform.ts</code> — 功能開關定義與開啟條件、模型與臨床資料介面層的共用型別</li>
@@ -3718,7 +3922,13 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <li><code>operations.ts</code> — 迭代 5：<code>evaluateLabourRules()</code> 勞動條件判定、班別定義、成效基準指標定義，以及三處暫代值的<strong>預設值</strong>（注意：只是預設值，現行值一律讀資料表）。迭代 6 另加六項輪播行為參數的定義</li>
 <li><code>carousel.ts</code> — 迭代 6：輪播的層、卡片種類、卡片與行為參數型別、第二層內容的長度上限。<code>CAROUSEL_CARD_KIND_LAYER</code> 讓後端由卡片種類推出層別，不採信平板送上來的值</li>
 </ul>
-<p><strong>迭代 4 的暫定內容全部在這裡並標版本字串。</strong> 臨床端回覆 Q-23～Q-26 後，改常數並升版即可，舊紀錄仍指向舊版本。</p>
+<p><strong>迭代 4 的暫定內容原本全部在這裡並標版本字串</strong>，改內容要改常數並升版。
+<strong>迭代 9 把這件事整個翻過來</strong>：內容搬進資料表，護理長在畫面上改、立刻生效，不必重新部署。</p>
+<p><code>PRE_DIALYSIS_SYMPTOM_QUESTIONS</code>、<code>QUIZ_QUESTIONS</code>、<code>FEEDBACK_ITEMS</code>、<code>EDUCATION_TOPICS</code>、
+<code>HELP_REQUEST_CATEGORY_LABELS</code> 這幾份<strong>還在檔案裡，但只剩一個用途</strong>：
+把迭代 9 之前那一版補寫成第 1 版，讓既有作答還原得出當時的題目。
+執行期沒有任何一行程式讀它們——依 3.14 第 5 條，<strong>不得留下「程式讀常數、介面讀資料表」的雙軌</strong>。
+依《資料庫使用規範》18.2「一次更新只做加法」，它們在下一版才移除。</p>
 <p><strong>改動 <code>packages/shared</code> 後必須重跑 <code>npm run build:shared</code></strong>（<code>npm run dev</code> 會自動先跑一次）。</p>
 <hr />
 <h2 id="7--高風險三項有條件納入排在迭代-11原迭代-7">7. 🔒 高風險三項：有條件納入，排在迭代 11（原迭代 7）<a class="headerlink" href="#7--高風險三項有條件納入排在迭代-11原迭代-7" title="Permanent link">&para;</a></h2>
@@ -3857,7 +4067,11 @@ npm<span class="w"> </span>run<span class="w"> </span>dev<span class="w">       
 </code></pre></div>
 <p><strong>必填環境變數</strong>：<code>DATABASE_URL</code>（<code>file:</code> 加絕對路徑）、<code>JWT_SECRET</code>、<code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>。</p>
 <p><strong>常用選填</strong>：<code>BACKUP_DIR</code>（備份輸出）、<code>LLM_PROVIDER</code>（<code>mock</code>／<code>lab</code>／<code>onprem</code>，預設 <code>mock</code>）與 <code>LLM_ENDPOINT</code>／<code>LLM_API_KEY</code>／<code>LLM_MODEL_ID</code>、<code>LLM_MOCK_LATENCY_MS</code>（預設 1200）、<code>JWT_EXPIRES_IN</code>（預設 8 小時）、<code>BINDING_MAX_HOURS</code>（預設 6）。</p>
-<p><strong>迭代 8 沒有新增任何環境變數。</strong> 它一個端點都沒加，設定面完全沒動。</p>
+<p><strong>迭代 8、9 都沒有新增任何環境變數。</strong> 迭代 8 一個端點都沒加；
+迭代 9 加了不少端點，但它新增的每一個數字都是<strong>營運參數</strong>——
+「其他」的提醒門檻、每月加問的間隔、趨勢偏離的三個門檻、抽題規則的三個上限，
+一律存在 <code>operational_settings</code>，在護理端改，不在 <code>.env</code> 改。
+<strong>會被護理長調整的東西不該放在只有工程師動得到的地方。</strong></p>
 <p><strong>迭代 7 新增的五個（只有正式環境會用到）</strong>：<code>DEPLOYMENT_ENV=production</code> 把這台機器標成正式環境（時區不符即拒絕啟動、開發用的遷移指令被擋下、<code>API_PORT</code> 沒填即拒絕啟動）、<code>REQUIRED_TIME_ZONE</code>（預設 <code>Asia/Taipei</code>）、<code>PRISMA_ENGINES_DIR</code>（指向安裝包內的 Prisma 引擎，DEP-30）、<code>LLM_HEALTH_TIMEOUT_SECONDS</code>（健康檢查逾時，預設 5 秒，與單次生成的 <code>LLM_TIMEOUT_SECONDS</code> 分開）、<code>DB_DISK_MIN_FREE_MB</code>（資料庫磁碟保留空間下限，預設 1024，DEP-37）。</p>
 <p>既有的 <code>API_PORT</code> 在正式環境的行為也變了：<strong>開發機留空照舊用 3000，正式環境留空即拒絕啟動</strong>（DEP-37 第 2 項）。</p>
 <blockquote>
@@ -3871,13 +4085,24 @@ npm<span class="w"> </span>run<span class="w"> </span>verify:iteration3<span cla
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration4<span class="w">   </span><span class="c1"># 迭代 4 — 18 步驟（需先 db:seed，並設定 BACKUP_DIR）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration5<span class="w">   </span><span class="c1"># 迭代 5 — 15 步驟</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration6<span class="w">   </span><span class="c1"># 迭代 6 — 15 步驟</span>
-npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w">        </span><span class="c1"># 零院外連線盤點（不需後端）</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration7<span class="w">   </span><span class="c1"># 迭代 7 — 11 步驟</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration8<span class="w">   </span><span class="c1"># 迭代 8 — 7 步驟（不需後端）</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration9<span class="w">   </span><span class="c1"># 迭代 9 — 10 步驟</span>
+npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w">           </span><span class="c1"># 五支盤點腳本（不需後端）</span>
 </code></pre></div>
 <p>腳本都會建立少量標記過的合成資料並逐項斷言，涵蓋主線流程、錯誤路徑、權限隔離、冪等去重、稽核事件。<strong>改動後請全部跑過。</strong></p>
-<p>最近一次執行（2026-09-19，本機 SQLite，迭代 8 完成後）：<strong>八支皆全數通過</strong>
+<p>最近一次執行（2026-09-19，本機 SQLite，迭代 9 完成後）：<strong>九支皆全數通過</strong>
 （<code>verify:iteration8</code> 不需要後端在跑，它驗的東西全部在前端原始碼與樣式表裡）；
-<strong>五支盤點腳本中，零院外連線 0 筆、介面設計基準全部通過、離線可部署性 0 項阻擋</strong>。
-介面技術識別仍是既有的 22 筆，清除排在迭代 9；遷移安全的 1 筆是迭代 5 留下的歷史紀錄。</p>
+<strong>五支盤點腳本全綠</strong>——介面技術識別從 22 筆降到 0，遷移安全改成只掃上一次部署之後新增的那幾份
+（已經套用出去的遷移改不動，把它們掃出來只會得到一份改不動的清單，
+而<strong>一支永遠是紅的檢查跟沒有那支檢查一樣：沒有人會再看它一眼</strong>）。</p>
+<p><strong>迭代 9 動了六支既有的驗收腳本，而且是非動不可的。</strong> 題目與選項改成資料之後，
+那幾支腳本原本照共用常數湊一份答案出來，送出去會被後端以「版本不符」擋下——<strong>而擋下是對的</strong>。
+改法是加一支共用的填答器（<code>scripts/lib/questionnaire.ts</code>）：先問後端「現在生效的是哪一版、有哪幾題」，
+再照那一份填。<strong>斷言一條都沒有放寬</strong>，改的只是「答案從哪裡來」。
+另外 <code>verify:iteration4</code>、<code>verify:iteration5</code> 各多了一段：
+離院衛教與班表、成效基準首波是關閉的，因此先確認關著時真的擋得住，再暫時提供、驗完關回去——
+<strong>驗收腳本不該因為預設是關的就跳過那一段，也不該把它留在開著的狀態。</strong></p>
 <p>其中 <code>verify:iteration2</code> 改了一處，而且只有這一處：FR-N10 讓「只填自由文字即可結案」不再成立，那一段跟著改成新的結案方式。<strong>迭代 2 原本要驗的行為一條都沒有放寬</strong>——狀態轉換、留下處理者、總覽不再顯示待處理，斷言全部保留。這是目前唯一一次刻意改動既有驗收腳本，理由記在《實作規格書》1.1 節；其餘情況一律不得以「配合新功能」為由修改既有腳本。迭代 6 與迭代 7 都沒有再動過任何一支——迭代 7 的解除綁定回應只多了兩個欄位，既有欄位一個都沒有動，因此既有斷言原封不動仍然成立。</p>
 <p>完整的手動測試步驟（17 章、286 個可勾選的測試項）另有<a href="../../testing/manual-test-guide/">測試手冊</a>。其中四部分尚未執行：</p>
 <ul>
@@ -3887,6 +4112,7 @@ npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w
 <li><strong>第 16 章</strong> 迭代 6 的 48 項，其中<strong>四節是腳本驗不到、只能用手指確認的</strong>：觸碰立即中止、求助按鈕位置與尺寸不變、細節頁自動退回、夜間模式調暗。輪播對病人開啟前應先走過這四節</li>
 <li><strong><a href="../../testing/iteration-7/">迭代 7 分冊</a></strong> 的 59 項，其中 §7.6 的更新流程要先停掉後端才走得完；另有三項只有到部署當天（以服務執行帳號確認主機時區、以一般登入帳號確認讀不到資料庫與備份目錄）或迭代 10（乾淨機器上的全程離線安裝）才做得到</li>
 <li><strong><a href="../../testing/iteration-8/">迭代 8 分冊</a></strong> 的 43 項。這一冊大半要用眼睛看、最好用手指碰：<strong>標了 ⚠️ 的十一項請不要用滑鼠在開發機上帶過</strong>——躺著看得不看得清楚、單手做不做得完、從護理站走過來兩秒內知不知道有事，腳本一句話都說不出來</li>
+<li><strong><a href="../../testing/iteration-9/">迭代 9 分冊</a></strong> 的 41 項。腳本驗得了後端（關閉的端點回不回 404、版本號有沒有遞增、「其他」能不能停用），<strong>四條護欄裡有三條是畫面上的事</strong>：識別碼那一格是不是輸入框、有沒有刪除按鈕、「其他」那一列有沒有停用按鈕——都只能用眼睛看</li>
 </ul>
 <hr />
 <h2 id="11-迭代-34-接手的人值得知道的決定">11. 迭代 3、4 接手的人值得知道的決定<a class="headerlink" href="#11-迭代-34-接手的人值得知道的決定" title="Permanent link">&para;</a></h2>
@@ -3996,6 +4222,9 @@ npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 測試資料是否為虛構合成資料</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> MDM 呼叫是否皆透過 <code>MdmProviderPort</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> schema 是否維持相容約束（無 enum、無 JSON 欄位、單一級聯路徑）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 新畫面有沒有掛上導覽版位（<code>@RequireNavItem()</code>），還是又多了一個關不掉的功能</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 新增的選項或題目是不是寫進資料表，而不是又回到程式常數（跑 <code>npm run check:ui</code>）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 護理長會想調的數字，有沒有放在只有工程師動得到的地方（<code>.env</code> 而非營運參數）</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
@@ -4008,6 +4237,11 @@ npm<span class="w"> </span>run<span class="w"> </span>check:egress<span class="w
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>0923</td>
+<td>2026-09-19</td>
+<td>補上迭代 7～9：部署前的缺陷修正與資料保護、兩端介面重新設計、導覽版位與內容資料化。規模表加一欄（資料表 40 → 54、營運參數 12 → 20），共用常數那一節改寫——附錄 C 的內容搬進資料表之後，那幾份常數只剩「把舊版補寫成第 1 版」一個用途</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/0916/reports/progress-technical/">0916</a></td>
 <td>2026-09-16</td>
