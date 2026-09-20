@@ -1,9 +1,9 @@
 # 血液透析平板照護輔助系統 — 完整手動測試手冊
 
 > 從 `git clone` 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-> 對應版本：迭代 6 · 107 條 API 路由 · 68 種稽核動作。
+> 對應版本：迭代 9 · 126 條 API 路由 · 164 種稽核動作。
 > 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
-> **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--迭代-3-7-分冊)。
+> **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--迭代-3-9-分冊)。
 
 本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。
 
@@ -146,7 +146,7 @@ ls -l /d/hd-data            # Git Bash
 
 | 指令 | 在做什麼 | 為什麼需要 |
 |---|---|---|
-| `npm run build:shared` | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：問卷題庫、求助分派規則、68 種稽核動作代碼、權限碼。 | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。 |
+| `npm run build:shared` | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：求助分派規則、164 種稽核動作的代號、權限碼、導覽版位的預設值。 | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。 |
 | `npm run prisma:migrate` | 讀 `apps/api/prisma/schema.prisma`，把資料表建到 `.env` 的 `DATABASE_URL` 指向的 SQLite 檔案，並產生 Prisma Client。本專案目前有六個 migration（迭代 3～7 各一個）。**這一支是開發用的**，正式環境改用 `npm run db:update`，見[迭代 7 分冊](iteration-7.md) §7.6、§7.7。 | 你的資料庫一開始是**空的**。這步建出 nurses、patients、devices、device_bindings、symptom_reports、help_requests、audit_logs 等資料表。沒跑過，後續任何操作都會失敗。 |
 | `npm run db:seed` | 灌入**虛構**測試資料：8 位病人（`HD-TEST-0001`～`0008`）與 15 台平板（`TB-01`～`TB-15`），並把平板金鑰寫到 `apps/api/.device-keys.json`。 | 沒有病人就不能建排班，沒有平板就不能指派。**它不建立任何護理師帳號** — 那是後端啟動時依 `.env` 自動建立的。可重複執行，已有資料時會自動略過。 |
 
@@ -728,7 +728,7 @@ taskkill //PID 33244 //F
 
 ## 09 · API 附錄
 
-後端啟動時會印出完整路由清單，目前共 **107 條**，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
+後端啟動時會印出完整路由清單，目前共 **126 條**，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
 
 ### 怎麼帶憑證
 
@@ -817,6 +817,8 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `POST /api/ai/test-invocations` | system:configure＋AI 開關 | （迭代 3）介面層連線測試，走與正式功能相同的閘道 |
 | `GET /api/ai/invocations` | ai-invocation:read（唯讀角色亦可） | （迭代 3）AI 呼叫紀錄 |
 | `GET /api/ops/database` | backup:manage | （迭代 3）SQLite 必開設定與檔案大小（**不含檔案路徑**） |
+| `GET /api/ops/runtime` | backup:manage | （迭代 7）服務實際跑在哪個時區、哪個帳號底下，Prisma 引擎是不是自帶的 |
+| `GET /api/ops/updates` | backup:manage | （迭代 7）歷次版本更新紀錄；由更新腳本寫入，這裡只讀 |
 | `GET /api/backups` | backup:manage | （迭代 3）備份歷程 |
 | `POST /api/backups` | backup:manage | （迭代 3）立即線上備份（`VACUUM INTO`） |
 | `POST /api/clinical-values/manual-entries` | clinical-value:manage | （迭代 3）人工輸入臨床數值，整批全有或全無 |
@@ -873,9 +875,26 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `POST /api/clinical-values/file-imports` | clinical-value:manage | （迭代 6）Excel／CSV 匯入，整批全有或全無 |
 | `GET /api/import-field-mappings` | clinical-value:manage | （迭代 6）匯入欄位對應設定 |
 | `PUT /api/import-field-mappings/:targetField` | clinical-value:manage | （迭代 6）修改某一個欄位的對應名稱或啟停用 |
+| `GET /api/navigation` | 登入態 | （迭代 9）護理端畫導覽列用的清單。**關閉的功能不會出現在這裡** |
+| `GET /api/navigation/placements` | nav-placement:manage | （迭代 9）設定畫面用：含關閉的功能、目前版位與上一次的理由 |
+| `PUT /api/navigation/placements/:key` | nav-placement:manage | （迭代 9）改一項功能的版位（主列／更多選單／關閉），**理由必填** |
+| `GET /api/content/help-categories` | 登入態 | （迭代 9）求助類別（只有啟用中的），畫面上顯示文字用 |
+| `GET /api/content/help-categories/all` | content:manage | （迭代 9）求助類別全部，含已停用 |
+| `PUT /api/content/help-categories` | content:manage | （迭代 9）新增或修改一個求助類別（帶識別碼為修改） |
+| `GET /api/content/questionnaire` | 登入態 | （迭代 9）目前生效的透析前問卷與它的版本號 |
+| `PUT /api/content/questionnaire/items` | content:manage | （迭代 9）改一題問卷題目，**整份複製成新版本再套上改動** |
+| `GET /api/content/quiz-bank` | 登入態 | （迭代 9）目前生效的衛教題庫與知識點 |
+| `PUT /api/content/quiz-topics` | content:manage | （迭代 9）新增或修改一個衛教知識點 |
+| `PUT /api/content/quiz-questions` | content:manage | （迭代 9）改一題題庫題目，版本號跟著遞增 |
+| `GET /api/content/feedback-form` | 登入態 | （迭代 9）目前生效的回饋題目與三個門檻 |
+| `PUT /api/content/feedback-items` | content:manage | （迭代 9）改一題回饋題目，版本號跟著遞增 |
+| `GET /api/content/other-usage` | content:manage | （迭代 9）「其他」被選用的次數；用得太多代表清單不夠用 |
+| `GET /api/education/topics` | education:manage | （迭代 9）產生衛教內容時可選的主題（停用的不出現） |
+| `GET /api/device/content/questionnaire` | 裝置＋Token | （迭代 9）平板取問卷題目；取到之後存在本機供離線使用 |
+| `GET /api/device/content/help-categories` | 裝置＋Token | （迭代 9）平板取求助類別；改過的文字下一次取得就生效 |
 
-> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)、[迭代 4](iteration-4.md)、[迭代 5](iteration-5.md)、[迭代 6](iteration-6.md)、[迭代 7](iteration-7.md)、[迭代 8](iteration-8.md) 六本分冊。
-> 本表逐條對齊後端啟動時印出的路由清單（目前 107 條）；日後新增端點時，以那份清單為準回頭補這張表。
+> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)、[迭代 4](iteration-4.md)、[迭代 5](iteration-5.md)、[迭代 6](iteration-6.md)、[迭代 7](iteration-7.md)、[迭代 8](iteration-8.md)、[迭代 9](iteration-9.md) 七本分冊。
+> 本表逐條對齊後端啟動時印出的路由清單（目前 126 條）；日後新增端點時，以那份清單為準回頭補這張表。
 
 - [ ] `h1` **［終端機］** 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
   → 409「此排班仍有進行中的裝置綁定，請先解除綁定」。解除後再取消則成功，狀態變 `CANCELLED`。
@@ -1003,7 +1022,7 @@ npm run db:restore -- --from <BACKUP_DIR 裡的備份檔> --to <新的絕對路�
 
 ---
 
-## 13 · 迭代 3-7 分冊
+## 13 · 迭代 3-9 分冊
 
 迭代 3 之後的功能各自成冊。全部併進本頁會超過兩千行，翻起來反而找不到東西；分開之後每一冊都能單獨走完，前置條件寫在各冊開頭。
 
@@ -1015,10 +1034,11 @@ npm run db:restore -- --from <BACKUP_DIR 裡的備份檔> --to <新的絕對路�
 | [迭代 6 — 閒置輪播與檔案匯入](iteration-6.md) | 輪播三層與主線保護、細節頁、夜間模式、Excel／CSV 匯入與可設定的欄位對應、瀏覽事件 | `p1`–`p63` |
 | [迭代 7 — 擋住上線的缺陷與資料安全](iteration-7.md) | 不依日期的有效綁定清單、跨日提示、指派清單說得出原因、冪等解除、時區與執行帳號、更新前強制備份與驗證還原、遷移指令防呆、AI 端點不通時的四條主線、共用主機上的隔離（連接埠、目錄、磁碟空間） | `q1`–`q59` |
 | [迭代 8 — 介面重新設計](iteration-8.md) | 求助區的版面契約、字級與觸控目標、顏色不是唯一線索、說人話、沒有手勢與裝飾性動畫、護理端一眼看出有沒有事、破壞性動作的阻力、常駐總覽螢幕的字級倍率 | `r1`–`r43` |
+| [迭代 9 — 導覽版位、功能開關與內容資料化](iteration-9.md) | 主列 7 項與「更多」選單、「關閉」是整個不提供（含後端擋下與稽核）、求助類別資料化、內容與選項的四條護欄、問卷與題庫的版本號、透析前問卷的分頁與條件追問、介面上不再有內部技術識別 | `s1`–`s41` |
 
 走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。
 
-**開始任何一本分冊之前，先把這四樣東西準備好**（六本分冊的「前置」都建立在這些上面）：
+**開始任何一本分冊之前，先把這四樣東西準備好**（七本分冊的「前置」都建立在這些上面）：
 
 | 要準備的 | 在哪裡弄出來 |
 |---|---|

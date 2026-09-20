@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 40 張表、422 個欄位、6 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 54 張表、529 個欄位、8 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -64,6 +64,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 十三、護理師班表與成效基準（迭代 5） | `nurse_shifts`、`shift_bed_assignments`、`shift_change_requests`、`baseline_measurements` | 誰上哪一班、負責哪幾床、調班的來龍去脈；以及系統啟用前的人工量測結果 |
 | 十四、閒置輪播與檔案匯入（迭代 6） | `carousel_items`、`carousel_view_events`、`import_field_mappings` | 輪播第二層播什麼、哪一類卡片有人看、匯入檔案的欄位怎麼對上 |
 | 十五、版本更新紀錄（迭代 7） | `update_runs` | 每一次版本更新前備份了什麼、驗證還原成不成功、套用了哪幾個遷移、誰執行的 |
+| 十六、導覽版位與內容資料化（迭代 9） | `nav_placement_settings`、`help_categories`、`help_request_methods`、`questionnaire_*`、`quiz_*`、`feedback_form_*`、`symptom_answer_options` | 哪些功能出現在哪裡；病人與護理師看到的選項與題目是什麼，以及它們改過幾版 |
 
 ### 每張表都有的三個欄位
 
@@ -1043,6 +1044,89 @@ FR-S12、規範第 18 條。**第一次正式部署之後，每一次更新面�
 
 ---
 
+## 十六、導覽版位與內容資料化（迭代 9）
+
+FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓「有哪些、放在哪、問什麼」
+不必改程式就能改。** 寫在程式裡的選項，每改一次就要重新部署一次；
+而重新部署的門檻高到最後大家就不改了——不改的結果不是穩定，是護理部放棄使用這一部分。
+
+### `nav_placement_settings` — 導覽版位（7 欄）
+
+**蒐集的意義**：FR-S11。半年後有人問「這個功能什麼時候不見的」要答得出來。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `nav_key` | `TEXT` | 哪一個功能 | 唯一鍵。合法值為 `@hd/shared` 的 `NavItemKey`（17 項） |
+| `placement` | `TEXT` | 主列／更多選單／關閉 | `PRIMARY` / `MENU` / `OFF`（`NavPlacement`）。⛔ **`OFF` 不是「藏起來」**：前端不註冊路由、後端回 404 |
+| `last_reason` | `TEXT?` | 上一次調整的理由 | 每次調整必填，長度下限由服務層把關 |
+| `changed_by_id` | `TEXT?` | 誰調的 | → `nurses.id` |
+| `changed_at` | `TS?` | 什麼時候調的 | **刻意可為空**：空代表從未被調過，與「有人把它調回預設值」是兩件事 |
+| `created_at` | `TS` | 這一列建立的時間 | 第一次啟動時由 `NAV_ITEM_DEFINITIONS` 補齊 |
+
+**誰寫這張表**：`NavigationService`。預設值來自共用常數，**只在那一列還不存在時寫入一次**——
+之後一律以資料表為準，否則每次重新部署都會把護理長的調整洗掉。
+**稽核**：`NAV_PLACEMENT_CHANGED`（改版位）、`NAV_ITEM_ACCESS_BLOCKED`（關閉的端點被呼叫）。
+
+### `help_categories` — 求助類別（10 欄）
+
+**蒐集的意義**：SRS 附錄 C.2。原為共用常數，迭代 9 起以本表為準。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `code` | `TEXT` | 識別碼 | 唯一鍵。⛔ **建立後不可編輯**——一改，這個選項之前累積的所有紀錄就與之後的對不起來（附錄 C.0 規則 1） |
+| `label` | `TEXT` | 病人看到的字 | 白話症狀，不是診斷名稱。可改 |
+| `group_code` | `TEXT` | 臨床／非臨床 | `CLINICAL` / `NON_CLINICAL`。分派規則的輸入之一 |
+| `default_severity` | `TEXT` | 分派表預設急迫度 | ⛔ 只決定「先跳到誰的畫面上」。**病人自選的優先於它**（FR-N03） |
+| `sort_order` | `INT` | 顯示順序 | 臨床組刻意依常見程度排，不依字母 |
+| `active` | `BOOL` | 還在用嗎 | ⛔ **停用是唯一的移除方式**，沒有刪除 |
+| `is_other` | `BOOL` | 是不是「其他」 | ⛔ 為真時不可停用（附錄 C.8 護欄 3） |
+| `clinical_note` | `TEXT?` | 對應的常見併發症 | ⛔ **不顯示給病人，也不顯示給護理師**——顯示了就變成系統在給診斷提示，那是 FR-P03／P05 的範圍 |
+
+**稽核**：`HELP_CATEGORY_UPDATED`、首次寫入時的 `CONTENT_DEFAULTS_SEEDED`。
+
+### `help_request_methods` — 處理方式的執行順序（5 欄）
+
+**蒐集的意義**：附錄 C.3。一次求助常常做了不只一件事，而且**順序有意義**——
+「先平躺再回填食鹽水」和「先回填再平躺」是不同的處置路徑。
+
+| 欄位 | 型別 | 說明 |
+|---|---|---|
+| `help_request_id` | `TEXT` | → `help_requests.id`（級聯刪除） |
+| `method_code` | `TEXT` | `help_resolution_options` 中 `kind=METHOD` 的 `code` |
+| `sequence` | `INT` | 1 起算的執行順序 |
+
+`help_requests.handling_method_code` 保留為「第一個做的處置」，既有紀錄與既有查詢照舊可用。
+
+### 三組帶版本號的內容
+
+`questionnaire_versions` ＋ `questionnaire_items` ＋ `questionnaire_item_options` ＋ `questionnaire_item_triggers`（附錄 C.5）、
+`quiz_bank_versions` ＋ `quiz_bank_questions` ＋ `quiz_bank_question_options` ＋ `quiz_topics`（附錄 C.6）、
+`feedback_form_versions` ＋ `feedback_form_items`（附錄 C.7）。
+
+**三組是同一個形狀，規則也一樣**：
+
+| 規則 | 為什麼 |
+|---|---|
+| **改一題＝整份複製成新版本再套上改動**，在同一個交易裡完成 | 半成品的版本比沒有版本更難查 |
+| 每一份作答記錄它當時的版本字串 | 沒有版本號，改過題目之後的趨勢圖就是把兩種不同的問題畫在同一條線上 |
+| 舊版本原封不動留著 | 舊作答要還原得出當時問的是什麼 |
+| 版本號從 **2** 起算 | 第 1 版留給迭代 9 之前那一版題目，**只在既有環境才寫入**（全新環境沒有人填過它）。同一個版本字串在任何一套環境裡都要指同一份題目 |
+| 知識點與題目的識別碼**不可重用** | 一個識別碼一輩子只對應一個知識點，否則「這位病人在鉀離子上錯了三次」會變成假的 |
+
+**`symptom_answer_options`** 是複選題的子表：單選題不會有這裡的資料，`answer_value` 就是答案本身；
+複選題的 `answer_value` 記 `SELECTED` 或 `NONE`，選了哪幾項存在這張表，順序即病人點選的順序。
+
+**`help_requests.category_label`**（迭代 9 新增的欄位）：按下求助的當下，病人在平板上看到的那行字。
+類別的顯示文字之後可能被改掉（識別碼不動），但**這一筆紀錄要留住當時的措辭**——
+事後回頭看，要知道病人按的是哪一個按鈕上的哪幾個字。迭代 9 之前的紀錄為空，顯示時退回以識別碼查目前的文字。
+
+**趨勢偏離仍然不入庫**：規則 `PSY-DEV-v2`（這位病人自己近六次的移動中位數，
+連續兩次低於它達 2 分才標示；三個門檻皆可在 `operational_settings` 調整）在查詢時即時計算，
+結果只以事實陳述呈現給護理師，**不寫入任何資料表，也不自動觸發轉介**。
+
+---
+
 ## 附錄 A：資料不流向哪裡
 
 同樣重要的是**沒有**蒐集什麼。以下都不在資料庫裡，且都是刻意的：
@@ -1088,6 +1172,7 @@ FR-S12、規範第 18 條。**第一次正式部署之後，每一次更新面�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 0923 | 2026-09-19 | 補到 54 張表：新增第十五節（版本更新紀錄）與第十六節（導覽版位與內容資料化）。**附錄 C 的內容全部搬進資料表**，三組帶版本號的內容用同一個形狀；`help_requests` 多一欄 `category_label`（按下當時的措辭），`symptom_answers` 多一張複選子表 |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/reference/data-dictionary/) | 2026-09-16 | 補到 39 張表 408 個欄位：改述為 SQLite 現況，補上迭代 3 的五張表與迭代 4 的十四張表，新增第十二～十四節（求助處理與可設定暫代值、班表與成效基準、閒置輪播與檔案匯入）|
 | [0909](https://94sh09sh19sh.github.io/hd-docs/0909/reference/data-dictionary/) | 2026-09-09 | 首次定版 |
 
