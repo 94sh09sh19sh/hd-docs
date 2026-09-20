@@ -973,6 +973,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1979,8 +2007,22 @@
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q35</code> <strong>［終端機］</strong> <code>npm run check:offline</code>
   → 沒有阻擋項。逐項看過：引擎檔已就位（兩個檔、各約 20MB）、Prisma 三者版本一致且<strong>鎖成確定版本</strong>（不是 <code>^6.x</code>）、「套用既有遷移」的指令存在、開發用的那支已加上防呆、更新流程有入口、三個建置產物都在。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q36</code> <strong>［終端機］</strong> 開啟 <code>apps/api/package.json</code>，確認 <code>prisma</code> 與 <code>@prisma/client</code> 兩個版本號<strong>沒有 <code>^</code> 或 <code>~</code></strong>。
-  → 引擎與 CLI 的版本必須一致；浮動的版本範圍會在某次重新安裝時悄悄換掉其中一邊，而症狀會是一個看起來毫不相干的錯誤。</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q35a</code> <strong>［終端機］（0920 補）</strong> 在開發機上假裝斷網，跑一次遷移：
+  <div class="highlight"><pre><span></span><code><span class="c1"># 把 CLI 自己那份引擎與快取清掉，模擬「剛解開的 node_modules」</span>
+rm<span class="w"> </span>-f<span class="w"> </span>node_modules/prisma/query_engine-*.node
+rm<span class="w"> </span>-rf<span class="w"> </span>apps/api/node_modules/.cache/prisma
+<span class="c1"># 把下載位址指到一個解析不出來的主機，等同於院內的網路狀況</span>
+<span class="nv">PRISMA_ENGINES_MIRROR</span><span class="o">=</span>http://offline.invalid<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>prisma:migrate
+</code></pre></div>
+  → 正常跑完，最後的 <code>Running generate...</code> 也要成功。<strong>這一步就是迭代 9 末倒下的那一步</strong>：
+  遷移本身全數套用完成，倒在它順手跑的 <code>generate</code> 上，給的錯誤是 <code>getaddrinfo ENOTFOUND binaries.prisma.sh</code>。
+  若又出現那個錯誤，是 <code>apps/api/scripts/prisma-cli.mjs</code> 沒被用到（檢查 <code>package.json</code> 的 prisma 指令）。</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q36</code> <strong>［終端機］</strong> 開啟 <code>apps/api/package.json</code>，確認 <code>prisma</code> 與 <code>@prisma/client</code> 兩個版本號<strong>沒有 <code>^</code> 或 <code>~</code></strong>。
+  → 引擎與 CLI 的版本必須一致；浮動的版本範圍會在某次重新安裝時悄悄換掉其中一邊，而症狀會是一個看起來毫不相干的錯誤。</p>
+</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q37</code> <strong>［終端機］</strong> <code>npm run check:egress</code>
   → 仍為 0 筆。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q38</code> ⚠️ <strong>迭代 10 才做得完的一項</strong>：在一台<strong>乾淨的 Windows 機器</strong>上、<strong>全程離線</strong>，從解開安裝包到服務起來、套用遷移、正常運作。

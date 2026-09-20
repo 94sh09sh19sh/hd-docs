@@ -1411,6 +1411,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2728,6 +2756,31 @@
 </tr>
 </tbody>
 </table>
+<p><strong>（0920 補）第 2 點的「啟動」與「遷移」是兩個不同的行程，要分開做。</strong> 這一點漏掉一半的後果，是離線建置測試在 <code>npm run prisma:migrate</code> 的<strong>最後一步</strong>倒下——遷移本身已經全數套用完成，倒在它順手跑的 <code>generate</code> 上，錯誤訊息一模一樣是 <code>getaddrinfo ENOTFOUND binaries.prisma.sh</code>。</p>
+<p>原因是<strong>引擎在 <code>node_modules</code> 裡有兩個位置</strong>：<code>@prisma/engines/</code> 是安裝後腳本下載的那份，後端執行期用它；<code>prisma/</code> 是 <strong>Prisma CLI 自己的那份</strong>，而 CLI <strong>不會去讀 <code>@prisma/engines</code></strong>——它只看自己的目錄與 <code>node_modules/.cache/prisma</code>，兩邊都沒有就直接連往院外下載。開發機上那份早就下載過了，所以平常看不出來；換到剛解開 <code>node_modules</code> 的離線機器，兩邊都是空的。</p>
+<table>
+<thead>
+<tr>
+<th>行程</th>
+<th>誰把路徑指好</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>後端服務啟動</td>
+<td><code>src/infra/prisma/bundled-engines.ts</code>（<code>main.ts</code> 第一行 import）</td>
+</tr>
+<tr>
+<td><code>prisma migrate</code>、<code>prisma generate</code>、<code>prisma studio</code></td>
+<td><code>apps/api/scripts/prisma-cli.mjs</code>，所有 prisma 指令都從這裡進去</td>
+</tr>
+<tr>
+<td><code>npm run db:update</code>（正式環境的前滾）</td>
+<td><code>apps/api/scripts/db-update.mjs</code>，它自己 spawn CLI，環境變數一併帶上</td>
+</tr>
+</tbody>
+</table>
+<p>三者找引擎的順序一致：<code>PRISMA_ENGINES_DIR</code>（安裝包指定）→ <code>node_modules/@prisma/engines</code>（開發機）。<code>npm run check:offline</code> 會擋下沒經過這一層的 prisma 指令。</p>
 <p><strong>DEP-31｜正式環境一律使用「套用既有遷移」的指令，不得使用開發用的遷移指令。</strong> 開發用的那支在偵測到資料庫與遷移歷史對不上時，會提議或直接重建整個資料庫（《資料庫使用規範》18.1 第 3 關）。<strong>這一條與離線引擎是兩件事，但會在同一個指令上相遇，所以寫在一起。</strong></p>
 <p><strong>驗收方式</strong>：把離線建置測試的步驟改成「連網只發生在建置安裝包的那台機器上」，院內端全程離線，從解壓到服務起來不得出現任何一次對外請求。</p>
 <h3 id="64-更新">6.4 更新<a class="headerlink" href="#64-更新" title="Permanent link">&para;</a></h3>

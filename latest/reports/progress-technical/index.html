@@ -1653,6 +1653,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3506,9 +3534,14 @@
 <td>目標狀態已達成就回報成功並說明它何時因什麼結束，同時寫一筆 <code>BINDING_RELEASE_NOOP</code> 稽核——冪等不等於什麼都沒發生</td>
 </tr>
 <tr>
-<td>Prisma 引擎隨包攜帶</td>
+<td>Prisma 引擎隨包攜帶（後端啟動）</td>
 <td><code>infra/prisma/bundled-engines.ts</code>、<code>engine-bootstrap.ts</code></td>
 <td><code>PRISMA_ENGINES_DIR</code> 指向包內引擎。<strong>必須在 <code>@prisma/client</code> 載入前執行</strong>，因此獨立成一個只有副作用的模組，由 import 順序保證</td>
+</tr>
+<tr>
+<td>Prisma 引擎隨包攜帶（指令端，0920 補）</td>
+<td><code>apps/api/scripts/prisma-cli.mjs</code>、<code>scripts/lib/prisma-engines.mjs</code></td>
+<td>上一列只管後端啟動；<code>prisma migrate</code>、<code>prisma generate</code> 是另外開的行程，不經過它。所有 prisma 指令改從這層進去，執行前同樣依 <code>PRISMA_ENGINES_DIR</code> → <code>node_modules/@prisma/engines</code> 的順序把路徑指好</td>
 </tr>
 <tr>
 <td>版本鎖成確定版本</td>
