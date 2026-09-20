@@ -303,6 +303,18 @@ request to https://binaries.prisma.sh/... failed, reason: getaddrinfo ENOTFOUND 
 | 2 | 啟動與遷移時以環境變數指向包內的引擎路徑，不讓 Prisma 自己去找 |
 | 3 | **把 Prisma 的版本鎖成確定版本，不用可浮動的版本範圍**。引擎與 CLI 的版本必須一致，浮動的版本範圍會在某次重新安裝時悄悄換掉其中一邊 |
 
+**（0920 補）第 2 點的「啟動」與「遷移」是兩個不同的行程，要分開做。** 這一點漏掉一半的後果，是離線建置測試在 `npm run prisma:migrate` 的**最後一步**倒下——遷移本身已經全數套用完成，倒在它順手跑的 `generate` 上，錯誤訊息一模一樣是 `getaddrinfo ENOTFOUND binaries.prisma.sh`。
+
+原因是**引擎在 `node_modules` 裡有兩個位置**：`@prisma/engines/` 是安裝後腳本下載的那份，後端執行期用它；`prisma/` 是 **Prisma CLI 自己的那份**，而 CLI **不會去讀 `@prisma/engines`**——它只看自己的目錄與 `node_modules/.cache/prisma`，兩邊都沒有就直接連往院外下載。開發機上那份早就下載過了，所以平常看不出來；換到剛解開 `node_modules` 的離線機器，兩邊都是空的。
+
+| 行程 | 誰把路徑指好 |
+|---|---|
+| 後端服務啟動 | `src/infra/prisma/bundled-engines.ts`（`main.ts` 第一行 import） |
+| `prisma migrate`、`prisma generate`、`prisma studio` | `apps/api/scripts/prisma-cli.mjs`，所有 prisma 指令都從這裡進去 |
+| `npm run db:update`（正式環境的前滾） | `apps/api/scripts/db-update.mjs`，它自己 spawn CLI，環境變數一併帶上 |
+
+三者找引擎的順序一致：`PRISMA_ENGINES_DIR`（安裝包指定）→ `node_modules/@prisma/engines`（開發機）。`npm run check:offline` 會擋下沒經過這一層的 prisma 指令。
+
 **DEP-31｜正式環境一律使用「套用既有遷移」的指令，不得使用開發用的遷移指令。** 開發用的那支在偵測到資料庫與遷移歷史對不上時，會提議或直接重建整個資料庫（《資料庫使用規範》18.1 第 3 關）。**這一條與離線引擎是兩件事，但會在同一個指令上相遇，所以寫在一起。**
 
 **驗收方式**：把離線建置測試的步驟改成「連網只發生在建置安裝包的那台機器上」，院內端全程離線，從解壓到服務起來不得出現任何一次對外請求。

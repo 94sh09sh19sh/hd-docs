@@ -455,7 +455,8 @@ npm workspaces monorepo。約 23,700 行 TypeScript（不含 dist／node_modules
 | 不依日期的有效綁定清單 | `modules/binding/binding.controller.ts`（`GET /bindings?active=1`）、`nurse-pwa/pages/DevicesPage.tsx` | 原本的解除入口掛在依日期篩選的排班清單上，日期一對不上整列就消失。這份清單日期完全不參與條件 |
 | 跨日提示與指派清單說明 | `nurse-pwa/pages/ConsolePage.tsx`、`common/mappers.ts` 的 `describeAssignability()` | 不可指派的平板照樣列出來、只是選不下去，並寫出原因。判斷與 `BindingService.create` 的擋下條件寫在同一個地方，避免畫面說的與後端做的走偏 |
 | 解除改為冪等 | `modules/binding/binding.service.ts` | 目標狀態已達成就回報成功並說明它何時因什麼結束，同時寫一筆 `BINDING_RELEASE_NOOP` 稽核——冪等不等於什麼都沒發生 |
-| Prisma 引擎隨包攜帶 | `infra/prisma/bundled-engines.ts`、`engine-bootstrap.ts` | `PRISMA_ENGINES_DIR` 指向包內引擎。**必須在 `@prisma/client` 載入前執行**，因此獨立成一個只有副作用的模組，由 import 順序保證 |
+| Prisma 引擎隨包攜帶（後端啟動） | `infra/prisma/bundled-engines.ts`、`engine-bootstrap.ts` | `PRISMA_ENGINES_DIR` 指向包內引擎。**必須在 `@prisma/client` 載入前執行**，因此獨立成一個只有副作用的模組，由 import 順序保證 |
+| Prisma 引擎隨包攜帶（指令端，0920 補） | `apps/api/scripts/prisma-cli.mjs`、`scripts/lib/prisma-engines.mjs` | 上一列只管後端啟動；`prisma migrate`、`prisma generate` 是另外開的行程，不經過它。所有 prisma 指令改從這層進去，執行前同樣依 `PRISMA_ENGINES_DIR` → `node_modules/@prisma/engines` 的順序把路徑指好 |
 | 版本鎖成確定版本 | `apps/api/package.json` | `prisma` 與 `@prisma/client` 去掉 `^`。引擎與 CLI 版本必須一致，浮動範圍會在某次重裝時悄悄換掉其中一邊 |
 | 更新流程 | `apps/api/scripts/db-update.mjs` | 規範 18.1 四道關卡的可執行版：備份 → **實際還原驗證** → 前滾 → 寫紀錄。純 Node.js、不依賴任何開發相依（正式主機上沒有開發環境） |
 | 開發用遷移指令的防呆 | `apps/api/scripts/guard-dev-migrate.mjs` | 掛在 `prisma:migrate` 前面，偵測到正式環境設定就拒絕執行並寫稽核 |

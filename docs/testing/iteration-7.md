@@ -169,6 +169,18 @@
 
 - [ ] `q35` **［終端機］** `npm run check:offline`
   → 沒有阻擋項。逐項看過：引擎檔已就位（兩個檔、各約 20MB）、Prisma 三者版本一致且**鎖成確定版本**（不是 `^6.x`）、「套用既有遷移」的指令存在、開發用的那支已加上防呆、更新流程有入口、三個建置產物都在。
+- [ ] `q35a` **［終端機］（0920 補）** 在開發機上假裝斷網，跑一次遷移：
+  ```bash
+  # 把 CLI 自己那份引擎與快取清掉，模擬「剛解開的 node_modules」
+  rm -f node_modules/prisma/query_engine-*.node
+  rm -rf apps/api/node_modules/.cache/prisma
+  # 把下載位址指到一個解析不出來的主機，等同於院內的網路狀況
+  PRISMA_ENGINES_MIRROR=http://offline.invalid npm run prisma:migrate
+  ```
+  → 正常跑完，最後的 `Running generate...` 也要成功。**這一步就是迭代 9 末倒下的那一步**：
+  遷移本身全數套用完成，倒在它順手跑的 `generate` 上，給的錯誤是 `getaddrinfo ENOTFOUND binaries.prisma.sh`。
+  若又出現那個錯誤，是 `apps/api/scripts/prisma-cli.mjs` 沒被用到（檢查 `package.json` 的 prisma 指令）。
+
 - [ ] `q36` **［終端機］** 開啟 `apps/api/package.json`，確認 `prisma` 與 `@prisma/client` 兩個版本號**沒有 `^` 或 `~`**。
   → 引擎與 CLI 的版本必須一致；浮動的版本範圍會在某次重新安裝時悄悄換掉其中一邊，而症狀會是一個看起來毫不相干的錯誤。
 - [ ] `q37` **［終端機］** `npm run check:egress`
