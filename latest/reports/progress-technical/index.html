@@ -987,6 +987,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-10打包平板佈建與部署演練0920" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 10：打包、平板佈建與部署演練（0920）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#規模" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1681,6 +1692,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1946,6 +1985,34 @@
     
   
     迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
   
 
     
@@ -2539,6 +2606,17 @@
     <span class="md-ellipsis">
       
         迭代 9：導覽版位、功能開關與內容資料化（0919）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#迭代-10打包平板佈建與部署演練0920" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 10：打包、平板佈建與部署演練（0920）
       
     </span>
   </a>
@@ -3852,6 +3930,113 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 而已經套用出去的遷移改不動（規範 18.1 第 2 關），所以掃出來只會得到一份改不動的清單。
 改成只掃「上一次部署之後新增的那幾份」，基準線寫在 <code>check-all.mjs</code> 裡，每次部署後往前移。
 <strong>一支永遠是紅的檢查，跟沒有那支檢查一樣：沒有人會再看它一眼。</strong></p>
+<h3 id="迭代-10打包平板佈建與部署演練0920">迭代 10：打包、平板佈建與部署演練（0920）<a class="headerlink" href="#迭代-10打包平板佈建與部署演練0920" title="Permanent link">&para;</a></h3>
+<p>依《實作規格書》4.8 節與《部署規範》第 3、6、8 章。<strong>這個迭代的一句話是：
+把系統變成一份帶得進院內的東西，並且實際試一次。</strong></p>
+<p>與前九個迭代有一個根本差別：<strong>它的驗收有一半不在開發機上</strong>。
+前面驗的是「功能對不對」，這一個驗的是「把它搬到一台什麼都沒有的機器上，還能不能動」——
+而開發機正好是那個條件的反面。因此 <code>verify:iteration10</code> 刻意不湊成十條綠燈，
+把結果分成「驗過了／只驗得到交付物在不在／這裡驗不到」三種印出來。</p>
+<table>
+<thead>
+<tr>
+<th>工作項</th>
+<th>位置</th>
+<th>做法重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>離線安裝包</td>
+<td><code>scripts/build-offline-package.mjs</code></td>
+<td>自帶 Node.js 執行期、建置產物、Prisma 引擎、遷移檔、服務腳本、版本標記。<strong>包裡沒有 <code>.env</code>、沒有資料庫、沒有備份</strong>（DEP-13）；資料與備份一律在包外，<strong>因為某一次「刪掉舊資料夾再解壓新版」不會發生在第一次更新，會發生在第五次、由另一個人執行的那一次</strong></td>
+</tr>
+<tr>
+<td>雜湊值</td>
+<td><code>CHECKSUMS.txt</code></td>
+<td>逐檔 SHA-256，清單本身再取一次。防毒只回答「有沒有惡意內容」，不回答「是不是我給的那一份」</td>
+</tr>
+<tr>
+<td>安裝包驗收</td>
+<td><code>scripts/verify-package.mjs</code></td>
+<td>五項，<strong>全部用包內的東西跑</strong>：包內的執行期、包內的套件、包內的引擎</td>
+</tr>
+<tr>
+<td>執行期的零院外連線</td>
+<td><code>scripts/package-templates/egress-sentinel.cjs</code></td>
+<td>掛在 <code>NODE_OPTIONS</code> 上攔 DNS 查詢與 TCP 連線。<code>check:egress</code> 讀的是原始碼，回答「有沒有人寫了對外的網址」；<strong>這一支回答「這個行程實際上有沒有去連過院外」</strong>，抓得到套件在安裝後腳本裡偷跑的那種</td>
+</tr>
+<tr>
+<td>常駐與啟停</td>
+<td><code>scripts/package-templates/service-*.ps1</code></td>
+<td>Windows 內建的排程工作。<strong>不是 sc.exe 的服務</strong>——node.exe 不會回應服務控制管理員，要成為服務得外加一個包裝器，而那是另一個要送進院內、另外過資安審查的執行檔（Q-27）</td>
+</tr>
+<tr>
+<td>病人端離線快取</td>
+<td><code>apps/patient-pwa/sw-template.js</code></td>
+<td>畫面走網路優先、逾時退回快取；<strong><code>/api/</code> 一律不快取</strong>——快取裡出現病人資料，等於把資料留在平板上，與「Session 失效即清除本地暫存」直接衝突</td>
+</tr>
+<tr>
+<td>圖示</td>
+<td><code>scripts/generate-icons.mjs</code></td>
+<td>用 Node 內建的 zlib 自己組 PNG，不引入影像相依。<strong>做成腳本而不是把圖檔丟進 repo</strong>，是為了讓「它是怎麼來的、顏色跟誰對齊」留得住</td>
+</tr>
+<tr>
+<td>逸出偵測</td>
+<td><code>POST /api/device/foreground</code>、<code>DevicesPage</code></td>
+<td>平板每 30 秒回報一次、離開前景立刻回報；護理端那一頁每 15 秒重取。<strong>四種狀態</strong>：固定中／已跳出／失去回報／尚未回報</td>
+</tr>
+<tr>
+<td>自簽 CA</td>
+<td><code>scripts/make-hospital-ca.mjs</code></td>
+<td>根憑證 10 年、伺服器憑證 825 天，主體別名要涵蓋平板實際連的位址。<strong>不會覆蓋既有的 CA</strong>——換 CA 等於 15 台都要重發 APK</td>
+</tr>
+<tr>
+<td>外殼 App</td>
+<td><code>apps/kiosk-shell/</code></td>
+<td>獨立的 Android 專案，不進本 repo 的建置流程。README 寫的是兩邊的契約：載入哪個網址、序號與金鑰怎麼帶、信任哪張憑證</td>
+</tr>
+</tbody>
+</table>
+<p><strong>「已跳出」與「失去回報」是兩種狀態，不是一種。</strong> 前者是平板說的，後者是它不說話。
+護理師要做的事不同：前者去床邊把螢幕固定重新釘回來，後者去看看那台平板還在不在。
+「尚未回報」則是外殼 App 還沒裝，不是故障——<strong>把三者混成一格紅字，護理師就會開始忽略它</strong>。</p>
+<p><strong>稽核只記轉折點。</strong> 15 台每 30 秒一筆，一天四萬多筆；要回答的問題是「哪一台什麼時候跳出去的」，
+答案只在轉折點上。第一次回報而且回報「我在前景」時也不記——那是 App 裝好之後的第一句話，
+不是跳出去又回來。</p>
+<p><strong>演練抓到三個缺陷，三個都是靜態檢查看不到的。</strong></p>
+<table>
+<thead>
+<tr>
+<th>缺陷</th>
+<th>為什麼看不到</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>後端在安裝包裡拒絕啟動（「找不到專案根目錄」）</td>
+<td>資料庫路徑檢查往上找帶 workspaces 的 <code>package.json</code>，<strong>安裝包裡沒有那個東西</strong>；開發機永遠找得到</td>
+<td>改成兩段：先找專案根目錄，找不到就找安裝包根目錄。兩者要擋的是同一件事——資料庫不得放在「每次更新會整個換掉的那個目錄」裡</td>
+</tr>
+<tr>
+<td><code>prisma migrate deploy</code> 在包內找不到 CLI</td>
+<td>指令外套只認開發機的兩個落點，安裝包少一層目錄</td>
+<td>補上第三個落點</td>
+</tr>
+<tr>
+<td><code>npm run db:update</code> 倒在套用遷移（<code>database is locked</code>）</td>
+<td>更新腳本為了寫更新紀錄一直開著一條連線，遷移引擎要獨占。<strong>只有在這次更新真的帶著待套用的遷移時才發作</strong></td>
+<td>套用遷移前先放掉自己的連線</td>
+</tr>
+</tbody>
+</table>
+<p>第三個特別值得記下來：它<strong>會在第一次真正需要它的時候失敗</strong>。
+沒有 schema 變更的更新一路綠燈，而有 schema 變更的那一次，正是最需要備份與前滾都成功的那一次。</p>
+<p><strong>已完成與未完成講清楚</strong>：開發端的建置、驗收、離線快取、逸出偵測、更新與回退演練都做完了；
+<strong>乾淨 Windows 機器上的全程離線安裝、路線 A 與路線 B 的現場紀錄、服務以專用帳號註冊、
+平板實機佈建，四項都還沒做，也不可能在開發機上做</strong>。欄位已備在
+《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》。</p>
 <h3 id="規模">規模<a class="headerlink" href="#規模" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3863,6 +4048,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <th>迭代 6 完成</th>
 <th>迭代 7 完成</th>
 <th>迭代 9 完成</th>
+<th>迭代 10 完成</th>
 </tr>
 </thead>
 <tbody>
@@ -3874,6 +4060,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>107</td>
 <td>109</td>
 <td>116</td>
+<td>117</td>
 </tr>
 <tr>
 <td>資料表</td>
@@ -3882,6 +4069,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>36</td>
 <td>39</td>
 <td>40</td>
+<td>54</td>
 <td>54</td>
 </tr>
 <tr>
@@ -3892,6 +4080,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>68</td>
 <td>74</td>
 <td>82</td>
+<td>84</td>
 </tr>
 <tr>
 <td>權限碼</td>
@@ -3901,10 +4090,12 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>21</td>
 <td>21</td>
 <td>23</td>
+<td>23</td>
 </tr>
 <tr>
 <td>角色</td>
 <td>3</td>
+<td>6</td>
 <td>6</td>
 <td>6</td>
 <td>6</td>
@@ -3919,6 +4110,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>10</td>
 <td>10</td>
 <td>11</td>
+<td>11</td>
 </tr>
 <tr>
 <td>營運參數</td>
@@ -3927,6 +4119,7 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <td>6</td>
 <td>12</td>
 <td>12</td>
+<td>20</td>
 <td>20</td>
 </tr>
 </tbody>
@@ -3939,6 +4132,9 @@ v1.0 為共用主機訂的隔離要求整條回來，只是落實方式由容器
 <p><strong>迭代 9 一次多了 14 張表</strong>，但它們幾乎都是同一個形狀：三組「版本表加題目表加選項表」。
 新增的 8 個營運參數也是同一類東西——<strong>「其他」的提醒門檻、每月加問的間隔、趨勢偏離的三個門檻、
 抽題規則的三個上限</strong>，全部是護理長會想調、而工程師不該替他決定的數字。</p>
+<p><strong>迭代 10 幾乎沒有動資料模型</strong>：<code>devices</code> 多三個欄位、一個平板端端點、兩種稽核動作，
+就這樣。它的工作量全在 repo 之外——<strong>把已經做好的東西變成一份帶得進院內的檔案</strong>，
+以及把「帶進去之後會發生什麼」實際試一次。</p>
 <h3 id="共用常數的角色">共用常數的角色<a class="headerlink" href="#共用常數的角色" title="Permanent link">&para;</a></h3>
 <p><code>packages/shared</code> 不只是型別。以下<strong>業務規則</strong>放在這裡，前後端共用同一份定義：</p>
 <ul>

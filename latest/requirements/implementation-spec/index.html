@@ -1647,6 +1647,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1912,6 +1940,34 @@
     
   
     迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
   
 
     
@@ -4611,6 +4667,51 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </ol>
 <p><strong>外部依賴</strong>：無（內容已由院方授權採用）。</p>
 <h3 id="48-迭代-10打包平板佈建與部署演練0919-新增本週">4.8 迭代 10：打包、平板佈建與部署演練（0919 新增，本週）<a class="headerlink" href="#48-迭代-10打包平板佈建與部署演練0919-新增本週" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-20 完成實作與開發端演練。</strong> 驗收標準十條裡，<strong>五條在開發機上驗得完、五條只有現場做得到</strong>，
+這件事寫在 <code>npm run verify:iteration10</code> 的輸出裡，不會被湊成十條綠燈：
+腳本把「驗過了」「只驗得到交付物在不在」「這裡驗不到」分成三種結果印出來。
+手動測試步驟見《<a href="../../testing/iteration-10/">完整手動測試手冊</a>》迭代 10 分冊（<code>t1</code>–<code>t53</code>），
+現場那一半的結果要填進《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》。</p>
+<p><strong>開發端已完成</strong>：安裝包建置與五項驗收（雜湊值逐檔核對、包內沒有設定與資料、以包內引擎套用遷移、
+以包內執行期啟動三個行程、<strong>全程沒有任何一次往院外的連線</strong>）；病人端 Service Worker 與圖示；
+逸出偵測端到端；更新與回退各實際演練一次。</p>
+<p><strong>演練抓到三個缺陷，都只有在把東西真的跑起來時才會現形</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>缺陷</th>
+<th>為什麼靜態檢查看不到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>後端在安裝包裡拒絕啟動（「找不到專案根目錄」）</td>
+<td>資料庫路徑檢查往上找帶 workspaces 的 <code>package.json</code>，<strong>安裝包裡沒有那個東西</strong>。開發機永遠找得到</td>
+</tr>
+<tr>
+<td><code>prisma migrate deploy</code> 在包內找不到 CLI</td>
+<td>指令外套只認開發機的兩個落點，安裝包少一層目錄</td>
+</tr>
+<tr>
+<td><code>npm run db:update</code> 倒在套用遷移那一步（<code>database is locked</code>）</td>
+<td>更新腳本自己開著連線，遷移引擎要獨占。<strong>只有在這次更新真的帶著遷移時才發作</strong>——它會在第一次真正需要它的時候失敗</td>
+</tr>
+</tbody>
+</table>
+<p><strong>未完成、且不可能在開發機上完成的</strong>：乾淨 Windows 機器上的全程離線安裝（DEP-22）、
+路線 A 與路線 B 的現場紀錄（DEP-25～28）、服務以專用低權限帳號註冊（DEP-12）、
+平板佈建與外殼 App 實機（DEP-35、DEP-36）。</p>
+<p><strong>兩處與原定計畫不同，理由寫在這裡</strong>：</p>
+<ol>
+<li><strong>常駐方式是排程工作，不是 Windows 服務。</strong> node.exe 不會回應服務控制管理員，
+   要成為真正的服務得外加一個包裝器（NSSM 之類），而那是另一個要送進院內、另外過資安審查的執行檔。
+   排程工作是內建的，開機自動啟動、以指定帳號執行、失敗重試三件事都做得到。
+   代價是 services.msc 看不到它，要到工作排程器裡看——<strong>若資訊室要求必須是服務，換掉的只有那一支腳本</strong>（Q-27）。</li>
+<li><strong>部署前置檢查清單是 26 條，不是 24 條。</strong> 本節工作項表格原本寫 24 條，
+   以《<a href="../deployment-spec/">部署規範</a>》第 9 章的實際條數為準。</li>
+</ol>
+</blockquote>
 <p><strong>目標</strong>：把前面三個迭代的成果變成一份可以帶進院內的東西，並實際演練一次。</p>
 <table>
 <thead>
@@ -4684,7 +4785,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td>部署前置檢查清單逐條確認</td>
 <td>DEP 第 9 章</td>
-<td>24 條</td>
+<td>26 條</td>
 </tr>
 </tbody>
 </table>
@@ -4700,7 +4801,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <li>病人端在斷網時仍能開啟畫面（Service Worker 生效），求助按鈕明確顯示無法通知</li>
 <li>外殼 App 釘住後病人退不出去，解除需 PIN</li>
 <li>平板跳出 Kiosk 時，護理端總覽在 30 秒內看得到</li>
-<li>部署前置檢查清單 24 條逐條確認完成</li>
+<li>部署前置檢查清單 26 條逐條確認完成</li>
 </ol>
 <p><strong>外部依賴（都不擋實作，但擋實際部署）</strong>：</p>
 <ul>
@@ -4942,28 +5043,28 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>三層皆已實作；第二層等護理部給內容才開得起來（Q-28），第三層 0919 確定走院方 API</td>
 </tr>
 <tr>
-<td><strong>7</strong></td>
-<td><strong>擋住上線的缺陷與資料安全</strong></td>
-<td><strong>可以，立刻</strong></td>
+<td>~~7~~</td>
+<td>~~擋住上線的缺陷與資料安全~~</td>
+<td><strong>已完成（0919）</strong></td>
 <td>無</td>
 </tr>
 <tr>
-<td><strong>8</strong></td>
-<td><strong>介面重新設計</strong></td>
-<td><strong>可以</strong></td>
+<td>~~8~~</td>
+<td>~~介面重新設計~~</td>
+<td><strong>已完成（0919）</strong></td>
 <td>無（Q-31 現場試用不擋實作，但要排在首波試用之前）</td>
 </tr>
 <tr>
-<td><strong>9</strong></td>
-<td><strong>導覽版位、開關與內容資料化</strong></td>
-<td><strong>可以</strong></td>
+<td>~~9~~</td>
+<td>~~導覽版位、開關與內容資料化~~</td>
+<td><strong>已完成（0919）</strong>，0920 另有 9.1 修正</td>
 <td>無（內容已由院方授權採用）</td>
 </tr>
 <tr>
-<td><strong>10</strong></td>
-<td><strong>打包、平板佈建與部署演練</strong></td>
-<td><strong>實作可以</strong></td>
-<td>實際進院需 Q-27、Q-29、Q-11</td>
+<td>~~10~~</td>
+<td>~~打包、平板佈建與部署演練~~</td>
+<td><strong>實作已完成（0920）</strong></td>
+<td>實際進院仍需 Q-27、Q-29、Q-11；乾淨機器與實機佈建待現場</td>
 </tr>
 <tr>
 <td>11</td>

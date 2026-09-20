@@ -1103,10 +1103,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#44-逸出偵測走既有的-sse" class="md-nav__link">
+  <a href="#44-逸出偵測讓它看得見而不是防得住" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.4 逸出偵測走既有的 SSE
+        4.4 逸出偵測：讓它看得見，而不是防得住
       
     </span>
   </a>
@@ -1325,6 +1325,34 @@
     
   
     迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
   
 
     
@@ -1616,6 +1644,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1877,10 +1933,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#44-逸出偵測走既有的-sse" class="md-nav__link">
+  <a href="#44-逸出偵測讓它看得見而不是防得住" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.4 逸出偵測走既有的 SSE
+        4.4 逸出偵測：讓它看得見，而不是防得住
       
     </span>
   </a>
@@ -2352,13 +2408,19 @@
 </tbody>
 </table>
 <p>（Android 7 起，使用者手動安裝的 CA 預設不被應用程式信任，這是第二種方式需要明寫 <code>src="user"</code> 的原因。第一種方式不受此限。）</p>
-<h3 id="44-逸出偵測走既有的-sse">4.4 逸出偵測走既有的 SSE<a class="headerlink" href="#44-逸出偵測走既有的-sse" title="Permanent link">&para;</a></h3>
+<h3 id="44-逸出偵測讓它看得見而不是防得住">4.4 逸出偵測：讓它看得見，而不是防得住<a class="headerlink" href="#44-逸出偵測讓它看得見而不是防得住" title="Permanent link">&para;</a></h3>
 <p>螢幕固定唯一守不住的是「有人解開了而護理師不知道」。這一點不必靠作業系統強制：</p>
-<p>平板端每 30 秒回報一次「我還在前景」，並監聽 <code>visibilitychange</code>，一離開前景就立刻回報。護理端總覽直接顯示哪一台跳出了 Kiosk。</p>
+<p>平板端每 30 秒回報一次「我還在前景」，並監聽 <code>visibilitychange</code>，一離開前景就立刻回報。護理端的裝置清單直接顯示哪一台跳出了 Kiosk。</p>
 <p><strong>把「用作業系統權限預防」換成「用既有連線偵測並讓護理師看見」</strong>，與求助、症狀回報是同一個模式，不新增任何架構。</p>
+<p><strong>0920 實作時的一處修正</strong>：本節原本寫「走既有的 SSE」。實際做法是平板以既有的裝置驗證
+<code>POST /api/device/foreground</code>，護理端那一頁每 15 秒重新取得一次清單——<strong>不經 SSE</strong>。
+原因是 SSE 那條長連線是給護理端訂閱用的，平板端從來沒有訂閱它；為了逸出偵測讓平板也接一條
+長連線，等於為一件每 30 秒一筆的小事多養一條連線。兩者相加，跳出到護理端看得見最長 30 秒，
+與原定的要求一致。</p>
 <hr />
 <h2 id="5-前置條件">5. 前置條件<a class="headerlink" href="#5-前置條件" title="Permanent link">&para;</a></h2>
-<p>以下五項在第一次部署前必須完成，缺任何一項這條路線都走不完整。</p>
+<p>以下五項在第一次部署前必須完成，缺任何一項這條路線都走不完整。
+<strong>0920（迭代 10）更新現況欄：前兩項已完成，後三項要在部署當天做。</strong></p>
 <table>
 <thead>
 <tr>
@@ -2370,18 +2432,18 @@
 <tbody>
 <tr>
 <td><strong>Service Worker</strong></td>
-<td><strong>不存在</strong></td>
-<td>3.1 選 PWA 而非純網頁的唯一理由就是離線能力，而離線快取靠它。目前 <code>apps/patient-pwa/</code> 完全沒有 Service Worker，<code>offline-queue.ts</code> 的 IndexedDB 暫存是另一回事，只存得住待送出的資料，存不住畫面本身</td>
+<td><strong>0920 完成</strong></td>
+<td>3.1 選 PWA 而非純網頁的唯一理由就是離線能力，而離線快取靠它。<code>offline-queue.ts</code> 的 IndexedDB 暫存是另一回事，只存得住待送出的資料，存不住畫面本身。<br>做法：建置時由 <code>apps/patient-pwa/vite.config.ts</code> 的外掛把產物清單填進 <code>sw-template.js</code>，不引入任何外部相依。畫面走網路優先、逾時退回快取（平板靠「下次開啟就是新版」更新，快取優先會讓新版晚一個療程）；<strong><code>/api/</code> 一律不快取</strong>——快取裡出現病人資料，等於把資料留在平板上</td>
 </tr>
 <tr>
 <td><strong>圖示資產</strong></td>
-<td><strong><code>manifest.webmanifest</code> 的 <code>icons</code> 是空陣列</strong></td>
-<td>走本路線後，圖示不再是「能不能安裝到主畫面」的條件（APK 本身就是 App），但仍需要一張圖當 APK 的啟動圖示。圖檔一樣得做，只是用途改變</td>
+<td><strong>0920 完成</strong></td>
+<td>走本路線後，圖示不再是「能不能安裝到主畫面」的條件（APK 本身就是 App），但仍需要一張圖當 APK 的啟動圖示。<br>做法：<code>npm run assets:icons</code> 由腳本產生（192／512／512 maskable／1024），顏色取自病人端的設計語彙。<strong>做成腳本而不是把圖檔丟進 repo</strong>，是為了讓「它是怎麼來的、顏色跟誰對齊」留得住</td>
 </tr>
 <tr>
 <td><strong>自簽 CA 與伺服器憑證</strong></td>
-<td>未建立</td>
-<td>4.3 的基礎。根憑證有效期建議設 10 年，免得日後頻繁重發 APK</td>
+<td>未建立（工具已備，0920）</td>
+<td>4.3 的基礎。根憑證有效期設 10 年，免得日後頻繁重發 APK。<code>npm run cert:hospital-ca -- --host &lt;院內主機&gt; --ip &lt;院內 IP&gt;</code> 產生 CA 與伺服器憑證；<strong>主體別名要涵蓋平板實際連的位址</strong>，且腳本不會覆蓋既有的 CA</td>
 </tr>
 <tr>
 <td><strong>APK 簽名金鑰（keystore）</strong></td>
@@ -2528,6 +2590,40 @@
 </ul>
 <p>因此稽核說明欄的 <code>[mock]</code> 前綴應移除——它已經不是模擬品，而是這項功能的正式實作。</p>
 <p>需要新增的：第 5 章的 Service Worker 與圖示、4.4 的前景回報端點與護理端總覽欄位，以及一個新的 Android 外殼專案。</p>
+<p><strong>0920（迭代 10）全部完成</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>要做的</th>
+<th>落在哪裡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service Worker 與圖示</td>
+<td><code>apps/patient-pwa/sw-template.js</code>、<code>scripts/generate-icons.mjs</code></td>
+</tr>
+<tr>
+<td>前景回報端點</td>
+<td><code>POST /api/device/foreground</code>（走既有的裝置驗證）。每 30 秒一次，離開前景立刻一次</td>
+</tr>
+<tr>
+<td>護理端的欄位</td>
+<td>裝置清單多一欄「固定狀態」，四種狀態：固定中／已跳出／失去回報／尚未回報</td>
+</tr>
+<tr>
+<td>外殼 App</td>
+<td><code>apps/kiosk-shell/</code>（獨立的 Android 專案，不進本 repo 的建置流程；README 寫的是兩邊的契約）</td>
+</tr>
+<tr>
+<td>稽核</td>
+<td><strong>只記轉折點</strong>。15 台每 30 秒一筆，一天四萬多筆會把稽核軌跡淹掉；要回答的問題是「哪一台什麼時候跳出去的」，答案只在轉折點上</td>
+</tr>
+</tbody>
+</table>
+<p><strong>「已跳出」與「失去回報」刻意分成兩種狀態</strong>：前者是平板說的，後者是它不說話。
+護理師要做的事不同——前者去把螢幕固定重新釘回來，後者去看看那台平板還在不在。
+「尚未回報」則是外殼 App 還沒裝，不是故障。</p>
 <h3 id="82-需求文件">8.2 需求文件<a class="headerlink" href="#82-需求文件" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
