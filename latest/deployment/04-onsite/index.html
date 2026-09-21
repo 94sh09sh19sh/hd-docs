@@ -3240,10 +3240,11 @@
 <h2 id="5-路線-b正式安裝">5. 路線 B（正式安裝）<a class="headerlink" href="#5-路線-b正式安裝" title="Permanent link">&para;</a></h2>
 <h3 id="h-09-解壓並核對雜湊dep-27">H-09 解壓並核對雜湊（DEP-27）<a class="headerlink" href="#h-09-解壓並核對雜湊dep-27" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nb">Expand-Archive</span> <span class="n">-Path</span> <span class="p">&lt;</span><span class="n">隨身碟</span><span class="p">&gt;:\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;.</span><span class="n">zip</span> <span class="n">-DestinationPath</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Expand-Archive</span> <span class="n">-Path</span> <span class="p">&lt;</span><span class="n">隨身碟</span><span class="p">&gt;:\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;.</span><span class="n">zip</span> <span class="n">-DestinationPath</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;</span>
 <span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;</span>
 <span class="nb">Get-FileHash</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span> <span class="p">.\</span><span class="n">CHECKSUMS</span><span class="p">.</span><span class="n">txt</span>
 </code></pre></div>
+<p>壓縮檔裡<strong>沒有最上層資料夾</strong>，<code>-DestinationPath</code> 要寫到有版本號的那一層。</p>
 <p>與交付單上那一串<strong>逐字比對</strong>。</p>
 <p><strong>可能怎麼壞、怎麼處理</strong></p>
 <table>
@@ -3257,6 +3258,10 @@
 <tr>
 <td><strong>雜湊不一樣</strong></td>
 <td><strong>停下來。</strong> 重新複製再比一次。還是不同就是路上壞了或被掃描站動過——今天不要裝</td>
+</tr>
+<tr>
+<td><code>cd</code> 找不到路徑，檔案全散在 <code>C:\hd\</code> 底下</td>
+<td>解壓目的地少寫了版本號那一層。清掉散出來的檔案，照上面的指令重解，不要用搬的</td>
 </tr>
 <tr>
 <td>路徑太長導致解壓失敗</td>

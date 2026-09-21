@@ -2837,10 +2837,11 @@ VM：設定裡把網路介面卡改成「未連線」。</p>
 <hr />
 <h3 id="r-04-解壓並核對雜湊dep-27">R-04 解壓並核對雜湊（DEP-27）<a class="headerlink" href="#r-04-解壓並核對雜湊dep-27" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nb">Expand-Archive</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;.</span><span class="n">zip</span> <span class="n">-DestinationPath</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Expand-Archive</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;.</span><span class="n">zip</span> <span class="n">-DestinationPath</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;</span>
 <span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;</span>
 <span class="nb">Get-FileHash</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span> <span class="p">.\</span><span class="n">CHECKSUMS</span><span class="p">.</span><span class="n">txt</span>
 </code></pre></div>
+<p>壓縮檔裡<strong>沒有最上層資料夾</strong>，所以 <code>-DestinationPath</code> 一定要寫到有版本號的那一層，不能只寫 <code>C:\hd\</code>。</p>
 <p>拿輸出的雜湊值與<a href="../01-dev-machine/#p-11-寫交付單">交付單</a>上那一個逐字對照。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <p>兩串完全相同。<strong>逐字比對，不要只看頭尾四碼。</strong></p>
@@ -2858,6 +2859,11 @@ VM：設定裡把網路介面卡改成「未連線」。</p>
 <td><strong>雜湊不一樣</strong></td>
 <td>檔案在路上壞了，或被防毒動過手腳，或你拿錯版本</td>
 <td><strong>停下來。</strong> 重新複製一次再比。還是不一樣就回開發機整包重做。不要「應該只是小問題」硬著頭皮往下</td>
+</tr>
+<tr>
+<td><code>cd</code> 說找不到路徑，<code>C:\hd\</code> 底下直接出現 <code>runtime</code>、<code>CHECKSUMS.txt</code> 等一堆檔案</td>
+<td>解壓目的地只寫了 <code>C:\hd\</code>，壓縮檔沒有最上層資料夾</td>
+<td>把 <code>C:\hd\</code> 底下除了壓縮檔與 <code>verify-package.mjs</code> 以外的東西刪掉，照上面的指令重解一次。<strong>不要用搬的</strong>，搬漏一個檔案就要到 R-05 才會發現</td>
 </tr>
 <tr>
 <td>解壓很慢或失敗</td>
