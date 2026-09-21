@@ -381,6 +381,7 @@ notepad ..\.env
 
 **這五件事都要寫下「是誰設的、由誰保管、改動前要知會誰」。**
 主機是共用的，別的專案的維運人員一樣改得動，而改掉之後本系統不會收到任何通知。
+依據是《部署規範》DEP-21，對應 26 條清單第 3、4、10 條。
 
 **可能怎麼壞、怎麼處理**
 
@@ -388,6 +389,176 @@ notepad ..\.env
 |---|---|
 | 防毒排除清單今天加不了（要走申請） | **停手或降級**：可以先把服務跑起來驗證，但**不要讓護理師開始輸入真實資料**，直到排除清單生效 |
 | 對方說「排除清單不安全，不能加」 | 說明範圍只有一個資料夾，且該資料夾只有服務帳號寫得進去。談不成就記下來，回去評估別的做法 |
+
+---
+
+#### H-14 自己做的時候（資訊室把系統管理員權限交給你）
+
+**動手之前先確認兩件事**，任何一件不成立就不要自己改，回到上面那張表請資訊室做：
+
+1. 資訊室**明確同意**你自己改這五項，並記下是誰同意的。
+2. 這幾項設定**有沒有被群組原則集中管理**。有的話，本機改了會在下次套用原則時被蓋回去，
+   而你改的當下看起來完全正常。每一項底下都有一行檢查指令。
+
+以下指令一律在**以系統管理員身分開啟的 PowerShell** 裡執行。先把資料目錄指定好，後面都會用到：
+
+```powershell
+$dataDir = "<資料目錄>"      # 與 H-13 的 -DataDir 同一個值，例如 D:\hd-care\data
+```
+
+##### ① 資料庫目錄加入防毒排除清單
+
+**先看主機上是哪一套防毒在當家**：
+
+```powershell
+Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntiVirusProduct | Select-Object displayName
+Get-MpComputerStatus | Select-Object AMRunningMode, RealTimeProtectionEnabled
+```
+
+| 看到的結果 | 代表 | 怎麼做 |
+|---|---|---|
+| 只有 Windows Defender（Microsoft Defender），`AMRunningMode` 是 `Normal` | Defender 是主要防毒 | 照下面的指令加 |
+| 出現其他產品（趨勢、賽門鐵克、卡巴斯基等），或 Defender 是 `Passive Mode` | 第三方防毒在當家，Defender 加了也沒用 | 這類產品幾乎都由**中央主控台**統一派送設定，裝在本機的那一端通常鎖住、改不了。**這一項只能請資訊室從主控台加**，你做不到 |
+
+**Defender 的做法**：
+
+```powershell
+Add-MpPreference -ExclusionPath $dataDir
+```
+
+- 排除的是**整個資料夾**，不是資料庫那一個檔案。SQLite 寫入時會在旁邊產生 `-wal`、`-shm` 等暫存檔，只排除主檔等於沒排除。
+- **只排除資料目錄**，不要排除整顆磁碟、不要排除安裝包目錄、不要排除 `node.exe`。
+
+**怎麼知道成功了**
+
+```powershell
+(Get-MpPreference).ExclusionPath
+```
+
+清單裡看得到 `$dataDir` 那一行。
+
+**確認沒有被集中管理蓋掉**：
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -ErrorAction SilentlyContinue
+```
+
+什麼都沒印出來，代表沒有群組原則管 Defender，本機設定會留著。
+印出了 `DisableLocalAdminMerge` 且值為 `1`，代表**本機加的排除會被忽略**，一定要資訊室從群組原則加。
+隔天回來再跑一次 `(Get-MpPreference).ExclusionPath`，那一行還在才算數。
+
+##### ② 確認資料庫目錄不在雲端同步資料夾底下
+
+**選路徑的原則**：直接放在磁碟根目錄底下的專屬資料夾（例如 `D:\hd-care\data`），
+**不要放在 `C:\Users\` 底下的任何地方**——「文件」「桌面」最常被重新導向到 OneDrive。
+
+**檢查**：
+
+```powershell
+$env:OneDrive; $env:OneDriveCommercial
+Get-Item $dataDir | Select-Object FullName, LinkType, Target, Attributes
+Get-Process | Where-Object { $_.Name -match 'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box' } | Select-Object Name
+```
+
+**怎麼知道成功了**
+
+| 檢查 | 要看到 |
+|---|---|
+| 第一行印出的 OneDrive 路徑 | `$dataDir` **不在**那個路徑底下（沒印出任何東西也算通過） |
+| `LinkType`、`Target` | **都是空的**。有值代表這個資料夾是捷徑或連結，實際位置在別處，要順著 `Target` 再查一次 |
+| `Attributes` | **沒有** `ReparsePoint` |
+| 第三行 | 有同步軟體在跑的話，開啟它的設定，確認同步範圍不含 `$dataDir` 所在的磁碟或資料夾 |
+| 檔案總管 | 開啟 `$dataDir`，**狀態欄沒有雲朵或綠色勾勾圖示** |
+
+##### ③ 確認不是對應網路磁碟機的代號
+
+```powershell
+$drive = Split-Path $dataDir -Qualifier
+Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$drive'" | Select-Object DeviceID, DriveType, ProviderName
+subst
+Get-Partition -DriveLetter $drive.TrimEnd(':') | Get-Disk | Select-Object FriendlyName, BusType
+```
+
+**怎麼知道成功了**
+
+| 檢查 | 要看到 | 看到別的代表 |
+|---|---|---|
+| `DriveType` | `3`（本機固定磁碟） | `4` 是網路磁碟機、`2` 是抽取式磁碟，**都不行** |
+| `ProviderName` | 空的 | 印出 `\\伺服器\分享` 就是網路磁碟機 |
+| `subst` | 沒有列出這個代號 | 列出來的話，這個代號是別的資料夾的替身，要照實際路徑重查 |
+| `BusType` | `NVMe`、`SATA`、`RAID` 之類 | `USB` 是外接碟、`iSCSI` 是走網路的儲存設備，**都不行** |
+| `$dataDir` 本身 | 以磁碟代號開頭 | 以 `\\` 開頭是網路路徑，**直接換路徑** |
+
+另外注意：網路磁碟機的對應是**跟著登入者走的**。你看得到的 `Z:`，服務帳號看不到；
+就算硬要用，服務一啟動就會找不到路徑。
+
+##### ④ 關閉自動休眠
+
+```powershell
+powercfg /change standby-timeout-ac 0
+powercfg /change hibernate-timeout-ac 0
+```
+
+螢幕關閉不影響服務，**不用動** `monitor-timeout`。
+
+**怎麼知道成功了**
+
+```powershell
+powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE
+powercfg /query SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE
+```
+
+兩段輸出裡「目前的 AC 電源設定索引」都是 `0x00000000`。
+
+**確認沒有被集中管理蓋掉**：
+
+```powershell
+Get-ChildItem "HKLM:\SOFTWARE\Policies\Microsoft\Power" -ErrorAction SilentlyContinue
+```
+
+什麼都沒印出來才代表本機設定會留著。有東西的話，電源設定由群組原則控制，要請資訊室改。
+**隔天回來再跑一次查詢**，值還是 `0` 才算數。
+
+##### ⑤ 系統更新的重新啟動時段不落在透析班次
+
+先要有透析班次的起訖時間（Q-27 第 7 題、第五冊 `C-20`），例如 `06:00–23:00`。
+
+**先看更新是不是被集中管理**：
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -ErrorAction SilentlyContinue
+Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction SilentlyContinue
+```
+
+| 看到的結果 | 代表 | 怎麼做 |
+|---|---|---|
+| 兩行都沒印出東西 | 更新由這台機器自己決定 | 照下面設「使用時段」 |
+| 印出 `WUServer`、`AUOptions`、`ScheduledInstallTime` 等值 | 院方用群組原則或 WSUS 統一管更新，**本機設定會被蓋掉** | 把這些值抄下來，請資訊室把這台的安裝與重新啟動時間排在透析班次以外。**你做不到** |
+
+**沒有集中管理時的做法**：
+
+1. 設定 → Windows Update → 進階選項 → **使用時段**。
+2. 選「手動」，把開始與結束時間設成涵蓋整段透析班次。
+3. 有「根據活動自動調整」的選項就**關掉**，否則 Windows 會自己改掉你設的時間。
+
+**使用時段最長只能設 18 小時。** 班次加前後準備超過 18 小時，就蓋不住整段，
+要請資訊室改用群組原則排定安裝時間。「暫停更新」不是解法，它只是把問題往後推。
+
+**怎麼知道成功了**
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" | Select-Object ActiveHoursStart, ActiveHoursEnd
+```
+
+兩個數字是小時（`6` 代表 06:00、`23` 代表 23:00），跟你設的一致。
+
+##### 自己做完之後
+
+| 要做 | 為什麼 |
+|---|---|
+| 五項的檢查輸出**抄在部署紀錄上**，寫明「由誰設、何時設、資訊室哪一位同意」 | 日後設定被改掉時，才分得出是誰動的、原本是什麼 |
+| 在交接文件寫下「這五項改動前要知會誰」 | 主機是共用的，別的專案的人不會知道這五項跟本系統有關 |
+| **隔天或下次進院時**，把 ①④⑤ 的檢查指令再跑一次 | 群組原則通常在重新開機或每 90 分鐘左右重新套用，當下看起來成功不代表會留著 |
 
 ---
 
