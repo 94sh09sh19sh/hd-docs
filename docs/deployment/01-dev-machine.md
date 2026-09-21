@@ -421,7 +421,7 @@ Get-FileHash -Algorithm SHA256 .\CHECKSUMS.txt
 
 ### P-16 列印紙本
 
-院內沒有網路，這份文件在現場**開不起來**。至少印這五份：
+院內沒有網路，這份文件在現場**開不起來**。至少印這六份：
 
 | 印什麼 | 為什麼 |
 |---|---|
@@ -429,6 +429,7 @@ Get-FileHash -Algorithm SHA256 .\CHECKSUMS.txt
 | [第五冊 · 帶進去與帶出來](05-carry-in-out.md) | 離院前逐條打勾 |
 | [第六冊 · 現場疑難排解](06-troubleshooting.md) | 出事的時候翻 |
 | [第七冊 · 院方要求直接 `git clone`](07-git-clone.md) | H-08 的 clone 萬一成功時照著走 |
+| [第八冊 · 把服務關乾淨](08-shutdown.md) | 停手、備份、換版前要關服務時照著走 |
 | 《[部署規範](../requirements/deployment-spec.md)》第 9 章的 26 條清單 | 逐條打勾，打完那張紙就是部署紀錄 |
 
 再加上 P-11 的交付單、P-15 的小抄，以及**一本空白筆記本**（[第五冊](05-carry-in-out.md)會用掉半本）。
