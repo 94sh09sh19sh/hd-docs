@@ -2331,6 +2331,14 @@
 <li>這與鏡像的推送是兩件獨立的事：<code>docs:sync</code> 推的是<strong>鏡像 repo</strong>，照舊改完就推，不受私有 repo 的 push 規則影響。</li>
 <li><code>docs/</code> 以外的檔案（<code>apps/</code>、<code>scripts/</code>、設定檔）不在這條授權範圍內，照原本的規矩問過再 commit。</li>
 </ul>
+<p><strong>改完 <code>docs/</code> 的收尾順序，一步都不能少：</strong></p>
+<ol>
+<li>判斷兩份維護指南要不要跟著改（見上方「改完文件，回頭檢查這兩份指南」）</li>
+<li><code>git commit</code></li>
+<li><code>npm run docs:sync</code>——<strong>commit 完立刻跑，不要等 push</strong>。公開站只看鏡像，私有 repo 推不推都跟它無關</li>
+<li>回報：改了什麼、指南要不要改、sync 推了哪些檔案、私有 repo 還沒 push</li>
+</ol>
+<p>2026-09-21 就漏過第 3 步：commit、push 都做了，公開站卻還是舊的，直到使用者問「公開文件有同步了嗎」才補跑。</p>
 <h2 id="目錄結構">目錄結構<a class="headerlink" href="#目錄結構" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>docs/
 ├── index.md                    進度首頁（讀者的入口，有硬性上限，見下）
