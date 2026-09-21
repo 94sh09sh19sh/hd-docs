@@ -1,0 +1,3744 @@
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="需求、進度、參考與測試文件">
+      
+      
+      
+        <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/deployment/02-dry-run/">
+      
+      
+        <link rel="prev" href="../01-dev-machine/">
+      
+      
+        <link rel="next" href="../03-tablet-shell/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>第二冊 · 開發端的測試部署 - 血液透析中心平板照護輔助系統</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#第二冊--開發端的測試部署" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-header__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            血液透析中心平板照護輔助系統
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第二冊 · 開發端的測試部署
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換為深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為淺色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換為淺色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-nav__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    血液透析中心平板照護輔助系統
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    每週紀錄
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0916 — 迭代 3～6 完成，全程留在院內網路
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0909 — Iteration 1＋2 完成、核心流程可完整執行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/archive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    臨床端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    技術端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    需求文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    需求文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/fde-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDE 數位化評估報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/srs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/database-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料庫使用規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/implementation-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    實作規格書
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/deployment-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/open-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    尚待確認事項清冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/architecture-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架構圖
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    參考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    參考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data-dictionary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料字典
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tech-stack-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    這套系統是用什麼蓋的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/mdm-offline-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    平板管控：免 MDM 的全院內方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/uiux-design-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介面設計基準
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手動測試
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    手動測試
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/manual-test-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整手動測試手冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署手冊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    部署手冊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    總覽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-dev-machine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第一冊 · 開發機準備與安裝包建置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二冊 · 開發端的測試部署
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二冊 · 開發端的測試部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-為什麼這一步不能省" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 為什麼這一步不能省
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-先找一台乾淨的機器" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 先找一台「乾淨」的機器
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 先找一台「乾淨」的機器">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-01-確認這台機器真的是乾淨的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-01 確認這台機器真的是乾淨的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-02-斷網" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-02 斷網
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-把包送進去並驗收" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 把包送進去並驗收
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 把包送進去並驗收">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-03-用隨身碟複製順便演練交付動作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-03 用隨身碟複製（順便演練交付動作）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-04-解壓並核對雜湊dep-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-04 解壓並核對雜湊（DEP-27）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-05-驗收五項dep-22-的正本" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-05 驗收五項（DEP-22 的正本）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-模擬院內主機的設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 模擬院內主機的設定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 模擬院內主機的設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-06-決定三個目錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-06 決定三個目錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-07-建立專用低權限帳號" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-07 建立專用低權限帳號
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-08-建立-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-08 建立 .env
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-位址必須在建置安裝包之前就知道" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠ 位址必須在建置安裝包之前就知道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-09-確認時區" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-09 確認時區
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-安裝與啟動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 安裝與啟動
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 安裝與啟動">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-10-套用既有遷移dep-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-10 套用既有遷移（DEP-31）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-11-註冊服務" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-11 註冊服務
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-12-啟動並確認" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-12 啟動並確認
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-13--從另一台機器連進來最容易被跳過也最會出事的一步" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-13 ⚠ 從另一台機器連進來（最容易被跳過、也最會出事的一步）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-14-權限反向測試" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-14 權限反向測試
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-15-重新開機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-15 重新開機
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-16-在服務執行帳號底下確認時區與執行身分" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-16 在服務執行帳號底下確認時區與執行身分
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-功能面的冒煙測試" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 功能面的冒煙測試
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 功能面的冒煙測試">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-17-走一次主線" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-17 走一次主線
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-18-病人端斷網仍開得出畫面" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-18 病人端斷網仍開得出畫面
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-更新與回退在這台機器上各做一次" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 更新與回退，在這台機器上各做一次
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 更新與回退，在這台機器上各做一次">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-19-停止服務並確認停乾淨" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-19 停止服務並確認停乾淨
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-20-更新演練" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-20 更新演練
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-21-回退演練" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-21 回退演練
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-收尾" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 收尾
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 收尾">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-22-記下每一步花了多久" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-22 記下每一步花了多久
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-23-把結果寫進演練紀錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-23 把結果寫進演練紀錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-24-留著這台機器" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-24 留著這台機器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-這一冊的完成條件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 這一冊的完成條件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-tablet-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第三冊 · 平板與外殼 App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-onsite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第四冊 · 進院當天
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-carry-in-out/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第五冊 · 帶進去與帶出來
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第六冊 · 現場疑難排解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    維護流程
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    維護流程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/HOWTO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄維護流程（人用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/AGENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件維護作業指示（agent 用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-為什麼這一步不能省" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 為什麼這一步不能省
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-先找一台乾淨的機器" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 先找一台「乾淨」的機器
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 先找一台「乾淨」的機器">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-01-確認這台機器真的是乾淨的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-01 確認這台機器真的是乾淨的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-02-斷網" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-02 斷網
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-把包送進去並驗收" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 把包送進去並驗收
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 把包送進去並驗收">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-03-用隨身碟複製順便演練交付動作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-03 用隨身碟複製（順便演練交付動作）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-04-解壓並核對雜湊dep-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-04 解壓並核對雜湊（DEP-27）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-05-驗收五項dep-22-的正本" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-05 驗收五項（DEP-22 的正本）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-模擬院內主機的設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 模擬院內主機的設定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 模擬院內主機的設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-06-決定三個目錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-06 決定三個目錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-07-建立專用低權限帳號" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-07 建立專用低權限帳號
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-08-建立-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-08 建立 .env
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-位址必須在建置安裝包之前就知道" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠ 位址必須在建置安裝包之前就知道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-09-確認時區" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-09 確認時區
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-安裝與啟動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 安裝與啟動
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 安裝與啟動">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-10-套用既有遷移dep-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-10 套用既有遷移（DEP-31）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-11-註冊服務" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-11 註冊服務
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-12-啟動並確認" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-12 啟動並確認
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-13--從另一台機器連進來最容易被跳過也最會出事的一步" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-13 ⚠ 從另一台機器連進來（最容易被跳過、也最會出事的一步）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-14-權限反向測試" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-14 權限反向測試
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-15-重新開機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-15 重新開機
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-16-在服務執行帳號底下確認時區與執行身分" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-16 在服務執行帳號底下確認時區與執行身分
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-功能面的冒煙測試" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 功能面的冒煙測試
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 功能面的冒煙測試">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-17-走一次主線" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-17 走一次主線
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-18-病人端斷網仍開得出畫面" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-18 病人端斷網仍開得出畫面
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-更新與回退在這台機器上各做一次" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 更新與回退，在這台機器上各做一次
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 更新與回退，在這台機器上各做一次">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-19-停止服務並確認停乾淨" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-19 停止服務並確認停乾淨
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-20-更新演練" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-20 更新演練
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-21-回退演練" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-21 回退演練
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-收尾" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 收尾
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 收尾">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-22-記下每一步花了多久" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-22 記下每一步花了多久
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-23-把結果寫進演練紀錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-23 把結果寫進演練紀錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-24-留著這台機器" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R-24 留著這台機器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-這一冊的完成條件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 這一冊的完成條件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="第二冊--開發端的測試部署">第二冊 · 開發端的測試部署<a class="headerlink" href="#第二冊--開發端的測試部署" title="Permanent link">&para;</a></h1>
+<p>版本：v0.1　文件狀態：草案　編號：<code>R-xx</code>　建議時點：<strong>D-2</strong></p>
+<blockquote>
+<p>這一冊做的是<strong>彩排</strong>：在一台什麼都沒有的機器上，把院內那一整套從頭到尾走一次。
+終點是——你已經做過一次，所以進院那天不是第一次。</p>
+</blockquote>
+<hr />
+<h2 id="0-為什麼這一步不能省">0. 為什麼這一步不能省<a class="headerlink" href="#0-為什麼這一步不能省" title="Permanent link">&para;</a></h2>
+<p>迭代 10 在開發機上建好安裝包、所有靜態檢查全綠之後，<strong>把它真的跑起來，當場出現兩個缺陷</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>症狀</th>
+<th>真正的原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>後端起不來，說「找不到專案根目錄」</td>
+<td>資料庫路徑檢查往上找帶 workspaces 的 <code>package.json</code>，<strong>安裝包裡沒有那個東西</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>套用遷移時找不到 Prisma CLI</td>
+<td>指令外套只認得開發機的兩種版面，<strong>安裝包的版面少一層</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>兩個都不是設定寫錯，是「開發機的版面與安裝包的版面不一樣」</strong>——而所有靜態檢查都只看得到前者。</p>
+<p>這就是 DEP-22 的意思：<strong>在開發機上解壓來測，測到的是開發機，不是安裝包。</strong></p>
+<p>預計耗時：<strong>半天</strong>。第一次做會更久，而那正是它的價值——這些時間你遲早要花，
+在自己家裡花比在醫院裡花便宜得多。</p>
+<hr />
+<h2 id="1-先找一台乾淨的機器">1. 先找一台「乾淨」的機器<a class="headerlink" href="#1-先找一台乾淨的機器" title="Permanent link">&para;</a></h2>
+<p>「乾淨」的定義：<strong>沒有開發環境、沒有全域安裝的 Node.js、沒有這個專案的任何殘留。</strong></p>
+<p>沒有第二台實體機也有替代品，但<strong>可信度差很多</strong>，要知道自己在用哪一種：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>可信度</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>另一台實體 Windows 機器</strong></td>
+<td>★★★</td>
+<td>最接近院內主機。借一台、或用家裡那台不寫程式的</td>
+</tr>
+<tr>
+<td><strong>全新安裝的 Windows VM</strong>（Hyper-V／VirtualBox）</td>
+<td>★★★</td>
+<td>幾乎等價，而且可以照快照重來。<strong>強烈建議用這個</strong></td>
+</tr>
+<tr>
+<td>同一台機器上新增一個本機使用者帳號</td>
+<td>★</td>
+<td><strong>驗不到 DEP-22</strong>：Node.js 裝在系統層，新帳號一樣看得到它。只能拿來驗權限那幾項</td>
+</tr>
+<tr>
+<td>開發機上直接解壓來測</td>
+<td>✗</td>
+<td><strong>不算數</strong>。這正是 DEP-22 明文要擋的</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>建議做法</strong>：開一台 Windows VM，裝完系統之後<strong>先拍一個快照</strong>。
+每練一次就還原快照，你可以練很多次，而每一次都是真正的「第一次安裝」。</p>
+</blockquote>
+<hr />
+<h3 id="r-01-確認這台機器真的是乾淨的">R-01 確認這台機器真的是乾淨的<a class="headerlink" href="#r-01-確認這台機器真的是乾淨的" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong>（在那台機器上）</p>
+<div class="highlight"><pre><span></span><code><span class="n">node</span> <span class="n">-v</span>
+<span class="n">npm</span> <span class="n">-v</span>
+<span class="nb">Get-ChildItem</span> <span class="n">C</span><span class="p">:\</span> <span class="n">-Filter</span> <span class="s2">"*hd-tablet-care*"</span> <span class="n">-Recurse</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p>前兩個都回「不是內部或外部命令」，第三個沒有結果。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node -v</code> 有版本號</td>
+<td><strong>這次演練不算數</strong>。你驗的是那一份 Node.js，不是包裡的那一份。解除安裝它，或換一台機器</td>
+</tr>
+<tr>
+<td>有這個專案的殘留</td>
+<td>刪掉。殘留的 <code>.env</code> 或資料庫會讓你誤以為某一步成功了</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-02-斷網">R-02 斷網<a class="headerlink" href="#r-02-斷網" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>實體機：<strong>把網路線拔掉，Wi-Fi 關掉</strong>。
+VM：設定裡把網路介面卡改成「未連線」。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p><div class="highlight"><pre><span></span><code><span class="n">ping</span> <span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span>
+</code></pre></div>
+→ 完全不通（<code>傳輸失敗</code> 或逾時）。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>想「留著網路比較方便」</td>
+<td><strong>不行。</strong> 整個演練的意義就是證明沒有網路也做得完。留著網路，你會在某一步不知不覺用到它，而院內沒有</td>
+</tr>
+<tr>
+<td>斷網之後沒辦法把檔案複製過去</td>
+<td>正確——所以要用隨身碟，<strong>順便把 R-03 一起練了</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-把包送進去並驗收">2. 把包送進去並驗收<a class="headerlink" href="#2-把包送進去並驗收" title="Permanent link">&para;</a></h2>
+<h3 id="r-03-用隨身碟複製順便演練交付動作">R-03 用隨身碟複製（順便演練交付動作）<a class="headerlink" href="#r-03-用隨身碟複製順便演練交付動作" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>把 <a href="../01-dev-machine/#p-13-準備隨身碟">P-13</a> 那支隨身碟插上去，把兩個檔案複製到機器上，例如 <code>C:\hd\</code>。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p><code>C:\hd\</code> 底下有壓縮檔與 <code>verify-package.mjs</code>。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>複製到一半失敗</td>
+<td>隨身碟品質或檔案系統問題</td>
+<td>換一支。<strong>這件事在院內發生會很難看</strong>——順便確認你的碟是 exFAT 或 NTFS，FAT32 放不下 4GB 以上的檔案</td>
+</tr>
+<tr>
+<td>防毒把壓縮檔擋下</td>
+<td>即時掃描</td>
+<td>記下判定名稱。院內掃描站會遇到同一件事</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-04-解壓並核對雜湊dep-27">R-04 解壓並核對雜湊（DEP-27）<a class="headerlink" href="#r-04-解壓並核對雜湊dep-27" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">Expand-Archive</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;.</span><span class="n">zip</span> <span class="n">-DestinationPath</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span>
+<span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">-&lt;</span><span class="n">版本</span><span class="p">&gt;-&lt;</span><span class="n">commit</span><span class="p">&gt;</span>
+<span class="nb">Get-FileHash</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span> <span class="p">.\</span><span class="n">CHECKSUMS</span><span class="p">.</span><span class="n">txt</span>
+</code></pre></div>
+<p>拿輸出的雜湊值與<a href="../01-dev-machine/#p-11-寫交付單">交付單</a>上那一個逐字對照。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p>兩串完全相同。<strong>逐字比對，不要只看頭尾四碼。</strong></p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>雜湊不一樣</strong></td>
+<td>檔案在路上壞了，或被防毒動過手腳，或你拿錯版本</td>
+<td><strong>停下來。</strong> 重新複製一次再比。還是不一樣就回開發機整包重做。不要「應該只是小問題」硬著頭皮往下</td>
+</tr>
+<tr>
+<td>解壓很慢或失敗</td>
+<td>2 萬多個檔案</td>
+<td>正常會花幾分鐘。失敗就看磁碟空間</td>
+</tr>
+<tr>
+<td><code>Expand-Archive</code> 說路徑太長</td>
+<td>Windows 的路徑長度上限</td>
+<td><strong>把解壓目的地換成很短的路徑</strong>（例如 <code>C:\hd\</code>），不要放在桌面底下好幾層。這一條在院內一樣會遇到</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-05-驗收五項dep-22-的正本">R-05 驗收五項（DEP-22 的正本）<a class="headerlink" href="#r-05-驗收五項dep-22-的正本" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">runtime</span><span class="p">\</span><span class="n">node</span><span class="p">.</span><span class="n">exe</span> <span class="p">..\</span><span class="n">verify-package</span><span class="p">.</span><span class="n">mjs</span> <span class="p">-</span><span class="n">-dir</span> <span class="p">.</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p>五項全綠。<strong>這一次的輸出才是 DEP-22 的交付物</strong>——整段抄進演練紀錄 §3.2。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>說找不到 <code>runtime/node.exe</code></td>
+<td>路徑或解壓不完整</td>
+<td>確認你在安裝包目錄裡</td>
+</tr>
+<tr>
+<td>第 3 項倒在 <code>ENOTFOUND binaries.prisma.sh</code></td>
+<td>引擎沒帶到或沒指好</td>
+<td><strong>這就是整個演練要抓的東西</strong>。在開發機上永遠看不到它，因為那裡早就下載過了</td>
+</tr>
+<tr>
+<td>第 5 項有連線紀錄</td>
+<td>有東西在偷連外</td>
+<td><strong>不得交付</strong>。記下哨兵抓到的主機名稱</td>
+</tr>
+<tr>
+<td>全綠</td>
+<td></td>
+<td>恭喜，DEP-22 這一條過了。<strong>把整段輸出抄下來或拍照</strong>（拍自己的機器可以，院內不行）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-模擬院內主機的設定">3. 模擬院內主機的設定<a class="headerlink" href="#3-模擬院內主機的設定" title="Permanent link">&para;</a></h2>
+<p>從這裡開始，<strong>把這台機器當成院內那台</strong>。每一步都照你打算在院內做的方式做。</p>
+<h3 id="r-06-決定三個目錄">R-06 決定三個目錄<a class="headerlink" href="#r-06-決定三個目錄" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>在紙上先寫死，三個目錄<strong>互相不得包含</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>這次演練用</th>
+<th>院內要填什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>安裝包目錄</td>
+<td><code>C:\hd\hd-tablet-care-&lt;版本&gt;-&lt;commit&gt;\</code></td>
+<td>資訊室指定的路徑</td>
+</tr>
+<tr>
+<td><strong>資料庫目錄</strong></td>
+<td><code>D:\hd-data\</code></td>
+<td><strong>必須在安裝包目錄之外</strong>（DEP-08）</td>
+</tr>
+<tr>
+<td><strong>備份目錄</strong></td>
+<td><code>D:\hd-data\backups\</code>（演練用；院內第一落點可用第二顆 SSD）</td>
+<td><strong>最終落點必須是院內另一台機器</strong>（DEP-06）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>想法</th>
+<th>為什麼不行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「資料庫放在安裝包裡比較好找」</td>
+<td>某一次「把舊資料夾整個刪掉再解壓新版」就會把資料庫一起刪掉。<strong>這種事不會發生在第一次更新，會發生在第五次、由另一個人執行的那一次</strong>（DEP-08）</td>
+</tr>
+<tr>
+<td>「放在『文件』底下就好」</td>
+<td>醫院電腦常把「文件」重新導向到雲端同步資料夾，而路徑上看不出來。那等於把資料庫送出院外，同時毀掉檔案鎖（DEP-21）</td>
+</tr>
+<tr>
+<td>「用網路磁碟機的代號，反正看起來像本機」</td>
+<td>看起來像本機，行為是網路檔案系統。<strong>後端會拒絕啟動</strong>，這是《資料庫使用規範》7.2 明文要擋的</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-07-建立專用低權限帳號">R-07 建立專用低權限帳號<a class="headerlink" href="#r-07-建立專用低權限帳號" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong>（以系統管理員身分開啟 PowerShell）</p>
+<div class="highlight"><pre><span></span><code><span class="n">net</span> <span class="n">user</span> <span class="n">svc-hdcare</span> <span class="p">&lt;</span><span class="n">一組夠長的密碼</span><span class="p">&gt;</span> <span class="p">/</span><span class="n">add</span>
+<span class="n">net</span> <span class="n">localgroup</span> <span class="n">Users</span> <span class="n">svc-hdcare</span> <span class="p">/</span><span class="n">add</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p><code>net user svc-hdcare</code> 查得到這個帳號，且<strong>不在 Administrators 群組裡</strong>。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>想用自己的帳號跑就好</td>
+<td><strong>不行</strong>（DEP-12）。主機是共用的，同一台機器上別的專案的維運人員也有登入權限，而他們不該讀得到病人資料</td>
+</tr>
+<tr>
+<td>院方是網域環境，本機帳號可能不適用</td>
+<td>這是 Q-27 第 2 題。<strong>D-14 就要問</strong>：本機帳號還是網域帳號、密碼由誰保管、會不會定期強制更換（會的話服務要跟著改）</td>
+</tr>
+<tr>
+<td>密碼要多複雜</td>
+<td>照院方政策。<strong>寫在紙上帶進去，不要存在手機裡</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-08-建立-env">R-08 建立 <code>.env</code><a class="headerlink" href="#r-08-建立-env" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>把包內的 <code>.env.範本</code> 複製到<strong>安裝包目錄的上一層</strong>，改名為 <code>.env</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Copy-Item</span> <span class="p">.\.</span><span class="n">env</span><span class="p">.</span><span class="n">範本</span> <span class="p">..\.</span><span class="n">env</span>
+<span class="n">notepad</span> <span class="p">..\.</span><span class="n">env</span>
+</code></pre></div>
+<p><strong>正式環境的必填欄位</strong>（其餘留空即用預設值）：</p>
+<table>
+<thead>
+<tr>
+<th>變數</th>
+<th>填什麼</th>
+<th>填錯會怎樣</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEPLOYMENT_ENV</code></td>
+<td><code>production</code></td>
+<td>留空的話，時區檢查不擋、開發用遷移指令不擋、<code>synchronous</code> 可被放寬。<strong>正式主機一定要填</strong></td>
+</tr>
+<tr>
+<td><code>DATABASE_URL</code></td>
+<td><code>file:D:/hd-data/hd.db</code>（<strong>絕對路徑、正斜線</strong>）</td>
+<td>相對路徑直接拒絕啟動</td>
+</tr>
+<tr>
+<td><code>BACKUP_DIR</code></td>
+<td><code>D:/hd-data/backups</code></td>
+<td>沒填就無法備份，而<strong>更新流程會停在備份那一步</strong></td>
+</tr>
+<tr>
+<td><code>JWT_SECRET</code></td>
+<td>一串隨機值（見下）</td>
+<td>留空拒絕啟動</td>
+</tr>
+<tr>
+<td><code>API_PORT</code></td>
+<td>資訊室登記過的埠</td>
+<td><strong>正式環境沒填就拒絕啟動</strong>（DEP-37 第 2 項）</td>
+</tr>
+<tr>
+<td><code>NURSE_PORT</code>／<code>PATIENT_PORT</code></td>
+<td>另外兩個登記過的埠</td>
+<td>靜態站起不來</td>
+</tr>
+<tr>
+<td><code>CORS_ORIGINS</code></td>
+<td><code>http://&lt;院內主機&gt;:&lt;NURSE_PORT&gt;,http://&lt;院內主機&gt;:&lt;PATIENT_PORT&gt;</code></td>
+<td><strong>填成 localhost 的話，護理站電腦一連就被擋</strong></td>
+</tr>
+<tr>
+<td><code>PRISMA_ENGINES_DIR</code></td>
+<td>安裝包的 <code>engines\</code> 絕對路徑</td>
+<td>留空會去找 <code>node_modules</code>，找不到就連外下載</td>
+</tr>
+<tr>
+<td><code>SUPER_ADMIN_WORK_ID</code>／<code>SUPER_ADMIN_INITIAL_PASSWORD</code>／<code>SUPER_ADMIN_DISPLAY_NAME</code></td>
+<td>第一個最高權限帳號</td>
+<td>不填也起得來，但<strong>資料庫裡不會有任何帳號，護理端登不進去</strong></td>
+</tr>
+<tr>
+<td><code>TZ</code></td>
+<td><code>Asia/Taipei</code></td>
+<td>見 R-09</td>
+</tr>
+<tr>
+<td><code>MDM_KIOSK_BASE_URL</code></td>
+<td><code>http://&lt;院內主機&gt;:&lt;PATIENT_PORT&gt;</code></td>
+<td>平板佈建時的位址</td>
+</tr>
+<tr>
+<td><code>LLM_PROVIDER</code></td>
+<td><code>mock</code>（首波 AI 關閉，DEP-29）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><code>JWT_SECRET</code> 的產生方式（<strong>在開發機上先產好寫在紙上</strong>，院內那台沒有方便的產生工具）：</p>
+<div class="highlight"><pre><span></span><code>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">"console.log(require('crypto').randomBytes(48).toString('base64url'))"</span>
+</code></pre></div>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>存檔後中文變亂碼</td>
+<td>記事本以系統預設編碼頁存檔</td>
+<td><code>.env</code> 只填英數字與路徑，避免中文。要編輯就用 UTF-8 存檔</td>
+</tr>
+<tr>
+<td>後端說找不到 <code>.env</code></td>
+<td>放錯位置</td>
+<td>它要在<strong>安裝包目錄的上一層</strong>，不是包裡面（DEP-13）。也可以用 <code>HD_ENV_FILE</code> 指定位置</td>
+</tr>
+<tr>
+<td>路徑寫成 <code>D:\hd-data\hd.db</code></td>
+<td>反斜線</td>
+<td><code>DATABASE_URL</code> 一律用正斜線：<code>file:D:/hd-data/hd.db</code></td>
+</tr>
+<tr>
+<td>不知道院內主機位址</td>
+<td><strong>Q-27 沒問到</strong></td>
+<td>見下方的警告框</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h3 id="-位址必須在建置安裝包之前就知道">⚠ 位址必須在建置安裝包之前就知道<a class="headerlink" href="#-位址必須在建置安裝包之前就知道" title="Permanent link">&para;</a></h3>
+<p><strong>兩個 PWA 呼叫後端的位址是在建置時寫進產物裡的</strong>（<code>VITE_API_BASE_URL</code>），
+不是啟動時才讀的。預設值是 <code>http://localhost:3000</code>——
+在護理站那台電腦上開啟護理端時，<code>localhost</code> 指的是<strong>那台電腦自己</strong>，不是主機。</p>
+<p>也就是說：<strong>院內主機的位址必須在 <a href="../01-dev-machine/#p-04-建置三個產物">P-04</a> 建置之前就決定</strong>，
+建置前把 <code>VITE_API_BASE_URL=http://&lt;院內主機&gt;:&lt;API_PORT&gt;</code> 填進開發機的 <code>.env</code> 再 <code>npm run build</code>。</p>
+<p>這件事與憑證的主體別名是同一個位址（<a href="../03-tablet-shell/">第三冊</a> K-01），<strong>兩邊必須一致</strong>。</p>
+<p><strong>R-13 就是專門用來抓這個問題的</strong>：一定要從另一台機器連進來測，不要只在主機本機上開。
+位址到現場才知道的話，唯一的補救是帶著開發機進院重新產生安裝包——
+那要先確認院方允許外來筆記型電腦接上院內網路（Q-29）。</p>
+</blockquote>
+<hr />
+<h3 id="r-09-確認時區">R-09 確認時區<a class="headerlink" href="#r-09-確認時區" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-TimeZone</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p>顯示 <code>Taipei Standard Time</code>。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不是台北時區</td>
+<td><code>Set-TimeZone -Id "Taipei Standard Time"</code>（要系統管理員權限）</td>
+</tr>
+<tr>
+<td>院內主機不是台北時區，而沒有人有權限改</td>
+<td><strong>停手</strong>（總覽第 6 節）。後端會拒絕啟動（DEP-15），硬繞過去會讓班表整張錯開一格，而<strong>那種錯誤不會有人回報成程式問題</strong></td>
+</tr>
+<tr>
+<td>在自己的工作階段看是對的</td>
+<td><strong>不夠</strong>。要在<strong>服務執行帳號底下</strong>確認，做法見 R-16</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-安裝與啟動">4. 安裝與啟動<a class="headerlink" href="#4-安裝與啟動" title="Permanent link">&para;</a></h2>
+<h3 id="r-10-套用既有遷移dep-31">R-10 套用既有遷移（DEP-31）<a class="headerlink" href="#r-10-套用既有遷移dep-31" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">runtime</span><span class="p">\</span><span class="n">node</span><span class="p">.</span><span class="n">exe</span> <span class="p">.\</span><span class="n">app</span><span class="p">\</span><span class="n">api</span><span class="p">\</span><span class="n">scripts</span><span class="p">\</span><span class="n">prisma-cli</span><span class="p">.</span><span class="n">mjs</span> <span class="n">migrate</span> <span class="n">deploy</span> <span class="p">-</span><span class="n">-schema</span> <span class="p">.\</span><span class="n">app</span><span class="p">\</span><span class="n">api</span><span class="p">\</span><span class="n">prisma</span><span class="p">\</span><span class="n">schema</span><span class="p">.</span><span class="n">prisma</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p>列出套用了哪幾個遷移，最後說資料庫已同步。<code>D:\hd-data\hd.db</code> 出現了。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getaddrinfo ENOTFOUND binaries.prisma.sh</code></td>
+<td>Prisma CLI 找不到引擎，跑去連外下載</td>
+<td>確認 <code>.env</code> 的 <code>PRISMA_ENGINES_DIR</code>；確認你用的是 <code>prisma-cli.mjs</code> 這個外套，不是直接呼叫 prisma</td>
+</tr>
+<tr>
+<td><code>Error code 14: Unable to open the database file</code></td>
+<td>目錄不存在或沒有寫入權限</td>
+<td>先手動建出 <code>D:\hd-data\</code></td>
+</tr>
+<tr>
+<td>拒絕啟動，說資料庫路徑在共用位置</td>
+<td>你把它放在暫存／公用／桌面／文件／下載底下</td>
+<td>換一個自己的路徑（DEP-37 第 3 項）</td>
+</tr>
+<tr>
+<td>有人建議改用開發用的遷移指令</td>
+<td></td>
+<td><strong>絕對不可以。</strong> 那一支在偵測到資料庫與遷移歷史對不上時，會提議或直接<strong>重建整個資料庫</strong>（DEP-31）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-11-註冊服務">R-11 註冊服務<a class="headerlink" href="#r-11-註冊服務" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong>（系統管理員身分）</p>
+<p>先<strong>故意做錯一次</strong>，確認它擋得住：</p>
+<p><div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">scripts</span><span class="p">\</span><span class="n">service-install</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Account</span> <span class="s2">"&lt;機器名&gt;\svc-hdcare"</span> <span class="n">-DataDir</span> <span class="s2">".\data"</span> <span class="n">-BackupDir</span> <span class="s2">"D:\hd-data\backups"</span>
+</code></pre></div>
+→ 應該被擋下，說<strong>資料目錄不得位於安裝包目錄之內（DEP-08）</strong>。</p>
+<p>再做對的那一次：</p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">scripts</span><span class="p">\</span><span class="n">service-install</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Account</span> <span class="s2">"&lt;機器名&gt;\svc-hdcare"</span> <span class="n">-DataDir</span> <span class="s2">"D:\hd-data"</span> <span class="n">-BackupDir</span> <span class="s2">"D:\hd-data\backups"</span> <span class="n">-LockDownDataDir</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p>印出「已註冊」，並列出接下來的三件事。中途會要你輸入那個帳號的密碼（不會顯示、不會寫進檔案）。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「這一支要以系統管理員身分執行」</td>
+<td>權限不足</td>
+<td>以系統管理員身分重新開啟 PowerShell</td>
+</tr>
+<tr>
+<td>密碼輸入後說帳號或密碼錯誤</td>
+<td>帳號格式</td>
+<td>本機帳號寫 <code>&lt;機器名&gt;\svc-hdcare</code>，網域帳號寫 <code>&lt;網域&gt;\svc-hdcare</code></td>
+</tr>
+<tr>
+<td>沒加 <code>-LockDownDataDir</code></td>
+<td>會出現警告</td>
+<td><strong>要加</strong>。不加的話資料目錄沿用繼承來的權限，同機其他登入者可能讀得到病人資料（DEP-12）</td>
+</tr>
+<tr>
+<td>執行原則擋下 <code>.ps1</code></td>
+<td>Windows 預設</td>
+<td><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code> 之後再跑。<strong>這一條在院內要先問過資訊室</strong></td>
+</tr>
+<tr>
+<td>資訊室要求必須是 <code>services.msc</code> 看得到的服務</td>
+<td>目前用的是排程工作</td>
+<td>這是 Q-27 第 6 題。排程工作在「服務」清單裡看不到，要到工作排程器看。<strong>要換的話只換 <code>service-install.ps1</code> 這一支</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-12-啟動並確認">R-12 啟動並確認<a class="headerlink" href="#r-12-啟動並確認" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">scripts</span><span class="p">\</span><span class="n">service-start</span><span class="p">.</span><span class="n">ps1</span>
+<span class="p">.\</span><span class="n">scripts</span><span class="p">\</span><span class="n">service-status</span><span class="p">.</span><span class="n">ps1</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p>三件事同時成立：</p>
+<ol>
+<li>排程工作 <code>Running</code>，<strong>執行身分是 <code>svc-hdcare</code></strong>，不是你</li>
+<li>本安裝包底下 <strong>3 個行程</strong>（後端、護理端、病人端）</li>
+<li>存活檢查 <strong>HTTP 200</strong></li>
+</ol>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只有 1 或 2 個行程</td>
+<td>有一個倒了</td>
+<td><strong>啟動器的設計是任何一個倒下就三個一起停</strong>，所以看到 1～2 個多半是正在收尾。看紀錄檔找真正的錯</td>
+</tr>
+<tr>
+<td>存活檢查連不上</td>
+<td>服務沒起來，或埠與 <code>.env</code> 的 <code>API_PORT</code> 不一致</td>
+<td><code>.\scripts\service-status.ps1 -ApiPort &lt;埠&gt;</code> 指定埠再試</td>
+</tr>
+<tr>
+<td>行程數是 0</td>
+<td>排程工作跑起來就死</td>
+<td>多半是 <code>.env</code> 有問題。<strong>直接用前景跑一次看錯誤</strong>：<code>.\runtime\node.exe .\scripts\run-all.mjs</code></td>
+</tr>
+<tr>
+<td>說連接埠被佔用</td>
+<td>這台機器上有別的東西在用</td>
+<td>換一個埠，並記下來——<strong>院內十之八九也會遇到</strong>（DEP-37 第 2 項）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-13--從另一台機器連進來最容易被跳過也最會出事的一步">R-13 ⚠ 從另一台機器連進來（<strong>最容易被跳過、也最會出事的一步</strong>）<a class="headerlink" href="#r-13--從另一台機器連進來最容易被跳過也最會出事的一步" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>用<strong>另一台</strong>電腦（不是主機本身）的瀏覽器開 <code>http://&lt;主機 IP&gt;:&lt;NURSE_PORT&gt;</code>，試著登入。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p>畫面出得來，<strong>而且登得進去</strong>。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>畫面出得來，但登入沒反應／一直轉</td>
+<td><strong><code>VITE_API_BASE_URL</code> 是 localhost</strong>，護理端在向那台電腦自己要資料</td>
+<td>見 R-08 的警告框。要用院內主機位址重新產生安裝包</td>
+</tr>
+<tr>
+<td>瀏覽器主控台出現 CORS 錯誤</td>
+<td><code>.env</code> 的 <code>CORS_ORIGINS</code> 沒填院內位址</td>
+<td>補上護理端與病人端兩個來源，重新啟動服務</td>
+</tr>
+<tr>
+<td>整個連不上</td>
+<td>Windows 防火牆</td>
+<td>要開三個埠的輸入規則。在演練機上先練一次：<br><code>New-NetFirewallRule -DisplayName "HD API" -Direction Inbound -LocalPort &lt;埠&gt; -Protocol TCP -Action Allow</code></td>
+</tr>
+<tr>
+<td>只有主機自己開得起來</td>
+<td>同上</td>
+<td><strong>院內的護理端是開在護理站的電腦上，不是主機上。主機自己開得起來完全不代表能用</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-14-權限反向測試">R-14 權限反向測試<a class="headerlink" href="#r-14-權限反向測試" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>用<strong>一般登入者</strong>的帳號（不是管理員、也不是 <code>svc-hdcare</code>）開啟 <code>D:\hd-data\</code>。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p><strong>拒絕存取。</strong></p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看得到裡面的檔案</td>
+<td><code>-LockDownDataDir</code> 沒生效。重跑 R-11，或手動收權限：<code>icacls D:\hd-data /inheritance:r</code> 再逐一授權</td>
+</tr>
+<tr>
+<td>沒有第二個帳號可以測</td>
+<td>建一個臨時的：<code>net user tester &lt;密碼&gt; /add</code>。<strong>測完刪掉</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-15-重新開機">R-15 重新開機<a class="headerlink" href="#r-15-重新開機" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>把機器重新啟動，<strong>不要登入</strong>，等兩分鐘，再登入查狀態。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p><code>.\scripts\service-status.ps1</code> 顯示 Running、3 個行程、存活檢查 200。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>服務沒起來</td>
+<td>排程工作的觸發條件是「開機時」，但帳號密碼可能失效</td>
+<td>到工作排程器看「上次執行結果」。常見原因是服務帳號沒有「以批次工作登入」的權限</td>
+</tr>
+<tr>
+<td>要登入才會起來</td>
+<td>註冊時的設定不對</td>
+<td>重跑 R-11</td>
+</tr>
+<tr>
+<td>起來了但連不上</td>
+<td>開機時另一個專案先佔走了埠</td>
+<td><strong>這正是 DEP-37 第 2 項在講的事</strong>，而且它只會在重新開機時發作。記下來，回報資訊室</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-16-在服務執行帳號底下確認時區與執行身分">R-16 在服務執行帳號底下確認時區與執行身分<a class="headerlink" href="#r-16-在服務執行帳號底下確認時區與執行身分" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>護理端 → 系統管理 → 維運狀態。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p>四件事都對：</p>
+<table>
+<thead>
+<tr>
+<th>看什麼</th>
+<th>應該是</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>伺服器時區</td>
+<td><code>Asia/Taipei</code></td>
+</tr>
+<tr>
+<td><strong>執行身分</strong></td>
+<td><code>svc-hdcare</code>，<strong>不是你現在登入的帳號</strong></td>
+</tr>
+<tr>
+<td>連接埠</td>
+<td>你在 <code>.env</code> 填的那個，且標示為「來自主機設定」而非程式預設值</td>
+</tr>
+<tr>
+<td>資料庫磁碟可用空間</td>
+<td>綠的，高於 <code>DB_DISK_MIN_FREE_MB</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>主機時區正確，不代表服務執行帳號取得的時區正確</strong>（DEP-15）。這一頁是唯一看得到後者的地方。</p>
+</blockquote>
+<hr />
+<h2 id="5-功能面的冒煙測試">5. 功能面的冒煙測試<a class="headerlink" href="#5-功能面的冒煙測試" title="Permanent link">&para;</a></h2>
+<h3 id="r-17-走一次主線">R-17 走一次主線<a class="headerlink" href="#r-17-走一次主線" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>照《<a href="../../testing/manual-test-guide/">完整手動測試手冊</a>》§02 冒煙測試與 §03 主線 A：
+登入 → 改密碼 → 建病人 → 建排班 → 指派平板 → 病人端顯示 → 解除綁定 → 稽核查得到。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p>每一步都如手冊所述。<strong>這一段走不完，就不要進醫院。</strong></p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>登入頁出得來但沒有任何帳號</td>
+<td><code>SUPER_ADMIN_*</code> 沒填</td>
+<td>補進 <code>.env</code>，重新啟動服務。<strong>資料庫不必重建</strong></td>
+</tr>
+<tr>
+<td>平板端顯示「裝置尚未佈建」</td>
+<td>正常。那是給佈建用的畫面</td>
+<td>在護理端「裝置管理」註冊一台，拿到金鑰再連</td>
+</tr>
+<tr>
+<td>某個功能整個不見</td>
+<td>首波功能開關關閉（DEP-29）</td>
+<td><strong>這是正確行為</strong>：關閉的功能連後端端點一起擋下，不以灰色按鈕呈現（DEP-34）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-18-病人端斷網仍開得出畫面">R-18 病人端斷網仍開得出畫面<a class="headerlink" href="#r-18-病人端斷網仍開得出畫面" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>用另一台裝置開病人端、等畫面出來之後，<strong>把那台裝置的網路斷掉</strong>，重新整理。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p>畫面照樣出得來；求助區在原來的位置、原來的大小，<strong>而且明確顯示現在通知不到護理師</strong>。</p>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>斷網後一片空白</td>
+<td>Service Worker 沒註冊成功</td>
+<td>看 <a href="../01-dev-machine/#p-04-建置三個產物">P-04</a>：產物裡有沒有 <code>sw.js</code>。<strong>這一條不成立，選 PWA 的唯一理由就沒了</strong></td>
+</tr>
+<tr>
+<td>求助按鈕按得下去但沒有任何提示</td>
+<td>離線狀態沒顯示</td>
+<td>記成缺陷。<strong>能按而沒有回應是最糟的那一種</strong></td>
+</tr>
+</tbody>
+</table>
+<p>詳細項次見<a href="../../testing/iteration-10/">迭代 10 分冊</a> <code>t16</code>–<code>t22</code>。</p>
+<hr />
+<h2 id="6-更新與回退在這台機器上各做一次">6. 更新與回退，在這台機器上各做一次<a class="headerlink" href="#6-更新與回退在這台機器上各做一次" title="Permanent link">&para;</a></h2>
+<h3 id="r-19-停止服務並確認停乾淨">R-19 停止服務並確認停乾淨<a class="headerlink" href="#r-19-停止服務並確認停乾淨" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">scripts</span><span class="p">\</span><span class="n">service-stop</span><span class="p">.</span><span class="n">ps1</span>
+<span class="p">.\</span><span class="n">scripts</span><span class="p">\</span><span class="n">service-status</span><span class="p">.</span><span class="n">ps1</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<p>行程數 <strong>0</strong>。</p>
+<p><strong>為什麼要確認「都」停了</strong>：剩下任何一個還開著資料庫檔案，接下來的備份就是在一個還在被寫入的檔案上做的（DEP-10）。</p>
+<hr />
+<h3 id="r-20-更新演練">R-20 更新演練<a class="headerlink" href="#r-20-更新演練" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>用一個新版本的安裝包（可以只是把 <a href="../01-dev-machine/#p-06-建置安裝包">P-06</a> 再跑一次），照這七步：</p>
+<table>
+<thead>
+<tr>
+<th>順序</th>
+<th>動作</th>
+<th>跳過會怎樣</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>停止服務</td>
+<td>資料庫還有寫入時做的備份不可靠</td>
+</tr>
+<tr>
+<td>2</td>
+<td>備份，<strong>並驗證它還原得起來</strong></td>
+<td>「有備份」和「備份能用」是兩件事</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>舊版目錄改名，不要刪</strong></td>
+<td>沒有可以退回去的東西</td>
+</tr>
+<tr>
+<td>4</td>
+<td>解壓新版到新目錄</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>套用遷移（R-10 那一支）</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>啟動，確認主線功能</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>寫進更新紀錄</td>
+<td>半年後沒有人答得出資料是哪一次更新弄壞的</td>
+</tr>
+</tbody>
+</table>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>想直接把舊目錄刪掉再解壓</td>
+<td><strong>不要。</strong> 第 3 步是回退唯一的依靠</td>
+</tr>
+<tr>
+<td>新版的 <code>.env</code> 要重寫嗎</td>
+<td>不用。<code>.env</code> 在安裝包目錄之外，整包換掉也不會被蓋掉——<strong>這正是 DEP-08 那條界線的用處</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-21-回退演練">R-21 回退演練<a class="headerlink" href="#r-21-回退演練" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>把 R-20 那次更新前的備份還原到另一個檔案，再把舊版目錄換回來。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<p>雜湊相符、完整性檢查 ok、筆數與更新前一致；還原出來的那份<strong>沒有</strong>這次遷移新增的欄位。</p>
+<blockquote>
+<p><strong>程式可以退版，資料庫不行退版。</strong> 動過 schema 的版本要回退，是<strong>還原備份再換回舊版程式</strong>，
+不是把遷移倒回去。</p>
+</blockquote>
+<hr />
+<h2 id="7-收尾">7. 收尾<a class="headerlink" href="#7-收尾" title="Permanent link">&para;</a></h2>
+<h3 id="r-22-記下每一步花了多久">R-22 記下每一步花了多久<a class="headerlink" href="#r-22-記下每一步花了多久" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<p>填這張表。它是你在院內的時間預算，也是回答「大概要多久」時唯一誠實的依據。</p>
+<table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>演練耗時</th>
+<th>院內預估（×1.5）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>解壓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>核對雜湊</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>驗收五項</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>建 <code>.env</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>套用遷移</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>註冊服務並啟動</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>冒煙測試</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>合計</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>×1.5 不是保守，是經驗值</strong>：現場有人在旁邊、鍵盤不順手、權限要等人、還會被問問題。</p>
+</blockquote>
+<hr />
+<h3 id="r-23-把結果寫進演練紀錄">R-23 把結果寫進演練紀錄<a class="headerlink" href="#r-23-把結果寫進演練紀錄" title="Permanent link">&para;</a></h3>
+<p>《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》§3.2「乾淨機器啟動測試」那張表，現在填得出來了：</p>
+<table>
+<thead>
+<tr>
+<th>欄位</th>
+<th>從哪一步來</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>機器（型號、作業系統版本、是否乾淨安裝）</td>
+<td>R-01</td>
+</tr>
+<tr>
+<td>網路：實際斷開的方式</td>
+<td>R-02</td>
+</tr>
+<tr>
+<td><code>verify-package.mjs</code> 輸出</td>
+<td>R-05</td>
+</tr>
+<tr>
+<td>服務啟動後的存活檢查回應</td>
+<td>R-12</td>
+</tr>
+<tr>
+<td>主機時區（在服務執行帳號底下確認）</td>
+<td>R-16</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="r-24-留著這台機器">R-24 留著這台機器<a class="headerlink" href="#r-24-留著這台機器" title="Permanent link">&para;</a></h3>
+<p><strong>不要急著把它刪掉。</strong> 它之後還有三個用處：</p>
+<ol>
+<li>下一次更新之前，先在這裡演練一次</li>
+<li>現場遇到怪問題時，回來這裡重現</li>
+<li>交接給別人時，讓對方在這裡練一次，而不是在院內練</li>
+</ol>
+<hr />
+<h2 id="8-這一冊的完成條件">8. 這一冊的完成條件<a class="headerlink" href="#8-這一冊的完成條件" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-01</code> 機器確定是乾淨的（<code>node -v</code> 失敗）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-02</code> 全程斷網</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-04</code> 雜湊核對相符</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-05</code> 驗收五項全綠，輸出已抄下</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-11</code> DEP-08 的反向測試擋得住</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-12</code> 三個行程、存活檢查 200、執行身分正確</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-13</code> <strong>從另一台機器連得進來並登得進去</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-14</code> 一般帳號讀不到資料目錄</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-15</code> 重新開機後自己起來</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-17</code> 主線走得完</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-18</code> 病人端斷網仍開得出畫面</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-20</code>／<code>R-21</code> 更新與回退各做過一次</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-22</code> 時間預算表填好</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>R-23</code> 演練紀錄 §3.2 填好</li>
+</ul>
+<hr />
+<h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>定版</th>
+<th>日期</th>
+<th>異動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><a href="../01-dev-machine/">← 上一冊 · 開發機準備</a> · <a href="../">回部署手冊總覽</a> · <a href="../03-tablet-shell/">下一冊 · 平板與外殼 App →</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
