@@ -3455,7 +3455,8 @@
 </tbody>
 </table>
 <p><strong>這五件事都要寫下「是誰設的、由誰保管、改動前要知會誰」。</strong>
-主機是共用的，別的專案的維運人員一樣改得動，而改掉之後本系統不會收到任何通知。</p>
+主機是共用的，別的專案的維運人員一樣改得動，而改掉之後本系統不會收到任何通知。
+依據是《部署規範》DEP-21，對應 26 條清單第 3、4、10 條。</p>
 <p><strong>可能怎麼壞、怎麼處理</strong></p>
 <table>
 <thead>
@@ -3472,6 +3473,221 @@
 <tr>
 <td>對方說「排除清單不安全，不能加」</td>
 <td>說明範圍只有一個資料夾，且該資料夾只有服務帳號寫得進去。談不成就記下來，回去評估別的做法</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="h-14-自己做的時候資訊室把系統管理員權限交給你">H-14 自己做的時候（資訊室把系統管理員權限交給你）<a class="headerlink" href="#h-14-自己做的時候資訊室把系統管理員權限交給你" title="Permanent link">&para;</a></h4>
+<p><strong>動手之前先確認兩件事</strong>，任何一件不成立就不要自己改，回到上面那張表請資訊室做：</p>
+<ol>
+<li>資訊室<strong>明確同意</strong>你自己改這五項，並記下是誰同意的。</li>
+<li>這幾項設定<strong>有沒有被群組原則集中管理</strong>。有的話，本機改了會在下次套用原則時被蓋回去，
+   而你改的當下看起來完全正常。每一項底下都有一行檢查指令。</li>
+</ol>
+<p>以下指令一律在<strong>以系統管理員身分開啟的 PowerShell</strong> 裡執行。先把資料目錄指定好，後面都會用到：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$dataDir</span> <span class="p">=</span> <span class="s2">"&lt;資料目錄&gt;"</span>      <span class="c"># 與 H-13 的 -DataDir 同一個值，例如 D:\hd-care\data</span>
+</code></pre></div>
+<h5 id="①-資料庫目錄加入防毒排除清單">① 資料庫目錄加入防毒排除清單<a class="headerlink" href="#①-資料庫目錄加入防毒排除清單" title="Permanent link">&para;</a></h5>
+<p><strong>先看主機上是哪一套防毒在當家</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-CimInstance</span> <span class="n">-Namespace</span> <span class="n">root</span><span class="p">/</span><span class="n">SecurityCenter2</span> <span class="n">-ClassName</span> <span class="n">AntiVirusProduct</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">displayName</span>
+<span class="nb">Get-MpComputerStatus</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">AMRunningMode</span><span class="p">,</span> <span class="n">RealTimeProtectionEnabled</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>看到的結果</th>
+<th>代表</th>
+<th>怎麼做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只有 Windows Defender（Microsoft Defender），<code>AMRunningMode</code> 是 <code>Normal</code></td>
+<td>Defender 是主要防毒</td>
+<td>照下面的指令加</td>
+</tr>
+<tr>
+<td>出現其他產品（趨勢、賽門鐵克、卡巴斯基等），或 Defender 是 <code>Passive Mode</code></td>
+<td>第三方防毒在當家，Defender 加了也沒用</td>
+<td>這類產品幾乎都由<strong>中央主控台</strong>統一派送設定，裝在本機的那一端通常鎖住、改不了。<strong>這一項只能請資訊室從主控台加</strong>，你做不到</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Defender 的做法</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Add-MpPreference</span> <span class="n">-ExclusionPath</span> <span class="nv">$dataDir</span>
+</code></pre></div>
+<ul>
+<li>排除的是<strong>整個資料夾</strong>，不是資料庫那一個檔案。SQLite 寫入時會在旁邊產生 <code>-wal</code>、<code>-shm</code> 等暫存檔，只排除主檔等於沒排除。</li>
+<li><strong>只排除資料目錄</strong>，不要排除整顆磁碟、不要排除安裝包目錄、不要排除 <code>node.exe</code>。</li>
+</ul>
+<p><strong>怎麼知道成功了</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">ExclusionPath</span>
+</code></pre></div>
+<p>清單裡看得到 <code>$dataDir</code> 那一行。</p>
+<p><strong>確認沒有被集中管理蓋掉</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ItemProperty</span> <span class="s2">"HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender"</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+</code></pre></div>
+<p>什麼都沒印出來，代表沒有群組原則管 Defender，本機設定會留著。
+印出了 <code>DisableLocalAdminMerge</code> 且值為 <code>1</code>，代表<strong>本機加的排除會被忽略</strong>，一定要資訊室從群組原則加。
+隔天回來再跑一次 <code>(Get-MpPreference).ExclusionPath</code>，那一行還在才算數。</p>
+<h5 id="②-確認資料庫目錄不在雲端同步資料夾底下">② 確認資料庫目錄不在雲端同步資料夾底下<a class="headerlink" href="#②-確認資料庫目錄不在雲端同步資料夾底下" title="Permanent link">&para;</a></h5>
+<p><strong>選路徑的原則</strong>：直接放在磁碟根目錄底下的專屬資料夾（例如 <code>D:\hd-care\data</code>），
+<strong>不要放在 <code>C:\Users\</code> 底下的任何地方</strong>——「文件」「桌面」最常被重新導向到 OneDrive。</p>
+<p><strong>檢查</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$env:OneDrive</span><span class="p">;</span> <span class="nv">$env:OneDriveCommercial</span>
+<span class="nb">Get-Item</span> <span class="nv">$dataDir</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FullName</span><span class="p">,</span> <span class="n">LinkType</span><span class="p">,</span> <span class="n">Target</span><span class="p">,</span> <span class="n">Attributes</span>
+<span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s1">'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box'</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<table>
+<thead>
+<tr>
+<th>檢查</th>
+<th>要看到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第一行印出的 OneDrive 路徑</td>
+<td><code>$dataDir</code> <strong>不在</strong>那個路徑底下（沒印出任何東西也算通過）</td>
+</tr>
+<tr>
+<td><code>LinkType</code>、<code>Target</code></td>
+<td><strong>都是空的</strong>。有值代表這個資料夾是捷徑或連結，實際位置在別處，要順著 <code>Target</code> 再查一次</td>
+</tr>
+<tr>
+<td><code>Attributes</code></td>
+<td><strong>沒有</strong> <code>ReparsePoint</code></td>
+</tr>
+<tr>
+<td>第三行</td>
+<td>有同步軟體在跑的話，開啟它的設定，確認同步範圍不含 <code>$dataDir</code> 所在的磁碟或資料夾</td>
+</tr>
+<tr>
+<td>檔案總管</td>
+<td>開啟 <code>$dataDir</code>，<strong>狀態欄沒有雲朵或綠色勾勾圖示</strong></td>
+</tr>
+</tbody>
+</table>
+<h5 id="③-確認不是對應網路磁碟機的代號">③ 確認不是對應網路磁碟機的代號<a class="headerlink" href="#③-確認不是對應網路磁碟機的代號" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="nv">$drive</span> <span class="p">=</span> <span class="nb">Split-Path</span> <span class="nv">$dataDir</span> <span class="n">-Qualifier</span>
+<span class="nb">Get-CimInstance</span> <span class="n">Win32_LogicalDisk</span> <span class="n">-Filter</span> <span class="s2">"DeviceID='$drive'"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DeviceID</span><span class="p">,</span> <span class="n">DriveType</span><span class="p">,</span> <span class="n">ProviderName</span>
+<span class="n">subst</span>
+<span class="nb">Get-Partition</span> <span class="n">-DriveLetter</span> <span class="nv">$drive</span><span class="p">.</span><span class="n">TrimEnd</span><span class="p">(</span><span class="s1">':'</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">BusType</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<table>
+<thead>
+<tr>
+<th>檢查</th>
+<th>要看到</th>
+<th>看到別的代表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DriveType</code></td>
+<td><code>3</code>（本機固定磁碟）</td>
+<td><code>4</code> 是網路磁碟機、<code>2</code> 是抽取式磁碟，<strong>都不行</strong></td>
+</tr>
+<tr>
+<td><code>ProviderName</code></td>
+<td>空的</td>
+<td>印出 <code>\\伺服器\分享</code> 就是網路磁碟機</td>
+</tr>
+<tr>
+<td><code>subst</code></td>
+<td>沒有列出這個代號</td>
+<td>列出來的話，這個代號是別的資料夾的替身，要照實際路徑重查</td>
+</tr>
+<tr>
+<td><code>BusType</code></td>
+<td><code>NVMe</code>、<code>SATA</code>、<code>RAID</code> 之類</td>
+<td><code>USB</code> 是外接碟、<code>iSCSI</code> 是走網路的儲存設備，<strong>都不行</strong></td>
+</tr>
+<tr>
+<td><code>$dataDir</code> 本身</td>
+<td>以磁碟代號開頭</td>
+<td>以 <code>\\</code> 開頭是網路路徑，<strong>直接換路徑</strong></td>
+</tr>
+</tbody>
+</table>
+<p>另外注意：網路磁碟機的對應是<strong>跟著登入者走的</strong>。你看得到的 <code>Z:</code>，服務帳號看不到；
+就算硬要用，服務一啟動就會找不到路徑。</p>
+<h5 id="④-關閉自動休眠">④ 關閉自動休眠<a class="headerlink" href="#④-關閉自動休眠" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="n">powercfg</span> <span class="p">/</span><span class="n">change</span> <span class="n">standby-timeout-ac</span> <span class="n">0</span>
+<span class="n">powercfg</span> <span class="p">/</span><span class="n">change</span> <span class="n">hibernate-timeout-ac</span> <span class="n">0</span>
+</code></pre></div>
+<p>螢幕關閉不影響服務，<strong>不用動</strong> <code>monitor-timeout</code>。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">powercfg</span> <span class="p">/</span><span class="n">query</span> <span class="n">SCHEME_CURRENT</span> <span class="n">SUB_SLEEP</span> <span class="n">STANDBYIDLE</span>
+<span class="n">powercfg</span> <span class="p">/</span><span class="n">query</span> <span class="n">SCHEME_CURRENT</span> <span class="n">SUB_SLEEP</span> <span class="n">HIBERNATEIDLE</span>
+</code></pre></div>
+<p>兩段輸出裡「目前的 AC 電源設定索引」都是 <code>0x00000000</code>。</p>
+<p><strong>確認沒有被集中管理蓋掉</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ChildItem</span> <span class="s2">"HKLM:\SOFTWARE\Policies\Microsoft\Power"</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+</code></pre></div>
+<p>什麼都沒印出來才代表本機設定會留著。有東西的話，電源設定由群組原則控制，要請資訊室改。
+<strong>隔天回來再跑一次查詢</strong>，值還是 <code>0</code> 才算數。</p>
+<h5 id="⑤-系統更新的重新啟動時段不落在透析班次">⑤ 系統更新的重新啟動時段不落在透析班次<a class="headerlink" href="#⑤-系統更新的重新啟動時段不落在透析班次" title="Permanent link">&para;</a></h5>
+<p>先要有透析班次的起訖時間（Q-27 第 7 題、第五冊 <code>C-20</code>），例如 <code>06:00–23:00</code>。</p>
+<p><strong>先看更新是不是被集中管理</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ItemProperty</span> <span class="s2">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<span class="nb">Get-ItemProperty</span> <span class="s2">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>看到的結果</th>
+<th>代表</th>
+<th>怎麼做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>兩行都沒印出東西</td>
+<td>更新由這台機器自己決定</td>
+<td>照下面設「使用時段」</td>
+</tr>
+<tr>
+<td>印出 <code>WUServer</code>、<code>AUOptions</code>、<code>ScheduledInstallTime</code> 等值</td>
+<td>院方用群組原則或 WSUS 統一管更新，<strong>本機設定會被蓋掉</strong></td>
+<td>把這些值抄下來，請資訊室把這台的安裝與重新啟動時間排在透析班次以外。<strong>你做不到</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>沒有集中管理時的做法</strong>：</p>
+<ol>
+<li>設定 → Windows Update → 進階選項 → <strong>使用時段</strong>。</li>
+<li>選「手動」，把開始與結束時間設成涵蓋整段透析班次。</li>
+<li>有「根據活動自動調整」的選項就<strong>關掉</strong>，否則 Windows 會自己改掉你設的時間。</li>
+</ol>
+<p><strong>使用時段最長只能設 18 小時。</strong> 班次加前後準備超過 18 小時，就蓋不住整段，
+要請資訊室改用群組原則排定安裝時間。「暫停更新」不是解法，它只是把問題往後推。</p>
+<p><strong>怎麼知道成功了</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ItemProperty</span> <span class="s2">"HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ActiveHoursStart</span><span class="p">,</span> <span class="n">ActiveHoursEnd</span>
+</code></pre></div>
+<p>兩個數字是小時（<code>6</code> 代表 06:00、<code>23</code> 代表 23:00），跟你設的一致。</p>
+<h5 id="自己做完之後">自己做完之後<a class="headerlink" href="#自己做完之後" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>要做</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>五項的檢查輸出<strong>抄在部署紀錄上</strong>，寫明「由誰設、何時設、資訊室哪一位同意」</td>
+<td>日後設定被改掉時，才分得出是誰動的、原本是什麼</td>
+</tr>
+<tr>
+<td>在交接文件寫下「這五項改動前要知會誰」</td>
+<td>主機是共用的，別的專案的人不會知道這五項跟本系統有關</td>
+</tr>
+<tr>
+<td><strong>隔天或下次進院時</strong>，把 ①④⑤ 的檢查指令再跑一次</td>
+<td>群組原則通常在重新開機或每 90 分鐘左右重新套用，當下看起來成功不代表會留著</td>
 </tr>
 </tbody>
 </table>
