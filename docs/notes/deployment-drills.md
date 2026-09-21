@@ -84,6 +84,7 @@ request to https://binaries.prisma.sh/... failed, reason: getaddrinfo ENOTFOUND 
 | `npm install` 的錯誤原文 |  |
 | 耗時 |  |
 | 有沒有人提議「開一下網路就好」、怎麼回應的 |  |
+| **若 `git clone` 成功**：來源（直連／代理／院內鏡像）、用了誰的憑證、連線是否常態、選了哪一條出路（[第七冊](../deployment/07-git-clone.md) G-02～G-06） |  |
 
 > **路線 A 不得為了讓它成功而在正式主機上開對外連線。**
 > 若真的開了，零院外連線這個前提就在第一天被自己破壞。

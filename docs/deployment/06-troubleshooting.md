@@ -217,6 +217,15 @@ curl.exe -i http://localhost:<API_PORT>/api/health  # 後端本身活著嗎
 
 ---
 
+### X-37 `git clone` 竟然成功了
+
+| | |
+|---|---|
+| **意義** | 主機連得到程式碼來源，而且**某個帳號的憑證被用上了**（repo 是私有的） |
+| **處置** | **先不要跑 `npm install`**，翻[第七冊](07-git-clone.md)從 G-01 做起 |
+
+---
+
 ## E. 憑證與平板
 
 ### X-24 平板上出現憑證警告
@@ -333,4 +342,4 @@ curl.exe -i http://localhost:<API_PORT>/api/health  # 後端本身活著嗎
 | 定版 | 日期 | 異動 |
 |---|---|---|
 
-[← 上一冊 · 帶進去與帶出來](05-carry-in-out.md) · [回部署手冊總覽](index.md) · [回進度首頁](../index.md)
+[← 上一冊 · 帶進去與帶出來](05-carry-in-out.md) · [回部署手冊總覽](index.md) · [下一冊 · 院方要求直接 `git clone` →](07-git-clone.md)
