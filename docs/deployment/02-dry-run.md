@@ -115,10 +115,12 @@ ping 8.8.8.8
 **做什麼**
 
 ```powershell
-Expand-Archive -Path C:\hd\hd-tablet-care-<版本>-<commit>.zip -DestinationPath C:\hd\
+Expand-Archive -Path C:\hd\hd-tablet-care-<版本>-<commit>.zip -DestinationPath C:\hd\hd-tablet-care-<版本>-<commit>
 cd C:\hd\hd-tablet-care-<版本>-<commit>
 Get-FileHash -Algorithm SHA256 .\CHECKSUMS.txt
 ```
+
+壓縮檔裡**沒有最上層資料夾**，所以 `-DestinationPath` 一定要寫到有版本號的那一層，不能只寫 `C:\hd\`。
 
 拿輸出的雜湊值與[交付單](01-dev-machine.md#p-11-寫交付單)上那一個逐字對照。
 
@@ -131,6 +133,7 @@ Get-FileHash -Algorithm SHA256 .\CHECKSUMS.txt
 | 症狀 | 原因 | 處置 |
 |---|---|---|
 | **雜湊不一樣** | 檔案在路上壞了，或被防毒動過手腳，或你拿錯版本 | **停下來。** 重新複製一次再比。還是不一樣就回開發機整包重做。不要「應該只是小問題」硬著頭皮往下 |
+| `cd` 說找不到路徑，`C:\hd\` 底下直接出現 `runtime`、`CHECKSUMS.txt` 等一堆檔案 | 解壓目的地只寫了 `C:\hd\`，壓縮檔沒有最上層資料夾 | 把 `C:\hd\` 底下除了壓縮檔與 `verify-package.mjs` 以外的東西刪掉，照上面的指令重解一次。**不要用搬的**，搬漏一個檔案就要到 R-05 才會發現 |
 | 解壓很慢或失敗 | 2 萬多個檔案 | 正常會花幾分鐘。失敗就看磁碟空間 |
 | `Expand-Archive` 說路徑太長 | Windows 的路徑長度上限 | **把解壓目的地換成很短的路徑**（例如 `C:\hd\`），不要放在桌面底下好幾層。這一條在院內一樣會遇到 |
 

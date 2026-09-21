@@ -259,10 +259,12 @@ npm install
 **做什麼**
 
 ```powershell
-Expand-Archive -Path <隨身碟>:\hd-tablet-care-<版本>-<commit>.zip -DestinationPath C:\hd\
+Expand-Archive -Path <隨身碟>:\hd-tablet-care-<版本>-<commit>.zip -DestinationPath C:\hd\hd-tablet-care-<版本>-<commit>
 cd C:\hd\hd-tablet-care-<版本>-<commit>
 Get-FileHash -Algorithm SHA256 .\CHECKSUMS.txt
 ```
+
+壓縮檔裡**沒有最上層資料夾**，`-DestinationPath` 要寫到有版本號的那一層。
 
 與交付單上那一串**逐字比對**。
 
@@ -271,6 +273,7 @@ Get-FileHash -Algorithm SHA256 .\CHECKSUMS.txt
 | 症狀 | 處置 |
 |---|---|
 | **雜湊不一樣** | **停下來。** 重新複製再比一次。還是不同就是路上壞了或被掃描站動過——今天不要裝 |
+| `cd` 找不到路徑，檔案全散在 `C:\hd\` 底下 | 解壓目的地少寫了版本號那一層。清掉散出來的檔案，照上面的指令重解，不要用搬的 |
 | 路徑太長導致解壓失敗 | 解到很短的路徑（`C:\hd\`），不要放在桌面或使用者資料夾深處 |
 | 解壓很慢 | 2 萬多個檔案，幾分鐘是正常的 |
 | 不知道要解到哪 | 問資訊室指定的安裝路徑。**要記得它必須與資料庫、備份目錄分開**（DEP-08） |
