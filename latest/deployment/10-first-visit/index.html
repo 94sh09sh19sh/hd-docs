@@ -3214,7 +3214,7 @@
 <tr>
 <td>D-04</td>
 <td>準備一把唯讀、會過期的權杖</td>
-<td><strong>不確定當天 clone 用的是哪一把憑證</strong>，見 <a href="#f-11-clone-用的憑證">F-11</a></td>
+<td>沒有。當天是<strong>臨時建了一把 classic 權杖</strong>，已於 0922 刪除，見 <a href="#f-11-clone-用的憑證">F-11</a></td>
 </tr>
 </tbody>
 </table>
@@ -3743,7 +3743,7 @@
 </ul>
 <h3 id="f-10-那個容器與它掛進去的東西">F-10 那個容器與它掛進去的東西<a class="headerlink" href="#f-10-那個容器與它掛進去的東西" title="Permanent link">&para;</a></h3>
 <p><code>dialysis_system_v0</code> <strong>很可能還在主機上</strong>（<code>-d</code> 讓它在背景跑；主機斷電後它不會自己回來，但容器本身仍在）。
-它掛著整顆 C 槽，裡面有一份 clone 下來的原始碼，也可能有憑證（F-11）。<strong>下一次進院第一件事就是收掉它，而且順序不能錯</strong>：</p>
+它掛著整顆 C 槽，裡面有一份 clone 下來的原始碼，也可能留著當天那把權杖的字串（已作廢，F-11）。<strong>下一次進院第一件事就是收掉它，而且順序不能錯</strong>：</p>
 <p><strong>① 先看，不要動</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-a</span> <span class="p">-</span><span class="n">-filter</span> <span class="n">name</span><span class="p">=</span><span class="n">dialysis_system_v0</span>
 <span class="n">docker</span> <span class="n">inspect</span> <span class="n">dialysis_system_v0</span> <span class="p">-</span><span class="n">-format</span> <span class="s2">"{{json .Mounts}}"</span>
@@ -3755,7 +3755,7 @@
 <span class="n">docker</span> <span class="n">exec</span> <span class="n">dialysis_system_v0</span> <span class="n">sh</span> <span class="n">-c</span> <span class="s2">"ls /app; find /app -maxdepth 3 -name .git -type d 2&gt;/dev/null"</span>
 <span class="n">docker</span> <span class="n">exec</span> <span class="n">dialysis_system_v0</span> <span class="n">sh</span> <span class="n">-c</span> <span class="s2">"cd &lt;上一行找到的目錄的上一層&gt; &amp;&amp; git log -1 --oneline &amp;&amp; git remote -v &amp;&amp; git config --list --show-origin | grep -i credential"</span>
 </code></pre></div>
-<p><code>git log -1</code> 就是 F-04 那個「當天實際 clone 到哪一版」的答案。<strong><code>git remote -v</code> 的網址裡若有權杖，那把權杖已經外洩，照 F-11 處理。</strong></p>
+<p><code>git log -1</code> 就是 F-04 那個「當天實際 clone 到哪一版」的答案。<strong><code>git remote -v</code> 的網址或 Git 設定裡若看得到權杖，那是 0922 那把已刪除的權杖，照 F-11 把殘留清掉即可。</strong></p>
 <blockquote>
 <p>⚠️ <strong>在這個容器裡絕對不要對 <code>/app</code> 下任何刪除、移動、改權限的指令。</strong>
 <code>/app</code> 就是主機的 C 槽，<code>rm -rf</code> 下去刪的是主機上的真檔案，包含另一個專案的東西。</p>
@@ -3774,30 +3774,32 @@
 </code></pre></div>
 <p>它是當天為了 F-01 拉下來的，本系統用不到。<strong>要不要刪問過資訊室</strong>：同機另一個專案有可能也在用同一個映像檔。</p>
 <h3 id="f-11-clone-用的憑證">F-11 clone 用的憑證<a class="headerlink" href="#f-11-clone-用的憑證" title="Permanent link">&para;</a></h3>
-<p>本專案的 repo 是私有的，容器裡的 <code>git clone</code> 成功了，表示<strong>當天有一把能讀這個 repo 的憑證被輸入到容器裡</strong>。
-不知道是哪一把：</p>
+<p>本專案的 repo 是私有的，容器裡的 <code>git clone</code> 用的是<strong>部署當天臨時建立的一把 GitHub 權杖（classic）</strong>，
+不是 D-04 要求事先準備的那種唯讀、只限這個 repo、會過期的權杖。</p>
 <table>
 <thead>
 <tr>
-<th>若當天用的是</th>
-<th>要做的</th>
+<th>看什麼</th>
+<th>現況</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>事先準備的唯讀、會過期的權杖（D-04）</td>
-<td>仍然<strong>今天就作廢</strong>，不要等它過期（D-25）</td>
+<td>權杖類型</td>
+<td><strong>classic</strong>。classic 權杖無法限定單一 repo，權限範圍依建立時勾選的 scope，通常比 D-04 要求的寬</td>
 </tr>
 <tr>
-<td><strong>個人的 GitHub 權杖或密碼</strong>（有寫入權限、不會過期）</td>
-<td><strong>立刻作廢並重發</strong>。那把憑證留在一個掛著整顆 C 槽、任何能登入主機的人都進得去的容器裡</td>
+<td>處理</td>
+<td><strong>已於 2026-09-22 在 GitHub 上刪除</strong>，這把權杖從此不能再用</td>
 </tr>
 <tr>
-<td>寫在網址裡 clone 的</td>
-<td>同上，而且它會出現在 F-10 ② 的 <code>git remote -v</code> 裡</td>
+<td>主機上的殘留</td>
+<td>字串可能還留在容器裡的 Git 設定、<code>git remote -v</code> 的網址或 shell 歷史中。<strong>已經失效，不再是外洩風險</strong>，但下一次進院照 F-10 ②～④ 收掉容器與 clone 時一併清除</td>
 </tr>
 </tbody>
 </table>
+<p><strong>下一次不要再臨時開 classic 權杖。</strong> 照 D-04 事先建 fine-grained 權杖：只勾這個 repo、Contents 唯讀、進院隔天過期；
+院方若要自己 clone，請院方用他們自己的帳號取得存取權。</p>
 <h3 id="f-12-帳號與權限">F-12 帳號與權限<a class="headerlink" href="#f-12-帳號與權限" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>docker-users</code> 群組裡只有一個本機帳號，而那也是平常登入這台主機的帳號</li>
@@ -3836,7 +3838,7 @@
 <tr>
 <td>D-04</td>
 <td>唯讀、會過期的權杖</td>
-<td>不確定（F-11）</td>
+<td>✗ 臨時開了 classic 權杖；已於 0922 刪除（F-11）</td>
 </tr>
 <tr>
 <td>D-05</td>
@@ -3885,7 +3887,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>D-24、D-25 沒做，意思是</strong>：對外連線目前的狀態不知道、主機上可能留有憑證。這兩件事已經併進 F-10、F-11。</p>
+<p><strong>D-24 沒做，意思是</strong>對外連線目前的狀態不知道；<strong>D-25 的作廢權杖已在 0922 回來後補做</strong>，主機上剩下的只是失效字串的殘留。這兩件事已經併進 F-10、F-11。</p>
 <hr />
 <h2 id="7-手冊要改的地方">7. 手冊要改的地方<a class="headerlink" href="#7-手冊要改的地方" title="Permanent link">&para;</a></h2>
 <p>這一冊只記錄，不替其他冊改內容。下列各項<strong>要回到對應那一冊去改</strong>，改完在這裡把狀態換成「已改」：</p>
@@ -4075,7 +4077,7 @@
 </tr>
 <tr>
 <td>5</td>
-<td>權杖處理完畢（F-11）</td>
+<td>~~權杖處理完畢~~ <strong>已完成</strong>：0922 臨時建立的 classic 權杖已刪除（F-11）；下一次改用 D-04 的 fine-grained 權杖</td>
 <td>D-25</td>
 </tr>
 </tbody>
