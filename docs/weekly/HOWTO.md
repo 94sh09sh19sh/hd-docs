@@ -213,7 +213,7 @@ git add docs docs-site scripts package.json && git commit -m "docs: 週報 0916"
 | 站上看不到剛加的那一頁 | `docs-site/mkdocs.yml` 的 `nav` 沒加那一列 | 補一列再 `docs:sync`。頁面其實建出來了，只是側欄沒有入口 |
 | 凍結版的內容是舊的 | 先跑了 `docs:freeze` 才跑 `docs:sync` | 順序一律是先 sync 再 freeze。腳本會擋下沒同步就凍結的情況，但別靠它 |
 | 週次 tag 打錯了 | 版本歷程那一欄寫錯週次 | **趁還沒 push 才救得回來**。已經建出去的凍結版視為既成紀錄，要修正就在新的一週寫明 |
-| 改了 `docs/` 但站上沒變 | 只改了 repo，沒跑 `docs:sync`。**`git push` 不會更新公開站**——站台只看鏡像，私有 repo 推了也沒用 | 跑 `npm run docs:sync`。跑完 Actions 還要一兩分鐘才建完。交給 agent 時，它的收尾順序寫在 AGENT.md「git：commit 自動，push 等指令」 |
+| 改了 `docs/` 但站上沒變 | 只改了 repo，沒跑 `docs:sync`。**`git push` 不會更新公開站**——站台只看鏡像，私有 repo 推了也沒用 | 跑 `npm run docs:sync`。跑完 Actions 還要一兩分鐘才建完。交給 agent 時，它的收尾順序寫在 AGENT.md「git：docs 改完就 commit、push」 |
 | `docs:sync` 說找不到鏡像 repo | 鏡像還沒建立 | `gh repo create hd-docs --public`，再跑一次 |
 | 在鏡像 repo 或站台上改的字不見了 | 同步是整份覆蓋，鏡像是單向的 | 內容一律改 `docs/`，鏡像只當展示 |
 | 預覽起不來，說找不到 mkdocs | 本機沒裝建站工具 | `pip install -r docs-site/requirements.txt`。只影響預覽，不影響同步 |

@@ -40,24 +40,26 @@
 指南本身沒有「版本歷程」表，改了不補、不出凍結版（見下方「版本歷程的適用範圍」），
 但改完一樣要 `npm run docs:sync` 把鏡像推上去。
 
-## git：commit 自動，push 等指令
+## git：docs 改完就 commit、push
 
-使用者於 2026-09-10 常態授權：
+使用者於 2026-09-10 常態授權 commit，2026-09-22 再擴大到 push：
 
 - **`docs/` 底下的檔案改完就直接 commit，不必問。** 一件事做完 commit 一次，不要累積成一大包。
   訊息用台灣繁體中文，句首照既有慣例寫 `docs: `。
-- **私有 repo 的 `git push` 一律等使用者開口。** 沒有例外，即使 commit 已經堆了好幾筆。
-- 這與鏡像的推送是兩件獨立的事：`docs:sync` 推的是**鏡像 repo**，照舊改完就推，不受私有 repo 的 push 規則影響。
-- `docs/` 以外的檔案（`apps/`、`scripts/`、設定檔）不在這條授權範圍內，照原本的規矩問過再 commit。
+- **只動到 `docs/` 的 commit，接著直接 `git push` 到目前分支，不必問**（2026-09-22 起）。
+- 這與鏡像的推送是兩件獨立的事：`docs:sync` 推的是**鏡像 repo**，私有 repo 的 `git push` 推的是原始碼 repo，兩個都要做。
+- `docs/` 以外的檔案（`apps/`、`scripts/`、設定檔）不在這條授權範圍內，照原本的規矩問過再 commit，push 也等使用者開口。
+  同一筆 commit 若混了 `docs/` 以外的檔案，就不算「只改文件」，push 一樣要先問。
 
 **改完 `docs/` 的收尾順序，一步都不能少：**
 
 1. 判斷兩份維護指南要不要跟著改（見上方「改完文件，回頭檢查這兩份指南」）
 2. `git commit`
-3. `npm run docs:sync`——**commit 完立刻跑，不要等 push**。公開站只看鏡像，私有 repo 推不推都跟它無關
-4. 回報：改了什麼、指南要不要改、sync 推了哪些檔案、私有 repo 還沒 push
+3. `git push`
+4. `npm run docs:sync`——公開站只看鏡像，私有 repo 推了也不會更新站台
+5. 回報：改了什麼、指南要不要改、push 到哪個分支、sync 推了哪些檔案
 
-2026-09-21 就漏過第 3 步：commit、push 都做了，公開站卻還是舊的，直到使用者問「公開文件有同步了嗎」才補跑。
+2026-09-21 就漏過 sync 那一步：commit、push 都做了，公開站卻還是舊的，直到使用者問「公開文件有同步了嗎」才補跑。
 
 ## 目錄結構
 
@@ -251,7 +253,7 @@ scripts/
 6. 使用者同意後 `npm run docs:sync`。
 7. `npm run docs:freeze`，確認新週次都建立到。**定版日這一步要先問使用者**——凍下去不再更新。
 8. 再跑一次 `npm run docs:sync`：版本歷程第一欄的新週次，要等該週凍結版存在，同步時才換得成連結。
-9. commit（訊息 `docs: 週報 MMDD`）。**私有 repo 的 git push 要等使用者指令**（見上方 git 規則）。
+9. commit（訊息 `docs: 週報 MMDD`）。接著 `git push`（見上方 git 規則）。
 
 ## 新增其他文件
 
