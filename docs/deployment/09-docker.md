@@ -955,4 +955,4 @@ docker compose up -d
 | 定版 | 日期 | 異動 |
 |---|---|---|
 
-[← 上一冊 · 把服務關乾淨](08-shutdown.md) · [回部署手冊總覽](index.md) · [回進度首頁](../index.md)
+[← 上一冊 · 把服務關乾淨](08-shutdown.md) · [回部署手冊總覽](index.md) · [下一冊 · 第一次進院紀錄 →](10-first-visit.md) · [回進度首頁](../index.md)
