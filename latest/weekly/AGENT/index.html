@@ -1924,10 +1924,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gitcommit-自動push-等指令" class="md-nav__link">
+  <a href="#gitdocs-改完就-commitpush" class="md-nav__link">
     <span class="md-ellipsis">
       
-        git：commit 自動，push 等指令
+        git：docs 改完就 commit、push
       
     </span>
   </a>
@@ -2187,10 +2187,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gitcommit-自動push-等指令" class="md-nav__link">
+  <a href="#gitdocs-改完就-commitpush" class="md-nav__link">
     <span class="md-ellipsis">
       
-        git：commit 自動，push 等指令
+        git：docs 改完就 commit、push
       
     </span>
   </a>
@@ -2462,23 +2462,25 @@
 <p>判斷完沒有要改，就不必動——但要在回報裡明講「維護指南無需更動」，讓使用者知道這一步做過了。
 指南本身沒有「版本歷程」表，改了不補、不出凍結版（見下方「版本歷程的適用範圍」），
 但改完一樣要 <code>npm run docs:sync</code> 把鏡像推上去。</p>
-<h2 id="gitcommit-自動push-等指令">git：commit 自動，push 等指令<a class="headerlink" href="#gitcommit-自動push-等指令" title="Permanent link">&para;</a></h2>
-<p>使用者於 2026-09-10 常態授權：</p>
+<h2 id="gitdocs-改完就-commitpush">git：docs 改完就 commit、push<a class="headerlink" href="#gitdocs-改完就-commitpush" title="Permanent link">&para;</a></h2>
+<p>使用者於 2026-09-10 常態授權 commit，2026-09-22 再擴大到 push：</p>
 <ul>
 <li><strong><code>docs/</code> 底下的檔案改完就直接 commit，不必問。</strong> 一件事做完 commit 一次，不要累積成一大包。
   訊息用台灣繁體中文，句首照既有慣例寫 <code>docs:</code>。</li>
-<li><strong>私有 repo 的 <code>git push</code> 一律等使用者開口。</strong> 沒有例外，即使 commit 已經堆了好幾筆。</li>
-<li>這與鏡像的推送是兩件獨立的事：<code>docs:sync</code> 推的是<strong>鏡像 repo</strong>，照舊改完就推，不受私有 repo 的 push 規則影響。</li>
-<li><code>docs/</code> 以外的檔案（<code>apps/</code>、<code>scripts/</code>、設定檔）不在這條授權範圍內，照原本的規矩問過再 commit。</li>
+<li><strong>只動到 <code>docs/</code> 的 commit，接著直接 <code>git push</code> 到目前分支，不必問</strong>（2026-09-22 起）。</li>
+<li>這與鏡像的推送是兩件獨立的事：<code>docs:sync</code> 推的是<strong>鏡像 repo</strong>，私有 repo 的 <code>git push</code> 推的是原始碼 repo，兩個都要做。</li>
+<li><code>docs/</code> 以外的檔案（<code>apps/</code>、<code>scripts/</code>、設定檔）不在這條授權範圍內，照原本的規矩問過再 commit，push 也等使用者開口。
+  同一筆 commit 若混了 <code>docs/</code> 以外的檔案，就不算「只改文件」，push 一樣要先問。</li>
 </ul>
 <p><strong>改完 <code>docs/</code> 的收尾順序，一步都不能少：</strong></p>
 <ol>
 <li>判斷兩份維護指南要不要跟著改（見上方「改完文件，回頭檢查這兩份指南」）</li>
 <li><code>git commit</code></li>
-<li><code>npm run docs:sync</code>——<strong>commit 完立刻跑，不要等 push</strong>。公開站只看鏡像，私有 repo 推不推都跟它無關</li>
-<li>回報：改了什麼、指南要不要改、sync 推了哪些檔案、私有 repo 還沒 push</li>
+<li><code>git push</code></li>
+<li><code>npm run docs:sync</code>——公開站只看鏡像，私有 repo 推了也不會更新站台</li>
+<li>回報：改了什麼、指南要不要改、push 到哪個分支、sync 推了哪些檔案</li>
 </ol>
-<p>2026-09-21 就漏過第 3 步：commit、push 都做了，公開站卻還是舊的，直到使用者問「公開文件有同步了嗎」才補跑。</p>
+<p>2026-09-21 就漏過 sync 那一步：commit、push 都做了，公開站卻還是舊的，直到使用者問「公開文件有同步了嗎」才補跑。</p>
 <h2 id="目錄結構">目錄結構<a class="headerlink" href="#目錄結構" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>docs/
 ├── index.md                    進度首頁（讀者的入口，有硬性上限，見下）
@@ -2727,7 +2729,7 @@ scripts/
 <li>使用者同意後 <code>npm run docs:sync</code>。</li>
 <li><code>npm run docs:freeze</code>，確認新週次都建立到。<strong>定版日這一步要先問使用者</strong>——凍下去不再更新。</li>
 <li>再跑一次 <code>npm run docs:sync</code>：版本歷程第一欄的新週次，要等該週凍結版存在，同步時才換得成連結。</li>
-<li>commit（訊息 <code>docs: 週報 MMDD</code>）。<strong>私有 repo 的 git push 要等使用者指令</strong>（見上方 git 規則）。</li>
+<li>commit（訊息 <code>docs: 週報 MMDD</code>）。接著 <code>git push</code>（見上方 git 規則）。</li>
 </ol>
 <h2 id="新增其他文件">新增其他文件<a class="headerlink" href="#新增其他文件" title="Permanent link">&para;</a></h2>
 <p>同上，差別只在放置目錄，並在 <code>docs/index.md</code> 的「我要找…」或「需求文件」表格加一列。
