@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 54 張表、529 個欄位、8 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 54 張表、534 個欄位、10 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -153,7 +153,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ---
 
-### `devices` — 病人端平板（12 欄）
+### `devices` — 病人端平板（17 欄）
 
 **蒐集的意義**：透析中心共 15 台平板（SRS 第 9 章）。平板**沒有病人登入機制**，它憑什麼證明自己是「3 號床那台」？靠的就是這張表裡的序號與 API 金鑰雜湊。這張表同時記錄 MDM（行動裝置管理）狀態，因為平板是共用裝置，必須能遠端鎖定與限制為單一 App。
 
@@ -169,6 +169,11 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `mdm_locked` | `BOOL` | 是否已遠端鎖定 | `DEFAULT false`。**與 `status` 正交** — 一台鎖定中的平板仍可能同時是 `BOUND`。不要把兩者合併成單一狀態機 |
 | `mdm_kiosk_url` | `TEXT?` | Kiosk（單一 App）模式要鎖定顯示的網址 | 選填。設定時寫 `DEVICE_MDM_KIOSK_CONFIGURED` 稽核 |
 | `last_seen_at` | `TS?` | 這台平板最後一次與後端通訊的時間。用來發現離線或故障的機器 | 平板請求時更新。⚠️ 更新頻繁，避免放進頻繁查詢的交易中 |
+| `kiosk_foreground` | `BOOL?` | 平板最後一次回報時是否停在病人端畫面上（迭代 10 逸出偵測；迭代 12 起在外殼裡是「可見而且仍釘選」） | 空值＝從未回報（還沒裝外殼），與「已跳出」分開 |
+| `kiosk_reported_at` | `TS?` | 最後一次收到前景回報的時間。超過 90 秒沒有回報，護理端顯示「失去回報」 | 每 30 秒更新一次 |
+| `kiosk_exited_at` | `TS?` | 最後一次回報「離開前景」的時間。回到前景之後仍保留，答得出上一次是什麼時候跳出去的 | 只在回報離開時更新 |
+| `shell_version` | `TEXT?` | 外殼 App 最後一次回報的自身版本，例 `0.2.0`（迭代 12，FR-S14） | 空值＝未回報版本（迭代 12 之前的外殼或一般瀏覽器）。不帶版本的回報不會把它洗掉 |
+| `shell_contract_version` | `INT?` | 外殼 App 實作的契約版本。與系統的契約版本不同時，護理端標為「版本不相容」 | 與 `shell_version` 同進退；「外殼過舊」由最低可用版本設定當場推算，不存欄位 |
 | `created_at` | `TS` | 建檔時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 

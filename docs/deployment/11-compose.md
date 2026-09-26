@@ -23,7 +23,7 @@
 | [第一冊](01-dev-machine.md)（安裝包建置）、[第二冊](02-dry-run.md)（乾淨機器演練）、[第五冊](05-carry-in-out.md)的隨身碟部分、[第七冊](07-git-clone.md)（clone 意外成功） | **歷史紀錄**。它們保護的是一條已經不存在的路線 |
 | [第四冊](04-onsite.md) H-08～H-13（帶入安裝包、安裝、啟動） | 由本冊 W-08～W-18 取代；第四冊其餘步驟（到場、找人、冒煙測試、交接）照舊 |
 | [第九冊](09-docker.md)（容器備案） | 由本冊取代。第九冊寫的是「容器是例外」時的做法：建完要關網路、要書面例外、`.env` 放在 clone 目錄裡——**這三件 v3.0 都不成立了** |
-| [第三冊](03-tablet-shell.md)（平板與外殼 App） | 照舊，迭代 12 會改成「APK 在院內主機上建置、從下載頁安裝」 |
+| [第三冊](03-tablet-shell.md)（平板與外殼 App） | 0927 起憑證、keystore、APK 與側載由[第十二冊](12-shell.md)取代（APK 在院內主機上建置、從下載頁安裝）；平板的採購與盤點照舊 |
 | [第八冊](08-shutdown.md)（把服務關乾淨） | 原則照舊，容器版的指令在本冊第 8 節 |
 
 ### 0.2 東西放在哪裡
@@ -36,7 +36,8 @@
 | 設定 | `D:\hd-tablet-care\config\.env`（AI 閘道的 `config.yaml` 之後放在 `config\ai-gateway\`） | **不在 clone 目錄裡**（DEP-08）：某一次「整個刪掉重新 clone」不能把設定一起刪掉 |
 | 備份 | `D:\hd-tablet-care\backups\` | 資料卷裡的資料庫唯一看得見的出口，院方的備份軟體從這裡送往另一台機器（DEP-06） |
 | 資料庫 | 具名資料卷 `hd-tablet-care-data` | **只能放資料卷，不得是 Windows 目錄**（DEP-23）。檔案總管看不到它是正常的 |
-| CA 與 APK 簽章金鑰 | 具名資料卷 `hd-tablet-care-keys` | 私鑰不離開主機（DEP-35，迭代 12 開始用） |
+| CA、伺服器憑證、APK 簽章金鑰、下載頁 | 具名資料卷 `hd-tablet-care-keys` | 私鑰不離開主機（DEP-35）。0927 起由 `shell-builder` 產生，見[第十二冊](12-shell.md) |
+| 外殼 App 原始碼 | `D:\hd-tablet-care\hd-kiosk-shell\`（`git clone` 下來的） | `shell-builder` 從這裡取釘住的那一版（第十二冊 Y-02） |
 | 程式 | 映像檔 `hd-tablet-care:<tag>` | 標籤就是 git tag，舊版不刪（DEP-19） |
 
 **繫結掛載只有 `config` 與 `backups` 兩個**（DEP-37 第 3 項），`npm run check:container` 會在開發端擋住任何第三個。
@@ -238,7 +239,7 @@ Get-Content $HOME\.ssh\hd-tablet-care.pub
 ```
 
 把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 **Settings → Deploy keys**，**不要勾 Allow write access**。
-外殼 App 的 repo 另產生一把（迭代 12；一把部署金鑰只能對應一個 repo）。
+外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在[第十二冊](12-shell.md) Y-02。
 
 再在 `$HOME\.ssh\config` 加一段，讓這把金鑰只用在這個 repo：
 
@@ -302,8 +303,10 @@ notepad D:\hd-tablet-care\config\.env
 | `HD_IMAGE_TAG` | 與 W-10 的 tag 相同 |
 | `HD_BACKUP_DIR`、`HD_CONFIG_DIR` | `D:\hd-tablet-care\backups`、`D:\hd-tablet-care\config` |
 | `HD_API_PORT`、`HD_NURSE_PORT`、`HD_PATIENT_PORT` | W-07 確認過的三個埠 |
-| `HD_PUBLIC_API_URL` | 平板與護理站連得到的後端位址，例如 `http://<主機名稱>:<後端埠>`。**建置時寫進產物**（DEP-39） |
-| `CORS_ORIGINS`、`MDM_KIOSK_BASE_URL` | 護理端、病人端的實際位址 |
+| `HD_PUBLIC_API_URL` | 護理站連得到的後端位址，例如 `http://<主機名稱>:<後端埠>`。**建置時寫進護理端的產物**（DEP-39） |
+| `CORS_ORIGINS` | 護理端的實際位址（病人端與後端同一個來源，不必列） |
+| `MDM_KIOSK_BASE_URL` | 平板要連的病人端位址，**一律 `https://`**（第十二冊 Y-03） |
+| `HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING` | 外殼 repo 的 clone 位置與簽章用途（第十二冊 Y-03）。**每一條 compose 指令都會檢查前者**，還沒 clone 也先填好路徑 |
 | `JWT_SECRET` | 範本裡有不需要 Node.js 的產生指令 |
 | `SUPER_ADMIN_*` | 第一個最高權限帳號，首次登入強制改密碼 |
 
@@ -518,7 +521,7 @@ docker compose --env-file $cfg up -d
 | 2 | `npm run verify:iteration11 -- --live --env-file <設定目錄>\.env`：`down -v` 之後資料還在、繫結掛載只有兩個、正式環境設定拒絕 `lab` | 這一條是唯一允許用 Node 的，**它是驗收，不是部署步驟** |
 | 3 | 更新一次：打一個測試 tag，照 W-19 走完 | W-19 |
 | 4 | 回到上一版，資料完整 | W-20 |
-| 5 | 開發手機裝外殼、釘住、護理端看得到（迭代 12 起） | 第三冊 |
+| 5 | 開發手機裝外殼、釘住、護理端看得到（迭代 12 起） | [第十二冊](12-shell.md)第 7 節 |
 | 6 | AI 經 SSH 通道接實驗室閘道跑一次（迭代 13 起） | — |
 
 **在 Git Bash 裡照抄會壞的一件事**：Git Bash 會把 `/backups/…`、`/data/…` 這種參數自動轉成 Windows 路徑，
@@ -560,8 +563,8 @@ docker compose --env-file $cfg up -d
 | 元件 | 狀態 |
 |---|---|
 | `ai-gateway`（AI 閘道） | 服務、設定檔掛載、`ai` 設定檔已定；程式在**迭代 13** |
-| `shell-builder`（外殼 APK 建置） | 服務、金鑰資料卷、`shell` 設定檔已定；建置映像檔在**迭代 12** |
-| 病人端下載頁 | 迭代 12 |
+| `shell-builder`（外殼 APK 建置） | **0927 迭代 12 完成**，見[第十二冊](12-shell.md) |
+| 病人端下載頁、HTTPS | **0927 迭代 12 完成**，見第十二冊 Y-07 |
 
 ---
 

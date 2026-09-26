@@ -727,6 +727,8 @@ SRS 第 10 章的假設之一是「透析中心具備穩定之院內 Wi-Fi 網�
 
 建置所需的外部來源已在《部署規範》3.2、3.4 與第 7 章列出。**執行期本來就不連外**（DEP-14），所以即使對外連線日後被關掉，已經跑起來的服務不受影響，受影響的只有更新。
 
+**0927 迭代 12 實測後補上外殼 APK 建置實際連到的網域**：`dl.google.com`（Android 命令列工具與 SDK）、`services.gradle.org`（Gradle 本體，會轉到 GitHub 的發布檔，再轉到 GitHub 的檔案主機）、`maven.google.com`、`repo.maven.apache.org`、`plugins.gradle.org`（Gradle 外掛與相依）。總量約 1.5 GB，只在建置 `shell-builder` 的映像檔時連；執行 `shell-builder` 時完全沒有網路。開發機上 Gradle 那一個檔案約 130 MB 就下載了 6.6 分鐘，院內主機若更慢要預留時間（《部署演練紀錄》9.1）。
+
 ---
 
 ## 5. D 級：可先用暫代值

@@ -375,10 +375,72 @@ npm run db:restore -- --from <備份檔> --to <還原後的路徑> --sha256 <備
 | 事項 | 什麼時候 |
 |---|---|
 | 以正式的 git tag（不是 patch）再走一次 | 迭代 11 的改動 commit 並打 tag 之後 |
-| 開發手機從下載頁裝外殼、釘住、護理端看得到（DEP-22 第 2～5 項） | 迭代 12 |
+| 開發手機從下載頁裝外殼、釘住、護理端看得到（DEP-22 第 2～5 項） | 迭代 12：APK、下載頁與 HTTPS 已在開發機驗過（第 9 節），**手機本身待測** |
 | AI 經 SSH 通道接實驗室閘道（DEP-22 第 7 項前半；後半「正式環境設定拒絕 `lab`」已在 8.2 驗過） | 迭代 13 |
 | 重新開機後服務自己回來（DEP-21 第 4 項） | 開發機的 Docker Desktop 隨登入啟動，驗不出院內「沒人登入」的情形，要在院內那台驗（Q-27） |
 | 部署前置檢查清單 v3.0 的 25 條 | 第 1、15、16、17、19 條的工具與實測已備妥；其餘要在主機與現場答 |
+
+---
+
+## 9. 迭代 12：外殼 APK 在開發機上建置（0927）
+
+照《[部署手冊](../deployment/index.md)》第十二冊，在開發機上走 Y-03～Y-07，再跑 `verify:iteration12 --live`。
+原始輸出存在開發機上（repo 之外的 `drill-i12/logs/`，21 份），理由同第 8 節：輸出裡有開發機的路徑與帳號名稱。
+
+| 條件 | 本次 |
+|---|---|
+| 程式碼 | **本系統是工作目錄，不是全新 clone**：迭代 12 的改動當時尚未 commit。外殼是本機 clone 的 `hd-kiosk-shell`，tag `v0.2.0` 已打（當時尚未推上 GitHub）。正式交付前要以真正的 tag、從 GitHub 全新 clone 兩個 repo 再走一次 |
+| 資料卷 | 實測前 `docker volume ls` 為空，兩個資料卷都是這次才建立的 |
+| 設定 | `HD_SHELL_SIGNING=dev`；`MDM_KIOSK_BASE_URL=https://<開發機區網 IP>:18081`（手機要連得到，`localhost` 不行） |
+
+### 9.1 `shell-builder` 的映像檔（Y-04）
+
+| 項次 | 結果 |
+|---|---|
+| Android 命令列工具、SDK 34、build-tools 34.0.0、Gradle 8.7 | 全部下載並核對 SHA-256 通過 |
+| 外殼原始碼 | 從主機上的 clone 取出 `v0.2.0`（`015ee5461349`），版本與契約核對通過，院外網址掃描 0 筆 |
+| 預先建置 | **外殼第一次被實際編譯成功**。AGP 另外自動補裝了 platform-tools，一併進了映像檔 |
+| 大小 | 映像檔 2.99 GB（Android SDK 與 Gradle 相依占大半） |
+| 耗時 | Gradle 那一個檔案（約 130 MB）在開發機的網路上下載了 6.6 分鐘；第一次建置時它卡住超過 15 分鐘沒有進度，**加上重試與「60 秒內低於 1 KB/s 就中斷」之後重建才過**。院內主機的網路若更慢，這一步要預留時間 |
+
+### 9.2 建 APK，第二次不重新產生金鑰（驗收 2）
+
+| 步驟 | 結果 |
+|---|---|
+| 第一次 `run shell-builder` | 「這一次新產生：院內 CA 伺服器憑證（<IP>） APK 簽章金鑰（開發用）」；**執行時沒有網路**（`network_mode: none`），Gradle 以離線模式建置成功 |
+| 第二次 | 三行「沿用既有的……」、「金鑰全部沿用，這一次沒有產生任何新的金鑰」；APK 與簽章憑證的 SHA-256 與第一次相同 |
+| `keys-info` 前後各一次 | 輸出逐位元組相同：CA 到 2036 年、伺服器憑證 `IP Address:<IP>` 到 2028 年、簽章金鑰指紋 |
+| 改用 `hospital` 執行 | 拒絕：「這個金鑰資料卷是『dev』用的，設定卻是『hospital』……」，結束狀態 1 |
+| 資料卷權限 | `ca/`、`signing/` 為 `drwx------ root`；`tls/server.key` 擁有者 1000、`600`；`public/` 有 APK、`index.html`、`shell.json`；容器裡解析不到任何主機名稱 |
+| APK 內容 | `tw.hospital.hdcare.kiosk`、versionCode 200、versionName 0.2.0、minSdk 21、targetSdk 34；v2 簽章，簽署者 `CN=HD Kiosk Shell (開發用)`；**嵌入的 CA 與金鑰資料卷裡的院內 CA 逐位元組相同**；權限只有網路、網路狀態、開機完成三項（第四項是 androidx 自動加的、只屬於本 App 的內部權限） |
+
+### 9.3 金鑰備份與還原（DEP-35）
+
+| 步驟 | 結果 |
+|---|---|
+| `keys-backup` | `backups/keys/hd-keys-<時間>.tar.gz`（約 12 KB），權限 600 |
+| `keys-verify` | 四個檔案逐一相符、備份裡的簽章金鑰以備份裡的密碼打得開、CA 私鑰完整 |
+| `keys-restore` 到已有金鑰的資料卷 | 拒絕：「金鑰資料卷裡已經有金鑰，不覆蓋……」 |
+| `keys-restore` 到一個空的暫時資料卷 | 還原成功並自動核對；`keys-info` 的指紋與原本的完全相同。暫時資料卷事後刪除 |
+
+### 9.4 HTTPS、同一個來源與下載頁（驗收 3 的伺服器那一半）
+
+| 步驟 | 結果 |
+|---|---|
+| 遷移 | 10 個遷移，套用了 `iteration12_kiosk_shell_version` |
+| 啟動 | `patient-web` 記錄「HTTPS；HTTP 只留外殼下載頁」「/api/ 轉送至 http://api:3000」（金鑰先於服務產生，第一次啟動就是 HTTPS） |
+| `verify:iteration12 --live` | 全部 ✓：下載頁與 APK（`application/vnd.android.package-archive`）、HTTP 開病人端轉到 HTTPS、只信任院內 CA 就連得上、不信任就連不上 |
+| `verify:iteration12:api` 整支**經病人端的 HTTPS 轉送**打進容器裡的後端 | 全部 ✓：版本握手、四種狀態、400、401、稽核 |
+| 調高 `KIOSK_SHELL_MIN_VERSION` 到 0.2.1，只 `up -d api` | 契約端點回 `0.2.1`，回報 0.2.0 的平板立刻變成「外殼過舊」；改回空白後恢復「版本正常」（驗收 5） |
+| `api` 重新啟動的那幾秒 | 病人端轉送回 502「後端暫時無法連線」，api 起來後自動恢復——平板端的離線佇列本來就要處理這種情形 |
+
+### 9.5 還沒做的
+
+| 事項 | 什麼時候 |
+|---|---|
+| 開發手機從下載頁安裝、佈建、釘選、跳出、提示列（驗收 3～6 的手機那一半） | 測試分冊 §12.5～§12.7，要實際拿手機做 |
+| 以正式 tag、從 GitHub 全新 clone 兩個 repo 再走一次 | 迭代 12 的改動 commit、兩邊 tag 推上去之後 |
+| 院內主機上 `shell-builder` 的建置時間與對外連線（`dl.google.com`、`services.gradle.org`、`maven.google.com`、`repo.maven.apache.org`） | 第二次進院前問資訊室（Q-32，網域清單已補在那一題） |
 
 ---
 
