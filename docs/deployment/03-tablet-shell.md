@@ -462,6 +462,6 @@ cd apps/kiosk-shell && ./gradlew assembleRelease
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0923 | 2026-09-23 | 首次定版。平板與自包外殼 App：平板到貨前就做得完的上半，與到貨後側載、螢幕固定的下半 |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/0923/deployment/03-tablet-shell/) | 2026-09-23 | 首次定版。平板與自包外殼 App：平板到貨前就做得完的上半，與到貨後側載、螢幕固定的下半 |
 
 [← 上一冊 · 開發端的測試部署](02-dry-run.md) · [回部署手冊總覽](index.md) · [下一冊 · 進院當天 →](04-onsite.md)

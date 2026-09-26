@@ -459,6 +459,6 @@ Get-FileHash -Algorithm SHA256 .\CHECKSUMS.txt
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0923 | 2026-09-23 | 首次定版。在開發機建置可交付的離線安裝包，產出寫著版本與雜湊值的交付單 |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/0923/deployment/01-dev-machine/) | 2026-09-23 | 首次定版。在開發機建置可交付的離線安裝包，產出寫著版本與雜湊值的交付單 |
 
 [← 回部署手冊總覽](index.md) · [下一冊 · 開發端的測試部署 →](02-dry-run.md)

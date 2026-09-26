@@ -311,6 +311,6 @@ TLS 正常驗證、沒有警告、Service Worker 正常運作。**不必購買�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0923 | 2026-09-23 | 首次定版。為什麼 SSE 繞不過 MDM；病人端改為 PWA 裝在自包 WebView 外殼裡、Kiosk 靠 Android 內建螢幕固定，0919 起被需求文件採納 |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/0923/notes/mdm-offline-plan/) | 2026-09-23 | 首次定版。為什麼 SSE 繞不過 MDM；病人端改為 PWA 裝在自包 WebView 外殼裡、Kiosk 靠 Android 內建螢幕固定，0919 起被需求文件採納 |
 
 [← 回進度首頁](../index.md)

@@ -750,6 +750,6 @@ Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" | Select-O
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0923 | 2026-09-23 | 首次定版。進院當天從進門到離開的逐步清單，每一步打勾並記時間，那張紙就是部署紀錄 |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/0923/deployment/04-onsite/) | 2026-09-23 | 首次定版。進院當天從進門到離開的逐步清單，每一步打勾並記時間，那張紙就是部署紀錄 |
 
 [← 上一冊 · 平板與外殼 App](03-tablet-shell.md) · [回部署手冊總覽](index.md) · [下一冊 · 帶進去與帶出來 →](05-carry-in-out.md)

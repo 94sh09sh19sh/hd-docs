@@ -339,6 +339,6 @@ Enable-ScheduledTask -TaskName HD-TabletCare
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0923 | 2026-09-23 | 首次定版。把服務停掉的三種程度：暫停、停用、撤除，各自怎麼做、怎麼確認 |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/0923/deployment/08-shutdown/) | 2026-09-23 | 首次定版。把服務停掉的三種程度：暫停、停用、撤除，各自怎麼做、怎麼確認 |
 
 [← 上一冊 · 院方要求直接 `git clone`](07-git-clone.md) · [回部署手冊總覽](index.md) · [下一冊 · 院方要求以 `git clone` ＋ Docker 部署 →](09-docker.md)

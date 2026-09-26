@@ -1172,7 +1172,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0923 | 2026-09-23 | 補到 54 張表 529 個欄位：迭代 7 的執行環境與版本更新紀錄（第十五節）、迭代 9 的導覽版位與內容資料化（第十六節）；附錄 C 的內容全部搬進資料表，三組帶版本號的內容用同一個形狀，`help_requests` 多一欄 `category_label`，`symptom_answers` 多一張複選子表 |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/0923/reference/data-dictionary/) | 2026-09-23 | 補到 54 張表 529 個欄位：迭代 7 的執行環境與版本更新紀錄（第十五節）、迭代 9 的導覽版位與內容資料化（第十六節）；附錄 C 的內容全部搬進資料表，三組帶版本號的內容用同一個形狀，`help_requests` 多一欄 `category_label`，`symptom_answers` 多一張複選子表 |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/reference/data-dictionary/) | 2026-09-16 | 補到 39 張表 408 個欄位：改述為 SQLite 現況，補上迭代 3 的五張表與迭代 4 的十四張表，新增第十二～十四節（求助處理與可設定暫代值、班表與成效基準、閒置輪播與檔案匯入）|
 | [0909](https://94sh09sh19sh.github.io/hd-docs/0909/reference/data-dictionary/) | 2026-09-09 | 首次定版 |
 
