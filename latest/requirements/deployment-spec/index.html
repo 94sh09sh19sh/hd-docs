@@ -993,6 +993,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#54-閘道的設定檔放哪裡怎麼生效0927迭代-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 閘道的設定檔放哪裡、怎麼生效（0927，迭代 13）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1962,6 +1973,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 13 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2380,6 +2419,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/13-ai-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十三冊 · AI 閘道（實驗室實測與院內設定）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2745,6 +2812,17 @@
     <span class="md-ellipsis">
       
         5.3 正式：院內 GPU API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-閘道的設定檔放哪裡怎麼生效0927迭代-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 閘道的設定檔放哪裡、怎麼生效（0927，迭代 13）
       
     </span>
   </a>
@@ -3476,6 +3554,41 @@
 </table>
 <p><strong>DEP-24｜AI 必須可以整個關掉，而且關掉之後系統要能完整運作。</strong>（保留）首波部署 AI 功能預設為關（DEP-29），<code>ai-gateway</code> 可以根本不啟動。</p>
 <p><strong>正式 GPU API 若不是 Ollama</strong>：規範的方法二（OpenAI 相容介面）涵蓋大多數推論伺服器，<code>config.yaml</code> 的 <code>provider</code> 改成相容介面那一種即可；若連相容介面都不是，改的是閘道的 <code>llm_factory</code>，仍然不動後端。</p>
+<h3 id="54-閘道的設定檔放哪裡怎麼生效0927迭代-13">5.4 閘道的設定檔放哪裡、怎麼生效（0927，迭代 13）<a class="headerlink" href="#54-閘道的設定檔放哪裡怎麼生效0927迭代-13" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>項次</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>院內那一份</td>
+<td>主機設定目錄底下的 <code>ai-gateway/config.yaml</code>，compose 唯讀掛入。範本 <code>services/ai-gateway/config.hospital.example.yaml</code>，<strong>位址與模型留空到 Q-07 有答案</strong></td>
+</tr>
+<tr>
+<td>實驗室那一份</td>
+<td>實驗室的個人資料夾。範本 <code>services/ai-gateway/config.example.yaml</code>。<strong>實際的 <code>config.yaml</code> 一律不進 repo</strong>（<code>.gitignore</code> 擋著）</td>
+</tr>
+<tr>
+<td>生效方式</td>
+<td>存檔即生效：閘道每個請求比對檔案的修改時間。<strong>不重新啟動閘道、不重建任何映像檔</strong></td>
+</tr>
+<tr>
+<td>改壞了</td>
+<td>不沿用舊設定。閘道回「設定有誤」、<code>/health</code> 不通過，後端的健康檢查跟著不通過，AI 總開關開不起來</td>
+</tr>
+<tr>
+<td>後端這一側</td>
+<td><code>LLM_ENDPOINT</code> 指向閘道；<strong><code>LLM_MODEL_ID</code> 留空</strong>，模型只由 <code>config.yaml</code> 決定；<code>LLM_TIMEOUT_SECONDS</code> 要比 <code>config.yaml</code> 的 <code>timeout_seconds</code> 大</td>
+</tr>
+<tr>
+<td>閘道的映像檔</td>
+<td>只有程式與鎖定版本的套件，不含設定檔、不含模型；建置時連 Docker Hub、Debian 與 Python 套件來源（Q-32），執行時只連 <code>config.yaml</code> 指定的推論端點</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="6-交付與更新">6. 交付與更新<a class="headerlink" href="#6-交付與更新" title="Permanent link">&para;</a></h2>
 <p><strong>DEP-18｜（0926 改寫）交付物是 repo 上的一個 git tag 加一份設定範本。</strong> 不是一份安裝包，也不是一份安裝手冊。</p>

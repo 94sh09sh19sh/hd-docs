@@ -2187,6 +2187,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 13 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2592,6 +2620,34 @@
     
   
     第十二冊 · 外殼 App（主機上建 APK）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/13-ai-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十三冊 · AI 閘道（實驗室實測與院內設定）
   
 
     
@@ -4016,7 +4072,8 @@
 <li><strong>換正式 GPU API 的驗收標準是「只改 <code>config.yaml</code> 與 <code>LLM_PROVIDER</code>」</strong>。若做不到，改的是閘道，不是後端</li>
 <li><strong>正式環境設定下 <code>LLM_PROVIDER=lab</code> 拒絕啟動</strong>（DEP-40），與第 3 條的合成資料檢查並存</li>
 </ol>
-<p><strong>閘道對後端的介面</strong>：<code>/v1/chat/completions</code>、<code>/v1/models</code>（回傳 <code>config.yaml</code> 設定的模型，不列推論端點上的全部模型）、<code>/health</code>。後端的 <code>HttpLlmProvider</code> 因此一行都不必改；0919 那句「院內伺服器規格與實驗室 API 端點格式確認前這只是暫定」到此定案——<strong>格式由我們自己的閘道決定</strong>，外面怎麼變都關在閘道裡。</p>
+<p><strong>閘道對後端的介面</strong>：<code>/v1/chat/completions</code>、<code>/v1/models</code>（回傳 <code>config.yaml</code> 設定的模型，不列推論端點上的全部模型）、<code>/health</code>。後端的 <code>HttpLlmProvider</code> 沿用；0919 那句「院內伺服器規格與實驗室 API 端點格式確認前這只是暫定」到此定案——<strong>格式由我們自己的閘道決定</strong>，外面怎麼變都關在閘道裡。</p>
+<p><strong>0927 補（迭代 13 實作時發現）</strong>：<code>HttpLlmProvider</code> 原本把 <code>LLM_MODEL_ID</code> 當必填，還拿它核對模型清單，換模型就得同時改 <code>config.yaml</code> 與後端 <code>.env</code>，第 9 條做不到。改了一處：<strong>接閘道時 <code>LLM_MODEL_ID</code> 留空</strong>，請求不帶 <code>model</code>，由閘道決定並在回應裡回報實際模型，<code>ai_invocations</code> 記那一個。第 2 條「模型名稱只寫在 <code>config.yaml</code>」因此是程式強制，不只是慣例。</p>
 <h3 id="35-臨床資料來源介面層-clinicaldatasourceport新增">3.5 臨床資料來源介面層 <code>ClinicalDataSourcePort</code>（新增）<a class="headerlink" href="#35-臨床資料來源介面層-clinicaldatasourceport新增" title="Permanent link">&para;</a></h3>
 <p>對應 FR-S05。院方尚未確定給 API 還是 Excel，因此先定介面。</p>
 <div class="highlight"><pre><span></span><code>ClinicalDataSourcePort（抽象介面）
@@ -5947,6 +6004,58 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </ol>
 <p><strong>外部依賴</strong>：Q-11（平板型號、側載政策）。不擋實作，開發手機即可驗完。</p>
 <h3 id="411-迭代-13ai-閘道與實驗室實際測試0926-新增本週">4.11 迭代 13：AI 閘道與實驗室實際測試（0926 新增，本週）<a class="headerlink" href="#411-迭代-13ai-閘道與實驗室實際測試0926-新增本週" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-27 完成實作與開發機上的本機實測；實驗室上的真模型實測待連線。</strong> 閘道在 <code>services/ai-gateway</code>（FastAPI ＋ LangChain，<code>config.yaml</code> ＋ <code>llm_factory</code>），
+映像檔建置的最後一步是它自己的自我測試（內建假推論端點，不需要網路）。步驟見《<a href="../../deployment/">部署手冊</a>》第十三冊，
+手動測試見<a href="../../testing/iteration-13/">迭代 13 分冊</a>（<code>w1</code>–<code>w47</code>），實測結果見《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 10 節。</p>
+<table>
+<thead>
+<tr>
+<th>驗收</th>
+<th>狀態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 合成病人跑通 AI 草擬，<code>ai_invocations</code> 記下實際模型</td>
+<td>本機 ✓（假推論端點，<code>verify:iteration13:api</code>）；<strong>實驗室上的實際模型待測</strong>（分冊 §13.4）</td>
+</tr>
+<tr>
+<td>2. 帶真實病人標記的請求在 <code>lab</code> 下被擋下並記錄</td>
+<td>✓ 本機；擋在閘道之前，推論端點一個請求都沒收到</td>
+</tr>
+<tr>
+<td>3. 只改 <code>config.yaml</code> 就換得了模型，後端不重建</td>
+<td>✓ 本機（改檔即生效，閘道也不必重新啟動）；實驗室再驗一次</td>
+</tr>
+<tr>
+<td>4. <code>provider</code> 在規範的兩種方法之間切換</td>
+<td>✓ 本機（<code>ollama</code>、<code>openai</code> 兩種都跑通）；實驗室再驗一次</td>
+</tr>
+<tr>
+<td>5. 閘道停掉時 AI 暫時無法使用，主線完全正常</td>
+<td>✓ 本機</td>
+</tr>
+<tr>
+<td>6. repo 與文件裡搜不到實驗室的連線資訊</td>
+<td>工具已備（<code>verify:iteration13 --secrets</code>，逐字比對檔案、歷史與提交訊息）；<strong>連線資訊到手後跑</strong></td>
+</tr>
+<tr>
+<td>7. 實驗室個人資料夾以外沒有留下檔案</td>
+<td>待測（第十三冊 Z-14）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>與原定計畫不同、或規格沒寫到而補上的四處</strong>：</p>
+<ol>
+<li><strong><code>HttpLlmProvider</code> 改了一處</strong>（見 3.4 的 0927 補）：<code>LLM_MODEL_ID</code> 可以留空，否則驗收 3 做不到。</li>
+<li><strong><code>config.yaml</code> 改檔即生效，改壞了不沿用舊設定。</strong> 閘道每個請求比對檔案的修改時間；改壞時回「設定有誤」、<code>/health</code> 不通過，
+   後端健康檢查跟著不通過，AI 總開關開不起來——院內範本因此可以把位址與模型留空，閘道照樣起得來，只是明確說出還缺什麼。</li>
+<li><strong><code>/v1/models</code> 會去探推論端點</strong>（只讀模型清單，不載入、不管理）。後端的健康檢查只問這一個端點，閘道若只照抄設定檔，
+   SSH 轉送斷了或模型被移走時健康檢查照樣通過。</li>
+<li><strong>映像檔裡裝了 <code>curl</code></strong>，因為規範要求在容器內以 <code>curl</code> 確認連線；<strong>明寫關閉 LangSmith 追蹤</strong>，它一開就把呼叫內容送往院外。</li>
+</ol>
+</blockquote>
 <p><strong>目標</strong>：照實驗室規範串接實驗室 GPU 伺服器，讓 AI 功能以真的模型跑一次；並把架構做成日後換成正式 GPU API 只改設定檔。</p>
 <table>
 <thead>
@@ -5980,7 +6089,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td>後端設定：<code>LLM_PROVIDER=lab</code>、<code>LLM_ENDPOINT</code> 指向轉送後的本機位址</td>
 <td>3.4</td>
-<td><code>HttpLlmProvider</code> 不改</td>
+<td><code>HttpLlmProvider</code> 不改（0927：改了一處，<code>LLM_MODEL_ID</code> 可留空，見 3.4）</td>
 </tr>
 <tr>
 <td>各項 AI 功能的提示詞在真模型上跑一輪，記錄繁體中文品質、耗時與失敗樣態</td>
@@ -6341,9 +6450,9 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>無；院內平板需 Q-11</td>
 </tr>
 <tr>
-<td>13</td>
-<td>AI 閘道與實驗室實際測試（0926）</td>
-<td><strong>可以</strong>（實驗室規範已取得）</td>
+<td>~~13~~</td>
+<td>~~AI 閘道與實驗室實際測試（0926）~~</td>
+<td><strong>實作已完成（0927）</strong>，本機實測通過；實驗室上的真模型實測待連線</td>
 <td>無；院內啟用需 Q-07</td>
 </tr>
 <tr>

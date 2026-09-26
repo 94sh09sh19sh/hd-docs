@@ -2121,6 +2121,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 13 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2526,6 +2554,34 @@
     
   
     第十二冊 · 外殼 App（主機上建 APK）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/13-ai-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十三冊 · AI 閘道（實驗室實測與院內設定）
   
 
     
@@ -4189,7 +4245,7 @@
 </tr>
 <tr>
 <td><strong>狀態</strong></td>
-<td><strong>已回覆（0926）</strong>：使用規範已取得，下列第 1、2、4、5 題有答案；第 3、6 題與繁中表現在實測時補</td>
+<td><strong>已回覆（0926）</strong>：使用規範已取得，下列第 1、2、4、5 題有答案；第 3、6 題與繁中表現在實測時補。<strong>0927</strong>：照規範寫的 AI 閘道已完成並在開發機上以假推論端點實測（迭代 13），實驗室上的實測待連線</td>
 </tr>
 </tbody>
 </table>
@@ -4669,6 +4725,7 @@
 <p><strong>現況／暫代做法</strong></p>
 <p>建置所需的外部來源已在《部署規範》3.2、3.4 與第 7 章列出。<strong>執行期本來就不連外</strong>（DEP-14），所以即使對外連線日後被關掉，已經跑起來的服務不受影響，受影響的只有更新。</p>
 <p><strong>0927 迭代 12 實測後補上外殼 APK 建置實際連到的網域</strong>：<code>dl.google.com</code>（Android 命令列工具與 SDK）、<code>services.gradle.org</code>（Gradle 本體，會轉到 GitHub 的發布檔，再轉到 GitHub 的檔案主機）、<code>maven.google.com</code>、<code>repo.maven.apache.org</code>、<code>plugins.gradle.org</code>（Gradle 外掛與相依）。總量約 1.5 GB，只在建置 <code>shell-builder</code> 的映像檔時連；執行 <code>shell-builder</code> 時完全沒有網路。開發機上 Gradle 那一個檔案約 130 MB 就下載了 6.6 分鐘，院內主機若更慢要預留時間（《部署演練紀錄》9.1）。</p>
+<p><strong>0927 迭代 13 補上 AI 閘道映像檔建置會連到的網域</strong>：Docker Hub（Python 基底映像檔）、<code>deb.debian.org</code>（映像檔裡的 <code>curl</code>）、<code>pypi.org</code> 與 <code>files.pythonhosted.org</code>（LangChain 等 45 個 Python 套件，全部鎖版本）。映像檔約 330 MB，<strong>只在建置時連</strong>；執行時閘道只連 <code>config.yaml</code> 指定的院內推論端點，不連任何院外位址。AI 首波關閉時閘道可以不建（DEP-24）。</p>
 <hr />
 <h2 id="5-d-級可先用暫代值">5. D 級：可先用暫代值<a class="headerlink" href="#5-d-級可先用暫代值" title="Permanent link">&para;</a></h2>
 <p>這十四項的共同特徵是：<strong>開發端先用一組合理的暫定值往下做，答案回來後替換即可，不影響架構。</strong> 因此它們一併問，但不擋任何進度。</p>

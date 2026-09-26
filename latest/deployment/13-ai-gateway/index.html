@@ -1,0 +1,3652 @@
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="需求、進度、參考與測試文件">
+      
+      
+      
+        <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/deployment/13-ai-gateway/">
+      
+      
+        <link rel="prev" href="../12-shell/">
+      
+      
+        <link rel="next" href="../../weekly/HOWTO/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>第十三冊 · AI 閘道（實驗室實測與院內設定） - 血液透析中心平板照護輔助系統</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#第十三冊--ai-閘道實驗室實測與院內設定" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-header__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            血液透析中心平板照護輔助系統
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第十三冊 · AI 閘道（實驗室實測與院內設定）
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換為深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為淺色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換為淺色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-nav__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    血液透析中心平板照護輔助系統
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    每週紀錄
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0923 — 部署前的迭代 7～10 完成，第一次進院失敗
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0916 — 迭代 3～6 完成，全程留在院內網路
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0909 — Iteration 1＋2 完成、核心流程可完整執行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/archive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    臨床端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    技術端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    需求文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    需求文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/fde-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDE 數位化評估報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/srs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/database-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料庫使用規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/implementation-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    實作規格書
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/deployment-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/open-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    尚待確認事項清冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/architecture-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架構圖
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    參考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    參考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data-dictionary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料字典
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tech-stack-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    這套系統是用什麼蓋的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kiosk-shell-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    病人端外殼 App 契約
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/mdm-offline-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    平板管控：免 MDM 的全院內方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/uiux-design-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介面設計基準
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/deployment-route-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署路線比較：離線安裝包與容器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手動測試
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    手動測試
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/manual-test-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整手動測試手冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 11 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 12 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 13 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署手冊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    部署手冊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    總覽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-dev-machine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第一冊 · 開發機準備與安裝包建置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-dry-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二冊 · 開發端的測試部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-tablet-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第三冊 · 平板與外殼 App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-onsite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第四冊 · 進院當天
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-carry-in-out/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第五冊 · 帶進去與帶出來
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第六冊 · 現場疑難排解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-git-clone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第七冊 · 院方要求直接 git clone
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-shutdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第八冊 · 把服務關乾淨
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第九冊 · 院方要求以 git clone ＋ Docker 部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-first-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十冊 · 第一次進院紀錄（0922，失敗）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十二冊 · 外殼 App（主機上建 APK）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十三冊 · AI 閘道（實驗室實測與院內設定）
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十三冊 · AI 閘道（實驗室實測與院內設定）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-先講結論" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 先講結論
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 先講結論">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-這一冊做什麼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 這一冊做什麼
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-實驗室規範與本冊的對應dep-42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 實驗室規範與本冊的對應（DEP-42）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-開發機上的本機實測0927" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 開發機上的本機實測（0927）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-開發機這一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 開發機這一層
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 開發機這一層">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-01-在專案目錄外記下連線資訊" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-01 在專案目錄外記下連線資訊
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-02-第一次連線" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-02 第一次連線
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-實驗室這一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 實驗室這一層
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 實驗室這一層">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-03-建個人資料夾實驗室容器外" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-03 建個人資料夾（實驗室，容器外）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-04-查可用模型實驗室容器外" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-04 查可用模型（實驗室，容器外）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-05-把閘道程式碼放進個人資料夾開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-05 把閘道程式碼放進個人資料夾（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-06-建映像檔實驗室個人資料夾裡" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-06 建映像檔（實驗室，個人資料夾裡）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-07-起個人容器實驗室" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-07 起個人容器（實驗室）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-08-容器內以-curl-找到-ollama實驗室容器內" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-08 容器內以 curl 找到 Ollama（實驗室，容器內）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-09-填-configyaml實驗室" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-09 填 config.yaml（實驗室）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-10-ssh-本機轉送開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-10 SSH 本機轉送（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-實測" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 實測
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 實測">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-11-端對端驗收與品質紀錄開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-11 端對端驗收與品質紀錄（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-12-換模型換方法驗收-34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-12 換模型、換方法（驗收 3、4）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-13-用畫面看一次開發機選做" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-13 用畫面看一次（開發機，選做）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-收尾驗收-67" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 收尾（驗收 6、7）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 收尾（驗收 6、7）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-14-實驗室上不留東西" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-14 實驗室上不留東西
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-15-repo-裡沒有實驗室的連線資訊開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-15 repo 裡沒有實驗室的連線資訊（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-院內主機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 院內主機
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 院內主機">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-20-放院內那一份-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-20 放院內那一份 config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-21-建置與啟動閘道" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-21 建置與啟動閘道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-22-之後每一次-up-都帶---profile-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-22 之後每一次 up 都帶 --profile ai
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-23-接上正式-gpu-apiq-07-有答案之後" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-23 接上正式 GPU API（Q-07 有答案之後）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-24-把-ai-整個關掉" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-24 把 AI 整個關掉
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-疑難排解這一冊特有的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 疑難排解（這一冊特有的）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    維護流程
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    維護流程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/HOWTO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄維護流程（人用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/AGENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件維護作業指示（agent 用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-先講結論" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 先講結論
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 先講結論">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-這一冊做什麼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 這一冊做什麼
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-實驗室規範與本冊的對應dep-42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 實驗室規範與本冊的對應（DEP-42）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-開發機上的本機實測0927" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 開發機上的本機實測（0927）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-開發機這一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 開發機這一層
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 開發機這一層">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-01-在專案目錄外記下連線資訊" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-01 在專案目錄外記下連線資訊
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-02-第一次連線" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-02 第一次連線
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-實驗室這一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 實驗室這一層
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 實驗室這一層">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-03-建個人資料夾實驗室容器外" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-03 建個人資料夾（實驗室，容器外）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-04-查可用模型實驗室容器外" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-04 查可用模型（實驗室，容器外）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-05-把閘道程式碼放進個人資料夾開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-05 把閘道程式碼放進個人資料夾（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-06-建映像檔實驗室個人資料夾裡" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-06 建映像檔（實驗室，個人資料夾裡）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-07-起個人容器實驗室" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-07 起個人容器（實驗室）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-08-容器內以-curl-找到-ollama實驗室容器內" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-08 容器內以 curl 找到 Ollama（實驗室，容器內）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-09-填-configyaml實驗室" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-09 填 config.yaml（實驗室）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-10-ssh-本機轉送開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-10 SSH 本機轉送（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-實測" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 實測
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 實測">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-11-端對端驗收與品質紀錄開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-11 端對端驗收與品質紀錄（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-12-換模型換方法驗收-34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-12 換模型、換方法（驗收 3、4）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-13-用畫面看一次開發機選做" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-13 用畫面看一次（開發機，選做）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-收尾驗收-67" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 收尾（驗收 6、7）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 收尾（驗收 6、7）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-14-實驗室上不留東西" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-14 實驗室上不留東西
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-15-repo-裡沒有實驗室的連線資訊開發機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-15 repo 裡沒有實驗室的連線資訊（開發機）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-院內主機" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 院內主機
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 院內主機">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#z-20-放院內那一份-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-20 放院內那一份 config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-21-建置與啟動閘道" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-21 建置與啟動閘道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-22-之後每一次-up-都帶---profile-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-22 之後每一次 up 都帶 --profile ai
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-23-接上正式-gpu-apiq-07-有答案之後" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-23 接上正式 GPU API（Q-07 有答案之後）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z-24-把-ai-整個關掉" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Z-24 把 AI 整個關掉
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-疑難排解這一冊特有的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 疑難排解（這一冊特有的）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="第十三冊--ai-閘道實驗室實測與院內設定">第十三冊 · AI 閘道：實驗室實測與院內設定<a class="headerlink" href="#第十三冊--ai-閘道實驗室實測與院內設定" title="Permanent link">&para;</a></h1>
+<p>版本：v0.1　文件狀態：草案（0927 新增，迭代 13）　編號：<code>Z-xx</code></p>
+<blockquote>
+<p><strong>這一冊分兩半</strong>：第 1～4 節是<strong>過渡期</strong>——在實驗室的 GPU 伺服器上起 AI 閘道、開發機經 SSH 接過去，
+讓 AI 功能以真的模型跑一次（只准合成資料）；第 5 節是<strong>院內</strong>——compose 裡的 <code>ai-gateway</code> 服務，
+接在第十一冊之後，等正式 GPU API（Q-07）有答案才真的接上。</p>
+<p>規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》第 5 章（DEP-16、DEP-17、DEP-40～DEP-42）；
+閘道本身的說明在 repo 的 <code>services/ai-gateway/README.md</code>。這一冊只寫手指要按什麼、每一步會怎麼壞。</p>
+<p>⚠️ <strong>實驗室的位址、SSH 埠、帳號與密碼，一律不寫進 repo、不寫進這本手冊、不寫進週報</strong>（DEP-42）。
+本冊用 <code>&lt;角括號&gt;</code> 標出要換成實際值的地方；實際值只存在你自己電腦上、專案目錄以外的那一份筆記（Z-01）。
+文件站是公開的。</p>
+</blockquote>
+<hr />
+<h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
+<h3 id="01-這一冊做什麼">0.1 這一冊做什麼<a class="headerlink" href="#01-這一冊做什麼" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>開發機                                         實驗室 GPU 伺服器
+┌──────────────────────┐   SSH 本機轉送   ┌───────────────────────────────────────┐
+│ 後端  LLM_PROVIDER=lab │ ───────────────▶ │ 個人容器：AI 閘道（只綁本機介面）       │
+│ LLM_ENDPOINT=          │  127.0.0.1:18000 │   config.yaml 在個人資料夾             │
+│  http://127.0.0.1:18000/v1                │         │ LangChain                   │
+└──────────────────────┘                  │         ▼                             │
+                                          │ Ollama（別人維護，只能呼叫、不能管理） │
+                                          └───────────────────────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>在哪裡做</th>
+<th>產生什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>記下連線資訊</td>
+<td>開發機，專案目錄外</td>
+<td>一份只有你看得到的筆記；也是驗收 6 的比對來源</td>
+</tr>
+<tr>
+<td>個人資料夾、查可用模型</td>
+<td>實驗室，<strong>容器外</strong></td>
+<td><code>&lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway/</code>；選定的模型名稱</td>
+</tr>
+<tr>
+<td>建映像檔、起個人容器</td>
+<td>實驗室，個人資料夾裡</td>
+<td>閘道容器，只綁實驗室伺服器的 <code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td>容器內 <code>curl</code> 確認連得到 Ollama、填 <code>config.yaml</code></td>
+<td>實驗室，<strong>容器內</strong></td>
+<td>閘道的 <code>/health</code> 通過</td>
+</tr>
+<tr>
+<td>SSH 本機轉送</td>
+<td>開發機</td>
+<td>開發機的 <code>127.0.0.1:18000</code> 接到閘道</td>
+</tr>
+<tr>
+<td>端對端驗收與品質紀錄</td>
+<td>開發機</td>
+<td>驗收 1、2 在真模型上通過；四項 AI 功能的輸出、耗時報告</td>
+</tr>
+<tr>
+<td>換模型、換方法</td>
+<td>實驗室改 <code>config.yaml</code>、開發機重跑</td>
+<td>驗收 3、4</td>
+</tr>
+<tr>
+<td>收尾</td>
+<td>實驗室</td>
+<td>個人資料夾以外沒有本專案的東西（驗收 7）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="02-實驗室規範與本冊的對應dep-42">0.2 實驗室規範與本冊的對應（DEP-42）<a class="headerlink" href="#02-實驗室規範與本冊的對應dep-42" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>規範</th>
+<th>本冊</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>以 SSH 連線；<strong>以 Terminal 的 <code>ssh</code> 取代 VS Code 的遠端視窗</strong>（本專案唯一的差異）</td>
+<td>Z-02</td>
+</tr>
+<tr>
+<td>2</td>
+<td>在指定路徑建個人資料夾，資料與程式碼只放自己的資料夾，不得動用別人的</td>
+<td>Z-03、Z-05；<strong>不改共用帳號的任何設定檔，含 <code>~/.ssh/</code></strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>建個人容器，所有工作與套件安裝都在容器內</td>
+<td>Z-06、Z-07</td>
+</tr>
+<tr>
+<td>4</td>
+<td>查可用模型在<strong>容器外</strong>；確認連線在<strong>容器內</strong>以 <code>curl</code> 測</td>
+<td>Z-04、Z-08</td>
+</tr>
+<tr>
+<td>5</td>
+<td>以 LangChain 呼叫，建議以 config 檔管理設定</td>
+<td>閘道本身就是這樣寫的；<code>config.yaml</code> 在個人資料夾</td>
+</tr>
+<tr>
+<td>6</td>
+<td>只能呼叫模型，不可管理；要新模型聯絡學長姐</td>
+<td>閘道沒有任何管理模型的端點</td>
+</tr>
+<tr>
+<td>7</td>
+<td>第一次回應慢是模型在載入；一直慢可能是別人在用大型模型</td>
+<td>Z-11 的逾時設得寬；結果照實記錄</td>
+</tr>
+</tbody>
+</table>
+<h3 id="03-開發機上的本機實測0927">0.3 開發機上的本機實測（0927）<a class="headerlink" href="#03-開發機上的本機實測0927" title="Permanent link">&para;</a></h3>
+<p>實驗室之前，整條路徑先在開發機上以<strong>假的推論端點</strong>走過一次：閘道映像檔、LangChain 兩種方法、
+改 <code>config.yaml</code> 換模型、閘道停掉時主線照常，全部通過。結果見《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 10 節。
+<strong>實驗室這一半（本冊第 1～4 節）尚待連線後實測</strong>，走完回填同一節。</p>
+<hr />
+<h2 id="1-開發機這一層">1. 開發機這一層<a class="headerlink" href="#1-開發機這一層" title="Permanent link">&para;</a></h2>
+<h3 id="z-01-在專案目錄外記下連線資訊">Z-01 在專案目錄外記下連線資訊<a class="headerlink" href="#z-01-在專案目錄外記下連線資訊" title="Permanent link">&para;</a></h3>
+<p>在<strong>專案目錄以外</strong>開一個資料夾（例如 <code>%USERPROFILE%\hd-lab\</code>），建一份 <code>lab.env</code>：</p>
+<div class="highlight"><pre><span></span><code>LAB_HOST=&lt;實驗室伺服器的位址&gt;
+LAB_SSH_PORT=&lt;SSH 埠&gt;
+LAB_USER=&lt;帳號&gt;
+LAB_JUMP_HOST=&lt;若要先登入另一台再轉連，那一台的位址；沒有就刪掉這行&gt;
+LAB_GATEWAY_PORT=&lt;閘道在實驗室伺服器上要綁的埠，挑一個沒人用的&gt;
+</code></pre></div>
+<p><strong>密碼不寫進這份檔</strong>，每次連線手打。這份檔同時是驗收 6 的比對來源（Z-15）。</p>
+<p>再在 <code>%USERPROFILE%\.ssh\config</code>（<strong>開發機自己的</strong>，不是實驗室的）加一段，之後所有指令都用 <code>hd-lab</code> 這個別名，
+實際位址不必再出現在任何指令裡：</p>
+<div class="highlight"><pre><span></span><code>Host hd-lab
+    HostName &lt;實驗室伺服器的位址&gt;
+    Port &lt;SSH 埠&gt;
+    User &lt;帳號&gt;
+    # 要先登入另一台再轉連時才加這一行
+    ProxyJump &lt;帳號&gt;@&lt;轉連用的那一台&gt;:&lt;埠&gt;
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：<code>ssh -G hd-lab</code> 印出的 <code>hostname</code>、<code>port</code>、<code>user</code> 是對的。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%USERPROFILE%\.ssh</code> 不存在</td>
+<td><code>mkdir $HOME\.ssh</code>。開發機目前沒有任何 SSH 設定，這是第一份</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="z-02-第一次連線">Z-02 第一次連線<a class="headerlink" href="#z-02-第一次連線" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">ssh</span> <span class="n">hd-lab</span>
+</code></pre></div>
+<p>打密碼。第一次會問主機指紋，<strong>請學長姐確認指紋</strong>再回 <code>yes</code>。</p>
+<p><strong>怎麼知道成功了</strong>：出現實驗室伺服器的提示字元；<code>hostname</code>、<code>whoami</code> 是預期的主機與帳號。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection timed out</code></td>
+<td>不在校內網路。實驗室伺服器校外連不到（Q-08），先連校內網路或照實驗室的方式轉連（<code>ProxyJump</code>）</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>帳號或密碼錯。<strong>不要</strong>為了省打密碼去改實驗室那邊的 <code>~/.ssh/authorized_keys</code>——那是共用帳號的設定檔（規範第 2 項）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>本冊從這裡開始的「實驗室」步驟都在這個 SSH 視窗裡做；「開發機」步驟另開一個 PowerShell 視窗。</p>
+</blockquote>
+<hr />
+<h2 id="2-實驗室這一層">2. 實驗室這一層<a class="headerlink" href="#2-實驗室這一層" title="Permanent link">&para;</a></h2>
+<h3 id="z-03-建個人資料夾實驗室容器外">Z-03 建個人資料夾（實驗室，容器外）<a class="headerlink" href="#z-03-建個人資料夾實驗室容器外" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>&lt;指定路徑&gt;
+mkdir<span class="w"> </span>-p<span class="w"> </span>&lt;個人資料夾&gt;/hd-ai-gateway
+ls<span class="w"> </span>-ld<span class="w"> </span>&lt;個人資料夾&gt;<span class="w"> </span>&lt;個人資料夾&gt;/hd-ai-gateway
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：兩個目錄都在，擁有者是你的帳號。之後<strong>本專案的每一個檔案都只放在這底下</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied</code></td>
+<td>不是規範指定的那個路徑。問學長姐，不要在家目錄或別人的資料夾底下建</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="z-04-查可用模型實驗室容器外">Z-04 查可用模型（實驗室，<strong>容器外</strong>）<a class="headerlink" href="#z-04-查可用模型實驗室容器外" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ollama<span class="w"> </span>list
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：列出模型名稱與大小。挑一個<strong>繁體中文能力可能較好、大小與目前使用狀況相符</strong>的，
+名稱<strong>一字不差</strong>抄到開發機那份筆記（含冒號後面的標籤）。另挑一個備用，Z-12 換模型時用。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ollama: command not found</code></td>
+<td>這一台的 Ollama 不在你的 <code>PATH</code>，或查詢方式不同。問學長姐怎麼查，<strong>不要自己裝</strong></td>
+</tr>
+<tr>
+<td>想用的模型不在清單上</td>
+<td>只能用清單上有的（規範第 6 項）；要新模型聯絡學長姐</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="z-05-把閘道程式碼放進個人資料夾開發機">Z-05 把閘道程式碼放進個人資料夾（開發機）<a class="headerlink" href="#z-05-把閘道程式碼放進個人資料夾開發機" title="Permanent link">&para;</a></h3>
+<p><strong>只傳閘道這一個目錄</strong>，本系統的其他程式碼、資料庫、<code>.env</code> 一律不上實驗室：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">claude_code_space</span><span class="p">\</span><span class="n">lab_project</span><span class="p">\</span><span class="n">v0</span><span class="p">\</span><span class="n">services</span><span class="p">\</span><span class="n">ai-gateway</span>
+<span class="n">scp</span> <span class="n">-r</span> <span class="n">gateway</span> <span class="n">Dockerfile</span> <span class="p">.</span><span class="n">dockerignore</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span> <span class="n">config</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">yaml</span> <span class="n">hd-lab</span><span class="p">:&lt;</span><span class="n">指定路徑</span><span class="p">&gt;/&lt;</span><span class="n">個人資料夾</span><span class="p">&gt;/</span><span class="n">hd-ai-gateway</span><span class="p">/</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：實驗室上 <code>ls &lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway</code> 看得到那五樣。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>開發機有 <code>config.yaml</code> 也跟著傳上去了</td>
+<td>本機那份不該存在（它有 <code>.gitignore</code>，但檔案還是會在）。刪掉本機那份，實驗室的在 Z-08 另建</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="z-06-建映像檔實驗室個人資料夾裡">Z-06 建映像檔（實驗室，個人資料夾裡）<a class="headerlink" href="#z-06-建映像檔實驗室個人資料夾裡" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>&lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway:i13<span class="w"> </span>.
+</code></pre></div>
+<p><code>&lt;個人前綴&gt;</code> 用你自己的代號，讓別人一眼看得出這是誰的映像檔與容器。</p>
+<p><strong>怎麼知道成功了</strong>：建置過程最後有一段自我測試，結尾印出 <code>全部通過</code>，接著 <code>naming to …&lt;個人前綴&gt;-hd-ai-gateway:i13</code>。
+<strong>這一步同時確認了 LangChain 等套件裝在映像檔裡、兩種方法都能用</strong>，還沒碰到真的模型。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>permission denied while trying to connect to the Docker daemon</code></td>
+<td>你的帳號沒有 Docker 權限。問學長姐個人容器要怎麼建——若規定一律從實驗室提供的映像檔開，走下面的「替代做法」</td>
+</tr>
+<tr>
+<td>下載 Python 套件失敗</td>
+<td>實驗室伺服器連不到套件來源。問學長姐有沒有鏡像站；<strong>不要改共用的 pip 設定</strong></td>
+</tr>
+<tr>
+<td>自我測試有 <code>✗</code></td>
+<td>套件版本不對或程式被改過。對照 repo 的那一版重傳（Z-05）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>替代做法</strong>（不准自己建映像檔時）：以實驗室指定的 Python 映像檔開個人容器，把個人資料夾掛進去，套件裝在容器裡：</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--name<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:&lt;閘道埠&gt;:8000<span class="w"> </span>--add-host<span class="o">=</span>host.docker.internal:host-gateway<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>&lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway:/work<span class="w"> </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">AI_GATEWAY_CONFIG</span><span class="o">=</span>/work/config.yaml<span class="w"> </span>-e<span class="w"> </span><span class="nv">LANGSMITH_TRACING</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>&lt;實驗室指定的<span class="w"> </span>Python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>映像檔&gt;<span class="w"> </span>bash
+<span class="c1"># 以下在容器裡</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+python<span class="w"> </span>-m<span class="w"> </span>gateway.selftest
+python<span class="w"> </span>-m<span class="w"> </span>gateway<span class="w">          </span><span class="c1"># 前景執行；要離開按 Ctrl+P Ctrl+Q（容器繼續跑）</span>
+</code></pre></div>
+<p>走這條路時，<strong>實驗室與院內就不是同一個映像檔</strong>（DEP-16），在演練紀錄裡寫明。</p>
+<hr />
+<h3 id="z-07-起個人容器實驗室">Z-07 起個人容器（實驗室）<a class="headerlink" href="#z-07-起個人容器實驗室" title="Permanent link">&para;</a></h3>
+<p>先放一份還沒填好的設定檔——<strong>閘道在設定檔有誤時照樣啟動</strong>，只是每個請求都回「設定有誤」，填好存檔就生效：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>&lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway
+cp<span class="w"> </span>config.example.yaml<span class="w"> </span>config.yaml
+chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>config.yaml<span class="w">      </span><span class="c1"># 容器裡以一般使用者執行，要讀得到</span>
+
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:&lt;閘道埠&gt;:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--add-host<span class="o">=</span>host.docker.internal:host-gateway<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>&lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway:/config/ai-gateway:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>&lt;個人前綴&gt;-hd-ai-gateway:i13
+docker<span class="w"> </span>logs<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway
+</code></pre></div>
+<p><strong><code>-p 127.0.0.1:…</code> 那個 <code>127.0.0.1</code> 不能省</strong>：省了就是對整個實驗室網路開放，別人的機器連得到你的閘道（DEP-42）。</p>
+<p><strong>怎麼知道成功了</strong>：<code>docker logs</code> 有 <code>設定檔有誤，改好之前 AI 功能無法使用：base_url 尚未填寫</code> 與 <code>Uvicorn running on http://0.0.0.0:8000</code>。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>port is already allocated</code></td>
+<td><code>&lt;閘道埠&gt;</code> 被別人用了。換一個，開發機筆記同步改</td>
+</tr>
+<tr>
+<td><code>找不到設定檔 /config/ai-gateway/config.yaml</code></td>
+<td><code>-v</code> 的左邊不是你的個人資料夾那一層，或 <code>cp</code> 沒做</td>
+</tr>
+<tr>
+<td><code>Permission denied</code> 讀不到 <code>config.yaml</code></td>
+<td>少了 <code>chmod 644</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="z-08-容器內以-curl-找到-ollama實驗室容器內">Z-08 容器內以 <code>curl</code> 找到 Ollama（實驗室，<strong>容器內</strong>）<a class="headerlink" href="#z-08-容器內以-curl-找到-ollama實驗室容器內" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="m">5</span><span class="w"> </span>http://host.docker.internal:11434/api/tags
+</code></pre></div>
+<p>（<code>11434</code> 是 Ollama 的預設埠；實驗室若另有指定，照指定的。）</p>
+<p><strong>怎麼知道成功了</strong>：印出一段 JSON，裡面有 Z-04 看到的那些模型名稱。<strong>這個位址就是 <code>config.yaml</code> 的 <code>base_url</code>。</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Could not resolve host</code></td>
+<td>少了 <code>--add-host=host.docker.internal:host-gateway</code>。<code>docker rm -f</code> 後照 Z-07 重起</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Ollama 只聽實驗室伺服器自己的 <code>127.0.0.1</code>，一般網路的容器進不去。改用「host 網路」起容器（下方）</td>
+</tr>
+<tr>
+<td>逾時</td>
+<td>問學長姐：容器裡要用哪個位址連 Ollama</td>
+</tr>
+</tbody>
+</table>
+<p><strong>host 網路的起法</strong>（Ollama 只聽本機時）：容器直接用實驗室伺服器的網路，閘道自己只綁 <code>127.0.0.1</code>：</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway<span class="w"> </span>--network<span class="w"> </span>host<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">AI_GATEWAY_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1<span class="w"> </span>-e<span class="w"> </span><span class="nv">AI_GATEWAY_PORT</span><span class="o">=</span>&lt;閘道埠&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>&lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway:/config/ai-gateway:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>&lt;個人前綴&gt;-hd-ai-gateway:i13
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="m">5</span><span class="w"> </span>http://127.0.0.1:11434/api/tags
+</code></pre></div>
+<p>這時 <code>base_url</code> 是 <code>http://127.0.0.1:11434</code>，後面各步驟裡閘道自己的位址是 <code>127.0.0.1:&lt;閘道埠&gt;</code>（不是 <code>:8000</code>）。</p>
+<hr />
+<h3 id="z-09-填-configyaml實驗室">Z-09 填 <code>config.yaml</code>（實驗室）<a class="headerlink" href="#z-09-填-configyaml實驗室" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>nano<span class="w"> </span>&lt;指定路徑&gt;/&lt;個人資料夾&gt;/hd-ai-gateway/config.yaml
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>欄位</th>
+<th>填什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>provider</code></td>
+<td><code>ollama</code>（先用方法一）</td>
+</tr>
+<tr>
+<td><code>base_url</code></td>
+<td>Z-08 測通的那一個，例如 <code>http://host.docker.internal:11434</code></td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>Z-04 挑的那一個，一字不差</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>範本的預設即可</td>
+</tr>
+</tbody>
+</table>
+<p>存檔。<strong>不必重新啟動容器。</strong></p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span><span class="m">127</span>.0.0.1:8000/health
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：<code>{"status":"ok","config":"ok","provider":"ollama","model":"&lt;你填的模型&gt;",…}</code>。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"config":"error"</code></td>
+<td>看 <code>detail</code> 那一句，照它說的改</td>
+</tr>
+<tr>
+<td><code>推論端點上找不到設定的模型</code></td>
+<td><code>model</code> 與 <code>ollama list</code> 不是一字不差（常見：少了 <code>:</code> 後面的標籤）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="z-10-ssh-本機轉送開發機">Z-10 SSH 本機轉送（開發機）<a class="headerlink" href="#z-10-ssh-本機轉送開發機" title="Permanent link">&para;</a></h3>
+<p>另開一個 PowerShell 視窗，<strong>這個視窗在測試期間一直開著</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="n">ssh</span> <span class="n">-N</span> <span class="n">-L</span> <span class="n">127</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">:</span><span class="n">18000</span><span class="p">:</span><span class="n">127</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">:&lt;</span><span class="n">閘道埠</span><span class="p">&gt;</span> <span class="n">hd-lab</span>
+</code></pre></div>
+<p>打完密碼後游標停住、沒有任何輸出，這是正常的。再開一個視窗：</p>
+<div class="highlight"><pre><span></span><code><span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">http</span><span class="p">://</span><span class="n">127</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">:</span><span class="n">18000</span><span class="p">/</span><span class="n">health</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：與 Z-09 同樣的一行 JSON，這次是在開發機上看到的。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bind [127.0.0.1]:18000: Address already in use</code></td>
+<td>開發機上 18000 被佔了。換一個（例如 18001），後面的位址一起換</td>
+</tr>
+<tr>
+<td><code>connect failed: Connection refused</code></td>
+<td>實驗室那邊閘道沒在跑，或 <code>&lt;閘道埠&gt;</code> 對不上。回 Z-07／Z-08</td>
+</tr>
+<tr>
+<td>過一陣子就斷</td>
+<td>閒置被踢。加 <code>-o ServerAliveInterval=30</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-實測">3. 實測<a class="headerlink" href="#3-實測" title="Permanent link">&para;</a></h2>
+<h3 id="z-11-端對端驗收與品質紀錄開發機">Z-11 端對端驗收與品質紀錄（開發機）<a class="headerlink" href="#z-11-端對端驗收與品質紀錄開發機" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">claude_code_space</span><span class="p">\</span><span class="n">lab_project</span><span class="p">\</span><span class="n">v0</span>
+<span class="n">npm</span> <span class="n">run</span> <span class="n">verify</span><span class="p">:</span><span class="n">iteration13</span><span class="p">:</span><span class="n">api</span> <span class="p">--</span> <span class="p">-</span><span class="n">-gateway</span> <span class="n">http</span><span class="p">://</span><span class="n">127</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">:</span><span class="n">18000</span><span class="p">/</span><span class="n">v1</span> <span class="p">-</span><span class="n">-report</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">hd-lab</span><span class="p">\</span><span class="n">ai-lab-trial</span><span class="p">-&lt;</span><span class="n">日期</span><span class="p">&gt;.</span><span class="nb">md</span>
+</code></pre></div>
+<p>腳本自己建一個暫存資料庫、另起一個 <code>LLM_PROVIDER=lab</code> 的後端（不碰開發用的資料庫），依序驗：
+AI 總開關開得起來（健康檢查經閘道通過）、合成病人的衛教產生成功且 <code>ai_invocations</code> 記下實驗室上的實際模型、
+「看似真實」的病人被擋下且完全沒有送出；再把四項 AI 功能各跑一次，輸出與耗時寫進報告。</p>
+<p><strong>第一次會很慢</strong>：模型要載入，可能一兩分鐘（規範第 7 項），腳本的逾時已放寬到五分鐘以上。</p>
+<p><strong>怎麼知道成功了</strong>：結尾 <code>全部通過</code>（驗收 3、4、5 那幾行是 <code>·</code>，表示在別處驗）；報告檔裡四項都有輸出。</p>
+<p>報告要人讀：每一項的「品質」欄照這四點判讀後填——<strong>繁體中文是否通順、有沒有簡體字或中國大陸用語、
+有沒有捏造提示裡沒有的事、格式是否照提示</strong>。結論與耗時抄進演練紀錄第 10 節；<strong>報告檔本身留在專案目錄外</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AI 總開關</code> 那一步 HTTP 409</td>
+<td>健康檢查沒過。<code>curl.exe http://127.0.0.1:18000/health</code> 看是閘道、<code>config.yaml</code> 還是轉送的問題</td>
+</tr>
+<tr>
+<td>背景工作 <code>推論伺服器逾時</code></td>
+<td>第一次載入太久，或別人在用大型模型。等幾分鐘重跑；一直如此就換小一點的模型（Z-12）</td>
+</tr>
+<tr>
+<td>輸出夾雜簡體字</td>
+<td>照實記錄，這正是要蒐集的結果。可換模型比較</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="z-12-換模型換方法驗收-34">Z-12 換模型、換方法（驗收 3、4）<a class="headerlink" href="#z-12-換模型換方法驗收-34" title="Permanent link">&para;</a></h3>
+<p><strong>換模型</strong>——實驗室改 <code>config.yaml</code> 的 <code>model</code> 為 Z-04 挑的備用模型，存檔。開發機：</p>
+<div class="highlight"><pre><span></span><code><span class="n">npm</span> <span class="n">run</span> <span class="n">verify</span><span class="p">:</span><span class="n">iteration13</span><span class="p">:</span><span class="n">api</span> <span class="p">--</span> <span class="p">-</span><span class="n">-gateway</span> <span class="n">http</span><span class="p">://</span><span class="n">127</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">:</span><span class="n">18000</span><span class="p">/</span><span class="n">v1</span> <span class="p">-</span><span class="n">-expect-model</span> <span class="p">&lt;</span><span class="n">備用模型</span><span class="p">&gt;</span>
+</code></pre></div>
+<p><strong>換方法</strong>——<code>config.yaml</code> 改成方法二：</p>
+<div class="highlight"><pre><span></span><code><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:11434/v1</span><span class="w">     </span><span class="c1"># 結尾多一段 /v1</span>
+</code></pre></div>
+<p>存檔，再跑一次（不帶 <code>--expect-model</code> 也可以）。</p>
+<p><strong>怎麼知道成功了</strong>：兩次都 <code>全部通過</code>；第一次的「呼叫紀錄的模型」是備用模型。<strong>全程沒有重建映像檔、沒有重新啟動閘道、
+後端每次都是腳本新起的同一份程式</strong>——換的只有 <code>config.yaml</code>。</p>
+<hr />
+<h3 id="z-13-用畫面看一次開發機選做">Z-13 用畫面看一次（開發機，選做）<a class="headerlink" href="#z-13-用畫面看一次開發機選做" title="Permanent link">&para;</a></h3>
+<p>開發機的 <code>.env</code>：</p>
+<div class="highlight"><pre><span></span><code>LLM_PROVIDER=lab
+LLM_ENDPOINT=http://127.0.0.1:18000/v1
+LLM_MODEL_ID=
+LLM_TIMEOUT_SECONDS=300
+</code></pre></div>
+<p><code>npm run dev</code>，護理端「系統管理」：供應者「實驗室 API」、資料離開院內標成「院外：僅得送合成資料」、模型識別字是 <code>config.yaml</code> 那一個、健康檢查通過。
+開 AI 總開關，替一位病歷號 <code>HD-TEST-</code> 開頭的病人產生衛教。<strong>看完把 <code>.env</code> 改回 <code>LLM_PROVIDER=mock</code>。</strong></p>
+<hr />
+<h2 id="4-收尾驗收-67">4. 收尾（驗收 6、7）<a class="headerlink" href="#4-收尾驗收-67" title="Permanent link">&para;</a></h2>
+<h3 id="z-14-實驗室上不留東西">Z-14 實驗室上不留東西<a class="headerlink" href="#z-14-實驗室上不留東西" title="Permanent link">&para;</a></h3>
+<p>測試期間閘道可以留著。<strong>確定不用了</strong>：</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway
+docker<span class="w"> </span>rmi<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway:i13
+docker<span class="w"> </span>ps<span class="w"> </span>-a<span class="w"> </span>--format<span class="w"> </span><span class="s1">'{{.Names}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;個人前綴&gt;<span class="w">     </span><span class="c1"># 沒有輸出</span>
+docker<span class="w"> </span>images<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;個人前綴&gt;<span class="w">                           </span><span class="c1"># 沒有輸出</span>
+ls<span class="w"> </span>-la<span class="w"> </span>~<span class="w">                                                  </span><span class="c1"># 沒有本專案的檔案</span>
+</code></pre></div>
+<p>個人資料夾留不留照實驗室的規矩；<code>config.yaml</code> 裡只有實驗室自己的位址與模型名稱。</p>
+<p><strong>怎麼知道成功了</strong>：本專案的東西只剩個人資料夾底下那一份（或整個刪掉）。這是驗收 7，結果寫進<a href="../../testing/iteration-13/">迭代 13 分冊</a> §13.6。</p>
+<p>開發機：關掉 Z-10 的轉送視窗，<code>.env</code> 改回 <code>mock</code>。</p>
+<hr />
+<h3 id="z-15-repo-裡沒有實驗室的連線資訊開發機">Z-15 repo 裡沒有實驗室的連線資訊（開發機）<a class="headerlink" href="#z-15-repo-裡沒有實驗室的連線資訊開發機" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">npm</span> <span class="n">run</span> <span class="n">verify</span><span class="p">:</span><span class="n">iteration13</span> <span class="p">--</span> <span class="p">-</span><span class="n">-secrets</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">hd-lab</span><span class="p">\</span><span class="n">lab</span><span class="p">.</span><span class="n">env</span>
+</code></pre></div>
+<p>腳本逐字比對 <code>lab.env</code> 裡每一個值：工作目錄的每個檔案、git 歷史的每一次改動、每一則提交訊息。<strong>值不會印出來</strong>。
+要連密碼一起驗，暫時在 <code>lab.env</code> 加一行 <code>LAB_PASSWORD=…</code>，跑完刪掉。</p>
+<p><strong>怎麼知道成功了</strong>：每一個名稱都是 <code>✓ …檔案、歷史、提交訊息都找不到</code>。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>某個值出現在某個檔案</td>
+<td>改掉，<strong>再確認它沒被提交過</strong>。已經提交或推上 GitHub 的，要當成外洩處理：換密碼、請學長姐評估要不要換位址或埠</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-院內主機">5. 院內主機<a class="headerlink" href="#5-院內主機" title="Permanent link">&para;</a></h2>
+<p>首波 AI 功能預設關閉（DEP-29），閘道可以根本不起。下面 Z-20～Z-22 在第十一冊 W-18 之後做一次，
+讓閘道就位、確認它明確回報「設定尚未填好」；Z-23 等 Q-07（正式 GPU API）有答案才做。</p>
+<blockquote>
+<p>⚠️ 指令都在主機的 PowerShell、<code>D:\hd-tablet-care\repo</code> 底下下；<code>$cfg</code> 是第十一冊 W-11 設的 <code>D:\hd-tablet-care\config\.env</code>。</p>
+</blockquote>
+<h3 id="z-20-放院內那一份-configyaml">Z-20 放院內那一份 <code>config.yaml</code><a class="headerlink" href="#z-20-放院內那一份-configyaml" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">mkdir</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">config</span><span class="p">\</span><span class="n">ai-gateway</span>
+<span class="nb">Copy-Item</span> <span class="n">services</span><span class="p">\</span><span class="n">ai-gateway</span><span class="p">\</span><span class="n">config</span><span class="p">.</span><span class="n">hospital</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">yaml</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">config</span><span class="p">\</span><span class="n">ai-gateway</span><span class="p">\</span><span class="n">config</span><span class="p">.</span><span class="n">yaml</span>
+</code></pre></div>
+<p>範本的 <code>base_url</code> 與 <code>model</code> 刻意留空。<strong>不要填實驗室的位址</strong>——院內主機連得出去，填了就是把資料往院外送。</p>
+<h3 id="z-21-建置與啟動閘道">Z-21 建置與啟動閘道<a class="headerlink" href="#z-21-建置與啟動閘道" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">ai</span> <span class="n">build</span> <span class="n">ai-gateway</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">ai</span> <span class="n">up</span> <span class="n">-d</span> <span class="n">ai-gateway</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">api</span> <span class="n">node</span> <span class="n">-e</span> <span class="s2">"fetch('http://ai-gateway:8000/health').then(async r=&gt;console.log(r.status, await r.text()))"</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：建置最後印出 <code>全部通過</code>；最後一行是
+<code>503 {"status":"error","config":"error","detail":"base_url 尚未填寫（推論端點的位址）"}</code>——
+<strong>這就是正確的狀態</strong>：閘道在、<code>api</code> 經私有網路連得到它、它清楚說出還缺什麼。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fetch failed</code></td>
+<td>閘道沒起來。<code>docker compose --env-file $cfg --profile ai logs ai-gateway</code></td>
+</tr>
+<tr>
+<td><code>找不到設定檔</code></td>
+<td>Z-20 的路徑不對：必須是設定目錄底下的 <code>ai-gateway\config.yaml</code></td>
+</tr>
+<tr>
+<td><code>docker compose ps</code> 看到 <code>ai-gateway</code> 有 <code>0.0.0.0:…-&gt;8000</code></td>
+<td>有人在 compose 加了 <code>ports</code>。拿掉——閘道不對外（部署規範 5.3），<code>npm run check:container</code> 會擋</td>
+</tr>
+</tbody>
+</table>
+<h3 id="z-22-之後每一次-up-都帶---profile-ai">Z-22 之後每一次 <code>up</code> 都帶 <code>--profile ai</code><a class="headerlink" href="#z-22-之後每一次-up-都帶---profile-ai" title="Permanent link">&para;</a></h3>
+<p>閘道起過之後，更新時（第十一冊的更新流程）<code>build</code> 與 <code>up -d</code> 都要加 <code>--profile ai</code>，閘道才會跟著換成新版映像檔。
+沒帶的話，閘道停在舊版，但<strong>主線不受影響</strong>（DEP-24）。</p>
+<h3 id="z-23-接上正式-gpu-apiq-07-有答案之後">Z-23 接上正式 GPU API（Q-07 有答案之後）<a class="headerlink" href="#z-23-接上正式-gpu-apiq-07-有答案之後" title="Permanent link">&para;</a></h3>
+<ol>
+<li><code>D:\hd-tablet-care\config\ai-gateway\config.yaml</code>：填 <code>provider</code>、<code>base_url</code>、<code>model</code>（要金鑰時填 <code>api_key</code>）。存檔即生效。</li>
+<li>確認：Z-21 的最後一行改成 <code>200 {"status":"ok",…}</code>。</li>
+<li><code>$cfg</code> 的 AI 那一段：</li>
+</ol>
+<div class="highlight"><pre><span></span><code>LLM_PROVIDER=onprem
+LLM_ENDPOINT=http://ai-gateway:8000/v1
+LLM_MODEL_ID=
+LLM_TIMEOUT_SECONDS=150
+</code></pre></div>
+<ol>
+<li><code>docker compose --env-file $cfg up -d api</code>（只換環境變數，<strong>不重建映像檔</strong>）。</li>
+<li>護理端「系統管理」：供應者「院內地端推論」、健康檢查通過，才照 DEP-29 的條件開 AI 總開關。
+   「允許真實病人資料」是另一個開關，另有條件，<strong>不在這一步開</strong>。</li>
+</ol>
+<p><strong>這就是 FR-S13 的驗收</strong>：由實驗室換成正式 GPU API，改的只有 <code>config.yaml</code> 與 <code>.env</code> 的 <code>LLM_PROVIDER</code>，程式一行未動。</p>
+<h3 id="z-24-把-ai-整個關掉">Z-24 把 AI 整個關掉<a class="headerlink" href="#z-24-把-ai-整個關掉" title="Permanent link">&para;</a></h3>
+<p>護理端關 AI 總開關，然後：</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">ai</span> <span class="n">stop</span> <span class="n">ai-gateway</span>
+</code></pre></div>
+<p>主線完全不受影響（DEP-24，本機實測過，見演練紀錄第 10 節）。</p>
+<hr />
+<h2 id="6-疑難排解這一冊特有的">6. 疑難排解（這一冊特有的）<a class="headerlink" href="#6-疑難排解這一冊特有的" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>護理端「健康檢查」寫 <code>無法連線至推論伺服器</code></td>
+<td>後端連不到<strong>閘道</strong>（開發機：轉送斷了；院內：閘道沒起）</td>
+<td>開發機重開 Z-10；院內 Z-21</td>
+</tr>
+<tr>
+<td>健康檢查寫 <code>推論伺服器回應 HTTP 503</code></td>
+<td>閘道在，但它後面不通或設定有誤</td>
+<td>開 <code>&lt;閘道&gt;/health</code> 看 <code>detail</code></td>
+</tr>
+<tr>
+<td>健康檢查寫 <code>端點上找不到設定的模型</code></td>
+<td>後端的 <code>LLM_MODEL_ID</code> 填了東西，與 <code>config.yaml</code> 不同</td>
+<td><code>LLM_MODEL_ID</code> 留空</td>
+</tr>
+<tr>
+<td>換了 <code>config.yaml</code>，呼叫紀錄的模型沒變</td>
+<td>改到另一份檔案（實驗室：不是掛進容器的那個資料夾；院內：不是設定目錄底下那份）</td>
+<td><code>docker inspect &lt;容器&gt; --format '{{json .Mounts}}'</code> 看實際掛的是哪裡</td>
+</tr>
+<tr>
+<td>院內後端起不來：<code>正式環境設定下不得使用 LLM_PROVIDER=lab</code></td>
+<td>有人把開發機的設定抄過來了</td>
+<td>這是 DEP-40 在擋。改成 <code>onprem</code> 或 <code>mock</code></td>
+</tr>
+<tr>
+<td>輸出前面有一段思考過程</td>
+<td>模型把思考放在 <code>&lt;think&gt;</code> 以外的格式</td>
+<td><code>config.yaml</code> 加 <code>reasoning: false</code>（方法一），或換模型</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>定版</th>
+<th>日期</th>
+<th>異動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><a href="../">← 回部署手冊總覽</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
