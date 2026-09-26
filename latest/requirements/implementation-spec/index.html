@@ -1603,6 +1603,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kiosk-shell-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    病人端外殼 App 契約
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2131,6 +2159,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 12 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2508,6 +2564,34 @@
     
   
     第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/12-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十二冊 · 外殼 App（主機上建 APK）
   
 
     
@@ -5743,6 +5827,62 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </ol>
 <p><strong>外部依賴</strong>：Q-27（主機 Docker 版本、連接埠、開機自動登入）、Q-32（對外連線範圍）。<strong>都不擋實作</strong>，擋的是第二次進院。</p>
 <h3 id="410-迭代-12外殼-app-獨立-repo-與整合0926-新增本週">4.10 迭代 12：外殼 App 獨立 repo 與整合（0926 新增，本週）<a class="headerlink" href="#410-迭代-12外殼-app-獨立-repo-與整合0926-新增本週" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-27 完成實作與開發機上的建置實測。</strong> 外殼搬到私人 repo <code>hd-kiosk-shell</code>（<code>git subtree split</code>，保留歷史），
+本 repo 刪除 <code>apps/kiosk-shell/</code> 與 <code>make-hospital-ca.mjs</code>；契約定為第 1 版
+（《<a href="../../reference/kiosk-shell-contract/">病人端外殼 App 契約</a>》＋<code>packages/shared/src/kiosk-shell.ts</code>），外殼 <code>v0.2.0</code> 實作它，
+本系統以 <code>services/shell-builder/shell.pin</code> 釘住。步驟見《<a href="../../deployment/">部署手冊</a>》第十二冊，
+手動測試見<a href="../../testing/iteration-12/">迭代 12 分冊</a>（<code>v1</code>–<code>v48</code>），開發機實測結果見《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 9 節。</p>
+<table>
+<thead>
+<tr>
+<th>驗收</th>
+<th>狀態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 本 repo 沒有 <code>apps/kiosk-shell/</code>；外殼 README 指向契約</td>
+<td>✓ <code>verify:iteration12 --shell-src</code></td>
+</tr>
+<tr>
+<td>2. <code>shell-builder</code> 從零建出 APK，第二次不重新產生金鑰</td>
+<td>✓ 開發機實測（演練紀錄第 9 節）、<code>verify:iteration12 --live</code></td>
+</tr>
+<tr>
+<td>3. 開發手機從下載頁安裝並載入病人端</td>
+<td>下載頁、HTTPS、<code>/api/</code> 轉送已在開發機驗過；<strong>手機本身待測</strong>（分冊 §12.5）</td>
+</tr>
+<tr>
+<td>4. 釘住後退不出去、跳出 30 秒內看得到</td>
+<td>後端與網頁那一半已驗（<code>verify:iteration12:api</code>）；<strong>手機本身待測</strong>（分冊 §12.6）</td>
+</tr>
+<tr>
+<td>5. 最低可用版本調高一版，護理端立刻標出</td>
+<td>✓ <code>verify:iteration12:api</code>；改 <code>.env</code> 重新啟動 api 那一次在分冊 §12.7</td>
+</tr>
+<tr>
+<td>6. 契約版本不合時兩邊都有明確提示</td>
+<td>系統這一邊 ✓；平板上的提示列<strong>待手機測</strong>（分冊 §12.7）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>與原定計畫不同、或規格沒寫到而補上的五處</strong>：</p>
+<ol>
+<li><strong>病人端改走 HTTPS，並與後端同一個來源。</strong> 規格要外殼「憑證信任」，外殼因此只信任院內 CA、只准 HTTPS；
+   但 HTTPS 頁面不准呼叫 HTTP 的後端，而規格沒寫伺服器憑證用在哪裡。做法是病人端的靜態服務以伺服器憑證提供 HTTPS，
+   並把 <code>/api/</code> 轉送給 api——外殼只需要信任一張憑證，病人端不必再設 CORS。護理端不動。</li>
+<li><strong>同一個埠同時接 HTTPS 與 HTTP，HTTP 只留下載頁。</strong> 平板第一次下載 APK 時還不信任院內 CA；不另開埠是因為每個埠都要向資訊室登記（DEP-37）。</li>
+<li><strong>外殼原始碼從主機上的 clone 帶進 <code>shell-builder</code> 的映像檔建置</strong>（compose 的 <code>additional_contexts</code>），不是在容器裡 clone。
+   部署金鑰因此不進映像檔；映像檔自己 checkout 釘住的 tag。執行時 <code>network_mode: none</code>，以預先下載的相依離線建置——
+   DEP-14「建置時碰不到資料」延伸成「掛著私鑰的時候沒有網路」。</li>
+<li><strong>外殼回報「是否釘選」，網頁把它併進前景判定。</strong> 解開螢幕固定之後 App 常常還停在前景，只看畫面可不可見會誤報成「固定中」，
+   驗收第 4 條就驗不過。外殼也在每次啟動時請求螢幕固定，重新開機後按一下確認框即可。</li>
+<li><strong>金鑰的備份、核對與還原做成 <code>shell-builder</code> 的指令</strong>（<code>keys-backup</code>、<code>keys-verify</code>、<code>keys-restore</code>），落實 DEP-35 的「每年驗證一次」。</li>
+</ol>
+<p><strong>迭代 10 的外殼其實建不起來</strong>：少了根目錄的 Gradle 設定與啟動圖示，<code>res/raw/</code> 裡的 <code>README.md</code> 也不是合法的資源名稱。
+迭代 10 沒有編譯環境、從來沒有實際建置過，這三處是這次要讓 <code>shell-builder</code> 建置時逐一核對才發現的，已在外殼 <code>v0.2.0</code> 修正。</p>
+</blockquote>
 <p><strong>目標</strong>：把 WebView 外殼開成另一個私人 repo，與本系統以契約整合，APK 在院內主機上建置、從院內下載頁安裝。</p>
 <table>
 <thead>
@@ -6195,9 +6335,9 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>無；第二次進院需 Q-27、Q-32</td>
 </tr>
 <tr>
-<td>12</td>
-<td>外殼 App 獨立 repo 與整合（0926）</td>
-<td><strong>可以</strong></td>
+<td>~~12~~</td>
+<td>~~外殼 App 獨立 repo 與整合（0926）~~</td>
+<td><strong>已完成（0927）</strong>，開發機建置實測通過；開發手機那幾條待測</td>
 <td>無；院內平板需 Q-11</td>
 </tr>
 <tr>
@@ -6373,8 +6513,8 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td><strong>容器設定盤點</strong>（0926 新增）</td>
 <td><code>npm run check:container</code></td>
-<td>compose 與 Dockerfile 有沒有違反部署規範：繫結掛載只准兩個、資料卷 external、專案名稱固定、沒有主機層級權限、不用 <code>env_file</code>、標籤帶版本號、不拉現成映像檔</td>
-<td>DEP-10、DEP-13、DEP-23、DEP-37、DEP-39、迭代 11</td>
+<td>compose 與 Dockerfile 有沒有違反部署規範：繫結掛載只准兩個、資料卷 external、專案名稱固定、沒有主機層級權限、不用 <code>env_file</code>、標籤帶版本號、不拉現成映像檔；0927 起加上金鑰資料卷只有 <code>shell-builder</code> 可寫、病人端唯讀、<code>shell-builder</code> 執行時沒有網路</td>
+<td>DEP-10、DEP-13、DEP-23、DEP-35、DEP-37、DEP-39、迭代 11、12</td>
 </tr>
 <tr>
 <td><strong>遷移安全盤點</strong></td>
@@ -6385,7 +6525,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td>六支一起跑</td>
 <td><code>npm run check:all</code></td>
-<td>含零院外連線盤點（0926 起掃描範圍改為映像檔內容、compose 檔與 AI 閘道）</td>
+<td>含零院外連線盤點（0926 起掃描範圍改為映像檔內容、compose 檔與 AI 閘道；0927 起外殼那一節改掃 <code>shell-builder</code>，外殼原始碼由 <code>shell-builder</code> 在映像檔建置時掃）</td>
 <td>—</td>
 </tr>
 </tbody>

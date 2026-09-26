@@ -1378,6 +1378,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kiosk-shell-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    病人端外殼 App 契約
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1906,6 +1934,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 12 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2283,6 +2339,34 @@
     
   
     第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/12-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十二冊 · 外殼 App（主機上建 APK）
   
 
     
@@ -3202,13 +3286,13 @@
 └── docker compose（專案名稱 hd-tablet-care）
     ├── api            後端，唯一開啟資料庫做寫入的行程（DEP-10）
     ├── nurse-web      護理端 PWA 靜態資源
-    ├── patient-web    病人端 PWA 靜態資源，另提供外殼 APK 的院內下載頁（DEP-45）
+    ├── patient-web    病人端 PWA 靜態資源（HTTPS）、`/api/` 轉送給 api、外殼 APK 的院內下載頁（DEP-45）
     ├── ai-gateway     AI 閘道（第 5 章）。AI 功能關閉時不必啟動
     └── shell-builder  一次性工作：建置外殼 APK（第 7 章），平時不跑
 
 具名資料卷（WSL2 內，compose down -v 也刪不掉）   主機目錄（繫結掛載，只有這兩個）
 ├── hd-tablet-care-data   SQLite 與 -wal、-shm      ├── 備份輸出目錄
-└── hd-tablet-care-keys   CA 與 APK 簽章金鑰         └── 設定目錄（.env、AI 閘道的 config.yaml）
+└── hd-tablet-care-keys   CA、伺服器憑證、APK 簽章金鑰、下載頁   └── 設定目錄（.env、AI 閘道的 config.yaml）
 </code></pre></div>
 <p><strong>DEP-08｜（0926 改寫）資料庫只放具名資料卷；備份與設定只放本系統自己的主機目錄；兩者都不在 git clone 的目錄裡。</strong> 原本的理由不變：某一次「把舊目錄整個刪掉重新 clone」會把放在裡面的東西一起刪掉。</p>
 <p><strong>DEP-09｜<code>-wal</code> 與 <code>-shm</code> 必須與主檔在同一個掛載點。</strong>（保留）掛的是目錄，不是檔案。</p>
@@ -3536,7 +3620,7 @@
 </tr>
 <tr>
 <td>APK</td>
-<td><code>shell-builder</code> 以 Android 建置映像檔，在主機上 clone 釘住的外殼 tag、嵌入院內 CA 後建置</td>
+<td><code>shell-builder</code> 以 Android 建置映像檔，從主機上的外殼 clone 取出釘住的 tag、嵌入院內 CA 後建置</td>
 <td>建置用的 SDK 全在映像檔裡，主機不必裝（DEP-04）</td>
 </tr>
 <tr>
@@ -3546,7 +3630,44 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>0927 迭代 12 已實作</strong>（實作規格書 4.10），落實方式有四處要記下來：</p>
+<table>
+<thead>
+<tr>
+<th>項次</th>
+<th>做法</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>外殼原始碼怎麼進 <code>shell-builder</code></td>
+<td><strong>主機上</strong>以外殼 repo 的部署金鑰 clone（<code>.env</code> 的 <code>HD_SHELL_SRC_DIR</code>），compose 以 <code>additional_contexts</code> 帶進映像檔建置，映像檔自己 checkout <code>shell.pin</code> 釘住的 tag</td>
+<td>部署金鑰不進映像檔；DEP-43 本來就是主機 clone 兩個 repo</td>
+</tr>
+<tr>
+<td>建置與執行分兩段</td>
+<td>映像檔建置時下載 SDK 與全部相依、<strong>不掛資料卷</strong>；執行時 <code>network_mode: none</code>，以離線模式建置與簽章</td>
+<td>DEP-14：掛著 CA 與簽章私鑰的那一刻一條網路都沒有</td>
+</tr>
+<tr>
+<td>伺服器憑證用在哪</td>
+<td>病人端靜態服務以它提供 HTTPS，並把 <code>/api/</code> 轉送給 api；病人端與後端同一個來源</td>
+<td>外殼只信任院內 CA、只准 HTTPS，HTTPS 頁面不准呼叫 HTTP 的後端；同源之後只要一張憑證、不必設 CORS</td>
+</tr>
+<tr>
+<td>下載頁</td>
+<td>同一個埠接 HTTPS 與 HTTP，HTTP 只留 <code>/shell/</code> 下載頁，其餘轉到 HTTPS</td>
+<td>平板第一次下載 APK 時還不信任院內 CA；不另開埠（DEP-37 第 2 項）</td>
+</tr>
+</tbody>
+</table>
+<p>金鑰資料卷的內容、權限與 <code>shell-builder</code> 的四個指令（<code>build</code>、<code>keys-info</code>、<code>keys-backup</code>、<code>keys-verify</code>）見
+<code>services/shell-builder/README.md</code>，步驟見部署手冊第十二冊。</p>
+</blockquote>
 <p><strong>DEP-35｜（0926 改寫）CA 與 APK 簽章金鑰遺失即無法補救。</strong> 金鑰資料卷的內容與資料庫一併備份到院內另一台機器，每年驗證一次還原得回來。簽章金鑰遺失的後果不變：再也發不出更新版，只能換套件名重新側載全部平板。</p>
+<p>0927 起的做法：<code>shell-builder keys-backup</code> 把金鑰寫到備份目錄底下的 <code>keys\</code>，隨資料庫備份一起送走；<code>shell-builder keys-verify</code> 核對某一份備份還原得回來。<strong><code>shell-builder</code> 絕不覆蓋既有的 CA 與簽章金鑰</strong>，資料卷不完整時拒絕執行，要從備份還原。</p>
 <hr />
 <h2 id="8-病人端平板的佈建">8. 病人端平板的佈建<a class="headerlink" href="#8-病人端平板的佈建" title="Permanent link">&para;</a></h2>
 <p>完整方案見《<a href="../../notes/mdm-offline-plan/">平板管控：免 MDM 的全院內方案</a>》。</p>
@@ -3554,20 +3675,21 @@
 <ol>
 <li>啟動本系統（第 6 章）</li>
 <li>執行 <code>shell-builder</code>：產生 CA、伺服器憑證、簽章金鑰（僅首次），建置 APK 並放上下載頁</li>
+<li>備份金鑰（<code>keys-backup</code>，DEP-35）；重新啟動 <code>patient-web</code>，讓病人端改走 HTTPS</li>
 <li>在護理端裝置管理建立平板，取得各台的序號與金鑰</li>
 </ol>
 <h3 id="82-平板端每台各做一次">8.2 平板端（每台各做一次）<a class="headerlink" href="#82-平板端每台各做一次" title="Permanent link">&para;</a></h3>
 <ol>
 <li>設定裝置 PIN，關閉新增使用者</li>
 <li>開啟允許安裝不明來源應用程式</li>
-<li><strong>以平板瀏覽器開院內下載頁，下載並安裝 APK</strong></li>
-<li>首次啟動，輸入或掃描該台的序號與金鑰</li>
+<li><strong>以平板瀏覽器開院內下載頁（<code>http://&lt;院內主機&gt;:&lt;病人端埠&gt;/shell/</code>），下載並安裝 APK</strong></li>
 <li>開啟螢幕固定，勾選「解除固定前要求 PIN」</li>
-<li>開啟 App 並釘住</li>
+<li>首次啟動，輸入主機位址（<code>https://</code> 開頭）與該台的序號、金鑰</li>
+<li>App 詢問是否固定畫面時按「確定」（0927 起外殼每次啟動都會請求一次）</li>
 <li>記錄序號與床號的對應，核對護理端裝置清單</li>
 </ol>
 <p><strong>DEP-36｜首波試用只佈建實際會用到的台數。</strong>（保留）先兩三台跑完一個完整班次，再佈建其餘。</p>
-<p><strong>每日要做的一件事</strong>：前一天有重新開機的平板要重新釘選。</p>
+<p><strong>每日要做的一件事</strong>：前一天有重新開機的平板要重新釘選——App 開機後會自己起來並跳出固定確認框，按一下即可。</p>
 <hr />
 <h2 id="9-開發端實測部署開發機開發手機">9. 開發端實測部署：開發機＋開發手機<a class="headerlink" href="#9-開發端實測部署開發機開發手機" title="Permanent link">&para;</a></h2>
 <p><strong>DEP-22｜（0926 改寫）每一個要交給院方的 tag，都要先在開發機上以院內的同一套指令從零部署一次，並以開發手機當平板走完一輪。</strong> 「從零」的意思：</p>

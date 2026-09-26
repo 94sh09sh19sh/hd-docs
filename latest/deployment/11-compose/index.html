@@ -16,7 +16,7 @@
         <link rel="prev" href="../10-first-visit/">
       
       
-        <link rel="next" href="../../weekly/HOWTO/">
+        <link rel="next" href="../12-shell/">
       
       
         
@@ -891,6 +891,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kiosk-shell-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    病人端外殼 App 契約
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1406,6 +1434,34 @@
     
   
     迭代 11 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 12 分冊
   
 
     
@@ -2296,6 +2352,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十二冊 · 外殼 App（主機上建 APK）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2930,7 +3014,7 @@
 </tr>
 <tr>
 <td><a href="../03-tablet-shell/">第三冊</a>（平板與外殼 App）</td>
-<td>照舊，迭代 12 會改成「APK 在院內主機上建置、從下載頁安裝」</td>
+<td>0927 起憑證、keystore、APK 與側載由<a href="../12-shell/">第十二冊</a>取代（APK 在院內主機上建置、從下載頁安裝）；平板的採購與盤點照舊</td>
 </tr>
 <tr>
 <td><a href="../08-shutdown/">第八冊</a>（把服務關乾淨）</td>
@@ -2970,9 +3054,14 @@
 <td><strong>只能放資料卷，不得是 Windows 目錄</strong>（DEP-23）。檔案總管看不到它是正常的</td>
 </tr>
 <tr>
-<td>CA 與 APK 簽章金鑰</td>
+<td>CA、伺服器憑證、APK 簽章金鑰、下載頁</td>
 <td>具名資料卷 <code>hd-tablet-care-keys</code></td>
-<td>私鑰不離開主機（DEP-35，迭代 12 開始用）</td>
+<td>私鑰不離開主機（DEP-35）。0927 起由 <code>shell-builder</code> 產生，見<a href="../12-shell/">第十二冊</a></td>
+</tr>
+<tr>
+<td>外殼 App 原始碼</td>
+<td><code>D:\hd-tablet-care\hd-kiosk-shell\</code>（<code>git clone</code> 下來的）</td>
+<td><code>shell-builder</code> 從這裡取釘住的那一版（第十二冊 Y-02）</td>
 </tr>
 <tr>
 <td>程式</td>
@@ -3298,7 +3387,7 @@
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
 <p>把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。
-外殼 App 的 repo 另產生一把（迭代 12；一把部署金鑰只能對應一個 repo）。</p>
+外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在<a href="../12-shell/">第十二冊</a> Y-02。</p>
 <p>再在 <code>$HOME\.ssh\config</code> 加一段，讓這把金鑰只用在這個 repo：</p>
 <div class="highlight"><pre><span></span><code>Host github-hd-tablet-care
     HostName github.com
@@ -3388,11 +3477,19 @@
 </tr>
 <tr>
 <td><code>HD_PUBLIC_API_URL</code></td>
-<td>平板與護理站連得到的後端位址，例如 <code>http://&lt;主機名稱&gt;:&lt;後端埠&gt;</code>。<strong>建置時寫進產物</strong>（DEP-39）</td>
+<td>護理站連得到的後端位址，例如 <code>http://&lt;主機名稱&gt;:&lt;後端埠&gt;</code>。<strong>建置時寫進護理端的產物</strong>（DEP-39）</td>
 </tr>
 <tr>
-<td><code>CORS_ORIGINS</code>、<code>MDM_KIOSK_BASE_URL</code></td>
-<td>護理端、病人端的實際位址</td>
+<td><code>CORS_ORIGINS</code></td>
+<td>護理端的實際位址（病人端與後端同一個來源，不必列）</td>
+</tr>
+<tr>
+<td><code>MDM_KIOSK_BASE_URL</code></td>
+<td>平板要連的病人端位址，<strong>一律 <code>https://</code></strong>（第十二冊 Y-03）</td>
+</tr>
+<tr>
+<td><code>HD_SHELL_SRC_DIR</code>、<code>HD_SHELL_SIGNING</code></td>
+<td>外殼 repo 的 clone 位置與簽章用途（第十二冊 Y-03）。<strong>每一條 compose 指令都會檢查前者</strong>，還沒 clone 也先填好路徑</td>
 </tr>
 <tr>
 <td><code>JWT_SECRET</code></td>
@@ -3669,7 +3766,7 @@
 <tr>
 <td>5</td>
 <td>開發手機裝外殼、釘住、護理端看得到（迭代 12 起）</td>
-<td>第三冊</td>
+<td><a href="../12-shell/">第十二冊</a>第 7 節</td>
 </tr>
 <tr>
 <td>6</td>
@@ -3775,11 +3872,11 @@
 </tr>
 <tr>
 <td><code>shell-builder</code>（外殼 APK 建置）</td>
-<td>服務、金鑰資料卷、<code>shell</code> 設定檔已定；建置映像檔在<strong>迭代 12</strong></td>
+<td><strong>0927 迭代 12 完成</strong>，見<a href="../12-shell/">第十二冊</a></td>
 </tr>
 <tr>
-<td>病人端下載頁</td>
-<td>迭代 12</td>
+<td>病人端下載頁、HTTPS</td>
+<td><strong>0927 迭代 12 完成</strong>，見第十二冊 Y-07</td>
 </tr>
 </tbody>
 </table>

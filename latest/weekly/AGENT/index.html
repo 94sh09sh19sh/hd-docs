@@ -889,6 +889,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kiosk-shell-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    病人端外殼 App 契約
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1417,6 +1445,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 12 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1794,6 +1850,34 @@
     
   
     第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/12-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十二冊 · 外殼 App（主機上建 APK）
   
 
     
@@ -2555,12 +2639,13 @@
 │   └── progress-technical.md
 ├── reference/                  參考文件（隨程式碼變動）
 │   ├── data-dictionary.md
-│   └── tech-stack-explained.md
+│   ├── tech-stack-explained.md
+│   └── kiosk-shell-contract.md 病人端外殼 App 契約（0927 新增，真本；外殼 repo 不另寫一份）
 ├── notes/                      單篇技術方案評估與決策紀錄（0919 新增）
 │   ├── mdm-offline-plan.md     平板管控：免 MDM 的全院內方案
 │   ├── uiux-design-baseline.md 介面設計基準（0919 新增）
 │   ├── iteration-9-1-fixes.md   迭代 9.1 修正清單（0920 新增）
-│   ├── deployment-drills.md    部署演練紀錄（0920 新增；0926 起第 8 節是容器部署實測）
+│   ├── deployment-drills.md    部署演練紀錄（0920 新增；0926 起第 8 節是容器部署實測，0927 第 9 節是外殼 APK）
 │   └── deployment-route-comparison.md  部署路線比較：安裝包與容器（0922 新增，0926 起為歷史紀錄）
 ├── testing/
 │   ├── manual-test-guide.md    主手冊（環境、兩條主線、迭代 1／2 細節、附錄）
@@ -2572,9 +2657,10 @@
 │   ├── iteration-8.md          迭代 8 分冊（0919 新增）
 │   ├── iteration-9.md          迭代 9 分冊（0919 新增）
 │   ├── iteration-10.md         迭代 10 分冊（0920 新增）
-│   └── iteration-11.md         迭代 11 分冊（0926 新增）
-├── deployment/                 部署手冊：總覽加十一冊（0921 新增）
-│   ├── index.md                總覽（三種結果、時程、十一冊索引、停手準則）
+│   ├── iteration-11.md         迭代 11 分冊（0926 新增）
+│   └── iteration-12.md         迭代 12 分冊（0927 新增）
+├── deployment/                 部署手冊：總覽加十二冊（0921 新增）
+│   ├── index.md                總覽（三種結果、時程、十二冊索引、停手準則）
 │   ├── 01-dev-machine.md       開發機準備與安裝包建置（`P-xx`）
 │   ├── 02-dry-run.md           開發端的測試部署（`R-xx`）
 │   ├── 03-tablet-shell.md      平板與外殼 App（`K-xx`）
@@ -2585,7 +2671,8 @@
 │   ├── 08-shutdown.md          把服務關乾淨：暫停、停用、撤除（`S-xx`）
 │   ├── 09-docker.md            院方要求以 git clone ＋ Docker 部署（`D-xx`）
 │   ├── 10-first-visit.md       0922 第一次進院紀錄，失敗（`F-xx`，0922 新增）
-│   └── 11-compose.md           容器部署：git clone ＋ docker compose，現行路線（`W-xx`，0926 新增）
+│   ├── 11-compose.md           容器部署：git clone ＋ docker compose，現行路線（`W-xx`，0926 新增）
+│   └── 12-shell.md             外殼 App：主機上建 APK、平板從下載頁安裝（`Y-xx`，0927 新增）
 └── weekly/
     ├── _template.md            新一週的空白範本（底線開頭，不會上站）
     ├── archive.md              歷次週報總表
@@ -2653,7 +2740,7 @@ scripts/
 <tr>
 <td><code>docs/reference/</code></td>
 <td>隨程式碼變動的參考資料</td>
-<td>schema 一改就要跟著更新</td>
+<td>schema 一改就要跟著更新；<code>kiosk-shell-contract.md</code> 是外殼契約的真本，<strong>改它要照它第 9 節：契約版本號加一，與 <code>packages/shared/src/kiosk-shell.ts</code>、<code>services/shell-builder/shell.pin</code> 一起改</strong></td>
 </tr>
 <tr>
 <td><code>docs/notes/</code></td>
@@ -2672,7 +2759,7 @@ scripts/
 </tr>
 <tr>
 <td><code>docs/deployment/</code></td>
-<td>部署手冊：總覽加十一冊，寫「手指要按什麼」（第十冊是進院紀錄，第十一冊是現行路線）</td>
+<td>部署手冊：總覽加十二冊，寫「手指要按什麼」（第十冊是進院紀錄，第十一、十二冊是現行路線）</td>
 <td><strong>規則的真本仍是《部署規範》</strong>，本手冊只寫順序與出錯處置；兩者衝突以部署規範為準。見下方「部署手冊的分冊」</td>
 </tr>
 <tr>
@@ -2731,7 +2818,7 @@ scripts/
   當天的 commit 樹未必等於那週發佈出去的內容。正確做法只有一條——匯入該週發佈出去的版本</li>
 </ul>
 <h3 id="版本歷程的適用範圍">版本歷程的適用範圍<a class="headerlink" href="#版本歷程的適用範圍" title="Permanent link">&para;</a></h3>
-<p>有「版本歷程」表的只有<strong>需求文件（六份）、架構圖、進度報告（兩份）、參考文件（兩份）、<code>notes/</code>（五份）、測試手冊（主手冊與九本分冊）、部署手冊（總覽與十一冊）</strong>這三十八份，改了就要補一列。
+<p>有「版本歷程」表的只有<strong>需求文件（六份）、架構圖、進度報告（兩份）、參考文件（三份）、<code>notes/</code>（五份）、測試手冊（主手冊與十本分冊）、部署手冊（總覽與十二冊）</strong>這四十一份，改了就要補一列。
 以下五種沒有這張表，改了<strong>不補、也不出凍結版</strong>，但一樣要同步：</p>
 <ul>
 <li><code>index.md</code>（狀態靠「本週定版」與修訂中標記表達）</li>
@@ -2808,13 +2895,13 @@ scripts/
   那一列的說明要寫出目前是幾本分冊、共幾項。</li>
 <li>分冊要在 <code>docs-site/mkdocs.yml</code> 的 <code>nav</code>「手動測試」底下補一列。</li>
 <li>分冊末尾要有「版本歷程」表（見上方「版本歷程的適用範圍」），第一次定版前表內沒有列是正常的。</li>
-<li><strong>項次編號跨冊不重複</strong>：主手冊用 <code>a</code>–<code>k</code>，迭代 3 用 <code>l</code>、<code>m</code>，迭代 4 用 <code>n</code>，迭代 5 用 <code>o</code>，迭代 6 用 <code>p</code>，迭代 7 用 <code>q</code>，迭代 8 用 <code>r</code>，迭代 9 用 <code>s</code>，迭代 10 用 <code>t</code>，迭代 11 用 <code>u</code>。
+<li><strong>項次編號跨冊不重複</strong>：主手冊用 <code>a</code>–<code>k</code>，迭代 3 用 <code>l</code>、<code>m</code>，迭代 4 用 <code>n</code>，迭代 5 用 <code>o</code>，迭代 6 用 <code>p</code>，迭代 7 用 <code>q</code>，迭代 8 用 <code>r</code>，迭代 9 用 <code>s</code>，迭代 10 用 <code>t</code>，迭代 11 用 <code>u</code>，迭代 12 用 <code>v</code>。
   新迭代往後接一個沒用過的字母。抽出既有章節時<strong>沿用原編號</strong>，不要重編——那些編號會被寫進週報與驗收紀錄。</li>
 <li>分冊之間互相引用寫相對路徑（<code>iteration-3.md</code>），並在主手冊 §13 的表格補一列。</li>
 <li>開新分冊等於新增一份文件，本頁「目錄結構」樹與「目錄職責」表、HOWTO 的對應段落都要跟著補。</li>
 </ul>
 <h2 id="部署手冊的分冊">部署手冊的分冊<a class="headerlink" href="#部署手冊的分冊" title="Permanent link">&para;</a></h2>
-<p><code>docs/deployment/</code> 是一份總覽加十一冊（0921 起）。總覽放「這本是什麼、三種結果、時程、十一冊索引、
+<p><code>docs/deployment/</code> 是一份總覽加十二冊（0921 起）。總覽放「這本是什麼、三種結果、時程、十二冊索引、
 什麼時候停手」；前六冊各自對應部署流程的一個階段，第七冊是 H-08 分出去的岔路（clone 意外成功），
 第八冊是停手、備份、換版、撤除共用的關服務步驟（總覽第 6 節「把服務停掉」的做法），
 第九冊是容器備案啟用時的另一條路線（院方指定 clone ＋ Docker，取代第四冊 H-08～H-13），
@@ -2823,14 +2910,16 @@ scripts/
 第十一冊是 0926 起的<strong>現行路線</strong>（容器＋<code>git clone</code>，《部署規範》v3.0）；第一、二、七、九冊與第五冊的隨身碟部分成為歷史紀錄，
 <strong>只在開頭標明、不改寫內容</strong>，第四冊的 H-08～H-13 由第十一冊取代。
 <strong>第十一冊的指令與根目錄的 <code>Dockerfile</code>、<code>docker-compose.yml</code>、<code>deploy/hospital.env.example</code> 綁在一起</strong>：
-動了其中任何一份，回頭核對第十一冊的指令、錯誤訊息原文與 0.3 節的實測結果（實測紀錄在演練紀錄第 8 節）。</p>
+動了其中任何一份，回頭核對第十一冊的指令、錯誤訊息原文與 0.3 節的實測結果（實測紀錄在演練紀錄第 8 節）。
+第十二冊（0927）接在第十一冊之後，寫外殼 APK 的建置與平板佈建，取代第三冊的憑證、keystore、APK 與側載部分（第三冊只在開頭標明）。
+<strong>第十二冊的指令與 <code>services/shell-builder/</code> 綁在一起</strong>：動了那裡的腳本或 <code>shell.pin</code>，回頭核對第十二冊的指令、輸出原文與錯誤訊息（實測紀錄在演練紀錄第 9 節）。</p>
 <p>硬性規則：</p>
 <ul>
 <li><strong>首頁只掛總覽那一列</strong>（「我要找…」表最後一列），各冊從總覽的索引進去。理由與測試手冊分冊相同。</li>
 <li>各冊要在 <code>docs-site/mkdocs.yml</code> 的 <code>nav</code>「部署手冊」底下各佔一列。</li>
 <li>每一冊末尾要有「版本歷程」表，第一次定版前表內沒有列是正常的。</li>
 <li><strong>編號自成一套，與測試手冊的 <code>a</code>–<code>t</code> 不共用</strong>：準備 <code>P</code>、演練 <code>R</code>、平板 <code>K</code>、現場 <code>H</code>、
-  攜帶 <code>C</code>、排解 <code>X</code>、clone 岔路 <code>G</code>、關服務 <code>S</code>、Docker 路線 <code>D</code>、進院紀錄 <code>F</code>、容器部署 <code>W</code>。新增一冊往後挑一個沒用過的字母，<strong>既有編號不重編</strong>——
+  攜帶 <code>C</code>、排解 <code>X</code>、clone 岔路 <code>G</code>、關服務 <code>S</code>、Docker 路線 <code>D</code>、進院紀錄 <code>F</code>、容器部署 <code>W</code>、外殼 APK <code>Y</code>。新增一冊往後挑一個沒用過的字母，<strong>既有編號不重編</strong>——
   它們會被寫進部署紀錄與現場筆記。</li>
 <li><strong>規則的真本是《部署規範》</strong>：DEP 條款、部署前置檢查清單（v3.0 起在第 11 章，25 條）一律不在部署手冊裡複製一份，
   只寫編號與「現場怎麼做」。兩邊敘述衝突時以部署規範為準，並回頭修手冊。</li>
@@ -2861,7 +2950,7 @@ scripts/
   它刻意排在需求文件之後、維護連結之前，且表格只有三欄、每份一句話——<strong>不准長成第三張索引表</strong>）</li>
 <li><strong>兩張表的列序照讀者的思考順序固定（2026-09-10 定），不准重排，新增也要插進對的位置</strong>：</li>
 <li>「我要找…」：臨床端進度報告 → 技術端進度報告 → 架構圖 → 資料字典 →
-    這套系統是用什麼蓋的 → 完整手動測試手冊 → 部署手冊
+    這套系統是用什麼蓋的 → 病人端外殼 App 契約 → 完整手動測試手冊 → 部署手冊
     （最後兩列是「動手」的兩份：先驗收，再部署。<strong>分冊都不另占一列</strong>）</li>
 <li>「其他文件」：平板管控：免 MDM 的全院內方案 → 介面設計基準 → 迭代 9.1 修正清單 → 部署演練紀錄 → 部署路線比較。新增的排在表尾即可，這塊沒有閱讀動線</li>
 <li>「需求文件」：FDE 數位化評估報告 → SRS → 資料庫使用規範 → 實作規格書 → 部署規範 →
