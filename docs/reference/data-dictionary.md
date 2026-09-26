@@ -396,7 +396,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
 | `invoked_at` | `TS` | 呼叫時間 | `DEFAULT CURRENT_TIMESTAMP`，有索引 |
 | `provider` | `TEXT` | 用的是哪一種模型供應者：模擬、實驗室 API、院內推論 | 合法值 `mock` / `lab` / `onprem`（`LlmProviderId`）。與 `outcome` 組成複合索引 |
-| `model_id` | `TEXT?` | 用的是哪一個模型 | 取自設定 `LLM_MODEL_ID` 或伺服器回應。⛔ 模型名稱只由設定提供，不寫在程式裡 |
+| `model_id` | `TEXT?` | 用的是哪一個模型 | 以推論端點實際回報的為準；經 AI 閘道時就是閘道 `config.yaml` 的那一個（後端 `LLM_MODEL_ID` 留空，迭代 13）。被擋下的請求沒有送出，此欄可能為空。⛔ 模型名稱只由設定提供，不寫在程式裡 |
 | `purpose` | `TEXT` | 哪一項功能發起的呼叫 | 合法值見 `AiPurpose`：`CONNECTIVITY_TEST`（迭代 3 的連線測試）；迭代 4 的 `EDUCATION_CONTENT`（個人化衛教）、`DISCHARGE_SUMMARY`（離院衛教重點）、`NURSING_RECORD_DRAFT`（護理記錄草擬）、`SOP_ANSWER`（SOP 查詢回答）。每項 AI 功能各登記一個，新增功能時在 `@hd/shared` 補上 |
 | `max_output_tokens` | `INT?` | 輸出長度上限 | 呼叫參數逐項成欄，不以 JSON 承載（6.1） |
 | `temperature_permille` | `INT?` | 取樣溫度 | 以千分位整數記錄（200 代表 0.2），不用浮點數 |

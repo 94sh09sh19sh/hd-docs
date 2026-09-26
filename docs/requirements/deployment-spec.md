@@ -267,6 +267,17 @@ git clone 下來的原始碼（主機上，本系統自己的目錄）
 
 **正式 GPU API 若不是 Ollama**：規範的方法二（OpenAI 相容介面）涵蓋大多數推論伺服器，`config.yaml` 的 `provider` 改成相容介面那一種即可；若連相容介面都不是，改的是閘道的 `llm_factory`，仍然不動後端。
 
+### 5.4 閘道的設定檔放哪裡、怎麼生效（0927，迭代 13）
+
+| 項次 | 規則 |
+|---|---|
+| 院內那一份 | 主機設定目錄底下的 `ai-gateway/config.yaml`，compose 唯讀掛入。範本 `services/ai-gateway/config.hospital.example.yaml`，**位址與模型留空到 Q-07 有答案** |
+| 實驗室那一份 | 實驗室的個人資料夾。範本 `services/ai-gateway/config.example.yaml`。**實際的 `config.yaml` 一律不進 repo**（`.gitignore` 擋著） |
+| 生效方式 | 存檔即生效：閘道每個請求比對檔案的修改時間。**不重新啟動閘道、不重建任何映像檔** |
+| 改壞了 | 不沿用舊設定。閘道回「設定有誤」、`/health` 不通過，後端的健康檢查跟著不通過，AI 總開關開不起來 |
+| 後端這一側 | `LLM_ENDPOINT` 指向閘道；**`LLM_MODEL_ID` 留空**，模型只由 `config.yaml` 決定；`LLM_TIMEOUT_SECONDS` 要比 `config.yaml` 的 `timeout_seconds` 大 |
+| 閘道的映像檔 | 只有程式與鎖定版本的套件，不含設定檔、不含模型；建置時連 Docker Hub、Debian 與 Python 套件來源（Q-32），執行時只連 `config.yaml` 指定的推論端點 |
+
 ---
 
 ## 6. 交付與更新
