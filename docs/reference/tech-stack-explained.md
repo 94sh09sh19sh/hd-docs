@@ -216,6 +216,7 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 0923 | 2026-09-23 | 交付方式由「貨櫃」（容器）改為「離線安裝包」，並寫下 0919 為什麼換做法；AI 推論改為另一台機器，新增「螢幕固定」一詞 |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/reference/tech-stack-explained/) | 2026-09-16 | 改寫到迭代 6，補回 v2.0 之後的變化：資料庫改為 SQLite、AI 改由院內伺服器推論、推播改為 SSE 與常駐總覽螢幕、正式環境改以容器部署 |
 | [0909](https://94sh09sh19sh.github.io/hd-docs/0909/reference/tech-stack-explained/) | 2026-09-09 | 首次定版 |
 

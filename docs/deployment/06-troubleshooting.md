@@ -341,5 +341,6 @@ curl.exe -i http://localhost:<API_PORT>/api/health  # 後端本身活著嗎
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 0923 | 2026-09-23 | 首次定版。院內查不到資料時用的疑難排解：症狀、先查什麼、怎麼處置 |
 
 [← 上一冊 · 帶進去與帶出來](05-carry-in-out.md) · [回部署手冊總覽](index.md) · [下一冊 · 院方要求直接 `git clone` →](07-git-clone.md)

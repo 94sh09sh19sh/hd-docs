@@ -518,6 +518,7 @@ LlmProviderPort（抽象介面）
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 0923 | 2026-09-23 | 新增 0919 三項前提修正：應用主機改為 Windows 工作站、平板免 MDM、院方授權採用預設選項與題庫；7.4 部署形態依主機變更重評，由容器改為離線安裝包，臨床資料來源確定走 API |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/requirements/fde-assessment/) | 2026-09-16 | 改版為 v2.0：SaMD 邊界由整條排除改為有條件納入，選型理由改述為封閉網路與院內地端推論；待確認事項移交《尚待確認事項清冊》，部署相關敘述改指《部署規範》 |
 | [0909](https://94sh09sh19sh.github.io/hd-docs/0909/requirements/fde-assessment/) | 2026-09-09 | 首次定版 |
 

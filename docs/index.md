@@ -1,6 +1,6 @@
 # 血液透析中心平板照護輔助系統 — 進度首頁
 
-**本週定版**：0916｜**0923 修訂中**
+**本週定版**：0923
 
 > 每週三開會日定版一次。下方連結**永遠指向現行版**，網址不變；日期標的是它最後一次定版的週次。
 
@@ -8,7 +8,7 @@
 
 ## 最近三週
 
-### [0923 — 部署前的迭代 7～10 完成，第一次進院失敗](weekly/2026-09-23.md) · 修訂中
+### [0923 — 部署前的迭代 7～10 完成，第一次進院失敗](weekly/2026-09-23.md)
 
 進度：
 
@@ -47,13 +47,13 @@
 
 | 我是 | 看這份 | 本週定版 |
 |---|---|---|
-| 醫師、護理部、法規承辦人 | [臨床端進度報告](reports/progress-clinical.md) | 0916 · 修訂中 |
-| 接手或協作的工程師 | [技術端進度報告](reports/progress-technical.md) | 0916 · 修訂中 |
-| 要看系統實體與邏輯長什麼樣 | [架構圖](requirements/architecture-diagrams.md) | 0916 · 修訂中 |
-| 要查資料庫蒐集了哪些資料 | [資料字典](reference/data-dictionary.md) — 54 張表 529 個欄位逐欄說明 | 0916 · 修訂中 |
-| 沒有技術背景，想聽懂會議上那些詞 | [這套系統是用什麼蓋的](reference/tech-stack-explained.md) | 0916 · 修訂中 |
-| 要動手驗收 | [完整手動測試手冊](testing/manual-test-guide.md) — 主手冊加迭代 3～10 八本分冊，604 項逐條驗證 | 0916 · 修訂中 |
-| 要進醫院部署 | [部署手冊](deployment/index.md) — 總覽加十冊，從開發機準備走到離開醫院，每一步都寫出會怎麼壞、怎麼處理；第十冊是 0922 第一次進院（失敗）的完整紀錄 | 新增 · 修訂中 |
+| 醫師、護理部、法規承辦人 | [臨床端進度報告](reports/progress-clinical.md) | 0923 |
+| 接手或協作的工程師 | [技術端進度報告](reports/progress-technical.md) | 0923 |
+| 要看系統實體與邏輯長什麼樣 | [架構圖](requirements/architecture-diagrams.md) | 0923 |
+| 要查資料庫蒐集了哪些資料 | [資料字典](reference/data-dictionary.md) — 54 張表 529 個欄位逐欄說明 | 0923 |
+| 沒有技術背景，想聽懂會議上那些詞 | [這套系統是用什麼蓋的](reference/tech-stack-explained.md) | 0923 |
+| 要動手驗收 | [完整手動測試手冊](testing/manual-test-guide.md) — 主手冊加迭代 3～10 八本分冊，604 項逐條驗證 | 0923 |
+| 要進醫院部署 | [部署手冊](deployment/index.md) — 總覽加十冊，從開發機準備走到離開醫院，每一步都寫出會怎麼壞、怎麼處理；第十冊是 0922 第一次進院（失敗）的完整紀錄 | 0923 |
 
 ## 需求文件
 
@@ -61,12 +61,12 @@
 
 | 文件 | 角色 | 本週定版 |
 |---|---|---|
-| [FDE 數位化評估報告](requirements/fde-assessment.md) | 背景脈絡與選型理由 | 0916 · 修訂中 |
-| [軟體需求規格書（SRS）](requirements/srs.md) | 功能需求來源（FR 編號出處） | 0916 · 修訂中 |
-| [資料庫使用規範](requirements/database-policy.md) | 資料治理強制規則，優先權等同實作規格書 | 0916 · 修訂中 |
-| [實作規格書](requirements/implementation-spec.md) | 範圍與技術選型，**衝突時以此為準** | 0916 · 修訂中 |
-| [部署規範](requirements/deployment-spec.md) | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 0916 · 修訂中 |
-| [尚待確認事項清冊](requirements/open-questions.md) | 卡住進度的問題總表，其餘文件不再各自維護 | 0916 · 修訂中 |
+| [FDE 數位化評估報告](requirements/fde-assessment.md) | 背景脈絡與選型理由 | 0923 |
+| [軟體需求規格書（SRS）](requirements/srs.md) | 功能需求來源（FR 編號出處） | 0923 |
+| [資料庫使用規範](requirements/database-policy.md) | 資料治理強制規則，優先權等同實作規格書 | 0923 |
+| [實作規格書](requirements/implementation-spec.md) | 範圍與技術選型，**衝突時以此為準** | 0923 |
+| [部署規範](requirements/deployment-spec.md) | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 0923 |
+| [尚待確認事項清冊](requirements/open-questions.md) | 卡住進度的問題總表，其餘文件不再各自維護 | 0923 |
 
 每份文件末尾都有「版本歷程」，記錄歷次定版與異動摘要；要回頭對帳哪一版談定了什麼，從那裡找。
 
@@ -76,11 +76,11 @@
 
 | 文件 | 內容 | 本週定版 |
 |---|---|---|
-| [平板管控：免 MDM 的全院內方案](notes/mdm-offline-plan.md) | 為什麼 SSE 繞不過 MDM；病人端為何選 PWA 裝在自包 WebView 外殼裡，以及部署與日常維運要做哪些事 | 新增 · 修訂中 |
-| [介面設計基準](notes/uiux-design-baseline.md) | 透析病人與透析室護理師是兩個族群，為什麼不能共用一套版面；設計系統與每次改介面都要跑的驗收清單 | 新增 · 修訂中 |
-| [迭代 9.1 修正清單](notes/iteration-9-1-fixes.md) | 迭代 9 實機試用後當場提出的十一項修正：每一項的症狀、查出來的原因、決定怎麼改 | 新增 · 修訂中 |
-| [部署演練紀錄](notes/deployment-drills.md) | 路線 A 的失敗證據、路線 B 的交付流程、更新與回退演練；開發端已完成的部分與部署當天要填的欄位分開列 | 新增 · 修訂中 |
-| [部署路線比較：離線安裝包與容器](notes/deployment-route-comparison.md) | 原本的離線安裝包與院方要求的容器逐項比較；不用容器為什麼也能與同機其他專案隔離，以及要問院方的問題 | 新增 · 修訂中 |
+| [平板管控：免 MDM 的全院內方案](notes/mdm-offline-plan.md) | 為什麼 SSE 繞不過 MDM；病人端為何選 PWA 裝在自包 WebView 外殼裡，以及部署與日常維運要做哪些事 | 0923 |
+| [介面設計基準](notes/uiux-design-baseline.md) | 透析病人與透析室護理師是兩個族群，為什麼不能共用一套版面；設計系統與每次改介面都要跑的驗收清單 | 0923 |
+| [迭代 9.1 修正清單](notes/iteration-9-1-fixes.md) | 迭代 9 實機試用後當場提出的十一項修正：每一項的症狀、查出來的原因、決定怎麼改 | 0923 |
+| [部署演練紀錄](notes/deployment-drills.md) | 路線 A 的失敗證據、路線 B 的交付流程、更新與回退演練；開發端已完成的部分與部署當天要填的欄位分開列 | 0923 |
+| [部署路線比較：離線安裝包與容器](notes/deployment-route-comparison.md) | 原本的離線安裝包與院方要求的容器逐項比較；不用容器為什麼也能與同機其他專案隔離，以及要問院方的問題 | 0923 |
 
 ---
 

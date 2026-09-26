@@ -535,5 +535,6 @@ Test-NetConnection registry.npmjs.org -Port 443
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 0923 | 2026-09-23 | 首次定版。院方要求直接 `git clone` 而且成功時的岔路 |
 
 [← 上一冊 · 現場疑難排解](06-troubleshooting.md) · [回部署手冊總覽](index.md) · [下一冊 · 把服務關乾淨 →](08-shutdown.md)
