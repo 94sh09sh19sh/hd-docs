@@ -2103,6 +2103,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 11 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2452,6 +2480,34 @@
     
   
     第十冊 · 第一次進院紀錄（0922，失敗）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/11-compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十一冊 · 容器部署（現行路線）
   
 
     
@@ -5587,6 +5643,42 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </ul>
 <p><strong>這三項不到齊，安裝包仍然做得出來、演練仍然做得完</strong>（在自己的機器與自己的平板上），差別只在能不能真的進院。<strong>Q-27 與 Q-29 要排在這個迭代開始之前問</strong>，它們的答覆會決定安裝包要打成什麼樣子。</p>
 <h3 id="49-迭代-11部署改為-docker--git-clone0926-新增本週">4.9 迭代 11：部署改為 Docker ＋ git clone（0926 新增，本週）<a class="headerlink" href="#49-迭代-11部署改為-docker--git-clone0926-新增本週" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-26 完成實作與開發機實測。</strong> 驗收六條在開發機上全部走過：從 GitHub 全新 clone、全新資料卷、
+只用 Git 與 Docker 從零部署；<code>verify:iteration11 --live</code> 驗 <code>down -v</code> 之後資料還在、繫結掛載只有兩個、
+正式環境設定拒絕 <code>lab</code>；更新（新 tag、備份並驗證還原、套用一個新遷移）與回退（舊 tag、舊映像檔、還原備份）各一次。
+結果見《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 8 節，步驟見《<a href="../../deployment/">部署手冊</a>》第十一冊，
+手動測試見<a href="../../testing/iteration-11/">迭代 11 分冊</a>（<code>u1</code>–<code>u43</code>）。</p>
+<p><strong>實測抓到兩個缺陷，都只有在容器裡跑才會現形</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>缺陷</th>
+<th>為什麼靜態檢查看不到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db:update</code> 以一次性容器執行時，「服務是否已停」問的是自己的 <code>127.0.0.1</code>，<strong>服務開著也照樣更新</strong></td>
+<td>開發機上本機就是服務所在；只有在另起的容器裡，本機才不是</td>
+</tr>
+<tr>
+<td>還原腳本在映像檔裡跑不起來（它讀 <code>src/</code>，映像檔沒帶）</td>
+<td>開發機上什麼都在</td>
+</tr>
+</tbody>
+</table>
+<p><strong>與原定計畫不同的三處</strong>：</p>
+<ol>
+<li><strong><code>installer-route</code> 已沒有未合入的修正</strong>：0922 之後的容器修正都已在 <code>master</code>，第一項工作只剩刪分支。</li>
+<li><strong><code>check:offline</code> 沒有刪掉，而是改寫</strong>：引擎要經外套、版本要鎖、遷移只准前滾，這幾件在容器裡一樣成立；
+   容器設定另開 <code>check:container</code>，把部署規範裡「compose 不准怎麼寫」逐條變成檢查（0922 的 <code>-v /c:/app</code> 就是它要擋的）。</li>
+<li><strong>設定範本另開一份</strong> <code>deploy/hospital.env.example</code>：根目錄的 <code>.env.example</code> 留給日常開發，兩份各填各的，
+   院內那份只列容器需要的變數，連接埠與版本標籤沒有預設值。</li>
+</ol>
+<p><strong>未完成、且不在本迭代範圍的</strong>：以正式 tag（而不是 patch）再走一次實測；外殼 App（迭代 12）與 AI 閘道（迭代 13）兩項實測；
+斷電重開後服務自己回來（要在院內那台驗，Q-27）。</p>
+</blockquote>
 <p><strong>目標</strong>：照院方條件（容器、git clone、可連出不可連入、不准隨身碟、Administrator 無密碼）把部署做成院內一套指令就走得完的樣子，並撤除安裝包路線。完整規則見《<a href="../deployment-spec/">部署規範</a>》v3.0。</p>
 <table>
 <thead>
@@ -6097,9 +6189,9 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>—</td>
 </tr>
 <tr>
-<td>11</td>
-<td>部署改為 Docker ＋ git clone（0926）</td>
-<td><strong>可以</strong></td>
+<td>~~11~~</td>
+<td>~~部署改為 Docker ＋ git clone（0926）~~</td>
+<td><strong>已完成（0926）</strong>，開發機實測通過</td>
 <td>無；第二次進院需 Q-27、Q-32</td>
 </tr>
 <tr>
@@ -6273,10 +6365,16 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>FR-S10、迭代 9</td>
 </tr>
 <tr>
-<td><strong>離線可部署性盤點</strong></td>
+<td><strong>執行期不下載、遷移只前滾</strong>（原「離線可部署性盤點」）</td>
 <td><code>npm run check:offline</code></td>
-<td>0926 起只留與容器相關的盤點項（引擎版本鎖定、遷移指令防呆、更新入口）；安裝包盤點項撤除</td>
-<td>DEP-30、迭代 7、11</td>
+<td>0926 起只留在容器裡照樣成立的盤點項（Prisma 指令經外套、版本鎖定、遷移指令防呆、更新入口）；安裝包盤點項撤除</td>
+<td>DEP-30、DEP-31、迭代 7、11</td>
+</tr>
+<tr>
+<td><strong>容器設定盤點</strong>（0926 新增）</td>
+<td><code>npm run check:container</code></td>
+<td>compose 與 Dockerfile 有沒有違反部署規範：繫結掛載只准兩個、資料卷 external、專案名稱固定、沒有主機層級權限、不用 <code>env_file</code>、標籤帶版本號、不拉現成映像檔</td>
+<td>DEP-10、DEP-13、DEP-23、DEP-37、DEP-39、迭代 11</td>
 </tr>
 <tr>
 <td><strong>遷移安全盤點</strong></td>
@@ -6285,9 +6383,9 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>規範第 18 條、FR-S12、迭代 7</td>
 </tr>
 <tr>
-<td>四支一起跑</td>
+<td>六支一起跑</td>
 <td><code>npm run check:all</code></td>
-<td>含既有的零院外連線盤點</td>
+<td>含零院外連線盤點（0926 起掃描範圍改為映像檔內容、compose 檔與 AI 閘道）</td>
 <td>—</td>
 </tr>
 </tbody>

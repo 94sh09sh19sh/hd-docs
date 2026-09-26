@@ -1,0 +1,3867 @@
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="需求、進度、參考與測試文件">
+      
+      
+      
+        <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/deployment/11-compose/">
+      
+      
+        <link rel="prev" href="../10-first-visit/">
+      
+      
+        <link rel="next" href="../../weekly/HOWTO/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>第十一冊 · 容器部署（現行路線） - 血液透析中心平板照護輔助系統</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#第十一冊--容器部署git-clone--docker-compose現行路線" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-header__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            血液透析中心平板照護輔助系統
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第十一冊 · 容器部署（現行路線）
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換為深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為淺色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換為淺色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-nav__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    血液透析中心平板照護輔助系統
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    每週紀錄
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0923 — 部署前的迭代 7～10 完成，第一次進院失敗
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0916 — 迭代 3～6 完成，全程留在院內網路
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0909 — Iteration 1＋2 完成、核心流程可完整執行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/archive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    臨床端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    技術端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    需求文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    需求文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/fde-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDE 數位化評估報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/srs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/database-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料庫使用規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/implementation-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    實作規格書
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/deployment-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/open-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    尚待確認事項清冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/architecture-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架構圖
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    參考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    參考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data-dictionary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料字典
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tech-stack-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    這套系統是用什麼蓋的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/mdm-offline-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    平板管控：免 MDM 的全院內方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/uiux-design-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介面設計基準
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/deployment-route-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署路線比較：離線安裝包與容器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手動測試
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    手動測試
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/manual-test-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整手動測試手冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 11 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署手冊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    部署手冊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    總覽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-dev-machine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第一冊 · 開發機準備與安裝包建置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-dry-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二冊 · 開發端的測試部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-tablet-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第三冊 · 平板與外殼 App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-onsite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第四冊 · 進院當天
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-carry-in-out/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第五冊 · 帶進去與帶出來
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第六冊 · 現場疑難排解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-git-clone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第七冊 · 院方要求直接 git clone
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-shutdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第八冊 · 把服務關乾淨
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第九冊 · 院方要求以 git clone ＋ Docker 部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-first-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十冊 · 第一次進院紀錄（0922，失敗）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-先講結論" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 先講結論
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 先講結論">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-這一冊取代哪些" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 這一冊取代哪些
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-東西放在哪裡" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 東西放在哪裡
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-開發機實測結果0926" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 開發機實測結果（0926）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-兩個前提先接受" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.4 兩個前提，先接受
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-進院前在開發端做完" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 進院前（在開發端做完）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 進院前（在開發端做完）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-01-要交的-tag-先在開發機從零實測一次" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-01 要交的 tag 先在開發機從零實測一次
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-02-確認-tag-在-github-上" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-02 確認 tag 在 GitHub 上
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-03-把問題清單寄給資訊室" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-03 把問題清單寄給資訊室
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-主機這一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 主機這一層
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 主機這一層">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-04-確認-git-與-docker-可以用" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-04 確認 Git 與 Docker 可以用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-05-docker-desktop-的設定與防毒排除" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-05 Docker Desktop 的設定與防毒排除
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-06-對外連線實測" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-06 對外連線實測
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-07-連接埠" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-07 連接埠
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-取得程式碼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 取得程式碼
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 取得程式碼">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-08-建立兩個目錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-08 建立兩個目錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-09-產生部署金鑰dep-43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-09 產生部署金鑰（DEP-43）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-10-clone切到-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-10 clone，切到 tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 設定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-11-由範本填-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-11 由範本填 .env
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-12-建立兩個資料卷" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-12 建立兩個資料卷
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-建置與啟動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 建置與啟動
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 建置與啟動">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-13-建置映像檔" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-13 建置映像檔
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-14-套用既有遷移dep-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-14 套用既有遷移（DEP-31）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-15-啟動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-15 啟動
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-16-確認它是對的那一個" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-16 確認它是對的那一個
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-17-備份一次並驗證還原得起來" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-17 備份一次，並驗證還原得起來
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-18-重新開機測試dep-21-第-4-項" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-18 重新開機測試（DEP-21 第 4 項）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-更新與回退" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 更新與回退
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 更新與回退">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-19-更新dep-19七步" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-19 更新（DEP-19，七步）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-20-回退" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-20 回退
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-開發機實測dep-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 開發機實測（DEP-22）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-關服務" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 關服務
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-疑難排解這一冊特有的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 疑難排解（這一冊特有的）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-還沒到的部分" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 還沒到的部分
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    維護流程
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    維護流程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/HOWTO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄維護流程（人用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/AGENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件維護作業指示（agent 用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-先講結論" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 先講結論
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 先講結論">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-這一冊取代哪些" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 這一冊取代哪些
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-東西放在哪裡" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 東西放在哪裡
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-開發機實測結果0926" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 開發機實測結果（0926）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-兩個前提先接受" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.4 兩個前提，先接受
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-進院前在開發端做完" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 進院前（在開發端做完）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 進院前（在開發端做完）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-01-要交的-tag-先在開發機從零實測一次" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-01 要交的 tag 先在開發機從零實測一次
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-02-確認-tag-在-github-上" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-02 確認 tag 在 GitHub 上
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-03-把問題清單寄給資訊室" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-03 把問題清單寄給資訊室
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-主機這一層" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 主機這一層
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 主機這一層">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-04-確認-git-與-docker-可以用" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-04 確認 Git 與 Docker 可以用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-05-docker-desktop-的設定與防毒排除" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-05 Docker Desktop 的設定與防毒排除
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-06-對外連線實測" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-06 對外連線實測
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-07-連接埠" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-07 連接埠
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-取得程式碼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 取得程式碼
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 取得程式碼">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-08-建立兩個目錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-08 建立兩個目錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-09-產生部署金鑰dep-43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-09 產生部署金鑰（DEP-43）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-10-clone切到-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-10 clone，切到 tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 設定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-11-由範本填-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-11 由範本填 .env
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-12-建立兩個資料卷" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-12 建立兩個資料卷
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-建置與啟動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 建置與啟動
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 建置與啟動">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-13-建置映像檔" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-13 建置映像檔
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-14-套用既有遷移dep-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-14 套用既有遷移（DEP-31）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-15-啟動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-15 啟動
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-16-確認它是對的那一個" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-16 確認它是對的那一個
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-17-備份一次並驗證還原得起來" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-17 備份一次，並驗證還原得起來
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-18-重新開機測試dep-21-第-4-項" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-18 重新開機測試（DEP-21 第 4 項）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-更新與回退" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 更新與回退
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 更新與回退">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w-19-更新dep-19七步" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-19 更新（DEP-19，七步）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w-20-回退" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W-20 回退
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-開發機實測dep-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 開發機實測（DEP-22）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-關服務" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 關服務
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-疑難排解這一冊特有的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 疑難排解（這一冊特有的）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-還沒到的部分" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 還沒到的部分
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="第十一冊--容器部署git-clone--docker-compose現行路線">第十一冊 · 容器部署：<code>git clone</code> ＋ <code>docker compose</code>（現行路線）<a class="headerlink" href="#第十一冊--容器部署git-clone--docker-compose現行路線" title="Permanent link">&para;</a></h1>
+<p>版本：v0.1　文件狀態：草案（0926 新增，迭代 11）　編號：<code>W-xx</code>　<strong>這一冊要印出來帶進去</strong></p>
+<blockquote>
+<p><strong>0926 起這是唯一的部署路線。</strong> 院方的條件是：以容器部署、程式以 <code>git clone</code> 取得、
+院內網路連得出去但外面連不進來、<strong>不准用隨身碟</strong>、Administrator 不設密碼（《部署規範》v3.0 第 0.1 節）。
+離線安裝包那條路因此<strong>撤除</strong>，不是降為備案。</p>
+<p>規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》v3.0；這一冊只寫手指要按什麼、每一步會怎麼壞。</p>
+<p>⚠️ <strong>本冊所有指令都在主機的 PowerShell 下。不要自己先開任何容器，也不要自己下 <code>docker run -v</code>、<code>-p</code>。</strong>
+容器一律由 <code>docker compose</code> 依 repo 裡的 <code>docker-compose.yml</code> 產生。
+0922 就是在一個手動開的容器裡照步驟做，還把整顆 C 槽掛了進去（<a href="../10-first-visit/">第十冊</a> F-01、F-02）。</p>
+</blockquote>
+<hr />
+<h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
+<h3 id="01-這一冊取代哪些">0.1 這一冊取代哪些<a class="headerlink" href="#01-這一冊取代哪些" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>冊</th>
+<th>0926 起</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../01-dev-machine/">第一冊</a>（安裝包建置）、<a href="../02-dry-run/">第二冊</a>（乾淨機器演練）、<a href="../05-carry-in-out/">第五冊</a>的隨身碟部分、<a href="../07-git-clone/">第七冊</a>（clone 意外成功）</td>
+<td><strong>歷史紀錄</strong>。它們保護的是一條已經不存在的路線</td>
+</tr>
+<tr>
+<td><a href="../04-onsite/">第四冊</a> H-08～H-13（帶入安裝包、安裝、啟動）</td>
+<td>由本冊 W-08～W-18 取代；第四冊其餘步驟（到場、找人、冒煙測試、交接）照舊</td>
+</tr>
+<tr>
+<td><a href="../09-docker/">第九冊</a>（容器備案）</td>
+<td>由本冊取代。第九冊寫的是「容器是例外」時的做法：建完要關網路、要書面例外、<code>.env</code> 放在 clone 目錄裡——<strong>這三件 v3.0 都不成立了</strong></td>
+</tr>
+<tr>
+<td><a href="../03-tablet-shell/">第三冊</a>（平板與外殼 App）</td>
+<td>照舊，迭代 12 會改成「APK 在院內主機上建置、從下載頁安裝」</td>
+</tr>
+<tr>
+<td><a href="../08-shutdown/">第八冊</a>（把服務關乾淨）</td>
+<td>原則照舊，容器版的指令在本冊第 8 節</td>
+</tr>
+</tbody>
+</table>
+<h3 id="02-東西放在哪裡">0.2 東西放在哪裡<a class="headerlink" href="#02-東西放在哪裡" title="Permanent link">&para;</a></h3>
+<p>主機上替本系統開一個自己的目錄，例如 <code>D:\hd-tablet-care\</code>，底下三個子目錄：</p>
+<table>
+<thead>
+<tr>
+<th>東西</th>
+<th>位置</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始碼</td>
+<td><code>D:\hd-tablet-care\repo\</code>（<code>git clone</code> 下來的）</td>
+<td>建置映像檔用；<strong>更新時還要用</strong></td>
+</tr>
+<tr>
+<td>設定</td>
+<td><code>D:\hd-tablet-care\config\.env</code>（AI 閘道的 <code>config.yaml</code> 之後放在 <code>config\ai-gateway\</code>）</td>
+<td><strong>不在 clone 目錄裡</strong>（DEP-08）：某一次「整個刪掉重新 clone」不能把設定一起刪掉</td>
+</tr>
+<tr>
+<td>備份</td>
+<td><code>D:\hd-tablet-care\backups\</code></td>
+<td>資料卷裡的資料庫唯一看得見的出口，院方的備份軟體從這裡送往另一台機器（DEP-06）</td>
+</tr>
+<tr>
+<td>資料庫</td>
+<td>具名資料卷 <code>hd-tablet-care-data</code></td>
+<td><strong>只能放資料卷，不得是 Windows 目錄</strong>（DEP-23）。檔案總管看不到它是正常的</td>
+</tr>
+<tr>
+<td>CA 與 APK 簽章金鑰</td>
+<td>具名資料卷 <code>hd-tablet-care-keys</code></td>
+<td>私鑰不離開主機（DEP-35，迭代 12 開始用）</td>
+</tr>
+<tr>
+<td>程式</td>
+<td>映像檔 <code>hd-tablet-care:&lt;tag&gt;</code></td>
+<td>標籤就是 git tag，舊版不刪（DEP-19）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>繫結掛載只有 <code>config</code> 與 <code>backups</code> 兩個</strong>（DEP-37 第 3 項），<code>npm run check:container</code> 會在開發端擋住任何第三個。</p>
+<h3 id="03-開發機實測結果0926">0.3 開發機實測結果（0926）<a class="headerlink" href="#03-開發機實測結果0926" title="Permanent link">&para;</a></h3>
+<p>本冊的每一條指令都在開發機上照順序跑過一次：<strong>從 GitHub 全新 clone、全新資料卷、只用 Git 與 Docker</strong>，
+接著走完一次更新（新 tag、備份並驗證還原、套用一個新遷移）與一次回退（舊 tag、舊映像檔、還原備份）。
+每一步的結果在《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 8 節。</p>
+<p>實測抓到兩件事，都已處理：</p>
+<table>
+<thead>
+<tr>
+<th>問題</th>
+<th>不處理會怎樣</th>
+<th>處理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db:update</code> 以一次性容器執行時，「服務是不是還開著」問的是它自己</td>
+<td>服務沒停也照樣更新——<strong>備份與遷移之間的寫入會補不回來</strong></td>
+<td>compose 給它 <code>UPDATE_PROBE_URL=http://api:3000/api/health</code>，改問正在跑的 <code>api</code>；實測服務開著時確實拒絕</td>
+</tr>
+<tr>
+<td>還原腳本在映像檔裡跑不起來</td>
+<td>回退時沒有工具可以把備份放回資料卷</td>
+<td>映像檔一併帶入還原腳本需要的原始碼與設定</td>
+</tr>
+</tbody>
+</table>
+<p><strong>開發機驗不到、要在院內那台驗的</strong>：主機的 Docker 版本與資料位置、登記過的連接埠、
+斷電重開後 Docker Desktop 會不會自己起來（DEP-21 第 4 項）、防毒排除（Q-27）。</p>
+<h3 id="04-兩個前提先接受">0.4 兩個前提，先接受<a class="headerlink" href="#04-兩個前提先接受" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>前提</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>連得出去，不等於資料可以出去</strong>（DEP-14）</td>
+<td>部署與更新要連 GitHub、Docker Hub、npm、Prisma、Debian 套件來源；執行期零院外連線由程式擋，<strong>建置階段不掛任何資料卷</strong></td>
+</tr>
+<tr>
+<td><strong>能登入這台主機的人一律可信任</strong>（DEP-38）</td>
+<td>院方決定 Administrator 不設密碼。本系統不在作業系統層級另設防線；這一條要寫進交接文件，日後帳號政策改變要重新評估</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1-進院前在開發端做完">1. 進院前（在開發端做完）<a class="headerlink" href="#1-進院前在開發端做完" title="Permanent link">&para;</a></h2>
+<h3 id="w-01-要交的-tag-先在開發機從零實測一次">W-01 要交的 tag 先在開發機從零實測一次<a class="headerlink" href="#w-01-要交的-tag-先在開發機從零實測一次" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong>：照本冊第 7 節走完整一輪（DEP-22）。<strong>任一項不過，tag 不得交出去。</strong></p>
+<p><strong>怎麼知道成功了</strong>：演練紀錄第 8 節每一格都填了，而且沒有 ✗。</p>
+<hr />
+<h3 id="w-02-確認-tag-在-github-上">W-02 確認 tag 在 GitHub 上<a class="headerlink" href="#w-02-確認-tag-在-github-上" title="Permanent link">&para;</a></h3>
+<p>0922 院方 clone 到的 <code>master</code> 不是開發端以為的那一版（<a href="../10-first-visit/">F-04</a>）。<strong>部署一律 checkout tag，不部署分支</strong>（DEP-44）。</p>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">git</span> <span class="n">ls-remote</span> <span class="p">-</span><span class="n">-tags</span> <span class="n">origin</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：要交的 tag 出現在清單裡，而且指向的 commit 與開發機實測的那一個相同（<code>git rev-parse &lt;tag&gt;</code>）。</p>
+<hr />
+<h3 id="w-03-把問題清單寄給資訊室">W-03 把問題清單寄給資訊室<a class="headerlink" href="#w-03-把問題清單寄給資訊室" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong>：至少一週前寄出，答覆寫進演練紀錄。</p>
+<table>
+<thead>
+<tr>
+<th>問題</th>
+<th>對應</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主機的 Docker Desktop 與 Compose 版本？可以不升級就用嗎？</td>
+<td>DEP-04、Q-27</td>
+</tr>
+<tr>
+<td>Docker 的資料（WSL2 虛擬磁碟）在哪顆磁碟？剩多少空間？能加入防毒排除嗎？</td>
+<td>DEP-21、DEP-37 第 5 項</td>
+</tr>
+<tr>
+<td>要給本系統哪三個連接埠？（現場看過 3000 已被佔用）</td>
+<td>DEP-37 第 2 項、<a href="../10-first-visit/">F-17</a></td>
+</tr>
+<tr>
+<td><strong>斷電之後誰開機、誰登入？有 UPS 嗎？</strong> Docker Desktop 要有人登入才會起來</td>
+<td>DEP-21 第 4 項、<a href="../10-first-visit/">F-18、F-19</a></td>
+</tr>
+<tr>
+<td>主機上有沒有 RAM 磁碟？（有的話不得放任何資料）</td>
+<td><a href="../10-first-visit/">F-18</a></td>
+</tr>
+<tr>
+<td>GitHub、Docker Hub、npm、Prisma 引擎、Debian 套件來源是不是常態連得到？經不經代理？</td>
+<td>Q-32</td>
+</tr>
+<tr>
+<td>備份目錄的內容由誰、多久送往另一台機器一次？</td>
+<td>DEP-06</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-主機這一層">2. 主機這一層<a class="headerlink" href="#2-主機這一層" title="Permanent link">&para;</a></h2>
+<h3 id="w-04-確認-git-與-docker-可以用">W-04 確認 Git 與 Docker 可以用<a class="headerlink" href="#w-04-確認-git-與-docker-可以用" title="Permanent link">&para;</a></h3>
+<p><strong>本系統對主機的要求只有這兩樣</strong>（DEP-04）。不要求、也不准自己裝 Node.js、Python 或 Android SDK。</p>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">git</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">docker</span> <span class="n">version</span>
+<span class="n">docker</span> <span class="n">info</span> <span class="p">-</span><span class="n">-format</span> <span class="s2">"{{.ServerVersion}} {{.OSType}} {{.Architecture}}"</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="n">version</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>應該看到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git --version</code></td>
+<td>有版本號</td>
+</tr>
+<tr>
+<td><code>docker version</code></td>
+<td>Client 與 Server 兩段都有版本號</td>
+</tr>
+<tr>
+<td><code>docker info</code></td>
+<td><code>&lt;版本&gt; linux x86_64</code>（<strong>一定要是 <code>linux</code></strong>）</td>
+</tr>
+<tr>
+<td><code>docker compose version</code></td>
+<td><strong>v2 以上</strong>（0922 現場是 <code>v5.1.1</code>，是對的；<a href="../10-first-visit/">F-15</a>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>可能怎麼壞、怎麼處理</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine</code></td>
+<td>Docker Desktop 沒在跑</td>
+<td>從開始選單開 Docker Desktop，等它變綠再重試。<strong>記下來：斷電重開沒人登入時就是這樣</strong></td>
+</tr>
+<tr>
+<td><code>OSType</code> 是 <code>windows</code></td>
+<td>切到了 Windows 容器模式</td>
+<td>系統匣 Docker 圖示按右鍵 → Switch to Linux containers</td>
+</tr>
+<tr>
+<td><code>git</code> 找不到</td>
+<td>主機沒裝 Git</td>
+<td>問資訊室。<strong>不要自己裝</strong>，那是院方的變更流程</td>
+</tr>
+<tr>
+<td>只有 <code>docker-compose</code>（有連字號）能用</td>
+<td>舊版 Compose v1</td>
+<td>請資訊室處理。v1 不支援本系統用的 <code>name:</code>、<code>profiles</code>、外部資料卷寫法</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-05-docker-desktop-的設定與防毒排除">W-05 Docker Desktop 的設定與防毒排除<a class="headerlink" href="#w-05-docker-desktop-的設定與防毒排除" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong>：開 Docker Desktop → Settings，逐項看，<strong>同機有別的專案在用時只看不改</strong>，改動要先知會資訊室（DEP-21 最後一段）。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>位置</th>
+<th>應該是</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>General → Start Docker Desktop when you sign in</td>
+<td>勾</td>
+<td>否則連有人登入都不會啟動</td>
+</tr>
+<tr>
+<td>2</td>
+<td>General → Send usage statistics</td>
+<td>不勾</td>
+<td>院外連線（FR-S07）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Software updates → Automatically check for updates</td>
+<td>不勾</td>
+<td>更新 Docker 是院方的變更。<strong>從 Microsoft Store 裝的</strong>，這一項改由市集的自動更新決定，要到市集設定看（<a href="../10-first-visit/">F-16</a>）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Resources → Advanced → Disk image location</td>
+<td>記下路徑</td>
+<td>防毒排除要排的就是這個目錄</td>
+</tr>
+</tbody>
+</table>
+<p>然後請資訊室把第 4 項那個目錄加入防毒排除清單（DEP-21 第 1 項）。</p>
+<p><strong>怎麼知道成功了</strong>：四項抄進演練紀錄；防毒排除清單裡看得到那個目錄。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>設定是灰的</td>
+<td>院方以管理原則鎖住，記下來，由資訊室決定</td>
+</tr>
+<tr>
+<td>資訊室不肯排除整個虛擬磁碟目錄</td>
+<td>談到有結果。即時掃描正在被寫入的虛擬磁碟，會造成間歇性的鎖定與變慢</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-06-對外連線實測">W-06 對外連線實測<a class="headerlink" href="#w-06-對外連線實測" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">Test-NetConnection</span> <span class="n">github</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">443</span>
+<span class="nb">Test-NetConnection</span> <span class="n">registry</span><span class="p">-</span><span class="n">1</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">io</span> <span class="n">-Port</span> <span class="n">443</span>
+<span class="nb">Test-NetConnection</span> <span class="n">auth</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">io</span> <span class="n">-Port</span> <span class="n">443</span>
+<span class="nb">Test-NetConnection</span> <span class="n">production</span><span class="p">.</span><span class="n">cloudflare</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">443</span>
+<span class="nb">Test-NetConnection</span> <span class="n">deb</span><span class="p">.</span><span class="n">debian</span><span class="p">.</span><span class="n">org</span> <span class="n">-Port</span> <span class="n">80</span>
+<span class="nb">Test-NetConnection</span> <span class="n">registry</span><span class="p">.</span><span class="n">npmjs</span><span class="p">.</span><span class="n">org</span> <span class="n">-Port</span> <span class="n">443</span>
+<span class="nb">Test-NetConnection</span> <span class="n">binaries</span><span class="p">.</span><span class="n">prisma</span><span class="p">.</span><span class="n">sh</span> <span class="n">-Port</span> <span class="n">443</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>網域</th>
+<th>誰要用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>github.com</code></td>
+<td><code>git clone</code>、<code>git fetch</code>（走 SSH 時另測 <code>Test-NetConnection github.com -Port 22</code>）</td>
+</tr>
+<tr>
+<td><code>registry-1.docker.io</code>、<code>auth.docker.io</code>、<code>production.cloudflare.docker.com</code></td>
+<td>下載基底映像 <code>node:20-bookworm-slim</code></td>
+</tr>
+<tr>
+<td><code>deb.debian.org</code>（<strong>埠 80</strong>）</td>
+<td>建置時安裝 <code>openssl</code></td>
+</tr>
+<tr>
+<td><code>registry.npmjs.org</code></td>
+<td><code>npm ci</code></td>
+</tr>
+<tr>
+<td><code>binaries.prisma.sh</code></td>
+<td>Prisma 引擎（只在建置時）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>怎麼知道成功了</strong>：全部 <code>TcpTestSucceeded : True</code>。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>經代理伺服器，<code>Test-NetConnection</code> 是 <code>False</code></td>
+<td>改用 <code>curl.exe -I https://registry.npmjs.org</code> 測；Docker 另外要在 Settings → Resources → Proxies 設代理</td>
+</tr>
+<tr>
+<td>22 不通、443 通</td>
+<td>部署金鑰改走 443：<code>~/.ssh/config</code> 的 <code>HostName</code> 改成 <code>ssh.github.com</code>、加 <code>Port 443</code></td>
+</tr>
+<tr>
+<td>有幾個不通</td>
+<td>補齊再往下。建到一半才失敗更浪費時間</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-07-連接埠">W-07 連接埠<a class="headerlink" href="#w-07-連接埠" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-NetTCPConnection</span> <span class="n">-State</span> <span class="n">Listen</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">LocalPort</span> <span class="n">-in</span> <span class="n">3000</span><span class="p">,</span><span class="n">8080</span><span class="p">,</span><span class="n">8081</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">LocalPort</span><span class="p">,</span> <span class="n">OwningProcess</span>
+</code></pre></div>
+<p>把資訊室給的三個埠（後端、護理端、病人端）也照這樣查一次。</p>
+<p><strong>怎麼知道成功了</strong>：要用的三個埠查不到任何結果。</p>
+<p><strong>可能怎麼壞</strong>：查到了——那個埠有人在用（0922 的 3000 就是）。換一個，<strong>並回報資訊室登記</strong>。
+<strong>不要自己下 <code>-p</code> 把埠對到別的地方</strong>（<a href="../10-first-visit/">F-03</a>、<a href="../10-first-visit/">F-17</a>），埠只寫在 <code>.env</code> 裡（W-11）。</p>
+<hr />
+<h2 id="3-取得程式碼">3. 取得程式碼<a class="headerlink" href="#3-取得程式碼" title="Permanent link">&para;</a></h2>
+<h3 id="w-08-建立兩個目錄">W-08 建立兩個目錄<a class="headerlink" href="#w-08-建立兩個目錄" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">config</span><span class="p">,</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">backups</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+</code></pre></div>
+<p><code>repo</code> 不先建，由 W-10 的 clone 產生。</p>
+<p><strong>不可以放的地方</strong>：雲端同步資料夾、網路磁碟機代號、RAM 磁碟、<code>C:\Users\&lt;帳號&gt;\</code> 底下的桌面／文件／下載（DEP-21 第 2 項、DEP-37）。</p>
+<hr />
+<h3 id="w-09-產生部署金鑰dep-43">W-09 產生部署金鑰（DEP-43）<a class="headerlink" href="#w-09-產生部署金鑰dep-43" title="Permanent link">&para;</a></h3>
+<p>私鑰在主機上產生、不離開主機；<strong>只有公鑰</strong>交給 repo 管理者登記。0922 那種臨時建立、事後要記得刪的個人權杖不再需要。</p>
+<p><strong>做什麼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
+<span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">pub</span>
+</code></pre></div>
+<p>把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。
+外殼 App 的 repo 另產生一把（迭代 12；一把部署金鑰只能對應一個 repo）。</p>
+<p>再在 <code>$HOME\.ssh\config</code> 加一段，讓這把金鑰只用在這個 repo：</p>
+<div class="highlight"><pre><span></span><code>Host github-hd-tablet-care
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/hd-tablet-care
+    IdentitiesOnly yes
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">ssh</span> <span class="n">-T</span> <span class="n">github-hd-tablet-care</span>
+</code></pre></div>
+<p>看到 <code>Hi &lt;帳號&gt;/hd-tablet-care! You've successfully authenticated, but GitHub does not provide shell access.</code></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey)</code></td>
+<td>公鑰還沒登記，或登記到別的 repo</td>
+</tr>
+<tr>
+<td><code>ssh-keygen</code> 找不到</td>
+<td>Windows 的 OpenSSH Client 選用功能沒裝。問資訊室</td>
+</tr>
+<tr>
+<td>第一次連線問 <code>Are you sure you want to continue connecting</code></td>
+<td>核對顯示的指紋是 GitHub 公布的那一組再回答 <code>yes</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-10-clone切到-tag">W-10 clone，切到 tag<a class="headerlink" href="#w-10-clone切到-tag" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nv">@github</span><span class="n">-hd-tablet-care</span><span class="p">:</span><span class="n">94sh09sh19sh</span><span class="p">/</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">git</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">repo</span>
+<span class="nb">cd </span><span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">repo</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;</span>
+<span class="n">git</span> <span class="n">describe</span> <span class="p">-</span><span class="n">-tags</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：<code>git describe --tags</code> 印出的正是交付的 tag，不帶 <code>-g&lt;雜湊&gt;</code> 尾巴。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HEAD is now at …</code> 之後出現 detached HEAD 的說明</td>
+<td>正常。部署本來就不在分支上（DEP-44）</td>
+</tr>
+<tr>
+<td><code>error: pathspec '&lt;tag&gt;' did not match</code></td>
+<td>tag 沒推上去，回 W-02</td>
+</tr>
+</tbody>
+</table>
+<p><strong>之後本冊每一條 docker 指令都在 <code>D:\hd-tablet-care\repo</code> 底下下。</strong></p>
+<hr />
+<h2 id="4-設定">4. 設定<a class="headerlink" href="#4-設定" title="Permanent link">&para;</a></h2>
+<h3 id="w-11-由範本填-env">W-11 由範本填 <code>.env</code><a class="headerlink" href="#w-11-由範本填-env" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">Copy-Item</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">repo</span><span class="p">\</span><span class="n">deploy</span><span class="p">\</span><span class="n">hospital</span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">example</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">config</span><span class="p">\.</span><span class="n">env</span>
+<span class="n">notepad</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">config</span><span class="p">\.</span><span class="n">env</span>
+</code></pre></div>
+<p>範本裡每一項都有說明。必填的：</p>
+<table>
+<thead>
+<tr>
+<th>變數</th>
+<th>填什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HD_IMAGE_TAG</code></td>
+<td>與 W-10 的 tag 相同</td>
+</tr>
+<tr>
+<td><code>HD_BACKUP_DIR</code>、<code>HD_CONFIG_DIR</code></td>
+<td><code>D:\hd-tablet-care\backups</code>、<code>D:\hd-tablet-care\config</code></td>
+</tr>
+<tr>
+<td><code>HD_API_PORT</code>、<code>HD_NURSE_PORT</code>、<code>HD_PATIENT_PORT</code></td>
+<td>W-07 確認過的三個埠</td>
+</tr>
+<tr>
+<td><code>HD_PUBLIC_API_URL</code></td>
+<td>平板與護理站連得到的後端位址，例如 <code>http://&lt;主機名稱&gt;:&lt;後端埠&gt;</code>。<strong>建置時寫進產物</strong>（DEP-39）</td>
+</tr>
+<tr>
+<td><code>CORS_ORIGINS</code>、<code>MDM_KIOSK_BASE_URL</code></td>
+<td>護理端、病人端的實際位址</td>
+</tr>
+<tr>
+<td><code>JWT_SECRET</code></td>
+<td>範本裡有不需要 Node.js 的產生指令</td>
+</tr>
+<tr>
+<td><code>SUPER_ADMIN_*</code></td>
+<td>第一個最高權限帳號，首次登入強制改密碼</td>
+</tr>
+</tbody>
+</table>
+<p><code>LLM_PROVIDER</code> 維持 <code>mock</code>。<strong>填 <code>lab</code> 後端會拒絕啟動</strong>（DEP-40），那是刻意的。</p>
+<p>為了少打字，之後每次開 PowerShell 先設一個變數：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$cfg</span> <span class="p">=</span> <span class="s2">"D:\hd-tablet-care\config\.env"</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">config</span> <span class="p">-</span><span class="n">-quiet</span>
+</code></pre></div>
+<p>沒有任何輸出就是對的。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>required variable HD_... is missing a value: 請設定 …</code></td>
+<td>冒號後面就是要填什麼，補上</td>
+</tr>
+<tr>
+<td><code>couldn't find env file</code></td>
+<td><code>$cfg</code> 路徑打錯，或這個 PowerShell 視窗還沒設 <code>$cfg</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-12-建立兩個資料卷">W-12 建立兩個資料卷<a class="headerlink" href="#w-12-建立兩個資料卷" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">volume</span> <span class="n">create</span> <span class="n">hd-tablet-care-data</span>
+<span class="n">docker</span> <span class="n">volume</span> <span class="n">create</span> <span class="n">hd-tablet-care-keys</span>
+</code></pre></div>
+<p><strong>只在第一次部署時做。</strong> 兩個都標成 external，compose 不會建立、<code>docker compose down -v</code> 也刪不掉它們（部署規範 3.3）。</p>
+<p><strong>怎麼知道成功了</strong>：<code>docker volume ls</code> 看得到兩個名字。</p>
+<hr />
+<h2 id="5-建置與啟動">5. 建置與啟動<a class="headerlink" href="#5-建置與啟動" title="Permanent link">&para;</a></h2>
+<h3 id="w-13-建置映像檔">W-13 建置映像檔<a class="headerlink" href="#w-13-建置映像檔" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">build</span>
+</code></pre></div>
+<p>第一次要下載基底映像與套件，約十分鐘。</p>
+<p><strong>怎麼知道成功了</strong>：最後一行 <code>Image hd-tablet-care:&lt;tag&gt; Built</code>；<code>docker images hd-tablet-care</code> 看得到這個標籤。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>failed to resolve source metadata for docker.io/library/node</code></td>
+<td>連不到 Docker Hub</td>
+<td>回 W-06</td>
+</tr>
+<tr>
+<td><code>npm error code ETIMEDOUT</code> 或 <code>ECONNRESET</code></td>
+<td>連 npm 不穩</td>
+<td>再跑一次；已經下載的層會沿用</td>
+</tr>
+<tr>
+<td><code>pull access denied for hd-tablet-care</code></td>
+<td>下的是 <code>up</code> 而不是 <code>build</code></td>
+<td>先 <code>build</code>。本系統的映像檔一律就地建置，不從任何地方拉（DEP-39）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-14-套用既有遷移dep-31">W-14 套用既有遷移（DEP-31）<a class="headerlink" href="#w-14-套用既有遷移dep-31" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="n">prisma-cli</span><span class="p">.</span><span class="n">mjs</span> <span class="n">migrate</span> <span class="n">deploy</span> <span class="p">-</span><span class="n">-schema</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">prisma</span><span class="p">/</span><span class="n">schema</span><span class="p">.</span><span class="n">prisma</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：最後一行 <code>All migrations have been successfully applied.</code></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SQLite database hd.db created at file:/data/hd.db</code></td>
+<td>第一次部署時正常</td>
+</tr>
+<tr>
+<td>任何提到 <code>binaries.prisma.sh</code> 的錯誤</td>
+<td>映像檔建壞了（引擎沒在建置時取得）。重建，<strong>不要在執行期開網路讓它下載</strong>（DEP-30）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-15-啟動">W-15 啟動<a class="headerlink" href="#w-15-啟動" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">up</span> <span class="n">-d</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="nb">ps</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：<code>api</code>、<code>nurse-web</code>、<code>patient-web</code> 三個都是 <code>Up</code>；<code>ai-gateway</code> 與 <code>shell-builder</code> <strong>不在清單上是對的</strong>（它們在 <code>ai</code>、<code>shell</code> 兩個設定檔裡，預設不啟動）。</p>
+<hr />
+<h3 id="w-16-確認它是對的那一個">W-16 確認它是對的那一個<a class="headerlink" href="#w-16-確認它是對的那一個" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">http</span><span class="p">://</span><span class="n">localhost</span><span class="p">:&lt;</span><span class="n">後端埠</span><span class="p">&gt;/</span><span class="n">api</span><span class="p">/</span><span class="n">health</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">logs</span> <span class="n">api</span> <span class="p">-</span><span class="n">-tail</span> <span class="n">30</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong></p>
+<table>
+<thead>
+<tr>
+<th>看什麼</th>
+<th>應該是</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>health</td>
+<td><code>{"status":"ok",…}</code></td>
+</tr>
+<tr>
+<td>日誌 <code>已連線至 SQLite</code> 那一行</td>
+<td><code>journal_mode=WAL、foreign_keys=ON、busy_timeout=5000ms、synchronous=FULL</code></td>
+</tr>
+<tr>
+<td>日誌 <code>版本標記</code></td>
+<td>後面寫著 <code>（正式環境設定）</code></td>
+</tr>
+<tr>
+<td>日誌 <code>伺服器時區</code></td>
+<td><code>Asia/Taipei</code>，現在時間正確</td>
+</tr>
+<tr>
+<td>護理站瀏覽器開 <code>http://&lt;主機名稱&gt;:&lt;護理端埠&gt;</code></td>
+<td>出現登入頁，用 <code>SUPER_ADMIN_*</code> 登入後被要求改密碼</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>護理站開得了頁面，登入時轉圈後失敗</td>
+<td><code>HD_PUBLIC_API_URL</code> 或 <code>CORS_ORIGINS</code> 寫錯</td>
+<td>改 <code>.env</code>，<strong><code>HD_PUBLIC_API_URL</code> 改了要重新 build</strong>（寫在產物裡），<code>CORS_ORIGINS</code> 只要 <code>up -d</code></td>
+</tr>
+<tr>
+<td><code>api</code> 一直 Restarting</td>
+<td>設定被後端拒絕</td>
+<td><code>logs api</code> 最後幾行會說哪一條（時區、連接埠、<code>lab</code>…），照訊息改</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-17-備份一次並驗證還原得起來">W-17 備份一次，並驗證還原得起來<a class="headerlink" href="#w-17-備份一次並驗證還原得起來" title="Permanent link">&para;</a></h3>
+<p>「有備份」和「備份能用」是兩件事（規範 8.1）。</p>
+<p><strong>做什麼</strong></p>
+<ol>
+<li>護理端 <strong>系統管理</strong> 按「立即備份」，記下檔名與 SHA-256</li>
+<li>還原到資料卷裡的一個測試檔，跑完整性檢查，再刪掉：</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node_modules</span><span class="p">/.</span><span class="n">bin</span><span class="p">/</span><span class="n">ts-node</span> <span class="p">-</span><span class="n">-project</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">tsconfig</span><span class="p">.</span><span class="n">json</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="nb">restore-backup</span><span class="p">.</span><span class="n">ts</span> <span class="p">-</span><span class="n">-from</span> <span class="p">/</span><span class="n">backups</span><span class="p">/&lt;</span><span class="n">檔名</span><span class="p">&gt;</span> <span class="p">-</span><span class="n">-to</span> <span class="p">/</span><span class="n">data</span><span class="p">/</span><span class="nb">restore-check</span><span class="p">.</span><span class="n">db</span> <span class="p">-</span><span class="n">-sha256</span> <span class="p">&lt;</span><span class="n">雜湊</span><span class="p">&gt;</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="p">-</span><span class="n">-entrypoint</span> <span class="nb">rm </span><span class="n">api</span> <span class="p">/</span><span class="n">data</span><span class="p">/</span><span class="nb">restore-check</span><span class="p">.</span><span class="n">db</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：<code>✓ 與備份歷程上的紀錄相符</code>、<code>完整性檢查：ok</code>；<code>D:\hd-tablet-care\backups\</code> 裡看得到那個檔。</p>
+<hr />
+<h3 id="w-18-重新開機測試dep-21-第-4-項">W-18 重新開機測試（DEP-21 第 4 項）<a class="headerlink" href="#w-18-重新開機測試dep-21-第-4-項" title="Permanent link">&para;</a></h3>
+<p><strong>這一條決定這條路線在院內能不能用。</strong> <code>restart: unless-stopped</code> 只管 Docker 起來之後；Docker Desktop 是隨使用者登入啟動的程式，<strong>沒人登入，容器就不會起來</strong>。</p>
+<p><strong>做什麼</strong>：重新開機 → 照院方平常的方式登入（或不登入，看院方答覆）→ 等三分鐘 → <code>docker compose --env-file $cfg ps</code> 與 W-16 的 health。</p>
+<p><strong>怎麼知道成功了</strong>：三個服務自己回到 <code>Up</code>，health 正常，<strong>中間沒有人手動開 Docker Desktop</strong>。</p>
+<p><strong>沒過的話</strong>：記下實況（有沒有自動登入、Docker Desktop 有沒有起來），這是 Q-27 要談的事，不在現場硬改院方的登入設定。</p>
+<hr />
+<h2 id="6-更新與回退">6. 更新與回退<a class="headerlink" href="#6-更新與回退" title="Permanent link">&para;</a></h2>
+<h3 id="w-19-更新dep-19七步">W-19 更新（DEP-19，七步）<a class="headerlink" href="#w-19-更新dep-19七步" title="Permanent link">&para;</a></h3>
+<p><strong>排在非透析時段，更新後第一個班次要有人在</strong>（DEP-32）。</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">repo</span>
+<span class="n">git</span> <span class="n">fetch</span> <span class="p">-</span><span class="n">-tags</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="p">&lt;</span><span class="n">新</span> <span class="n">tag</span><span class="p">&gt;</span>
+<span class="n">git</span> <span class="n">describe</span> <span class="p">-</span><span class="n">-tags</span>
+</code></pre></div>
+<p>把 <code>.env</code> 的 <code>HD_IMAGE_TAG</code> 改成新 tag，然後：</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">build</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">stop</span> <span class="n">api</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="n">db-update</span><span class="p">.</span><span class="n">mjs</span> <span class="p">-</span><span class="n">-note</span> <span class="s2">"&lt;舊 tag&gt; → &lt;新 tag&gt;"</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">up</span> <span class="n">-d</span>
+</code></pre></div>
+<p><code>db-update.mjs</code> 一次做完四件事：確認 <code>api</code> 已停、更新前備份、<strong>驗證備份還原得起來</strong>、套用遷移，並寫進更新紀錄與稽核軌跡（規範 18.4）。任何一關沒過就停，資料庫不會被動到。</p>
+<p><strong>怎麼知道成功了</strong>：輸出最後是 <code>更新完成</code>；W-16 各項正常；護理端 <strong>系統管理</strong> 的「版本更新紀錄」多一筆；兩個 tag 記在稽核軌跡的說明裡（<code>--note</code>）。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>更新中止：後端服務還在執行</code></td>
+<td>上一行的 <code>stop api</code> 沒做或沒成功。<strong>不要加 <code>--allow-running</code></strong>，那是演練用的</td>
+</tr>
+<tr>
+<td><code>更新中止：備份目的地可用空間 …不足</code></td>
+<td>主機共用，先查是誰佔掉空間（DEP-37）</td>
+</tr>
+<tr>
+<td><strong>舊的映像檔</strong></td>
+<td><strong>不要刪</strong>。新版穩定之前，那是唯一回得去的東西</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="w-20-回退">W-20 回退<a class="headerlink" href="#w-20-回退" title="Permanent link">&para;</a></h3>
+<p>程式可以退版，<strong>資料庫不能把遷移倒回去</strong>（規範 18.3、FR-S12）。這一版動過 schema 時，回退等於「舊程式＋更新前那份備份」，<strong>更新之後寫進去的資料會一起消失</strong>——所以才要在累積新資料之前決定。</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">repo</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="p">&lt;</span><span class="n">舊</span> <span class="n">tag</span><span class="p">&gt;</span>
+</code></pre></div>
+<p><code>.env</code> 的 <code>HD_IMAGE_TAG</code> 改回舊 tag（舊映像檔還在，不必重建），然後：</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">stop</span> <span class="n">api</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="p">-</span><span class="n">-entrypoint</span> <span class="n">sh</span> <span class="n">api</span> <span class="n">-c</span> <span class="s2">"mkdir -p /data/before-rollback &amp;&amp; mv /data/hd.db /data/hd.db-wal /data/hd.db-shm /data/before-rollback/ 2&gt;/dev/null; ls -l /data/before-rollback"</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node_modules</span><span class="p">/.</span><span class="n">bin</span><span class="p">/</span><span class="n">ts-node</span> <span class="p">-</span><span class="n">-project</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">tsconfig</span><span class="p">.</span><span class="n">json</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="nb">restore-backup</span><span class="p">.</span><span class="n">ts</span> <span class="p">-</span><span class="n">-from</span> <span class="p">/</span><span class="n">backups</span><span class="p">/&lt;</span><span class="n">hd-before-update</span><span class="p">-</span><span class="err">…</span><span class="p">&gt;.</span><span class="n">db</span> <span class="p">-</span><span class="n">-to</span> <span class="p">/</span><span class="n">data</span><span class="p">/</span><span class="n">hd</span><span class="p">.</span><span class="n">db</span> <span class="p">-</span><span class="n">-sha256</span> <span class="p">&lt;</span><span class="n">雜湊</span><span class="p">&gt;</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">up</span> <span class="n">-d</span>
+</code></pre></div>
+<p>備份檔名與雜湊在 W-19 <code>db-update</code> 輸出的第 3 步，也在更新紀錄裡。</p>
+<p><strong>怎麼知道成功了</strong>：還原輸出 <code>完整性檢查：ok</code>、<code>還原的就是 DATABASE_URL 指向的正本</code>；<code>ps</code> 裡三個服務的映像檔標籤是舊 tag；護理端的版本標記是舊版。</p>
+<p>移到 <code>/data/before-rollback/</code> 的那份<strong>先留著</strong>，確定不需要再刪（<code>docker compose --env-file $cfg run --rm --no-deps --entrypoint rm api -r /data/before-rollback</code>）。</p>
+<hr />
+<h2 id="7-開發機實測dep-22">7. 開發機實測（DEP-22）<a class="headerlink" href="#7-開發機實測dep-22" title="Permanent link">&para;</a></h2>
+<p><strong>每一個要交給院方的 tag，都先在開發機上照本冊走一次。</strong> 「從零」的意思：</p>
+<ul>
+<li><strong>全新的 clone</strong>，不是平常開發的那個工作目錄</li>
+<li><strong>全新的資料卷</strong>：先確認 <code>docker volume ls</code> 裡沒有 <code>hd-tablet-care-*</code>，有就先照第 8 節撤除</li>
+<li><strong>只用 Git 與 Docker</strong>，指令與院內一字不差；開發機上的 Node.js 在這一輪裡不得被用到</li>
+<li>設定照範本另填一份，位址用 <code>localhost</code>，埠挑開發時沒在用的（例如 13000、18080、18081）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>驗什麼</th>
+<th>本冊步驟</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>從 clone 到服務起來，全程沒有人工補步驟，每一步輸出存檔</td>
+<td>W-08～W-17</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>npm run verify:iteration11 -- --live --env-file &lt;設定目錄&gt;\.env</code>：<code>down -v</code> 之後資料還在、繫結掛載只有兩個、正式環境設定拒絕 <code>lab</code></td>
+<td>這一條是唯一允許用 Node 的，<strong>它是驗收，不是部署步驟</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>更新一次：打一個測試 tag，照 W-19 走完</td>
+<td>W-19</td>
+</tr>
+<tr>
+<td>4</td>
+<td>回到上一版，資料完整</td>
+<td>W-20</td>
+</tr>
+<tr>
+<td>5</td>
+<td>開發手機裝外殼、釘住、護理端看得到（迭代 12 起）</td>
+<td>第三冊</td>
+</tr>
+<tr>
+<td>6</td>
+<td>AI 經 SSH 通道接實驗室閘道跑一次（迭代 13 起）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>在 Git Bash 裡照抄會壞的一件事</strong>：Git Bash 會把 <code>/backups/…</code>、<code>/data/…</code> 這種參數自動轉成 Windows 路徑，
+還原腳本就會回報找不到備份檔。<strong>本冊一律用 PowerShell</strong>；非用 Git Bash 不可時，先 <code>export MSYS_NO_PATHCONV=1</code>，
+<code>--env-file</code> 也要寫成 <code>C:/…</code> 的形式。</p>
+<hr />
+<h2 id="8-關服務">8. 關服務<a class="headerlink" href="#8-關服務" title="Permanent link">&para;</a></h2>
+<p>原則與三種深度見<a href="../08-shutdown/">第八冊</a>，容器版的指令：</p>
+<table>
+<thead>
+<tr>
+<th>深度</th>
+<th>指令</th>
+<th>資料</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暫停（維護、換版）</td>
+<td><code>docker compose --env-file $cfg stop</code></td>
+<td>不動</td>
+</tr>
+<tr>
+<td>停用（不再自動起來）</td>
+<td><code>docker compose --env-file $cfg down</code></td>
+<td>不動。資料卷是 external，<code>down -v</code> 也刪不掉</td>
+</tr>
+<tr>
+<td>撤除（試用結束）</td>
+<td><code>down</code> 之後先做最後一次備份並確認已送到另一台機器，再 <code>docker volume rm hd-tablet-care-data hd-tablet-care-keys</code>、刪映像檔與 <code>D:\hd-tablet-care\</code></td>
+<td><strong>刪了就沒有了</strong>。要院方書面同意，照第八冊撤除那一節做</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>docker compose down</code> 只關得到 <code>hd-tablet-care</code> 這個專案</strong>（專案名稱寫死在 compose 檔裡，DEP-37 第 1 項）。不要用 <code>docker stop $(docker ps -q)</code> 這種會關到別人容器的寫法。</p>
+<hr />
+<h2 id="9-疑難排解這一冊特有的">9. 疑難排解（這一冊特有的）<a class="headerlink" href="#9-疑難排解這一冊特有的" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>原因</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error code 14: Unable to open the database file</code></td>
+<td>資料卷不是由 compose 掛上，或手動開的容器以 root 建了檔</td>
+<td>只用本冊的指令；手動開過的容器全部刪掉，重新 <code>up -d</code></td>
+</tr>
+<tr>
+<td><code>正式環境設定下不得使用 LLM_PROVIDER=lab</code></td>
+<td><code>.env</code> 抄了開發機的設定</td>
+<td>改回 <code>mock</code>（或迭代 13 之後的 <code>onprem</code>）。這是刻意擋的（DEP-40）</td>
+</tr>
+<tr>
+<td><code>時區…不是正式環境要求的 Asia/Taipei</code></td>
+<td>compose 的 <code>TZ</code> 被改過</td>
+<td>還原 compose 檔。compose 檔不在主機上改，要改回開發端改、打新 tag</td>
+</tr>
+<tr>
+<td><code>docker compose --profile ai build</code> 失敗：找不到 Dockerfile</td>
+<td>AI 閘道在迭代 13 才補上</td>
+<td>目前預設不啟動它，正常</td>
+</tr>
+<tr>
+<td><code>bind source path does not exist</code></td>
+<td><code>HD_BACKUP_DIR</code> 或 <code>HD_CONFIG_DIR</code> 指的目錄不存在</td>
+<td>回 W-08</td>
+</tr>
+<tr>
+<td>連接埠 <code>address already in use</code></td>
+<td>同機別的專案佔用</td>
+<td>回 W-07 換埠，登記後改 <code>.env</code></td>
+</tr>
+<tr>
+<td>平板或護理站開得了頁面，資料打不回來</td>
+<td>產物裡寫死的後端位址不對</td>
+<td>W-16 表格第一列</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-還沒到的部分">10. 還沒到的部分<a class="headerlink" href="#10-還沒到的部分" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>元件</th>
+<th>狀態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ai-gateway</code>（AI 閘道）</td>
+<td>服務、設定檔掛載、<code>ai</code> 設定檔已定；程式在<strong>迭代 13</strong></td>
+</tr>
+<tr>
+<td><code>shell-builder</code>（外殼 APK 建置）</td>
+<td>服務、金鑰資料卷、<code>shell</code> 設定檔已定；建置映像檔在<strong>迭代 12</strong></td>
+</tr>
+<tr>
+<td>病人端下載頁</td>
+<td>迭代 12</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>定版</th>
+<th>日期</th>
+<th>異動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><a href="../">← 回部署手冊總覽</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
