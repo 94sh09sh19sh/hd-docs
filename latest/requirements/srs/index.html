@@ -704,6 +704,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#02-0926-異動摘要第一次進院失敗之後" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 0926 異動摘要（第一次進院失敗之後）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2416,6 +2427,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#02-0926-異動摘要第一次進院失敗之後" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 0926 異動摘要（第一次進院失敗之後）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2980,6 +3002,57 @@
 </tbody>
 </table>
 <p><strong>一句話</strong>：0910 改的是「要做什麼」，0912 改的是「跑在哪裡」，<strong>0919 改的是「怎麼交到使用者手上」</strong>。</p>
+<h3 id="02-0926-異動摘要第一次進院失敗之後">0.2 0926 異動摘要（第一次進院失敗之後）<a class="headerlink" href="#02-0926-異動摘要第一次進院失敗之後" title="Permanent link">&para;</a></h3>
+<p>本週四件事，<strong>功能邊界仍一條未動</strong>，改的是「長什麼樣、AI 接到哪裡、外殼放哪裡、怎麼部署」：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>項次</th>
+<th>0919</th>
+<th>0926</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>介面方向</td>
+<td>兩個族群、兩套設計</td>
+<td><strong>以極簡為目標全面重新設計</strong>：能用圖示就不用文字、能用框線與顏色分區就不用文字、不影響功能的字全部刪掉、能不捲動就不捲動（6 章「可用性（極簡）」）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>病人端首頁</td>
+<td>多項功能入口並列</td>
+<td><strong>只有三區：基本資訊、輪播內容、緊急回報</strong>。透析前問卷、透析後衛教、心情問卷依療程時點出現，不在首頁常駐（FR-P14、FR-P15）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>護理端</td>
+<td>一套介面</td>
+<td><strong>分簡易版與專業版，預設開啟簡易版</strong>。專業版即現行完整介面，不更動（FR-N14）；簡易版把即時總覽、緊急通報、新增病人、輪播內容、排班與指派、裝置管理<strong>合併成一個畫面</strong>，以拖曳與顏色分區讓護理師一步完成（FR-N15、FR-N16）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>AI</td>
+<td>實驗室 API 未取得，只有模擬</td>
+<td><strong>串接實驗室 GPU 伺服器做實際 AI 測試</strong>，照實驗室規範以 LangChain 呼叫；後端一律經 <strong>AI 閘道</strong>，日後換成正式 GPU API 只改閘道的設定檔（FR-S06、FR-S13）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>病人端外殼 App</td>
+<td>放在本 repo 的一個目錄</td>
+<td><strong>獨立為另一個私人 repo</strong>，與本系統以帶版本號的契約整合（FR-S14）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>部署</td>
+<td>隨身碟帶入離線安裝包</td>
+<td><strong>Docker ＋ git clone</strong>；院內網路可以連出、外面連不進來、不准用隨身碟；安裝包路線全面撤除，並在開發機與開發手機上實測整套部署（《<a href="../deployment-spec/">部署規範</a>》v3.0）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>需求總數由 63 條增為 70 條</strong>：FR-P14～P15、FR-N14～N16、FR-S13～S14。</p>
 <hr />
 <h2 id="1-文件目的與範圍">1. 文件目的與範圍<a class="headerlink" href="#1-文件目的與範圍" title="Permanent link">&para;</a></h2>
 <p>本文件定義「血液透析中心平板照護輔助系統」之軟體需求，涵蓋病人端 15 台 Android 平板、護理端多裝置應用、後端服務、地端 AI 輔助功能、單位管理與營運分析，以及資料治理規範。</p>
@@ -3049,8 +3122,16 @@
 <td>Android 5.0 起內建的功能，把畫面釘在單一 App 上，解除需輸入 PIN。本系統的 Kiosk 鎖定靠它，不靠 MDM（0919 新增）</td>
 </tr>
 <tr>
-<td><strong>離線安裝包</strong></td>
-<td>正式環境的交付物：一份自帶 Node.js 執行期、已建置產物與 Prisma 引擎的壓縮檔，在無對外連線的主機上解壓即可啟動（0919 新增）</td>
+<td>~~離線安裝包~~</td>
+<td>~~正式環境的交付物：一份自帶 Node.js 執行期、已建置產物與 Prisma 引擎的壓縮檔~~（0919 新增，<strong>0926 撤除</strong>：院方不准用隨身碟，改以 git clone ＋ Docker 部署）</td>
+</tr>
+<tr>
+<td><strong>AI 閘道</strong></td>
+<td>本系統的一個容器，不含模型。後端把 AI 請求交給它，它依設定檔以 LangChain 呼叫推論端點；換推論端點只換它的設定檔（0926 新增）</td>
+</tr>
+<tr>
+<td><strong>簡易版／專業版</strong></td>
+<td>護理端的兩種介面。簡易版是預設，日常六項合併在一個床位圖工作台；專業版即 0919 的完整介面（0926 新增）</td>
 </tr>
 <tr>
 <td><strong>首波試用</strong></td>
@@ -3126,6 +3207,11 @@
 <li><strong>MDM 服務移出系統邊界。</strong> 平板管控改走免 MDM 路線，系統內留下的只有「裝置佈建狀態的紀錄與稽核」，不再有任何對外的裝置管理通道（FR-S01）。</li>
 <li><strong>臨床資料來源確定為院方 API。</strong> <code>HospitalApiAdapter</code> 成為正式來源，檔案匯入退為備援（FR-S05）。</li>
 <li><strong>新增一個病人端元件：自包 WebView 外殼 App。</strong> 它不含任何業務邏輯，只負責載入 PWA、信任院內自簽憑證、限制行為邊界，並回報前景狀態（逸出偵測）。</li>
+</ul>
+<p><strong>0926 的邊界變動</strong>：</p>
+<ul>
+<li><strong>新增 AI 閘道。</strong> 它是本系統的一部分（跑在本系統的容器裡），但不含模型：後端把 AI 請求交給它，由它依設定檔以 LangChain 呼叫推論端點。推論端點本身仍在邊界外（FR-S13）。</li>
+<li><strong>外殼 App 移到另一個 repo。</strong> 它仍是系統元件，但原始碼不在本 repo；兩邊的界線是一份帶版本號的契約，契約的真本在本 repo（FR-S14）。</li>
 </ul>
 <hr />
 <h2 id="4-權限模型與裝置綁定">4. 權限模型與裝置綁定<a class="headerlink" href="#4-權限模型與裝置綁定" title="Permanent link">&para;</a></h2>
@@ -3450,6 +3536,20 @@
 <td>無</td>
 <td><strong>新增</strong></td>
 </tr>
+<tr>
+<td><strong>FR-P14</strong></td>
+<td><strong>首頁只有三區</strong>：基本資訊、輪播內容、緊急回報。三區以框線與顏色區隔，整頁不捲動；首頁不放任何其他功能的常駐入口</td>
+<td><strong>P0</strong></td>
+<td>無</td>
+<td><strong>0926 新增</strong></td>
+</tr>
+<tr>
+<td><strong>FR-P15</strong></td>
+<td><strong>任務依療程時點出現</strong>：透析前問卷（FR-P02）、透析後衛教（FR-P07）、心情問卷（FR-P08）在各自的時點以全螢幕、一題一頁、圖示選項的方式出現，完成即回首頁；未完成時在基本資訊區以一個圖示標示，點圖示即可繼續</td>
+<td><strong>P0</strong></td>
+<td>無</td>
+<td><strong>0926 新增</strong></td>
+</tr>
 </tbody>
 </table>
 <p><strong>FR-P09～P13 補充說明</strong>：</p>
@@ -3460,6 +3560,38 @@
 <li>晚班時段輪播應自動調暗或改為靜態顯示。</li>
 <li><strong>0919 補充（FR-P13 的版位規則）</strong>：求助按鈕「位置固定」必須以<strong>版位固定</strong>實作，不是以「輪播時把按鈕的層級抬高」實作。按鈕在輪播中與非輪播中都佔據畫面上同一塊保留區域，輪播內容的可用範圍必須把那塊區域先扣掉。<strong>只要輪播的字有任何一個被求助按鈕蓋住，這一條就算不通過</strong>——蓋住的是字，代價卻是病人以為按鈕壞了。</li>
 <li><strong>0919 補充（FR-P02／P06／P07／P08 的內容來源）</strong>：症狀問卷題目、求助類別、衛教題庫與回饋題目的<strong>預設內容見附錄 C</strong>，且全部須可在護理端調整（FR-S11）。</li>
+</ul>
+<p><strong>FR-P14、FR-P15 補充說明（0926）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>區</th>
+<th>內容</th>
+<th>不放什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>基本資訊</td>
+<td>床號、療程進度（圖形，不是文字時間表）、待完成任務的圖示</td>
+<td>姓名與病歷號（輪播與首頁同屬鄰床可見的畫面，規則同 FR-P09～P13）</td>
+</tr>
+<tr>
+<td>輪播內容</td>
+<td>FR-P09～P11 的三層內容，<strong>首頁上就在輪播</strong>，不必等閒置</td>
+<td>操作說明、功能介紹</td>
+</tr>
+<tr>
+<td>緊急回報</td>
+<td>FR-P06 的求助按鈕與類別；位置與大小固定，規則同 FR-P13 的版位保留</td>
+<td>任何其他按鈕</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>這一版把「閒置才輪播」改成「首頁本來就有輪播區」</strong>：閒置門檻（FR-P09）仍保留，用在任務畫面閒置太久時自動回首頁。</li>
+<li>任務畫面裡同樣看得到緊急回報區，版位與首頁相同——病人在填問卷時也可能需要求助。</li>
+<li><strong>「不影響功能的字」的判準</strong>：刪掉之後，病人還能不能完成那個動作。能，就刪。題目本身、選項的必要說明、「僅供參考」這類法規要求的標示不在此限。</li>
 </ul>
 <h3 id="52-護理端">5.2 護理端<a class="headerlink" href="#52-護理端" title="Permanent link">&para;</a></h3>
 <table>
@@ -3564,6 +3696,27 @@
 <td>無</td>
 <td><strong>新增</strong></td>
 </tr>
+<tr>
+<td><strong>FR-N14</strong></td>
+<td><strong>簡易版與專業版</strong>：護理端提供兩種介面，<strong>每次登入預設開啟簡易版</strong>，一次點選即可切換。專業版即 0919 的完整介面，功能與版面不更動</td>
+<td><strong>P0</strong></td>
+<td>無</td>
+<td><strong>0926 新增</strong></td>
+</tr>
+<tr>
+<td><strong>FR-N15</strong></td>
+<td><strong>簡易版單一工作台</strong>：即時總覽、緊急通報、新增病人、輪播內容、排班與指派、裝置管理合併在<strong>同一個畫面</strong>，以床位為中心、以顏色分區，不換頁、不捲動</td>
+<td><strong>P0</strong></td>
+<td>無</td>
+<td><strong>0926 新增</strong></td>
+</tr>
+<tr>
+<td><strong>FR-N16</strong></td>
+<td><strong>一步完成</strong>：簡易版的每一項日常任務以一個動作完成（一次拖曳或一次點選），不得拆成多步或跳出多層對話框；需要結構化紀錄的任務（FR-N10）以預設值加一次點選完成，可事後補改</td>
+<td><strong>P0</strong></td>
+<td>無</td>
+<td><strong>0926 新增</strong></td>
+</tr>
 </tbody>
 </table>
 <p><strong>FR-N10 的結構化欄位</strong>（實際選項須由護理部確認）：</p>
@@ -3600,6 +3753,70 @@
 <p><strong>為什麼「確認時間」與「到達床邊時間」要分開</strong>：兩者的差距是資料品質的檢查點。若只記錄確認時間，一旦這個數字被用於績效，最省力的做法會變成「先按確認再慢慢走過去」，指標就失去意義。分開記錄讓這種情況看得見。</p>
 <p><strong>0919：這一條暫時做不到，而且必須承認做不到。</strong> 護理站只有一兩台桌機、護理師手上沒有平板，「到床邊才按」在物理上無法發生；硬留著這顆按鈕，得到的會是「回到護理站後補按」的假資料，比沒有資料更糟。因此首波試用期間<strong>關閉這顆按鈕</strong>，該欄位一律留空，並在成效指標中明確標示「本期間無到達時間資料」。等護理師手上有裝置時，在系統設定開啟即可，資料結構不必改。</p>
 <p><strong>處理方式與處理結果的選項內容</strong>：0919 起改由附錄 C 的預設清單提供，院方已授權採用，並可在護理端系統設定增刪改。</p>
+<p><strong>FR-N14～N16 補充說明（0926）</strong>：</p>
+<p>簡易版的畫面是<strong>一張床位圖</strong>，四周是可以拖上去的東西。每一項任務對應一個動作：</p>
+<table>
+<thead>
+<tr>
+<th>任務</th>
+<th>一步怎麼做</th>
+<th>對應</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看全部病人現況</td>
+<td>床位格的底色即狀態（空床、治療中、待處理、緊急、平板離線或跳出固定），不必點開</td>
+<td>FR-N02</td>
+</tr>
+<tr>
+<td>接緊急通報</td>
+<td>緊急的床位格閃爍並置頂一條紅框；<strong>點一下即確認通報</strong>，床位格展開成處理方式的圖示列</td>
+<td>FR-N03</td>
+</tr>
+<tr>
+<td>結案</td>
+<td>點一個處理方式圖示即結案，處理結果預設「已解決」，要改再點一次</td>
+<td>FR-N10</td>
+</tr>
+<tr>
+<td>新增病人</td>
+<td>拖「＋」到空床，輸入最少必要欄位即建立並指派</td>
+<td>FR-N01</td>
+</tr>
+<tr>
+<td>指派平板與病人</td>
+<td>把病人拖到床位；該床的平板即開始這次療程</td>
+<td>FR-N01、4.3</td>
+</tr>
+<tr>
+<td>解除指派</td>
+<td>把床位上的病人拖出床位圖</td>
+<td>4.3</td>
+</tr>
+<tr>
+<td>排班與床位分配</td>
+<td>把護理師拖到床位（可一次框選多床）</td>
+<td>FR-M02</td>
+</tr>
+<tr>
+<td>推送輪播內容</td>
+<td>把內容卡拖到某一床，或拖到「全部」</td>
+<td>FR-P11</td>
+</tr>
+<tr>
+<td>裝置管理</td>
+<td>平板以小圖示貼在床位格上；把平板拖到另一床即換床、拖到回收區即停用；版本過舊或跳出固定直接以顏色標示</td>
+<td>FR-S01、FR-S14</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>拖曳一定要有不拖曳的替代做法</strong>（點選來源、再點選目的地），給觸控不準或用滑鼠不順手的人。替代做法同樣只有一步的份量。</li>
+<li><strong>顏色不能是唯一的訊號</strong>：每一種狀態色同時配一個圖示形狀，色覺辨識有困難的護理師一樣分得出來。</li>
+<li><strong>一步完成不得以犧牲紀錄換取</strong>：稽核軌跡、結構化欄位、權限檢查與專業版完全相同，差別只在操作的步數。拖錯了要能一步復原。</li>
+<li>專業版才有的功能（AI 草稿審閱簽核、系統設定、報表等）<strong>不出現在簡易版</strong>，要用時切到專業版。</li>
+</ul>
 <h3 id="53-管理與營運0910-新增對應新增任務一之-13">5.3 管理與營運（0910 新增，對應新增任務一之 1～3）<a class="headerlink" href="#53-管理與營運0910-新增對應新增任務一之-13" title="Permanent link">&para;</a></h3>
 <p>本節全部為新增。設計原則見《<a href="../fde-assessment/">FDE 評估報告</a>》第五章，資料分級與存取限制見《<a href="../database-policy/">資料庫使用規範</a>》第 11 條。</p>
 <table>
@@ -3816,9 +4033,22 @@
 <td><strong>P0</strong></td>
 <td><strong>0919 新增</strong></td>
 </tr>
+<tr>
+<td><strong>FR-S13</strong></td>
+<td><strong>AI 閘道</strong>：後端所有 AI 請求一律經本系統的 AI 閘道轉送至推論端點；閘道依實驗室規範以 LangChain 呼叫模型，推論端點、模型與參數全部寫在閘道的設定檔。<strong>由實驗室換成正式 GPU API 只改該設定檔與後端的供應者設定，不改程式</strong></td>
+<td><strong>P0</strong></td>
+<td><strong>0926 新增</strong></td>
+</tr>
+<tr>
+<td><strong>FR-S14</strong></td>
+<td><strong>外殼 App 契約</strong>：病人端外殼 App 與本系統之間的介面（載入網址、裝置身分、前景回報、版本回報、憑證信任）以一份帶版本號的契約定義，真本在本系統；外殼每次回報附上自己的版本，版本低於最低可用版本時護理端直接標示</td>
+<td><strong>P0</strong></td>
+<td><strong>0926 新增</strong></td>
+</tr>
 </tbody>
 </table>
 <p><strong>FR-S06 的過渡期限制</strong>：實驗室 API 為院外服務，因此在切換至地端推論之前，<strong>系統不得將任何真實病人資料送入 AI 流程</strong>，僅得使用合成資料。此限制以程式強制（設定為 <code>LabApiProvider</code> 時，帶有真實病人資料的請求應被擋下），不依賴人的自律。</p>
+<p><strong>0926 補一道防線</strong>：院內網路現在連得出去，「把開發機的設定抄到院內」就足以讓資料往實驗室送。因此<strong>正式環境設定下選用實驗室供應者，後端直接拒絕啟動</strong>（部署規範 DEP-40）。合成資料檢查擋「送了什麼」，這一條擋「送往哪裡」。</p>
 <p><strong>FR-S10 的判準（0919）</strong>：判準不是「有沒有寫技術名詞」，而是<strong>「這個字對使用者有沒有意義」</strong>。護理師需要知道「這個開關管的是什麼功能」，不需要知道它在程式裡叫什麼；病人需要知道「已處理」，不需要看到 <code>RESOLVED</code>。因此：</p>
 <table>
 <thead>
@@ -3978,8 +4208,8 @@
 </tr>
 <tr>
 <td>網路邊界</td>
-<td><strong>系統不得包含任何主動連向院外的連線</strong>（過渡期的實驗室 API 為唯一例外，且僅得送合成資料）</td>
-<td><strong>新增</strong></td>
+<td><strong>系統執行期不得包含任何主動連向院外的連線</strong>（過渡期的實驗室 API 為唯一例外，僅限開發環境，且僅得送合成資料）。<strong>0926</strong>：院內網路可以連出去，部署與更新時的 git、映像檔與套件下載屬於建置階段，不在此限；<strong>這一條從此只靠程式擋，不再有網路替它兜底</strong></td>
+<td><strong>新增，0926 修正</strong></td>
 </tr>
 <tr>
 <td>離線韌性</td>
@@ -4007,6 +4237,11 @@
 <td><strong>0919 新增</strong></td>
 </tr>
 <tr>
+<td><strong>可用性（極簡）</strong></td>
+<td>兩端介面以極簡為目標，四條依序套用：<strong>能用圖示就不用文字；能用框線與顏色分區就不用文字，也不把不同功能混在同一區；不影響功能的字全部刪掉；能不上下捲動就不捲動</strong>（內容多時改分頁，不改捲動）。適用病人端全部畫面與護理端簡易版；護理端專業版維持 0919 版面</td>
+<td><strong>0926 新增</strong></td>
+</tr>
+<tr>
 <td>可擴充性</td>
 <td>前後端架構需可延伸支援管理端儀表板，共用同一套 API 層</td>
 <td>擴充</td>
@@ -4023,8 +4258,8 @@
 </tr>
 <tr>
 <td>可移植性</td>
-<td>系統不得對正式主機的全域環境有任何要求：<strong>不得要求院方預先安裝 Node.js、npm 或任何執行期相依</strong>，執行期隨交付物一起帶進去。<strong>0919 修正</strong>：正式主機改為 x86-64 Windows 工作站，與開發環境同架構；ARM64 的限制取消。<strong>那台主機與其他專案共用</strong>，因此「不假設全域環境」這一條不但保留，還更嚴格（DEP-04），隔離改在安裝包層級做到（DEP-37）</td>
-<td><strong>0912 新增，0919 修正</strong></td>
+<td>系統不得對正式主機的全域環境有任何要求：<strong>不得要求院方預先安裝 Node.js、npm 或任何執行期相依</strong>，執行期隨交付物一起帶進去。<strong>0919 修正</strong>：正式主機改為 x86-64 Windows 工作站，與開發環境同架構；ARM64 的限制取消。<strong>那台主機與其他專案共用</strong>，因此「不假設全域環境」這一條不但保留，還更嚴格（DEP-04）。<strong>0926 修正</strong>：對主機的要求只剩 Git 與 Docker，其餘全在映像檔裡；隔離改在容器層級做到（DEP-37）</td>
+<td><strong>0912 新增，0919、0926 修正</strong></td>
 </tr>
 <tr>
 <td>正確性（時間）</td>
@@ -4054,6 +4289,9 @@
 <li>~~<strong>0912</strong>：正式環境以容器部署於院內 NVIDIA DGX Spark（ARM64、128GB 統一記憶體、與其他專案共用）~~ → <strong>0919 取代</strong>：正式環境為<strong>院內一台 Windows 工作站</strong>（Intel i7-14700、64GB 記憶體、2TB SSD ×2、x86-64，<strong>與其他專案共用</strong>，院方確保本系統資源足夠），以<strong>離線安裝包</strong>部署，資料庫檔案置於該機本機磁碟。容器降為備案，詳見《<a href="../deployment-spec/">部署規範</a>》</li>
 <li><strong>0912 新增，0919 強化</strong>：地端推論服務<strong>不由本系統部署或啟動</strong>。它在<strong>另一台機器</strong>（DGX Spark）上，對本系統而言只是一個可設定的 HTTP 端點；本系統不需要 GPU 存取權限，也不需要與它同機（DEP-16）</li>
 <li><strong>0919 新增</strong>：病人端平板<strong>不經 MDM 管理</strong>。PWA 由一支自包 WebView 外殼 App 載入，Kiosk 靠 Android 內建的螢幕固定，院內自簽 CA 打包進該 App。系統端不含任何裝置管理通道，只保留佈建狀態的紀錄與逸出偵測（FR-S01）</li>
+<li><strong>0926 改寫部署形態</strong>：上面「以離線安裝包部署」一句作廢。正式環境改以 <strong>Docker 容器</strong>部署，程式由 <strong>git clone</strong> 取得後在院內主機上就地建置；資料庫只放具名資料卷，備份寫到主機目錄。安裝包路線撤除。詳見《<a href="../deployment-spec/">部署規範</a>》v3.0</li>
+<li><strong>0926 新增</strong>：後端與推論端點之間多一個 <strong>AI 閘道</strong>（本系統的容器之一，不含模型），依設定檔以 LangChain 呼叫推論端點（FR-S13）。<strong>換推論端點只換閘道的設定檔</strong></li>
+<li><strong>0926 新增</strong>：外殼 App 原始碼移到<strong>另一個私人 repo</strong>，APK 在院內主機上以容器建置、由院內下載頁提供給平板，不經任何外部媒介（FR-S14）</li>
 </ul>
 <p><strong>架構圖現況</strong>：《<a href="../architecture-diagrams/">架構圖</a>》已於 2026-09-11 依本章重繪，推播中繼、外部 LLM 與 PostgreSQL 三處已拿掉；0919 依本節重繪第二次，應用伺服器與 AI 推論端點分成兩台機器，MDM 那格拿掉改為自包外殼與螢幕固定。圖與本章文字若有出入，仍<strong>以本章文字為準</strong>。</p>
 <hr />
@@ -4079,6 +4317,7 @@
 <li>螢幕恆亮由外殼 App 的常亮旗標提供，比網頁的 Wake Lock 可靠；閒置輪播使螢幕長時間亮著，對電池與螢幕壽命的影響仍須追蹤（15 台的汰換成本）</li>
 <li>常駐總覽螢幕不在本節範圍：它是護理端裝置，不裝這支 App</li>
 <li><strong>本階段仍不實作任何真 MDM 串接</strong>。院方若已有既有 MDM 方案，再以新增一個實作的方式接上，介面不變（FR-S01）</li>
+<li><strong>0926</strong>：外殼 App 是<strong>另一個私人 repo</strong>，本 repo 只保留它與本系統之間的契約（FR-S14）。APK 不再由開發端建好帶進院內，而是<strong>在院內主機上建置</strong>，CA 與簽章金鑰都在那台主機上產生、不離開主機；平板從院內下載頁安裝（部署規範第 7 章）</li>
 </ul>
 <hr />
 <h2 id="10-假設與限制">10. 假設與限制<a class="headerlink" href="#10-假設與限制" title="Permanent link">&para;</a></h2>
@@ -4123,8 +4362,8 @@
 </tr>
 <tr>
 <td>7</td>
-<td><strong>實驗室 API 尚未取得</strong>；在取得並切換至地端推論前，AI 功能僅得對合成資料執行</td>
-<td><strong>新增</strong></td>
+<td>~~實驗室 API 尚未取得~~ → <strong>0926：實驗室 GPU 伺服器的使用規範已取得</strong>，AI 經 AI 閘道接實驗室做實際測試。在切換至院內正式 GPU API 前，AI 功能僅得對合成資料執行</td>
+<td><strong>新增，0926 改寫</strong></td>
 </tr>
 <tr>
 <td>8</td>
@@ -4143,8 +4382,8 @@
 </tr>
 <tr>
 <td>11</td>
-<td>~~正式環境以容器部署，交付物為離線映像檔~~ → <strong>0919 改寫：正式環境為院內一台 Windows 工作站</strong>（Intel i7-14700、64GB、2TB SSD ×2、x86-64，與其他專案共用），以<strong>離線安裝包</strong>部署；院內主機不需要對外連線即可安裝。開發環境維持本機直跑。容器降為備案</td>
-<td><strong>0912 新增，0919 改寫</strong></td>
+<td>~~正式環境以容器部署，交付物為離線映像檔~~ → ~~0919：以離線安裝包部署~~ → <strong>0926 改寫：正式環境為院內一台 Windows 工作站</strong>（與其他專案共用），<strong>以 Docker 容器部署，程式由 git clone 取得並就地建置</strong>。院內網路可以連出去、外面連不進來、不准用隨身碟。日常開發維持本機直跑，部署實測用容器</td>
+<td><strong>0912 新增，0919、0926 改寫</strong></td>
 </tr>
 <tr>
 <td>12</td>
@@ -4170,6 +4409,16 @@
 <td>16</td>
 <td><strong>病人端平板不經 MDM 管理</strong>，改走自包 WebView 外殼加螢幕固定；此路線守不住「有人解開螢幕固定」，改以逸出偵測讓它被看見（第 9 章）</td>
 <td><strong>0919 新增</strong></td>
+</tr>
+<tr>
+<td>17</td>
+<td><strong>正式主機的 Administrator 不設密碼，能登入者一律視為可信任</strong>。本系統不在作業系統層級另設帳號與目錄權限防線；本系統自己的帳號、權限矩陣與稽核軌跡照舊（部署規範 DEP-38）</td>
+<td><strong>0926 新增</strong></td>
+</tr>
+<tr>
+<td>18</td>
+<td><strong>實驗室 GPU 伺服器在院外，且只能呼叫模型、不能管理模型</strong>。實驗室上的模型、額度與回應速度不代表正式 GPU API 的表現；提示詞與輸出格式要在兩邊都驗過</td>
+<td><strong>0926 新增</strong></td>
 </tr>
 </tbody>
 </table>

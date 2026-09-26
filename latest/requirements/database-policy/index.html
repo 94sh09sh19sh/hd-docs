@@ -3316,6 +3316,42 @@
 <li><strong>不得使用對應網路磁碟機的代號指向遠端目錄。</strong> 看起來像本機磁碟，行為是網路檔案系統，正是本條要擋的情形。</li>
 </ol>
 <p><strong>容器路線若日後啟用</strong>，0912 那張表仍然適用，但要多一條：<strong>資料庫檔案不得落在 Windows 目錄的繫結掛載上</strong>（在 WSL2 底下它是跨檔案系統的轉譯層，檔案鎖不可靠），必須放在 Linux 檔案系統的具名資料卷裡。這也是 0919 不選容器的理由之一。</p>
+<p><strong>0926：容器路線成為正式路線</strong>（《<a href="../deployment-spec/">部署規範</a>》v3.0，安裝包撤除）。本條規則仍一字未改，上面那張 Windows 表改為下表：</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>0926 的具體做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>放在本機磁碟</td>
+<td>放在 <strong>Docker 具名資料卷</strong>（WSL2 的 Linux 檔案系統，實體在主機本機 SSD）。<strong>不得以繫結掛載把 Windows 目錄給後端當資料庫用</strong>（DEP-23）</td>
+</tr>
+<tr>
+<td><code>-wal</code>／<code>-shm</code> 與主檔是一組</td>
+<td>掛的是資料卷的目錄，三個檔案在同一個掛載點</td>
+</tr>
+<tr>
+<td>後端是唯一寫入行程</td>
+<td>compose 裡 <code>api</code> 只有一個執行個體；資料修補與遷移在 <code>api</code> 停止時以一次性容器執行</td>
+</tr>
+<tr>
+<td>~~檔案權限只給後端執行帳號~~</td>
+<td><strong>0926 作廢</strong>：院方決定能登入主機者一律可信任，不另設作業系統層級的帳號與權限（DEP-38）。容器內仍以非 root 執行</td>
+</tr>
+<tr>
+<td>院方看得到、備份得到</td>
+<td>資料卷在檔案總管裡看不到，因此<strong>備份一律寫到主機的備份目錄</strong>（繫結掛載，備份檔寫完即不再被開啟，不受檔案鎖問題影響），再送往院內另一台機器</td>
+</tr>
+<tr>
+<td>防毒排除</td>
+<td>要排除的改為 <strong>Docker 的資料目錄</strong>（WSL2 虛擬磁碟），不是某個資料庫資料夾</td>
+</tr>
+</tbody>
+</table>
+<p>資料卷標為 <code>external</code>，<code>docker compose down -v</code> 也刪不掉它。</p>
 <hr />
 <h2 id="8-備份還原與留存期限">8. 備份、還原與留存期限<a class="headerlink" href="#8-備份還原與留存期限" title="Permanent link">&para;</a></h2>
 <h3 id="81-備份">8.1 備份<a class="headerlink" href="#81-備份" title="Permanent link">&para;</a></h3>
@@ -3333,7 +3369,7 @@
 </tr>
 <tr>
 <td><strong>備份也不能離開院內</strong></td>
-<td>備份檔與正本適用同一條規則。不得備到雲端硬碟、不得寄信、不得拷到個人隨身碟。<strong>0919 補充：部署用的隨身碟是單向的</strong>——只能把安裝包帶進院內，不得帶任何資料出院；用完當場清除，並在部署紀錄上寫明</td>
+<td>備份檔與正本適用同一條規則。不得備到雲端硬碟、不得寄信、不得拷到個人隨身碟。~~0919 補充：部署用的隨身碟是單向的~~（<strong>0926</strong>：院方不准用隨身碟，這條補充隨之作廢；院內網路現在連得出去，<strong>備份不出院改靠程式與流程擋</strong>：備份只寫到主機的備份目錄與院內另一台機器，任何腳本不得把備份送往院外）</td>
 </tr>
 <tr>
 <td><strong>至少每日一次，保留數個世代</strong></td>
@@ -3806,7 +3842,7 @@
 <tbody>
 <tr>
 <td>新版有問題，但這一版<strong>沒有動 schema</strong></td>
-<td>直接換回舊版的安裝包，資料庫不動</td>
+<td>直接換回舊版（0926 起：checkout 舊 tag、改用舊版映像檔標籤），資料庫不動</td>
 </tr>
 <tr>
 <td>新版有問題，且這一版<strong>動過 schema</strong></td>
