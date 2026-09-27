@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 54 張表、534 個欄位、10 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 56 張表、547 個欄位、11 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -65,6 +65,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 十四、閒置輪播與檔案匯入（迭代 6） | `carousel_items`、`carousel_view_events`、`import_field_mappings` | 輪播第二層播什麼、哪一類卡片有人看、匯入檔案的欄位怎麼對上 |
 | 十五、版本更新紀錄（迭代 7） | `update_runs` | 每一次版本更新前備份了什麼、驗證還原成不成功、套用了哪幾個遷移、誰執行的 |
 | 十六、導覽版位與內容資料化（迭代 9） | `nav_placement_settings`、`help_categories`、`help_request_methods`、`questionnaire_*`、`quiz_*`、`feedback_form_*`、`symptom_answer_options` | 哪些功能出現在哪裡；病人與護理師看到的選項與題目是什麼，以及它們改過幾版 |
+| 十七、床位圖（迭代 14） | `beds`、`carousel_item_targets`（另有 `devices.bed_no`） | 透析室有哪幾床、每台平板貼在哪一床、哪則輪播內容只在哪幾床播 |
 
 ### 每張表都有的三個欄位
 
@@ -153,7 +154,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ---
 
-### `devices` — 病人端平板（17 欄）
+### `devices` — 病人端平板（18 欄）
 
 **蒐集的意義**：透析中心共 15 台平板（SRS 第 9 章）。平板**沒有病人登入機制**，它憑什麼證明自己是「3 號床那台」？靠的就是這張表裡的序號與 API 金鑰雜湊。這張表同時記錄 MDM（行動裝置管理）狀態，因為平板是共用裝置，必須能遠端鎖定與限制為單一 App。
 
@@ -174,10 +175,11 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `kiosk_exited_at` | `TS?` | 最後一次回報「離開前景」的時間。回到前景之後仍保留，答得出上一次是什麼時候跳出去的 | 只在回報離開時更新 |
 | `shell_version` | `TEXT?` | 外殼 App 最後一次回報的自身版本，例 `0.2.0`（迭代 12，FR-S14） | 空值＝未回報版本（迭代 12 之前的外殼或一般瀏覽器）。不帶版本的回報不會把它洗掉 |
 | `shell_contract_version` | `INT?` | 外殼 App 實作的契約版本。與系統的契約版本不同時，護理端標為「版本不相容」 | 與 `shell_version` 同進退；「外殼過舊」由最低可用版本設定當場推算，不存欄位 |
+| `bed_no` | `TEXT?` UNIQUE | 這台平板貼在哪一床（迭代 14，簡易版床位圖）。**病人在哪一床就是看他那台平板在哪一床**，所以病人本身不存床號 | 空值＝還沒放上床位或停用後拿下。唯一（一床一台）；SQLite 允許多個空值。換床走 `POST /devices/:id/bed`，目的床有平板時兩台對調，寫 `DEVICE_BED_CHANGED`。床號要在 `beds` 的啟用清單裡 |
 | `created_at` | `TS` | 建檔時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 
-**索引**：`serial_no`（唯一）、`status`
+**索引**：`serial_no`（唯一）、`status`、`bed_no`（唯一）
 **被參照**：`device_bindings`、`symptom_reports`、`help_requests`、`audit_logs`
 
 ---
@@ -1129,6 +1131,49 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 **趨勢偏離仍然不入庫**：規則 `PSY-DEV-v2`（這位病人自己近六次的移動中位數，
 連續兩次低於它達 2 分才標示；三個門檻皆可在 `operational_settings` 調整）在查詢時即時計算，
 結果只以事實陳述呈現給護理師，**不寫入任何資料表，也不自動觸發轉介**。
+
+---
+
+## 十七、床位圖（迭代 14）
+
+**蒐集的意義**：護理端簡易版的畫面是一張床位圖（SRS FR-N15）。迭代 14 之前系統裡沒有「床」：
+病人綁的是平板，班表記的床號只是一串字。空床也要畫得出來、平板要貼得上去、輪播內容要能只推給某一床，
+床位因此成為資料。三處都**只做加法**，既有資料不必搬。
+
+### `beds` — 床位清單（7 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `bed_no` | `TEXT` UNIQUE | 床號，例 `05`。只到床位層級，不含姓名與病歷號 | 格式同班表的 `BED_NO_PATTERN`（英數與連字號，最長 12 字）。一律大寫 |
+| `sort_order` | `INT` | 床位圖上的順序 | 依清單順序寫 10、20、30…… |
+| `active` | `BOOL` | 這一床現在在不在床位圖上 | `DEFAULT true`。**拿掉的床不刪列只停用**：舊的求助、班表紀錄寫著那個床號，要看得懂它曾經存在。有病人正在治療的床拿不掉 |
+| `updated_by_id` | `TEXT?` → `nurses` | 最後一次調整清單的人 | 首次自動建立時為空 |
+| `created_at` | `TS` | 建檔時間 | 見共通欄位 |
+| `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
+
+**預設值**：全新環境第一次啟動時，資料表是空的就寫入共用常數 `DEFAULT_BED_NOS`（15 床，01～15——SRS 寫共 15 台平板）。
+**之後一律以資料表為準**，重新部署不會洗掉護理長的調整。整組取代走 `PUT /beds`（營運參數權限、要填理由），寫 `BEDS_UPDATED`。
+**索引**：`bed_no`（唯一）、`(active, sort_order)`
+
+### `carousel_item_targets` — 輪播內容的播放床位（5 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `carousel_item_id` | `TEXT` → `carousel_items` | 哪一則內容 | 內容刪除時一併刪除（實際上內容只停用不刪） |
+| `bed_no` | `TEXT` | 只在這一床播 | 床號要在 `beds` 的啟用清單裡 |
+| `created_by_id` | `TEXT` → `nurses` | 誰推送的 | — |
+| `created_at` | `TS` | 推送時間 | — |
+
+**一列都沒有＝全部床位**，因此迭代 14 之前的內容維持原本的行為。整組取代走 `PUT /carousel/items/:id/targets`，
+寫 `CAROUSEL_ITEM_TARGETS_CHANGED`（說明寫出改前與改後的範圍）。病人端取第二層內容時，
+只拿「沒有指定床位」或「指定床位裡有自己那台平板所在床號」的內容；平板沒放上床位時只看得到全部床位的內容。
+**索引**：`(carousel_item_id, bed_no)`（唯一）、`bed_no`
+
+**`operational_settings` 多兩個鍵**（值存在既有的表裡，不是新欄位）：
+`PATIENT_TASK_FEEDBACK_AFTER_MINUTES`（心情問卷在綁定後幾分鐘出現，預設 120）、
+`PATIENT_TASK_EDUCATION_AFTER_MINUTES`（衛教在綁定後幾分鐘出現，預設 180）。FR-P15。
 
 ---
 
