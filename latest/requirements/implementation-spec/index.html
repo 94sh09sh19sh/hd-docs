@@ -1258,6 +1258,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4121-迭代-141日期時差與平板佈建0928" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12.1 迭代 14.1：日期時差與平板佈建（0928）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#413-迭代-15規則引擎與三項高風險功能原迭代-7--110926-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1825,6 +1836,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-14-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2230,6 +2269,34 @@
     
   
     迭代 14 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 分冊
   
 
     
@@ -3346,6 +3413,17 @@
     <span class="md-ellipsis">
       
         4.12 迭代 14：介面極簡重設計（0926 新增，本週）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4121-迭代-141日期時差與平板佈建0928" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12.1 迭代 14.1：日期時差與平板佈建（0928）
       
     </span>
   </a>
@@ -6321,6 +6399,60 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </table>
 <p><strong>實測時修掉的兩個問題</strong>：病人送出問卷後，回報筆數比「問卷到期」旗標先更新，問卷又自動跳出一次——改成送出時就地把旗標設為否，
 並且只在這次綁定真的從後端取回輪播內容之後才判斷問卷到期；護理端全域的 <code>main</code> 樣式讓床位圖撐開、蓋到右側四個框——床位圖把那幾條歸零。</p>
+<h3 id="4121-迭代-141日期時差與平板佈建0928">4.12.1 迭代 14.1：日期時差與平板佈建（0928）<a class="headerlink" href="#4121-迭代-141日期時差與平板佈建0928" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-09-28 完成。</strong> 使用者凌晨操作簡易版時發現的缺陷與佈建補強，逐項紀錄在《<a href="../../notes/iteration-14-1-fixes/">迭代 14.1 修正紀錄</a>》，
+手動測試在《<a href="../../testing/iteration-14-1/">迭代 14.1 分冊</a>》（<code>x57</code>～<code>x80</code>）。不是新的範圍，迭代 15 的內容一項都沒動。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>改了什麼</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>後端的「今天」是 UTC 日期</strong>：台北 00:00～08:00 即時總覽與簡易版床位圖停在前一天，凌晨指派成功的綁定在床位圖上看不到</td>
+<td><code>todayScheduledDate()</code> 改以主機時區的年月日組出日期，與護理端 <code>today()</code> 相同（DEP-15 已保證主機是 Asia/Taipei）</td>
+<td>FR-N02、FR-N15</td>
+</tr>
+<tr>
+<td>2</td>
+<td>開發環境 seed 的 15 台平板要逐台手動 MDM 註冊</td>
+<td>模擬 MDM、非正式環境時，後端啟動自動納管（照樣經 <code>MdmProviderPort</code>、照樣寫稽核）；<strong>正式環境不做</strong></td>
+<td>FR-S01</td>
+</tr>
+<tr>
+<td>3</td>
+<td>模擬 MDM 的狀態只在記憶體，後端重新啟動後已納管的平板鎖不了、解不開、也無法重新註冊</td>
+<td><code>MdmProviderPort</code> 新增 <code>simulated</code> 與選用的 <code>restoreDevice</code>；啟動時把資料庫的納管狀態交回模擬 MDM（不分環境）</td>
+<td>FR-S01</td>
+</tr>
+<tr>
+<td>4</td>
+<td>正式環境每台平板要手動輸入主機位址、序號、金鑰</td>
+<td>「裝置管理」註冊成功時畫出<strong>佈建 QR code</strong>（內容就是契約第 2 節的載入網址）；外殼 <strong>0.3.0</strong> 佈建畫面可掃描，掃完只填欄位、不直接儲存</td>
+<td>FR-S01、FR-S14</td>
+</tr>
+</tbody>
+</table>
+<p><strong>三個決定</strong>：</p>
+<ul>
+<li><strong>外殼加相機權限</strong>（使用者 0928 決定，推翻外殼 README 的「刻意沒有相機」）。範圍收在佈建畫面：按下掃描才要權限；外殼沒有 <code>WebChromeClient</code>，病人端網頁拿不到相機；沒有相機的平板照樣裝得上</li>
+<li><strong>契約不加版號、最低可用版本不調高</strong>：QR code 是既有載入網址，新舊外殼兩個方向都相容；加版號會讓所有 0.2.0 外殼被標成「版本不相容」，是假警報（契約第 2 節、第 10 節）</li>
+<li><strong>不讓平板自己向後端註冊</strong>：那樣任何連上院內 Wi-Fi 的裝置都能冒充病人平板</li>
+</ul>
+<p><strong>驗收現況（0928）</strong>：<code>verify:iteration14-1</code>（6 步，不需後端）與 <code>verify:iteration14-1:api</code>（5 步；<strong>停掉後端再啟動之後</strong>跑，驗得到補回）全部通過；
+<code>check:all</code> 六支全綠；<code>verify:iteration14</code> 全綠。外殼 0.3.0 以 Gradle 8.7 在開發機編譯成功（compileSdk 暫以 35 代替本機沒有的 34；<code>aapt</code> 核對：versionCode 300、minSdk 21、多了相機權限、相機硬體全部標為非必要）；
+<strong>真的平板掃 QR code 待做</strong>（<code>x72</code>～<code>x77</code>，需 <code>https://</code> 環境與重建的 <code>shell-builder</code>）。</p>
+<p><strong>已知的環境相依（不是這次造成的）</strong>：<code>verify:iteration14:api</code> 步驟 4 預設「第二層輪播」開著，
+但 <code>verify:iteration6</code> 跑完會把它改回關閉，而第二層要有上架中的內容才准開。先跑過迭代 6 的環境裡，迭代 14 的這兩條會不通過；
+依 1.1「不得以配合新功能為由修改既有驗收腳本」，這次不改腳本，記在這裡。</p>
+<p><strong>上線前</strong>：外殼 repo 的 <code>v0.3.0</code> tag 要推到主機上的 clone；重建 <code>shell-builder</code> 映像檔（掃描套件要在映像檔建置階段下載）；<code>MDM_KIOSK_BASE_URL</code> 必須是 <code>https://</code>。</p>
 <h3 id="413-迭代-15規則引擎與三項高風險功能原迭代-7--110926-再順延">4.13 迭代 15：規則引擎與三項高風險功能（原迭代 7 → 11，0926 再順延）<a class="headerlink" href="#413-迭代-15規則引擎與三項高風險功能原迭代-7--110926-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -6600,6 +6732,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~介面極簡重設計（0926）~~</td>
 <td><strong>實作已完成（0927）</strong>，開發機截圖與腳本驗收通過；第三者錄影與部署一輪待做</td>
 <td>無；進院前需 Q-31，目標平板尺寸待 Q-33</td>
+</tr>
+<tr>
+<td>~~14.1~~</td>
+<td>~~日期時差與平板佈建（0928）~~</td>
+<td><strong>已完成（0928）</strong>，腳本驗收通過；真的平板掃 QR code 待做</td>
+<td>無</td>
 </tr>
 <tr>
 <td>15</td>

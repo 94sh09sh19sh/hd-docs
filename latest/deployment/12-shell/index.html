@@ -1113,6 +1113,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-14-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1518,6 +1546,34 @@
     
   
     迭代 14 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 分冊
   
 
     
@@ -3222,8 +3278,10 @@
 <h2 id="4-平板每台各做一次">4. 平板（每台各做一次）<a class="headerlink" href="#4-平板每台各做一次" title="Permanent link">&para;</a></h2>
 <p>照《部署規範》8.2。<strong>首波只佈建實際會用到的兩三台</strong>（DEP-36）。</p>
 <h3 id="y-09-在護理端註冊平板">Y-09 在護理端註冊平板<a class="headerlink" href="#y-09-在護理端註冊平板" title="Permanent link">&para;</a></h3>
-<p>護理端 → 裝置管理 → 註冊新平板。<strong>金鑰只顯示一次</strong>，抄在佈建單上，佈建完就銷毀那張單子。
-顯示的網址要以 <code>https://</code> 開頭；不是的話回 Y-03。</p>
+<p>護理端 → 裝置管理 → 註冊新平板。畫面出現<strong>佈建 QR code</strong> 與文字網址（迭代 14.1 起），
+<strong>兩者只顯示一次</strong>：這個畫面先不要關，拿著平板照 Y-10～Y-12 做完、掃完再離開。
+平板沒有相機、或這一頁非關不可時，才把序號與金鑰抄在佈建單上，佈建完就銷毀那張單子。
+顯示的網址要以 <code>https://</code> 開頭；不是的話回 Y-03（外殼會拒收 <code>http://</code> 的 QR code）。</p>
 <h3 id="y-10-平板的系統設定">Y-10 平板的系統設定<a class="headerlink" href="#y-10-平板的系統設定" title="Permanent link">&para;</a></h3>
 <ol>
 <li>設定裝置 PIN，關閉「新增使用者」</li>
@@ -3252,7 +3310,9 @@
 </table>
 <h3 id="y-12-首次啟動與釘選">Y-12 首次啟動與釘選<a class="headerlink" href="#y-12-首次啟動與釘選" title="Permanent link">&para;</a></h3>
 <ol>
-<li>開啟「透析照護平板」，主機位址填 <code>https://&lt;主機&gt;:&lt;病人端埠&gt;</code>（與 <code>MDM_KIOSK_BASE_URL</code> 相同），序號與金鑰填 Y-09 的</li>
+<li>開啟「透析照護平板」，按「<strong>掃描 QR code</strong>」（外殼 0.3.0 起），允許相機，對準 Y-09 畫面上的 QR code。
+   三欄一次填好，<strong>核對序號與這台平板的標籤一致</strong>。沒有相機時照舊手動輸入：主機位址填 <code>https://&lt;主機&gt;:&lt;病人端埠&gt;</code>
+   （與 <code>MDM_KIOSK_BASE_URL</code> 相同），序號與金鑰填 Y-09 的</li>
 <li>按「儲存並啟動」，系統跳出「要固定這個應用程式嗎」，按「確定」</li>
 </ol>
 <p><strong>怎麼知道成功了</strong>：畫面是病人端的等待畫面，沒有任何憑證警告；按上一頁、首頁、多工鍵都離不開。</p>
@@ -3267,6 +3327,18 @@
 <tr>
 <td>「主機位址要以 https:// 開頭」</td>
 <td>照填</td>
+</tr>
+<tr>
+<td>掃了 QR code 出現「主機位址不是 https:// 開頭」</td>
+<td><code>MDM_KIOSK_BASE_URL</code> 還是 <code>http://</code>。回 Y-03 改好，重新註冊這一台（舊的那張 QR code 已經不能用）</td>
+</tr>
+<tr>
+<td>掃了 QR code 出現「這不是平板佈建用的 QR code」</td>
+<td>掃到別的東西了。對準 Y-09 畫面上那一張</td>
+</tr>
+<tr>
+<td>佈建畫面沒有「掃描 QR code」</td>
+<td>裝的是 0.3.0 以前的外殼。手動輸入照樣可以；要掃描就照 Y-14 換成 0.3.0（重建 <code>shell-builder</code> 映像檔，Y-04、Y-05）再從下載頁重裝</td>
 </tr>
 <tr>
 <td>一片空白或「網頁無法使用」</td>

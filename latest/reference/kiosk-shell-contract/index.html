@@ -979,6 +979,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2. 載入網址與裝置身分">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#佈建-qr-code迭代-141-增補" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        佈建 QR code（迭代 14.1 增補）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1259,6 +1276,34 @@
     
   
     部署路線比較：離線安裝包與容器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-14-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 修正紀錄
   
 
     
@@ -1677,6 +1722,34 @@
     
   
     迭代 14 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 分冊
   
 
     
@@ -2299,6 +2372,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2. 載入網址與裝置身分">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#佈建-qr-code迭代-141-增補" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        佈建 QR code（迭代 14.1 增補）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2493,6 +2583,47 @@
 （<code>apps/patient-pwa/src/device.ts</code> 的 <code>readCredentials</code>），病人不會在畫面上看到金鑰。
 金鑰遺失就在護理端解除佈建後重新註冊，不必重發 APK。</p>
 <p><strong>外殼只放行同一個來源</strong>（協定、主機、埠三者相同）。任何外部連結一律不開。</p>
+<h3 id="佈建-qr-code迭代-141-增補">佈建 QR code（迭代 14.1 增補）<a class="headerlink" href="#佈建-qr-code迭代-141-增補" title="Permanent link">&para;</a></h3>
+<p>護理端「裝置管理」註冊平板成功時，除了以文字顯示上面那個載入網址，<strong>也把同一個網址畫成 QR code</strong>
+（<code>apps/nurse-pwa/src/qr-code.tsx</code>，在瀏覽器裡自己畫，不經任何院外服務）。外殼 0.3.0 起佈建畫面有「掃描 QR code」：</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QR code 的內容</td>
+<td><strong>就是上面的載入網址</strong>，一個字都不多：<code>https://&lt;主機&gt;:&lt;埠&gt;/?serial=&lt;序號&gt;&amp;key=&lt;金鑰&gt;</code></td>
+</tr>
+<tr>
+<td>外殼怎麼拆</td>
+<td>主機位址 = 網址去掉 <code>/?serial=…</code> 那一段（連線位址若帶路徑照樣保留）；序號、金鑰取自兩個參數並做 URL 解碼</td>
+</tr>
+<tr>
+<td>拆完之後</td>
+<td><strong>只填進三欄，不直接儲存</strong>。護理師核對序號與平板標籤一致後按「儲存並啟動」，存下來的東西與手動輸入完全相同</td>
+</tr>
+<tr>
+<td>擋下的情況</td>
+<td>不是這個格式、序號不合第 2 節的規則、<strong>不是 <code>https://</code></strong>（第 6 節）。開發機的 QR code 是 <code>http://</code>，外殼會拒收，這是正確的</td>
+</tr>
+<tr>
+<td>相機</td>
+<td>只在佈建畫面、按下掃描時才要權限；病人端網頁拿不到相機（外殼沒有設定 <code>WebChromeClient</code>，WebView 一律拒絕網頁的相機要求）</td>
+</tr>
+<tr>
+<td>沒有相機時</td>
+<td>手動輸入照舊，三欄的來源不變</td>
+</tr>
+</tbody>
+</table>
+<p><strong>這一項不加契約版號</strong>，理由：QR code 的內容是本節既有的載入網址，沒有新的格式、端點或 JavaScript 介面；
+舊外殼（0.2.0）照樣以手動輸入佈建，新外殼接舊系統也照樣手動輸入，兩個方向都不會壞。
+照第 9 節加版號的話，部署新系統之後所有 0.2.0 外殼都會被標成「版本不相容」，但它們其實完全能用——
+那是假警報。<strong>QR code 的內容若要改成網址以外的格式，就要照第 9 節加版號。</strong></p>
 <hr />
 <h2 id="3-javascript-介面windowhdkioskshell">3. JavaScript 介面：<code>window.HdKioskShell</code><a class="headerlink" href="#3-javascript-介面windowhdkioskshell" title="Permanent link">&para;</a></h2>
 <p>外殼以 <code>addJavascriptInterface</code> 注入。<strong>只有讀取，沒有任何會改變平板狀態的方法</strong>。</p>
@@ -2720,6 +2851,11 @@
 <td>1</td>
 <td>0927</td>
 <td>迭代 12 首版。迭代 10 的外殼 README 裡「載入網址、裝置身分、前景回報、憑證」四節搬到這裡並定版號；新增 JS 介面、版本握手端點、前景回報附版本、釘選狀態併入前景判定；憑證改為只信任院內 CA、只准 HTTPS，後端改為與病人端同一個來源</td>
+</tr>
+<tr>
+<td>1（增補）</td>
+<td>0928</td>
+<td>迭代 14.1：第 2 節新增「佈建 QR code」——內容就是既有的載入網址，外殼 0.3.0 起可掃描。沒有新格式、兩個方向都相容，<strong>不加版號</strong>（理由見第 2 節）</td>
 </tr>
 </tbody>
 </table>
