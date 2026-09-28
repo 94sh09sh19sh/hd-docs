@@ -198,7 +198,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `shift` | `TEXT` | 班別：早班、午班、晚班。透析是固定時段輪班制，同一台機器一天服務多位病人 | 合法值 `MORNING` / `AFTERNOON` / `EVENING`（`TreatmentShift`）。中文標籤在 `TREATMENT_SHIFT_LABELS` |
 | `status` | `TEXT` | 這次療程的進度：已排定、進行中、已完成、已取消 | 合法值 `SCHEDULED` / `IN_PROGRESS` / `COMPLETED` / `CANCELLED`（`TreatmentSessionStatus`）。與 `scheduled_date` 組成複合索引 |
 | `started_at` | `TS?` | 實際上機時間。排定時間與實際時間常有落差，兩者分開記錄 | 轉入 `IN_PROGRESS` 時寫入 |
-| `ended_at` | `TS?` | 實際下機時間 | 轉入 `COMPLETED` 時寫入 |
+| `ended_at` | `TS?` | 實際下機時間 | 轉入 `COMPLETED` 時寫入。0929 起今天的療程可以**重新開啟**（誤下機），回到 `SCHEDULED` 時清為 NULL；下機時間仍留在 `audit_logs` |
 | `created_by_id` | `TEXT` | **是誰排的這個班**。稽核要求每筆資料都能追溯到具名操作者 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
 | `created_at` | `TS` | 排班建立時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
@@ -377,7 +377,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `CAROUSEL_LAYER_1` `CAROUSEL_LAYER_2` `CAROUSEL_LAYER_3` `PERF_INDIVIDUAL_L3` `REWARD_SCORING`。後端啟動時自動補齊缺少的列，一律為關閉 |
+| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `CAROUSEL_LAYER_1` `CAROUSEL_LAYER_2` `CAROUSEL_LAYER_3` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有輪播三層預設開啟） |
 | `enabled` | `BOOL` | 目前是否開啟 | `DEFAULT false`。⛔ **不得直接改資料庫開啟**——開啟必須經 `FeatureFlagsService`：它會判定開啟條件（實作規格書 3.7）、要求核准依據、寫入稽核。後端以記憶體中的狀態為準，直接改資料庫在重新啟動前也不會生效 |
 | `last_reason` | `TEXT?` | 最後一次切換時登記的核准依據或理由 | 開與關都必填（FR-S08、FR-M11），長度 2～500 字 |
 | `changed_by_id` | `TEXT?` | 最後一次是誰切換的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未切換過時為 NULL |
