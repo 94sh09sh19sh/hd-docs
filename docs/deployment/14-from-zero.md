@@ -218,8 +218,15 @@ docker compose version
 |---|---|---|
 | 1 | General → Start Docker Desktop when you sign in | 勾 |
 | 2 | General → Send usage statistics | 不勾 |
-| 3 | Software updates → Automatically check for updates | 不勾 |
+| 3 | Software updates → Automatically check for updates | 不勾（見下方說明） |
 | 4 | Resources → Advanced → Disk image location | **把路徑抄下來** |
+
+> **第 3 項找不到勾選框？** 那是因為這台的 Docker Desktop 是從 **Microsoft Store** 裝的，設定頁只會叫你去市集管理，沒有勾選框可以勾（第十冊 F-16，院內主機就是這種情形）。
+> 這時更新是否自動發生，由**市集的自動更新設定**決定，而市集設定管的是**整台主機的所有 App**，只能交給資訊室決定。你要做的是：
+> 1. 在演練紀錄寫下「更新由市集管理，現行設定＝＿＿」。
+> 2. 問資訊室能不能改成手動更新；不行的話，至少請他們避開透析時段。
+>
+> 不處理的後果：Docker Desktop 更新時引擎會重新啟動，容器會中斷一段時間，碰上透析班時平板就會斷線；版本也會在沒走院方變更流程的情況下自己換掉。
 
 然後請資訊室把第 4 項那個資料夾加入防毒的排除清單。
 
