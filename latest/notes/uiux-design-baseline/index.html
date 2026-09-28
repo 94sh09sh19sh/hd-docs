@@ -1583,6 +1583,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2029,6 +2057,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.2 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2462,6 +2518,90 @@
     
   
     第十三冊 · AI 閘道（實驗室實測與院內設定）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14-from-zero/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊 · 從零開始的實際部署（新手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14a-env-hospital/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之一 · 實際部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14b-env-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之二 · 模擬部署的 .env 怎麼填
   
 
     
@@ -3331,6 +3471,10 @@
 <li><strong>自動出現只有一次。</strong> 病人按回首頁就回首頁，任務改成基本資訊區的一個圖示，點圖示接著做</li>
 <li>任務畫面閒置超過閒置門檻（FR-P09，預設 60 秒）自動回首頁——病人睡著了，平板不該一直停在第 3 題</li>
 <li><strong>內容多到一頁放不下時分頁，不捲動</strong>（M-4）。衛教內文以欄分頁（<code>PagedText</code>），版面尺寸變了自動重算頁數</li>
+<li><strong>求助的類別也一樣</strong>（0929，迭代 14.2）：依畫面實際大小分頁，一個框放不完就接到下一頁，框照樣分開畫（M-2）；
+  每一格同高，一頁放幾列才算得出來。只做到「不捲動」而不分頁，結果是放不下的類別被切掉、病人看不到</li>
+<li><strong>「其他」那一框（如廁、環境、口渴、機器）是功能開關，預設關閉</strong>（0929）：關閉時只剩「不舒服」一框，
+  組尾接非臨床組的「其他，請有人過來一下」。按鈕少一半；要上廁所、機器在叫，仍然有一顆送得出去</li>
 <li>為什麼時點是營運參數不是寫死：療程長度因人而異，四小時是常態不是規定，護理部要能改</li>
 </ul>
 <p><strong>這一版刪掉的字</strong>（M-3 的判準：刪掉之後病人還能不能完成動作）：「您好」「病歷號」「療程時段」「開始時間」
@@ -3538,7 +3682,11 @@
 └──────────────────────────────────────────────┴──────────────┘
 </code></pre></div>
 <p><strong>分區</strong>：床位圖在左，四種可以拖上去的東西在右，<strong>各自一個框、各自一個底色</strong>（M-2），不混在一起：
-病人（含新增、候床、下機兩個放置區）、護理師、平板（含停用區）、輪播內容（含「全部床位」放置區）。</p>
+病人（含新增、候床、下機兩個放置區）、護理師、平板（含停用區）、輪播內容（含新增與「全部床位」放置區）。</p>
+<p><strong>框裡的清單</strong>（0929，迭代 14.2）：格子同寬同高，每頁幾格依框的實際大小算，<strong>不寫死</strong>；分頁的 ‹ › 排在框底下放置區那一列的最前面，
+不另起一列（框只放得下一列時，另起的分頁列會被切掉）。<strong>停用的平板回到平板清單</strong>，排在備用的後面、帶鎖頭——
+兩者的用法一樣（拖到床上就用），停用區只是放置區，不放任何東西。
+<strong>蓋在床位格上的面板</strong>（新增病人、處理方式）超出畫面時往上或往左長，不能有一顆按鈕在畫面外。</p>
 <p><strong>九項一步操作</strong>（SRS 5.2 補充說明的表）：</p>
 <table>
 <thead>
@@ -3575,6 +3723,12 @@
 <td>復原＝解除綁定並取消排班</td>
 </tr>
 <tr>
+<td>新增衛教或公告（0929）</td>
+<td>拖輪播內容框的「＋」到床位或「全部」</td>
+<td>點「＋」、再點目的地</td>
+<td>復原＝下架（輪播內容沒有刪除）</td>
+</tr>
+<tr>
 <td>指派平板與病人</td>
 <td>拖病人到床位</td>
 <td>點病人、再點床位</td>
@@ -3607,7 +3761,8 @@
 </tbody>
 </table>
 <p>另有「下機」：拖病人到「下機」即正常下機結束。下機會把療程標成已完成、回不去，<strong>所以它延後 8 秒才送出</strong>，
-8 秒內按復原就當作沒發生——這是「一步復原」在不可逆動作上的做法，結案用的是同一個機制。</p>
+8 秒內按復原就當作沒發生——這是「一步復原」在不可逆動作上的做法，結案用的是同一個機制。
+<strong>8 秒之後才發現拖錯</strong>（0929）：把病人拖回床上就好，今天這個時段的療程會重新開啟，不必到專業版處理；下機與重新開啟各留一筆稽核。</p>
 <p><strong>「接緊急通報」為什麼不提供復原</strong>：確認通報是一個時間戳記，記的是「護理師什麼時候知道了」。
 撤掉它等於改寫那個時間，而那正是成效指標要用的資料（SRS FR-N10 的「確認時間與到達時間分開」）。
 按錯的代價是一筆早了幾秒的確認，比可以被撤掉的確認時間小得多。</p>
@@ -3804,9 +3959,9 @@
 <code>lightbulb</code> 說明（點開看更多），以及求助類別：<code>rotate-3d</code> 頭暈、<code>zap</code> 抽筋、<code>waves</code> 噁心想吐、<code>heart-pulse</code> 胸悶胸痛很喘、
 <code>brain</code> 頭痛、<code>hand</code> 皮膚癢、<code>thermometer</code> 發冷發燒、<code>droplet</code> 出血、<code>person-standing</code> 身體其他地方不舒服、<code>glass-water</code> 口渴肚子餓。</p>
 <p>護理端簡易版另有：<code>activity</code> 治療中、<code>triangle-alert</code> 待處理的求助、<code>octagon-alert</code> 緊急的求助、
-<code>shield-alert</code> 平板跳出固定畫面、<code>circle-arrow-up</code> 外殼版本過舊、<code>badge-alert</code> 外殼版本不相容、<code>tablet-smartphone</code> 平板、
+<code>shield-alert</code> 平板跳出固定畫面、<code>circle-arrow-up</code> 外殼版本過舊、<code>badge-alert</code> 外殼版本不相容、<code>wrench</code> 平板尚未佈建、<code>tablet-smartphone</code> 平板、
 <code>user</code> 病人、<code>user-plus</code> 新增病人、<code>stethoscope</code> 護理師、<code>megaphone</code> 公告、<code>layout-grid</code> 全部床位、<code>lock</code> 停用平板、
-<code>undo-2</code> 復原、<code>log-out</code> 下機、<code>arrow-left-right</code> 切換簡易版／專業版、<code>circle-x</code> 取消這筆求助，
+<code>undo-2</code> 復原、<code>log-out</code> 下機、<code>arrow-left-right</code> 切換簡易版／專業版、<code>circle-x</code> 取消這筆求助、<code>plus</code> 新增輪播內容（14.2），
 以及處理方式：<code>scan-heart</code> 觀察生命徵象、<code>move</code> 調整姿勢、<code>gauge</code> 調整超過濾、<code>droplets</code> 生理食鹽水回填、<code>pill</code> 給藥、
 <code>bandage</code> 局部處置、<code>phone-call</code> 通知醫師、<code>power</code> 提前結束療程、<code>package</code> 提供物品、<code>heart-handshake</code> 說明與安撫、<code>forward</code> 轉介
 （「調整機台設定」「協助如廁」「環境調整」「其他」沿用上表的 <code>monitor-dot</code>、<code>toilet</code>、<code>thermometer-sun</code>、<code>message-circle-question</code>——意思相同，所以是同一個圖示）。</p>
@@ -3884,6 +4039,12 @@
 <td>警示</td>
 <td><code>badge-alert</code>（徽章形）</td>
 <td>護理端平板標籤</td>
+</tr>
+<tr>
+<td>平板尚未佈建</td>
+<td>注意</td>
+<td><code>wrench</code>（扳手）</td>
+<td>護理端平板標籤（床位格與平板框）</td>
 </tr>
 </tbody>
 </table>
