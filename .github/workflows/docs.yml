@@ -49,6 +49,9 @@ jobs:
 
       - name: 部署凍結版（週次 tag）
         if: github.ref_type == 'tag'
+        env:
+          # llms.txt 裡的連結指向該週凍結版，不指向 latest（見 mkdocs.yml 的 llmstxt）
+          LLMSTXT_BASE_URL: https://94sh09sh19sh.github.io/hd-docs/${{ github.ref_name }}/
         run: |
           week="${GITHUB_REF_NAME}"
           if mike list 2>/dev/null | grep -qE "(^|[^0-9])${week}([^0-9]|$)"; then

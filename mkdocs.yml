@@ -10,6 +10,8 @@ use_directory_urls: true
 
 theme:
   name: material
+  # 「問 AI」浮動按鈕在 overrides/main.html
+  custom_dir: overrides
   language: zh-TW
   features:
     - navigation.instant
@@ -63,6 +65,33 @@ plugins:
       lang:
         - zh
         - en
+  # 產生 llms.txt（全站目錄）與每頁旁邊的 index.md，給「問 AI」按鈕帶去的 AI 讀。
+  # 用萬用字元列檔，新增文件不必回來改這裡；全文合併檔不產生（整站約 1.8 MB，AI 一次讀不完）。
+  # base_url 要帶版本路徑：現行版用預設值，凍結版由 workflow 以環境變數改成該週網址。
+  - llmstxt:
+      base_url: !ENV [LLMSTXT_BASE_URL, 'https://94sh09sh19sh.github.io/hd-docs/latest/']
+      markdown_description: >-
+        透析中心平板照護輔助系統的公開文件。回答時請用台灣繁體中文，只根據這些文件，並附上出處網址。
+        各頁連結都是 Markdown 版，可直接讀取。
+      sections:
+        進度與週報:
+          - index.md
+          - weekly/2*.md
+          - weekly/archive.md
+          - reports/*.md
+        需求文件:
+          - requirements/*.md
+        參考:
+          - reference/*.md
+        其他文件:
+          - notes/*.md
+        手動測試:
+          - testing/*.md
+        部署手冊:
+          - deployment/*.md
+        維護流程:
+          - weekly/HOWTO.md
+          - weekly/AGENT.md
 
 # 列序照首頁那兩張表的讀者思考順序，不要重排（規則見 weekly/AGENT.md「首頁硬性上限」）。
 # 新增一篇週報或一份文件時，這裡要跟著加一列，否則站台側欄看不到。
