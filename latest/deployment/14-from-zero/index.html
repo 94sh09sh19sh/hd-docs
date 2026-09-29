@@ -4187,20 +4187,24 @@
 <p><strong>做什麼</strong></p>
 <p>先決定根目錄。實際部署用 <code>D:\hd-tablet-care</code>；🧪 模擬部署用 <code>C:\hd-sim</code>。</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$root</span> <span class="p">=</span> <span class="s2">"D:\hd-tablet-care"</span>          <span class="c"># 🧪 模擬部署改成 C:\hd-sim</span>
+<span class="nv">$cfg</span>  <span class="p">=</span> <span class="s2">"$root\config\.env"</span>
 <span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="s2">"$root\config"</span><span class="p">,</span> <span class="s2">"$root\backups"</span> <span class="p">|</span> <span class="nb">Out-Null</span>
 <span class="nb">Get-ChildItem</span> <span class="nv">$root</span>
+<span class="nv">$cfg</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：列出 <code>backups</code>、<code>config</code> 兩個資料夾。<code>repo</code> 現在還沒有是對的，下一步 clone 才會產生。</p>
+<p>前兩行設定兩個變數，本冊之後一直會用到：<code>$root</code> 是根目錄，<code>$cfg</code> 是 N-11 要建立的 <code>.env</code> 的位置。
+本冊之後的 <code>docker compose</code> 指令都寫成 <code>--env-file $cfg</code>，而且都在 <code>$root\repo</code> 底下打。</p>
+<p><strong>怎麼知道成功了</strong>：列出 <code>backups</code>、<code>config</code> 兩個資料夾，最後一行印出 <code>D:\hd-tablet-care\config\.env</code>（🧪 模擬部署是 <code>C:\hd-sim\config\.env</code>）。
+<code>repo</code> 現在還沒有是對的，下一步 clone 才會產生；<code>.env</code> 也還沒有，N-11 才會建立。</p>
 <p><strong>不可以放的地方</strong>：OneDrive 之類的雲端同步資料夾、網路磁碟機、RAM 磁碟、<code>C:\Users\&lt;帳號&gt;\</code> 底下的桌面／文件／下載。</p>
 <blockquote>
-<p>⚠️ <strong>開工三行</strong>：PowerShell 關掉再開，變數就不見了。<strong>之後每開一個新的 PowerShell 視窗，先打這三行</strong>
+<p>⚠️ <strong>開工三行</strong>：PowerShell 關掉再開，<code>$root</code>、<code>$cfg</code> 就不見了。<strong>之後每開一個新的 PowerShell 視窗，先打這三行</strong>
 （第三行要等 N-10 clone 完才有那個資料夾）：</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$root</span> <span class="p">=</span> <span class="s2">"D:\hd-tablet-care"</span>          <span class="c"># 🧪 模擬部署改成 C:\hd-sim</span>
 <span class="nv">$cfg</span>  <span class="p">=</span> <span class="s2">"$root\config\.env"</span>
 <span class="nb">cd </span><span class="nv">$root</span><span class="p">\</span><span class="n">repo</span>
 </code></pre></div>
-<p>本冊之後的 <code>docker compose</code> 指令都寫成 <code>--env-file $cfg</code>，而且都在 <code>$root\repo</code> 底下打。
-看到 <code>couldn't find env file</code>，十次有九次是忘了打這三行。</p>
+<p>看到 <code>couldn't find env file</code>，十次有九次是忘了打這三行。</p>
 </blockquote>
 <hr />
 <h3 id="n-09-產生本系統-repo-的部署金鑰w-09">N-09 產生本系統 repo 的部署金鑰（＝W-09）<a class="headerlink" href="#n-09-產生本系統-repo-的部署金鑰w-09" title="Permanent link">&para;</a></h3>
