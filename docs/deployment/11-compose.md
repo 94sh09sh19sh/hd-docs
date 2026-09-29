@@ -426,7 +426,7 @@ docker compose --env-file $cfg logs api --tail 30
 
 **做什麼**
 
-1. 護理端 **系統管理** 按「立即備份」，記下檔名與 SHA-256
+1. 護理端 **系統管理** 按「立即備份」，記下檔名。完整的 SHA-256 在備份旁邊同名的 `.sha256` 檔（`Get-Content D:\hd-tablet-care\backups\<檔名>.sha256`，前半段），畫面上只顯示前 12 碼
 2. 還原到資料卷裡的一個測試檔，跑完整性檢查，再刪掉：
 
 ```powershell
@@ -434,7 +434,9 @@ docker compose --env-file $cfg run --rm --no-deps api node_modules/.bin/ts-node 
 docker compose --env-file $cfg run --rm --no-deps --entrypoint rm api /data/restore-check.db
 ```
 
-**怎麼知道成功了**：`✓ 與備份歷程上的紀錄相符`、`完整性檢查：ok`；`D:\hd-tablet-care\backups\` 裡看得到那個檔。
+**怎麼知道成功了**：`✓ 與備份歷程上的紀錄相符`、`完整性檢查：ok`；`D:\hd-tablet-care\backups\` 裡看得到那個檔和同名的 `.sha256`。
+
+> 服務起不來、打不開備份歷程時，雜湊一樣從 `.sha256` 讀；送往院內另一台機器時要跟著一起送。
 
 ---
 
@@ -502,7 +504,7 @@ docker compose --env-file $cfg run --rm --no-deps api node_modules/.bin/ts-node 
 docker compose --env-file $cfg up -d
 ```
 
-備份檔名與雜湊在 W-19 `db-update` 輸出的第 3 步，也在更新紀錄裡。
+備份檔名與雜湊在 W-19 `db-update` 輸出的第 3 步，也在更新紀錄裡；雜湊另外存在備份旁邊同名的 `.sha256` 檔。
 
 **怎麼知道成功了**：還原輸出 `完整性檢查：ok`、`還原的就是 DATABASE_URL 指向的正本`；`ps` 裡三個服務的映像檔標籤是舊 tag；護理端的版本標記是舊版。
 

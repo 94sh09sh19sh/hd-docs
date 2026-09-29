@@ -436,7 +436,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `duration_ms` | `INT?` | 耗時（毫秒） | |
 | `file_name` | `TEXT` | 備份檔名 | ⛔ **只記檔名**，目錄由伺服器設定 `BACKUP_DIR` 決定，完整路徑不寫進資料庫（第 9 條） |
 | `file_size_bytes` | `BIGINT?` | 備份檔大小 | |
-| `sha256` | `TEXT?` | 備份檔的雜湊值。還原前拿來比對，確認檔案沒有損毀或被更動 | 還原腳本 `npm run db:restore -- --sha256` 會比對這個值 |
+| `sha256` | `TEXT?` | 備份檔的雜湊值。還原前拿來比對，確認檔案沒有損毀或被更動 | 還原腳本 `npm run db:restore -- --sha256` 會比對這個值。同一個值另存在備份旁邊的 `<檔名>.sha256`（格式同 `sha256sum`），資料庫壞掉時仍查得到 |
 | `error_message` | `TEXT?` | 失敗原因 | 已把資料庫與備份目錄的實際路徑換成設定名稱 |
 | `initiated_by_id` | `TEXT?` | 誰觸發的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。排程備份為 NULL |
 

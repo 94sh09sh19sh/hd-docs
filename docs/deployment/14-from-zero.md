@@ -571,15 +571,26 @@ docker compose --env-file $cfg logs api --tail 30
 
 **做什麼**
 
-1. 護理端 → **系統管理** → 「立即備份」。**把畫面上的檔名與 SHA-256 抄下來。**
-2. 把它還原到一個測試檔，確認完整，再刪掉測試檔（`<檔名>`、`<雜湊>` 換成剛剛抄的）：
+1. 護理端 → **系統管理** → 「立即備份」，記下畫面上的檔名。
+   備份歷程的 SHA-256 只顯示前 12 碼；完整的 64 碼到備份資料夾讀同名的 `.sha256` 檔：
+
+   ```powershell
+   Get-Content "$root\backups\<檔名>.sha256"
+   ```
+
+   前半段就是雜湊。護理端 **稽核軌跡**（動作選「資料庫線上備份」）的說明欄也有完整的一份。
+2. 把它還原到一個測試檔，確認完整，再刪掉測試檔（`<檔名>`、`<雜湊>` 換成剛剛記下的）：
 
    ```powershell
    docker compose --env-file $cfg run --rm --no-deps api node_modules/.bin/ts-node --project apps/api/tsconfig.json apps/api/scripts/restore-backup.ts --from /backups/<檔名> --to /data/restore-check.db --sha256 <雜湊>
    docker compose --env-file $cfg run --rm --no-deps --entrypoint rm api /data/restore-check.db
    ```
 
-**怎麼知道成功了**：輸出有 `✓ 與備份歷程上的紀錄相符` 與 `完整性檢查：ok`；`$root\backups\` 裡看得到那個檔。
+**怎麼知道成功了**：輸出有 `✓ 與備份歷程上的紀錄相符` 與 `完整性檢查：ok`；`$root\backups\` 裡看得到那個檔和同名的 `.sha256`。
+
+> 💡 **服務起不來時**：備份歷程與稽核軌跡都存在資料庫裡，打不開網頁就看不到。這時直接看資料夾：
+> `Get-ChildItem "$root\backups\*.db" | Sort-Object LastWriteTime` 最後一個是最新的備份，雜湊在它旁邊的 `.sha256`。
+> 送往院內另一台機器時，`.sha256` 要跟著一起送。
 
 實際部署還要**當場問清楚**：備份資料夾的內容由誰、多久送往院內另一台機器一次？答不出來就寫進交接文件的「已知限制」。
 
