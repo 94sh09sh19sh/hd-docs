@@ -4209,9 +4209,12 @@
 <ol>
 <li>產生金鑰（<code>&lt;主機名稱&gt;</code> 換成這台機器的名字，只是註記用）：</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
+<div class="highlight"><pre><span></span><code><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span>
+<span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
+<p>第一行是先建好 <code>.ssh</code> 資料夾：沒用過 SSH 的新帳號沒有這個資料夾，<code>ssh-keygen</code> 不會自己建。
+   資料夾已經在的話，這一行什麼都不會動。</p>
 <ol>
 <li>把印出來的那<strong>一整行</strong>（<code>ssh-ed25519 AAAA… hd-tablet-care@…</code>）交給 repo 管理者。
    管理者到 GitHub 的 <code>hd-tablet-care</code> repo → <strong>Settings → Deploy keys → Add deploy key</strong> 貼上，<strong>不要勾 Allow write access</strong>。</li>
@@ -4247,6 +4250,10 @@
 <tr>
 <td><code>ssh-keygen</code> 找不到</td>
 <td>Windows 的 OpenSSH Client 選用功能沒裝。實際部署問資訊室；模擬部署到「設定 → 系統 → 選用功能」加裝</td>
+</tr>
+<tr>
+<td><code>Saving key ... failed: No such file or directory</code>，接著 <code>Get-Content</code> 說 <code>.pub</code> 不存在</td>
+<td>漏打了建立 <code>.ssh</code> 資料夾那一行。補打後重跑 <code>ssh-keygen</code></td>
 </tr>
 <tr>
 <td>22 埠不通（N-06）</td>

@@ -3719,9 +3719,11 @@
 <h3 id="w-09-產生部署金鑰dep-43">W-09 產生部署金鑰（DEP-43）<a class="headerlink" href="#w-09-產生部署金鑰dep-43" title="Permanent link">&para;</a></h3>
 <p>私鑰在主機上產生、不離開主機；<strong>只有公鑰</strong>交給 repo 管理者登記。0922 那種臨時建立、事後要記得刪的個人權杖不再需要。</p>
 <p><strong>做什麼</strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
+<div class="highlight"><pre><span></span><code><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span>
+<span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
+<p>第一行是先建好 <code>.ssh</code> 資料夾：新帳號沒有這個資料夾，<code>ssh-keygen</code> 不會自己建；資料夾已經在的話，這一行不會動任何東西。</p>
 <p>把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。
 外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在<a href="../12-shell/">第十二冊</a> Y-02。</p>
 <p>再在 <code>$HOME\.ssh\config</code> 加一段，讓這把金鑰只用在這個 repo：</p>
@@ -3750,6 +3752,10 @@
 <tr>
 <td><code>ssh-keygen</code> 找不到</td>
 <td>Windows 的 OpenSSH Client 選用功能沒裝。問資訊室</td>
+</tr>
+<tr>
+<td><code>Saving key ... failed: No such file or directory</code></td>
+<td>漏了建立 <code>.ssh</code> 資料夾那一行。補打後重跑 <code>ssh-keygen</code></td>
 </tr>
 <tr>
 <td>第一次連線問 <code>Are you sure you want to continue connecting</code></td>
