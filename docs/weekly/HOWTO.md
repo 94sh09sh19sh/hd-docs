@@ -224,6 +224,7 @@ git add docs docs-site scripts package.json && git commit -m "docs: 週報 0916"
 | PowerShell 讀出來的中文是亂碼 | 系統預設編碼頁是 big5 | 讀檔一律 `Get-Content -Raw -Encoding UTF8`，省略 `-Encoding` 就會壞 |
 | 改了介面，但下一個人又改回去 | 只改了程式，沒改設計基準；或只改了文件，沒改 skill | 兩份一起改（見下方清單）。基準沒更新，下次就會再發明一組新的顏色與字級 |
 | 編輯某一行時被支語 hook 擋下，但那行看起來沒問題 | 詞庫收了一些在醫學與公文語境屬正常用法的詞，整行寫入就會被擋 | 縮小編輯範圍，只改那個片段；或把該行從 `~/.claude/hooks/zhiyu-words.txt` 註解掉 |
+| 重新產生架構圖時 Chrome 無頭模式沒有任何輸出、也不出錯 | 在 Git Bash 裡直接呼叫 `chrome.exe`，指令馬上結束、截圖沒寫出來（2026-09-29） | 改在 PowerShell 以 `Start-Process -Wait` 呼叫，路徑用 Windows 格式。細節寫在 `architecture-diagrams.md` 文末的坑 |
 
 ---
 

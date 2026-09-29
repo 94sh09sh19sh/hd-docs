@@ -138,9 +138,12 @@
   .link{fill:none;stroke:var(--line);stroke-width:2}
   .link-push{fill:none;stroke:var(--teal);stroke-width:2;stroke-dasharray:9 6}
   .link-ext{fill:none;stroke:var(--rust);stroke-width:2.2}
+  .link-build{fill:none;stroke:var(--ochre);stroke-width:2;stroke-dasharray:3 5}
+  .t-lbl-build{fill:var(--ochre);font-size:12.5px}
   .mk-ink{fill:var(--line)}
   .mk-teal{fill:var(--teal)}
   .mk-rust{fill:var(--rust)}
+  .mk-ochre{fill:var(--ochre)}
 
   /* ---- close ---- */
   .close{display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
@@ -163,12 +166,12 @@
   <header class="masthead">
     <div class="eyebrow">血液透析平板照護輔助系統 · 現行架構圖</div>
     <h1>透析照護系統架構圖</h1>
-    <p class="dek">圖版一畫軟體元件之間怎麼互相呼叫，圖版二畫這些東西實際擺在哪裡、哪條線跨出醫院。兩張圖的院內網路是同一個框；0910 需求改版之後，跨出醫院的只剩一條過渡期的線。</p>
+    <p class="dek">圖版一畫軟體元件之間怎麼互相呼叫，圖版二畫這些東西實際擺在哪裡、哪條線跨出醫院。兩張圖的院內網路是同一個框；0926 起服務執行時一條跨出醫院的線都沒有：對外只剩建置與更新時的連出，以及只在開發環境使用的實驗室通道。</p>
     <div class="meta">
       <span><b>依據</b> SRS v2.0 §3.2／§4.3／§7</span>
       <span><b>約束</b> 資料庫使用規範 §2／§7／§8／§14</span>
-      <span><b>對應</b> 迭代 6 完成時的程式</span>
-      <span><b>重繪</b> 2026-09-12（迭代 6 補畫閒置輪播，並標上正式主機）</span>
+      <span><b>對應</b> 迭代 14.3 完成時的程式</span>
+      <span><b>重繪</b> 2026-09-29（依 0926 改版：容器＋git clone、AI 閘道服務、實驗室通道只在開發環境、建置期連線分開畫）</span>
     </div>
   </header>
 
@@ -244,7 +247,8 @@
     <div class="lines">
       <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link"/><polygon points="40,1 52,6 40,11" class="mk-ink"/></svg>請求／資料寫入（前端或上游發起）</span>
       <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link-push"/><polygon points="40,1 52,6 40,11" class="mk-teal"/></svg>伺服器端送下來（SSE 推送、指派後才核發的 Session Token）</span>
-      <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link-ext"/><polygon points="40,1 52,6 40,11" class="mk-rust"/></svg>跨出醫院邊界（只剩過渡期的實驗室 API，只送合成資料）</span>
+      <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link-ext"/><polygon points="40,1 52,6 40,11" class="mk-rust"/></svg>跨出醫院邊界的執行期呼叫（只剩開發環境的實驗室 GPU 伺服器，只送合成資料）</span>
+      <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link-build"/><polygon points="40,1 52,6 40,11" class="mk-ochre"/></svg>建置期才有的連出（git clone、映像檔、套件），服務執行時不用</span>
     </div>
   </section>
 
@@ -256,7 +260,7 @@
       <p class="claim">病人不登入、前端碰不到資料庫；即時通知走院內 SSE，所有 AI 呼叫先過閘道；護理師自己的資料與臨床資料分表。</p>
     </div>
     <figure>
-      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕；裝置綁定、照護業務（含閒置輪播）、營運與排班、臨床資料匯入都寫入同一個 SQLite 檔案，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層呼叫院內 AI 伺服器，唯一跨出醫院的是過渡期的實驗室 API，只送合成資料。規則引擎與對外報表服務是規劃中的元件。">
+      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕；裝置綁定、照護業務（含閒置輪播）、營運與排班、臨床資料匯入都寫入同一個 SQLite 檔案，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層，再經本系統的 AI 閘道服務（容器，不含模型）呼叫院內 AI 伺服器；唯一跨出醫院的是只在開發環境、經 SSH 通道使用的實驗室 GPU 伺服器，只送合成資料，正式環境設定拒絕啟用。規則引擎與對外報表服務是規劃中的元件。">
         <defs>
           <marker id="p1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p1-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
@@ -265,7 +269,7 @@
         </defs>
 
         <!-- zone：與圖版 02 是同一個框，三個前端都跑在院內裝置上 -->
-        <rect x="16" y="-40" width="1368" height="870" rx="18" class="zone"/>
+        <rect x="16" y="-40" width="1368" height="876" rx="18" class="zone"/>
         <rect x="44" y="-54" width="122" height="28" class="chip"/>
         <text x="56" y="-34" class="t-zone">醫院院內網路</text>
 
@@ -283,7 +287,8 @@
         <path d="M 612,470 V 494 H 440 V 538" class="link" marker-end="url(#p1-ink)"/>
         <path d="M 806,470 V 516 H 490 V 542" class="link" marker-end="url(#p1-ink)"/>
         <path d="M 1000,470 V 534" class="link" marker-end="url(#p1-ink)"/>
-        <path d="M 1000,630 V 684" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 1000,630 V 648" class="link" marker-end="url(#p1-ink)"/>
+        <path d="M 1000,724 V 744" class="link" marker-end="url(#p1-ink)"/>
         <path d="M 1090,585 H 1140 V 870" class="link-ext" marker-end="url(#p1-rust)"/>
         <path d="M 128,412 H 64 V 83 H 142" class="link-push" marker-end="url(#p1-teal)"/>
         <path d="M 1278,410 H 1350 V 83 H 1330" class="link-push" marker-end="url(#p1-teal)"/>
@@ -300,9 +305,10 @@
         <text x="624" y="486" class="t-lbl">與臨床資料分表</text>
         <text x="818" y="508" class="t-lbl">全有或全無</text>
         <text x="1012" y="505" class="t-lbl">去識別化後</text>
-        <text x="1012" y="662" class="t-lbl">正式：院內推論</text>
+        <text x="898" y="740" text-anchor="end" class="t-lbl">正式：院內推論</text>
+        <text x="1152" y="680" class="t-lbl-ext">只在開發環境・SSH 通道</text>
         <text x="1152" y="700" class="t-lbl-ext">過渡期・只送合成資料</text>
-        <text x="1152" y="720" class="t-lbl-ext">真實病人資料在閘道擋下</text>
+        <text x="1152" y="720" class="t-lbl-ext">正式環境設定拒絕啟用</text>
 
         <!-- 病人端 PWA : tablet -->
         <rect x="150" y="28" width="260" height="110" rx="16" class="node"/>
@@ -400,12 +406,12 @@
         <rect x="548" y="580" width="24" height="12" rx="2" class="node-plan"/>
         <rect x="548" y="602" width="24" height="12" rx="2" class="node-plan"/>
         <text x="656" y="596" text-anchor="middle" class="t-title-plan">規則引擎</text>
-        <text x="656" y="615" text-anchor="middle" class="t-sub-s">迭代 7・FR-R01</text>
+        <text x="656" y="615" text-anchor="middle" class="t-sub-s">迭代 15・FR-R01</text>
         <rect x="560" y="642" width="180" height="56" rx="4" class="node-plan"/>
         <rect x="548" y="652" width="24" height="12" rx="2" class="node-plan"/>
         <rect x="548" y="674" width="24" height="12" rx="2" class="node-plan"/>
         <text x="656" y="668" text-anchor="middle" class="t-title-plan">對外報表服務</text>
-        <text x="656" y="687" text-anchor="middle" class="t-sub-s">迭代 8・FR-X01</text>
+        <text x="656" y="687" text-anchor="middle" class="t-sub-s">迭代 16・FR-X01</text>
 
         <!-- 模型供應者介面層 -->
         <rect x="910" y="540" width="180" height="90" rx="4" class="node"/>
@@ -415,21 +421,30 @@
         <text x="1006" y="598" text-anchor="middle" class="t-sub-s">只改設定即可切換</text>
         <text x="1006" y="618" text-anchor="middle" class="t-sub-s">模擬／實驗室 API／院內推論</text>
 
+        <!-- AI 閘道服務（迭代 13）：本系統的容器，不含模型；換模型只改它的 config.yaml -->
+        <rect x="910" y="652" width="180" height="72" rx="10" class="node"/>
+        <rect x="920" y="660" width="160" height="56" rx="6" class="screen"/>
+        <rect x="898" y="668" width="12" height="9" rx="2" class="node"/>
+        <rect x="898" y="699" width="12" height="9" rx="2" class="node"/>
+        <rect x="1090" y="668" width="12" height="9" rx="2" class="node"/>
+        <rect x="1090" y="699" width="12" height="9" rx="2" class="node"/>
+        <text x="1000" y="684" text-anchor="middle" class="t-title-s">AI 閘道服務</text>
+        <text x="1000" y="706" text-anchor="middle" class="t-sub-s">本系統的容器・不含模型</text>
+
         <!-- 院內 AI 伺服器 : rack -->
-        <rect x="910" y="690" width="180" height="120" rx="8" class="node"/>
-        <rect x="924" y="702" width="152" height="12" rx="3" class="screen"/>
-        <rect x="924" y="720" width="152" height="12" rx="3" class="screen"/>
-        <rect x="924" y="738" width="152" height="12" rx="3" class="screen"/>
-        <circle cx="1066" cy="708" r="3" class="dot"/><circle cx="1066" cy="726" r="3" class="dot"/><circle cx="1066" cy="744" r="3" class="dot"/>
-        <text x="1000" y="776" text-anchor="middle" class="t-title-s">院內 AI 伺服器</text>
-        <text x="1000" y="798" text-anchor="middle" class="t-sub-s">另一台 DGX Spark・不由本專案部署</text>
+        <rect x="910" y="748" width="180" height="80" rx="8" class="node"/>
+        <rect x="924" y="758" width="152" height="10" rx="3" class="screen"/>
+        <rect x="924" y="773" width="152" height="10" rx="3" class="screen"/>
+        <circle cx="1066" cy="763" r="2.5" class="dot"/><circle cx="1066" cy="778" r="2.5" class="dot"/>
+        <text x="1000" y="803" text-anchor="middle" class="t-title-s">院內 AI 伺服器</text>
+        <text x="1000" y="821" text-anchor="middle" class="t-sub-s">另一台 DGX Spark・不自行部署</text>
 
         <!-- 實驗室 API : cloud -->
         <use href="#p1-cloud" transform="translate(1010,852)" class="node-ext"/>
-        <text x="1160" y="920" text-anchor="middle" class="t-title-ext">實驗室 API</text>
-        <text x="1160" y="944" text-anchor="middle" class="t-sub">過渡期・院外・僅合成資料</text>
+        <text x="1160" y="920" text-anchor="middle" class="t-title-ext">實驗室 GPU 伺服器</text>
+        <text x="1160" y="944" text-anchor="middle" class="t-sub">個人容器裡的 AI 閘道・院外</text>
       </svg>
-      <figcaption>兩條綠色虛線都是伺服器端送下來的：Session Token 要等護理師指派後才核發，平板在輪詢時領取；即時總覽由院內 SSE 長連線推給護理端與常駐總覽螢幕，推播中繼已整條拿掉。鏽色線只剩一條：過渡期的實驗室 API，AI 閘道在程式裡強制只送合成資料。迭代 5 新增的營運與排班模組是本系統第一個蒐集「護理師自己的資料」的地方：它與其他模組寫同一個檔案，但班表與成效基準自成資料表，不回寫臨床資料表。迭代 6 的閒置輪播併在照護業務模組裡：卡片一律由後端組好再送到平板，畫面上不出現姓名與病歷號，第三層的臨床數值來自臨床資料匯入寫進去的那幾張表。</figcaption>
+      <figcaption>兩條綠色虛線都是伺服器端送下來的：Session Token 要等護理師指派後才核發，平板在輪詢時領取；即時總覽由院內 SSE 長連線推給護理端與常駐總覽螢幕，推播中繼已整條拿掉。0927 起模型供應者介面層不直接連推論端點，一律經本系統的 AI 閘道服務（Python・LangChain 的容器，不含模型）；換模型只改閘道的設定檔，後端不動。鏽色線只剩一條：過渡期的實驗室 GPU 伺服器，只在開發環境經 SSH 通道使用，後端的 AI 閘道在程式裡強制只送合成資料，正式環境設定下選用它會直接拒絕啟動。迭代 5 新增的營運與排班模組是本系統第一個蒐集「護理師自己的資料」的地方：它與其他模組寫同一個檔案，但班表與成效基準自成資料表，不回寫臨床資料表。迭代 6 的閒置輪播併在照護業務模組裡：卡片一律由後端組好再送到平板，畫面上不出現姓名與病歷號，第三層的臨床數值來自臨床資料匯入寫進去的那幾張表。</figcaption>
     </figure>
   </section>
 
@@ -438,14 +453,15 @@
     <div class="plate-head">
       <span class="no">圖版 02</span>
       <h3>實體架構與網路分區</h3>
-      <p class="claim">院內裝置與資料庫一條對外連線都沒有；唯一出口是應用伺服器連到過渡期實驗室 API 的那條線。</p>
+      <p class="claim">服務執行時院內一條對外連線都沒有；主機只在建置與更新時連出，實驗室通道只在開發環境。</p>
     </div>
     <figure>
-      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內一台與其他專案共用的 Windows 工作站上的應用伺服器、同機本機 SSD 上的 SQLite 檔案、唯讀整合的 HIS/EMR、院內另一台機器上的備份目的地，以及另一台 DGX Spark 上的院內 AI 推論端點。平板不經 MDM，改以自包 WebView 外殼加螢幕固定。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕。唯一跨出醫院的是應用伺服器連到過渡期實驗室 API 的線，只送合成資料。">
+      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內一台與其他專案共用的 Windows 工作站，上面以 Docker 容器與 git clone 部署應用伺服器與本系統的 AI 閘道；SQLite 檔案在同一台主機的資料卷裡，唯讀整合 HIS/EMR，每日備份到院內另一台機器，AI 推論端點在另一台 DGX Spark 上。平板不經 MDM，改以自包 WebView 外殼加螢幕固定。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕。服務執行時沒有任何一條線跨出醫院；主機只在建置與更新時連出取得程式碼、映像檔與套件。過渡期的實驗室 GPU 伺服器只在開發環境由開發機經 SSH 通道使用，只送合成資料。">
         <defs>
           <marker id="p2-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p2-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
           <marker id="p2-rust" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-rust"/></marker>
+          <marker id="p2-ochre" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ochre"/></marker>
           <path id="p2-cloud" d="M 45,118 A 38,38 0 0 1 45,50 A 46,46 0 0 1 120,22 A 44,44 0 0 1 196,40 A 55,55 0 0 1 255,118 Z"/>
         </defs>
 
@@ -454,7 +470,7 @@
         <rect x="80" y="95" width="460" height="185" rx="14" class="zone"/>
         <rect x="600" y="95" width="560" height="185" rx="14" class="zone"/>
         <rect x="80" y="345" width="1080" height="400" rx="14" class="zone"/>
-        <rect x="300" y="835" width="460" height="150" rx="14" class="zone-ext"/>
+        <rect x="80" y="835" width="1080" height="150" rx="14" class="zone-ext"/>
 
         <rect x="74" y="26" width="152" height="28" class="chip"/>
         <text x="86" y="46" class="t-zone">醫院院內網路</text>
@@ -464,8 +480,8 @@
         <text x="636" y="100" class="t-zone">護理站／行政區</text>
         <rect x="104" y="332" width="200" height="26" class="chip"/>
         <text x="116" y="350" class="t-zone">醫院機房／伺服器室</text>
-        <rect x="520" y="822" width="232" height="26" class="chip"/>
-        <text x="532" y="840" class="t-zone-ext">外部網際網路（過渡期）</text>
+        <rect x="104" y="822" width="300" height="26" class="chip"/>
+        <text x="116" y="840" class="t-zone-ext">外部網際網路（建置期與開發環境）</text>
 
         <!-- links -->
         <path d="M 300,262 V 302 H 430 V 414" class="link" marker-end="url(#p2-ink)"/>
@@ -474,7 +490,9 @@
         <path d="M 530,580 V 612 H 1015 V 576" class="link" marker-end="url(#p2-ink)"/>
         <path d="M 370,580 V 672 H 296" class="link" marker-end="url(#p2-ink)"/>
         <path d="M 480,580 V 680 H 644" class="link" marker-end="url(#p2-ink)"/>
-        <path d="M 430,580 V 870" class="link-ext" marker-end="url(#p2-rust)"/>
+        <path d="M 410,580 V 866" class="link-build" marker-end="url(#p2-ochre)"/>
+        <path d="M 850,685 H 914" class="link" marker-end="url(#p2-ink)"/>
+        <path d="M 780,911 H 882" class="link-ext" marker-end="url(#p2-rust)"/>
         <path d="M 545,420 V 368 H 1175 V 185 H 1146" class="link-push" marker-end="url(#p2-teal)"/>
         <path d="M 760,368 V 244" class="link-push" marker-end="url(#p2-teal)"/>
 
@@ -486,8 +504,12 @@
         <text x="800" y="604" text-anchor="middle" class="t-lbl">唯讀查詢或檔案匯入・不寫回</text>
         <text x="334" y="692" text-anchor="middle" class="t-lbl">每日線上備份</text>
         <text x="562" y="672" text-anchor="middle" class="t-lbl">院內推論・去識別化後</text>
-        <text x="418" y="790" text-anchor="end" class="t-lbl-ext">過渡期・只送合成資料</text>
-        <text x="450" y="790" class="t-lbl">院內裝置與資料庫一條對外連線都沒有，唯一出口是過渡期的實驗室 API</text>
+        <text x="398" y="776" text-anchor="end" class="t-lbl-build">建置與更新時才連出</text>
+        <text x="398" y="796" text-anchor="end" class="t-lbl-build">git clone・映像檔・套件</text>
+        <text x="450" y="790" class="t-lbl">服務執行時院內一條對外連線都沒有；正式環境設定拒絕選用實驗室</text>
+        <text x="885" y="674" text-anchor="middle" class="t-lbl">院內網段</text>
+        <text x="831" y="900" text-anchor="middle" class="t-lbl-ext">SSH 通道</text>
+        <text x="831" y="934" text-anchor="middle" class="t-lbl-ext">只送合成資料</text>
 
         <!-- 病人 Kiosk 平板 x15 : stacked tablets -->
         <rect x="146" y="136" width="180" height="112" rx="14" class="ghost"/>
@@ -527,15 +549,15 @@
         <rect x="356" y="482" width="188" height="14" rx="3" class="screen"/>
         <circle cx="530" cy="445" r="3" class="dot"/><circle cx="530" cy="467" r="3" class="dot"/><circle cx="530" cy="489" r="3" class="dot"/>
         <text x="450" y="528" text-anchor="middle" class="t-title">應用伺服器</text>
-        <text x="450" y="550" text-anchor="middle" class="t-sub-s">＝圖版 01 的整層後端</text>
-        <text x="450" y="570" text-anchor="middle" class="t-sub-s">共用 Windows 工作站・離線安裝包</text>
+        <text x="450" y="550" text-anchor="middle" class="t-sub-s">＝圖版 01 的整層後端・共用主機</text>
+        <text x="450" y="570" text-anchor="middle" class="t-sub-s">Docker 容器・git clone 部署</text>
 
         <!-- SQLite 檔案 : cylinder -->
         <path d="M 650,442 L 650,558 A 90,22 0 0 0 830,558 L 830,442 Z" class="node"/>
         <ellipse cx="740" cy="442" rx="90" ry="22" class="node"/>
         <text x="740" y="496" text-anchor="middle" class="t-title-s">SQLite 檔案</text>
         <text x="740" y="520" text-anchor="middle" class="t-sub-s">與應用伺服器同一台</text>
-        <text x="740" y="542" text-anchor="middle" class="t-sub-s">本機 SSD・非網路磁碟</text>
+        <text x="740" y="542" text-anchor="middle" class="t-sub-s">資料卷・本機 SSD</text>
 
         <!-- HIS／EMR : document -->
         <path d="M 915,420 H 1115 V 556 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 Z" class="node-legacy"/>
@@ -549,20 +571,43 @@
         <text x="200" y="678" text-anchor="middle" class="t-title-s">備份目的地</text>
         <text x="200" y="700" text-anchor="middle" class="t-sub-s">院內另一台機器・不得雲端同步</text>
 
-        <!-- 院內 AI 伺服器 : rack -->
-        <rect x="650" y="640" width="230" height="90" rx="8" class="node"/>
-        <rect x="664" y="652" width="202" height="10" rx="3" class="screen"/>
-        <rect x="664" y="668" width="202" height="10" rx="3" class="screen"/>
-        <circle cx="856" cy="657" r="2.5" class="dot"/><circle cx="856" cy="673" r="2.5" class="dot"/>
-        <text x="765" y="702" text-anchor="middle" class="t-title-s">院內 AI 推論端點</text>
-        <text x="765" y="721" text-anchor="middle" class="t-sub-s">另一台 DGX Spark・不自行部署</text>
+        <!-- AI 閘道（迭代 13）：與應用伺服器同一台主機上的另一個容器，不含模型 -->
+        <rect x="650" y="640" width="200" height="90" rx="10" class="node"/>
+        <rect x="662" y="650" width="176" height="70" rx="6" class="screen"/>
+        <rect x="638" y="656" width="12" height="9" rx="2" class="node"/>
+        <rect x="638" y="700" width="12" height="9" rx="2" class="node"/>
+        <rect x="850" y="656" width="12" height="9" rx="2" class="node"/>
+        <rect x="850" y="700" width="12" height="9" rx="2" class="node"/>
+        <text x="750" y="680" text-anchor="middle" class="t-title-s">AI 閘道</text>
+        <text x="750" y="702" text-anchor="middle" class="t-sub-s">同一台主機的容器</text>
+        <text x="750" y="720" text-anchor="middle" class="t-sub-s">不含模型・改設定換模型</text>
 
-        <!-- 實驗室 API : cloud -->
-        <use href="#p2-cloud" transform="translate(330,852) scale(0.92)" class="node-ext"/>
-        <text x="450" y="910" text-anchor="middle" class="t-title-ext">實驗室 API</text>
-        <text x="450" y="934" text-anchor="middle" class="t-sub-s">過渡期・只收合成資料</text>
+        <!-- 院內 AI 推論端點 : rack -->
+        <rect x="920" y="640" width="220" height="90" rx="8" class="node"/>
+        <rect x="934" y="652" width="192" height="10" rx="3" class="screen"/>
+        <rect x="934" y="668" width="192" height="10" rx="3" class="screen"/>
+        <circle cx="1116" cy="657" r="2.5" class="dot"/><circle cx="1116" cy="673" r="2.5" class="dot"/>
+        <text x="1030" y="702" text-anchor="middle" class="t-title-s">院內 AI 推論端點</text>
+        <text x="1030" y="721" text-anchor="middle" class="t-sub-s">另一台 DGX Spark・不自行部署</text>
+
+        <!-- 建置期的來源 -->
+        <rect x="300" y="872" width="220" height="80" rx="8" class="node-ext"/>
+        <text x="410" y="906" text-anchor="middle" class="t-title-s">GitHub・映像檔・套件</text>
+        <text x="410" y="930" text-anchor="middle" class="t-sub-s">只在部署與更新時</text>
+
+        <!-- 開發機（只在開發環境） : monitor -->
+        <rect x="620" y="866" width="160" height="70" rx="8" class="node"/>
+        <rect x="630" y="876" width="140" height="50" rx="4" class="screen"/>
+        <polygon points="685,936 715,936 722,948 678,948" class="node"/>
+        <text x="700" y="898" text-anchor="middle" class="t-title-s">開發機</text>
+        <text x="700" y="918" text-anchor="middle" class="t-sub-s">只在開發環境</text>
+
+        <!-- 實驗室 GPU 伺服器 : cloud -->
+        <use href="#p2-cloud" transform="translate(878,838)" class="node-ext"/>
+        <text x="1010" y="914" text-anchor="middle" class="t-title-ext">實驗室 GPU 伺服器</text>
+        <text x="1010" y="938" text-anchor="middle" class="t-sub-s">個人容器裡的 AI 閘道</text>
       </svg>
-      <figcaption>沒畫出來的線和畫出來的一樣重要：平板、護理端裝置、總覽螢幕、資料庫都沒有任何一條往外打的線。推播中繼與外部 LLM 已拿掉；過渡期的實驗室 API 是唯一例外，院內 AI 伺服器就位後這條線也會消失。</figcaption>
+      <figcaption>沒畫出來的線和畫出來的一樣重要：平板、護理端裝置、總覽螢幕、資料庫都沒有任何一條往外打的線。0926 起部署改為 Docker 容器＋git clone，主機只在建置與更新時連出取得程式碼、映像檔與套件（赭色點線），服務起來之後一條對外連線都沒有。應用伺服器與 AI 推論端點之間多了一格本系統的 AI 閘道（同一台主機上的容器，不含模型）。過渡期的實驗室 GPU 伺服器不再從院內主機連出：它只在開發環境由開發機經 SSH 通道使用，只送合成資料，正式環境設定下選用它會直接拒絕啟動。</figcaption>
     </figure>
   </section>
 
@@ -572,7 +617,7 @@
       <ol class="rules">
         <li>資料流方向恆定：前端 → 後端 API → SQLite 檔案。前端不碰資料庫檔案，後端是唯一的寫入者，統計與報表走唯讀連線。</li>
         <li>身分不靠登入靠綁定：Session Token ＝ 病人＋平板＋療程時段，限時限裝置，由自建服務核發與失效。</li>
-        <li>院內裝置與資料庫一條對外連線都沒有。唯一跨出醫院的是過渡期的實驗室 API，AI 閘道在程式裡強制只送合成資料。</li>
+        <li>服務執行時，院內裝置與資料庫一條對外連線都沒有；主機只在建置與更新時連出。過渡期的實驗室只在開發環境經 SSH 通道使用，AI 閘道在程式裡強制只送合成資料，正式環境設定拒絕選用它。</li>
         <li>病人的資料與護理師的資料分表存放：營運與排班模組寫的是班表與成效基準，兩邊永遠不互相回寫。</li>
       </ol>
     </div>
@@ -586,12 +631,13 @@
         <li><b>迭代 6 補上閒置輪播與正式主機。</b>輪播併在照護業務模組裡（卡片由後端組好再送到平板）；兩張圖的「院內 AI 伺服器」標上 DGX Spark，應用伺服器標上容器部署。<b>沒有新增任何機器或網路連線</b>，圖版 02 的分區與線一條未改。</li>
         <li><b>迭代 5 再加一個營運與排班模組。</b>它是本系統第一個蒐集「護理師自己的資料」的地方——班表、床位分配、成效基準。與其他模組寫同一個檔案，但自成資料表，<b>不回寫臨床資料表</b>（資料庫使用規範 §11.2）。</li>
         <li><b>0919 第一次動到圖版 02 的分區與線。</b>應用伺服器由 DGX Spark 改為<b>院內另一台 Windows 工作站</b>（仍與其他專案共用），以離線安裝包部署；AI 推論端點退成<b>另一台機器</b>，兩者之間只有一條院內 HTTP 呼叫；<b>MDM 整格拿掉</b>，平板改以自包 WebView 外殼加螢幕固定，那條「註冊／遠端鎖定」的線一併消失；臨床數值來源由「待確認」改為院方唯讀 API。前面幾次都只換標籤，這一次真的少了一台機器、少了一條線。</li>
+        <li><b>0926 第二次動到圖版 02 的線。</b>部署改為 <b>Docker 容器＋git clone</b>（安裝包撤除），應用伺服器多一條<b>建置期才有的連出</b>，與執行期零連外分開畫；後端與 AI 推論端點之間多一格<b>本系統的 AI 閘道</b>（容器，不含模型）；<b>院內主機連到實驗室的那條線拿掉</b>，改為只在開發環境由開發機經 SSH 通道連到實驗室個人容器裡的 AI 閘道。</li>
       </ul>
     </div>
   </section>
 
   <footer>
-    依據 SRS v2.0 §3.2／§4.3／§7、實作規格書 v2.0 第 3 章與資料庫使用規範 §2／§7／§8／§11／§14 重繪（2026-09-19 更新：應用主機改為 Windows 工作站、AI 推論端點獨立成另一台機器、MDM 拿掉改為自包外殼與螢幕固定）
+    依據 SRS v2.0 §3.2／§4.3／§7、實作規格書 v2.0 第 3 章與資料庫使用規範 §2／§7／§8／§11／§14 重繪（2026-09-29 更新：部署改為 Docker 容器＋git clone、多一格 AI 閘道服務、實驗室通道只在開發環境、建置期連線分開畫）
   </footer>
 
 </div>
