@@ -316,6 +316,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../weekly/2026-09-30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0930 — 部署改為容器、介面極簡重設計（迭代 11～14.3）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../weekly/2026-09-23/" class="md-nav__link">
         
   
@@ -5341,14 +5369,15 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <h3 id="線上備份與還原演練">線上備份與還原演練<a class="headerlink" href="#線上備份與還原演練" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>k5</code> <strong>［護理端］</strong> 以護理站管理者登入 →「系統管理」→「資料庫與備份」→「立即備份」。
-  → 備份歷程多一列「成功」，有檔名、大小與 SHA-256；稽核軌跡多一筆「資料庫線上備份」。</li>
+  → 備份歷程多一列「成功」，有檔名、大小與 SHA-256；稽核軌跡多一筆「資料庫線上備份」。
+  <code>BACKUP_DIR</code> 裡備份檔旁邊多一個同名的 <code>.sha256</code>（0929 起）。服務起不來、查不到備份歷程時，雜湊從這個檔拿。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>k6</code> <strong>［終端機］</strong> 把剛才那份備份還原到另一個路徑。
   → 依序印出雜湊比對相符、完整性檢查 ok、各資料表筆數。不會碰到使用中的資料庫。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>k7</code> <strong>［終端機］</strong> 把 <code>DATABASE_URL</code> 暫時指向還原出來的檔案，重新啟動後端並登入。
   → 帳號、病人、稽核紀錄都在。演練完記得把 <code>DATABASE_URL</code> 改回正本。</li>
 </ul>
 <p><em>步驟 k6</em></p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>db:restore<span class="w"> </span>--<span class="w"> </span>--from<span class="w"> </span>&lt;BACKUP_DIR<span class="w"> </span>裡的備份檔&gt;<span class="w"> </span>--to<span class="w"> </span>&lt;新的絕對路徑&gt;<span class="w"> </span>--sha256<span class="w"> </span>&lt;備份歷程上的雜湊&gt;
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>db:restore<span class="w"> </span>--<span class="w"> </span>--from<span class="w"> </span>&lt;BACKUP_DIR<span class="w"> </span>裡的備份檔&gt;<span class="w"> </span>--to<span class="w"> </span>&lt;新的絕對路徑&gt;<span class="w"> </span>--sha256<span class="w"> </span>&lt;備份旁邊同名<span class="w"> </span>.sha256<span class="w"> </span>檔的第一欄&gt;
 </code></pre></div>
 <blockquote>
 <p><strong>地雷｜不要直接複製資料庫檔案</strong></p>
