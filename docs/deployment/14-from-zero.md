@@ -324,16 +324,17 @@ Get-ChildItem $root
 
 **做什麼**
 
-1. 產生金鑰（`<主機名稱>` 換成這台機器的名字，只是註記用）：
+1. 產生金鑰。三行照抄，不用改任何字：
 
    ```powershell
    New-Item -ItemType Directory -Force $HOME\.ssh
-   ssh-keygen -t ed25519 -C "hd-tablet-care@<主機名稱>" -f $HOME\.ssh\hd-tablet-care -N '""'
+   ssh-keygen -t ed25519 -C "hd-tablet-care@$(hostname)" -f $HOME\.ssh\hd-tablet-care -N '""'
    Get-Content $HOME\.ssh\hd-tablet-care.pub
    ```
 
    第一行是先建好 `.ssh` 資料夾：沒用過 SSH 的新帳號沒有這個資料夾，`ssh-keygen` 不會自己建。
    資料夾已經在的話，這一行什麼都不會動。
+   `$(hostname)` 會自動換成這台機器的名字（想先看是什麼，單獨打 `hostname`），只當註記用，讓管理者在 GitHub 上認得這把金鑰是哪台機器的。
 
 2. 把印出來的那**一整行**（`ssh-ed25519 AAAA… hd-tablet-care@…`）交給 repo 管理者。
    管理者到 GitHub 的 `hd-tablet-care` repo → **Settings → Deploy keys → Add deploy key** 貼上，**不要勾 Allow write access**。
@@ -613,7 +614,7 @@ curl.exe -s http://localhost:<後端埠>/api/health
 1. 產生並交出公鑰，登記到**外殼 repo** 的 Settings → Deploy keys，不勾 Allow write access：
 
    ```powershell
-   ssh-keygen -t ed25519 -C "hd-kiosk-shell@<主機名稱>" -f $HOME\.ssh\hd-kiosk-shell -N '""'
+   ssh-keygen -t ed25519 -C "hd-kiosk-shell@$(hostname)" -f $HOME\.ssh\hd-kiosk-shell -N '""'
    Get-Content $HOME\.ssh\hd-kiosk-shell.pub
    ```
 

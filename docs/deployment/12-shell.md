@@ -73,7 +73,7 @@ git show <tag>:services/shell-builder/shell.pin
 **一把部署金鑰只能對應一個 repo**，外殼 repo 另產生一把。做法與第十一冊 W-09 相同，只是名稱不同：
 
 ```powershell
-ssh-keygen -t ed25519 -C "hd-kiosk-shell@<主機名稱>" -f $HOME\.ssh\hd-kiosk-shell -N '""'
+ssh-keygen -t ed25519 -C "hd-kiosk-shell@$(hostname)" -f $HOME\.ssh\hd-kiosk-shell -N '""'
 Get-Content $HOME\.ssh\hd-kiosk-shell.pub
 ```
 

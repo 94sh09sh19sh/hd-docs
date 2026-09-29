@@ -235,7 +235,7 @@ New-Item -ItemType Directory -Force D:\hd-tablet-care\config, D:\hd-tablet-care\
 
 ```powershell
 New-Item -ItemType Directory -Force $HOME\.ssh
-ssh-keygen -t ed25519 -C "hd-tablet-care@<主機名稱>" -f $HOME\.ssh\hd-tablet-care -N '""'
+ssh-keygen -t ed25519 -C "hd-tablet-care@$(hostname)" -f $HOME\.ssh\hd-tablet-care -N '""'
 Get-Content $HOME\.ssh\hd-tablet-care.pub
 ```
 
