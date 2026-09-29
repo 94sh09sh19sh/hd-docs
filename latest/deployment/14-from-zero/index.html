@@ -4219,11 +4219,14 @@
 <ol>
 <li>把印出來的那<strong>一整行</strong>（<code>ssh-ed25519 AAAA… hd-tablet-care@…</code>）交給 repo 管理者。
    管理者到 GitHub 的 <code>hd-tablet-care</code> repo → <strong>Settings → Deploy keys → Add deploy key</strong> 貼上，<strong>不要勾 Allow write access</strong>。</li>
-<li>開 SSH 的設定檔：</li>
+<li>開 SSH 的設定檔。兩行照抄：</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="n">notepad</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">config</span>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">config</span><span class="p">))</span> <span class="p">{</span> <span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">File</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">config</span> <span class="p">}</span>
+<span class="n">notepad</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">config</span>
 </code></pre></div>
-<p>問「要建立新檔案嗎」就按「是」。在檔案最後加上這一段，存檔關閉：</p>
+<p>第一行是先建好沒有副檔名的空檔：直接讓記事本建新檔，它會自作主張存成 <code>config.txt</code>，ssh 就讀不到。
+   檔案已經在的話，這一行什麼都不會動，原本的內容不會被清掉。
+   在檔案最後加上這一段，存檔關閉：</p>
 <div class="highlight"><pre><span></span><code>Host github-hd-tablet-care
     HostName github.com
     User git
@@ -4261,8 +4264,8 @@
 <td>設定檔那一段的 <code>HostName</code> 改成 <code>ssh.github.com</code>，並加一行 <code>Port 443</code></td>
 </tr>
 <tr>
-<td><code>notepad</code> 存成了 <code>config.txt</code></td>
-<td>在檔案總管把副檔名拿掉（檢視 → 顯示 → 副檔名）</td>
+<td><code>Could not resolve hostname github-hd-tablet-care:</code> 後面接一串亂碼（那是 big5 的「無法辨別這台主機。」）</td>
+<td>ssh 沒讀到設定檔，幾乎都是記事本存成了 <code>config.txt</code>（漏打第 3 步第一行）。<code>Get-ChildItem $HOME\.ssh</code> 看得到 <code>config.txt</code> 就打 <code>Rename-Item $HOME\.ssh\config.txt config</code>，再重跑 <code>ssh -T</code></td>
 </tr>
 </tbody>
 </table>
@@ -4537,7 +4540,7 @@
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
 <ol>
-<li><code>notepad $HOME\.ssh\config</code>，在最後再加一段：</li>
+<li><code>notepad $HOME\.ssh\config</code>（N-09 已經建好這個檔，直接開就好），在最後再加一段：</li>
 </ol>
 <div class="highlight"><pre><span></span><code>Host github-hd-kiosk-shell
     HostName github.com
