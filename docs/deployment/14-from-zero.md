@@ -338,13 +338,16 @@ Get-ChildItem $root
 
 2. 把印出來的那**一整行**（`ssh-ed25519 AAAA… hd-tablet-care@…`）交給 repo 管理者。
    管理者到 GitHub 的 `hd-tablet-care` repo → **Settings → Deploy keys → Add deploy key** 貼上，**不要勾 Allow write access**。
-3. 開 SSH 的設定檔：
+3. 開 SSH 的設定檔。兩行照抄：
 
    ```powershell
+   if (-not (Test-Path $HOME\.ssh\config)) { New-Item -ItemType File $HOME\.ssh\config }
    notepad $HOME\.ssh\config
    ```
 
-   問「要建立新檔案嗎」就按「是」。在檔案最後加上這一段，存檔關閉：
+   第一行是先建好沒有副檔名的空檔：直接讓記事本建新檔，它會自作主張存成 `config.txt`，ssh 就讀不到。
+   檔案已經在的話，這一行什麼都不會動，原本的內容不會被清掉。
+   在檔案最後加上這一段，存檔關閉：
 
    ```
    Host github-hd-tablet-care
@@ -371,7 +374,7 @@ ssh -T github-hd-tablet-care
 | `ssh-keygen` 找不到 | Windows 的 OpenSSH Client 選用功能沒裝。實際部署問資訊室；模擬部署到「設定 → 系統 → 選用功能」加裝 |
 | `Saving key ... failed: No such file or directory`，接著 `Get-Content` 說 `.pub` 不存在 | 漏打了建立 `.ssh` 資料夾那一行。補打後重跑 `ssh-keygen` |
 | 22 埠不通（N-06） | 設定檔那一段的 `HostName` 改成 `ssh.github.com`，並加一行 `    Port 443` |
-| `notepad` 存成了 `config.txt` | 在檔案總管把副檔名拿掉（檢視 → 顯示 → 副檔名） |
+| `Could not resolve hostname github-hd-tablet-care:` 後面接一串亂碼（那是 big5 的「無法辨別這台主機。」） | ssh 沒讀到設定檔，幾乎都是記事本存成了 `config.txt`（漏打第 3 步第一行）。`Get-ChildItem $HOME\.ssh` 看得到 `config.txt` 就打 `Rename-Item $HOME\.ssh\config.txt config`，再重跑 `ssh -T` |
 
 > 🧪 **模擬部署**：開發機上**另產生一把**，不要拿你平常推程式碼的那把 SSH 金鑰頂替——
 > 那樣走的就不是院內那條路。登記時標題寫「模擬部署（開發機）」，之後可以一直留著重複使用。
@@ -618,7 +621,7 @@ curl.exe -s http://localhost:<後端埠>/api/health
    Get-Content $HOME\.ssh\hd-kiosk-shell.pub
    ```
 
-2. `notepad $HOME\.ssh\config`，在最後再加一段：
+2. `notepad $HOME\.ssh\config`（N-09 已經建好這個檔，直接開就好），在最後再加一段：
 
    ```
    Host github-hd-kiosk-shell
