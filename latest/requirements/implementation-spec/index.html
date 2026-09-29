@@ -6771,8 +6771,8 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <blockquote>
 <p><strong>2026-09-29 完成。</strong> 起因是部署時的一個問題：院內主機的 Docker Desktop 從 Microsoft Store 安裝，可能自己更新、自己重新啟動；
 主機也可能斷電。那時護理端會不會有警告？查下去發現只有常駐總覽螢幕會大聲示警。
-使用者指示：專業版所有畫面與簡易版，斷線都要有非常醒目的警告。
-紀錄在《<a href="../../notes/iteration-14-3-fixes/">迭代 14.3 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-14-3/">迭代 14.3 分冊</a>》（<code>x111</code>～<code>x126</code>）。</p>
+使用者指示：專業版所有畫面與簡易版，斷線都要有非常醒目的警告；接著查到病人端的請求沒有逾時上限，一併處理。
+紀錄在《<a href="../../notes/iteration-14-3-fixes/">迭代 14.3 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-14-3/">迭代 14.3 分冊</a>》（<code>x111</code>～<code>x130</code>）。</p>
 </blockquote>
 <table>
 <thead>
@@ -6803,6 +6803,11 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>沒有；要等按下操作、送出失敗</td>
 <td>同上；橫幅獨占一列，床位圖讓出高度，整頁仍不捲動</td>
 </tr>
+<tr>
+<td>病人端</td>
+<td>已有黃色「沒有網路」與「請按床邊呼叫鈴」；但請求沒有逾時上限，<strong>主機斷電時要等瀏覽器自己逾時</strong>才會發現</td>
+<td>畫面不變；16 個請求一律 8 秒逾時（<code>device.ts</code> 的 <code>deviceFetch</code>），最慢約 11 秒發現，送出求助最多約 8 秒就告知改按呼叫鈴</td>
+</tr>
 </tbody>
 </table>
 <p><strong>判定</strong>（<code>apps/nurse-pwa/src/connection-status.tsx</code>）：</p>
@@ -6820,11 +6825,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <li><strong>是「專業版不動」（FR-N14）的例外</strong>：出自使用者 0929 的指示。只加一個共用元件與上緣的一層，各頁本身沒有改；
   求助橫幅改由同一層一起黏在上緣（示警在上、求助在下），捲動時誰也不蓋住誰</li>
 </ul>
+<p><strong>病人端求助逾時而後端其實已收到</strong>：病人看到「請按呼叫鈴」、護理站也收到——兩邊都處理，是安全的方向。逾時不用 <code>AbortSignal.timeout()</code>（外殼支援到 Android 5）。</p>
 <p><strong>沒有改的</strong>：後端一行都沒動，只多用了既有的存活檢查端點。沒有新增功能需求；主機斷電時系統仍然<strong>不會主動通知任何人</strong>
 （FR-S07 不准院外推播），所以護理站的常駐總覽螢幕仍要一直開著、有人看得到。</p>
-<p><strong>驗收現況（0929）</strong>：<code>verify:iteration14-3</code>（5 步，不需後端）全部通過；<code>build</code>、<code>check:all</code> 六支、<code>verify:iteration8</code>、
+<p><strong>驗收現況（0929）</strong>：<code>verify:iteration14-3</code>（6 步，不需後端）全部通過；<code>build</code>、<code>check:all</code> 六支、<code>verify:iteration8</code>、
 <code>verify:iteration14</code>、<code>verify:iteration14-1</code>、<code>verify:iteration14-2</code> 全綠。<strong>還沒有在瀏覽器實際看過</strong>（做這次變更的那個 clone 沒有資料庫），
-停掉後端、拔網路線、讓登入失效三種情況要在手動測試環境走一次（<code>x111</code>～<code>x122</code>）。</p>
+停掉後端、暫停後端（模擬斷電）、拔網路線、讓登入失效要在手動測試環境走一次（<code>x111</code>～<code>x128</code>）。</p>
 <h3 id="413-迭代-15規則引擎與三項高風險功能原迭代-7--110926-再順延">4.13 迭代 15：規則引擎與三項高風險功能（原迭代 7 → 11，0926 再順延）<a class="headerlink" href="#413-迭代-15規則引擎與三項高風險功能原迭代-7--110926-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -7119,7 +7125,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 <tr>
 <td>~~14.3~~</td>
-<td>~~斷線示警遍及專業版每一頁與簡易版（0929）~~</td>
+<td>~~斷線示警遍及專業版每一頁與簡易版；病人端請求逾時（0929）~~</td>
 <td><strong>已完成（0929）</strong>，腳本驗收通過；瀏覽器實際看過待做</td>
 <td>無</td>
 </tr>

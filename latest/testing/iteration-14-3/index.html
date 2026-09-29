@@ -1806,10 +1806,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1436--自動化驗收-" class="md-nav__link">
+  <a href="#1436--病人端主機斷電時及時改成請按床邊呼叫鈴修正紀錄-25-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.3.6 · 自動化驗收 🖥
+        14.3.6 · 病人端：主機斷電時及時改成「請按床邊呼叫鈴」（修正紀錄 2.5）🖥 ⏸
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1437--自動化驗收-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3.7 · 自動化驗收 🖥
       
     </span>
   </a>
@@ -2576,10 +2587,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1436--自動化驗收-" class="md-nav__link">
+  <a href="#1436--病人端主機斷電時及時改成請按床邊呼叫鈴修正紀錄-25-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.3.6 · 自動化驗收 🖥
+        14.3.6 · 病人端：主機斷電時及時改成「請按床邊呼叫鈴」（修正紀錄 2.5）🖥 ⏸
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1437--自動化驗收-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3.7 · 自動化驗收 🖥
       
     </span>
   </a>
@@ -2621,7 +2643,8 @@
 操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
 項次接著迭代 14.2 分冊編（<code>x111</code> 起；14.2 用到 <code>x110</code>），四冊合起來是迭代 14 的完整紀錄。</p>
 </blockquote>
-<p><strong>這一冊驗一件事</strong>：與伺服器的連線一斷，專業版每一頁與簡易版都有非常醒目的警告；連線恢復後警告自己消失；平常不會誤報。</p>
+<p><strong>這一冊驗兩件事</strong>：與伺服器的連線一斷，護理端專業版每一頁與簡易版都有非常醒目的警告，連線恢復後自己消失、平常不會誤報；
+病人端在<strong>主機斷電</strong>（請求沒有回應、只會一直等）時，也能及時改成「請按床邊呼叫鈴」，不會停在「正在通知護理站」。</p>
 <table>
 <thead>
 <tr>
@@ -2632,7 +2655,11 @@
 <tbody>
 <tr>
 <td>🖥 <strong>開發機</strong></td>
-<td>平常的開發環境。<strong>這一冊後端與護理端要分兩個終端機開</strong>：<code>npm run dev:api</code>、<code>npm run dev:nurse</code>；「停掉後端」就是在 <code>dev:api</code> 那個視窗按 Ctrl+C，「開回後端」就是再跑一次</td>
+<td>平常的開發環境。<strong>這一冊後端與前端要分開開</strong>：<code>npm run dev:api</code>、<code>npm run dev:nurse</code>、<code>npm run dev:patient</code> 各一個終端機；「停掉後端」就是在 <code>dev:api</code> 那個視窗按 Ctrl+C，「開回後端」就是再跑一次</td>
+</tr>
+<tr>
+<td>⏸ <strong>暫停後端</strong></td>
+<td>模擬主機斷電：停掉後端時連線會被立刻拒絕，斷電時卻是<strong>沒有回應、一直等</strong>，要用暫停才模擬得出來。<code>netstat -ano \| findstr :3000</code> 查出後端的 PID →「資源監視器」→ CPU 分頁 → 在那個 PID 的 <code>node.exe</code> 按右鍵選暫停（英文介面是 Suspend Process）；再按右鍵選繼續即恢復。容器部署時是 <code>docker compose pause api</code>／<code>unpause api</code></td>
 </tr>
 <tr>
 <td>📐 <strong>目標尺寸</strong></td>
@@ -2684,6 +2711,12 @@
 </tr>
 <tr>
 <td>§14.3.6</td>
+<td>病人端：主機斷電時及時改成「請按床邊呼叫鈴」</td>
+<td>🖥 ⏸</td>
+<td>修正紀錄 2.5</td>
+</tr>
+<tr>
+<td>§14.3.7</td>
 <td>自動化驗收</td>
 <td>🖥</td>
 <td>修正紀錄第 3 節</td>
@@ -2712,7 +2745,7 @@
 </tr>
 <tr>
 <td>一台綁定中的病人平板</td>
-<td><code>x113</code></td>
+<td><code>x113</code>、§14.3.6</td>
 <td>主手冊 §2 的綁定流程，或簡易版把病人拖上有平板的床</td>
 </tr>
 </tbody>
@@ -2761,11 +2794,22 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x124</code> <strong>［護理端］</strong> 常駐總覽螢幕模式停掉後端再開回。
   → 維持原本那一套（紅框閃爍、「連線中斷」橫幅），<strong>沒有出現第二條橫幅</strong>。</li>
 </ul>
-<h2 id="1436--自動化驗收-">14.3.6 · 自動化驗收 🖥<a class="headerlink" href="#1436--自動化驗收-" title="Permanent link">&para;</a></h2>
+<h2 id="1436--病人端主機斷電時及時改成請按床邊呼叫鈴修正紀錄-25-">14.3.6 · 病人端：主機斷電時及時改成「請按床邊呼叫鈴」（修正紀錄 2.5）🖥 ⏸<a class="headerlink" href="#1436--病人端主機斷電時及時改成請按床邊呼叫鈴修正紀錄-25-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x125</code> <strong>［終端機］</strong> <code>npm run verify:iteration14-3</code>
-  → 五個步驟全部 ✓（不需要後端）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x126</code> <strong>［終端機］</strong> <code>npm run check:all</code>、<code>npm run verify:iteration14</code>、<code>npm run verify:iteration14-1</code>、<code>npm run verify:iteration14-2</code>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x125</code> <strong>［病人端］</strong> 綁定中、停在首頁。<strong>［終端機］</strong> 停掉後端。
+  → 約 3 秒內，首頁出現黃色「沒有網路，需要時請按床邊呼叫鈴」，底部求助區改成「請按床邊呼叫鈴／目前無法通知護理站」。開回後端，幾秒內恢復「我需要協助」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x126</code> <strong>［終端機］</strong> 改用<strong>暫停後端</strong>。<strong>［病人端］</strong> 看首頁。
+  → <strong>最慢約 11 秒</strong>出現同上的黃色標籤與求助區文字，不會一直停在「我需要協助」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x127</code> <strong>［病人端］</strong> 繼續後端，等求助區恢復；<strong>［終端機］</strong> 再暫停一次，<strong>［病人端］</strong> 馬上按「我需要協助」→ 選類別 → 選有多急。
+  → 「正在通知護理站」<strong>最多約 8 秒</strong>就換成「沒辦法通知護理站，請按床邊呼叫鈴或出聲叫護理人員」，不會一直轉。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x128</code> <strong>［病人端］</strong> 後端仍暫停著，填完一份問卷送出。<strong>［終端機］</strong> 繼續後端。
+  → 送出時顯示「已存在平板，有網路時會自動送出」；繼續後端之後自動補送，護理端看得到<strong>一筆</strong>（不重複）。</li>
+</ul>
+<h2 id="1437--自動化驗收-">14.3.7 · 自動化驗收 🖥<a class="headerlink" href="#1437--自動化驗收-" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x129</code> <strong>［終端機］</strong> <code>npm run verify:iteration14-3</code>
+  → 六個步驟全部 ✓（不需要後端）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>x130</code> <strong>［終端機］</strong> <code>npm run check:all</code>、<code>npm run verify:iteration14</code>、<code>npm run verify:iteration14-1</code>、<code>npm run verify:iteration14-2</code>
   → 全綠（迭代 14 到 14.2 的既有驗收沒有被動到）。</li>
 </ul>
 <hr />
