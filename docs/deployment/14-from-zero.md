@@ -296,15 +296,21 @@ Get-NetTCPConnection -State Listen | Where-Object LocalPort -in 13000,18080,1808
 
 ```powershell
 $root = "D:\hd-tablet-care"          # 🧪 模擬部署改成 C:\hd-sim
+$cfg  = "$root\config\.env"
 New-Item -ItemType Directory -Force "$root\config", "$root\backups" | Out-Null
 Get-ChildItem $root
+$cfg
 ```
 
-**怎麼知道成功了**：列出 `backups`、`config` 兩個資料夾。`repo` 現在還沒有是對的，下一步 clone 才會產生。
+前兩行設定兩個變數，本冊之後一直會用到：`$root` 是根目錄，`$cfg` 是 N-11 要建立的 `.env` 的位置。
+本冊之後的 `docker compose` 指令都寫成 `--env-file $cfg`，而且都在 `$root\repo` 底下打。
+
+**怎麼知道成功了**：列出 `backups`、`config` 兩個資料夾，最後一行印出 `D:\hd-tablet-care\config\.env`（🧪 模擬部署是 `C:\hd-sim\config\.env`）。
+`repo` 現在還沒有是對的，下一步 clone 才會產生；`.env` 也還沒有，N-11 才會建立。
 
 **不可以放的地方**：OneDrive 之類的雲端同步資料夾、網路磁碟機、RAM 磁碟、`C:\Users\<帳號>\` 底下的桌面／文件／下載。
 
-> ⚠️ **開工三行**：PowerShell 關掉再開，變數就不見了。**之後每開一個新的 PowerShell 視窗，先打這三行**
+> ⚠️ **開工三行**：PowerShell 關掉再開，`$root`、`$cfg` 就不見了。**之後每開一個新的 PowerShell 視窗，先打這三行**
 > （第三行要等 N-10 clone 完才有那個資料夾）：
 >
 > ```powershell
@@ -313,7 +319,6 @@ Get-ChildItem $root
 > cd $root\repo
 > ```
 >
-> 本冊之後的 `docker compose` 指令都寫成 `--env-file $cfg`，而且都在 `$root\repo` 底下打。
 > 看到 `couldn't find env file`，十次有九次是忘了打這三行。
 
 ---
