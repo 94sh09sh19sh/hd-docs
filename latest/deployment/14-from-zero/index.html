@@ -4506,13 +4506,22 @@
 <p>「有備份」和「備份能用」是兩件事。</p>
 <p><strong>做什麼</strong></p>
 <ol>
-<li>護理端 → <strong>系統管理</strong> → 「立即備份」。<strong>把畫面上的檔名與 SHA-256 抄下來。</strong></li>
-<li>把它還原到一個測試檔，確認完整，再刪掉測試檔（<code>&lt;檔名&gt;</code>、<code>&lt;雜湊&gt;</code> 換成剛剛抄的）：</li>
+<li>護理端 → <strong>系統管理</strong> → 「立即備份」，記下畫面上的檔名。
+   備份歷程的 SHA-256 只顯示前 12 碼；完整的 64 碼到備份資料夾讀同名的 <code>.sha256</code> 檔：</li>
 </ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-Content</span> <span class="s2">"$root\backups\&lt;檔名&gt;.sha256"</span>
+</code></pre></div>
+<p>前半段就是雜湊。護理端 <strong>稽核軌跡</strong>（動作選「資料庫線上備份」）的說明欄也有完整的一份。
+2. 把它還原到一個測試檔，確認完整，再刪掉測試檔（<code>&lt;檔名&gt;</code>、<code>&lt;雜湊&gt;</code> 換成剛剛記下的）：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node_modules</span><span class="p">/.</span><span class="n">bin</span><span class="p">/</span><span class="n">ts-node</span> <span class="p">-</span><span class="n">-project</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">tsconfig</span><span class="p">.</span><span class="n">json</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="nb">restore-backup</span><span class="p">.</span><span class="n">ts</span> <span class="p">-</span><span class="n">-from</span> <span class="p">/</span><span class="n">backups</span><span class="p">/&lt;</span><span class="n">檔名</span><span class="p">&gt;</span> <span class="p">-</span><span class="n">-to</span> <span class="p">/</span><span class="n">data</span><span class="p">/</span><span class="nb">restore-check</span><span class="p">.</span><span class="n">db</span> <span class="p">-</span><span class="n">-sha256</span> <span class="p">&lt;</span><span class="n">雜湊</span><span class="p">&gt;</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="p">-</span><span class="n">-entrypoint</span> <span class="nb">rm </span><span class="n">api</span> <span class="p">/</span><span class="n">data</span><span class="p">/</span><span class="nb">restore-check</span><span class="p">.</span><span class="n">db</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：輸出有 <code>✓ 與備份歷程上的紀錄相符</code> 與 <code>完整性檢查：ok</code>；<code>$root\backups\</code> 裡看得到那個檔。</p>
+<p><strong>怎麼知道成功了</strong>：輸出有 <code>✓ 與備份歷程上的紀錄相符</code> 與 <code>完整性檢查：ok</code>；<code>$root\backups\</code> 裡看得到那個檔和同名的 <code>.sha256</code>。</p>
+<blockquote>
+<p>💡 <strong>服務起不來時</strong>：備份歷程與稽核軌跡都存在資料庫裡，打不開網頁就看不到。這時直接看資料夾：
+<code>Get-ChildItem "$root\backups\*.db" | Sort-Object LastWriteTime</code> 最後一個是最新的備份，雜湊在它旁邊的 <code>.sha256</code>。
+送往院內另一台機器時，<code>.sha256</code> 要跟著一起送。</p>
+</blockquote>
 <p>實際部署還要<strong>當場問清楚</strong>：備份資料夾的內容由誰、多久送往院內另一台機器一次？答不出來就寫進交接文件的「已知限制」。</p>
 <blockquote>
 <p>⚠️ <strong>這一步一律用 PowerShell。</strong> 在 Git Bash 裡打，<code>/backups/…</code> 會被自動改寫成 Windows 路徑，還原腳本就說找不到檔案。</p>
