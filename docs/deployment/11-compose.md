@@ -234,9 +234,12 @@ New-Item -ItemType Directory -Force D:\hd-tablet-care\config, D:\hd-tablet-care\
 **做什麼**
 
 ```powershell
+New-Item -ItemType Directory -Force $HOME\.ssh
 ssh-keygen -t ed25519 -C "hd-tablet-care@<主機名稱>" -f $HOME\.ssh\hd-tablet-care -N '""'
 Get-Content $HOME\.ssh\hd-tablet-care.pub
 ```
+
+第一行是先建好 `.ssh` 資料夾：新帳號沒有這個資料夾，`ssh-keygen` 不會自己建；資料夾已經在的話，這一行不會動任何東西。
 
 把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 **Settings → Deploy keys**，**不要勾 Allow write access**。
 外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在[第十二冊](12-shell.md) Y-02。
@@ -263,6 +266,7 @@ ssh -T github-hd-tablet-care
 |---|---|
 | `Permission denied (publickey)` | 公鑰還沒登記，或登記到別的 repo |
 | `ssh-keygen` 找不到 | Windows 的 OpenSSH Client 選用功能沒裝。問資訊室 |
+| `Saving key ... failed: No such file or directory` | 漏了建立 `.ssh` 資料夾那一行。補打後重跑 `ssh-keygen` |
 | 第一次連線問 `Are you sure you want to continue connecting` | 核對顯示的指紋是 GitHub 公布的那一組再回答 `yes` |
 
 ---

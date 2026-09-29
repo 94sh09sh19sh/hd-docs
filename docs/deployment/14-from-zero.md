@@ -327,9 +327,13 @@ Get-ChildItem $root
 1. 產生金鑰（`<主機名稱>` 換成這台機器的名字，只是註記用）：
 
    ```powershell
+   New-Item -ItemType Directory -Force $HOME\.ssh
    ssh-keygen -t ed25519 -C "hd-tablet-care@<主機名稱>" -f $HOME\.ssh\hd-tablet-care -N '""'
    Get-Content $HOME\.ssh\hd-tablet-care.pub
    ```
+
+   第一行是先建好 `.ssh` 資料夾：沒用過 SSH 的新帳號沒有這個資料夾，`ssh-keygen` 不會自己建。
+   資料夾已經在的話，這一行什麼都不會動。
 
 2. 把印出來的那**一整行**（`ssh-ed25519 AAAA… hd-tablet-care@…`）交給 repo 管理者。
    管理者到 GitHub 的 `hd-tablet-care` repo → **Settings → Deploy keys → Add deploy key** 貼上，**不要勾 Allow write access**。
@@ -364,6 +368,7 @@ ssh -T github-hd-tablet-care
 |---|---|
 | `Permission denied (publickey)` | 公鑰還沒登記，或登記到別的 repo 去了 |
 | `ssh-keygen` 找不到 | Windows 的 OpenSSH Client 選用功能沒裝。實際部署問資訊室；模擬部署到「設定 → 系統 → 選用功能」加裝 |
+| `Saving key ... failed: No such file or directory`，接著 `Get-Content` 說 `.pub` 不存在 | 漏打了建立 `.ssh` 資料夾那一行。補打後重跑 `ssh-keygen` |
 | 22 埠不通（N-06） | 設定檔那一段的 `HostName` 改成 `ssh.github.com`，並加一行 `    Port 443` |
 | `notepad` 存成了 `config.txt` | 在檔案總管把副檔名拿掉（檢視 → 顯示 → 副檔名） |
 
