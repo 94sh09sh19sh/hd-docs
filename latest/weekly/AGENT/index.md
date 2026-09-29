@@ -131,6 +131,7 @@ docs-site/                      站台設定（真本在此，由 docs:sync 複�
 ├── mkdocs.yml                  主題、側欄列序（nav）、版本選單、llms.txt 分區
 ├── requirements.txt            建站相依（mkdocs-material、mike、mkdocs-llmstxt）
 ├── overrides/main.html         「問 AI」浮動按鈕（另開 Claude／ChatGPT，站台本身沒有後端）
+├── hooks/llms_headings.py      llms.txt 每頁底下補上二級標題
 ├── README.md                   鏡像 repo 的說明頁
 └── workflows/docs.yml          鏡像 repo 的 GitHub Actions
 
@@ -160,7 +161,7 @@ scripts/
 | `docs/deployment/`                                 | 部署手冊：總覽加十四冊與兩本子手冊，寫「手指要按什麼」（第十冊是進院紀錄，第十一～十三冊是現行路線，第十四冊與兩本子手冊是它們的新手導讀版） | **規則的真本仍是《部署規範》**，本手冊只寫順序與出錯處置；兩者衝突以部署規範為準。見下方「部署手冊的分冊」                                                                                     |
 | `docs/weekly/HOWTO.md`、`AGENT.md`                 | 維護流程本身                                                                                                                                 | 文件結構或流程一變就要同步，見上方「改完文件，回頭檢查這兩份指南」                                                                                                                             |
 | `docs-site/mkdocs.yml`                             | 側欄列序與站台設定                                                                                                                           | 新增文件時補 `nav` 一列，列序對齊首頁。`llmstxt` 的 `sections` 用萬用字元，新增文件不必動；**只有 `docs/` 底下多了新的頂層目錄時要補一區**，否則那批文件不會出現在 llms.txt，「問 AI」讀不到   |
-| `docs-site/overrides/`                             | 主題覆寫，目前只有「問 AI」按鈕                                                                                                              | 有需要才動；整個目錄由 `docs:sync` 複製                                                                                                                                                        |
+| `docs-site/overrides/`、`docs-site/hooks/`         | 「問 AI」按鈕，以及替 llms.txt 補小標的建站 hook                                                                                             | 有需要才動；兩個目錄都由 `docs:sync` 整個複製                                                                                                                                                  |
 | `docs-site/workflows/docs.yml`                     | 鏡像的建站流程                                                                                                                               | 有需要才動；改完要 `docs:sync` 才會生效                                                                                                                                                        |
 | `scripts/docs-*.mjs`、`snapshot-import.mjs`        | 同步、凍結與舊快照匯入工具                                                                                                                   | 有需要才動                                                                                                                                                                                     |
 
