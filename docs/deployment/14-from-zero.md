@@ -661,6 +661,7 @@ curl.exe -s http://localhost:<後端埠>/api/health
 |---|---|
 | `ssh -T` 印出的是 `hd-tablet-care` | 設定檔兩段的 `IdentityFile` 寫反，或少了 `IdentitiesOnly yes` |
 | `Permission denied (publickey)` | 公鑰登記到本系統的 repo 去了 |
+| `ssh -T` 成功，`git clone` 卻出現 `Connection reset by … port 22` | 網路把連線切斷，不是金鑰的問題。`Test-Path $root\hd-kiosk-shell` 是 `True` 就先刪掉殘留的資料夾，再重跑 clone；還是被切，就把設定檔這一段的 `HostName` 改成 `ssh.github.com`、加一行 `Port 443`，重跑 `ssh -T` 再 clone（見[第十一冊](11-compose.md)） |
 
 > 🧪 **模擬部署**：與 N-09 相同，開發機上另產生一把、標題註明模擬部署。
 
