@@ -702,6 +702,10 @@ docker compose --env-file $cfg --profile shell run --rm shell-builder
 
 **再打一次同一條指令**，這次要看到「**金鑰全部沿用，這一次沒有產生任何新的金鑰**」，而且簽章憑證的 SHA-256 與第一次相同。
 
+> 💡 **沒抄到也查得到，不必重跑。** 瀏覽器開 `http://localhost:<病人端埠>/shell/`，下載頁最下面「版本資訊」列著三個 SHA-256（同一個資料夾的 `shell.json` 也有）；`patient-web` 有在跑就開得到，不必等 N-23。
+> 每跑一次建置，下載頁上的 APK 就會換成新的一份，所以**交接文件的檔案 SHA-256 以下載頁上的為準**。
+> `shell-builder keys-info` 只列得出院內 CA 與簽章金鑰的指紋，而且是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。
+
 | 症狀 | 處置 |
 |---|---|
 | `MDM_KIOSK_BASE_URL 要以 https:// 開頭` | `.env` 改成 `https://`，見子手冊 |

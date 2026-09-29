@@ -167,6 +167,10 @@ docker compose --env-file $cfg --profile shell run --rm shell-builder
 **再執行一次**，要看到「**金鑰全部沿用，這一次沒有產生任何新的金鑰**」，簽章憑證的 SHA-256 與第一次相同。
 這是 DEP-35 的核心：`shell-builder` 絕不覆蓋既有的 CA 與簽章金鑰。
 
+沒抄到也查得到，不必重跑：`http://localhost:<病人端埠>/shell/` 下載頁的「版本資訊」列著三個 SHA-256，同一個資料夾的 `shell.json` 也有；
+`patient-web` 每次都即時讀檔，不必先做 Y-07。每跑一次建置，APK 就會換成新的一份，**交接文件的檔案 SHA-256 以下載頁上的為準**。
+`keys-info` 只列得出院內 CA 與簽章金鑰的指紋，格式是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。
+
 | 症狀 | 處置 |
 |---|---|
 | `HD_SHELL_SIGNING 要填 dev（開發機）或 hospital（院內主機）` | Y-03 沒填 |
