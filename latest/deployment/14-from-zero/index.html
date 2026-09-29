@@ -4207,14 +4207,15 @@
 <p>這把金鑰讓這台機器可以從 GitHub <strong>讀</strong>本系統的程式碼，別的什麼都不能做。</p>
 <p><strong>做什麼</strong></p>
 <ol>
-<li>產生金鑰（<code>&lt;主機名稱&gt;</code> 換成這台機器的名字，只是註記用）：</li>
+<li>產生金鑰。三行照抄，不用改任何字：</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span>
-<span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
+<span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
 <p>第一行是先建好 <code>.ssh</code> 資料夾：沒用過 SSH 的新帳號沒有這個資料夾，<code>ssh-keygen</code> 不會自己建。
-   資料夾已經在的話，這一行什麼都不會動。</p>
+   資料夾已經在的話，這一行什麼都不會動。
+   <code>$(hostname)</code> 會自動換成這台機器的名字（想先看是什麼，單獨打 <code>hostname</code>），只當註記用，讓管理者在 GitHub 上認得這把金鑰是哪台機器的。</p>
 <ol>
 <li>把印出來的那<strong>一整行</strong>（<code>ssh-ed25519 AAAA… hd-tablet-care@…</code>）交給 repo 管理者。
    管理者到 GitHub 的 <code>hd-tablet-care</code> repo → <strong>Settings → Deploy keys → Add deploy key</strong> 貼上，<strong>不要勾 Allow write access</strong>。</li>
@@ -4532,7 +4533,7 @@
 <ol>
 <li>產生並交出公鑰，登記到<strong>外殼 repo</strong> 的 Settings → Deploy keys，不勾 Allow write access：</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-kiosk-shell@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">-N</span> <span class="s1">'""'</span>
+<div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-kiosk-shell@</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">-N</span> <span class="s1">'""'</span>
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
 <ol>

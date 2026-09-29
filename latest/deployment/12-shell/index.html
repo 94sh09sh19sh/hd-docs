@@ -3253,7 +3253,7 @@
 <h2 id="2-主機這一層">2. 主機這一層<a class="headerlink" href="#2-主機這一層" title="Permanent link">&para;</a></h2>
 <h3 id="y-02-外殼-repo-的部署金鑰與-clonedep-43">Y-02 外殼 repo 的部署金鑰與 clone（DEP-43）<a class="headerlink" href="#y-02-外殼-repo-的部署金鑰與-clonedep-43" title="Permanent link">&para;</a></h3>
 <p><strong>一把部署金鑰只能對應一個 repo</strong>，外殼 repo 另產生一把。做法與第十一冊 W-09 相同，只是名稱不同：</p>
-<div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-kiosk-shell@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">-N</span> <span class="s1">'""'</span>
+<div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-kiosk-shell@</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">-N</span> <span class="s1">'""'</span>
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
 <p>把印出來的那一行交給 repo 管理者，登記到<strong>外殼 repo</strong>（<code>hd-kiosk-shell</code>）的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。

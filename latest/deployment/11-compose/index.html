@@ -3720,7 +3720,7 @@
 <p>私鑰在主機上產生、不離開主機；<strong>只有公鑰</strong>交給 repo 管理者登記。0922 那種臨時建立、事後要記得刪的個人權杖不再需要。</p>
 <p><strong>做什麼</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span>
-<span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@&lt;主機名稱&gt;"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
+<span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-tablet-care@</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span> <span class="n">-N</span> <span class="s1">'""'</span>
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
 <p>第一行是先建好 <code>.ssh</code> 資料夾：新帳號沒有這個資料夾，<code>ssh-keygen</code> 不會自己建；資料夾已經在的話，這一行不會動任何東西。</p>
