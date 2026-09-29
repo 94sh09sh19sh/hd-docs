@@ -1667,6 +1667,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2156,6 +2184,34 @@
     
   
     迭代 14.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.4 分冊
   
 
     
@@ -3969,7 +4025,12 @@
   簡易版的橫幅獨占一列、床位圖讓出高度，整頁仍然不捲動。這是「專業版不動」（FR-N14）的例外，出自使用者 0929 的指示</li>
 </ul>
 <p>為什麼要遍及每一頁：以前只有常駐總覽螢幕會大聲示警，其他頁面停在最後一刻的資料、看起來一切正常，
-  護理師要等到按下操作、送出失敗才知道。<strong>看起來正常的斷線，是最危險的斷線。</strong></p>
+  護理師要等到按下操作、送出失敗才知道。<strong>看起來正常的斷線，是最危險的斷線。</strong>
+- <strong>求助橫幅有上限</strong>（0929，迭代 14.4）：專業版上緣的求助橫幅最多三條完整的，其餘收成一列「還有 N 則求助」，附「全部查看」到緊急通報頁。
+  緊急的排在前面；收掉的裡面有緊急時，那一列用警示色並寫出「其中 N 則緊急」。別處（另一台護理站、簡易版）已經接起來的不再佔位置，
+  但快照裡找不到的一律留著——寧可多留一則，也不能漏掉一則。<strong>不要改成限制高度加捲軸</strong>：黏在上緣的小框裡再捲一次，藏起來的等於看不到。
+  這是「專業版不動」（FR-N14）的第二個例外，出自使用者 0929 的回報：大量求助湧入時，一則一條、沒有上限的橫幅疊得比畫面還高，
+  每一頁都被蓋住。<strong>真的需要它的時候，它反而讓整個畫面不能用。</strong></p>
 <h3 id="45-暗色與夜間">4.5 暗色與夜間<a class="headerlink" href="#45-暗色與夜間" title="Permanent link">&para;</a></h3>
 <ul>
 <li>病人端已有夜間模式（晚班調暗），<strong>調暗不得改變版面與字級</strong>，只改亮度</li>
@@ -4255,6 +4316,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版與專業版做同一件事，稽核軌跡與結構化欄位完全相同</strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版在護理站的解析度下沒有捲軸</strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）斷線時專業版每一頁與簡易版都看得到閃爍紅框與紅底橫幅</strong>；剛開頁面、換頁時不會誤閃；簡易版出現橫幅時仍沒有捲軸</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）專業版一次湧入很多則求助時，上緣最多三條加一列「還有幾則」</strong>，緊急的排前面，頁面本身一直看得到</li>
 </ul>
 <h3 id="63-兩端共通">6.3 兩端共通<a class="headerlink" href="#63-兩端共通" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -4331,6 +4393,11 @@
 <td>4.4 斷線示警（0929）</td>
 <td>護理端 <code>src/connection-status.tsx</code>；樣式在 <code>styles.css</code> 的 <code>.conn-lost</code>、<code>workbench.css</code> 的 <code>.wb:has(&gt; .conn-lost)</code></td>
 <td><code>verify:iteration14-3</code>：專業版掛在主框架、簡易版獨占一列、紅框不擋點擊、剛開頁面不誤報</td>
+</tr>
+<tr>
+<td>4.4 求助橫幅有上限（0929）</td>
+<td>護理端 <code>src/App.tsx</code> 的 <code>HelpRequestAlerts</code> 與 <code>MAX_ALERT_TOASTS</code></td>
+<td><code>verify:iteration14-4</code>：最多三條、其餘收成一列、緊急在前、快照裡找不到的不拿掉</td>
 </tr>
 </tbody>
 </table>
