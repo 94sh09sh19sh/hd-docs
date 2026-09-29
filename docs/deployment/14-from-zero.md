@@ -407,6 +407,7 @@ git describe --tags
 | 一大段 `You are in 'detached HEAD' state…` | **正常**。部署本來就不在分支上 |
 | `error: pathspec '<tag>' did not match` | tag 沒推上去，回 N-03 |
 | `destination path … already exists` | 那個資料夾已經有東西。實際部署：先弄清楚是誰放的，**不要直接刪**；模擬部署：上一輪沒撤除乾淨，照第 9.2 節撤除 |
+| N-09 的 `ssh -T` 成功，`git clone` 卻出現 `Connection reset by … port 22` | 網路把連線切斷，不是金鑰的問題。`Test-Path $root\repo` 是 `True` 就先刪掉這次 clone 殘留的資料夾，再重跑 clone；還是被切，就把 N-09 設定檔那一段的 `HostName` 改成 `ssh.github.com`、加一行 `Port 443`，重跑 `ssh -T` 再 clone（見[第十一冊](11-compose.md)） |
 
 > 🧪 **模擬部署**：一定要從 GitHub **全新 clone** 到 `C:\hd-sim\repo`，不要複製你的工作目錄，也不要在工作目錄裡做。
 
