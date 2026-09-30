@@ -507,5 +507,6 @@ docker compose --env-file $cfg --profile ai stop ai-gateway
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 0930 | 2026-09-30 | 首次定版。0927 新增：AI 閘道的實驗室實測與院內設定；實驗室的位址、帳號一律不寫進文件 |
 
 [← 回部署手冊總覽](index.md)

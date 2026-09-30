@@ -580,5 +580,6 @@ docker compose --env-file $cfg up -d
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 0930 | 2026-09-30 | 首次定版。0926 新增的現行路線：git clone ＋ docker compose 從零部署、更新與回退；之後補上部署金鑰前先建 .ssh、`$(hostname)`、備份雜湊改從同名 .sha256 讀取，以及 Q-27、Q-32 的 0930 答覆 |
 
 [← 回部署手冊總覽](index.md)
