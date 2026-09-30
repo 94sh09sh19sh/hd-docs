@@ -514,7 +514,7 @@ DEP-25（路線 A 的失敗紀錄）、DEP-26（進院前後各掃毒一次）�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 0930 | 2026-09-30 | 改版為 v3.0：容器＋git clone 為正式路線、離線安裝包撤除、不准用隨身碟、主機可連出不可連入；外殼 APK 在院內主機建置、AI 閘道；Q-27、Q-32 的 0930 答覆 |
+| [0930](https://94sh09sh19sh.github.io/hd-docs/0930/requirements/deployment-spec/) | 2026-09-30 | 改版為 v3.0：容器＋git clone 為正式路線、離線安裝包撤除、不准用隨身碟、主機可連出不可連入；外殼 APK 在院內主機建置、AI 閘道；Q-27、Q-32 的 0930 答覆 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/requirements/deployment-spec/) | 2026-09-23 | 改版為 v2.0：正式主機改為院內共用的 Windows 工作站，部署形態由容器改為離線安裝包、容器留作備案（3.3），新增 DEP-37 安裝包層級的共用主機隔離；第一次部署的兩條路線（路線 A 預期失敗、路線 B 為正式路線） |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/requirements/deployment-spec/) | 2026-09-16 | 首次定版。建立本文件：正式部署環境確定為院內 NVIDIA DGX Spark（ARM64、128GB 統一記憶體、共用主機），據此訂出容器化部署決策、三個環境的界線、交付方式與上線時程 |
 
