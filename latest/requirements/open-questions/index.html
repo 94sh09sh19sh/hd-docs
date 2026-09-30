@@ -4101,7 +4101,7 @@
 <td>資訊室</td>
 <td><strong>C</strong></td>
 <td>第二次進院能不能把服務跑起來</td>
-<td>待提出（0912 新增，0919 改寫，<strong>0926 再改寫</strong>：改回容器，服務帳號那幾題作廢）</td>
+<td><strong>部分已回覆（0930）</strong>：Docker 版本與連接埠已有答案；<strong>0930 追加兩題</strong> Docker Desktop 設定（使用統計、市集自動更新）。0912 新增，0919 改寫，0926 再改寫</td>
 </tr>
 <tr>
 <td><a href="#q-28-輪播第二層的衛教與公告內容">Q-28</a></td>
@@ -4141,7 +4141,7 @@
 <td>資訊室</td>
 <td><strong>C</strong></td>
 <td>部署與更新時 git clone、建置映像檔與外殼 APK</td>
-<td>待提出（0926 新增）</td>
+<td><strong>已回覆（0930）</strong>：對外連線是常態、沒有限制。0926 新增</td>
 </tr>
 <tr>
 <td><a href="#q-33-目標平板的型號與解析度">Q-33</a></td>
@@ -4236,6 +4236,29 @@
 </tbody>
 </table>
 <p><strong>0926 起最該先問的是 Q-27 與 Q-32</strong>：隨身碟那一關消失了，換成「主機連得出去是不是常態」與「斷電重開後有沒有人登入讓 Docker 起來」。兩題都擋第二次進院，都不擋開發端的實作。</p>
+<p><strong>0930 更新</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>變動</th>
+<th>影響的編號</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>主機對外連線是常態，沒有限制</strong></td>
+<td><strong>Q-32 改為已回覆</strong>；部署路線「連得出去」的前提成立</td>
+</tr>
+<tr>
+<td><strong>Docker 版本已查到（0922 進院紀錄），連接埠定為 13000、18080、18081</strong></td>
+<td><strong>Q-27 改為部分已回覆</strong>（第 1、3 題）</td>
+</tr>
+<tr>
+<td><strong>Docker Desktop 的使用統計開著、更新由 Microsoft Store 管</strong>（0922 現場所見，第十冊 D-08）</td>
+<td><strong>Q-27 追加第 9、10 題</strong>：兩項都是整台主機的設定，同機另一個專案也受影響，要資訊室同意</td>
+</tr>
+</tbody>
+</table>
 <p><strong>0912 更新（迭代 6 完成）</strong>：Q-09 的技術面已做成暫代——檔案匯入可收 Excel／CSV，欄位名稱走可設定的對應表，院方檔案的欄位名稱不同時改一列設定即可，不必改程式。內容面（哪些數值適合給病人看、多舊就不該顯示）仍待護理部回覆。同時新增 Q-28：輪播第二層沒有內容就開不起來，這是刻意的——沒有內容卻開著，病人只會看到空白的輪播。</p>
 <hr />
 <h2 id="2-a-級過期就作廢">2. A 級：過期就作廢<a class="headerlink" href="#2-a-級過期就作廢" title="Permanent link">&para;</a></h2>
@@ -4996,7 +5019,29 @@
 </tr>
 <tr>
 <td><strong>狀態</strong></td>
-<td>待提出（0912 新增，0919 改寫，0926 再改寫）</td>
+<td><strong>部分已回覆（0930）</strong>：第 1、3 題有答案，其餘待問；0930 追加第 9、10 題（0912 新增，0919 改寫，0926 再改寫）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>0930 已取得的答覆</strong></p>
+<table>
+<thead>
+<tr>
+<th>題</th>
+<th>答覆</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Docker 29.3.1、Compose v5.1.1。<strong>能不能不升級就用</strong>還沒問；DEP-04 規定不得自行升級</td>
+<td>0922 進院紀錄</td>
+</tr>
+<tr>
+<td>3</td>
+<td>連接埠定為後端 <code>13000</code>、護理端 <code>18080</code>、病人端 <code>18081</code>。登記後能否確保不被佔用、防火牆怎麼開，還沒問</td>
+<td>0930</td>
 </tr>
 </tbody>
 </table>
@@ -5014,6 +5059,13 @@
 <li>防毒軟體是哪一套？<strong>能不能把 Docker 的資料目錄加入排除清單</strong>、誰能加？</li>
 <li>系統更新的重新啟動時段、自動休眠設定，誰管？被別的專案改掉時誰通知本專案？可以接受的部署與更新時段是什麼時候（要避開透析班次，DEP-32）？——<strong>原 Q-29 第 6 題併入此處</strong></li>
 <li>0922 看到的磁碟規格與 i7-14700／2TB ×2 對不上，<strong>是不是同一台</strong>？</li>
+<li>（0930 追加）Docker Desktop 的 <strong>Send usage statistics</strong> 能不能關？0922 看到是開著的。
+   不關的影響：Docker Desktop 會持續把它自己的使用情形送往 Docker 公司，服務執行期間主機就多一條常駐的院外連線。
+   本系統的程式不經過這條線，但送出什麼由 Docker 公司決定、會隨版本改變，開發端無法逐項擔保；
+   「服務執行時沒有任何一條線跨出醫院」（FR-S07、DEP-39）也要改寫成「有一條 Docker Desktop 自己的例外」</li>
+<li>（0930 追加）<strong>Microsoft Store 的自動更新能不能改成手動？</strong> 這台的 Docker Desktop 是從市集裝的，更新由市集決定（第十冊 F-16）；市集的設定管的是整台主機的所有 App。
+   不改的話，Docker Desktop 可能在透析班中自己更新、重新啟動，容器全部中斷，新版也可能改變 compose 的行為。
+   這一題是第 7 題「系統更新誰管」落到 Docker 本身的那一半</li>
 </ol>
 <p><strong>0926 作廢的題目</strong>：服務帳號、密碼保管與定期更換、資料目錄權限（DEP-12、原 DEP-37 第 4 項；院方決定能登入者一律可信任，DEP-38）。</p>
 <p><strong>現況／暫代做法</strong></p>
@@ -5172,10 +5224,12 @@
 </tr>
 <tr>
 <td><strong>狀態</strong></td>
-<td>待提出（0926 新增）</td>
+<td><strong>已回覆（0930）</strong>：對外連線是常態、沒有限制（0926 新增）</td>
 </tr>
 </tbody>
 </table>
+<p><strong>0930 答覆</strong>：主機對外連線<strong>是常態</strong>，<strong>沒有限制</strong>——第 1、2 題的答案是常態開放、沒有代理也沒有白名單；第 3 題照「沒有限制」理解為 SSH 連得出去，院內主機上尚未實測。
+第 4 題（稽核要求）沒有談到。答覆還沒反映到《部署規範》，所以狀態是「已回覆」而不是「已結案」（0.2 節）。</p>
 <p><strong>背景</strong></p>
 <p>0926 確認「院內網路可以連出去，外面連不進來」，交付因此改走 git clone ＋ 就地建置（DEP-07）。但 0922 現場的筆記是「主機當天連得到院外」，<strong>沒有講清楚那是常態還是臨時開的</strong>。整條部署路線都建立在「連得出去」上。</p>
 <p><strong>不確認的後果</strong></p>
@@ -6108,12 +6162,12 @@
 <tr>
 <td><a href="#q-27-正式主機的容器執行方式與映像檔傳入管道">Q-27</a></td>
 <td><strong>C</strong></td>
-<td><strong>主機的 Docker 版本、連接埠、防毒排除、斷電重開後誰登入讓 Docker 起來</strong></td>
+<td><strong>防毒排除、斷電重開後誰登入讓 Docker 起來；Docker Desktop 的使用統計能不能關、市集自動更新能不能改手動</strong>（版本與連接埠 0930 已答覆）</td>
 </tr>
 <tr>
-<td><a href="#q-32-院內主機對外連線的範圍與穩定性">Q-32</a></td>
-<td><strong>C</strong></td>
-<td><strong>對外連線是不是常態、有沒有代理或白名單、SSH 連 GitHub 通不通</strong></td>
+<td>~~<a href="#q-32-院內主機對外連線的範圍與穩定性">Q-32</a>~~</td>
+<td>—</td>
+<td><strong>0930 已回覆</strong>：對外連線是常態、沒有限制</td>
 </tr>
 <tr>
 <td><a href="#q-09-輪播第三層臨床數值的來源與欄位">Q-09</a> 的技術面</td>
@@ -6173,6 +6227,7 @@
 </tbody>
 </table>
 <p><strong>建議談法（0926 重排優先順序）</strong>：<strong>先談 Q-27 與 Q-32，它們擋的是第二次進院</strong>——Q-29（隨身碟）已作廢。這兩項要一起談，因為它們是同一件事的兩半：程式怎麼進去（對外連線）、進去之後斷電了能不能自己回來（Docker 與開機登入）。0919 版問的服務帳號與目錄權限不必再問，院方已決定能登入者一律可信任。</p>
+<p><strong>0930 起</strong>：Q-32 已回覆，對外連線這一半成立。剩下 Q-27 未答的題目，<strong>先問第 9、10 題</strong>——兩項都是整台主機的設定，這台 Docker 同時在跑別的專案，要資訊室同意才能改。</p>
 <p>其餘 C 級（Q-09 技術面、Q-07、Q-10、Q-11、Q-12）可以在同一場的後半段一次帶完，它們都不擋第一次部署。B 級三項要法務一起，另外約。</p>
 <p>談之前先把兩件事講清楚，可以省掉一半的來回：<strong>本系統不在 DGX Spark 上跑</strong>（它只是一個 API 端點，本專案不需要 GPU、不需要那台機器的登入權限），以及<strong>尖峰請求數遠低於每秒 1</strong>（不需要準備高規格設備）。0912 那次談的時候這兩點還沒定，容易讓資訊室以為要整台機器被獨佔。</p>
 <h3 id="法務">法務<a class="headerlink" href="#法務" title="Permanent link">&para;</a></h3>
