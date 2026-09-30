@@ -360,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    0930 — 部署改為容器、介面極簡重設計（迭代 11～14.4）
+    0930 — 部署改為容器、介面極簡重設計（迭代 11～14.5）
   
 
     
@@ -1418,10 +1418,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#410-目標解析度0926-新增暫定" class="md-nav__link">
+  <a href="#410-目標解析度0926-新增0930-平板確定為-10-吋" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.10 目標解析度（0926 新增，暫定）
+        4.10 目標解析度（0926 新增；0930 平板確定為 10 吋）
       
     </span>
   </a>
@@ -1719,6 +1719,34 @@
     
   
     迭代 14.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-5-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.5 修正紀錄
   
 
     
@@ -2249,6 +2277,34 @@
     
   
     迭代 14.4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.5 分冊
   
 
     
@@ -3247,10 +3303,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#410-目標解析度0926-新增暫定" class="md-nav__link">
+  <a href="#410-目標解析度0926-新增0930-平板確定為-10-吋" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.10 目標解析度（0926 新增，暫定）
+        4.10 目標解析度（0926 新增；0930 平板確定為 10 吋）
       
     </span>
   </a>
@@ -4019,6 +4075,11 @@
 </table>
 <p><strong>求助按鈕用警示色，而且只有它用。</strong> 病人端畫面上不得有第二個紅色的東西，否則它就不再是「那顆紅色的」。</p>
 <p><strong>兩端都必須通過對比度檢查</strong>：內文對背景至少 4.5:1，大字與圖形至少 3:1。病人端因為糖尿病視網膜病變常見，<strong>目標值提高到內文 7:1</strong>。</p>
+<p><strong>病人端是白底</strong>（0930，迭代 14.5）：醫師說透析室很暗，病人端背景改成白底，框與按鈕是白底上的淺灰。
+白底上要過 7:1，四種語意色都是同色相的<strong>深色系</strong>（深青、深褐、深紅、深綠）；疊在語意色上的字是白色。
+紅色仍只給求助——求助區是深紅底白字，注意色是深褐而不是紅。
+<strong>夜裡不另做一套深色主題</strong>，夜裡靠夜間模式調暗（4.5）。護理端維持原本的配色，常駐總覽螢幕仍是深色。
+0919～0929 病人端是深色底，改版的理由與色碼對照見《<a href="../iteration-14-5-fixes/">迭代 14.5 修正紀錄</a>》2.1。</p>
 <h3 id="42-字級">4.2 字級<a class="headerlink" href="#42-字級" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4099,6 +4160,8 @@
 <h3 id="45-暗色與夜間">4.5 暗色與夜間<a class="headerlink" href="#45-暗色與夜間" title="Permanent link">&para;</a></h3>
 <ul>
 <li>病人端已有夜間模式（晚班調暗），<strong>調暗不得改變版面與字級</strong>，只改亮度</li>
+<li><strong>被調暗的區塊自己要有底色</strong>（0930）：白底上，沒有底色的區塊被調暗的只有字，白底照樣全亮。輪播區因此有自己的底色</li>
+<li>病人端按下去的回饋是<strong>變暗</strong>（0930）：白色的按鈕再調亮也還是白色，看不出按到</li>
 <li>護理端常駐總覽螢幕整夜開著，<strong>要能調暗但仍看得清楚</strong>；不得用降低字級的方式節省空間</li>
 </ul>
 <h3 id="46-圖示0926-新增">4.6 圖示（0926 新增）<a class="headerlink" href="#46-圖示0926-新增" title="Permanent link">&para;</a></h3>
@@ -4282,8 +4345,10 @@
 完整字檔 12MB，<code>scripts/subset-font.py</code> 只留 Big5 常用字、符號與程式碼裡實際出現的字（約 5,900 字、1.6MB），轉成 woff2 放進兩端的 <code>src/assets/fonts/</code>。
 放在 <code>src</code> 底下而不是 <code>public</code>：樣式表以相對路徑引用它，建置時成為產物，病人端的 Service Worker 因此自動把它列進離線快取。
 授權是 SIL Open Font License 1.1，全文隨字檔放在同一個目錄。介面或預設內容新增了罕用字要重跑一次，否則那個字改用系統字型畫出來。</p>
-<h3 id="410-目標解析度0926-新增暫定">4.10 目標解析度（0926 新增，暫定）<a class="headerlink" href="#410-目標解析度0926-新增暫定" title="Permanent link">&para;</a></h3>
-<p><strong>目標平板的型號與解析度仍待院方回覆</strong>（實作規格書 4.12「尚缺」、<a href="../../requirements/open-questions/#q-33-目標平板的型號與解析度">Q-33</a>）。在那之前以最常見的 10 吋 Android 平板為準：</p>
+<h3 id="410-目標解析度0926-新增0930-平板確定為-10-吋">4.10 目標解析度（0926 新增；0930 平板確定為 10 吋）<a class="headerlink" href="#410-目標解析度0926-新增0930-平板確定為-10-吋" title="Permanent link">&para;</a></h3>
+<p><strong>0930 院方確定平板是 10 吋</strong>（<a href="../../requirements/open-questions/#q-33-目標平板的型號與解析度">Q-33</a> 部分回覆），型號與面板解析度仍待回覆。
+尺寸確定就夠決定 CSS 尺寸：外殼會隱藏狀態列與導覽列（《<a href="../mdm-offline-plan/">平板管控方案</a>》），
+而 10 吋 Android 平板不論面板是 1280×800、1920×1200 還是 2560×1600，瀏覽器看到的<strong>短邊都是 800 CSS 像素</strong>：</p>
 <table>
 <thead>
 <tr>
@@ -4295,7 +4360,7 @@
 <tbody>
 <tr>
 <td>橫式</td>
-<td>1280 × 800</td>
+<td>1280 × 800（5:3 的面板約 1334 × 800）</td>
 <td>病人端首頁與每一個任務畫面不出現捲軸</td>
 </tr>
 <tr>
@@ -4310,7 +4375,12 @@
 </tr>
 </tbody>
 </table>
-<p><strong>型號一確定就改這張表，並在那個尺寸下重跑一次截圖驗收</strong>（迭代 14 驗收第 1 條）。比這更小的平板要先回來改這張表，不要硬塞。</p>
+<p><strong>病人端的字級、選項圖示與邊距以畫面短邊（<code>vmin</code>）縮放</strong>（0930）：同一台平板橫放直放字一樣大——
+手指與眼睛沒有變，字不該因為轉向就小一號（0929 以前以寬度縮放，直放時每一級都掉到 4.2 的下限）。
+每一項在短邊 800 時剛好等於上限，比 10 吋小的畫面才往下限縮；<strong>下限就是 4.2 那張表，不因此改變</strong>。
+求助區高度是例外，仍依畫面高度：它吃的是高度，直放時求助按鈕大一點沒有壞處。</p>
+<p>10 吋平板上 1 CSS 像素約 0.17 公釐：觸控目標 64px 約 11 公釐，內文 24px 約 4 公釐。</p>
+<p><strong>型號一確定，就在那台平板上重跑一次截圖驗收</strong>（迭代 14.5 分冊 <code>x150</code>）。短邊若不是 800（少數面板的縮放倍率不同），回來改這張表，不要硬塞。</p>
 <hr />
 <h2 id="5-這份基準怎麼被持續使用">5. 這份基準怎麼被持續使用<a class="headerlink" href="#5-這份基準怎麼被持續使用" title="Permanent link">&para;</a></h2>
 <p><strong>這是最重要的一節，因為一次性的改版三個月後就會被稀釋回去。</strong></p>
@@ -4362,9 +4432,10 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 每一個用顏色表示的狀態都有文字</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 內文對比度 ≥ 7:1</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 單手在畫面下半部可完成所有主線操作</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 夜間模式只改亮度，不改版面與字級</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 夜間模式只改亮度，不改版面與字級；<strong>（0930）白底上調暗的區塊真的變暗了</strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）首頁只有三區</strong>，沒有其他常駐入口；首頁與輪播都看不到姓名與病歷號</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）首頁與每一個任務畫面在 4.10 的兩個尺寸下都沒有捲軸</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）首頁與每一個任務畫面在 4.10 的兩個尺寸下都沒有捲軸</strong>；（0930）兩個方向的字一樣大</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0930）病人端是白底</strong>，沒有另做深色區塊；按下去看得出按到</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）任務畫面一題一頁</strong>，閒置逾時自動回首頁；按回首頁後任務變成基本資訊區的圖示</li>
 </ul>
 <h3 id="62-護理端">6.2 護理端<a class="headerlink" href="#62-護理端" title="Permanent link">&para;</a></h3>
@@ -4460,6 +4531,11 @@
 <td><code>verify:iteration14-3</code>：專業版掛在主框架、簡易版獨占一列、紅框不擋點擊、剛開頁面不誤報</td>
 </tr>
 <tr>
+<td>4.1 病人端白底、4.5 夜間調暗要有底色、4.10 以短邊縮放（0930）</td>
+<td><code>apps/patient-pwa/src/design-tokens.css</code>；<code>styles.css</code> 的 <code>.carousel</code> 與 <code>:active</code></td>
+<td><code>verify:iteration14-5</code>：背景白色、語意色過 7:1、輪播有底色、按下變暗、字級以 <code>vmin</code> 縮放且下限不變、求助區契約不變</td>
+</tr>
+<tr>
 <td>4.4 求助橫幅有上限（0929）</td>
 <td>護理端 <code>src/App.tsx</code> 的 <code>HelpRequestAlerts</code> 與 <code>MAX_ALERT_TOASTS</code></td>
 <td><code>verify:iteration14-4</code>：最多三條、其餘收成一列、緊急在前、快照裡找不到的不拿掉</td>
@@ -4503,7 +4579,7 @@
 </tr>
 <tr>
 <td><a href="../../requirements/open-questions/#q-33-目標平板的型號與解析度">Q-33</a></td>
-<td>目標平板的型號與解析度，決定 4.10 那張表；病人端「不捲動」以它為準</td>
+<td>目標平板的型號與解析度。<strong>0930 部分回覆：10 吋</strong>，4.10 那張表已依此確定；型號定了要在實機上重跑截圖驗收</td>
 </tr>
 <tr>
 <td><a href="../../requirements/open-questions/#q-34-透析室的床位數床號與療程時段">Q-34</a></td>
@@ -4523,6 +4599,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>0930</td>
+<td>2026-09-30</td>
+<td>0926 方向改為極簡（0.1 節四條）：病人端首頁三區與任務畫面、護理端簡易版、圖示登記、狀態色配形狀、拖曳、自帶字型、目標解析度；0929 補斷線示警與求助橫幅上限（「專業版不動」的兩個例外）；0930 病人端改白底、平板確定 10 吋、字級以畫面短邊縮放</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/0923/notes/uiux-design-baseline/">0923</a></td>
 <td>2026-09-23</td>
