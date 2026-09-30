@@ -14,6 +14,7 @@
 > 兩者衝突時，以原冊為準，規則的真本仍是《[部署規範](../requirements/deployment-spec.md)》v3.0。
 >
 > `.env` 的逐項填法另成兩冊：[第十四冊之一（實際部署）](14a-env-hospital.md)、[第十四冊之二（模擬部署）](14b-env-simulation.md)。
+> 院內主機上還留著 0922 第一次進院的容器與 clone，收法另成[第十四冊之三](14c-cleanup-first-visit.md)，在 N-04 之前做。
 
 ---
 
@@ -45,6 +46,7 @@
 | 項次 | 實際部署 | 🧪 模擬部署 | 在哪一步 |
 |---|---|---|---|
 | 機器 | 院內主機 | 你的開發機 | — |
+| 0922 留下的容器與 clone | 先收掉（[第十四冊之三](14c-cleanup-first-visit.md)） | 沒有，不必做 | N-04 之前 |
 | Git 與 Docker | 資訊室已裝好，**不准自己裝** | 自己裝 | N-04 |
 | 根目錄（`$root`） | `D:\hd-tablet-care` | `C:\hd-sim` | N-08 |
 | 問資訊室的問題清單 | 至少一週前寄出 | 不必 | N-02 |
@@ -170,6 +172,9 @@ git show <tag>:services/shell-builder/shell.pin
 
 > ⚠️ **從這裡開始，所有指令都在「要部署的那台機器」的 PowerShell 裡打**：實際部署是院內主機，🧪 模擬部署是開發機。
 > **不要自己開任何容器，不要下 `docker run -v`、`-p`。** 0922 就是這樣失敗的（[第十冊](10-first-visit.md) F-01、F-02）。
+
+> ⚠️ **實際部署：做 N-04 之前，先照[第十四冊之三](14c-cleanup-first-visit.md)把 0922 留下的容器 `dialysis_system_v0` 與那份 clone 收掉。**
+> 那個容器掛著整顆 C 槽，沒收掉不開始部署。🧪 模擬部署不必做。
 
 ### N-04 確認 Git 與 Docker 能用（＝W-04）
 

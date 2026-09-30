@@ -1,0 +1,428 @@
+# 第十四冊之三 · 收掉第一次部署留下的東西
+
+版本：v0.1　文件狀態：草案（0930 新增）　編號：`L-xx`　**與第十四冊一起印出來帶進去**
+
+> 0922 第一次進院失敗（[第十冊](10-first-visit.md)），院內主機上留下了幾樣東西：
+> 一個**掛著整顆 C 槽**的容器 `dialysis_system_v0`、一份 clone 下來的原始碼、一個 `python` 映像檔，
+> 還可能有一把已作廢權杖的殘留字串。這一冊一步一步教你把它們收乾淨。
+>
+> **什麼時候做**：下一次進院、在這台主機上動手的**第一件事**，排在[第十四冊](14-from-zero.md) N-04 之前
+> （＝第十冊 F-22 第 1、2 項）。只做一次，收完就不必再看這一冊。
+>
+> 這一冊是第十冊 [F-10](10-first-visit.md#f-10-那個容器與它掛進去的東西)、F-09、F-11 的**新手版**：
+> 順序相同，每一步標題註明對應的原步驟；兩者衝突時以第十冊為準。
+>
+> 🧪 **模擬部署**：開發機上沒有這些東西，不必做。想先練手的話，[附錄](#附錄在開發機上先練一次)教你在開發機上搭一個無害的替身。
+
+---
+
+## 0. 讀之前
+
+### 0.1 要收掉的東西
+
+| 東西 | 在哪裡 | 為什麼要收 | 在哪一步收 |
+|---|---|---|---|
+| 容器 `dialysis_system_v0` | Docker 裡 | 它把主機整顆 C 槽掛在自己的 `/app` 底下，容器裡任何一條指令都能改主機的檔案（F-02） | L-04 |
+| clone 下來的原始碼 | 兩種可能：主機 C 槽的某個資料夾，或只在容器裡 | 那是修正前的版本（F-04），本系統這次也不會用它 | L-03 找、L-05 刪 |
+| 權杖的殘留字串 | 跟著上面兩樣 | 那把權杖 0922 就在 GitHub 上刪掉了，**已經失效**（F-11），只是不該留著 | 隨 L-04、L-05 一起消失 |
+| `python` 映像檔 | Docker 裡 | 當天為了開那個容器拉下來的，本系統用不到 | L-06，**先問資訊室** |
+
+### 0.2 三條鐵則
+
+> ⚠️ **1. 在容器裡面，一律只看不動。**
+> 本冊在容器裡只下 `ls`、`find`、`git remote`、`git log` 這幾種「看」的指令。
+> **不准在容器裡下 `rm`、`mv`、`chmod`、`chown`**——`/app` 就是主機的 C 槽，刪下去的是主機上的真檔案，包含另一個專案的東西。
+
+> ⚠️ **2. 只動名字叫 `dialysis_system_v0` 的那一個容器。**
+> 這台主機上還有另一個專案在用 Docker。清單裡看到的其他容器、映像檔、資料卷都**不是我們的**。
+> **`docker system prune`、`docker container prune`、`docker image prune` 一律不准下**：它們會連別人的一起刪。
+> 指令裡看到 `-f`（強制）也一樣不加。
+
+> ⚠️ **3. 刪主機上的檔案之前，資訊室的人要在旁邊點頭。**
+> 容器是我們開的，收掉不必問；主機上的資料夾與映像檔，要讓對方看過再刪（L-05、L-06）。
+
+### 0.3 要準備的
+
+- 資訊室的同仁在旁（[第十四冊](14-from-zero.md) N-01 約好的那一位）
+- 《[部署演練紀錄](../notes/deployment-drills.md)》開著，每做完一步就填一格
+- 主機上開一個 PowerShell 視窗。**本冊還用不到開工三行**（`$root` 那時還沒建）
+
+整冊大約 15～20 分鐘。
+
+---
+
+## 1. 先看，不要動
+
+### L-01 看它還在不在（＝F-10 ①）
+
+**做什麼**
+
+```powershell
+docker ps -a --filter name=dialysis_system_v0
+```
+
+`ps` 是列出容器，`-a` 是連停著的也列。
+
+**怎麼知道成功了**：印出一張表，照下面判斷接著做哪一步。
+
+| 看到 | 意思 | 接著 |
+|---|---|---|
+| 一列，`NAMES` 是 `dialysis_system_v0`，`STATUS` 是 `Up …` | 還在，正在跑 | L-02 |
+| 一列，`STATUS` 是 `Exited …` | 還在，停著（主機斷過電就會這樣） | L-02 |
+| 只有標題那一列（`CONTAINER ID   IMAGE …`），底下什麼都沒有 | 容器已經不在了，有人收過 | 看下面方框 |
+
+> 💡 **容器已經不在了**：L-02～L-04 跳過，但 clone 那一份可能還在 C 槽上。
+> 在主機上找找看，列出 C 槽往下三層以內所有 Git 資料夾的位置：
+>
+> ```powershell
+> Get-ChildItem C:\ -Directory -Force -Filter .git -Depth 2 -ErrorAction SilentlyContinue | ForEach-Object { $_.Parent.FullName }
+> ```
+>
+> 每一行是一個 clone 的位置。逐一用 L-05 第 2 步的指令認，只認 `url` 裡有 `hd-tablet-care` 的；
+> 找到就照 L-05 刪，找不到就在演練紀錄寫「容器與 clone 皆已不在」，接著做 L-06。
+
+**可能怎麼壞**
+
+| 症狀 | 處置 |
+|---|---|
+| `failed to connect to the docker API at npipe:…` | Docker Desktop 沒在跑。開始選單開啟它，等左下角變綠再打一次（同第十四冊 N-04） |
+
+---
+
+### L-02 抄下它掛了什麼（＝F-10 ①）
+
+**做什麼**：三行各打一次，**輸出原文抄進演練紀錄**。
+
+```powershell
+docker inspect dialysis_system_v0 --format "{{json .Mounts}}"
+docker inspect dialysis_system_v0 --format "{{.HostConfig.RestartPolicy.Name}}"
+docker inspect dialysis_system_v0 --format "{{json .HostConfig.PortBindings}}"
+```
+
+`inspect` 是「讀出這個容器的設定」，只讀、不改任何東西。
+
+**怎麼知道成功了**
+
+| 哪一行 | 應該看到 | 意思 |
+|---|---|---|
+| 第一行 | `[{"Type":"bind","Source":"…","Destination":"/app",…}]` | `Source` 是主機上被掛進去的地方，`Destination` 是它在容器裡的名字。**這一行就是 F-02「整顆 C 槽」的證據** |
+| 第二行 | 多半是 `no` | 容器不會自己重新啟動 |
+| 第三行 | `{"8000/tcp":[{"HostIp":"","HostPort":"3000"}]}` | 主機的 3000 埠被它登記走了（F-03） |
+
+`Source` 的寫法不一定是 `C:\`：Docker Desktop 會把 Windows 路徑換成自己的寫法，看到 `/c`、`/run/desktop/mnt/host/c` 都有可能。
+**是不是真的 C 槽，下一步用眼睛確認**，這一步只負責抄。
+
+**可能怎麼壞**
+
+| 症狀 | 處置 |
+|---|---|
+| 第二行是 `always` 或 `unless-stopped` | 它會跟著 Docker 自己起來。沒關係，L-04 刪掉就不會了，記下來即可 |
+| `Error: No such object: dialysis_system_v0` | 名字打錯，或剛好有人把它刪了。回 L-01 再看一次 |
+
+---
+
+### L-03 確認 `/app` 是 C 槽，並找出 clone 在哪（＝F-10 ②、F-04）
+
+這一步要把容器叫起來、往裡面**看**。記得鐵則 1：只看不動。
+
+**做什麼**
+
+1. 叫起來，看 `/app` 裡有什麼：
+
+   ```powershell
+   docker start dialysis_system_v0
+   docker exec dialysis_system_v0 ls /app
+   ```
+
+   `docker exec <容器> <指令>` 是「在這個容器裡面執行一條指令」。第一行遇到已經在跑的容器也沒關係，它只會印出容器的名字。
+
+   | `ls` 印出 | 意思 | 接著 |
+   |---|---|---|
+   | 裡面有 `Windows`、`Users`、`Program Files` 這幾個名字 | `/app` 就是主機的 C 槽，F-02 確認了 | 第 2 步 |
+   | 沒有這幾個名字 | 掛進去的不是 C 槽，收法不同 | **停手**。把 L-02 第一行與這份清單抄下來，回開發端判斷後再繼續 |
+
+2. 找出容器裡所有 Git 資料夾（要等 10～60 秒，C 槽很大）：
+
+   ```powershell
+   docker exec dialysis_system_v0 sh -c "find / -maxdepth 4 -name .git -type d -not -path '/proc/*' 2>/dev/null"
+   ```
+
+   印出來的每一行長得像 `/app/hd-tablet-care/.git`。**去掉最後的 `/.git`**，剩下的 `/app/hd-tablet-care` 就是一份 clone 的位置。
+
+   可能會列出好幾行：C 槽上別的專案（包含同機另一個專案）也有 Git 資料夾，這是正常的。下一步逐一查，只認我們的那一份。
+
+3. 對上一步找到的**每一個位置**，看它是從哪裡 clone 來的（`<位置>` 換成上一步去掉 `/.git` 的那一段）：
+
+   ```powershell
+   docker exec dialysis_system_v0 git -C <位置> remote -v
+   ```
+
+   網址裡有 `hd-tablet-care` 的，就是 0922 那一份。**只有它是我們要收的**，其他的不要管。
+
+4. 對我們那一份，看它是哪一版：
+
+   ```powershell
+   docker exec dialysis_system_v0 git -C <位置> log -1 --oneline
+   ```
+
+**怎麼知道成功了**：下面四項都寫進了演練紀錄。
+
+| 看什麼 | 寫進演練紀錄 |
+|---|---|
+| 我們那一份的位置 | 原文照抄，例如 `/app/hd-tablet-care` |
+| 第 4 步那一行 | 整行照抄。這是 F-04「當天實際 clone 到哪一版」的答案 |
+| 第 3 步的網址 | 長得像 `https://ghp_…@github.com/…` 或 `https://<一長串字>@github.com/…` 的話，`@` 前面那一串就是 0922 那把權杖。它已經失效（F-11），演練紀錄寫「**有權杖殘留（已作廢）**」即可，**字串本身不要抄** |
+| 這一份在哪裡 | 照下表判斷 |
+
+| 位置的開頭 | 它其實在哪裡 | 怎麼收 |
+|---|---|---|
+| `/app/` | **主機的 C 槽**。把 `/app` 換成 `C:`、斜線 `/` 換成反斜線 `\`：`/app/hd-tablet-care` ＝ `C:\hd-tablet-care` | L-04 收容器，L-05 在主機上刪這個資料夾 |
+| 其他（例如 `/hd-tablet-care`、`/root/…`） | **只在容器裡** | L-04 刪容器時一起消失，L-05 跳過 |
+| 一個都沒找到 | clone 在更深的地方，或當天就刪了 | 演練紀錄寫「未找到」，照樣往下；L-05 跳過 |
+
+> 💡 **不必另外找權杖**：權杖殘留只可能在兩個地方——clone 的 Git 設定（跟著 L-05 刪掉），
+> 或容器裡的 shell 歷史與 Git 設定（跟著 L-04 刪掉）。收完這兩樣，殘留就沒了。
+
+**可能怎麼壞**
+
+| 症狀 | 處置 |
+|---|---|
+| `fatal: detected dubious ownership in repository` | Git 覺得這個資料夾的擁有者不對，不肯讀。指令裡 `git` 後面加 `-c safe.directory=*`，例如 `docker exec dialysis_system_v0 git -c safe.directory=* -C <位置> remote -v` |
+| `git: not found` | 這個容器裡沒有 Git（不太可能，`python` 映像檔有附）。改看設定檔：`docker exec dialysis_system_v0 cat <位置>/.git/config`，`url =` 那一行就是網址；第 4 步略過，演練紀錄寫「版本未查」 |
+| `find` 等超過三分鐘沒結束 | 按 Ctrl+C，把 `-maxdepth 4` 改成 `-maxdepth 3` 再打一次 |
+| `Error response from daemon: Container … is not running` | 第 1 步的 `docker start` 沒成功。再打一次，看它印出什麼 |
+
+---
+
+## 2. 收掉
+
+### L-04 收掉容器（＝F-10 ③）
+
+**做什麼**
+
+```powershell
+docker stop dialysis_system_v0
+docker rm dialysis_system_v0
+docker ps -a --filter name=dialysis_system_v0
+```
+
+`stop` 是停下來，`rm` 是刪掉這個容器。
+
+**怎麼知道成功了**：前兩行各印出一次 `dialysis_system_v0`；第三行**只剩標題那一列**。
+
+`docker rm` 只刪容器本身——容器裡的 shell 歷史、Git 設定、只在容器裡的那份 clone 都跟著沒了——
+**不會動到主機 C 槽上的任何檔案**。這是對的：C 槽上那一份，下一步在主機上刪。
+
+**可能怎麼壞**
+
+| 症狀 | 處置 |
+|---|---|
+| `You cannot remove a running container` | 第一行沒成功。再打一次 `docker stop`，等它印出名字再 `rm` |
+| `docker stop` 超過一分鐘沒回來 | 按 Ctrl+C，改打 `docker kill dialysis_system_v0`，再 `rm` |
+| `No such container` | 已經刪掉了。看第三行確認就好 |
+
+---
+
+### L-05 刪掉主機 C 槽上那一份 clone（＝F-10 ④）
+
+**只有 L-03 判斷「在主機的 C 槽」時才做。** 其他情形跳到 L-06。
+
+**做什麼**
+
+1. 把 L-03 換算好的路徑存進一個變數，之後就不必重打（例子是 `C:\hd-tablet-care`，換成你抄下來的）：
+
+   ```powershell
+   $old = "C:\hd-tablet-care"
+   ```
+
+2. 在主機上認一次，確定它是本系統、不是別人的：
+
+   ```powershell
+   Get-ChildItem $old
+   Select-String -Path "$old\.git\config" -Pattern "url"
+   ```
+
+   | 看什麼 | 應該是 |
+   |---|---|
+   | 第一行 | 本系統的檔案：`apps`、`docs`、`packages`、`package.json`、`README.md`… |
+   | 第二行 | `url = …` 那一行裡有 `hd-tablet-care` |
+
+3. 把這兩段輸出給資訊室的同仁看，說明：「這是 0922 我們留下的原始碼，要刪掉。」**對方同意了**才往下。
+
+4. 用檔案總管刪（會先進資源回收筒，刪錯還救得回來）：
+
+   ```powershell
+   explorer.exe (Split-Path $old)
+   ```
+
+   這一行會開啟它的上一層資料夾。在那個資料夾上**按右鍵 → 刪除**。
+
+5. 回 PowerShell 確認：
+
+   ```powershell
+   Test-Path $old
+   ```
+
+6. 資訊室確認沒刪錯之後，開**資源回收筒**，對**那一項**按右鍵 → 刪除。
+   **不要按「清理資源回收筒」**：那會連同這台主機上其他人丟進去的東西一起清掉。
+
+**怎麼知道成功了**：第 5 步印出 `False`；資源回收筒裡沒有那一項。
+
+> ⚠️ **不要改用 `Remove-Item -Recurse -Force`。** 那是直接永久刪除，路徑打錯一個字就救不回來，而這台主機上還有別人的專案。
+
+**可能怎麼壞**
+
+| 症狀 | 處置 |
+|---|---|
+| 第 2 步說找不到路徑 | 路徑換算錯了。回頭對一次 L-03 抄下來的位置；容器已經刪了查不回來的話，用 L-01 方框那一條在主機上找 |
+| 第 2 步列出來的不像本系統，或 `url` 裡沒有 `hd-tablet-care` | **停手，不要刪。** 路徑換錯了，刪下去的會是別人的東西 |
+| 刪的時候跳出「太大，無法放入資源回收筒，要永久刪除嗎？」 | 再核對一次第 2 步的輸出，確定是本系統，再按「是」 |
+| 「檔案正在使用中」 | 有程式開著裡面的檔案。把其他檔案總管視窗、編輯器關掉再刪；還是不行，回 L-04 確認容器真的刪掉了 |
+| 資訊室不同意刪 | 不刪。演練紀錄寫「保留，資訊室＿＿決定」，照樣往下 |
+
+---
+
+### L-06 `python` 映像檔：問過再決定（＝F-10 ⑤）
+
+**做什麼**：先看，不刪。
+
+```powershell
+docker image ls python
+docker ps -a --filter ancestor=python
+```
+
+第一行列出主機上所有 `python` 開頭的映像檔；第二行列出還有哪些容器是用它開的。
+
+**怎麼判斷**
+
+| 看到 | 意思 |
+|---|---|
+| 第一行只有一列，`TAG` 是 `latest`；第二行只有標題列 | 很可能只有 0922 那次用過。**問資訊室**：「這個 `python:latest` 是我們上次拉的，你們另一個專案有沒有在用？」 |
+| 第一行有好幾列（例如還有 `3.11-slim`） | 其他那幾列是別人的，**不要碰**；`latest` 那一列一樣先問 |
+| 第二行有容器 | 有人正在用它開的容器，**不刪**，演練紀錄記下容器名字即可 |
+
+資訊室說可以刪，才打：
+
+```powershell
+docker image rm python:latest
+```
+
+**怎麼知道成功了**：印出一串 `Untagged: …`、`Deleted: sha256:…`；再打一次 `docker image ls python`，`latest` 那一列不見了。
+
+**可能怎麼壞**
+
+| 症狀 | 處置 |
+|---|---|
+| `conflict: unable to remove repository reference … container … is using its referenced image` | 還有別的容器在用它。**不要加 `-f` 硬刪**，保留下來 |
+| 資訊室不確定 | 保留。它只佔一點磁碟空間，不影響本系統。演練紀錄寫「保留，待資訊室確認」 |
+
+---
+
+## 3. 收完之後
+
+### L-07 確認收乾淨了，順便查 3000 埠（＝F-09）
+
+**做什麼**
+
+```powershell
+docker ps -a --format "{{.Names}}  {{.Image}}  {{.Status}}"
+Get-NetTCPConnection -State Listen -LocalPort 3000, 9000 -ErrorAction SilentlyContinue | Select-Object LocalPort, OwningProcess
+```
+
+**怎麼知道成功了**
+
+| 看什麼 | 應該是 |
+|---|---|
+| 第一行 | 沒有 `dialysis_system_v0`。其他列是另一個專案的，**抄下名字即可，不要動** |
+| 第二行，3000 那一列 | 兩種都算對，照實寫進演練紀錄：**消失了** → 當初佔著 3000 的就是我們那個容器；**還在** → 是別人的，往下查是誰 |
+
+3000 還在的話，查是誰佔的（`<OwningProcess>` 換成上一行印出的數字）：
+
+```powershell
+Get-Process -Id <OwningProcess> | Select-Object Id, ProcessName, Path
+docker ps --format "{{.Names}}  {{.Ports}}"
+```
+
+行程是 `com.docker.backend` 或 `wslrelay` 的話，那是 Docker 在轉送某個容器的埠，第二行會看到是哪一個。
+把結果告訴資訊室，**請他們登記這個埠是誰的**。
+
+> ⚠️ **不論 3000 空出來與否，本系統都不用 3000，也不用 9000。** 本系統用的是資訊室 0930 確認的 `13000`、`18080`、`18081`，在第十四冊 N-07 確認沒人在用。
+
+### 演練紀錄這一段應該有的
+
+| 步驟 | 要寫的 |
+|---|---|
+| L-01 | 容器當時的狀態（Up／Exited／已不在） |
+| L-02 | 三行輸出原文 |
+| L-03 | clone 的位置、`log -1` 那一行、有沒有權杖殘留（只寫有無） |
+| L-04 | 容器已刪 |
+| L-05 | 主機上那一份已刪／只在容器裡／未找到／資訊室決定保留 |
+| L-06 | `python:latest` 已刪／保留（誰決定的） |
+| L-07 | 3000 埠空出來了，或被誰佔著 |
+
+**七格都有答案，這一冊就做完了**——「保留」「未找到」也是答案。接著回[第十四冊](14-from-zero.md) N-04。
+
+---
+
+## 4. 什麼時候當場停手
+
+下列任一種出現，**停手、記錄、不要硬收**：
+
+- L-03 的 `ls /app` 裡**沒有** `Windows`、`Users`（掛進去的不是 C 槽，收法不同）
+- 要刪的資料夾、映像檔，看起來不像本系統的
+- 有人說「整個 `prune` 一下比較快」「加個 `-f` 就刪得掉了」
+- 資訊室的同仁不在場，卻要刪主機上的檔案
+
+**L-04（收容器）沒完成，就不要開始第十四冊的部署**：那個容器掛著整顆 C 槽，留著它部署，等於主機上一直開著一扇沒人看的門。
+L-05、L-06 因資訊室決定保留而沒刪，不擋部署，寫進交接文件的「已知限制」即可。
+
+---
+
+## 附錄：在開發機上先練一次
+
+> 🧪 **這一段只在開發機上做。** 它搭一個無害的替身，讓你在進院前把 L-01～L-07 的指令親手打過一次。
+
+替身和 0922 那個容器同名、同映像檔，但**只掛一個空資料夾、不對應任何埠**。
+
+> ⚠️ **練習時絕對不要照第十冊 1.1 節那一行原樣打**：那一行會把你開發機的整顆 C 槽掛進去。
+
+**搭替身**
+
+```powershell
+New-Item -ItemType Directory -Force C:\hd-drill | Out-Null
+docker run -dit --name dialysis_system_v0 -v C:\hd-drill:/app python
+docker exec dialysis_system_v0 git init -q /app/hd-tablet-care
+docker exec dialysis_system_v0 git -C /app/hd-tablet-care remote add origin https://FAKE-TOKEN@github.com/94sh09sh19sh/hd-tablet-care.git
+docker exec dialysis_system_v0 git -C /app/hd-tablet-care -c user.name=drill -c user.email=drill@example.invalid commit -q --allow-empty -m drill
+```
+
+第二行第一次會下載 `python` 映像檔（約 1 GB），要等幾分鐘。`FAKE-TOKEN` 是假的，只是模擬權杖殘留長什麼樣子。
+
+**然後照 L-01 起往下做，與院內不同的地方：**
+
+| 步驟 | 練習時 |
+|---|---|
+| L-02 | `Source` 會是 `C:\hd-drill` 或它的換算寫法；第三行是 `{}`（替身沒有對應埠） |
+| L-03 第 1 步 | `ls /app` 只會看到 `hd-tablet-care`，**看不到 `Windows` 是對的**（替身只掛了 `C:\hd-drill`），照樣往第 2 步 |
+| L-03 換算路徑 | `/app` 換成 `C:\hd-drill`：`/app/hd-tablet-care` ＝ `C:\hd-drill\hd-tablet-care` |
+| L-05 | 第 2 步只會看到 `.git`（替身沒有程式碼），`url` 裡有 `hd-tablet-care` 即可；第 3 步不必問人 |
+| L-06 | 開發機上沒有別的東西在用 `python:latest` 的話，直接刪 |
+| L-07 | 第二行跳過 |
+
+**練完收尾**
+
+```powershell
+Remove-Item C:\hd-drill
+docker ps -a --filter name=dialysis_system_v0
+```
+
+第一行把空下來的 `C:\hd-drill` 刪掉（裡面還有東西時 PowerShell 會問你，那表示 L-05 沒做完）；第二行只剩標題列就收乾淨了。
+
+---
+
+## 版本歷程
+
+| 定版 | 日期 | 異動 |
+|---|---|---|
+
+[← 回第十四冊](14-from-zero.md)　[← 回第十冊](10-first-visit.md)　[← 回部署手冊總覽](index.md)
