@@ -97,12 +97,14 @@ git ls-remote --tags origin
 
 | 問題 | 對應 |
 |---|---|
-| 主機的 Docker Desktop 與 Compose 版本？可以不升級就用嗎？ | DEP-04、Q-27 |
+| 主機的 Docker Desktop 與 Compose 版本？可以不升級就用嗎？（**0930 已知**：Docker 29.3.1、Compose v5.1.1；能不能不升級還沒問） | DEP-04、Q-27 |
 | Docker 的資料（WSL2 虛擬磁碟）在哪顆磁碟？剩多少空間？能加入防毒排除嗎？ | DEP-21、DEP-37 第 5 項 |
-| 要給本系統哪三個連接埠？（現場看過 3000 已被佔用） | DEP-37 第 2 項、[F-17](10-first-visit.md) |
+| 要給本系統哪三個連接埠？（現場看過 3000 已被佔用）（**0930 已答**：後端 `13000`、護理端 `18080`、病人端 `18081`） | DEP-37 第 2 項、[F-17](10-first-visit.md) |
 | **斷電之後誰開機、誰登入？有 UPS 嗎？** Docker Desktop 要有人登入才會起來 | DEP-21 第 4 項、[F-18、F-19](10-first-visit.md) |
 | 主機上有沒有 RAM 磁碟？（有的話不得放任何資料） | [F-18](10-first-visit.md) |
-| GitHub、Docker Hub、npm、Prisma 引擎、Debian 套件來源是不是常態連得到？經不經代理？ | Q-32 |
+| GitHub、Docker Hub、npm、Prisma 引擎、Debian 套件來源是不是常態連得到？經不經代理？（**0930 已答**：常態、沒有限制） | Q-32 |
+| Docker Desktop 的 **Send usage statistics** 能不能關？（0922 看到是開著的，那是整台主機的設定） | DEP-14、Q-27 第 9 題 |
+| **Microsoft Store 的自動更新能不能改成手動？** 不改的話 Docker Desktop 可能在透析班中自己更新、重新啟動 | DEP-21 第 5 項、Q-27 第 10 題 |
 | 備份目錄的內容由誰、多久送往另一台機器一次？ | DEP-06 |
 
 ---
@@ -149,8 +151,8 @@ docker compose version
 | # | 位置 | 應該是 | 為什麼 |
 |---|---|---|---|
 | 1 | General → Start Docker Desktop when you sign in | 勾 | 否則連有人登入都不會啟動 |
-| 2 | General → Send usage statistics | 不勾 | 院外連線（FR-S07） |
-| 3 | Software updates → Automatically check for updates | 不勾 | 更新 Docker 是院方的變更。**從 Microsoft Store 裝的**，這一項改由市集的自動更新決定，要到市集設定看（[F-16](10-first-visit.md)） |
+| 2 | General → Send usage statistics | 不勾 | 院外連線（FR-S07）。院內主機 0922 是開著的，**關不關等資訊室答覆**（Q-27 第 9 題），答覆前只看不改 |
+| 3 | Software updates → Automatically check for updates | 不勾 | 更新 Docker 是院方的變更。**從 Microsoft Store 裝的**，這一項改由市集的自動更新決定，要到市集設定看（[F-16](10-first-visit.md)）；能不能改成手動待資訊室答覆（Q-27 第 10 題） |
 | 4 | Resources → Advanced → Disk image location | 記下路徑 | 防毒排除要排的就是這個目錄 |
 
 然後請資訊室把第 4 項那個目錄加入防毒排除清單（DEP-21 第 1 項）。

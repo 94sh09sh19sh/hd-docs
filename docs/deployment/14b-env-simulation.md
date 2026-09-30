@@ -238,12 +238,12 @@ docker compose --env-file $cfg config --quiet
 
 ## 5. 與實際部署的差異總表
 
-帶進院之前再看一次這張表：**右邊那一欄的每一個值，都不可以出現在院內那份 `.env` 裡。**
+帶進院之前再看一次這張表：**右邊那一欄的每一個值，都不可以出現在院內那份 `.env` 裡**——只有三個埠例外，兩邊剛好相同。
 
 | 變數 | 實際部署 | 模擬部署 |
 |---|---|---|
 | `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_SHELL_SRC_DIR` | `D:\hd-tablet-care\…`（依資訊室指定的磁碟） | `C:\hd-sim\…` |
-| 三個埠 | 資訊室登記的 | `13000`、`18080`、`18081` |
+| 三個埠 | `13000`、`18080`、`18081`（0930 資訊室確認） | 相同（例外） |
 | `HD_PUBLIC_API_URL`、`CORS_ORIGINS` | 護理站連得到的主機名稱或 IP | `localhost` |
 | `MDM_KIOSK_BASE_URL` | `https://<平板連得到的主機>:<病人端埠>` | `https://<開發機區網 IP>:18081` |
 | `HD_SHELL_SIGNING` | **`hospital`** | **`dev`** |
