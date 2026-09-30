@@ -3134,23 +3134,30 @@
 </tbody>
 </table>
 <h2 id="待決事項">待決事項<a class="headerlink" href="#待決事項" title="Permanent link">&para;</a></h2>
-<p><strong>擋住第二次進院的兩題</strong>（本週要問出去）：</p>
+<p><strong>本週取得的答覆</strong>：</p>
+<ul>
+<li>Q-27：主機的 Docker 版本 0922 進院時已記下（Docker 29.3.1、Compose v5.1.1）；連接埠定為後端 <code>13000</code>、護理端 <code>18080</code>、病人端 <code>18081</code></li>
+<li>Q-32：主機對外連線是常態，沒有限制</li>
+</ul>
+<p><strong>要問資訊室的兩項 Docker Desktop 設定</strong>（這台 Docker 同時在跑別的專案，兩項都是整台主機的設定，要資訊室同意才能改）：</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Q-27：主機的 Docker 版本、連接埠、防毒排除，以及<strong>斷電重開後誰登入讓 Docker 起來</strong>。主機電源（UPS、擺放位置、恢復供電自動開機）一併問</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Q-32：主機對外連線是不是常態、有沒有代理或白名單、SSH 連 GitHub 通不通</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Send usage statistics 能不能關？</strong>（0922 看到是開著的）
+  不關的影響：Docker Desktop 會持續把它自己的使用情形送往 Docker 公司，服務執行期間主機就多一條常駐的院外連線。
+  本系統的程式不經過這條線，但送出什麼由 Docker 公司決定、會隨版本改變，開發端無法逐項擔保；
+  文件裡「服務執行時沒有任何一條線跨出醫院」（FR-S07、DEP-39）也要改寫成「有一條 Docker Desktop 自己的例外」</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Microsoft Store 的自動更新能不能改成手動？</strong> 這台的 Docker Desktop 是從市集裝的，更新由市集決定（F-16）；市集的設定管的是整台主機的所有 App。
+  不改的話，Docker Desktop 可能在透析班中自己更新、重新啟動，容器全部中斷——護理端會跳斷線紅框、病人端約 11 秒後改成「請按床邊呼叫鈴」（迭代 14.3），新版也可能改變 compose 的行為</li>
 </ul>
 <p><strong>不擋進院，但要在首波試用前有答案</strong>：</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Q-31：至少一位護理師操作過簡易版（第三者錄影，測試分冊 <code>x39</code>）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Q-33：目標平板的型號與解析度——「整頁不捲動」要在那台平板上重驗</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Q-34：透析室幾床、床號怎麼編、三個療程時段各從幾點到幾點（目前 15 床、暫以 12 點與 17 點分界）</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Q-08 的剩餘部分：實驗室的使用期限與資料留存，真模型實測時順便問</li>
 </ul>
 <h2 id="下週規劃">下週規劃<a class="headerlink" href="#下週規劃" title="Permanent link">&para;</a></h2>
 <ul>
 <li>開發機＋開發手機照第十四冊走完一輪（含外殼實機、掃 QR code、14.3 的斷線情境、14.4 的求助湧入），打出交給院方的 tag</li>
 <li>連上實驗室，跑真模型實測並記下繁體中文品質（第十三冊）</li>
-<li>拿到 Q-27、Q-32 的答案後，約第二次進院</li>
+<li>問完上面兩項 Docker Desktop 設定後，約第二次進院</li>
 <li>迭代 15（規則引擎與三項高風險功能）可以開始實作；對真實病人開啟仍需 Q-02、Q-03</li>
 </ul>
 <hr />
