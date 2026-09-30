@@ -3055,8 +3055,8 @@
 <tbody>
 <tr>
 <td>一行一個，等號前後<strong>不要空格</strong></td>
-<td><code>HD_API_PORT=3100</code></td>
-<td><code>HD_API_PORT = 3100</code></td>
+<td><code>HD_API_PORT=13000</code></td>
+<td><code>HD_API_PORT = 13000</code></td>
 </tr>
 <tr>
 <td>值<strong>不要加引號</strong></td>
@@ -3089,7 +3089,7 @@
 <tbody>
 <tr>
 <td>三個連接埠（後端、護理端、病人端）</td>
-<td>資訊室登記</td>
+<td>資訊室。<strong>0930 已確認</strong>：<code>13000</code>、<code>18080</code>、<code>18081</code></td>
 <td><code>HD_API_PORT</code>、<code>HD_NURSE_PORT</code>、<code>HD_PATIENT_PORT</code>，以及所有位址</td>
 </tr>
 <tr>
@@ -3123,7 +3123,7 @@
 <p>⚠️ <strong>主機名稱還是 IP，擇一之後不要再換。</strong> 平板的伺服器憑證就簽這個名字；換了要重簽憑證、每一台平板重新佈建。
 選的原則：平板與護理站在院內網路上<strong>確定連得到、而且不會變</strong>的那一個。IP 由 DHCP 發的話可能會變，要請資訊室固定下來。</p>
 </blockquote>
-<p>下面的範例一律假設：主機名稱 <code>hd-server</code>、三個埠 <code>3100</code>、<code>8180</code>、<code>8181</code>、根目錄 <code>D:\hd-tablet-care</code>、tag <code>v0.2.0</code>。
+<p>下面的範例一律假設：主機名稱 <code>hd-server</code>、三個埠 <code>13000</code>、<code>18080</code>、<code>18081</code>（0930 資訊室確認的實際值）、根目錄 <code>D:\hd-tablet-care</code>、tag <code>v0.2.0</code>。
 <strong>這些只是範例，請換成你拿到的答案。</strong></p>
 <hr />
 <h2 id="1-逐項填">1. 逐項填<a class="headerlink" href="#1-逐項填" title="Permanent link">&para;</a></h2>
@@ -3190,17 +3190,17 @@
 <tr>
 <td><code>HD_API_PORT</code></td>
 <td>資訊室給的<strong>後端</strong>埠</td>
-<td><code>3100</code></td>
+<td><code>13000</code></td>
 </tr>
 <tr>
 <td><code>HD_NURSE_PORT</code></td>
 <td>資訊室給的<strong>護理端</strong>埠</td>
-<td><code>8180</code></td>
+<td><code>18080</code></td>
 </tr>
 <tr>
 <td><code>HD_PATIENT_PORT</code></td>
 <td>資訊室給的<strong>病人端</strong>埠</td>
-<td><code>8181</code></td>
+<td><code>18081</code></td>
 </tr>
 </tbody>
 </table>
@@ -3222,17 +3222,17 @@
 <tr>
 <td><code>HD_PUBLIC_API_URL</code></td>
 <td><strong>護理站電腦</strong>連得到的後端位址：<code>http://&lt;主機&gt;:&lt;後端埠&gt;</code></td>
-<td><code>http://hd-server:3100</code></td>
+<td><code>http://hd-server:13000</code></td>
 </tr>
 <tr>
 <td><code>CORS_ORIGINS</code></td>
 <td><strong>護理端</strong>的位址：<code>http://&lt;主機&gt;:&lt;護理端埠&gt;</code></td>
-<td><code>http://hd-server:8180</code></td>
+<td><code>http://hd-server:18080</code></td>
 </tr>
 <tr>
 <td><code>MDM_KIOSK_BASE_URL</code></td>
 <td><strong>平板</strong>要連的病人端位址，<strong>一律 <code>https://</code></strong>：<code>https://&lt;主機&gt;:&lt;病人端埠&gt;</code></td>
-<td><code>https://hd-server:8181</code></td>
+<td><code>https://hd-server:18081</code></td>
 </tr>
 </tbody>
 </table>
@@ -3404,13 +3404,13 @@
 HD_BACKUP_DIR=D:\hd-tablet-care\backups
 HD_CONFIG_DIR=D:\hd-tablet-care\config
 
-HD_API_PORT=3100
-HD_NURSE_PORT=8180
-HD_PATIENT_PORT=8181
+HD_API_PORT=13000
+HD_NURSE_PORT=18080
+HD_PATIENT_PORT=18081
 
-HD_PUBLIC_API_URL=http://hd-server:3100
-CORS_ORIGINS=http://hd-server:8180
-MDM_KIOSK_BASE_URL=https://hd-server:8181
+HD_PUBLIC_API_URL=http://hd-server:13000
+CORS_ORIGINS=http://hd-server:18080
+MDM_KIOSK_BASE_URL=https://hd-server:18081
 
 HD_SHELL_SRC_DIR=D:\hd-tablet-care\hd-kiosk-shell
 HD_SHELL_SIGNING=hospital

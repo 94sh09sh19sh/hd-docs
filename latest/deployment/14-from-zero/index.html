@@ -3900,8 +3900,8 @@
 </tr>
 <tr>
 <td>三個連接埠</td>
-<td>資訊室登記給你的</td>
-<td>自己挑沒人用的：<code>13000</code>、<code>18080</code>、<code>18081</code></td>
+<td><code>13000</code>、<code>18080</code>、<code>18081</code>（0930 資訊室確認）</td>
+<td>同樣用 <code>13000</code>、<code>18080</code>、<code>18081</code>，被佔用就自己換</td>
 <td>N-07</td>
 </tr>
 <tr>
@@ -4080,11 +4080,11 @@
 </blockquote>
 <hr />
 <h3 id="n-02-把問題清單寄給資訊室w-03">N-02 把問題清單寄給資訊室（＝W-03）<a class="headerlink" href="#n-02-把問題清單寄給資訊室w-03" title="Permanent link">&para;</a></h3>
-<p><strong>做什麼</strong>：把<a href="../11-compose/">第十一冊 W-03</a> 那張表的七個問題寄出去，答覆寫進演練紀錄。其中最要緊的三題：</p>
+<p><strong>做什麼</strong>：把<a href="../11-compose/">第十一冊 W-03</a> 那張表的七個問題寄出去，答覆寫進演練紀錄。0930 已經有答案的不必再問：連接埠是 <code>13000</code>、<code>18080</code>、<code>18081</code>；主機對外連線是常態、沒有限制；Docker 版本是 29.3.1、Compose v5.1.1。還沒答、最要緊的三題：</p>
 <ol>
-<li>本系統可以用哪<strong>三個連接埠</strong>？（0922 看過 3000 已被佔用）</li>
 <li><strong>斷電之後誰開機、誰登入？</strong> Docker Desktop 要有人登入才會起來</li>
-<li>GitHub、Docker Hub、npm 這些網站，主機是不是常態連得到？經不經代理伺服器？</li>
+<li>Docker Desktop 的 <strong>Send usage statistics</strong> 能不能關？（見 N-05 第 2 項）</li>
+<li><strong>Microsoft Store 的自動更新能不能改成手動？</strong>（見 N-05 第 3 項）</li>
 </ol>
 <p><strong>怎麼知道成功了</strong>：每一題都有答覆，或寫明「未答覆」與對方是誰。</p>
 <blockquote>
@@ -4224,7 +4224,7 @@
 <tr>
 <td>2</td>
 <td>General → Send usage statistics</td>
-<td>不勾</td>
+<td>不勾（見下方說明）</td>
 </tr>
 <tr>
 <td>3</td>
@@ -4244,6 +4244,8 @@
 1. 在演練紀錄寫下「更新由市集管理，現行設定＝＿＿」。
 2. 問資訊室能不能改成手動更新；不行的話，至少請他們避開透析時段。</p>
 <p>不處理的後果：Docker Desktop 更新時引擎會重新啟動，容器會中斷一段時間，碰上透析班時平板就會斷線；版本也會在沒走院方變更流程的情況下自己換掉。</p>
+<p><strong>第 2 項是開著的？</strong> 院內主機 0922 就是開著的。它是<strong>整台主機</strong>的設定，同機另一個專案也受影響，<strong>答覆前只看不改</strong>（Q-27 第 9 題）。
+不關的後果：Docker Desktop 會持續把它自己的使用情形送往 Docker 公司，服務執行期間主機就多一條院外連線；本系統的資料不經過這條線，但送出什麼開發端無法擔保。</p>
 </blockquote>
 <p>然後請資訊室把第 4 項那個資料夾加入防毒的排除清單。</p>
 <p><strong>怎麼知道成功了</strong>：四項抄進演練紀錄；防毒排除清單裡看得到那個資料夾。</p>
@@ -4293,11 +4295,11 @@
 </blockquote>
 <hr />
 <h3 id="n-07-確認三個連接埠沒人用w-07">N-07 確認三個連接埠沒人用（＝W-07）<a class="headerlink" href="#n-07-確認三個連接埠沒人用w-07" title="Permanent link">&para;</a></h3>
-<p><strong>做什麼</strong>：把要用的三個埠填進下面這一條再打（實際部署填資訊室給的，🧪 模擬部署填 <code>13000,18080,18081</code>）：</p>
+<p><strong>做什麼</strong>：確認下面這三個埠沒人在用（實際部署是資訊室 0930 確認的 <code>13000,18080,18081</code>；🧪 模擬部署用同一組，被佔用就換掉）：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-NetTCPConnection</span> <span class="n">-State</span> <span class="n">Listen</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">LocalPort</span> <span class="n">-in</span> <span class="n">13000</span><span class="p">,</span><span class="n">18080</span><span class="p">,</span><span class="n">18081</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">LocalPort</span><span class="p">,</span> <span class="n">OwningProcess</span>
 </code></pre></div>
 <p><strong>怎麼知道成功了</strong>：<strong>什麼都沒印出來</strong>，代表三個埠都沒人在用。</p>
-<p><strong>可能怎麼壞</strong>：印出了某個埠 → 有別的程式在用它。實際部署：換一個並<strong>回報資訊室登記</strong>；模擬部署：自己換一個沒人用的。
+<p><strong>可能怎麼壞</strong>：印出了某個埠 → 有別的程式在用它。實際部署：<strong>先停手回報資訊室</strong>，這三個埠是他們確認過的，不要自己換；模擬部署：自己換一個沒人用的。
 <strong>不要用 <code>-p</code> 之類的方式把埠對到別處</strong>，埠只寫在 <code>.env</code> 裡。</p>
 <blockquote>
 <p>🧪 <strong>模擬部署</strong>：三個埠記下來，N-11 填 <code>.env</code> 時要用。</p>

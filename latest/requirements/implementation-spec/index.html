@@ -4848,7 +4848,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tbody>
 <tr>
 <td>應用主機</td>
-<td>院內共用 Windows 工作站，<strong>Git 與 Docker（含 Compose）</strong>；登記好的連接埠；本系統專屬的備份目錄與設定目錄</td>
+<td>院內共用 Windows 工作站，<strong>Git 與 Docker（含 Compose）</strong>；連接埠（0930 定為後端 <code>13000</code>、護理端 <code>18080</code>、病人端 <code>18081</code>）；本系統專屬的備份目錄與設定目錄</td>
 </tr>
 <tr>
 <td>取得程式碼</td>
@@ -4856,7 +4856,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 </tr>
 <tr>
 <td>對外連線</td>
-<td>部署與更新時連得到 GitHub、映像檔來源、套件來源與 Android 建置相依（Q-32）</td>
+<td>部署與更新時連得到 GitHub、映像檔來源、套件來源與 Android 建置相依（Q-32；<strong>0930 確認是常態、沒有限制</strong>）</td>
 </tr>
 <tr>
 <td>AI 推論端點</td>
@@ -5790,7 +5790,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
     磁碟可用空間低於下限時更新流程在備份<strong>之前</strong>停下，資料庫不被改動（DEP-37）</li>
 </ol>
 <p><strong>外部依賴</strong>：無。<strong>這個迭代可以立刻開始。</strong></p>
-<p><strong>待資訊室答覆的一項（不擋本迭代）</strong>：磁碟保留空間的實際門檻與登記下來的連接埠號都在 Q-27。
+<p><strong>待資訊室答覆的一項（不擋本迭代）</strong>：磁碟保留空間的實際門檻在 Q-27。連接埠號 0930 已定（後端 <code>13000</code>、護理端 <code>18080</code>、病人端 <code>18081</code>）。
 程式先用預設值（1GB、3000）並讓它顯示在畫面上，數字下來之後改的是 <code>.env</code>，不是程式。</p>
 <h3 id="46-迭代-8介面重新設計0919-新增本週">4.6 迭代 8：介面重新設計（0919 新增，本週）<a class="headerlink" href="#46-迭代-8介面重新設計0919-新增本週" title="Permanent link">&para;</a></h3>
 <blockquote>
@@ -6376,7 +6376,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <li>更新演練：新 tag → 建置 → 停 <code>api</code> → 備份並驗證還原 → 套用遷移 → 啟動；回退演練：舊 tag ＋ 舊映像檔 ＋ 還原備份，資料完整</li>
 <li>以正式環境設定、<code>LLM_PROVIDER=lab</code> 啟動，後端拒絕並說明原因</li>
 </ol>
-<p><strong>外部依賴</strong>：Q-27（主機 Docker 版本、連接埠、開機自動登入）、Q-32（對外連線範圍）。<strong>都不擋實作</strong>，擋的是第二次進院。</p>
+<p><strong>外部依賴</strong>：Q-27（開機自動登入、防毒排除、Docker Desktop 的使用統計與市集自動更新；版本與連接埠 0930 已答覆）、Q-32（對外連線範圍，<strong>0930 已回覆</strong>：常態、沒有限制）。<strong>都不擋實作</strong>，擋的是第二次進院。</p>
 <h3 id="410-迭代-12外殼-app-獨立-repo-與整合0926-新增本週">4.10 迭代 12：外殼 App 獨立 repo 與整合（0926 新增，本週）<a class="headerlink" href="#410-迭代-12外殼-app-獨立-repo-與整合0926-新增本週" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>2026-09-27 完成實作與開發機上的建置實測。</strong> 外殼搬到私人 repo <code>hd-kiosk-shell</code>（<code>git subtree split</code>，保留歷史），
@@ -7280,7 +7280,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~11~~</td>
 <td>~~部署改為 Docker ＋ git clone（0926）~~</td>
 <td><strong>已完成（0926）</strong>，開發機實測通過</td>
-<td>無；第二次進院需 Q-27、Q-32</td>
+<td>無；第二次進院需 Q-27 未答的題（Q-32 已於 0930 回覆）</td>
 </tr>
 <tr>
 <td>~~12~~</td>
@@ -7340,6 +7340,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </table>
 <p><strong>結論（0926）：本週四個迭代沒有一個被外部答覆擋住實作。</strong> 開發機與開發手機就驗得完全部驗收標準；擋住的只有第二次進院。</p>
 <p><strong>0926 的優先順序</strong>：Q-29（隨身碟與掃毒）<strong>作廢</strong>——院方不准用隨身碟，交付改走 git clone。現在擋住第二次進院的是 <strong>Q-27</strong>（主機的 Docker、連接埠、斷電重開後誰登入）與新增的 <strong>Q-32</strong>（對外連線是不是常態、範圍多大）。兩題都要在本週問出去。</p>
+<p><strong>0930 更新</strong>：Q-32 已回覆——對外連線是常態、沒有限制，部署路線「連得出去」的前提成立。Q-27 的 Docker 版本（29.3.1、Compose v5.1.1）與連接埠（<code>13000</code>、<code>18080</code>、<code>18081</code>）也有答案。<strong>剩下擋第二次進院的是 Q-27 未答的題</strong>：斷電重開後誰登入、防毒排除，以及 0930 追加的 Docker Desktop 兩項設定（使用統計能不能關、市集自動更新能不能改手動）。</p>
 <hr />
 <h2 id="5-每次迭代開始前agent-應自我檢查">5. 每次迭代開始前，Agent 應自我檢查<a class="headerlink" href="#5-每次迭代開始前agent-應自我檢查" title="Permanent link">&para;</a></h2>
 <p>在動工前確認：</p>
@@ -7387,7 +7388,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>開工前只要記住兩件事</strong>：</p>
 <ol>
 <li>清冊裡只有 Q-01（成效基準的量測人力與時程）有時效性。<strong>0919 起它改排下週執行</strong>——首波只開放少數人，紙本流程仍在跑，量測的時機還沒過；真正關上這扇門的是全單位改用系統的那一天</li>
-<li><strong>Q-27 與 Q-32 要在本週問出去</strong>（0926 起 Q-29 作廢）。它們擋的是第二次進院：主機的 Docker 與開機後誰登入、對外連線是不是常態——任何一項不成立，院內那一套指令就走不完</li>
+<li><strong>Q-27 剩下的題要問出去</strong>（0930 起 Q-32 已回覆：對外連線是常態、沒有限制）。它擋的是第二次進院：斷電重開後誰登入、防毒排除、Docker Desktop 的使用統計與市集自動更新——開機沒人登入，服務就回不來</li>
 </ol>
 <hr />
 <h2 id="7-已知風險">7. 已知風險<a class="headerlink" href="#7-已知風險" title="Permanent link">&para;</a></h2>
@@ -7424,7 +7425,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td>~~交付當天才發現映像檔跑不起來~~ → ~~0919：交付當天進不了院~~ → <strong>0926：院內那一套指令走不完</strong></td>
 <td>0922 就是這樣失敗的：院方 clone 到的不是開發端以為的那一版、現場指令與手冊對不上。v3.0 之後沒有隨身碟這道關卡，但多了對外連線與開機自動登入兩個不在開發端手上的條件</td>
-<td>每個交出去的 tag 先在開發機＋開發手機從零實測（DEP-22）；部署一律 checkout tag（DEP-44）；<strong>Q-27 與 Q-32 本週問出去</strong></td>
+<td>每個交出去的 tag 先在開發機＋開發手機從零實測（DEP-22）；部署一律 checkout tag（DEP-44）；Q-32 已回覆（0930）；<strong>Q-27 剩下的題問出去</strong></td>
 </tr>
 <tr>
 <td><strong>更新把資料庫弄壞</strong></td>

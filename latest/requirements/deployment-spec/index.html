@@ -3613,7 +3613,7 @@
 </tr>
 <tr>
 <td>作業系統</td>
-<td>Windows，<strong>已安裝 Docker</strong>（0922 現場確認）</td>
+<td>Windows，<strong>已安裝 Docker</strong>（0922 現場確認：Docker 29.3.1、Compose v5.1.1；Docker Desktop 從 Microsoft Store 安裝）</td>
 </tr>
 <tr>
 <td>GPU</td>
@@ -3621,7 +3621,11 @@
 </tr>
 <tr>
 <td>網路</td>
-<td><strong>院內網路可以連出去，外面連不進來</strong>（0926 確認）</td>
+<td><strong>院內網路可以連出去，外面連不進來</strong>（0926 確認）；<strong>對外連線是常態、沒有限制</strong>，無代理、無白名單（0930 確認，Q-32）</td>
+</tr>
+<tr>
+<td>連接埠</td>
+<td>後端 <code>13000</code>、護理端 <code>18080</code>、病人端 <code>18081</code>（0930 確認，Q-27）</td>
 </tr>
 <tr>
 <td>外接儲存媒體</td>
@@ -3639,7 +3643,7 @@
 </table>
 <p><strong>「連得出去、連不進來」剛好是本系統需要的形狀。</strong> 部署與更新要連出去（GitHub、映像檔來源、套件來源）；本系統沒有任何一個功能需要被院外連進來。<strong>但連得出去不等於資料可以出去</strong>——那一條（FR-S04、FR-S07）是在程式裡擋的，不是靠網路擋的。v3.0 起它只剩程式這一道防線，見 DEP-14。</p>
 <h3 id="22-共用主機上的隔離">2.2 共用主機上的隔離<a class="headerlink" href="#22-共用主機上的隔離" title="Permanent link">&para;</a></h3>
-<p><strong>DEP-04｜（0926 改寫）本系統對主機的要求只有兩樣：Git 與 Docker（含 Compose）。</strong> 其餘一律在映像檔裡。不得要求院方安裝 Node.js、Python、Android SDK 或任何執行期相依，也不得要求調整全域設定。主機上既有的 Docker 若版本不足要先問（Q-27），不得自行升級——那一套 Docker 也在跑別的專案。</p>
+<p><strong>DEP-04｜（0926 改寫）本系統對主機的要求只有兩樣：Git 與 Docker（含 Compose）。</strong> 其餘一律在映像檔裡。不得要求院方安裝 Node.js、Python、Android SDK 或任何執行期相依，也不得要求調整全域設定。主機上既有的 Docker 若版本不足要先問（Q-27），不得自行升級——那一套 Docker 也在跑別的專案。0922 現場的版本是 Docker 29.3.1、Compose v5.1.1。</p>
 <p><strong>DEP-37｜（0926 改寫）共用主機上的隔離在容器層級做到。</strong> 五件事一起做：</p>
 <table>
 <thead>
@@ -3657,7 +3661,7 @@
 </tr>
 <tr>
 <td>2</td>
-<td><strong>連接埠向資訊室登記後固定</strong>，值寫在主機的 <code>.env</code>，不寫死在 compose 檔</td>
+<td><strong>連接埠向資訊室登記後固定</strong>，值寫在主機的 <code>.env</code>，不寫死在 compose 檔。0930 定為後端 <code>13000</code>、護理端 <code>18080</code>、病人端 <code>18081</code></td>
 <td>0922 現場就撞到：想用的埠已經有人在用</td>
 </tr>
 <tr>
@@ -3733,6 +3737,11 @@
 <td><strong>開機後 Docker Desktop 會自己起來</strong></td>
 <td>Docker Desktop 是隨使用者登入啟動的程式，不是系統服務。沒有人登入，容器就不會起來，<code>restart: unless-stopped</code> 也救不了（Q-27）</td>
 </tr>
+<tr>
+<td>5</td>
+<td>（0930 新增）<strong>Docker Desktop 不在透析班中自己更新</strong></td>
+<td>院內那一套是從 Microsoft Store 裝的，更新由市集的自動更新決定；更新時 Docker 重新啟動，容器全部中斷。市集設定管的是整台主機的 App，要資訊室同意才能改成手動（Q-27 第 10 題）</td>
+</tr>
 </tbody>
 </table>
 <p><strong>主機是共用的，這幾件事更容易被推翻。</strong> 部署紀錄上要寫明是誰設的，改動前要知會誰。</p>
@@ -3783,6 +3792,7 @@
 <li><code>npm run check:egress</code> 的掃描範圍改為<strong>映像檔會帶進去的全部內容</strong>，外加 compose 檔與 AI 閘道</li>
 <li>例外只有一條，而且只在開發環境成立：AI 閘道經 SSH 通道連實驗室（DEP-40）</li>
 <li>建置階段連出去（git、映像檔、套件、Prisma 引擎、Android 建置相依）是允許的，<strong>但建置階段不得掛載任何資料卷</strong>——建置時碰不到資料，資料就出不去</li>
+<li>（0930 補記）這一條管的是本系統的程式。<strong>主機上 Docker Desktop 自己的使用統計（Send usage statistics）0922 看到是開著的</strong>，那是 Docker Desktop 送往 Docker 公司的常駐連線，本系統的程式不經過它，但送出什麼開發端無法擔保。它是整台主機的設定，能不能關待 Q-27 第 9 題</li>
 </ul>
 <h3 id="33-資料庫落點">3.3 資料庫落點<a class="headerlink" href="#33-資料庫落點" title="Permanent link">&para;</a></h3>
 <p><strong>DEP-23｜（0926 由備案條款升為主規則）資料庫檔案不得落在 Windows 目錄的繫結掛載上，只能放在具名資料卷裡。</strong> 繫結掛載在 WSL2 底下是跨檔案系統的轉譯層，SQLite 的檔案鎖不可靠（《資料庫使用規範》7.2）。<strong>0922 院方那句「似乎允許鏡像到容器外」若指的是資料庫放 Windows 目錄，答案仍然是不行</strong>；能放到容器外的是備份，不是資料庫本身。</p>
@@ -4493,11 +4503,11 @@
 </tr>
 <tr>
 <td>Q-27</td>
-<td>主機的 Docker 版本與資料位置、連接埠、防毒排除、斷電重開與自動登入、共用資源額度</td>
+<td>主機的 Docker 資料位置、防毒排除、斷電重開與自動登入、共用資源額度、Docker Desktop 的使用統計與市集自動更新（版本與連接埠 0930 已答覆）</td>
 </tr>
 <tr>
 <td>Q-32</td>
-<td>主機對外連線的範圍與穩定性：GitHub、映像檔來源、套件來源、Android 建置相依是否常態可達</td>
+<td>主機對外連線的範圍與穩定性。<strong>0930 已回覆</strong>：常態、沒有限制</td>
 </tr>
 </tbody>
 </table>

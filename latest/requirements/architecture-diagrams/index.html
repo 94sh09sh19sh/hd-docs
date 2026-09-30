@@ -2725,7 +2725,7 @@
 </tbody>
 </table>
 <p><strong>圖二因此第一次做到「服務執行時一條跨出醫院的線都沒有」</strong>：0919 版還有一條從應用伺服器連到實驗室的鏽色線，現在它只存在於開發環境。
-建置期那條線是新的，但它只在有人下 <code>git clone</code>、<code>docker compose build</code> 的那段時間存在，範圍與是否常態待 Q-32。</p>
+建置期那條線是新的，但它只在有人下 <code>git clone</code>、<code>docker compose build</code> 的那段時間存在。0930 確認主機對外連線是常態、沒有限制（Q-32）。</p>
 <p>0919 那次重繪的四處（應用主機改為共用 Windows 工作站、AI 推論退成另一台機器、MDM 整格拿掉、臨床數值走院方唯讀 API）仍然成立，見文末。</p>
 <p><strong>兩張圖的「醫院院內網路」是同一個框</strong>：病人端平板、護理端裝置與常駐總覽螢幕都在框內。</p>
 <hr />
@@ -2751,7 +2751,7 @@
 <p><strong>讀圖五個重點</strong></p>
 <ul>
 <li>虛線框是網段，不是資料夾；沒畫出來的線和畫出來的一樣重要——平板、護理端裝置、總覽螢幕、資料庫都沒有任何一條往外打的線。</li>
-<li><strong>服務執行時沒有任何一條線跨出醫院。</strong> 唯一從院內主機往外的是赭色點線：部署與更新時 <code>git clone</code>、建置映像檔、下載套件，服務起來之後不用（DEP-39；範圍與是否常態待 <a href="../open-questions/">Q-32</a>）。</li>
+<li><strong>服務執行時沒有任何一條線跨出醫院。</strong> 唯一從院內主機往外的是赭色點線：部署與更新時 <code>git clone</code>、建置映像檔、下載套件，服務起來之後不用（DEP-39；0930 確認對外連線是常態、沒有限制，<a href="../open-questions/">Q-32</a>）。這句講的是本系統；主機上 Docker Desktop 自己的使用統計目前開著，那條線不經過本系統，能不能關待 <a href="../open-questions/">Q-27</a> 第 9 題（《部署規範》DEP-14）。</li>
 <li>過渡期的實驗室 GPU 伺服器<strong>不再從院內主機連出</strong>：它只在開發環境由開發機經 SSH 通道使用（DEP-42），院內正式環境設定下選用它會拒絕啟動（DEP-40）。院內 AI 推論端點就位之後，AI 一律走院內（<a href="../open-questions/">Q-07</a>）。</li>
 <li><strong>應用伺服器與 AI 推論端點是兩台不同的機器</strong>（0919 起）：應用伺服器是院內一台與其他專案共用的 Windows 工作站，0926 起以 Docker 容器＋<code>git clone</code> 部署，本系統的 AI 閘道是同一台主機上的另一個容器；AI 推論端點在另一台 DGX Spark 上，不由本專案部署（《<a href="../deployment-spec/">部署規範</a>》DEP-07、DEP-16）。<strong>0916 以前這兩個框畫的是同一台機器的兩個服務</strong>，現在它們真的是兩台。</li>
 <li>SQLite 檔案與應用伺服器在同一台機器的本機 SSD（0926 起放在固定名稱的 Docker 資料卷裡，拆容器不會動到它），不放網路磁碟，也不放在任何雲端同步資料夾底下（資料庫使用規範 7.2）；每日以線上備份寫到<strong>院內另一台機器</strong>，同機的第二顆 SSD 可以當第一落點但不能是唯一落點（8.1、DEP-06）。</li>
