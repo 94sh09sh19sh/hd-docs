@@ -4478,6 +4478,7 @@
 <span class="nb">Test-NetConnection</span> <span class="n">registry</span><span class="p">-</span><span class="n">1</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">io</span> <span class="n">-Port</span> <span class="n">443</span>
 <span class="nb">Test-NetConnection</span> <span class="n">auth</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">io</span> <span class="n">-Port</span> <span class="n">443</span>
 <span class="nb">Test-NetConnection</span> <span class="n">production</span><span class="p">.</span><span class="n">cloudflare</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">443</span>
+<span class="nb">Test-NetConnection</span> <span class="n">production</span><span class="p">.</span><span class="n">cloudfront</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">443</span>
 <span class="nb">Test-NetConnection</span> <span class="n">deb</span><span class="p">.</span><span class="n">debian</span><span class="p">.</span><span class="n">org</span> <span class="n">-Port</span> <span class="n">80</span>
 <span class="nb">Test-NetConnection</span> <span class="n">registry</span><span class="p">.</span><span class="n">npmjs</span><span class="p">.</span><span class="n">org</span> <span class="n">-Port</span> <span class="n">443</span>
 <span class="nb">Test-NetConnection</span> <span class="n">binaries</span><span class="p">.</span><span class="n">prisma</span><span class="p">.</span><span class="n">sh</span> <span class="n">-Port</span> <span class="n">443</span>
@@ -4911,7 +4912,8 @@
 <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nv">@github</span><span class="n">-hd-kiosk-shell</span><span class="p">:</span><span class="n">94sh09sh19sh</span><span class="p">/</span><span class="n">hd-kiosk-shell</span><span class="p">.</span><span class="n">git</span> <span class="nv">$root</span><span class="p">\</span><span class="n">hd-kiosk-shell</span>
 <span class="n">git</span> <span class="n">-C</span> <span class="nv">$root</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">tag</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：<code>ssh -T</code> 印出 <code>Hi 94sh09sh19sh/hd-kiosk-shell!…</code>（<strong>是 <code>hd-kiosk-shell</code>，不是 <code>hd-tablet-care</code></strong>）；<code>git tag</code> 列得出 N-03 看到的那一版。</p>
+<p><strong>怎麼知道成功了</strong>：<code>ssh -T</code> 印出 <code>Hi 94sh09sh19sh/hd-kiosk-shell!…</code>（<strong>是 <code>hd-kiosk-shell</code>，不是 <code>hd-tablet-care</code></strong>）；<code>git tag</code> 列得出 N-03 看到的那一版。
+<code>git tag</code> 會把外殼 repo 的<strong>每一個</strong> tag 都列出來，連以前的版本也在（例如 <code>v0.2.0</code>、<code>v0.3.0</code> 兩行）——<strong>這是對的</strong>，<code>shell-builder</code> 只取 <code>shell.pin</code> 釘住的那一個，其他的用不到。</p>
 <table>
 <thead>
 <tr>
@@ -4963,6 +4965,10 @@
 <tr>
 <td><code>dl.google.com</code>、<code>services.gradle.org</code>、<code>maven.google.com</code> 逾時</td>
 <td>對外連線被擋，請資訊室開通（Q-32）</td>
+</tr>
+<tr>
+<td><code>failed to resolve source metadata for docker.io/library/eclipse-temurin</code>，後面有 <code>lookup production.cloudfront.docker.com: no such host</code></td>
+<td>下載基底映像時查不到 Docker Hub 的下載站（DNS）。依序：① 再打一次同一條；② <code>Resolve-DnsName production.cloudfront.docker.com</code>，查得到就重新啟動 Docker Desktop 再建；③ 主機也查不到，就試 <code>Resolve-DnsName production.cloudfront.docker.com -Server 8.8.8.8</code>，這樣查得到表示院內 DNS 解析不了這個網域，請資訊室處理。只想測這一段，可以單獨打 <code>docker pull eclipse-temurin:17-jdk-jammy</code></td>
 </tr>
 <tr>
 <td>停在 <code>gradle.zip</code> 很久</td>
@@ -5028,6 +5034,11 @@
 <p><strong>怎麼知道成功了</strong>：日誌有「（HTTPS；HTTP 只留外殼下載頁）」。
 主機的瀏覽器開 <code>http://localhost:&lt;病人端埠&gt;/shell/</code> 看得到下載頁；開 <code>http://localhost:&lt;病人端埠&gt;/</code> 會被轉到 <code>https://</code> 並跳出憑證警告——
 <strong>這是對的</strong>：主機的瀏覽器不認得院內 CA，只有平板上的外殼 App 認得。</p>
+<p>日誌裡兩個常讓人愣一下的地方，<strong>都是正常的</strong>：</p>
+<ul>
+<li><strong>「找不到伺服器憑證」和「HTTPS」同時出現</strong>：<code>--tail 5</code> 取最後 5 行，常常跨到重新啟動<strong>之前</strong>那一次的輸出。以<strong>最後一次</strong>出現的「靜態資源已提供於連接埠…」那一行為準。</li>
+<li><strong>寫的是 <code>8081</code> 和 <code>http://api:3000</code>，不是 <code>18081</code>、<code>13000</code></strong>：這兩個是<strong>容器裡面</strong>的埠。主機的 <code>&lt;病人端埠&gt;</code> 轉進容器的 8081；<code>api:3000</code> 是 <code>patient-web</code> 經容器之間的網路找 API 的位址，不經過主機。瀏覽器和平板一律連 <code>&lt;病人端埠&gt;</code>。</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -5037,7 +5048,7 @@
 </thead>
 <tbody>
 <tr>
-<td>日誌是「找不到伺服器憑證…暫以 HTTP 提供」</td>
+<td><strong>最後一次</strong>啟動的日誌是「找不到伺服器憑證…暫以 HTTP 提供」</td>
 <td>N-21 還沒成功，或做完沒重新啟動 <code>patient-web</code></td>
 </tr>
 </tbody>

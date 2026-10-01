@@ -3474,7 +3474,8 @@
 <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nv">@github</span><span class="n">-hd-kiosk-shell</span><span class="p">:</span><span class="n">94sh09sh19sh</span><span class="p">/</span><span class="n">hd-kiosk-shell</span><span class="p">.</span><span class="n">git</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">hd-kiosk-shell</span>
 <span class="n">git</span> <span class="n">-C</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">tag</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：<code>ssh -T</code> 印出 <code>Hi &lt;帳號&gt;/hd-kiosk-shell!…</code>；<code>git tag</code> 列得出 Y-01 的那一版。</p>
+<p><strong>怎麼知道成功了</strong>：<code>ssh -T</code> 印出 <code>Hi &lt;帳號&gt;/hd-kiosk-shell!…</code>；<code>git tag</code> 列得出 Y-01 的那一版。
+以前的版本也會一起列出來（例如 <code>v0.2.0</code>、<code>v0.3.0</code>），這是正常的：<code>shell-builder</code> 只取 <code>shell.pin</code> 釘住的那一個。</p>
 <table>
 <thead>
 <tr>
@@ -3577,6 +3578,10 @@
 <td>對外連線被擋。回第十一冊 W-06；外殼建置要連的網域完整清單在 Q-32</td>
 </tr>
 <tr>
+<td><code>failed to resolve source metadata for docker.io/library/eclipse-temurin</code>，後面有 <code>lookup production.cloudfront.docker.com: no such host</code></td>
+<td>下載基底映像時查不到 Docker Hub 的下載站（DNS）。先重跑；<code>Resolve-DnsName production.cloudfront.docker.com</code> 查得到就重新啟動 Docker Desktop；主機也查不到、改用 <code>-Server 8.8.8.8</code> 才查得到，就是院內 DNS 的問題，找資訊室。單獨測這一段：<code>docker pull eclipse-temurin:17-jdk-jammy</code></td>
+</tr>
+<tr>
 <td>停在 <code>gradle.zip</code> 那一步很久沒有進度</td>
 <td>網路太慢或連線卡住。Dockerfile 已設「60 秒內低於 1 KB/s 就中斷並重試五次」，失敗會自己結束；再跑一次 Y-04，已完成的層不會重下載</td>
 </tr>
@@ -3636,6 +3641,8 @@
 <p><strong>怎麼知道成功了</strong>：記錄裡有「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」。
 主機的瀏覽器開 <code>http://&lt;主機&gt;:&lt;病人端埠&gt;/shell/</code> 看得到下載頁；開 <code>http://&lt;主機&gt;:&lt;病人端埠&gt;/</code> 會被轉到 <code>https://</code>
 並跳出憑證警告——<strong>這是對的</strong>，主機的瀏覽器不信任院內 CA，平板上的外殼才信任。</p>
+<p><code>--tail 5</code> 常常跨到重新啟動之前那一次，所以「找不到伺服器憑證」與「HTTPS」可能同時出現，以最後一次啟動的那幾行為準。
+記錄裡的 <code>8081</code>、<code>http://api:3000</code> 是容器裡面的埠，對應主機上的 <code>HD_PATIENT_PORT</code>、<code>HD_API_PORT</code>；平板一律連 <code>HD_PATIENT_PORT</code>。</p>
 <table>
 <thead>
 <tr>
@@ -3645,7 +3652,7 @@
 </thead>
 <tbody>
 <tr>
-<td>記錄是「找不到伺服器憑證…暫以 HTTP 提供」</td>
+<td><strong>最後一次</strong>啟動的記錄是「找不到伺服器憑證…暫以 HTTP 提供」</td>
 <td>Y-05 還沒跑成功，或跑完沒有重新啟動 <code>patient-web</code></td>
 </tr>
 <tr>

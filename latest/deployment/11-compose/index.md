@@ -168,18 +168,19 @@ Test-NetConnection github.com -Port 443
 Test-NetConnection registry-1.docker.io -Port 443
 Test-NetConnection auth.docker.io -Port 443
 Test-NetConnection production.cloudflare.docker.com -Port 443
+Test-NetConnection production.cloudfront.docker.com -Port 443
 Test-NetConnection deb.debian.org -Port 80
 Test-NetConnection registry.npmjs.org -Port 443
 Test-NetConnection binaries.prisma.sh -Port 443
 ```
 
-| 網域                                                                         | 誰要用                                                                             |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `github.com`                                                                 | `git clone`、`git fetch`（走 SSH 時另測 `Test-NetConnection github.com -Port 22`） |
-| `registry-1.docker.io`、`auth.docker.io`、`production.cloudflare.docker.com` | 下載基底映像 `node:20-bookworm-slim`                                               |
-| `deb.debian.org`（**埠 80**）                                                | 建置時安裝 `openssl`                                                               |
-| `registry.npmjs.org`                                                         | `npm ci`                                                                           |
-| `binaries.prisma.sh`                                                         | Prisma 引擎（只在建置時）                                                          |
+| 網域                                                                                                             | 誰要用                                                                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `github.com`                                                                                                     | `git clone`、`git fetch`（走 SSH 時另測 `Test-NetConnection github.com -Port 22`）                                                            |
+| `registry-1.docker.io`、`auth.docker.io`、`production.cloudflare.docker.com`、`production.cloudfront.docker.com` | 下載基底映像（`node:20-bookworm-slim`；外殼建置另有 `eclipse-temurin:17-jdk-jammy`）。Docker Hub 會把下載轉到這兩個下載站其中之一，兩個都要通 |
+| `deb.debian.org`（**埠 80**）                                                                                    | 建置時安裝 `openssl`                                                                                                                          |
+| `registry.npmjs.org`                                                                                             | `npm ci`                                                                                                                                      |
+| `binaries.prisma.sh`                                                                                             | Prisma 引擎（只在建置時）                                                                                                                     |
 
 **怎麼知道成功了**：全部 `TcpTestSucceeded : True`。
 
