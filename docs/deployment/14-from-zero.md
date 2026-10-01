@@ -566,7 +566,7 @@ docker compose --env-file $cfg logs api --tail 30
 
 | 症狀 | 處置 |
 |---|---|
-| 頁面開得了，登入時轉圈後失敗 | `.env` 的 `HD_PUBLIC_API_URL` 或 `CORS_ORIGINS` 寫錯。改完：前者要 `build` 再 `up -d`（它寫在網頁檔案裡），後者只要 `up -d` |
+| 頁面開得了，登入時轉圈後失敗 | `.env` 的 `HD_PUBLIC_API_URL` 或 `CORS_ORIGINS` 寫錯。改完：前者要 `build` 再 `up -d`（它寫在網頁檔案裡），後者只要 `up -d`。逐步查法見[附錄：護理端頁面開得起來卻登不進去](#附錄護理端頁面開得起來卻登不進去) |
 | 沒有帳號可以登入 | `SUPER_ADMIN_*` 沒填。補上再 `up -d`，**資料庫不必重建** |
 | 護理站的電腦開不到頁面，主機自己開得到 | 防火牆或網段，找資訊室（Q-27）。**不要自己關防火牆** |
 
@@ -1073,6 +1073,70 @@ Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
 | 第 2 步出現 `0x800106ba` 之類的錯誤 | Defender 沒在運作，正在運作的是第三方防毒 | 回第 1 步確認是哪一套，照第三方防毒的方式處理 |
 
 > 🧪 **模擬部署**：照 N-05 的規定，防毒排除不必做；想先熟悉指令可以在開發機上跑一次，同樣只看不改。
+
+---
+
+## 附錄：護理端頁面開得起來卻登不進去
+
+N-16 用瀏覽器開護理端，登入頁出得來，按下登入卻失敗。下面的 `<主機>` 是 `.env` 裡 `HD_PUBLIC_API_URL`、`CORS_ORIGINS` 用的那個名稱或 IP。
+第十四冊之一的範例寫 `hd-server`，**那只是範例**，要換成資訊室給的、護理站連得到的那一個。
+
+### 先認清：用哪個網址開
+
+登入時，網頁會連建置時寫進去的後端位址（`HD_PUBLIC_API_URL`）；後端只接受 `CORS_ORIGINS` 列出的來源，**主機名稱與埠要和網址列一字不差**。
+
+| 開的網址 | 登得進去嗎 |
+|---|---|
+| `http://<主機>:<護理端埠>` | 可以。在主機上開也一樣，網頁連後端時會連回主機自己 |
+| `http://localhost:<護理端埠>` | **實際部署登不進去**：網址列是 `localhost`，`CORS_ORIGINS` 寫的是 `<主機>`，後端不放行。改用上一列的網址開 |
+
+在主機上開得起來，**不代表護理站也開得起來**：連自己不經過防火牆。真正要驗的是在護理站的電腦開、登入成功。
+
+> 真的需要在主機上用 `localhost` 開的話，`CORS_ORIGINS` 可以用逗號列兩個來源：`http://<主機>:<護理端埠>,http://localhost:<護理端埠>`，改完 `up -d` 即可，不必再 `build`。
+
+### 第 1 步：看登入鈕下面的訊息
+
+| 訊息 | 意思 | 接著 |
+|---|---|---|
+| `工作ID 或密碼錯誤` | 有連到後端，帳號或密碼不對 | 用 `.env` 的 `SUPER_ADMIN_WORK_ID`、`SUPER_ADMIN_INITIAL_PASSWORD`。第一個帳號**只在資料庫還沒有任何使用者時建立**，事後改 `.env` 不會改到已建立的帳號 |
+| `Failed to fetch` | 瀏覽器沒拿到後端的回應：後端位址錯，或被 CORS 擋掉 | 第 2 步 |
+
+### 第 2 步：在主機上查三樣
+
+**做什麼**（`<主機>`、`<後端埠>`、`<護理端埠>` 換成你的）
+
+```powershell
+Select-String -Path $cfg -Pattern '^(CORS_ORIGINS|HD_PUBLIC_API_URL)='
+curl.exe -s http://<主機>:<後端埠>/api/health
+curl.exe -s -i -H "Origin: http://<主機>:<護理端埠>" http://<主機>:<後端埠>/api/health | Select-String Access-Control-Allow-Origin
+```
+
+**怎麼看**
+
+| 結果 | 意思 | 處置 |
+|---|---|---|
+| 第一條的 `CORS_ORIGINS` 不是瀏覽器網址列上的那個來源 | CORS 寫錯 | 改 `.env`，`docker compose --env-file $cfg up -d` |
+| 第二條沒有 `{"status":"ok",…}` | `<主機>:<後端埠>` 連不到後端 | `docker compose --env-file $cfg logs api --tail 30` 看原因；主機名稱查不到時，先 `Resolve-DnsName <主機>` |
+| 第三條什麼都沒印出來 | 後端沒放行這個來源 | `.env` 看起來對的話，多半是改完還沒 `up -d` |
+| 三條都正常 | 網頁裡寫死的後端位址是舊的 | 第 3 步 |
+
+### 第 3 步：網頁裡寫死的後端位址
+
+`HD_PUBLIC_API_URL` 是**建置時**寫進網頁檔案的。先 `build`、之後才改 `.env` 的位址，只 `up -d` 不會更新。
+
+**做什麼**：瀏覽器按 F12 → Network，再按一次登入，看請求送去哪個網址。
+
+- 是 `http://<主機>:<後端埠>/api/…` → 位址沒問題，回第 2 步再對一次。
+- 不是 → 再 `build` 一次：
+
+  ```powershell
+  docker compose --env-file $cfg build
+  docker compose --env-file $cfg up -d
+  ```
+
+  做完瀏覽器按 Ctrl＋F5 重新整理，再登入一次。
+
+> 🧪 **模擬部署**：`<主機>` 就是 `localhost`，網址是 `http://localhost:18080`、後端 `http://localhost:13000`（照第十四冊之二）。
 
 ---
 
