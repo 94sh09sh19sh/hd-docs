@@ -237,6 +237,7 @@ docker compose version
 > 不關的後果：Docker Desktop 會持續把它自己的使用情形送往 Docker 公司，服務執行期間主機就多一條院外連線；本系統的資料不經過這條線，但送出什麼開發端無法擔保。
 
 然後請資訊室把第 4 項那個資料夾加入防毒的排除清單。
+主機上跑的是哪一套防毒、排除清單裡已經有什麼，可以先自己查，指令在[附錄：查防毒軟體與排除清單](#附錄查防毒軟體與排除清單只看不改)。
 
 **怎麼知道成功了**：四項抄進演練紀錄；防毒排除清單裡看得到那個資料夾。
 
@@ -1008,6 +1009,62 @@ Remove-NetFirewallRule -DisplayName "hd-sim patient 18081"
 | N-16 | W-16 | | | |
 
 在演練紀錄裡寫「卡在 N-21」或「卡在 Y-05」都可以，兩者指的是同一件事。
+
+---
+
+## 附錄：查防毒軟體與排除清單（只看不改）
+
+N-05 要請資訊室把 Docker 的資料夾加入防毒排除清單。開口之前，先在主機上查清楚兩件事：**跑的是哪一套防毒**、**排除清單裡已經有什麼**。
+下面的指令**只看不改**；要不要加入排除、怎麼加，一律由資訊室決定。
+
+### 第 1 步：主機上裝了哪些防毒軟體
+
+**做什麼**
+
+```powershell
+Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct |
+  Select-Object displayName, productState, @{n='hex';e={'{0:X6}' -f $_.productState}}
+```
+
+**怎麼看**：每一套防毒軟體列成一行，看 `hex` 那一欄**中間兩碼**：
+
+| 中間兩碼 | 意思 |
+|---|---|
+| `10` 或 `11` | **正在運作**，排除要在這一套裡做 |
+| `00` 或 `01` | 裝了但沒在運作，通常是裝了第三方防毒之後被關掉的 Windows Defender |
+
+例：`061100` 是正在運作，`060100` 是已關閉。
+
+### 第 2 步：排除清單裡有什麼
+
+**正在運作的是 Windows Defender**（`displayName` 為 `Windows Defender` 或 `Microsoft Defender Antivirus`）：
+
+```powershell
+Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
+```
+
+印出的每一行是一個排除的路徑；**什麼都沒印出來**，就是目前沒有任何排除路徑。
+
+**正在運作的是第三方防毒**（趨勢、賽門鐵克等）：PowerShell 看不到它的排除清單，要開它自己的主控台看。
+院內多半由資訊室集中管理，主機上看不到或是灰的，就直接問資訊室。
+
+### 第 3 步：對照
+
+拿第 2 步的結果，對 N-05 第 4 項抄下的 **Disk image location**：
+
+- 清單裡有那個路徑，或它的上層資料夾 → 這一項已經做好，演練紀錄寫「已在排除清單」。
+- 沒有 → 演練紀錄寫「防毒＝＿＿，排除清單未含 Docker 的資料夾」，交給資訊室。
+
+### 可能怎麼壞
+
+| 症狀 | 原因 | 處置 |
+|---|---|---|
+| 第 1 步說 `Invalid namespace` | 這台是 Windows Server，沒有這個查詢介面 | 改跑 `Get-MpComputerStatus`，看 `AMRunningMode` 與 `AntivirusEnabled` 兩欄；其他防毒問資訊室 |
+| 第 1 步什麼都沒印出來 | 沒有任何防毒向 Windows 登記 | 記下來，問資訊室主機上是不是真的沒有防毒 |
+| 第 2 步印出 `N/A: Must be an administrator to view exclusions` | PowerShell 不是系統管理員身分 | 開始選單對「Windows PowerShell」按右鍵 →「以系統管理員身分執行」，再跑一次 |
+| 第 2 步出現 `0x800106ba` 之類的錯誤 | Defender 沒在運作，正在運作的是第三方防毒 | 回第 1 步確認是哪一套，照第三方防毒的方式處理 |
+
+> 🧪 **模擬部署**：照 N-05 的規定，防毒排除不必做；想先熟悉指令可以在開發機上跑一次，同樣只看不改。
 
 ---
 
