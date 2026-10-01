@@ -5408,7 +5408,7 @@ C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。<strong>院方同不同
 </table>
 <hr />
 <h3 id="v-17-確認它是對的而且護理站登得進去n-16w-16">V-17 確認它是對的，而且護理站登得進去（＝N-16、W-16）<a class="headerlink" href="#v-17-確認它是對的而且護理站登得進去n-16w-16" title="Permanent link">&para;</a></h3>
-<p>這一步分四段，<strong>照順序做</strong>。1001 就是卡在這一步的最後一段（第十四冊之四 M-01）。</p>
+<p>這一步分四段，<strong>照順序做</strong>。1001 卡在這一步：登入 <code>Failed to fetch</code>，原因是第二段的 CORS 不放行（第十四冊之四 M-01）。</p>
 <p><strong>第一段：後端活著</strong>（在主機上打）</p>
 <div class="highlight"><pre><span></span><code><span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">http</span><span class="p">://</span><span class="n">localhost</span><span class="p">:</span><span class="n">13000</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">health</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">logs</span> <span class="n">api</span> <span class="p">-</span><span class="n">-tail</span> <span class="n">30</span>
@@ -5441,15 +5441,24 @@ C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。<strong>院方同不同
 </tr>
 </tbody>
 </table>
-<p><strong>第二段：網頁裡寫死的後端位址是對的</strong></p>
+<p><strong>第二段：網頁裡寫死的後端位址、後端的 CORS 都是對的</strong>（在主機上打，不必開瀏覽器）</p>
+<p>先看網頁會連哪裡：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="nv">$cfg</span> <span class="n">-Pattern</span> <span class="s1">'^HD_PUBLIC_API_URL='</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">nurse-web</span> <span class="n">grep</span> <span class="n">-rhoE</span> <span class="s1">'https?://[A-Za-z0-9.-]+:[0-9]+'</span> <span class="n">apps</span><span class="p">/</span><span class="n">nurse-pwa</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">assets</span>
 </code></pre></div>
-<p>第二條印出的是<strong>護理端網頁實際會去連的後端位址</strong>（V-14 建置時寫進去的）。<strong>兩條印出的位址要一模一樣</strong>，例如都是 <code>http://&lt;主機&gt;:13000</code>。</p>
-<p>不一樣的話，是先 <code>build</code>、之後才改了 <code>.env</code> 的位址。再建置一次：</p>
+<p>第二條印出的是<strong>護理端網頁實際會去連的後端位址</strong>（V-14 建置時寫進去的）。<strong>兩條印出的位址要一模一樣</strong>，例如都是 <code>http://&lt;主機&gt;:13000</code>。
+不一樣的話，是先 <code>build</code>、之後才改了 <code>.env</code> 的位址。再建置一次：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">build</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">up</span> <span class="n">-d</span>
 </code></pre></div>
+<p>再看後端放不放行護理端（<code>&lt;主機&gt;</code> 換成 V-08 的值）：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="nv">$cfg</span> <span class="n">-Pattern</span> <span class="s1">'^CORS_ORIGINS='</span>
+<span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">-i</span> <span class="n">-H</span> <span class="s2">"Origin: http://&lt;主機&gt;:18080"</span> <span class="n">http</span><span class="p">://&lt;</span><span class="n">主機</span><span class="p">&gt;:</span><span class="n">13000</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">health</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">Access-Control-Allow-Origin</span>
+</code></pre></div>
+<p>第一條要是 <code>CORS_ORIGINS=http://&lt;主機&gt;:18080</code>；第二條要印出 <code>Access-Control-Allow-Origin: http://&lt;主機&gt;:18080</code>。</p>
+<p>第二條<strong>什麼都沒印出來</strong>，就是後端不放行護理端的來源，登入一定 <code>Failed to fetch</code>——<strong>1001 就是這個結果</strong>。
+把第一條的值改對（或值是對的、只是改完還沒套用），然後 <code>docker compose --env-file $cfg up -d</code>，再打一次第二條。
+<code>.env</code> 只在容器建立時讀一次，改完不 <code>up -d</code>，後端還在用舊的名單。</p>
 <p><strong>第三段：在主機上用正確的網址登入</strong></p>
 <p>主機的瀏覽器開 <strong><code>http://&lt;主機&gt;:18080</code></strong>——<strong>不要用 <code>localhost</code></strong>。</p>
 <blockquote>
@@ -5493,7 +5502,8 @@ C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。<strong>院方同不同
 </table>
 <blockquote>
 <p>改完密碼之後，實際部署要把新密碼交給院方指定的人保管，<code>.env</code> 裡的初始密碼可以清空（清空後 <code>up -d</code>）。</p>
-<p>📍 <strong>1001</strong>：第一段 health 正常；第三段登入出現 <code>Failed to fetch</code>，離院時未解。下一次從第二段開始查（0.5 節）。</p>
+<p>📍 <strong>1001</strong>：第一段 health 正常；登入出現 <code>Failed to fetch</code>。現場查到「放不放行護理端」那一條<strong>印出空的</strong>——後端不放行護理端的來源，離院時未解。
+下一次從第二段開始（0.5 節）：先看 <code>CORS_ORIGINS</code> 寫了什麼、改對後 <code>up -d</code>，再確認網頁裡的後端位址與瀏覽器網址列。</p>
 <p>🧪 <strong>模擬部署</strong>：<code>&lt;主機&gt;</code> 是開發機的區網 IP，開 <code>http://&lt;開發機區網 IP&gt;:18080</code>。
 登入成功之後，<strong>故意用 <code>http://localhost:18080</code> 再開一次、按登入</strong>，親眼看一次 <code>Failed to fetch</code> 長什麼樣——這就是院內用錯網址時會看到的。
 看完關掉，回到用區網 IP 開的那一頁。第四段改成用手機的瀏覽器開同一個網址（要連同一個 Wi-Fi）；開不到時照 V-25 方框處理防火牆。</p>
@@ -6342,10 +6352,11 @@ V-06 下載的兩個基底映像也可以留著。</p>
 </tbody>
 </table>
 <blockquote>
-<p>💡 <strong>輸出被截斷也算有印出來。</strong> 視窗太窄時，第三條那一行可能只看得到後半段（1001 回報的是 <code>…rol-Allow-Origin</code>）。
-看得到 <code>Allow-Origin</code> 這幾個字就是有放行；要看完整的一行，把視窗拉寬，或在指令最後加 <code>| Out-String -Width 300</code>。</p>
+<p>💡 <strong>輸出被截斷也算有印出來。</strong> 視窗太窄時，第三條那一行可能只看得到後半段（例如 <code>…rol-Allow-Origin</code>）。
+看得到 <code>Allow-Origin</code> 這幾個字就是有放行；要看完整的一行，把視窗拉寬，或在指令最後加 <code>| Out-String -Width 300</code>。
+反過來，<strong>真的什麼都沒印出來才是沒放行</strong>。1001 就是空的。</p>
 </blockquote>
-<p><strong>把第 2～4 步的結果全部抄進演練紀錄</strong>，包括正常的那幾條。1001 只帶回第 4 步的兩條，而且第三條前後兩次的說法不同，查不下去。</p>
+<p><strong>把第 2～4 步的結果全部抄進演練紀錄</strong>，包括正常的那幾條。1001 帶回了第 4 步的第二、三條（health 正常、第三條空的），但第一條 <code>CORS_ORIGINS</code> 的內容沒帶回來，所以分不出是寫錯了還是改完沒 <code>up -d</code>。</p>
 <blockquote>
 <p>🧪 <strong>模擬部署</strong>：<code>&lt;主機&gt;</code> 是開發機的區網 IP。V-17 方框那個「故意用 <code>localhost</code> 開」的練習，就是在看本附錄第一張表的第二列。</p>
 </blockquote>

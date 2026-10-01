@@ -3499,7 +3499,7 @@
 <tbody>
 <tr>
 <td>M-01</td>
-<td><strong>護理端登入出現 <code>Failed to fetch</code></strong>，三條檢查指令的結果前後兩次說法不一致，離院時未解</td>
+<td><strong>護理端登入出現 <code>Failed to fetch</code></strong>：後端活著，但 CORS 不放行護理端的來源（檢查指令第三條印出空的），離院時未解</td>
 <td>N-16</td>
 <td><strong>未解</strong></td>
 <td><a href="#m-01-護理端登入出現-failed-to-fetch">第 3 節</a></td>
@@ -3704,7 +3704,7 @@
 </tr>
 <tr>
 <td>17:45～17:58</td>
-<td>問能不能用 <code>localhost</code> 開護理端、<code>hd-server</code> 要不要照填；登入出現 <code>Failed to fetch</code>；當場把查法寫進第十四冊附錄；回報第三條指令的結果</td>
+<td>問能不能用 <code>localhost</code> 開護理端、<code>hd-server</code> 要不要照填；登入出現 <code>Failed to fetch</code>；當場把查法寫進第十四冊附錄；照附錄打三條指令，第三條印出空的（後端不放行護理端的來源）</td>
 <td>N-16（M-01）</td>
 </tr>
 <tr>
@@ -3797,24 +3797,29 @@
 <td>用 <code>.env</code> 裡那個 <code>&lt;主機&gt;</code> 連得到後端 ✓</td>
 </tr>
 <tr>
-<td>第三條：帶 <code>Origin</code> 標頭看 <code>Access-Control-Allow-Origin</code></td>
-<td><strong>兩種說法</strong>，見下</td>
-<td>—</td>
+<td>第三條：帶 <code>Origin: http://&lt;主機&gt;:&lt;護理端埠&gt;</code> 看 <code>Access-Control-Allow-Origin</code></td>
+<td><strong>什麼都沒印出來</strong></td>
+<td><strong>後端沒有放行這個來源</strong> ✗</td>
 </tr>
 </tbody>
 </table>
-<p>第三條的結果<strong>前後不一致</strong>：</p>
-<ul>
-<li>17:58 在現場回報「印出 <code>…rol-Allow-Origin</code>」（一行被截斷的 <code>Access-Control-Allow-Origin</code>）。照附錄判斷，這是<strong>後端有放行</strong>。</li>
-<li>帶回來的紀錄檔寫的是「<strong>空</strong>」。照附錄判斷，這是<strong>後端沒有放行</strong>。</li>
-</ul>
-<p>兩者可能都是真的：例如打了兩次，中間 <code>.env</code> 被改過、或兩次用的 <code>Origin</code> 不同。<strong>哪一個是最後的狀態，現在無從得知。</strong></p>
-<p><strong>還沒查的兩件事</strong>（現場最後問到這裡就離院了）：</p>
+<blockquote>
+<p>17:58 在現場曾回報第三條「印出 <code>…rol-Allow-Origin</code>」；回來後確認，<strong>第三條的結果是空的</strong>，以紀錄檔為準。</p>
+</blockquote>
+<p><strong>這三條合起來的意思</strong>：後端活著、<code>&lt;主機&gt;:&lt;後端埠&gt;</code> 連得到（第二條），但後端的 CORS 名單裡<strong>沒有</strong> <code>http://&lt;主機&gt;:&lt;護理端埠&gt;</code> 這個來源（第三條）。
+光這一點就足以讓登入出現 <code>Failed to fetch</code>。照附錄，原因只有兩種：</p>
 <ol>
-<li><strong>瀏覽器網址列上的網址</strong>是什麼。17:45 問過「能不能用 <code>localhost</code> 開護理端」——實際部署用 <code>localhost</code> 開，網址列的來源與 <code>CORS_ORIGINS</code> 對不上，<strong>一定是 <code>Failed to fetch</code></strong>。這是目前最可能的原因。</li>
-<li><strong>網頁裡寫死的後端位址</strong>是什麼。<code>HD_PUBLIC_API_URL</code> 在 <code>build</code> 時寫進網頁檔案；17:47 問過 <code>hd-server</code> 要不要照填，若當時先照範例填了 <code>hd-server</code>、建置之後才改成真正的名稱，只 <code>up -d</code> 不會更新網頁裡的位址。</li>
+<li><strong><code>.env</code> 的 <code>CORS_ORIGINS</code> 寫的不是 <code>http://&lt;主機&gt;:&lt;護理端埠&gt;</code></strong>——例如仍是範例的 <code>hd-server</code>、寫成 <code>localhost</code>、名稱與 IP 的寫法和第三條用的不同、埠不對。
+   17:47 問過「<code>hd-server</code> 要照寫還是寫主機名稱」，照抄過範例的可能性不低。</li>
+<li><strong><code>.env</code> 是對的，但改完之後沒有 <code>up -d</code></strong>：<code>.env</code> 只在容器建立時讀一次，執行中的後端還在用改之前的 <code>CORS_ORIGINS</code>。</li>
 </ol>
-<p><strong>下一次怎麼做</strong>：見<a href="#7-下一次進院">第 7 節</a> M-14 第 2 項，第十五冊 V-17 把這兩件事排進了步驟本身。</p>
+<p>第一條沒帶回來，所以分不出是哪一種。<strong>兩種的處置都是改好 <code>.env</code> 之後 <code>docker compose --env-file $cfg up -d</code>，再打一次第三條，要印出 <code>Access-Control-Allow-Origin: http://&lt;主機&gt;:&lt;護理端埠&gt;</code>。</strong></p>
+<p><strong>CORS 修好之後還要確認的兩件事</strong>（現場沒查到這裡）：</p>
+<ol>
+<li><strong>瀏覽器網址列上的網址</strong>。17:45 問過「能不能用 <code>localhost</code> 開護理端」——實際部署用 <code>localhost</code> 開，網址列的來源與 <code>CORS_ORIGINS</code> 對不上，CORS 修好了照樣是 <code>Failed to fetch</code>。</li>
+<li><strong>網頁裡寫死的後端位址</strong>。<code>HD_PUBLIC_API_URL</code> 在 <code>build</code> 時寫進網頁檔案；若建置之後才把 <code>.env</code> 的位址改成真正的名稱，只 <code>up -d</code> 不會更新網頁裡的位址。</li>
+</ol>
+<p><strong>下一次怎麼做</strong>：見<a href="#7-下一次進院">第 7 節</a> M-14 第 2 項，第十五冊 V-17 把這些都排進了步驟本身。</p>
 <h3 id="m-02-主機沒有-git">M-02 主機沒有 Git<a class="headerlink" href="#m-02-主機沒有-git" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>：N-04 的 <code>git --version</code> 說找不到。現場從 <code>git-scm.com</code> 下載 <strong>x64 Setup</strong>（不是 Portable、不是 ARM64）裝上，版本 <code>2.56.0.windows.1</code>。</p>
 <p><strong>為什麼要記</strong>：</p>
@@ -4134,9 +4139,9 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 <td>照第十五冊 V-05 抄</td>
 </tr>
 <tr>
-<td>N-16 第一條指令的輸出、瀏覽器網址列</td>
-<td>M-01 查不下去的原因</td>
-<td>第十五冊 V-17</td>
+<td>N-16 附錄第一條指令的輸出（<code>CORS_ORIGINS</code> 寫了什麼）、瀏覽器網址列</td>
+<td>M-01 分不出是寫錯還是沒 <code>up -d</code></td>
+<td>第十五冊 V-17 第二段</td>
 </tr>
 <tr>
 <td><code>&lt;主機&gt;</code> 用的是主機名稱還是 IP</td>
@@ -4358,7 +4363,8 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 <p>照順序，<strong>全部做完才往下</strong>。步驟編號是第十五冊的：</p>
 <ol>
 <li><strong>看服務是不是還是 1001 離開時的樣子</strong>：開工三行（根目錄 <code>C:\hd\hd-tablet-care</code>）→ <code>docker compose --env-file $cfg ps</code> → health。第十五冊 0.5 節有完整的檢查表。</li>
-<li><strong>先解 M-01</strong>：照第十五冊 V-17 的順序——瀏覽器網址列、網頁裡寫死的後端位址、三條指令——<strong>登入通了才往下</strong>。</li>
+<li><strong>先解 M-01</strong>：照第十五冊 V-17 第二段——先看 <code>CORS_ORIGINS</code> 寫了什麼，改對後 <code>up -d</code>，直到「放不放行」那一條印出 <code>Access-Control-Allow-Origin</code>；
+   再對網頁裡寫死的後端位址、瀏覽器網址列。<strong>登入通了才往下</strong>。</li>
 <li>確認 0922 的殘留：第十四冊之三的 L-01 與 L-07 兩步（只看）。</li>
 <li>補記 M-10 那幾格。</li>
 <li>把 M-13 的答案逐列核對一次。</li>
