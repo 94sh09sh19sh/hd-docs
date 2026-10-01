@@ -259,6 +259,7 @@ Test-NetConnection github.com -Port 443
 Test-NetConnection registry-1.docker.io -Port 443
 Test-NetConnection auth.docker.io -Port 443
 Test-NetConnection production.cloudflare.docker.com -Port 443
+Test-NetConnection production.cloudfront.docker.com -Port 443
 Test-NetConnection deb.debian.org -Port 80
 Test-NetConnection registry.npmjs.org -Port 443
 Test-NetConnection binaries.prisma.sh -Port 443
@@ -666,6 +667,7 @@ curl.exe -s http://localhost:<後端埠>/api/health
    ```
 
 **怎麼知道成功了**：`ssh -T` 印出 `Hi 94sh09sh19sh/hd-kiosk-shell!…`（**是 `hd-kiosk-shell`，不是 `hd-tablet-care`**）；`git tag` 列得出 N-03 看到的那一版。
+`git tag` 會把外殼 repo 的**每一個** tag 都列出來，連以前的版本也在（例如 `v0.2.0`、`v0.3.0` 兩行）——**這是對的**，`shell-builder` 只取 `shell.pin` 釘住的那一個，其他的用不到。
 
 | 症狀 | 處置 |
 |---|---|
@@ -694,6 +696,7 @@ docker compose --env-file $cfg --profile shell build shell-builder
 | `外殼 repo 的 clone 裡沒有 tag vX.Y.Z` | `git -C $root\hd-kiosk-shell fetch --tags`，再建一次 |
 | 提到版本、契約版本不符，或「外殼原始碼裡有指向院外的網址」 | **開發端的問題，不在現場修。** 停手，回開發端 |
 | `dl.google.com`、`services.gradle.org`、`maven.google.com` 逾時 | 對外連線被擋，請資訊室開通（Q-32） |
+| `failed to resolve source metadata for docker.io/library/eclipse-temurin`，後面有 `lookup production.cloudfront.docker.com: no such host` | 下載基底映像時查不到 Docker Hub 的下載站（DNS）。依序：① 再打一次同一條；② `Resolve-DnsName production.cloudfront.docker.com`，查得到就重新啟動 Docker Desktop 再建；③ 主機也查不到，就試 `Resolve-DnsName production.cloudfront.docker.com -Server 8.8.8.8`，這樣查得到表示院內 DNS 解析不了這個網域，請資訊室處理。只想測這一段，可以單獨打 `docker pull eclipse-temurin:17-jdk-jammy` |
 | 停在 `gradle.zip` 很久 | 它會自己重試、失敗會自己結束。結束後再打一次同一條，已完成的部分不會重下載 |
 
 ---
@@ -754,9 +757,14 @@ docker compose --env-file $cfg logs patient-web --tail 5
 主機的瀏覽器開 `http://localhost:<病人端埠>/shell/` 看得到下載頁；開 `http://localhost:<病人端埠>/` 會被轉到 `https://` 並跳出憑證警告——
 **這是對的**：主機的瀏覽器不認得院內 CA，只有平板上的外殼 App 認得。
 
+日誌裡兩個常讓人愣一下的地方，**都是正常的**：
+
+- **「找不到伺服器憑證」和「HTTPS」同時出現**：`--tail 5` 取最後 5 行，常常跨到重新啟動**之前**那一次的輸出。以**最後一次**出現的「靜態資源已提供於連接埠…」那一行為準。
+- **寫的是 `8081` 和 `http://api:3000`，不是 `18081`、`13000`**：這兩個是**容器裡面**的埠。主機的 `<病人端埠>` 轉進容器的 8081；`api:3000` 是 `patient-web` 經容器之間的網路找 API 的位址，不經過主機。瀏覽器和平板一律連 `<病人端埠>`。
+
 | 症狀 | 處置 |
 |---|---|
-| 日誌是「找不到伺服器憑證…暫以 HTTP 提供」 | N-21 還沒成功，或做完沒重新啟動 `patient-web` |
+| **最後一次**啟動的日誌是「找不到伺服器憑證…暫以 HTTP 提供」 | N-21 還沒成功，或做完沒重新啟動 `patient-web` |
 
 ---
 
