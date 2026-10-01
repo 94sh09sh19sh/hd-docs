@@ -3400,10 +3400,14 @@
 </tr>
 </tbody>
 </table>
-<p>產生 <code>JWT_SECRET</code>（主機上不必裝 Node.js，用 Docker 跑一次就好）：</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="n">node</span><span class="p">:</span><span class="n">20-bookworm-slim</span> <span class="n">node</span> <span class="n">-e</span> <span class="s2">"console.log(require('crypto').randomBytes(48).toString('base64url'))"</span>
+<p>產生 <code>JWT_SECRET</code>（Windows 內建的 PowerShell 就做得到，不必裝 Node.js，也不必下載任何映像檔）：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$b</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">byte</span><span class="p">[]</span> <span class="n">48</span><span class="p">;</span> <span class="no">[Security.Cryptography.RandomNumberGenerator]</span><span class="p">::</span><span class="n">Create</span><span class="p">().</span><span class="n">GetBytes</span><span class="p">(</span><span class="nv">$b</span><span class="p">);</span> <span class="no">[Convert]</span><span class="p">::</span><span class="n">ToBase64String</span><span class="p">(</span><span class="nv">$b</span><span class="p">).</span><span class="n">TrimEnd</span><span class="p">(</span><span class="s1">'='</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'+'</span><span class="p">,</span><span class="s1">'-'</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span><span class="s1">'_'</span><span class="p">)</span>
 </code></pre></div>
-<p>把印出來的那一整串貼在 <code>JWT_SECRET=</code> 後面。</p>
+<p>印出一行 64 個字元、只有英數字與 <code>-</code>、<code>_</code> 的字串。把那一整串貼在 <code>JWT_SECRET=</code> 後面。</p>
+<blockquote>
+<p>舊版手冊用 <code>docker run --rm node:20-bookworm-slim …</code> 產生。那條指令要先從 Docker Hub 下載映像檔，
+第一次跑會先印出 <code>Unable to find image 'node:20-bookworm-slim' locally</code>，網路不通就停在那裡。改用上面這一行就沒有這個問題。</p>
+</blockquote>
 <ul>
 <li><code>JWT_SECRET</code> 是<strong>登入憑證的簽章金鑰</strong>。每次部署產生新的，<strong>不要沿用模擬部署那一串，也不要寫在任何別的地方</strong>。
   事後換掉它，所有人會被登出，要重新登入。</li>

@@ -3305,9 +3305,10 @@
 </tr>
 </tbody>
 </table>
-<p>產生 <code>JWT_SECRET</code>——<strong>模擬部署也用 Docker 產生，不要用開發機上的 Node.js</strong>，這一輪要驗的就是「只靠 Git 與 Docker」：</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="n">node</span><span class="p">:</span><span class="n">20-bookworm-slim</span> <span class="n">node</span> <span class="n">-e</span> <span class="s2">"console.log(require('crypto').randomBytes(48).toString('base64url'))"</span>
+<p>產生 <code>JWT_SECRET</code>——<strong>跟院內用同一行 PowerShell，不要用開發機上的 Node.js</strong>，這一輪要驗的就是「只靠 Git 與 Docker」：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$b</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">byte</span><span class="p">[]</span> <span class="n">48</span><span class="p">;</span> <span class="no">[Security.Cryptography.RandomNumberGenerator]</span><span class="p">::</span><span class="n">Create</span><span class="p">().</span><span class="n">GetBytes</span><span class="p">(</span><span class="nv">$b</span><span class="p">);</span> <span class="no">[Convert]</span><span class="p">::</span><span class="n">ToBase64String</span><span class="p">(</span><span class="nv">$b</span><span class="p">).</span><span class="n">TrimEnd</span><span class="p">(</span><span class="s1">'='</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'+'</span><span class="p">,</span><span class="s1">'-'</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span><span class="s1">'_'</span><span class="p">)</span>
 </code></pre></div>
+<p>印出一行 64 個字元的字串，貼在 <code>JWT_SECRET=</code> 後面。</p>
 <ul>
 <li>每一輪模擬部署都重新產生，<strong>不要把這一串帶到院內</strong>。</li>
 <li>N-16 用 <code>sim-admin</code> / <code>Sim-Init-2026</code> 登入，會被要求改密碼，改成什麼都可以，撤除時一起消失。</li>

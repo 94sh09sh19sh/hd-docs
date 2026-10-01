@@ -112,11 +112,13 @@ ______________________________________________________________________
 | `SUPER_ADMIN_INITIAL_PASSWORD` | `Sim-Init-2026`  | ✓ 虛構即可     |
 | `SUPER_ADMIN_DISPLAY_NAME`     | `模擬部署管理員` | ✓ 虛構即可     |
 
-產生 `JWT_SECRET`——**模擬部署也用 Docker 產生，不要用開發機上的 Node.js**，這一輪要驗的就是「只靠 Git 與 Docker」：
+產生 `JWT_SECRET`——**跟院內用同一行 PowerShell，不要用開發機上的 Node.js**，這一輪要驗的就是「只靠 Git 與 Docker」：
 
 ```
-docker run --rm node:20-bookworm-slim node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+$b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
 ```
+
+印出一行 64 個字元的字串，貼在 `JWT_SECRET=` 後面。
 
 - 每一輪模擬部署都重新產生，**不要把這一串帶到院內**。
 - N-16 用 `sim-admin` / `Sim-Init-2026` 登入，會被要求改密碼，改成什麼都可以，撤除時一起消失。

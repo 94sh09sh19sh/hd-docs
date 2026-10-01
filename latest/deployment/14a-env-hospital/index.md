@@ -131,13 +131,15 @@ ______________________________________________________________________
 | `SUPER_ADMIN_INITIAL_PASSWORD` | 第一次登入用的臨時密碼     | 自己訂，遵守 0.2 節第三條 |
 | `SUPER_ADMIN_DISPLAY_NAME`     | 這個帳號顯示的名字         | 護理長給的                |
 
-產生 `JWT_SECRET`（主機上不必裝 Node.js，用 Docker 跑一次就好）：
+產生 `JWT_SECRET`（Windows 內建的 PowerShell 就做得到，不必裝 Node.js，也不必下載任何映像檔）：
 
 ```
-docker run --rm node:20-bookworm-slim node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+$b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
 ```
 
-把印出來的那一整串貼在 `JWT_SECRET=` 後面。
+印出一行 64 個字元、只有英數字與 `-`、`_` 的字串。把那一整串貼在 `JWT_SECRET=` 後面。
+
+> 舊版手冊用 `docker run --rm node:20-bookworm-slim …` 產生。那條指令要先從 Docker Hub 下載映像檔， 第一次跑會先印出 `Unable to find image 'node:20-bookworm-slim' locally`，網路不通就停在那裡。改用上面這一行就沒有這個問題。
 
 - `JWT_SECRET` 是**登入憑證的簽章金鑰**。每次部署產生新的，**不要沿用模擬部署那一串，也不要寫在任何別的地方**。 事後換掉它，所有人會被登出，要重新登入。
 - `SUPER_ADMIN_*` **只在資料庫裡一個使用者都沒有時**才用得到：第一次啟動時建立這個帳號，第一次登入強制改密碼。 改完密碼之後，這兩行可以清空（清空後 `docker compose --env-file $cfg up -d`）。
