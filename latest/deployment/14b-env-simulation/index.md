@@ -2,6 +2,8 @@
 
 版本：v0.1　文件狀態：草案（0929 新增）
 
+> **1001 起由[第十五冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15b-env-simulation/index.md)取代。** 第十五冊之二把護理端的位址從 `localhost` 改成開發機的區網 IP， 理由在那一冊開頭（1001 院內卡在的登入問題，用 `localhost` 模擬部署永遠練不到）。這一冊保留為紀錄、不再改寫。
+>
 > 這一冊只做一件事：**模擬部署時，開發機上那一份 `.env`，每一行要填什麼**。 它接在[第十四冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14-from-zero/index.md) N-11。實際部署的填法看[第十四冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14a-env-hospital/index.md)。
 >
 > 模擬部署的意思是：在自己的開發機上，用與院內**一字不差的指令**從零部署一次（《部署規範》DEP-22，第十一冊第 7 節）。 所以 `.env` 用的是**同一份範本、同一批變數**，只是值換成開發機的。 本冊與 repo 裡的 `deploy\hospital.env.example` 不一致時，以範本為準。

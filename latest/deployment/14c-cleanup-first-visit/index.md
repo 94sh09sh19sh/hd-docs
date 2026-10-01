@@ -2,6 +2,8 @@
 
 版本：v0.1　文件狀態：草案（0930 新增）　編號：`L-xx`　**與第十四冊一起印出來帶進去**
 
+> **1001 第二次進院有沒有照這一冊收過，沒有記到**（[第十四冊之四](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14d-second-visit/index.md) M-10）。 下一次進院照[第十五冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15-from-zero/index.md)：V-04 之前先做 L-01 看一眼，容器已不在就接著做 L-07；還在就從 L-02 起照做。 本冊內文說的「第十四冊 N-04」，在第十五冊是 V-04。
+>
 > 0922 第一次進院失敗（[第十冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/10-first-visit/index.md)），院內主機上留下了幾樣東西： 一個**掛著整顆 C 槽**的容器 `dialysis_system_v0`、一份 clone 下來的原始碼、一個 `python` 映像檔， 還可能有一把已作廢權杖的殘留字串。這一冊一步一步教你把它們收乾淨。
 >
 > **什麼時候做**：下一次進院、在這台主機上動手的**第一件事**，排在[第十四冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14-from-zero/index.md) N-04 之前 （＝第十冊 F-22 第 1、2 項）。只做一次，收完就不必再看這一冊。

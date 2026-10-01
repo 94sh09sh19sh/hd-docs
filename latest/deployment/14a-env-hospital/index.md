@@ -2,6 +2,8 @@
 
 版本：v0.1　文件狀態：草案（0929 新增）　**與第十四冊一起印出來帶進去**
 
+> **1001 起由[第十五冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15a-env-hospital/index.md)取代。** 這一冊是 1001 第二次進院時照著填的那一版，保留為紀錄、不再改寫。 本冊的範例 `hd-server` **不是院內主機的名字**；根目錄 1001 實際用的是 `C:\hd\hd-tablet-care`。
+>
 > 這一冊只做一件事：**院內主機上那一份 `.env`，每一行要填什麼**。 它接在[第十四冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14-from-zero/index.md) N-11（＝第十一冊 W-11、第十二冊 Y-03）。 模擬部署的填法不同，看[第十四冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14b-env-simulation/index.md)。
 >
 > 變數的真本是 repo 裡的 `deploy\hospital.env.example`（每一項上面都有註解），規則的真本是《[部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)》v3.0。 本冊與範本不一致時，以範本為準。
