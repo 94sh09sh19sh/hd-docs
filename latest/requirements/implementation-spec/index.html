@@ -4629,7 +4629,7 @@
 <li><strong><code>provider</code> 改為 <code>sqlite</code>，移除 <code>directUrl</code>。</strong> migration 檔與 PostgreSQL 不相容，<code>migrations/</code> 整組重建（既有資料為合成資料，直接捨棄，見《資料庫使用規範》第 15 條）。</li>
 <li><strong>連線行為必須實測確認。</strong> SQLite 只允許一個寫入者，Prisma 的連線設定（如連線字串上的 <code>connection_limit</code>）要驗證實際行為，不要照抄 PostgreSQL 的設定。</li>
 <li><strong><code>PRAGMA</code> 設定要在連線建立時套用</strong>：<code>journal_mode=WAL</code>、<code>foreign_keys=ON</code>、<code>busy_timeout&gt;=5000</code>、正式環境 <code>synchronous=FULL</code>。這四項是《資料庫使用規範》第 7 條的必開項，缺一個都會在多人同時操作時出問題。</li>
-<li><strong>不得用 <code>Float</code> 承載任何臨床數值</strong>（劑量、體重、超過濾量）。改用整數最小單位或 <code>String</code>，見《資料庫使用規範》6.2。</li>
+<li><strong>不得用 <code>Float</code> 承載任何臨床數值</strong>（劑量、體重、脫水量）。改用整數最小單位或 <code>String</code>，見《資料庫使用規範》6.2。</li>
 <li><strong>部分批次操作在 SQLite provider 上的支援與 PostgreSQL 不同</strong>，使用前先確認當前 Prisma 版本的實際支援，不要假設兩邊一樣。</li>
 <li>既有的六條 schema 約束（不用 enum、不用 JSON 承載關聯資料、不用資料庫專屬預設值、snake_case、稽核欄位不省略、級聯路徑只留一條）<strong>全部保留</strong>。</li>
 </ul>
@@ -4841,6 +4841,37 @@
 </tbody>
 </table>
 <p>三種來源一律收斂成同一組內部資料表，輪播與儀表板只讀內部資料表，不認來源。</p>
+<p><strong>1005 使用者決定</strong>：院方來源<strong>直接用同院 IDH 預警系統正在用的那支透析清單 API</strong>（格式與欄位見《<a href="../../notes/idh-reference-survey/">同院 IDH 系統參考調查</a>》第 2～4 節），<code>HospitalApiAdapter</code> 暫不寫。寫的時候另外照這幾條：</p>
+<table>
+<thead>
+<tr>
+<th>要處理的</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>欄位沒有名稱</td>
+<td>那支 API 只回陣列、只能靠位置認欄位，上表「沿用 <code>import_field_mappings</code>」改成對應<strong>位置</strong></td>
+</tr>
+<tr>
+<td>數值名稱</td>
+<td>一律沿用 API 的稱呼：理想體重（即乾體重）、目標脫水量、結束體重、實際脫水量。代號（<code>DRY_WEIGHT</code> 等）不變</td>
+</tr>
+<tr>
+<td>讀到 0</td>
+<td>不建立、不顯示。輪播第三層另外也擋 0（已實作）</td>
+</tr>
+<tr>
+<td>抓哪幾種</td>
+<td>只有 API 有的四種；血紅素、白蛋白、Kt/V、透析前後 BUN 暫定拿不到，用到它們的功能收進 <code>LAB_VALUE_FEATURES</code>（3.7）</td>
+</tr>
+<tr>
+<td>抓取頻率</td>
+<td>預設每 3 分鐘，護理站可調（做成營運參數）</td>
+</tr>
+</tbody>
+</table>
 <p><strong>硬性規則</strong>：</p>
 <ul>
 <li><strong>全有或全無。</strong> 一批匯入中任何一筆解析失敗或驗證不過，整批不寫入。臨床數值只對一半比完全沒有更危險。</li>
@@ -4953,6 +4984,11 @@
 <td><strong>求助畫面顯示「其他」那一框</strong>（FR-P06，0929 新增）</td>
 <td><strong>關</strong></td>
 <td>無，隨時可開。只決定病人端求助畫面有幾顆按鈕；關閉時非臨床組的「其他」接在「不舒服」那一框最後，<strong>後端不擋求助</strong>（4.12.2）</td>
+</tr>
+<tr>
+<td><strong>需要抽血數值的功能</strong> <code>LAB_VALUE_FEATURES</code>（FR-N07／FR-P11，1005 新增）</td>
+<td><strong>關</strong></td>
+<td>院方提供血紅素、白蛋白、透析前後 BUN 的來源（透析清單 API 沒有）。涵蓋透析適足性（關閉時「病人趨勢」不出現那一張卡、端點擋下）與輪播第三層的抽血數值與 Kt/V。系統驗不到來源是否到位，由切換的人寫在核准依據裡</td>
 </tr>
 </tbody>
 </table>
@@ -5673,7 +5709,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td>事件記錄快速範本＋AI 草擬初稿</td>
 <td>FR-N04</td>
-<td>AI 不取代簽核</td>
+<td>AI 不取代簽核。1005 起範本為 <code>EVENT-TEMPLATES-v2</code>，新增「透析中低血壓處置」</td>
 </tr>
 <tr>
 <td>護理記錄自動預填草稿</td>
@@ -5683,7 +5719,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td>透析適足性計算與趨勢</td>
 <td>FR-N07</td>
-<td>計算部分是公式，無風險；<strong>「預測」部分本迭代只做趨勢圖，預測留到規則引擎那個迭代</strong>（0919 重排後為迭代 11）</td>
+<td>計算部分是公式，無風險；<strong>「預測」部分本迭代只做趨勢圖，預測留到規則引擎那個迭代</strong>（0919 重排後為迭代 11）。1005 起透析前後 BUN 暫定拿不到，整項收進 <code>LAB_VALUE_FEATURES</code>，預設關閉</td>
 </tr>
 <tr>
 <td>心理社會風險趨勢彙總</td>
@@ -5854,7 +5890,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td>第三層內容</td>
 <td>FR-P11</td>
-<td>乾體重、超過濾目標、抽血結果、Kt/V。<strong>每筆必須標示資料時間</strong></td>
+<td>理想體重、目標脫水量、抽血結果、Kt/V。<strong>每筆必須標示資料時間</strong>。1005 起抽血結果與 Kt/V 只在 <code>LAB_VALUE_FEATURES</code> 開啟時播；數值是 0 的一律不播</td>
 </tr>
 <tr>
 <td><code>FileImportAdapter</code></td>
@@ -6964,6 +7000,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <li><strong>Schema 做了加法</strong>：<code>beds</code>（床位清單）、<code>carousel_item_targets</code>（輪播內容只在哪幾床播）、<code>devices.bed_no</code>（平板貼在哪一床）。
    原本寫「原則上無」，是沒有想到系統裡根本沒有「床」：病人綁的是平板，班表的床號只是一串字。
    <strong>病人在哪一床＝他那台平板在哪一床</strong>，病人本身不存床號。床位預設 15 床（SRS 寫共 15 台平板），是資料，系統管理可改；
+   <strong>1005 使用者決定</strong>：床號照醫院編號、不寫死，<strong>床位數不設上限</strong>（原本的 40 床上限已拿掉）；平板跟著病人，病人的床不固定。
    預設值在共用常數，資料表空的時候才寫入（3.13 第 4 條的同一個道理）。遷移 <code>20260927090000_iteration14_beds</code>，<code>check:migration</code> 通過。</li>
 <li><strong>三支加法端點</strong>，都是專業版本來就沒有的動作：<code>PUT /beds</code>、<code>POST /devices/:id/bed</code>（目的床有平板就對調）、
    <code>PUT /carousel/items/:id/targets</code>；另加 <code>POST /help-requests/:id/outcome</code>（結案後 60 分鐘內補改處理結果，FR-N16「可事後補改」）。

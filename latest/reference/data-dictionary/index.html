@@ -4602,7 +4602,7 @@
 <li><strong>稽核欄位不因階段省略</strong> — 誰、何時、對誰、做了什麼，設計時就納入。</li>
 <li><strong>級聯路徑只留一條</strong> — 多條級聯刪除路徑本身就難以推理。除了指定的那一條外鍵，其餘一律 <code>NO ACTION</code>。迭代 3 新增的五張表全部不帶級聯刪除。迭代 4 的十四張表只讓「主表 → 自己的明細」帶級聯（勾選欄位、測驗作答、回饋分數、文件段落、查詢引用），其餘一律 <code>NO ACTION</code>。迭代 5 的七張表同理：求助的後續追蹤沿用 <code>help_requests</code> 既有的那一條，床位分配與調班申請掛在 <code>nurse_shifts</code> 底下，其餘（選項清單、營運參數、成效基準）不帶任何級聯——它們是治理紀錄，成效基準更是過期就拿不到的一次性資料。迭代 6 的三張表同樣一條級聯都不帶：輪播內容與欄位對應是設定，瀏覽事件是成效資料。</li>
 </ol>
-<p>另依規範 6.2：<strong>任何劑量、體重、超過濾量等臨床數值不得使用浮點數</strong>，一律以整數最小單位或「整數＋小數位數」記錄。</p>
+<p>另依規範 6.2：<strong>任何劑量、體重、脫水量等臨床數值不得使用浮點數</strong>，一律以整數最小單位或「整數＋小數位數」記錄。</p>
 <h3 id="型別對照">型別對照<a class="headerlink" href="#型別對照" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4974,7 +4974,7 @@
 <hr />
 <h2 id="二主檔">二、主檔<a class="headerlink" href="#二主檔" title="Permanent link">&para;</a></h2>
 <h3 id="patients--病人9-欄"><code>patients</code> — 病人（9 欄）<a class="headerlink" href="#patients--病人9-欄" title="Permanent link">&para;</a></h3>
-<p><strong>蒐集的意義</strong>：綁定、排班、症狀回報、求助全部要指向一個明確的病人。這張表刻意<strong>只存識別與基本人口學資料，不存臨床數值</strong>。院方提供的少數臨床數值（乾體重、Kt/V 等）另存於第七類的 <code>clinical_values</code>，每一筆都帶資料時間與來源批次。</p>
+<p><strong>蒐集的意義</strong>：綁定、排班、症狀回報、求助全部要指向一個明確的病人。這張表刻意<strong>只存識別與基本人口學資料，不存臨床數值</strong>。院方提供的少數臨床數值（理想體重、Kt/V 等）另存於第七類的 <code>clinical_values</code>，每一筆都帶資料時間與來源批次。</p>
 <blockquote>
 <p>⚠️ <strong>測試資料鐵則</strong>：開發者本機不是院內環境，《資料庫使用規範》第 10 條<strong>絕對禁止</strong>在此放入任何接近真實病人的可識別資訊。現行測試資料由 <code>prisma/seed.ts</code> 以 <code>fakerZH_TW</code> 產生 8 筆全合成資料。</p>
 </blockquote>
@@ -5829,7 +5829,7 @@
 <td><code>flag_key</code></td>
 <td><code>TEXT</code> UNIQUE</td>
 <td>開關的識別字，例如「AI 輔助功能總開關」</td>
-<td>合法值見 <code>@hd/shared</code> 的 <code>FeatureFlagKey</code>：<code>RISK_STRATIFICATION</code> <code>INTRA_DIALYSIS_ALERT</code> <code>DOSE_REFERENCE</code> <code>AI_FEATURES</code> <code>REAL_PATIENT_DATA_TO_AI</code> <code>CAROUSEL_LAYER_1</code> <code>CAROUSEL_LAYER_2</code> <code>CAROUSEL_LAYER_3</code> <code>PERF_INDIVIDUAL_L3</code> <code>REWARD_SCORING</code> <code>HANDHELD_FEATURES</code> <code>HELP_NON_CLINICAL_GROUP</code>（0929）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有輪播三層預設開啟）</td>
+<td>合法值見 <code>@hd/shared</code> 的 <code>FeatureFlagKey</code>：<code>RISK_STRATIFICATION</code> <code>INTRA_DIALYSIS_ALERT</code> <code>DOSE_REFERENCE</code> <code>AI_FEATURES</code> <code>REAL_PATIENT_DATA_TO_AI</code> <code>CAROUSEL_LAYER_1</code> <code>CAROUSEL_LAYER_2</code> <code>CAROUSEL_LAYER_3</code> <code>PERF_INDIVIDUAL_L3</code> <code>REWARD_SCORING</code> <code>HANDHELD_FEATURES</code> <code>HELP_NON_CLINICAL_GROUP</code>（0929）<code>LAB_VALUE_FEATURES</code>（1005，需要抽血數值的功能）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有輪播三層預設開啟）</td>
 </tr>
 <tr>
 <td><code>enabled</code></td>
@@ -6189,20 +6189,20 @@
 <tr>
 <td><code>value_code</code></td>
 <td><code>TEXT</code></td>
-<td>數值種類：乾體重、本次超過濾目標、血紅素、白蛋白、Kt/V；迭代 4 另加透析適足性計算的五個輸入值</td>
+<td>數值種類：理想體重、目標脫水量、血紅素、白蛋白、Kt/V；迭代 4 另加透析適足性計算的五個輸入值</td>
 <td>合法值見 <code>CLINICAL_VALUE_DEFINITIONS</code>：<code>DRY_WEIGHT</code> <code>UF_TARGET</code> <code>HEMOGLOBIN</code> <code>ALBUMIN</code> <code>KT_V</code>（輪播第三層，實際種類待院方確認，Q-09）；<code>BUN_PRE</code> <code>BUN_POST</code> <code>WEIGHT_POST</code> <code>UF_VOLUME</code> <code>SESSION_MINUTES</code>（迭代 4，FR-N07 的輸入，Q-26）</td>
 </tr>
 <tr>
 <td><code>value_scaled</code></td>
 <td><code>INT</code></td>
 <td>數值本身</td>
-<td>⛔ <strong>不用浮點數</strong>（規範 6.2）。以整數記錄、搭配下一欄的小數位數：乾體重 62.5 kg 存為 <code>625</code>。十進位字串與整數的轉換用 <code>parseScaledDecimal</code> / <code>formatScaledDecimal</code>，全程字串運算</td>
+<td>⛔ <strong>不用浮點數</strong>（規範 6.2）。以整數記錄、搭配下一欄的小數位數：理想體重 62.5 kg 存為 <code>625</code>。十進位字串與整數的轉換用 <code>parseScaledDecimal</code> / <code>formatScaledDecimal</code>，全程字串運算</td>
 </tr>
 <tr>
 <td><code>value_scale</code></td>
 <td><code>INT</code></td>
 <td>小數位數</td>
-<td>乾體重 1、超過濾目標 0、Kt/V 2。逐列記錄，種類定義日後改變也不影響舊資料的解讀</td>
+<td>理想體重 1、目標脫水量 0、Kt/V 2。逐列記錄，種類定義日後改變也不影響舊資料的解讀</td>
 </tr>
 <tr>
 <td><code>unit</code></td>
@@ -6770,7 +6770,7 @@
 <td><code>template_version</code></td>
 <td><code>TEXT?</code></td>
 <td>範本版本</td>
-<td>現值 <code>EVENT-TEMPLATES-v1</code>。範本改版後舊記錄仍能對回當時的欄位</td>
+<td>現值 <code>EVENT-TEMPLATES-v2</code>（1005 新增「透析中低血壓處置」；之前的記錄是 v1）。範本改版後舊記錄仍能對回當時的欄位</td>
 </tr>
 <tr>
 <td><code>occurred_at</code></td>
@@ -6962,7 +6962,7 @@
 <tr>
 <td><code>weight_post_value_id</code></td>
 <td><code>TEXT</code></td>
-<td>用了哪一筆透析後體重</td>
+<td>用了哪一筆結束體重</td>
 <td>同上</td>
 </tr>
 <tr>
@@ -7690,7 +7690,7 @@
 <p>前兩張是<strong>輪播</strong>：第一層取自系統既有資料、第三層讀 <code>clinical_values</code>，兩層都不需要自己的表；
 只有第二層（中心自己寫的衛教與公告）與瀏覽事件需要存進資料表。
 第三張是<strong>檔案匯入的欄位對應</strong>——院方匯出檔的欄位名稱會被人改動，
-那是別人的系統，不會為了我們保持不變，所以「哪一欄是乾體重」必須是資料而不是程式。</p>
+那是別人的系統，不會為了我們保持不變，所以「哪一欄是理想體重」必須是資料而不是程式。</p>
 <h3 id="carousel_items--輪播第二層內容14-欄"><code>carousel_items</code> — 輪播第二層內容（14 欄）<a class="headerlink" href="#carousel_items--輪播第二層內容14-欄" title="Permanent link">&para;</a></h3>
 <p><strong>蒐集的意義</strong>：FR-P11 的第二層是靜態衛教與中心公告，由護理端在管理介面上架。
 這是輪播三層中唯一「人自己寫」的一層，因此也是唯一需要編輯、排序與上下架的一層。</p>
@@ -8248,7 +8248,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>預設值</strong>：全新環境第一次啟動時，資料表是空的就寫入共用常數 <code>DEFAULT_BED_NOS</code>（15 床，01～15——SRS 寫共 15 台平板）。
+<p><strong>預設值</strong>：全新環境第一次啟動時，資料表是空的就寫入共用常數 <code>DEFAULT_BED_NOS</code>（15 床，01～15——SRS 寫共 15 台平板）。1005 起床位數不設上限，床號照醫院編號由護理長填。
 <strong>之後一律以資料表為準</strong>，重新部署不會洗掉護理長的調整。整組取代走 <code>PUT /beds</code>（營運參數權限、要填理由），寫 <code>BEDS_UPDATED</code>。
 <strong>索引</strong>：<code>bed_no</code>（唯一）、<code>(active, sort_order)</code></p>
 <h3 id="carousel_item_targets--輪播內容的播放床位5-欄"><code>carousel_item_targets</code> — 輪播內容的播放床位（5 欄）<a class="headerlink" href="#carousel_item_targets--輪播內容的播放床位5-欄" title="Permanent link">&para;</a></h3>
