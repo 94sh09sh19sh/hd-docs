@@ -58,7 +58,7 @@ notepad $cfg
 | 要什麼 | 誰給 | 現況 | 用在哪幾項 |
 |---|---|---|---|
 | 三個連接埠（後端、護理端、病人端） | 資訊室 | **0930 已確認**：`13000`、`18080`、`18081` | `HD_API_PORT`、`HD_NURSE_PORT`、`HD_PATIENT_PORT`，以及所有位址 |
-| 主機位址 `<主機>`：護理站與平板用哪個名稱或 IP 連得到 | 資訊室（第十五冊 V-08） | **未答**。1001 現場自己決定了一個值 | `HD_PUBLIC_API_URL`、`CORS_ORIGINS`、`MDM_KIOSK_BASE_URL` |
+| 主機位址 `<主機>`：護理站與平板用哪個名稱或 IP 連得到 | 資訊室（第十五冊 V-08） | **未答**。1001 現場自己決定了一個值，是**名稱**（1005 補記）；改用 IP 照[第十五冊之四](15d-switch-host-to-ip.md) | `HD_PUBLIC_API_URL`、`CORS_ORIGINS`、`MDM_KIOSK_BASE_URL` |
 | 放本系統的磁碟 | 資訊室 | 1001 放在 `C:\hd\hd-tablet-care`，院方是否同意**未答** | `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_SHELL_SRC_DIR` |
 | 要交付的 tag | 你自己（V-03） | 1001 是 `v0.3.0` | `HD_IMAGE_TAG` |
 | 第一個管理員帳號的工號與名字 | 護理長 | — | `SUPER_ADMIN_WORK_ID`、`SUPER_ADMIN_DISPLAY_NAME` |
@@ -307,7 +307,7 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 | `CORS_ORIGINS`、`JWT_*`、`SUPER_ADMIN_*`、`BACKUP_DAILY_AT`、`DB_DISK_MIN_FREE_MB`、`KIOSK_SHELL_MIN_VERSION`、`LLM_*`、其他營運參數 | `docker compose --env-file $cfg up -d`（compose 會自己重建設定有變的容器） |
 | 三個埠 | 先向資訊室登記 → `up -d`；位址裡的埠也要一起改 |
 | `HD_PUBLIC_API_URL` | `docker compose --env-file $cfg build` 再 `up -d`——**它寫在網頁檔案裡，不重建沒用**。做完用第十五冊 V-17 第二段確認 |
-| `MDM_KIOSK_BASE_URL` | **原則上不改。** 非改不可時：`up -d api` → 重跑 `shell-builder`（它會重簽伺服器憑證，V-22）→ `restart patient-web`（V-24）→ **每一台平板清除資料、重新佈建** |
+| `MDM_KIOSK_BASE_URL` | **原則上不改。** 非改不可時：`up -d api` → 重跑 `shell-builder`（它會重簽伺服器憑證，V-22）→ 重新備份金鑰（V-23）→ `restart patient-web`（V-24）→ **每一台平板清除資料、重新佈建**。三個位址的主機一起從名稱換成 IP 的完整步驟在[第十五冊之四](15d-switch-host-to-ip.md) |
 | `HD_IMAGE_TAG` | 只在更新、回退時改，照第十一冊 W-19、W-20，不要單獨改 |
 | `HD_SHELL_SIGNING` | **不准改** |
 | `HD_BACKUP_DIR`、`HD_CONFIG_DIR` | `up -d`。舊資料夾裡的備份要先搬過去，並知會負責把備份送往另一台機器的人 |
@@ -344,7 +344,7 @@ Select-String -Path $cfg -Pattern '^(HD_IMAGE_TAG|HD_BACKUP_DIR|HD_CONFIG_DIR|HD
 |---|---|
 | 只有 `CORS_ORIGINS` | 改好，`up -d` |
 | `HD_PUBLIC_API_URL` | 改好，`build` 再 `up -d`，再用 V-17 第二段確認網頁裡的位址換過了 |
-| `MDM_KIOSK_BASE_URL` | **伺服器憑證已經在 1001 簽了這個名字。** 平板還沒佈建，所以現在改代價最小：照第 5 節那一列做（重跑 `shell-builder` 會重簽伺服器憑證，下載頁的 APK 也會換新），**不必**重新產生簽章金鑰 |
+| `MDM_KIOSK_BASE_URL` | **伺服器憑證已經在 1001 簽了這個名字。** 平板還沒佈建，所以現在改代價最小：照第 5 節那一列做（重跑 `shell-builder` 會重簽伺服器憑證，下載頁的 APK 也會換新），**不必**重新產生簽章金鑰。從名稱換成 IP 的話，照[第十五冊之四](15d-switch-host-to-ip.md)一步步做 |
 
 核對的結果只記「哪幾項對、哪幾項改了」，**不記值**（第 4 節）。
 
