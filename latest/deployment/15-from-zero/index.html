@@ -3383,6 +3383,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15d-switch-host-to-ip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之四 · 主機位址從名稱改成 IP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4291,7 +4319,8 @@ Git 沒裝時怎麼辦、防毒怎麼查、護理端登不進去怎麼查，都�
 <p>這一冊是第十一、十二、十三冊（現行路線）的<strong>新手導讀版</strong>：每一步標題後面註明對應的第十四冊與原冊步驟編號（例如「＝N-13、W-13」）。
 兩者衝突時，以原冊為準，規則的真本仍是《<a href="../../requirements/deployment-spec/">部署規範</a>》v3.0。</p>
 <p><code>.env</code> 的逐項填法另成兩冊：<a href="../15a-env-hospital/">第十五冊之一（實際部署）</a>、<a href="../15b-env-simulation/">第十五冊之二（模擬部署）</a>。
-1001 為什麼登不進去、下一次要做什麼，白話版在<a href="../15c-why-1001-failed/">第十五冊之三</a>。</p>
+1001 為什麼登不進去、下一次要做什麼，白話版在<a href="../15c-why-1001-failed/">第十五冊之三</a>。
+院內主機的 <code>&lt;主機&gt;</code> 要從名稱改成 IP，照<a href="../15d-switch-host-to-ip/">第十五冊之四</a>。</p>
 </blockquote>
 <hr />
 <h2 id="0-讀之前">0. 讀之前<a class="headerlink" href="#0-讀之前" title="Permanent link">&para;</a></h2>
@@ -4593,8 +4622,8 @@ Git 沒裝時怎麼辦、防毒怎麼查、護理端登不進去怎麼查，都�
 </tr>
 <tr>
 <td>V-08</td>
-<td>現場決定了，但沒記是名稱還是 IP</td>
-<td>與資訊室確認那個值，記下「名稱或 IP」</td>
+<td>現場用 <code>hostname</code> 決定，填的是<strong>名稱</strong>（1005 補記；資訊室沒有確認過）</td>
+<td>與資訊室確認那個值。<strong>要改用 IP</strong>，在 V-17 之前照<a href="../15d-switch-host-to-ip/">第十五冊之四</a>做，它一併涵蓋 V-17 與 V-22～V-24 要重做的部分</td>
 </tr>
 <tr>
 <td>V-09～V-16</td>
@@ -4754,7 +4783,7 @@ Git 沒裝時怎麼辦、防毒怎麼查、護理端登不進去怎麼查，都�
 </table>
 <p><strong>還沒答、最要緊的</strong>：</p>
 <ol>
-<li><strong>護理站與平板用哪個名稱或 IP 連這台主機？IP 能不能固定？</strong>（V-08 要用；1001 現場自己決定，沒有資訊室的書面答案）</li>
+<li><strong>護理站與平板用哪個名稱或 IP 連這台主機？IP 能不能固定？</strong>（V-08 要用；1001 現場自己決定用主機名稱，沒有資訊室的書面答案）</li>
 <li><strong>Docker 的資料夾能不能加入 Defender 的排除清單、誰加？</strong>（1001 查到排除清單是空的）</li>
 <li><strong>1001 Docker 三次查不到 Docker Hub 的網域</strong>（<code>production.cloudfront.docker.com</code>、<code>auth.docker.io</code>），院內 DNS 對這些網域穩不穩？（見 V-06）</li>
 <li><strong>斷電之後誰開機、誰登入？</strong> Docker Desktop 要有人登入才會起來</li>
@@ -5185,7 +5214,8 @@ Docker Hub 的兩個下載站（<code>cloudflare</code>、<code>cloudfront</code
 </tbody>
 </table>
 <blockquote>
-<p>📍 <strong>1001</strong>：現場打了 <code>hostname</code>，自己決定了一個值（是名稱還是 IP 沒有記到），沒有資訊室的書面答案。下一次照上面再確認一次。</p>
+<p>📍 <strong>1001</strong>：現場打了 <code>hostname</code>，自己決定了一個值，沒有資訊室的書面答案。當天沒有記是名稱還是 IP，1005 補記：<strong>是名稱</strong>（有沒有帶 DNS 尾碼未記）。
+下一次照上面再確認一次；確認的結果是改用 IP 的話，照<a href="../15d-switch-host-to-ip/">第十五冊之四</a>換。</p>
 <p>🧪 <strong>模擬部署</strong>：<code>&lt;主機&gt;</code> 是開發機 <strong>Wi-Fi 那張網卡的 IPv4 位址</strong>（第十五冊之二 0.3 節），例如 <code>192.168.1.23</code>。
 手機要連同一個 Wi-Fi；同一輪模擬部署之內不要換 Wi-Fi。</p>
 </blockquote>
@@ -5553,7 +5583,7 @@ C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。<strong>院方同不同
 </tr>
 <tr>
 <td>護理站的電腦連頁面都說找不到主機</td>
-<td><code>&lt;主機&gt;</code> 是名稱而護理站查不到，回 V-08</td>
+<td><code>&lt;主機&gt;</code> 是名稱而護理站查不到，回 V-08；決定改用 IP 就照<a href="../15d-switch-host-to-ip/">第十五冊之四</a></td>
 </tr>
 </tbody>
 </table>
@@ -5803,7 +5833,7 @@ C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。<strong>院方同不同
 </tr>
 <tr>
 <td>平板說找不到這個主機</td>
-<td><code>&lt;主機&gt;</code> 是名稱而平板查不到。這時要回 V-08 換成固定 IP——<strong>而那代表 V-22 的伺服器憑證要重簽</strong>，照第十五冊之一第 5 節「<code>MDM_KIOSK_BASE_URL</code> 非改不可時」做</td>
+<td><code>&lt;主機&gt;</code> 是名稱而平板查不到。這時要回 V-08 換成固定 IP——<strong>而那代表 V-22 的伺服器憑證要重簽</strong>，照<a href="../15d-switch-host-to-ip/">第十五冊之四</a>一步步換</td>
 </tr>
 </tbody>
 </table>
