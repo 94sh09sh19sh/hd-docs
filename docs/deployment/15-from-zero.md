@@ -19,6 +19,7 @@
 > 兩者衝突時，以原冊為準，規則的真本仍是《[部署規範](../requirements/deployment-spec.md)》v3.0。
 >
 > `.env` 的逐項填法另成兩冊：[第十五冊之一（實際部署）](15a-env-hospital.md)、[第十五冊之二（模擬部署）](15b-env-simulation.md)。
+> 1001 為什麼登不進去、下一次要做什麼，白話版在[第十五冊之三](15c-why-1001-failed.md)。
 
 ---
 
