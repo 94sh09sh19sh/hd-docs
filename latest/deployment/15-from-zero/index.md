@@ -10,7 +10,7 @@
 >
 > 這一冊是第十一、十二、十三冊（現行路線）的**新手導讀版**：每一步標題後面註明對應的第十四冊與原冊步驟編號（例如「＝N-13、W-13」）。 兩者衝突時，以原冊為準，規則的真本仍是《[部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)》v3.0。
 >
-> `.env` 的逐項填法另成兩冊：[第十五冊之一（實際部署）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15a-env-hospital/index.md)、[第十五冊之二（模擬部署）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15b-env-simulation/index.md)。
+> `.env` 的逐項填法另成兩冊：[第十五冊之一（實際部署）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15a-env-hospital/index.md)、[第十五冊之二（模擬部署）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15b-env-simulation/index.md)。 1001 為什麼登不進去、下一次要做什麼，白話版在[第十五冊之三](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15c-why-1001-failed/index.md)。
 
 ______________________________________________________________________
 
