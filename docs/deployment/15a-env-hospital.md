@@ -203,6 +203,17 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 `BINDING_MAX_HOURS`、`BINDING_EXPIRY_SWEEP_SECONDS`、`SYMPTOM_TREND_WINDOW_DAYS`、`SYMPTOM_TREND_REPORT_LIMIT`、
 `DEVICE_ONLINE_THRESHOLD_SECONDS`、`REALTIME_HEARTBEAT_SECONDS`：**全部維持範本的值**。沒有護理長或需求文件的明確理由，不要改。
 
+### 1.10 院方透析清單 API（1005 新增）
+
+| 變數 | 填什麼 |
+|---|---|
+| `HOSPITAL_API_BASE_URL` | **（空白）**——第三次進院只探測，位址在[第十五冊](15-from-zero.md) V-30a 當場輸入，不寫進這裡 |
+| `HD_SIMULATION_DEPLOYMENT` | **（空白），院內主機永遠空白** |
+
+- **探測看過、Q-35 向資訊室報備過之後**才把位址填進來，重新啟動 `api` 就開始每 3 分鐘抓一次、病人與療程自動出現（第十五冊第 11 節）。
+  這個位址**不進 repo、不寫進任何文件、不貼進任何紀錄**（DEP-46）。
+- `HD_SIMULATION_DEPLOYMENT` 是模擬部署才填 `yes` 的開關。院內填了它，抄錯的模擬設定就擋不住了——後端靠它空白，才會在位址指向模擬時拒絕啟動。
+
 ---
 
 ## 2. 填好的樣子
@@ -244,6 +255,9 @@ LLM_MODEL_ID=
 LLM_TIMEOUT_SECONDS=150
 LLM_HEALTH_TIMEOUT_SECONDS=5
 
+HOSPITAL_API_BASE_URL=
+HD_SIMULATION_DEPLOYMENT=
+
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -282,6 +296,7 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 - [ ] `HD_SHELL_SIGNING=hospital`
 - [ ] `JWT_SECRET` 是這次新產生的
 - [ ] `LLM_PROVIDER=mock`
+- [ ] `HOSPITAL_API_BASE_URL` 與 `HD_SIMULATION_DEPLOYMENT` **都是空白**（1005 新增）
 - [ ] 整份沒有任何一個值加了引號
 
 ---

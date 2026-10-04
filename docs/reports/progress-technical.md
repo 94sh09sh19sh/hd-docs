@@ -10,6 +10,7 @@
 > **0922 第一次進院失敗之後，0926 起的四個迭代把交付方式整個換掉**：迭代 11 改為 Docker ＋ `git clone`（安裝包撤除）、迭代 12 外殼 App 搬到獨立 repo 並以契約整合、迭代 13 新增 Python 的 AI 閘道服務、迭代 14 介面極簡重設計（護理端簡易版）；14.1～14.5 是使用者實際操作後的修正與院方回饋。
 > 迭代編號在 0919、0926、1005 各重排一次：原「規則引擎」與「管理儀表板」現在是**迭代 18、19**，對照表見實作規格書 4.0.1、4.0.3、4.0.4。
 > **1005 新版需求（修訂中）**：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成迭代 15～17（實作規格書 0.5、4.13～4.15）；第三次進院見 4.19。
+> **1005 迭代 15 實作完成**：`modules/hospital-sync/`（抓取、解析、同步）、模擬院方 API、探測工具、兩張新表；`verify:iteration15`（7 步）與 `verify:iteration15:api`（12 步）全綠，見下方「迭代 15～19」與實作規格書 4.13。
 
 ---
 
@@ -157,7 +158,7 @@ npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript�
 | `carousel_view_events` | **沒有病人、綁定、平板或卡片內容欄位**，這是刻意的（見 5.19）。要做個人層級的閱讀分析前，先回頭讀規範第 11 條 |
 | `import_field_mappings` | 檔案欄位名稱是資料不是程式；`(profile_code, target_field)` 唯一。兩個目標欄位不得同時對應到同一個檔案欄位，設定時就擋下 |
 | `backup_runs` | `sha256` 存完整雜湊；0929 起同一串另寫在 `BACKUP_DIR` 裡的 `<檔名>.sha256`（格式同 `sha256sum`）。**資料庫壞掉、服務起不來時這張表就查不到**，還原時的雜湊從那個檔拿 |
-| `beds` | 床位清單是資料（預設 15 床，系統管理可改）。有病人正在治療的床拿不掉，否則那位病人會從床位圖上消失 |
+| `beds` | 床位清單是資料（系統管理可改）。~~預設 15 床~~ 1005 迭代 15 起全新環境不預設，院方資料出現的床號自動加進來（只新增、不再啟用停用的床）。有病人正在治療的床拿不掉，否則那位病人會從床位圖上消失 |
 | `treatment_sessions` | 迭代 14.2 起可「重新開啟」：今天已下機或已取消的療程回到已排班、`ended_at` 清空，**沿用同一筆**（唯一鍵不動），當天的症狀回報與求助仍掛在它底下 |
 
 ---
@@ -1048,13 +1049,25 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 
 | 迭代 | 主題 | 可否立即開始 | 啟用前要等的外部答覆 |
 |---|---|---|---|
-| 15 | 院方 API 介接與自動化（1005） | 實作可以，用模擬院方 API | 第三次進院的探測（Q-09 第 9 題）、使用報備與連線（Q-35） |
+| ~~15~~ | ~~院方 API 介接與自動化（1005）~~ | **實作完成（1005）**，模擬院方 API 上驗收通過 | 對真實資料啟用：第三次進院的探測（Q-09 第 9 題）、使用報備與連線（Q-35） |
 | 16 | 病人端「本次透析」面板與跑馬燈（1005） | 實作可以 | 無；實機待 Q-33 |
 | 17 | 跑馬燈內容由 AI 生成、護理師核准（1005） | 實作可以 | 正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿 |
 | 18 | 規則引擎與三項高風險功能（原 7 → 11 → 15） | 實作可以 | 法務書面確認（Q-02）＋臨床端門檻值（Q-03） |
 | 19 | 管理儀表板、獎勵、對外揭露（原 8 → 12 → 16） | 建置可以 | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21） |
 
-迭代 15 的第一項是院方 API 探測工具，要趕在第三次進院前完成（實作規格書 4.19）；迭代 15 的其餘工作項與迭代 16、17 都不擋第三次進院。
+迭代 15 的第一項是院方 API 探測工具，要趕在第三次進院前完成（實作規格書 4.19）——**1005 已完成**，指令在部署手冊第十五冊 V-30a；迭代 16、17 都不擋第三次進院。
+
+#### 迭代 15 完成（1005）
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 抓取、解析、同步 | `apps/api/src/modules/hospital-sync/`：`hospital-api.format.ts`（純解析，探測工具共用）、`hospital-api.client.ts`（30 秒逾時、重試 3 次）、`hospital-api.adapter.ts`（`ClinicalDataSourcePort` 第三個實作）、`hospital-sync.service.ts`（排程與同步） |
+| 與護理師拖曳同一條路徑 | 同步呼叫 `ScheduleService.create`、`BindingService.create`、`DevicesService.setBed`、`ClinicalDataImportService.import`，操作者是登入不了的系統帳號 `SYSTEM-HOSPITAL-SYNC`；`AuditService.recordByNurse` 認得它，稽核記成 `HOSPITAL_SYNC`／「院方資料同步」 |
+| 護理師的更正優先 | `treatment_sessions.nurse_modified_at`（改狀態）與 `bed_nurse_modified_at`（換床）。兩支服務在操作者不是同步帳號時寫入 |
+| 模擬院方 API、探測工具 | `apps/api/src/hospital-api-sim.ts`（`npm run dev:hospital-sim`；compose 的 `simulation` 設定檔）、`apps/api/src/hospital-api-probe.ts`（`npm run probe:hospital-api`） |
+| 正式環境的兩道防線 | 啟動時：位址主機是 `hospital-api-sim` 就拒絕（`assertHospitalApiAllowed`）；抓取時：回應帶 `x-hd-simulated` 就整次作廢。模擬部署以 `HD_SIMULATION_DEPLOYMENT=yes` 明示 |
+| 推送 | 護理端串流多一種事件 `HOSPITAL_SYNC`；平板 `GET /device/stream`（`DeviceEventsService`，事件不帶數值） |
+| 開發機怎麼開 | `.env` 加 `HOSPITAL_API_BASE_URL=http://localhost:8090/dialysislist.php`，先 `npm run dev:hospital-sim` 再 `npm run dev:api`。不加就跟以前一樣，簡易版照人工流程 |
 迭代 18 與其他迭代沒有相依，外部答覆若提早到齊可隨時往前插隊。
 迭代 19 的成效指標會吃迭代 6 產生的 `carousel_view_events`（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，
 因此它只回答得了「哪一類內容有人看」這種問題。

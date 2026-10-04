@@ -67,6 +67,7 @@
 | APK 簽章用途 | `hospital` | `dev` | V-12 |
 | 平板 | 院內的平板 | 開發用的 Android 手機 | 第 8 節 |
 | 驗收工具 | 不跑（主機上沒有、也不准裝 Node.js） | 多跑三支 `verify:iteration… --live` | V-31 |
+| 院方 API（1005） | 只**探測**一次，位址當場輸入、不寫進 `.env` | 開模擬院方 API，`.env` 指向它並寫 `HD_SIMULATION_DEPLOYMENT=yes` | V-30a |
 | 重新開機測試 | **必做**，決定這條路線在院內能不能用 | 驗不出院內的情形，可略 | V-19 |
 | 備份送往另一台機器 | 院方負責，要當場確認 | 不必 | V-18 |
 | 做完之後 | 交接，服務留著跑 | **撤除乾淨**，下一次才又是「從零」 | 第 10 節 |
@@ -1207,6 +1208,49 @@ docker compose --env-file $cfg exec -T api node -e "fetch('http://ai-gateway:800
 
 ---
 
+## 9.5 院方 API：探測一次（1005 新增）
+
+1005 起院方透析清單 API 要取代護理師的手動輸入（《[實作規格書](../requirements/implementation-spec.md)》4.13）。
+**這一次只探測、不啟用**：看主機連不連得到、回應長什麼樣（透析中的結束欄位、床位格式、姓名欄），把輸出帶回來。
+啟用（`.env` 填位址）要等探測結果看過、Q-35 報備過，見第 11 節。
+
+### V-30a 探測院方透析清單 API（新增，第十五冊之三 E-16）
+
+**做什麼**（在 `$root\repo` 底下；位址向資訊室或護理長問，**只在這裡當場輸入，不要寫進 `.env`、不要貼進任何紀錄**）：
+
+```powershell
+$u = Read-Host '院方透析清單 API 的位址（含 dialysislist.php，不含 ?date=）'
+docker compose --env-file $cfg exec -T -e HOSPITAL_API_BASE_URL=$u api node apps/api/dist/hospital-api-probe.js
+```
+
+**怎麼知道成功了**：印出「連線：成功」、「解析：成功」，接著是每一欄的型態分布與幾段統計，最後一行「以上可以整段抄進演練紀錄」。
+**整段抄進演練紀錄**——工具只印結構（型態、欄數、筆數、床位的樣式），**不印任何一個病人的值，也不印位址**，抄下來不會帶出病人資料。
+
+| 症狀 | 處置 |
+|---|---|
+| `連線：失敗——找不到院方主機` 或 `連不到院方主機所在的網段` | 主機與院方 API 不在同一個網段，或名稱查不到。抄下來，回去問資訊室（Q-35）；**不要改主機的網路設定** |
+| `連線：失敗——連線被拒` | 位址的埠不對，或院方服務沒開。核對位址再試一次 |
+| `連線：失敗——逾時` | 院方伺服器沒有在 30 秒內回應。換個時間再試一次，兩次都逾時就抄下來 |
+| `解析：失敗` | 位址打到的不是透析清單（例如少了檔名）。核對位址 |
+| `模擬標頭：有` | 打到的是模擬院方 API，不是院方的——位址填錯了 |
+| `沒有設定院方 API 的位址` | `Read-Host` 那一行沒有輸入東西 |
+
+> ⚠️ **不要用瀏覽器或 `curl` 直接打院方 API**：回應是全中心病人的姓名與病歷號，會整片印在螢幕上（第十五冊之三 E-16）。
+
+> 🧪 **模擬部署**：先照[第十五冊之二](15b-env-simulation.md) 1.9 把 `.env` 指向模擬院方 API、寫上 `HD_SIMULATION_DEPLOYMENT=yes`，然後
+>
+> ```powershell
+> docker compose --env-file $cfg --profile simulation up -d
+> docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js
+> ```
+>
+> 第二行用的是 `.env` 裡的位址，所以不必輸入。印出「模擬標頭：有」是對的。接著開護理端簡易版：
+> 不必碰任何東西，床位圖上就會出現 A1、A2… 與「模擬甲」等病人（全是虛構的）。
+> 最後驗「院內的設定擋得住模擬」（部署規範第 9 章第 8 項）：把 `.env` 的 `HD_SIMULATION_DEPLOYMENT` 清空，`docker compose --env-file $cfg up -d api`，
+> `docker compose --env-file $cfg logs --tail 20 api` 要看到**拒絕啟動、指出 DEP-46**；看到之後改回 `yes`、再 `up -d api`。
+
+---
+
 ## 10. 收尾
 
 ### 10.1 實際部署：冒煙測試與交接
@@ -1292,6 +1336,7 @@ V-06 下載的兩個基底映像也可以留著。
 | 換外殼版本、調高最低可用版本 | [第十二冊](12-shell.md) Y-14、Y-15 |
 | 每年核對金鑰備份 | 第十二冊第 6 節 |
 | 接上正式 GPU API | [第十三冊](13-ai-gateway.md) Z-23 |
+| 接上院方 API（V-30a 探測過、Q-35 報備過之後） | 設定目錄的 `.env` 填 `HOSPITAL_API_BASE_URL`（[第十五冊之一](15a-env-hospital.md) 1.10），`docker compose --env-file $cfg up -d api`；護理端「系統管理 → 營運參數與選項清單」的「院方資料同步」卡片看到「成功」才算接上。**接上之後**，1005 之前預設的 01～15 床到同一頁的床位清單拿掉 |
 | 出錯了，這本沒寫到 | 第十一冊第 9 節、第十二冊第 8 節、第十三冊第 6 節、[第六冊](06-troubleshooting.md) |
 
 ---
