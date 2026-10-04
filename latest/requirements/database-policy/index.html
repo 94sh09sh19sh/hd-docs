@@ -4515,6 +4515,45 @@
 </tbody>
 </table>
 <p><strong>Agent 行為規則</strong>：不得為了先看到畫面而把 Excel 直接解析後塞進前端。介面層與資料表要先建立，即使一開始只有 <code>ManualEntryAdapter</code> 可用。</p>
+<p><strong>1005 補充：院方 API 全面取代手動輸入之後</strong>（SRS FR-S15、FR-S16）：</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>全有或全無的單位</strong></td>
+<td>院方 API 一次回傳全中心。若照上表「一批」等於一次抓取，一位病人的一列有問題，全中心都停在舊資料。因此 API 來源的<strong>一批是「一位病人的一次透析」</strong>：那一次透析的任何一列解析不過，那一次透析整個不寫入，其他病人照常</td>
+</tr>
+<tr>
+<td><strong>原始回應不存檔</strong></td>
+<td>回應含全中心當天的資料。只記抓取時間、筆數、結果、內容雜湊與錯誤原文，<strong>原始內容不寫進資料庫、不寫進日誌、不寫進備份目錄</strong></td>
+</tr>
+<tr>
+<td><strong>最小蒐集</strong></td>
+<td>病人主檔與床位收全部（床位圖要與現場一致）；<strong>每一筆生命徵象紀錄只收這次療程有綁定平板的病人</strong></td>
+</tr>
+<tr>
+<td><strong>系統寫入也要留痕</strong></td>
+<td>同步建立或改動病人、床位、療程，都寫稽核軌跡，操作者記為「院方資料同步」，與人的操作分得出來</td>
+</tr>
+<tr>
+<td><strong>人的更正優先</strong></td>
+<td>護理師改過的欄位，同步不得改回去</td>
+</tr>
+<tr>
+<td><strong>只讀不寫</strong></td>
+<td>不回寫院方任何資料</td>
+</tr>
+<tr>
+<td><strong>位址不進 repo</strong></td>
+<td>API 的院內位址只放主機設定目錄的 <code>.env</code>（DEP-13）</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="14-ai-相關資料的儲存">14. AI 相關資料的儲存<a class="headerlink" href="#14-ai-相關資料的儲存" title="Permanent link">&para;</a></h2>
 <table>
