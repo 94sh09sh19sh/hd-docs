@@ -28,7 +28,7 @@
 5. **稽核欄位不因階段省略** — 誰、何時、對誰、做了什麼，設計時就納入。
 6. **級聯路徑只留一條** — 多條級聯刪除路徑本身就難以推理。除了指定的那一條外鍵，其餘一律 `NO ACTION`。迭代 3 新增的五張表全部不帶級聯刪除。迭代 4 的十四張表只讓「主表 → 自己的明細」帶級聯（勾選欄位、測驗作答、回饋分數、文件段落、查詢引用），其餘一律 `NO ACTION`。迭代 5 的七張表同理：求助的後續追蹤沿用 `help_requests` 既有的那一條，床位分配與調班申請掛在 `nurse_shifts` 底下，其餘（選項清單、營運參數、成效基準）不帶任何級聯——它們是治理紀錄，成效基準更是過期就拿不到的一次性資料。迭代 6 的三張表同樣一條級聯都不帶：輪播內容與欄位對應是設定，瀏覽事件是成效資料。
 
-另依規範 6.2：**任何劑量、體重、超過濾量等臨床數值不得使用浮點數**，一律以整數最小單位或「整數＋小數位數」記錄。
+另依規範 6.2：**任何劑量、體重、脫水量等臨床數值不得使用浮點數**，一律以整數最小單位或「整數＋小數位數」記錄。
 
 ### 型別對照
 
@@ -133,7 +133,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ### `patients` — 病人（9 欄）
 
-**蒐集的意義**：綁定、排班、症狀回報、求助全部要指向一個明確的病人。這張表刻意**只存識別與基本人口學資料，不存臨床數值**。院方提供的少數臨床數值（乾體重、Kt/V 等）另存於第七類的 `clinical_values`，每一筆都帶資料時間與來源批次。
+**蒐集的意義**：綁定、排班、症狀回報、求助全部要指向一個明確的病人。這張表刻意**只存識別與基本人口學資料，不存臨床數值**。院方提供的少數臨床數值（理想體重、Kt/V 等）另存於第七類的 `clinical_values`，每一筆都帶資料時間與來源批次。
 
 > ⚠️ **測試資料鐵則**：開發者本機不是院內環境，《資料庫使用規範》第 10 條**絕對禁止**在此放入任何接近真實病人的可識別資訊。現行測試資料由 `prisma/seed.ts` 以 `fakerZH_TW` 產生 8 筆全合成資料。
 
@@ -377,7 +377,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `CAROUSEL_LAYER_1` `CAROUSEL_LAYER_2` `CAROUSEL_LAYER_3` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有輪播三層預設開啟） |
+| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `CAROUSEL_LAYER_1` `CAROUSEL_LAYER_2` `CAROUSEL_LAYER_3` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有輪播三層預設開啟） |
 | `enabled` | `BOOL` | 目前是否開啟 | `DEFAULT false`。⛔ **不得直接改資料庫開啟**——開啟必須經 `FeatureFlagsService`：它會判定開啟條件（實作規格書 3.7）、要求核准依據、寫入稽核。後端以記憶體中的狀態為準，直接改資料庫在重新啟動前也不會生效 |
 | `last_reason` | `TEXT?` | 最後一次切換時登記的核准依據或理由 | 開與關都必填（FR-S08、FR-M11），長度 2～500 字 |
 | `changed_by_id` | `TEXT?` | 最後一次是誰切換的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未切換過時為 NULL |
@@ -477,9 +477,9 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `id` | `TEXT` | 內部識別碼 | 主鍵。由應用層先產生，才能在同一個交易裡把舊值指向新值 |
 | `import_id` | `TEXT` | 屬於哪一批匯入 | 外鍵 → `clinical_value_imports.id`，`ON DELETE NO ACTION`。有索引 |
 | `patient_id` | `TEXT` | 哪一位病人的數值 | 外鍵 → `patients.id`，`ON DELETE NO ACTION`。與 `value_code`、`measured_at` 組成複合索引 |
-| `value_code` | `TEXT` | 數值種類：乾體重、本次超過濾目標、血紅素、白蛋白、Kt/V；迭代 4 另加透析適足性計算的五個輸入值 | 合法值見 `CLINICAL_VALUE_DEFINITIONS`：`DRY_WEIGHT` `UF_TARGET` `HEMOGLOBIN` `ALBUMIN` `KT_V`（輪播第三層，實際種類待院方確認，Q-09）；`BUN_PRE` `BUN_POST` `WEIGHT_POST` `UF_VOLUME` `SESSION_MINUTES`（迭代 4，FR-N07 的輸入，Q-26） |
-| `value_scaled` | `INT` | 數值本身 | ⛔ **不用浮點數**（規範 6.2）。以整數記錄、搭配下一欄的小數位數：乾體重 62.5 kg 存為 `625`。十進位字串與整數的轉換用 `parseScaledDecimal` / `formatScaledDecimal`，全程字串運算 |
-| `value_scale` | `INT` | 小數位數 | 乾體重 1、超過濾目標 0、Kt/V 2。逐列記錄，種類定義日後改變也不影響舊資料的解讀 |
+| `value_code` | `TEXT` | 數值種類：理想體重、目標脫水量、血紅素、白蛋白、Kt/V；迭代 4 另加透析適足性計算的五個輸入值 | 合法值見 `CLINICAL_VALUE_DEFINITIONS`：`DRY_WEIGHT` `UF_TARGET` `HEMOGLOBIN` `ALBUMIN` `KT_V`（輪播第三層，實際種類待院方確認，Q-09）；`BUN_PRE` `BUN_POST` `WEIGHT_POST` `UF_VOLUME` `SESSION_MINUTES`（迭代 4，FR-N07 的輸入，Q-26） |
+| `value_scaled` | `INT` | 數值本身 | ⛔ **不用浮點數**（規範 6.2）。以整數記錄、搭配下一欄的小數位數：理想體重 62.5 kg 存為 `625`。十進位字串與整數的轉換用 `parseScaledDecimal` / `formatScaledDecimal`，全程字串運算 |
+| `value_scale` | `INT` | 小數位數 | 理想體重 1、目標脫水量 0、Kt/V 2。逐列記錄，種類定義日後改變也不影響舊資料的解讀 |
 | `unit` | `TEXT` | 單位 | 如 `kg`、`mL`、`g/dL`；Kt/V 無單位時為空字串 |
 | `measured_at` | `TS` | **資料時間**：這個數值是什麼時候量的 | 必填，不得晚於現在。⛔ 呈現時必須一併顯示 |
 | `superseded_by_id` | `TEXT?` | 若已被更正，指向取代它的那一列 | 自關聯外鍵 → `clinical_values.id`，`ON DELETE NO ACTION`。現行值為 NULL。**舊值保留不刪** |
@@ -647,7 +647,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `treatment_session_id` | `TEXT` | 哪一次療程 | 外鍵 → `treatment_sessions.id`，`ON DELETE NO ACTION`，有索引。已取消的療程不能建立記錄 |
 | `record_type` | `TEXT` | 事件記錄，或依病人自報預填 | 合法值 `EVENT` / `SELF_REPORT_PREFILL`（`NursingRecordType`） |
 | `template_code` | `TEXT?` | 用了哪一個事件範本 | 合法值見 `NURSING_EVENT_TEMPLATES`：`DISCOMFORT` `ACCESS_BLEEDING` `MACHINE_ALARM` `FALL` `OTHER`（待 Q-25）。自報預填為 NULL |
-| `template_version` | `TEXT?` | 範本版本 | 現值 `EVENT-TEMPLATES-v1`。範本改版後舊記錄仍能對回當時的欄位 |
+| `template_version` | `TEXT?` | 範本版本 | 現值 `EVENT-TEMPLATES-v2`（1005 新增「透析中低血壓處置」；之前的記錄是 v1）。範本改版後舊記錄仍能對回當時的欄位 |
 | `occurred_at` | `TS?` | 事件發生時間 | 事件記錄必填，不得晚於現在（容許 5 分鐘時鐘誤差） |
 | `source_symptom_report_id` | `TEXT?` | 預填所依據的那一份病人自報 | 外鍵 → `symptom_reports.id`，`ON DELETE NO ACTION` |
 | `supplement_text` | `TEXT?` | 護理師補充的自由文字 | 上限 500 字，不取代結構化欄位；「其他事件」範本必填。送進模型前由閘道去識別化 |
@@ -694,7 +694,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `kt_v_hundredths` | `INT` | spKt/V | 1.35 存 `135`。計算的當下才轉成數值，結果立刻四捨五入回整數 |
 | `bun_pre_value_id` | `TEXT` | 用了哪一筆透析前 BUN | 外鍵 → `clinical_values.id`，`ON DELETE NO ACTION` |
 | `bun_post_value_id` | `TEXT` | 用了哪一筆透析後 BUN | 同上 |
-| `weight_post_value_id` | `TEXT` | 用了哪一筆透析後體重 | 同上 |
+| `weight_post_value_id` | `TEXT` | 用了哪一筆結束體重 | 同上 |
 | `uf_volume_value_id` | `TEXT` | 用了哪一筆實際脫水量 | 同上 |
 | `session_minutes_value_id` | `TEXT` | 用了哪一筆透析時間 | 同上。五筆必須是同一位病人、對應的數值種類、現行版本，且資料時間相差不超過 12 小時（`ADEQUACY_MAX_SPAN_HOURS`） |
 | `calculated_by_id` | `TEXT` | 誰按下計算 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。權限與臨床數值輸入相同（護理長以上） |
@@ -951,7 +951,7 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 前兩張是**輪播**：第一層取自系統既有資料、第三層讀 `clinical_values`，兩層都不需要自己的表；
 只有第二層（中心自己寫的衛教與公告）與瀏覽事件需要存進資料表。
 第三張是**檔案匯入的欄位對應**——院方匯出檔的欄位名稱會被人改動，
-那是別人的系統，不會為了我們保持不變，所以「哪一欄是乾體重」必須是資料而不是程式。
+那是別人的系統，不會為了我們保持不變，所以「哪一欄是理想體重」必須是資料而不是程式。
 
 ### `carousel_items` — 輪播第二層內容（14 欄）
 
@@ -1152,7 +1152,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `created_at` | `TS` | 建檔時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 
-**預設值**：全新環境第一次啟動時，資料表是空的就寫入共用常數 `DEFAULT_BED_NOS`（15 床，01～15——SRS 寫共 15 台平板）。
+**預設值**：全新環境第一次啟動時，資料表是空的就寫入共用常數 `DEFAULT_BED_NOS`（15 床，01～15——SRS 寫共 15 台平板）。1005 起床位數不設上限，床號照醫院編號由護理長填。
 **之後一律以資料表為準**，重新部署不會洗掉護理長的調整。整組取代走 `PUT /beds`（營運參數權限、要填理由），寫 `BEDS_UPDATED`。
 **索引**：`bed_no`（唯一）、`(active, sort_order)`
 

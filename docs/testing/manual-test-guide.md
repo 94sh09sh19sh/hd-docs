@@ -837,8 +837,8 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `GET /api/device/feedback-responses/mine` | 裝置＋Token | （迭代 4）本次療程是否已填 |
 | `GET /api/psychosocial/overview` | patient:monitor | （迭代 4）心理社會彙總 |
 | `GET /api/psychosocial/patients/:patientId` | patient:monitor | （迭代 4）單一病人的回饋與暫定規則比對 |
-| `GET /api/adequacy/patients/:patientId` | patient:monitor | （迭代 4）透析適足性趨勢 |
-| `POST /api/adequacy/calculations` | clinical-value:manage | （迭代 4）計算 URR 與 spKt/V |
+| `GET /api/adequacy/patients/:patientId` | patient:monitor | （迭代 4）透析適足性趨勢。1005 起受「需要抽血數值的功能」開關控制，預設關閉 |
+| `POST /api/adequacy/calculations` | clinical-value:manage | （迭代 4）計算 URR 與 spKt/V。同上 |
 | `GET /api/nursing-records?treatmentSessionId=` | patient:monitor | （迭代 4）護理記錄清單 |
 | `GET /api/nursing-records/:id` | patient:monitor | （迭代 4）單筆護理記錄 |
 | `POST /api/nursing-records/events` | nursing-record:write | （迭代 4）以快速範本建立事件記錄 |

@@ -247,7 +247,7 @@ npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript�
 
 `modules/feature-flags/`，定義在 `shared/platform.ts`。
 
-- 迭代 3 的十個開關：高風險三項（`RISK_STRATIFICATION`、`INTRA_DIALYSIS_ALERT`、`DOSE_REFERENCE`）、AI 兩項（`AI_FEATURES`、`REAL_PATIENT_DATA_TO_AI`）、輪播三層、績效兩項（`PERF_INDIVIDUAL_L3`、`REWARD_SCORING`）。**全部預設關閉**。之後又加兩個：迭代 9 的 `HANDHELD_FEATURES`，迭代 14.2 的 `HELP_NON_CLINICAL_GROUP`（求助畫面顯示「其他」那一框，預設關閉）
+- 迭代 3 的十個開關：高風險三項（`RISK_STRATIFICATION`、`INTRA_DIALYSIS_ALERT`、`DOSE_REFERENCE`）、AI 兩項（`AI_FEATURES`、`REAL_PATIENT_DATA_TO_AI`）、輪播三層、績效兩項（`PERF_INDIVIDUAL_L3`、`REWARD_SCORING`）。**全部預設關閉**。之後又加三個：迭代 9 的 `HANDHELD_FEATURES`，迭代 14.2 的 `HELP_NON_CLINICAL_GROUP`（求助畫面顯示「其他」那一框，預設關閉），1005 的 `LAB_VALUE_FEATURES`（需要抽血數值的功能：透析適足性、輪播第三層的抽血數值與 Kt/V，預設關閉；院方透析清單 API 沒有抽血數值）
 - **`HELP_NON_CLINICAL_GROUP` 是唯一不擋後端的開關**：它只決定平板上有幾顆按鈕。平板停在舊畫面時病人按下去的求助照樣要送到，擋掉就是把求助丟掉
 - 開啟條件由後端逐項判定，不靠人記得。例如 `REAL_PATIENT_DATA_TO_AI` 只在 `LLM_PROVIDER=onprem` 時可開；高風險三項要 FR-R08 書面確認＋規則版本附有書面依據，規則引擎尚未建立，所以目前開不了
 - 開關關閉時，`feature-flag.guard.ts` 讓相關端點回 404，前端相關元素**完全不渲染**（不是 disabled）
@@ -381,7 +381,7 @@ npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript�
 `FileImportAdapter` 收的是寬表：一列一位病人在某個資料時間的多項數值。
 
 - **欄位名稱不寫死**：`import_field_mappings` 一列一個目標欄位，比對時忽略大小寫與全形半形空白。
-  院方把「乾體重」改成「乾重(kg)」那天，改的是一列設定
+  院方把「理想體重」改成「理想體重(kg)」那天，改的是一列設定
 - **Excel 用 `exceljs`，CSV 自己解析**（約二十行，支援引號與欄內逗號）。
   「欄位裡有逗號就靜默切錯」這種錯誤不會有任何錯誤訊息，值得用那二十行換掉
 - **Excel 日期儲存格**在 exceljs 會以 UTC 解讀，但檔案上寫的是現場的時刻，
@@ -815,11 +815,11 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 - `SYMPTOM_TREND_DISCLAIMER` — 非診斷結果提示文字
 - `platform.ts` — 功能開關定義與開啟條件、模型與臨床資料介面層的共用型別
 - `education.ts` — 衛教主題 `EDU-TOPICS-v1`、題庫 `EDU-QUIZ-v1`、回饋題目與 `PSY-DEV-v1` 偏離規則
-- `nursing.ts` — 事件範本 `EVENT-TEMPLATES-v1`、AI 初稿處置、SOP 查詢結果類別
+- `nursing.ts` — 事件範本 `EVENT-TEMPLATES-v2`（1005 新增「透析中低血壓處置」）、AI 初稿處置、SOP 查詢結果類別
 - `operations.ts` — 迭代 5：`evaluateLabourRules()` 勞動條件判定、班別定義、成效基準指標定義，以及三處暫代值的**預設值**（注意：只是預設值，現行值一律讀資料表）。迭代 6 另加六項輪播行為參數的定義
 - `carousel.ts` — 迭代 6：輪播的層、卡片種類、卡片與行為參數型別、第二層內容的長度上限。`CAROUSEL_CARD_KIND_LAYER` 讓後端由卡片種類推出層別，不採信平板送上來的值
 - `kiosk-shell.ts` — 迭代 12：外殼契約版本、JS 介面型別、由外殼版本推算「版本正常／外殼過舊／版本不相容／未回報」。**契約的程式真本**，文件真本是《病人端外殼 App 契約》，兩者與 `shell.pin` 要一起改
-- `beds.ts` — 迭代 14：預設床位（15 床，`01`～`15`）與上限 40 床。一樣只是「資料表空的時候寫入的預設值」，實際幾床待 Q-34
+- `beds.ts` — 迭代 14：預設床位（15 床，`01`～`15`）。一樣只是「資料表空的時候寫入的預設值」；1005 起床號照醫院編號、不設上限（原本的 40 床上限已拿掉）
 
 **迭代 4 的暫定內容原本全部在這裡並標版本字串**，改內容要改常數並升版。
 **迭代 9 把這件事整個翻過來**：內容搬進資料表，護理長在畫面上改、立刻生效，不必重新部署。

@@ -425,7 +425,7 @@
 `shield-alert` 平板跳出固定畫面、`circle-arrow-up` 外殼版本過舊、`badge-alert` 外殼版本不相容、`wrench` 平板尚未佈建、`tablet-smartphone` 平板、
 `user` 病人、`user-plus` 新增病人、`stethoscope` 護理師、`megaphone` 公告、`layout-grid` 全部床位、`lock` 停用平板、
 `undo-2` 復原、`log-out` 下機、`arrow-left-right` 切換簡易版／專業版、`circle-x` 取消這筆求助、`plus` 新增輪播內容（14.2），
-以及處理方式：`scan-heart` 觀察生命徵象、`move` 調整姿勢、`gauge` 調整超過濾、`droplets` 生理食鹽水回填、`pill` 給藥、
+以及處理方式：`scan-heart` 觀察生命徵象、`move` 調整姿勢、`gauge` 調整脫水、`droplets` 生理食鹽水回填、`pill` 給藥、
 `bandage` 局部處置、`phone-call` 通知醫師、`power` 提前結束療程、`package` 提供物品、`heart-handshake` 說明與安撫、`forward` 轉介
 （「調整機台設定」「協助如廁」「環境調整」「其他」沿用上表的 `monitor-dot`、`toilet`、`thermometer-sun`、`message-circle-question`——意思相同，所以是同一個圖示）。
 
