@@ -1456,6 +1456,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3. 51 個欄位與本系統的對應">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-人為判斷結論1004" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 人為判斷結論（1004）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3046,6 +3063,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3. 51 個欄位與本系統的對應">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-人為判斷結論1004" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 人為判斷結論（1004）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3341,7 +3375,7 @@
 </tr>
 <tr>
 <td>缺值</td>
-<td>空字串 <code>""</code>。參考程式寫進資料庫前另把缺值補成 <code>-1</code></td>
+<td>空字串 <code>""</code>。參考程式寫進資料庫前另把缺值補成 <code>-1</code>。<strong>理想體重這類數值欄沒填時回的是 <code>0.0</code></strong>；反過來，沖水量這類數值欄有時回的是字串（如 <code>"100"</code>）。見第 3.1 節</td>
 </tr>
 <tr>
 <td>文字欄</td>
@@ -3433,12 +3467,12 @@
 <tr>
 <td>14</td>
 <td>理想體重（kg）</td>
-<td><code>DRY_WEIGHT</code>（<strong>推測</strong>，要護理部確認「理想體重」就是乾體重）</td>
+<td><code>DRY_WEIGHT</code>（<strong>即乾體重</strong>，1004 人為判斷確定；有時沒填、回 <code>0.0</code>）</td>
 </tr>
 <tr>
 <td>15</td>
 <td>目標脫水量（L）</td>
-<td><code>UF_TARGET</code>（<strong>推測</strong>；API 是公升，本系統是 mL，要乘 1000）</td>
+<td><code>UF_TARGET</code>（<strong>推測</strong>；不含輸液與食物的淨減重；API 是公升，本系統是 mL，要乘 1000）</td>
 </tr>
 <tr>
 <td>16～19</td>
@@ -3458,7 +3492,7 @@
 <tr>
 <td>22～25</td>
 <td>Start_SBP、Start_DBP、End_SBP、End_DBP</td>
-<td>—</td>
+<td>—（透析開始／結束血壓，1004 人為判斷確定）</td>
 </tr>
 <tr>
 <td>26～31</td>
@@ -3473,7 +3507,7 @@
 <tr>
 <td>36～37</td>
 <td>血壓（收縮）、血壓（舒張）</td>
-<td>—</td>
+<td>—（每一筆紀錄的血壓，1004 人為判斷確定）</td>
 </tr>
 <tr>
 <td>38～50</td>
@@ -3493,7 +3527,7 @@
 <tbody>
 <tr>
 <td><code>DRY_WEIGHT</code>、<code>UF_TARGET</code></td>
-<td>有（各需一項確認，見上表）</td>
+<td>有（理想體重、目標脫水量；目標脫水量要不要改對設定脫水量仍待確認）</td>
 </tr>
 <tr>
 <td><code>WEIGHT_POST</code>、<code>UF_VOLUME</code>、<code>SESSION_MINUTES</code></td>
@@ -3509,6 +3543,40 @@
 </tr>
 </tbody>
 </table>
+<h3 id="31-人為判斷結論1004">3.1 人為判斷結論（1004）<a class="headerlink" href="#31-人為判斷結論1004" title="Permanent link">&para;</a></h3>
+<p>以下是使用者 1004 人為判斷的結論，介接時照此辦理：</p>
+<table>
+<thead>
+<tr>
+<th>事項</th>
+<th>結論</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>兩組血壓</td>
+<td>第 22～25 欄是透析開始／結束血壓，同一次透析每列相同；第 36～37 欄是每一筆紀錄的血壓。<strong>成大版正確</strong></td>
+</tr>
+<tr>
+<td>開始血壓</td>
+<td>不等於第一筆紀錄的血壓，不能用第一筆紀錄代替</td>
+</tr>
+<tr>
+<td>理想體重</td>
+<td><strong>就是乾體重</strong>。文件一律沿用 API 的稱呼「理想體重」</td>
+</tr>
+<tr>
+<td>脫水量各欄</td>
+<td>目標脫水量＋輸液量＋食物重量＝預估脫水量＝設定脫水量；透析前體重－結束體重＝實際脫水量。<strong>目標脫水量是淨減重</strong>，設定脫水量是機器上設的總量</td>
+</tr>
+</tbody>
+</table>
+<p>介接時要處理的事：</p>
+<ul>
+<li><strong>理想體重有時沒填，回的是 <code>0.0</code>。</strong> 轉成 <code>DRY_WEIGHT</code> 時 0 要當缺值，不能播給病人。理想體重沒填時目標脫水量仍可能有值，兩欄不一定同時存在</li>
+<li><strong>數值欄也可能回字串。</strong> 第 49 欄（沖水量）可能是 <code>""</code> 或字串 <code>"100"</code>，解析時每一欄都要容許兩種型別</li>
+<li><strong>透析中抓到的列，結束欄位長什麼樣還不知道。</strong> 結束時間可能是開始後 4 小時的預排值；透析進行中抓到的列，結束時間、結束體重、結束血壓是空的還是預填，會影響 <code>WEIGHT_POST</code>、<code>UF_VOLUME</code>、<code>SESSION_MINUTES</code> 什麼時候可以採用，要在院內看一次透析中的回應</li>
+</ul>
 <hr />
 <h2 id="4-本系統-hospitalapiadapter-會長什麼樣">4. 本系統 <code>HospitalApiAdapter</code> 會長什麼樣<a class="headerlink" href="#4-本系統-hospitalapiadapter-會長什麼樣" title="Permanent link">&para;</a></h2>
 <p><code>ClinicalDataSourcePort</code> 的第三個實作原本寫的是「院方給 API 後補上」。依上面的格式，它要做的事已經清楚，<strong>只差第 9 節的幾項決定</strong>：</p>
@@ -3523,7 +3591,7 @@
 <hr />
 <h2 id="5-寫介接程式前要避開的坑">5. 寫介接程式前要避開的坑<a class="headerlink" href="#5-寫介接程式前要避開的坑" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>血壓欄位的位置，兩份參考程式互相矛盾。</strong> 成大版把第 22～25 欄當透析開始／結束血壓、第 36～37 欄當每一筆紀錄的血壓；斗六版的歷史查詢剛好把這兩組對調。兩者必有一錯。本系統目前不讀血壓，但日後做風險分層（FR-P03）一定會用到，要以資訊室的欄位定義或一次真實回應為準</li>
+<li><strong>血壓欄位的位置，兩份參考程式互相矛盾。</strong> 成大版把第 22～25 欄當透析開始／結束血壓、第 36～37 欄當每一筆紀錄的血壓；斗六版的歷史查詢剛好把這兩組對調。<strong>1004 人為判斷成大版正確</strong>（第 3.1 節），斗六版的歷史查詢拿到的其實是開始／結束血壓。本系統目前不讀血壓，日後做風險分層（FR-P03）照第 3 節的位置表即可</li>
 <li><strong>不要照抄成大版的匯入對應。</strong> <code>load_data.py</code> 把「預估脫水量」寫進 <code>expect_dehydration</code>、「設定脫水量」寫進 <code>estimate_dehydration</code>，「目標脫水量」完全沒用到。本系統若參考它的欄位，以第 3 節的位置表為準</li>
 <li><strong>去掉開頭那段 <code>&lt;meta&gt;</code> 要自己來。</strong> 參考程式用 Python 的 <code>strip('&lt;meta charset="UTF-8" /&gt;')</code>，那是「逐字元刪除頭尾出現在這組字元裡的字」，碰巧可用。本系統應該從第一個 <code>{</code> 開始解析</li>
 <li><strong>床位格式可能改過。</strong> 2024 年那份回應的床位是「數字＋英文字母」的形式，而現行程式會丟掉數字開頭的列，另外還留著一行被註解掉的「床號反轉」。現在的格式要在院內看一次才知道</li>
@@ -3660,8 +3728,8 @@
 <tbody>
 <tr>
 <td><a href="../../requirements/open-questions/#q-09-輪播第三層臨床數值的來源與欄位">Q-09</a></td>
-<td>位址、回應格式、51 欄順序、病人識別用病歷號、可主動查詢</td>
-<td>院方同不同意本系統呼叫；認證方式；欄位定義（血壓兩組）；Hb、白蛋白、Kt/V 的來源</td>
+<td>位址、回應格式、51 欄順序、病人識別用病歷號、可主動查詢；血壓兩組與理想體重的意義（1004 人為判斷）</td>
+<td>院方同不同意本系統呼叫；認證方式；理想體重沒填時從哪裡來；Hb、白蛋白、Kt/V 的來源</td>
 </tr>
 <tr>
 <td><a href="../../requirements/open-questions/#q-26-透析適足性的計算公式與輸入來源">Q-26</a></td>
@@ -3725,15 +3793,15 @@
 </tr>
 <tr>
 <td>3</td>
-<td><strong>血壓欄位以哪份為準</strong>：向資訊室要欄位定義，或在院內取一次真實回應比對</td>
-<td>後者等於在院內處理一次真實病人資料，只能在院內主機上做、不能帶出來</td>
-<td>先要欄位定義；拿不到再於下次進院時在主機上比對</td>
+<td>~~<strong>血壓欄位以哪份為準</strong>~~ <strong>1004 已定</strong>：第 22～25 欄是開始／結束、第 36～37 欄是每筆紀錄，成大版正確（人為判斷，第 3.1 節）</td>
+<td>—</td>
+<td>已定，不必再問</td>
 </tr>
 <tr>
 <td>4</td>
-<td><strong>「理想體重」是不是乾體重</strong>、「目標脫水量」是不是本次超過濾目標</td>
-<td>確認前就播，可能把錯的數字給病人看</td>
-<td>確認前輪播第三層不接 API，維持檔案匯入或人工輸入</td>
+<td>~~<strong>「理想體重」是不是乾體重</strong>~~ <strong>1004 已定：是</strong>（人為判斷）；剩下 <code>UF_TARGET</code> 要對「目標脫水量」還是「設定脫水量」</td>
+<td>理想體重有時是 <code>0.0</code>（沒填），直接接上會把 0 kg 播給病人看</td>
+<td>第 14 欄對 <code>DRY_WEIGHT</code>，0 一律當缺值；<code>UF_TARGET</code> 問護理部時順帶問理想體重多常沒填</td>
 </tr>
 <tr>
 <td>5</td>
