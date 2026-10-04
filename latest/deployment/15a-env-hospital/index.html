@@ -1904,6 +1904,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2747,6 +2775,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#110-院方透析清單-api1005-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 院方透析清單 API（1005 新增）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3209,6 +3248,17 @@
     <span class="md-ellipsis">
       
         1.9 其他營運參數
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-院方透析清單-api1005-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 院方透析清單 API（1005 新增）
       
     </span>
   </a>
@@ -3744,6 +3794,30 @@
 <h3 id="19-其他營運參數">1.9 其他營運參數<a class="headerlink" href="#19-其他營運參數" title="Permanent link">&para;</a></h3>
 <p><code>BINDING_MAX_HOURS</code>、<code>BINDING_EXPIRY_SWEEP_SECONDS</code>、<code>SYMPTOM_TREND_WINDOW_DAYS</code>、<code>SYMPTOM_TREND_REPORT_LIMIT</code>、
 <code>DEVICE_ONLINE_THRESHOLD_SECONDS</code>、<code>REALTIME_HEARTBEAT_SECONDS</code>：<strong>全部維持範本的值</strong>。沒有護理長或需求文件的明確理由，不要改。</p>
+<h3 id="110-院方透析清單-api1005-新增">1.10 院方透析清單 API（1005 新增）<a class="headerlink" href="#110-院方透析清單-api1005-新增" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>變數</th>
+<th>填什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HOSPITAL_API_BASE_URL</code></td>
+<td><strong>（空白）</strong>——第三次進院只探測，位址在<a href="../15-from-zero/">第十五冊</a> V-30a 當場輸入，不寫進這裡</td>
+</tr>
+<tr>
+<td><code>HD_SIMULATION_DEPLOYMENT</code></td>
+<td><strong>（空白），院內主機永遠空白</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>探測看過、Q-35 向資訊室報備過之後</strong>才把位址填進來，重新啟動 <code>api</code> 就開始每 3 分鐘抓一次、病人與療程自動出現（第十五冊第 11 節）。
+  這個位址<strong>不進 repo、不寫進任何文件、不貼進任何紀錄</strong>（DEP-46）。</li>
+<li><code>HD_SIMULATION_DEPLOYMENT</code> 是模擬部署才填 <code>yes</code> 的開關。院內填了它，抄錯的模擬設定就擋不住了——後端靠它空白，才會在位址指向模擬時拒絕啟動。</li>
+</ul>
 <hr />
 <h2 id="2-填好的樣子">2. 填好的樣子<a class="headerlink" href="#2-填好的樣子" title="Permanent link">&para;</a></h2>
 <p>照 0.3 節的假設填完，會像這樣（說明行省略）。<strong>角括號那幾處要換成你自己的，<code>&lt;主機&gt;</code> 三處換成同一個值</strong>：</p>
@@ -3781,6 +3855,9 @@ LLM_MODEL_ID=
 LLM_TIMEOUT_SECONDS=150
 LLM_HEALTH_TIMEOUT_SECONDS=5
 
+HOSPITAL_API_BASE_URL=
+HD_SIMULATION_DEPLOYMENT=
+
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -3808,6 +3885,7 @@ REALTIME_HEARTBEAT_SECONDS=20
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>HD_SHELL_SIGNING=hospital</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>JWT_SECRET</code> 是這次新產生的</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>LLM_PROVIDER=mock</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>HOSPITAL_API_BASE_URL</code> 與 <code>HD_SIMULATION_DEPLOYMENT</code> <strong>都是空白</strong>（1005 新增）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 整份沒有任何一個值加了引號</li>
 </ul>
 <hr />

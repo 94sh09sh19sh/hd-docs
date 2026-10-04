@@ -165,6 +165,16 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 
 `BINDING_MAX_HOURS` 以下六項：**全部維持範本的值**，與實際部署相同。
 
+### 1.9 院方透析清單 API（1005 新增）
+
+| 變數                       | 填什麼                                          | 與實際部署不同                         |
+| -------------------------- | ----------------------------------------------- | -------------------------------------- |
+| `HOSPITAL_API_BASE_URL`    | `http://hospital-api-sim:8090/dialysislist.php` | **不同**：院內第三次進院是空白，只探測 |
+| `HD_SIMULATION_DEPLOYMENT` | `yes`                                           | **不同**：院內永遠空白                 |
+
+- `hospital-api-sim` 是模擬院方 API，跟 `api` 用同一個映像檔，**只在 `--profile simulation` 時啟動**（第十五冊 V-30a），不開埠，只有 `api` 連得到。病人全是虛構的
+- compose 把後端固定成正式環境設定，模擬部署也一樣；**沒有 `HD_SIMULATION_DEPLOYMENT=yes`，位址指向模擬時後端拒絕啟動**——院內就是靠這一條擋住抄錯的設定，V-30a 最後會故意清空它驗一次
+
 ______________________________________________________________________
 
 ## 2. 填好的樣子
@@ -206,6 +216,9 @@ LLM_MODEL_ID=
 LLM_TIMEOUT_SECONDS=150
 LLM_HEALTH_TIMEOUT_SECONDS=5
 
+HOSPITAL_API_BASE_URL=http://hospital-api-sim:8090/dialysislist.php
+HD_SIMULATION_DEPLOYMENT=yes
+
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -234,6 +247,7 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BA
 - 三個位址都是 **Wi-Fi 那張網卡的 IP**，一字不差；`MDM_KIOSK_BASE_URL` 是 **`https://`**
 - **`HD_SHELL_SIGNING=dev`**
 - `LLM_PROVIDER=mock`
+- `HOSPITAL_API_BASE_URL` 指向 `hospital-api-sim`、`HD_SIMULATION_DEPLOYMENT=yes`（1005 新增）
 - 整份沒有任何一個值加了引號
 
 ______________________________________________________________________
@@ -255,15 +269,17 @@ ______________________________________________________________________
 
 帶進院之前再看一次這張表：**右邊那一欄的每一個值，都不可以出現在院內那份 `.env` 裡**——只有三個埠例外，兩邊剛好相同。
 
-| 變數                                                 | 實際部署                                      | 模擬部署                 |
-| ---------------------------------------------------- | --------------------------------------------- | ------------------------ |
-| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_SHELL_SRC_DIR` | `C:\hd\hd-tablet-care\…`（1001 院內實際用的） | `C:\hd-sim\…`            |
-| 三個埠                                               | `13000`、`18080`、`18081`（0930 資訊室確認）  | 相同（例外）             |
-| 三個位址的主機                                       | V-08 定的院內名稱或 IP                        | 開發機的 Wi-Fi IP        |
-| `HD_SHELL_SIGNING`                                   | **`hospital`**                                | **`dev`**                |
-| `JWT_SECRET`                                         | 院內當場產生                                  | 每一輪各自產生           |
-| `SUPER_ADMIN_*`                                      | 護理長給的工號與名字、臨時密碼                | `sim-admin` 之類的虛構值 |
-| 其他                                                 | 相同                                          | 相同                     |
+| 變數                                                 | 實際部署                                               | 模擬部署                                        |
+| ---------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------- |
+| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_SHELL_SRC_DIR` | `C:\hd\hd-tablet-care\…`（1001 院內實際用的）          | `C:\hd-sim\…`                                   |
+| 三個埠                                               | `13000`、`18080`、`18081`（0930 資訊室確認）           | 相同（例外）                                    |
+| 三個位址的主機                                       | V-08 定的院內名稱或 IP                                 | 開發機的 Wi-Fi IP                               |
+| `HD_SHELL_SIGNING`                                   | **`hospital`**                                         | **`dev`**                                       |
+| `HOSPITAL_API_BASE_URL`（1005）                      | 空白（第三次進院只探測；探測過、報備過才填院方的位址） | `http://hospital-api-sim:8090/dialysislist.php` |
+| `HD_SIMULATION_DEPLOYMENT`（1005）                   | **永遠空白**                                           | **`yes`**                                       |
+| `JWT_SECRET`                                         | 院內當場產生                                           | 每一輪各自產生                                  |
+| `SUPER_ADMIN_*`                                      | 護理長給的工號與名字、臨時密碼                         | `sim-admin` 之類的虛構值                        |
+| 其他                                                 | 相同                                                   | 相同                                            |
 
 兩邊**形狀相同**的地方也值得記住：三個位址都是「同一個別人連得到的主機」，護理端都用 `http://<主機>:18080` 開，都不用 `localhost`。
 

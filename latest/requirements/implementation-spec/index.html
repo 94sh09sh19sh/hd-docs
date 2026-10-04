@@ -2737,6 +2737,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5175,7 +5203,7 @@
 <li><strong>每筆數值都要有「資料時間」</strong>，呈現時必須一併顯示，避免病人看到三週前的體重以為是今天的。</li>
 <li>重複匯入要被偵測並擋下，或明確標記覆蓋並保留前一版。</li>
 </ul>
-<p><strong>1005 新版：<code>HospitalApiAdapter</code> 要寫了，而且不只寫數值。</strong> SRS FR-S15 的對照表上，每一列「能」都由它驅動。API 的欄位位置見參考調查第 3 節；下表的「第 N 欄」都指那裡。</p>
+<p><strong>1005 新版：<code>HospitalApiAdapter</code> 要寫了，而且不只寫數值。</strong>（<strong>迭代 15 已實作</strong>，實作結果見 4.13。） SRS FR-S15 的對照表上，每一列「能」都由它驅動。API 的欄位位置見參考調查第 3 節；下表的「第 N 欄」都指那裡。</p>
 <table>
 <thead>
 <tr>
@@ -5273,7 +5301,7 @@
 </tbody>
 </table>
 <p><strong>模擬院方 API</strong>（<code>hospital-api-sim</code>，compose 的 <code>simulation</code> profile）：開發機與模擬部署連不到院內的 API，用它產生<strong>同格式的合成資料</strong>——開頭那段 <code>&lt;meta&gt;</code>、51 欄的陣列、透析隨真實時間推進、每隔幾分鐘多一筆紀錄，並刻意放進各種邊界值（<code>""</code>、字串數字、理想體重 0、透析中結束欄位空白）。<strong>正式環境設定下 <code>HOSPITAL_API_BASE_URL</code> 指向它，後端拒絕啟動</strong>（與 DEP-40 同一個道理）。</p>
-<p><strong>院方 API 探測工具</strong>（<code>probe:hospital-api</code>，在 <code>api</code> 容器裡執行）：打一次 <code>?date=今天</code>，<strong>只印結構，不印任何一個值</strong>——總筆數、每列欄數、每一欄的型態分布（數字／字串／空字串／0 各幾筆）、床位的格式樣式（數字換成 <code>9</code>、字母換成 <code>A</code>）、透析進行中的列結束時間與結束體重是不是空的、姓名欄有沒有「〇」。輸出可以直接抄進演練紀錄。<strong>第三次進院要用它</strong>（4.19），因此排在迭代 15 的第一項。</p>
+<p><strong>院方 API 探測工具</strong>（<code>probe:hospital-api</code>，在 <code>api</code> 容器裡執行；<strong>1005 迭代 15 已完成</strong>，指令在部署手冊第十五冊 V-30a）：打一次 <code>?date=今天</code>，<strong>只印結構，不印任何一個值</strong>——總筆數、每列欄數、每一欄的型態分布（數字／字串／空字串／0 各幾筆）、床位的格式樣式（數字換成 <code>9</code>、字母換成 <code>A</code>）、透析進行中的列結束時間與結束體重是不是空的、姓名欄有沒有「〇」。輸出可以直接抄進演練紀錄。<strong>第三次進院要用它</strong>（4.19），因此排在迭代 15 的第一項。</p>
 <h3 id="36-規則引擎新增">3.6 規則引擎（新增）<a class="headerlink" href="#36-規則引擎新增" title="Permanent link">&para;</a></h3>
 <p>對應 FR-R01。三項高風險功能的計算<strong>由規則引擎執行，不經語言模型</strong>。</p>
 <p><strong>為什麼自建而不用第三方規則引擎套件</strong>：需求是「能逐條印出來給醫師看、能版本化、能指出這次套用了哪一條的哪一個門檻」。第三方套件的表達能力遠超需求，卻讓可解釋性變差。本專案的規則形態很窄——都是「某個數值或次數超過門檻」，自建一個小型評估器即可。</p>
@@ -7466,7 +7494,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
    產生兩端的 <code>icon-data.ts</code>；字型用 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集，放在 <code>src/assets/fonts/</code>，病人端離線快取自動帶上。</li>
 <li><strong>Schema 做了加法</strong>：<code>beds</code>（床位清單）、<code>carousel_item_targets</code>（輪播內容只在哪幾床播）、<code>devices.bed_no</code>（平板貼在哪一床）。
    原本寫「原則上無」，是沒有想到系統裡根本沒有「床」：病人綁的是平板，班表的床號只是一串字。
-   <strong>病人在哪一床＝他那台平板在哪一床</strong>，病人本身不存床號。床位預設 15 床（SRS 寫共 15 台平板），是資料，系統管理可改；
+   <strong>病人在哪一床＝他那台平板在哪一床</strong>，病人本身不存床號（<strong>1005 迭代 15 起</strong>沒有平板的病人看療程的 <code>bed_no</code>，見 4.13）。床位預設 15 床（SRS 寫共 15 台平板；<strong>1005 迭代 15 起全新環境不再預設</strong>），是資料，系統管理可改；
    <strong>1005 使用者決定</strong>：床號照醫院編號、不寫死，<strong>床位數不設上限</strong>（原本的 40 床上限已拿掉）；平板跟著病人，病人的床不固定。
    預設值在共用常數，資料表空的時候才寫入（3.13 第 4 條的同一個道理）。遷移 <code>20260927090000_iteration14_beds</code>，<code>check:migration</code> 通過。</li>
 <li><strong>三支加法端點</strong>，都是專業版本來就沒有的動作：<code>PUT /beds</code>、<code>POST /devices/:id/bed</code>（目的床有平板就對調）、
@@ -7904,6 +7932,168 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <li>既有驗收腳本全綠；專業版的新增病人、人工輸入、檔案匯入照樣可用</li>
 </ol>
 <p><strong>外部依賴</strong>：實作沒有。對真實資料啟用要第三次進院的探測結果（1.4）。</p>
+<blockquote>
+<p><strong>2026-10-05 實作完成。</strong> 手動測試在《<a href="../../testing/iteration-15/">迭代 15 分冊</a>》（<code>y1</code>～<code>y47</code>）。</p>
+</blockquote>
+<p><strong>1005 迭代 15 實作結果</strong>：</p>
+<ol>
+<li><strong>探測工具</strong>（<code>npm run probe:hospital-api</code>；院內主機在 <code>api</code> 容器裡 <code>node apps/api/dist/hospital-api-probe.js</code>）：打一次 <code>?date=今天</code>，
+   印出連線結果、開頭有沒有 <code>&lt;meta&gt;</code>、每列欄數、依病歷號＋開始時間分組的透析次數與格式不符的原因、51 欄各自的型態分布、
+   床位的格式樣式、姓名欄有沒有「〇」、透析進行中的列結束時間與結束體重長什麼樣、<strong>本系統用到的數字欄的數值大小分布</strong>
+   （只分 0、0～10、10～1000、1000 以上幾段，用來判斷累積量是公升還是毫升）。<strong>不印任何一個值、不印位址、不寫任何檔案</strong>。
+   指令寫進部署手冊<a href="../../deployment/15-from-zero/">第十五冊</a> V-30a；位址當場輸入，不寫進 <code>.env</code>——探測不等於啟用。</li>
+<li><strong>模擬院方 API</strong>（<code>hospital-api-sim</code>，<code>apps/api/src/hospital-api-sim.ts</code>，同一個映像檔、<code>simulation</code> 設定檔）：
+   12 位虛構病人分三組——快結束、進行中、還沒開始，<strong>以服務啟動的時間為準排</strong>，開發機什麼時候開都看得到三種；
+   <code>HOSPITAL_API_SIM_SCHEDULE=fixed</code> 改照透析室鐘點。邊界值照 3.5 放：字串數字、空字串、理想體重 0、透析中結束時間空白與已填預排值各半、
+   一位病人每列少兩欄。每一列的「透析器」欄有一串標記字（驗收第 8 條用）。驗收腳本可以把它切成「原樣回傳指定的列」或「停掉（503）」。</li>
+<li><strong>抓取、解析、去重、逾時與重試</strong>（<code>modules/hospital-sync/</code>）：30 秒逾時、失敗再試 3 次；從第一個 <code>{</code> 開始解析；
+   每一欄都容許數字與字串，十進位一律以字串換成整數最小單位（多出的小數位四捨五入，例如體重 62.45 kg 存 62.5——那是顯示精度，不是格式錯誤）。
+   <strong>一位病人的一次透析是全有或全無的單位</strong>：少欄、數字欄寫了文字、時間格式不對，那一次透析整個不寫入、寫一筆稽核（原因不含欄位值），其他病人照常。
+   原始回應不存，<code>hospital_api_fetch_runs</code> 只記時間、筆數、結果、內容雜湊與錯誤原因（錯誤原因不含位址）。
+   四個營運參數：抓取頻率（3 分鐘）、未更新提示門檻（10 分鐘）、待確認下機門檻（60 分鐘）、床號正規化（0 原樣／1 改字母在前／2 改數字在前，預設 0）。</li>
+<li><strong>病人、床位、療程</strong>全部走<strong>與護理師拖曳相同的服務</strong>（<code>ScheduleService.create</code>、<code>BindingService.create</code>、<code>DevicesService.setBed</code>、
+   <code>ClinicalDataImportService.import</code>），操作者是「院方資料同步」：</li>
+<li>病人：以病歷號對應，沒有就建立，有就以院方資料為準更新姓名、性別、生日（本系統沒有修改病人主檔的畫面，所以沒有「護理師改過的欄位」要避開）</li>
+<li>床位：院方出現過、床位清單沒有的床號就加在最後面；<strong>只新增，停用的床不會再啟用</strong>，病人也不自動放上停用的床。全新環境不再預設 15 床</li>
+<li>療程：當天出現就排班；開始時間已過且至少一筆紀錄才判定開始，<strong>開始時間記院方資料的透析開始時間</strong>；結束體重大於 0 即下機</li>
+<li>配了平板的病人，透析開始時平板在線上、沒有別的進行中綁定，就接上並把平板放到院方資料說的那一床；任一條件不成立就不接，標示原因</li>
+<li>病人換床（院方資料的床位變了），有平板的平板跟著過去；目的床的平板正在服務別人就不搬</li>
+<li><strong>四種數值</strong>經 <code>HospitalApiAdapter</code>（<code>ClinicalDataSourcePort</code> 的第三個實作）與原本的匯入服務寫入：0 不建立、公升換毫升；
+   透析前兩種記在開始時間，<strong>結束兩種等結束體重出現才寫</strong>、記在結束時間。同一資料時間已有相同的值就跳過，值變了才覆蓋並保留前一版。</li>
+<li><strong>生命徵象紀錄</strong>（<code>dialysis_vital_records</code>）只收這次療程有綁定平板的病人；去重鍵（病人、透析開始時間、紀錄時間）。
+   下機前先寫，最後幾筆不會掉。院方不通期間的紀錄，恢復後下一次抓取補齊（院方每次回傳當天全部）。</li>
+<li><strong>即時推送</strong>：護理端走原本的串流，同步改到的那幾列推一次，每次抓取後另推一則同步現況；
+   平板新增 <code>GET /device/stream</code>，推「療程變了」「有新紀錄」兩種事件（<strong>不帶任何數值</strong>），平板收到就重問一次。推送只是加速，輪詢照舊。</li>
+<li><strong>Schema 變更</strong>照規劃，只做加法（遷移 <code>20261005090000_iteration15_hospital_api</code>，<code>check:migration</code> 通過）：
+   新表 <code>hospital_api_fetch_runs</code>、<code>dialysis_vital_records</code>；<code>patients.preferred_device_id</code>；
+   <code>treatment_sessions</code> 加 <code>source</code>、<code>bed_no</code>、<code>expected_end_at</code>、<code>nurse_modified_at</code>、<code>bed_nurse_modified_at</code>；<code>beds.source</code>。
+   <strong>比規劃多一欄 <code>treatment_sessions.bed_no</code></strong>：沒有平板的病人也要在床位圖上，「病人在哪一床」不能只看他那台平板。
+   「護理師改過」分成兩欄：改狀態（提前結束、取消、重新開啟、確認下機）與換床是兩件事，換了床的病人結束體重出現時照樣要自動下機。</li>
+<li><strong>護理端</strong>：簡易版接了院方 API 時拿掉「新增病人」與「把病人拖上床」，病人框改放「今天要透析、還沒配平板的病人」與平板沒有自動接上的病人，
+   <strong>把平板放到病人身上就是配平板</strong>（可一步復原）；床位圖上方的「院方資料已 N 分鐘未更新」、床位格的「待確認下機」（點一下、延後 8 秒送出）、
+   沒有自動接上的原因（斷開圖示）。專業版：病人頁多一欄「配給的平板」、排班頁沒有平板的病人可以「下機結束」、
+   系統管理多一張「院方資料同步」卡片（現況、最近幾次抓取、立即同步）。事件記錄選「透析中低血壓處置」時自動帶入最近一筆院方血壓與時間（補充說明空著時才帶，護理師可改）。</li>
+<li><strong>病人端</strong>：任務時點從院方資料的透析開始時間起算（沒有院方資料時退回綁定時間）；療程進度條用預計結束時間。訂閱平板推送。</li>
+</ol>
+<p><strong>開發端在實作時做的判斷</strong>（使用者要推翻時改右欄那一處即可）：</p>
+<table>
+<thead>
+<tr>
+<th>判斷</th>
+<th>理由</th>
+<th>寫在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>沒接院方 API 的環境，簡易版照迭代 14 的人工流程</strong></td>
+<td>位址空白就是不抓（3.5），那時沒有任何事能由 API 判斷；拿掉新增病人，護理師只能切到專業版。接了才換成配平板</td>
+<td><code>simple/Workbench.tsx</code> 的 <code>hospitalApi</code></td>
+</tr>
+<tr>
+<td><strong>代表「院方資料同步」的是一個登入不了的系統帳號</strong></td>
+<td>療程、綁定、匯入批次的建立者都是必填的護理師外鍵；改成可空要重建資料表（減法）。帳號狀態停用、密碼丟掉、帳號清單與「有沒有使用者」都不算它；畫面與稽核顯示「院方資料同步」</td>
+<td>共用常數 <code>HOSPITAL_SYNC_WORK_ID</code>、《資料庫使用規範》第 13 條</td>
+</tr>
+<tr>
+<td><strong>模擬部署以 <code>HD_SIMULATION_DEPLOYMENT=yes</code> 明示</strong></td>
+<td>compose 把後端固定成正式環境設定，模擬部署也一樣；不明示就連模擬部署都用不了模擬院方 API。院內主機一律留空，留空時指向模擬就拒絕啟動</td>
+<td>部署規範 DEP-46、第十五冊之一、之二</td>
+</tr>
+<tr>
+<td><strong>床位圖排不下就捲動</strong>，床位格最矮 196px</td>
+<td>1005 床數不設上限（同院 IDH 系統是 41 床）；不設最矮高度，41 床會把格子壓到放不下內容。1366×768 一次看 15 床（與迭代 14 同密度），1920×1080 約 40 床；整頁仍不捲</td>
+<td>《介面設計基準》3.5、<code>design-tokens.css</code> 的 <code>--bed-min-h</code></td>
+</tr>
+<tr>
+<td><strong>院方的開始時間跨過班別界線時，換班別不另建</strong></td>
+<td>預排值與實際值可能跨過 12 點或 17 點；同一次透析不該變成兩筆療程。只動院方帶進來、還沒開始、護理師沒碰過的那一筆</td>
+<td><code>hospital-sync.service.ts</code></td>
+</tr>
+<tr>
+<td><strong>累積量（第 46 欄）當公升讀</strong></td>
+<td>與其他容量欄同單位；探測工具印出它的數值大小分布，第三次進院看一次就知道對不對，錯了改一行換算</td>
+<td>《資料字典》<code>dialysis_vital_records</code></td>
+</tr>
+<tr>
+<td><strong>衛教時點不改成「預計結束前」</strong></td>
+<td>起點換成透析開始、參數不變（本節工作項）；預計結束時間可能是預排值，第三次進院確認之後再談</td>
+<td>SRS FR-P15 補充說明的那一句保留為之後的選項</td>
+</tr>
+</tbody>
+</table>
+<p><strong>驗收現況（1005）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>驗收標準</th>
+<th>狀態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>全新資料進來不碰護理端，病人、床位、療程自動出現</td>
+<td>通過（<code>verify:iteration15:api</code> 步驟 2；開發機截圖）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>配平板的病人一個週期內自動進入療程；結束體重出現自動下機</td>
+<td>通過（步驟 3、7；平板推送收到「療程變了」）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>提前結束、手動換床後同步不改回去</td>
+<td>通過（步驟 8；確認下機之後也不改回去）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>回應格式不對不寫錯資料、不中斷其他病人</td>
+<td>通過（步驟 1、2）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>院方停掉：保留舊值、門檻後提示、恢復後補齊</td>
+<td>通過（步驟 5、6；門檻調成 2 分鐘截圖看過提示）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>同一份回應抓兩次不產生重複</td>
+<td>通過（步驟 4）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>正式環境設定下指向模擬，後端拒絕啟動</td>
+<td>通過（步驟 10：實際啟動一次，結束狀態 1、指出 DEP-46、不印位址）</td>
+</tr>
+<tr>
+<td>8</td>
+<td>探測工具的輸出不含任何欄位值</td>
+<td>通過（步驟 11：標記字串、24 個病歷號與姓名、位址都找不到）</td>
+</tr>
+<tr>
+<td>9</td>
+<td>稽核分得出院方資料同步與人</td>
+<td>通過（步驟 9）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>既有驗收腳本全綠；專業版人工操作照樣可用</td>
+<td><strong>後端與前端腳本全綠</strong>，例外與說明見下</td>
+</tr>
+</tbody>
+</table>
+<p>第 10 條的細節：<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>10</code>、<code>12:api</code>、<code>14-1:api</code>、<code>14-2:api</code>、<code>verify:iteration8</code>、<code>11</code>、<code>12</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>check:all</code> 六支全綠。
+<strong>三處說明</strong>：</p>
+<ul>
+<li><strong>兩支既有腳本本身的缺陷，這次回歸時更正</strong>（只改檔案路徑與日期的取法，檢查內容不放寬）：<code>verify:iteration4</code> 第 16 步讀的 <code>EducationScreen.tsx</code> 在迭代 14 已改為 <code>tasks/EducationTask.tsx</code>，
+  之後那一步一直讀不到檔案；<code>verify:iteration2</code> 以 UTC 日期排班，台北 00:00～08:00 會排到前一天、總覽看不到</li>
+<li><code>verify:iteration14</code> 的「簡易版只用既有端點」清單加兩支（配平板、確認下機），與 14.2 加「重新開啟排班」同一個做法；這兩支專業版也用，由 <code>verify:iteration15</code> 驗兩端是同一支</li>
+<li><code>verify:iteration14:api</code> 第 4 步需要輪播第二層開著（腳本沒有自己開）；開發資料庫目前是關的，<strong>暫時上架一則內容、開啟之後全綠</strong>，跑完已關回、下架。<code>verify:iteration13:api</code> 要 Docker Desktop 開著（建閘道映像檔），這次沒開，沒跑</li>
+</ul>
+<p><strong>待做</strong>：模擬部署（<code>--profile simulation</code>）走一次部署規範第 9 章第 8 項（Docker Desktop 沒開）；第三次進院在院內跑探測工具（4.19）；
+1005 之前就有 15 床預設床位的環境（1001 院內主機）在接上院方資料後，到系統管理把 01～15 拿掉。</p>
 <h3 id="414-迭代-16病人端本次透析面板與跑馬燈1005-新增">4.14 迭代 16：病人端「本次透析」面板與跑馬燈（1005 新增）<a class="headerlink" href="#414-迭代-16病人端本次透析面板與跑馬燈1005-新增" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：拿掉三層輪播，換成 SRS FR-P09～P11 的面板與跑馬燈。取捨見 SRS FR-P09～P11 補充說明的對照表。</p>
 <table>
@@ -8340,9 +8530,9 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>無；實機待 Q-33 的型號</td>
 </tr>
 <tr>
-<td>15</td>
-<td>院方 API 介接與自動化（1005）</td>
-<td><strong>實作可以</strong>，用模擬院方 API</td>
+<td>~~15~~</td>
+<td>~~院方 API 介接與自動化（1005）~~</td>
+<td><strong>實作已完成（1005）</strong>，模擬院方 API 上腳本驗收通過；模擬部署一輪待做</td>
 <td>對真實資料啟用需第三次進院的探測（Q-09 第 9 題、Q-35）</td>
 </tr>
 <tr>
@@ -8404,7 +8594,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 <tr>
 <td>出發前</td>
-<td>探測工具在模擬院方 API 上跑過，確認輸出不含任何值</td>
+<td>探測工具在模擬院方 API 上跑過，確認輸出不含任何值（<strong>1005 開發機已通過</strong>，帶去的 tag 在模擬部署再跑一次）</td>
 <td>4.13 驗收第 8 條</td>
 </tr>
 <tr>
@@ -8429,7 +8619,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 <tr>
 <td>現場</td>
-<td><strong>探測院方 API</strong>：主機的容器連得到 API；看一次透析進行中的回應結構（結束欄位、床位格式、姓名欄）</td>
+<td><strong>探測院方 API</strong>：主機的容器連得到 API；看一次透析進行中的回應結構（結束欄位、床位格式、姓名欄）。照第十五冊 V-30a，<strong>位址只在探測時當場輸入，不寫進 <code>.env</code></strong></td>
 <td>E-16、Q-09 第 9 題、Q-35</td>
 </tr>
 <tr>

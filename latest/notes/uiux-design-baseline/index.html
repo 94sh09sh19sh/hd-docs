@@ -2346,6 +2346,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4133,7 +4161,7 @@
 │ │王○○ ▓▓░│ │      │ │李○○   │ │…     │ │…     │ ├──────────────┤
 │ │📱 🩺林 │ │📱    │ │📱✕離線│ │…     │ │…     │ │  🩺 護理師     │
 │ └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ ├──────────────┤
-│   …（床位數是資料，預設 15 床）                  │  📱 平板  🔒停用 │
+│   …（床位數是資料，1005 起由院方資料帶進來）     │  📱 平板  🔒停用 │
 │                                              ├──────────────┤
 │                                              │  📣 輪播內容 ▦全部│
 └──────────────────────────────────────────────┴──────────────┘
@@ -4227,12 +4255,57 @@
 權限檢查也相同——沒有裝置管理權限的帳號，平板框與停用區根本不出現（N-6）。
 <strong>導覽版位也相同</strong>：「班表」在導覽版位裡是關閉的（首波預設）時，簡易版不出現護理師框，「排班與床位分配」那一項也就不在——
 關閉的功能就是不存在，不會因為換了一個畫面就繞過去（實作規格書 3.13）。</p>
-<p><strong>床位清單是資料</strong>（預設 15 床，系統管理 → 營運參數 → 床位清單）。<strong>有病人正在治療的床拿不掉</strong>：
+<p><strong>床位清單是資料</strong>（系統管理 → 營運參數 → 床位清單；1005 起全新環境不再預設 15 床，接了院方 API 時院方出現的床號自動加進來）。<strong>有病人正在治療的床拿不掉</strong>：
 病人在哪一床是看他那台平板在哪一床，床從床位圖上消失，那位病人就從簡易版上消失了。
 專業版才有的功能（AI 草稿審閱簽核、系統設定、報表）不出現在簡易版。</p>
 <p><strong>簡易版刪掉的字</strong>：表頭、欄名、「病歷號」、統計數字塊（改由床位格底色直接表達）、「重新整理」按鈕（即時串流本來就會更新）。
 <strong>留下的字</strong>：床號、病人姓名（護理站不是鄰床可見的畫面）、求助類別、處理方式的名稱（圖示底下一行小字，
 十六種處理方式光靠圖示分不清，這是必要說明）。</p>
+<h4 id="351-1005-起接了院方-api-的簡易版迭代-15">3.5.1 1005 起接了院方 API 的簡易版（迭代 15）<a class="headerlink" href="#351-1005-起接了院方-api-的簡易版迭代-15" title="Permanent link">&para;</a></h4>
+<p>判準一句：<strong>能用院方 API 判斷的，就不要求護理師操作</strong>（SRS FR-S15）。接了院方 API（後端設定了位址）時：</p>
+<table>
+<thead>
+<tr>
+<th>原本</th>
+<th>接了院方 API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>病人框：還沒上床的病人，加「＋」新增病人</td>
+<td><strong>今天要透析、還沒配平板的病人</strong>，以及平板沒有自動接上的病人。沒有「＋」——病人主檔由院方資料建立</td>
+</tr>
+<tr>
+<td>把病人拖到床位（指派平板與病人）</td>
+<td><strong>把平板拖到病人身上</strong>（配平板）：每位病人只做一次，系統記住；之後院方資料判定透析開始就自動接上。點平板、再點病人是替代做法；復原＝改回原本配的那一台</td>
+</tr>
+<tr>
+<td>床位格只畫有平板的病人</td>
+<td>沒有平板、院方資料說正在透析的病人也畫在他那一床（治療中），進度條照院方的開始與預計結束時間</td>
+</tr>
+<tr>
+<td>下機只有拖到「下機」</td>
+<td>院方資料出現結束體重就自動下機；過了預計結束很久還沒有，床位格出現「待確認下機」（<code>clock-alert</code>＋注意色），點一下即確認，<strong>一樣延後 8 秒才送出</strong></td>
+</tr>
+<tr>
+<td>—</td>
+<td>院方資料不通超過門檻，上面那一條出現「院方資料已 N 分鐘未更新」（<code>refresh-cw-off</code>＋注意色，不是警示色：那不是緊急狀況）</td>
+</tr>
+<tr>
+<td>—</td>
+<td>平板沒有自動接上（不在線上、正在別人的療程中、停用；或床是停用的床），床位格與病人框帶 <code>unlink</code>＋注意色，原因在提示裡</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>沒接院方 API 的環境照上面九項的人工流程</strong>（位址空白就是不抓，沒有任何事能由 API 判斷）</li>
+<li>病人框裡的病人是<strong>放平板的地方</strong>，不是拿起來的東西：病人在哪一床由院方資料決定，不必拖。虛線框；格子窄，名字要放得下，所以只有「沒有自動接上」的才帶一個貼在角落的小圖示</li>
+<li>自動完成的事在床位格上<strong>與護理師做的長得一樣</strong>；差別在稽核軌跡（操作者「院方資料同步」）。專業版另有一張「院方資料同步」卡片看現況與最近幾次抓取</li>
+</ul>
+<p><strong>床位圖排不下就捲動</strong>（1005 使用者決定床數不設上限；同院 IDH 系統是 41 床）。床位格最矮 <code>--bed-min-h</code>（196px）——
+床號、病人、求助或待確認下機、平板四列放得下；列高照樣平分剩下的空間，<strong>床少時與迭代 14 一樣不捲動</strong>，
+1366×768 一次看 15 床，1920×1080 約 40 床。<strong>捲動的只有床位圖</strong>，上面一條（緊急紅框、未更新提示）與右側四個框不動——
+緊急的床捲到看不見時，紅框裡的床號仍在，點一下即確認。蓋在床位格上的面板改看「畫面」與「床位圖」兩者較靠內的邊界翻轉，捲動的框不會把它切掉。</p>
 <hr />
 <h2 id="4-共用的設計系統">4. 共用的設計系統<a class="headerlink" href="#4-共用的設計系統" title="Permanent link">&para;</a></h2>
 <p>兩端各有各的版面，但底層的語彙要一致——同一個顏色在兩邊代表同一件事，否則維護的人會混亂。</p>
@@ -4437,6 +4510,7 @@
 <code>shield-alert</code> 平板跳出固定畫面、<code>circle-arrow-up</code> 外殼版本過舊、<code>badge-alert</code> 外殼版本不相容、<code>wrench</code> 平板尚未佈建、<code>tablet-smartphone</code> 平板、
 <code>user</code> 病人、<code>user-plus</code> 新增病人、<code>stethoscope</code> 護理師、<code>megaphone</code> 公告、<code>layout-grid</code> 全部床位、<code>lock</code> 停用平板、
 <code>undo-2</code> 復原、<code>log-out</code> 下機、<code>arrow-left-right</code> 切換簡易版／專業版、<code>circle-x</code> 取消這筆求助、<code>plus</code> 新增輪播內容（14.2），
+<code>refresh-cw-off</code> 院方資料未更新、<code>clock-alert</code> 待確認下機、<code>unlink</code> 沒有自動接上平板或放上床（原因在提示裡）（三個都是 1005 迭代 15），
 以及處理方式：<code>scan-heart</code> 觀察生命徵象、<code>move</code> 調整姿勢、<code>gauge</code> 調整脫水、<code>droplets</code> 生理食鹽水回填、<code>pill</code> 給藥、
 <code>bandage</code> 局部處置、<code>phone-call</code> 通知醫師、<code>power</code> 提前結束療程、<code>package</code> 提供物品、<code>heart-handshake</code> 說明與安撫、<code>forward</code> 轉介
 （「調整機台設定」「協助如廁」「環境調整」「其他」沿用上表的 <code>monitor-dot</code>、<code>toilet</code>、<code>thermometer-sun</code>、<code>message-circle-question</code>——意思相同，所以是同一個圖示）。</p>
@@ -4520,6 +4594,24 @@
 <td>注意</td>
 <td><code>wrench</code>（扳手）</td>
 <td>護理端平板標籤（床位格與平板框）</td>
+</tr>
+<tr>
+<td>待確認下機（迭代 15）</td>
+<td>注意</td>
+<td><code>clock-alert</code>（時鐘加驚嘆號）</td>
+<td>護理端床位格</td>
+</tr>
+<tr>
+<td>院方資料未更新（迭代 15）</td>
+<td>注意</td>
+<td><code>refresh-cw-off</code>（被斜線劃掉的雙箭頭圈）</td>
+<td>護理端簡易版上面那一條</td>
+</tr>
+<tr>
+<td>沒有自動接上（迭代 15）</td>
+<td>注意</td>
+<td><code>unlink</code>（斷開的鏈）</td>
+<td>護理端床位格、病人框</td>
 </tr>
 </tbody>
 </table>
@@ -4646,7 +4738,8 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）每次登入預設簡易版</strong>，一次點選切到專業版；專業版的畫面沒有被改動</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版的九項任務每一項都是一個動作</strong>，都有不拖曳的替代做法，都能一步復原（「接緊急通報」除外，理由見 3.5）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版與專業版做同一件事，稽核軌跡與結構化欄位完全相同</strong></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版在護理站的解析度下沒有捲軸</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版在護理站的解析度下沒有捲軸</strong>（1005 起床數多時只有床位圖自己捲動，整頁仍沒有捲軸）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005）接了院方 API 時簡易版沒有「新增病人」</strong>，病人框是還沒配平板的病人；未更新提示、待確認下機、沒有自動接上都是圖示＋注意色</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）斷線時專業版每一頁與簡易版都看得到閃爍紅框與紅底橫幅</strong>；剛開頁面、換頁時不會誤閃；簡易版出現橫幅時仍沒有捲軸</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）專業版一次湧入很多則求助時，上緣最多三條加一列「還有幾則」</strong>，緊急的排前面，頁面本身一直看得到</li>
 </ul>
@@ -4779,7 +4872,7 @@
 </tr>
 <tr>
 <td><a href="../../requirements/open-questions/#q-34-透析室的床位數床號與療程時段">Q-34</a></td>
-<td>透析室實際有幾床、床號怎麼編、療程時段怎麼切。簡易版預設 15 床（01～15，SRS 寫共 15 台平板），是資料，可在系統管理改</td>
+<td>透析室實際有幾床、床號怎麼編、療程時段怎麼切。~~簡易版預設 15 床（01～15）~~ 1005 起床位由院方資料帶進來，全新環境不再預設；床號照醫院編號、不設上限。只剩三班起訖待問（API 自動建立的療程算哪一班）</td>
 </tr>
 </tbody>
 </table>

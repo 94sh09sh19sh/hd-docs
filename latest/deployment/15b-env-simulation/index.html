@@ -1904,6 +1904,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2764,6 +2792,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#19-院方透析清單-api1005-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 院方透析清單 API（1005 新增）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3176,6 +3215,17 @@
     <span class="md-ellipsis">
       
         1.8 其他營運參數
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-院方透析清單-api1005-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 院方透析清單 API（1005 新增）
       
     </span>
   </a>
@@ -3609,6 +3659,32 @@
 </ul>
 <h3 id="18-其他營運參數">1.8 其他營運參數<a class="headerlink" href="#18-其他營運參數" title="Permanent link">&para;</a></h3>
 <p><code>BINDING_MAX_HOURS</code> 以下六項：<strong>全部維持範本的值</strong>，與實際部署相同。</p>
+<h3 id="19-院方透析清單-api1005-新增">1.9 院方透析清單 API（1005 新增）<a class="headerlink" href="#19-院方透析清單-api1005-新增" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>變數</th>
+<th>填什麼</th>
+<th>與實際部署不同</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HOSPITAL_API_BASE_URL</code></td>
+<td><code>http://hospital-api-sim:8090/dialysislist.php</code></td>
+<td><strong>不同</strong>：院內第三次進院是空白，只探測</td>
+</tr>
+<tr>
+<td><code>HD_SIMULATION_DEPLOYMENT</code></td>
+<td><code>yes</code></td>
+<td><strong>不同</strong>：院內永遠空白</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>hospital-api-sim</code> 是模擬院方 API，跟 <code>api</code> 用同一個映像檔，<strong>只在 <code>--profile simulation</code> 時啟動</strong>（第十五冊 V-30a），不開埠，只有 <code>api</code> 連得到。病人全是虛構的</li>
+<li>compose 把後端固定成正式環境設定，模擬部署也一樣；<strong>沒有 <code>HD_SIMULATION_DEPLOYMENT=yes</code>，位址指向模擬時後端拒絕啟動</strong>——院內就是靠這一條擋住抄錯的設定，V-30a 最後會故意清空它驗一次</li>
+</ul>
 <hr />
 <h2 id="2-填好的樣子">2. 填好的樣子<a class="headerlink" href="#2-填好的樣子" title="Permanent link">&para;</a></h2>
 <p>只有四處要換成你自己的：<code>HD_IMAGE_TAG</code>、三個位址裡的 IP（同一個）、<code>JWT_SECRET</code>。其餘照抄即可：</p>
@@ -3646,6 +3722,9 @@ LLM_MODEL_ID=
 LLM_TIMEOUT_SECONDS=150
 LLM_HEALTH_TIMEOUT_SECONDS=5
 
+HOSPITAL_API_BASE_URL=http://hospital-api-sim:8090/dialysislist.php
+HD_SIMULATION_DEPLOYMENT=yes
+
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -3668,6 +3747,7 @@ REALTIME_HEARTBEAT_SECONDS=20
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 三個位址都是 <strong>Wi-Fi 那張網卡的 IP</strong>，一字不差；<code>MDM_KIOSK_BASE_URL</code> 是 <strong><code>https://</code></strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong><code>HD_SHELL_SIGNING=dev</code></strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>LLM_PROVIDER=mock</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>HOSPITAL_API_BASE_URL</code> 指向 <code>hospital-api-sim</code>、<code>HD_SIMULATION_DEPLOYMENT=yes</code>（1005 新增）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 整份沒有任何一個值加了引號</li>
 </ul>
 <hr />
@@ -3723,6 +3803,16 @@ REALTIME_HEARTBEAT_SECONDS=20
 <td><code>HD_SHELL_SIGNING</code></td>
 <td><strong><code>hospital</code></strong></td>
 <td><strong><code>dev</code></strong></td>
+</tr>
+<tr>
+<td><code>HOSPITAL_API_BASE_URL</code>（1005）</td>
+<td>空白（第三次進院只探測；探測過、報備過才填院方的位址）</td>
+<td><code>http://hospital-api-sim:8090/dialysislist.php</code></td>
+</tr>
+<tr>
+<td><code>HD_SIMULATION_DEPLOYMENT</code>（1005）</td>
+<td><strong>永遠空白</strong></td>
+<td><strong><code>yes</code></strong></td>
 </tr>
 <tr>
 <td><code>JWT_SECRET</code></td>

@@ -1904,6 +1904,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3136,6 +3164,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#95-院方-api探測一次1005-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 院方 API：探測一次（1005 新增）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.5 院方 API：探測一次（1005 新增）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v-30a-探測院方透析清單-api新增第十五冊之三-e-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V-30a 探測院方透析清單 API（新增，第十五冊之三 E-16）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#10-收尾" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4132,6 +4188,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#95-院方-api探測一次1005-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 院方 API：探測一次（1005 新增）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.5 院方 API：探測一次（1005 新增）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v-30a-探測院方透析清單-api新增第十五冊之三-e-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V-30a 探測院方透析清單 API（新增，第十五冊之三 E-16）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#10-收尾" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4451,6 +4535,12 @@ Git 沒裝時怎麼辦、防毒怎麼查、護理端登不進去怎麼查，都�
 <td>不跑（主機上沒有、也不准裝 Node.js）</td>
 <td>多跑三支 <code>verify:iteration… --live</code></td>
 <td>V-31</td>
+</tr>
+<tr>
+<td>院方 API（1005）</td>
+<td>只<strong>探測</strong>一次，位址當場輸入、不寫進 <code>.env</code></td>
+<td>開模擬院方 API，<code>.env</code> 指向它並寫 <code>HD_SIMULATION_DEPLOYMENT=yes</code></td>
+<td>V-30a</td>
 </tr>
 <tr>
 <td>重新開機測試</td>
@@ -5994,6 +6084,63 @@ C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。<strong>院方同不同
 接上正式 GPU API 是 Q-07 有答案之後的事，見<a href="../13-ai-gateway/">第十三冊</a> Z-23。</p>
 </blockquote>
 <hr />
+<h2 id="95-院方-api探測一次1005-新增">9.5 院方 API：探測一次（1005 新增）<a class="headerlink" href="#95-院方-api探測一次1005-新增" title="Permanent link">&para;</a></h2>
+<p>1005 起院方透析清單 API 要取代護理師的手動輸入（《<a href="../../requirements/implementation-spec/">實作規格書</a>》4.13）。
+<strong>這一次只探測、不啟用</strong>：看主機連不連得到、回應長什麼樣（透析中的結束欄位、床位格式、姓名欄），把輸出帶回來。
+啟用（<code>.env</code> 填位址）要等探測結果看過、Q-35 報備過，見第 11 節。</p>
+<h3 id="v-30a-探測院方透析清單-api新增第十五冊之三-e-16">V-30a 探測院方透析清單 API（新增，第十五冊之三 E-16）<a class="headerlink" href="#v-30a-探測院方透析清單-api新增第十五冊之三-e-16" title="Permanent link">&para;</a></h3>
+<p><strong>做什麼</strong>（在 <code>$root\repo</code> 底下；位址向資訊室或護理長問，<strong>只在這裡當場輸入，不要寫進 <code>.env</code>、不要貼進任何紀錄</strong>）：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$u</span> <span class="p">=</span> <span class="nb">Read-Host</span> <span class="s1">'院方透析清單 API 的位址（含 dialysislist.php，不含 ?date=）'</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">-e</span> <span class="n">HOSPITAL_API_BASE_URL</span><span class="p">=</span><span class="nv">$u</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">hospital-api-probe</span><span class="p">.</span><span class="n">js</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：印出「連線：成功」、「解析：成功」，接著是每一欄的型態分布與幾段統計，最後一行「以上可以整段抄進演練紀錄」。
+<strong>整段抄進演練紀錄</strong>——工具只印結構（型態、欄數、筆數、床位的樣式），<strong>不印任何一個病人的值，也不印位址</strong>，抄下來不會帶出病人資料。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>連線：失敗——找不到院方主機</code> 或 <code>連不到院方主機所在的網段</code></td>
+<td>主機與院方 API 不在同一個網段，或名稱查不到。抄下來，回去問資訊室（Q-35）；<strong>不要改主機的網路設定</strong></td>
+</tr>
+<tr>
+<td><code>連線：失敗——連線被拒</code></td>
+<td>位址的埠不對，或院方服務沒開。核對位址再試一次</td>
+</tr>
+<tr>
+<td><code>連線：失敗——逾時</code></td>
+<td>院方伺服器沒有在 30 秒內回應。換個時間再試一次，兩次都逾時就抄下來</td>
+</tr>
+<tr>
+<td><code>解析：失敗</code></td>
+<td>位址打到的不是透析清單（例如少了檔名）。核對位址</td>
+</tr>
+<tr>
+<td><code>模擬標頭：有</code></td>
+<td>打到的是模擬院方 API，不是院方的——位址填錯了</td>
+</tr>
+<tr>
+<td><code>沒有設定院方 API 的位址</code></td>
+<td><code>Read-Host</code> 那一行沒有輸入東西</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>不要用瀏覽器或 <code>curl</code> 直接打院方 API</strong>：回應是全中心病人的姓名與病歷號，會整片印在螢幕上（第十五冊之三 E-16）。</p>
+<p>🧪 <strong>模擬部署</strong>：先照<a href="../15b-env-simulation/">第十五冊之二</a> 1.9 把 <code>.env</code> 指向模擬院方 API、寫上 <code>HD_SIMULATION_DEPLOYMENT=yes</code>，然後</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">simulation</span> <span class="n">up</span> <span class="n">-d</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">hospital-api-probe</span><span class="p">.</span><span class="n">js</span>
+</code></pre></div>
+<p>第二行用的是 <code>.env</code> 裡的位址，所以不必輸入。印出「模擬標頭：有」是對的。接著開護理端簡易版：
+不必碰任何東西，床位圖上就會出現 A1、A2… 與「模擬甲」等病人（全是虛構的）。
+最後驗「院內的設定擋得住模擬」（部署規範第 9 章第 8 項）：把 <code>.env</code> 的 <code>HD_SIMULATION_DEPLOYMENT</code> 清空，<code>docker compose --env-file $cfg up -d api</code>，
+<code>docker compose --env-file $cfg logs --tail 20 api</code> 要看到<strong>拒絕啟動、指出 DEP-46</strong>；看到之後改回 <code>yes</code>、再 <code>up -d api</code>。</p>
+</blockquote>
+<hr />
 <h2 id="10-收尾">10. 收尾<a class="headerlink" href="#10-收尾" title="Permanent link">&para;</a></h2>
 <h3 id="101-實際部署冒煙測試與交接">10.1 實際部署：冒煙測試與交接<a class="headerlink" href="#101-實際部署冒煙測試與交接" title="Permanent link">&para;</a></h3>
 <table>
@@ -6153,6 +6300,10 @@ V-06 下載的兩個基底映像也可以留著。</p>
 <tr>
 <td>接上正式 GPU API</td>
 <td><a href="../13-ai-gateway/">第十三冊</a> Z-23</td>
+</tr>
+<tr>
+<td>接上院方 API（V-30a 探測過、Q-35 報備過之後）</td>
+<td>設定目錄的 <code>.env</code> 填 <code>HOSPITAL_API_BASE_URL</code>（<a href="../15a-env-hospital/">第十五冊之一</a> 1.10），<code>docker compose --env-file $cfg up -d api</code>；護理端「系統管理 → 營運參數與選項清單」的「院方資料同步」卡片看到「成功」才算接上。<strong>接上之後</strong>，1005 之前預設的 01～15 床到同一頁的床位清單拿掉</td>
 </tr>
 <tr>
 <td>出錯了，這本沒寫到</td>

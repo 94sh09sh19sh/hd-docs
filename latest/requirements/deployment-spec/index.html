@@ -2413,6 +2413,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4112,6 +4140,9 @@
 <li><code>api</code> 執行期連院方 API 是<strong>院內連線</strong>，不違反 DEP-14；<code>check:egress</code> 照舊只擋院外</li>
 <li><code>hospital-api-sim</code> 只以 <code>simulation</code> profile 啟動；<strong>正式環境設定下 <code>HOSPITAL_API_BASE_URL</code> 指向它，後端拒絕啟動</strong>（與 DEP-40 同一個道理：抄錯設定不能變成假資料進病房）</li>
 <li>院方 API 的原始回應不落在任何主機目錄（《資料庫使用規範》第 13 條 1005 補充）</li>
+<li>（1005 迭代 15 實作時補）<strong>模擬部署以 <code>HD_SIMULATION_DEPLOYMENT=yes</code> 明示</strong>：compose 把後端固定成正式環境設定，模擬部署也一樣，不明示就連模擬部署都用不了模擬院方 API。
+  <strong>院內主機一律留空</strong>；留空時位址指向 <code>hospital-api-sim</code> 就拒絕啟動，收到模擬院方 API 的回應（帶模擬標頭）也整次作廢——換了名稱的模擬一樣擋得住</li>
+<li>（同上）探測工具在 <code>api</code> 容器裡跑（部署手冊第十五冊 V-30a）：<strong>位址只在探測時當場輸入，不寫進 <code>.env</code></strong>——探測不等於啟用，<code>.env</code> 填了位址，下一次重新啟動就開始寫真實資料</li>
 </ul>
 <h3 id="33-資料庫落點">3.3 資料庫落點<a class="headerlink" href="#33-資料庫落點" title="Permanent link">&para;</a></h3>
 <p><strong>DEP-23｜（0926 由備案條款升為主規則）資料庫檔案不得落在 Windows 目錄的繫結掛載上，只能放在具名資料卷裡。</strong> 繫結掛載在 WSL2 底下是跨檔案系統的轉譯層，SQLite 的檔案鎖不可靠（《資料庫使用規範》7.2）。<strong>0922 院方那句「似乎允許鏡像到容器外」若指的是資料庫放 Windows 目錄，答案仍然是不行</strong>；能放到容器外的是備份，不是資料庫本身。</p>
@@ -4581,7 +4612,7 @@
 </tr>
 <tr>
 <td>8</td>
-<td>（1005 新增）院方 API：開著 <code>hospital-api-sim</code>，不碰護理端，病人與床位自動出現；替一位病人配那支手機，模擬透析開始後手機自動進入療程、面板曲線自己長；<strong>再把設定改成正式環境且指向模擬，確認後端拒絕啟動</strong>（DEP-46）</td>
+<td>（1005 新增）院方 API：開著 <code>hospital-api-sim</code>，不碰護理端，病人與床位自動出現；替一位病人配那支手機，模擬透析開始後手機自動進入療程、面板曲線自己長；<strong>再把 <code>HD_SIMULATION_DEPLOYMENT</code> 清空（＝院內的設定）、位址仍指向模擬，確認後端拒絕啟動</strong>（DEP-46；步驟在第十五冊 V-30a 的模擬部署那一段）</td>
 </tr>
 </tbody>
 </table>
