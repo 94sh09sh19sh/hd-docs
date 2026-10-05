@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 完整手動測試手冊
 
-> 從 `git clone` 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。 對應版本：迭代 9 · 126 條 API 路由 · 164 種稽核動作。 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。 **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--%E8%BF%AD%E4%BB%A3-3-16-%E5%88%86%E5%86%8A)。
+> 從 `git clone` 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。 對應版本：迭代 17 · 136 條 API 路由 · 109 種稽核動作。 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。 **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--%E8%BF%AD%E4%BB%A3-3-17-%E5%88%86%E5%86%8A)。
 
 本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。
 
@@ -123,7 +123,7 @@ ls -l /d/hd-data            # Git Bash
 
 | 指令                     | 在做什麼                                                                                                                                                                                                                                                                                                                             | 為什麼需要                                                                                                                                                           |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run build:shared`   | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：求助分派規則、164 種稽核動作的代號、權限碼、導覽版位的預設值。                                                                                                                                                                                       | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。                                  |
+| `npm run build:shared`   | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：求助分派規則、109 種稽核動作的代號、權限碼、導覽版位的預設值。                                                                                                                                                                                       | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。                                  |
 | `npm run prisma:migrate` | 讀 `apps/api/prisma/schema.prisma`，把資料表建到 `.env` 的 `DATABASE_URL` 指向的 SQLite 檔案，並產生 Prisma Client。本專案目前有六個 migration（迭代 3～7 各一個）。**這一支是開發用的**，正式環境改用 `npm run db:update`，見[迭代 7 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-7/index.md) §7.6、§7.7。 | 你的資料庫一開始是**空的**。這步建出 nurses、patients、devices、device_bindings、symptom_reports、help_requests、audit_logs 等資料表。沒跑過，後續任何操作都會失敗。 |
 | `npm run db:seed`        | 灌入**虛構**測試資料：8 位病人（`HD-TEST-0001`～`0008`）與 15 台平板（`TB-01`～`TB-15`），並把平板金鑰寫到 `apps/api/.device-keys.json`。                                                                                                                                                                                            | 沒有病人就不能建排班，沒有平板就不能指派。**它不建立任何護理師帳號** — 那是後端啟動時依 `.env` 自動建立的。可重複執行，已有資料時會自動略過。                        |
 
@@ -557,7 +557,7 @@ taskkill //PID 33244 //F
 
 ## 09 · API 附錄
 
-後端啟動時會印出完整路由清單，目前共 **126 條**，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
+後端啟動時會印出完整路由清單，目前共 **136 條**，下表逐條列出（迭代 16 拿掉的兩條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
 
 ### 怎麼帶憑證
 
@@ -593,136 +593,158 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 
 ### 路由表
 
-| 方法／路徑                                                       | 需要的權限                         | 說明                                                                        |
-| ---------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------- |
-| `POST /api/auth/register`                                        | 公開                               | 護理師註冊申請                                                              |
-| `POST /api/auth/login`                                           | 公開                               | 登入，回傳 JWT                                                              |
-| `POST /api/auth/logout`                                          | 登入態                             | 撤銷本次權杖                                                                |
-| `POST /api/auth/change-password`                                 | 登入態                             | 撤銷該帳號所有權杖                                                          |
-| `GET /api/auth/me`                                               | 登入態                             | 取得自己的檔案與權限清單                                                    |
-| `GET /api/nurses/pending`                                        | nurse:approve                      | 待審核清單                                                                  |
-| `GET /api/nurses`                                                | nurse:approve                      | 全部帳號                                                                    |
-| `POST /api/nurses/:id/approve`                                   | nurse:approve                      | 核准                                                                        |
-| `POST /api/nurses/:id/reject`                                    | nurse:approve                      | 駁回（需 reason）                                                           |
-| `PATCH /api/nurses/:id/permissions`                              | nurse:grant-permission             | 調整角色／審核權限                                                          |
-| `GET /api/patients`                                              | 登入態                             | 病人清單                                                                    |
-| `POST /api/patients`                                             | patient:manage                     | 建立病人                                                                    |
-| `GET /api/devices`                                               | 登入態                             | 平板清單（指派時需要）                                                      |
-| `POST /api/devices`                                              | device:manage                      | 註冊平板，回傳一次性金鑰                                                    |
-| `GET /api/devices/mdm/console`                                   | device:manage                      | 模擬 MDM 控制台狀態                                                         |
-| `POST /api/devices/:id/mdm/enroll`                               | device:manage                      | MDM 註冊                                                                    |
-| `POST /api/devices/:id/mdm/unenroll`                             | device:manage                      | MDM 解除註冊                                                                |
-| `POST /api/devices/:id/mdm/lock`                                 | device:manage                      | 遠端鎖定                                                                    |
-| `POST /api/devices/:id/mdm/unlock`                               | device:manage                      | 解除鎖定                                                                    |
-| `POST /api/devices/:id/mdm/kiosk`                                | device:manage                      | 設定 Kiosk 網址                                                             |
-| `GET /api/treatment-sessions?date=`                              | 登入態                             | 當日排班                                                                    |
-| `POST /api/treatment-sessions`                                   | schedule:manage                    | 建立排班                                                                    |
-| `POST /api/treatment-sessions/:id/cancel`                        | schedule:manage                    | **取消排班（UI 未提供）**                                                   |
-| `GET /api/bindings`                                              | 登入態                             | 近期綁定紀錄                                                                |
-| `POST /api/bindings`                                             | binding:manage                     | 指派平板                                                                    |
-| `POST /api/bindings/:id/release`                                 | binding:manage                     | 解除（reason: MANUAL_RELEASE ／ NORMAL_DISCHARGE）                          |
-| `GET /api/device/session`                                        | 裝置金鑰                           | 平板輪詢綁定狀態                                                            |
-| `GET /api/device/session/context`                                | 裝置＋Token                        | 取得本次綁定病人資料                                                        |
-| `POST /api/device/session/cleared`                               | 裝置金鑰                           | 回報本地資料已清除                                                          |
-| `POST /api/device/symptom-reports`                               | 裝置＋Token                        | 送出症狀問卷                                                                |
-| `GET /api/device/symptom-reports/mine`                           | 裝置＋Token                        | 本次綁定已送出的回報                                                        |
-| `POST /api/device/help-requests`                                 | 裝置＋Token                        | 送出求助                                                                    |
-| `GET /api/device/help-requests/mine`                             | 裝置＋Token                        | 本次綁定的求助狀態                                                          |
-| `GET /api/symptom-reports/treatment-session/:treatmentSessionId` | patient:monitor                    | 某次療程的所有回報                                                          |
-| `GET /api/symptom-reports/trend/:patientId`                      | patient:monitor                    | 症狀趨勢摘要                                                                |
-| `GET /api/help-requests?status=`                                 | patient:monitor                    | 通報清單（含趨勢摘要）                                                      |
-| `GET /api/help-requests/:id`                                     | patient:monitor                    | 單筆通報                                                                    |
-| `POST /api/help-requests/:id/acknowledge`                        | help-request:handle                | 接手                                                                        |
-| `POST /api/help-requests/:id/resolve`                            | help-request:handle                | 處理完成                                                                    |
-| `POST /api/help-requests/:id/cancel`                             | help-request:handle                | 取消                                                                        |
-| `GET /api/overview?date=`                                        | patient:monitor                    | 多病人即時總覽                                                              |
-| `GET /api/realtime/stream`                                       | patient:monitor                    | 即時串流（SSE，不是一般的 JSON 回應）                                       |
-| `GET /api/audit-logs`                                            | audit:read                         | 稽核軌跡（可篩 action／deviceSerialNo／日期／分頁）                         |
-| `GET /api/health`                                                | 公開                               | 健康檢查，不需要任何憑證                                                    |
-| `GET /api/feature-flags/enabled`                                 | 登入態（唯讀角色亦可）             | （迭代 3）目前開著的功能開關，前端用來決定要不要畫出入口                    |
-| `GET /api/feature-flags`                                         | feature-flag:manage                | （迭代 3）十個開關的完整狀態與開啟條件                                      |
-| `PUT /api/feature-flags/:key`                                    | feature-flag:manage                | （迭代 3）切換開關（需 reason；AI 那兩項另需 system:configure）             |
-| `GET /api/ai/status`                                             | system:configure                   | （迭代 3）目前供應者、健康檢查與可用模型                                    |
-| `POST /api/ai/test-invocations`                                  | system:configure＋AI 開關          | （迭代 3）介面層連線測試，走與正式功能相同的閘道                            |
-| `GET /api/ai/invocations`                                        | ai-invocation:read（唯讀角色亦可） | （迭代 3）AI 呼叫紀錄                                                       |
-| `GET /api/ops/database`                                          | backup:manage                      | （迭代 3）SQLite 必開設定與檔案大小（**不含檔案路徑**）                     |
-| `GET /api/ops/runtime`                                           | backup:manage                      | （迭代 7）服務實際跑在哪個時區、哪個帳號底下，Prisma 引擎是不是自帶的       |
-| `GET /api/ops/updates`                                           | backup:manage                      | （迭代 7）歷次版本更新紀錄；由更新腳本寫入，這裡只讀                        |
-| `GET /api/backups`                                               | backup:manage                      | （迭代 3）備份歷程                                                          |
-| `POST /api/backups`                                              | backup:manage                      | （迭代 3）立即線上備份（`VACUUM INTO`）                                     |
-| `POST /api/clinical-values/manual-entries`                       | clinical-value:manage              | （迭代 3）人工輸入臨床數值，整批全有或全無                                  |
-| `GET /api/clinical-values`                                       | patient:monitor                    | （迭代 3）臨床數值清單（含被覆蓋的前一版）                                  |
-| `GET /api/clinical-value-imports`                                | clinical-value:manage              | （迭代 3）最近的匯入批次                                                    |
-| `GET /api/ai-jobs/:id`                                           | patient:monitor                    | （迭代 4）背景工作進度                                                      |
-| `GET /api/education/patients/:patientId`                         | patient:monitor                    | （迭代 4）衛教內容、完成紀錄、測驗與知識點                                  |
-| `POST /api/education/contents`                                   | education:manage＋AI 開關          | （迭代 4）產生個人化衛教，排入佇列                                          |
-| `POST /api/education/discharge-summaries`                        | education:manage＋AI 開關          | （迭代 4）產生離院衛教重點，排入佇列                                        |
-| `POST /api/education/contents/:id/approve`                       | education:manage                   | （迭代 4）核可，病人端可見                                                  |
-| `POST /api/education/contents/:id/reject`                        | education:manage                   | （迭代 4）退回（需 note）                                                   |
-| `GET /api/device/education`                                      | 裝置＋Token                        | （迭代 4）已核可的衛教內容與適性測驗題目                                    |
-| `POST /api/device/education/contents/:id/complete`               | 裝置＋Token                        | （迭代 4）我看完了                                                          |
-| `POST /api/device/quiz-attempts`                                 | 裝置＋Token                        | （迭代 4）送出測驗作答                                                      |
-| `POST /api/device/feedback-responses`                            | 裝置＋Token                        | （迭代 4）送出情緒／滿意度回饋                                              |
-| `GET /api/device/feedback-responses/mine`                        | 裝置＋Token                        | （迭代 4）本次療程是否已填                                                  |
-| `GET /api/psychosocial/overview`                                 | patient:monitor                    | （迭代 4）心理社會彙總                                                      |
-| `GET /api/psychosocial/patients/:patientId`                      | patient:monitor                    | （迭代 4）單一病人的回饋與暫定規則比對                                      |
-| `GET /api/adequacy/patients/:patientId`                          | patient:monitor                    | （迭代 4）透析適足性趨勢。1005 起受「需要抽血數值的功能」開關控制，預設關閉 |
-| `POST /api/adequacy/calculations`                                | clinical-value:manage              | （迭代 4）計算 URR 與 spKt/V。同上                                          |
-| `GET /api/nursing-records?treatmentSessionId=`                   | patient:monitor                    | （迭代 4）護理記錄清單                                                      |
-| `GET /api/nursing-records/:id`                                   | patient:monitor                    | （迭代 4）單筆護理記錄                                                      |
-| `POST /api/nursing-records/events`                               | nursing-record:write               | （迭代 4）以快速範本建立事件記錄                                            |
-| `POST /api/nursing-records/prefills`                             | nursing-record:write               | （迭代 4）依病人自報建立預填草稿                                            |
-| `POST /api/nursing-records/:id/ai-draft`                         | nursing-record:write＋AI 開關      | （迭代 4）AI 草擬初稿，排入佇列                                             |
-| `POST /api/nursing-records/:id/sign`                             | nursing-record:write               | （迭代 4）簽核，之後不可修改                                                |
-| `GET /api/sop/documents`                                         | sop:query                          | （迭代 4）收錄的文件                                                        |
-| `POST /api/sop/queries`                                          | sop:query                          | （迭代 4）SOP／藥品劑量查詢                                                 |
-| `POST /api/help-requests/:id/arrive`                             | help-request:handle                | （迭代 5）登記到達床邊時間，只能登記一次                                    |
-| `GET /api/help-requests/follow-ups/open`                         | patient:monitor                    | （迭代 5）待追蹤事項清單                                                    |
-| `POST /api/help-requests/follow-ups/:followUpId/close`           | help-request:handle                | （迭代 5）結束追蹤事項（完成或取消）                                        |
-| `GET /api/help-resolution-options`                               | 登入態                             | （迭代 5）結案畫面用：只有啟用中的處理方式與處理結果                        |
-| `GET /api/help-resolution-options/all`                           | operational-setting:manage         | （迭代 5）設定畫面用：含已停用者                                            |
-| `PUT /api/help-resolution-options`                               | operational-setting:manage         | （迭代 5）新增或停用一個選項（代號限大寫英數與底線）                        |
-| `GET /api/operational-settings`                                  | 登入態                             | （迭代 5）營運參數現值（再發判定期間、勞動條件上下限、輪播門檻等）          |
-| `PUT /api/operational-settings/:key`                             | operational-setting:manage         | （迭代 5）調整某一項營運參數（**理由必填**）                                |
-| `GET /api/shifts?from=&to=`                                      | 登入態                             | （迭代 5）班表；一般護理師只讀得到自己的班                                  |
-| `POST /api/shifts`                                               | shift:manage                       | （迭代 5）手動建立班次，違反勞動條件即擋下                                  |
-| `POST /api/shifts/imports`                                       | shift:manage                       | （迭代 5）班表檔案匯入，整批全有或全無                                      |
-| `POST /api/shifts/:id/beds`                                      | shift:manage                       | （迭代 5）指定當班負責床位（整組取代，不累加）                              |
-| `POST /api/shifts/:id/cancel`                                    | shift:manage                       | （迭代 5）取消班次（轉為已取消，不從表上消失）                              |
-| `GET /api/shifts/change-requests`                                | 登入態                             | （迭代 5）調班申請；一般護理師只看得到自己送出的                            |
-| `POST /api/shifts/change-requests`                               | 登入態                             | （迭代 5）提出調班申請，**只能對自己的班次**                                |
-| `POST /api/shifts/change-requests/:id/decide`                    | shift:manage                       | （迭代 5）核准或駁回調班申請                                                |
-| `GET /api/baselines/metrics`                                     | 登入態                             | （迭代 5）五條成效指標的定義與量測方式                                      |
-| `GET /api/baselines/overview`                                    | 登入態                             | （迭代 5）建檔進度：還差幾項、哪幾項只有估算值                              |
-| `GET /api/baselines`                                             | 登入態                             | （迭代 5）歷次建檔紀錄（含已被取代的）                                      |
-| `POST /api/baselines`                                            | baseline:manage                    | （迭代 5）建檔一條成效基準（背書者必填）                                    |
-| `GET /api/device/carousel`                                       | 裝置＋Token                        | （迭代 6）本次綁定的輪播內容與行為參數                                      |
-| `POST /api/device/carousel/view-events`                          | 裝置＋Token                        | （迭代 6）回報瀏覽事件（只有卡片種類、停留時間、點開次數）                  |
-| `GET /api/carousel/items`                                        | carousel-content:manage            | （迭代 6）第二層內容清單（含已下架）                                        |
-| `POST /api/carousel/items`                                       | carousel-content:manage            | （迭代 6）新增或修改第二層內容（帶 id 為修改）                              |
-| `GET /api/carousel/view-stats?days=`                             | carousel-content:manage            | （迭代 6）依卡片種類彙總的瀏覽狀況                                          |
-| `POST /api/clinical-values/file-imports`                         | clinical-value:manage              | （迭代 6）Excel／CSV 匯入，整批全有或全無                                   |
-| `GET /api/import-field-mappings`                                 | clinical-value:manage              | （迭代 6）匯入欄位對應設定                                                  |
-| `PUT /api/import-field-mappings/:targetField`                    | clinical-value:manage              | （迭代 6）修改某一個欄位的對應名稱或啟停用                                  |
-| `GET /api/navigation`                                            | 登入態                             | （迭代 9）護理端畫導覽列用的清單。**關閉的功能不會出現在這裡**              |
-| `GET /api/navigation/placements`                                 | nav-placement:manage               | （迭代 9）設定畫面用：含關閉的功能、目前版位與上一次的理由                  |
-| `PUT /api/navigation/placements/:key`                            | nav-placement:manage               | （迭代 9）改一項功能的版位（主列／更多選單／關閉），**理由必填**            |
-| `GET /api/content/help-categories`                               | 登入態                             | （迭代 9）求助類別（只有啟用中的），畫面上顯示文字用                        |
-| `GET /api/content/help-categories/all`                           | content:manage                     | （迭代 9）求助類別全部，含已停用                                            |
-| `PUT /api/content/help-categories`                               | content:manage                     | （迭代 9）新增或修改一個求助類別（帶識別碼為修改）                          |
-| `GET /api/content/questionnaire`                                 | 登入態                             | （迭代 9）目前生效的透析前問卷與它的版本號                                  |
-| `PUT /api/content/questionnaire/items`                           | content:manage                     | （迭代 9）改一題問卷題目，**整份複製成新版本再套上改動**                    |
-| `GET /api/content/quiz-bank`                                     | 登入態                             | （迭代 9）目前生效的衛教題庫與知識點                                        |
-| `PUT /api/content/quiz-topics`                                   | content:manage                     | （迭代 9）新增或修改一個衛教知識點                                          |
-| `PUT /api/content/quiz-questions`                                | content:manage                     | （迭代 9）改一題題庫題目，版本號跟著遞增                                    |
-| `GET /api/content/feedback-form`                                 | 登入態                             | （迭代 9）目前生效的回饋題目與三個門檻                                      |
-| `PUT /api/content/feedback-items`                                | content:manage                     | （迭代 9）改一題回饋題目，版本號跟著遞增                                    |
-| `GET /api/content/other-usage`                                   | content:manage                     | （迭代 9）「其他」被選用的次數；用得太多代表清單不夠用                      |
-| `GET /api/education/topics`                                      | education:manage                   | （迭代 9）產生衛教內容時可選的主題（停用的不出現）                          |
-| `GET /api/device/content/questionnaire`                          | 裝置＋Token                        | （迭代 9）平板取問卷題目；取到之後存在本機供離線使用                        |
-| `GET /api/device/content/help-categories`                        | 裝置＋Token                        | （迭代 9）平板取求助類別；改過的文字下一次取得就生效                        |
+| 方法／路徑                                                       | 需要的權限                         | 說明                                                                                                   |
+| ---------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `POST /api/auth/register`                                        | 公開                               | 護理師註冊申請                                                                                         |
+| `POST /api/auth/login`                                           | 公開                               | 登入，回傳 JWT                                                                                         |
+| `POST /api/auth/logout`                                          | 登入態                             | 撤銷本次權杖                                                                                           |
+| `POST /api/auth/change-password`                                 | 登入態                             | 撤銷該帳號所有權杖                                                                                     |
+| `GET /api/auth/me`                                               | 登入態                             | 取得自己的檔案與權限清單                                                                               |
+| `GET /api/nurses/pending`                                        | nurse:approve                      | 待審核清單                                                                                             |
+| `GET /api/nurses`                                                | nurse:approve                      | 全部帳號                                                                                               |
+| `POST /api/nurses/:id/approve`                                   | nurse:approve                      | 核准                                                                                                   |
+| `POST /api/nurses/:id/reject`                                    | nurse:approve                      | 駁回（需 reason）                                                                                      |
+| `PATCH /api/nurses/:id/permissions`                              | nurse:grant-permission             | 調整角色／審核權限                                                                                     |
+| `GET /api/patients`                                              | 登入態                             | 病人清單                                                                                               |
+| `POST /api/patients`                                             | patient:manage                     | 建立病人                                                                                               |
+| `GET /api/devices`                                               | 登入態                             | 平板清單（指派時需要）                                                                                 |
+| `POST /api/devices`                                              | device:manage                      | 註冊平板，回傳一次性金鑰                                                                               |
+| `GET /api/devices/mdm/console`                                   | device:manage                      | 模擬 MDM 控制台狀態                                                                                    |
+| `POST /api/devices/:id/mdm/enroll`                               | device:manage                      | MDM 註冊                                                                                               |
+| `POST /api/devices/:id/mdm/unenroll`                             | device:manage                      | MDM 解除註冊                                                                                           |
+| `POST /api/devices/:id/mdm/lock`                                 | device:manage                      | 遠端鎖定                                                                                               |
+| `POST /api/devices/:id/mdm/unlock`                               | device:manage                      | 解除鎖定                                                                                               |
+| `POST /api/devices/:id/mdm/kiosk`                                | device:manage                      | 設定 Kiosk 網址                                                                                        |
+| `GET /api/treatment-sessions?date=`                              | 登入態                             | 當日排班                                                                                               |
+| `POST /api/treatment-sessions`                                   | schedule:manage                    | 建立排班                                                                                               |
+| `POST /api/treatment-sessions/:id/cancel`                        | schedule:manage                    | **取消排班（UI 未提供）**                                                                              |
+| `GET /api/bindings`                                              | 登入態                             | 近期綁定紀錄                                                                                           |
+| `POST /api/bindings`                                             | binding:manage                     | 指派平板                                                                                               |
+| `POST /api/bindings/:id/release`                                 | binding:manage                     | 解除（reason: MANUAL_RELEASE ／ NORMAL_DISCHARGE）                                                     |
+| `GET /api/device/session`                                        | 裝置金鑰                           | 平板輪詢綁定狀態                                                                                       |
+| `GET /api/device/session/context`                                | 裝置＋Token                        | 取得本次綁定病人資料                                                                                   |
+| `POST /api/device/session/cleared`                               | 裝置金鑰                           | 回報本地資料已清除                                                                                     |
+| `POST /api/device/symptom-reports`                               | 裝置＋Token                        | 送出症狀問卷                                                                                           |
+| `GET /api/device/symptom-reports/mine`                           | 裝置＋Token                        | 本次綁定已送出的回報                                                                                   |
+| `POST /api/device/help-requests`                                 | 裝置＋Token                        | 送出求助                                                                                               |
+| `GET /api/device/help-requests/mine`                             | 裝置＋Token                        | 本次綁定的求助狀態                                                                                     |
+| `GET /api/symptom-reports/treatment-session/:treatmentSessionId` | patient:monitor                    | 某次療程的所有回報                                                                                     |
+| `GET /api/symptom-reports/trend/:patientId`                      | patient:monitor                    | 症狀趨勢摘要                                                                                           |
+| `GET /api/help-requests?status=`                                 | patient:monitor                    | 通報清單（含趨勢摘要）                                                                                 |
+| `GET /api/help-requests/:id`                                     | patient:monitor                    | 單筆通報                                                                                               |
+| `POST /api/help-requests/:id/acknowledge`                        | help-request:handle                | 接手                                                                                                   |
+| `POST /api/help-requests/:id/resolve`                            | help-request:handle                | 處理完成                                                                                               |
+| `POST /api/help-requests/:id/cancel`                             | help-request:handle                | 取消                                                                                                   |
+| `GET /api/overview?date=`                                        | patient:monitor                    | 多病人即時總覽                                                                                         |
+| `GET /api/realtime/stream`                                       | patient:monitor                    | 即時串流（SSE，不是一般的 JSON 回應）                                                                  |
+| `GET /api/audit-logs`                                            | audit:read                         | 稽核軌跡（可篩 action／deviceSerialNo／日期／分頁）                                                    |
+| `GET /api/health`                                                | 公開                               | 健康檢查，不需要任何憑證                                                                               |
+| `GET /api/feature-flags/enabled`                                 | 登入態（唯讀角色亦可）             | （迭代 3）目前開著的功能開關，前端用來決定要不要畫出入口                                               |
+| `GET /api/feature-flags`                                         | feature-flag:manage                | （迭代 3）十個開關的完整狀態與開啟條件                                                                 |
+| `PUT /api/feature-flags/:key`                                    | feature-flag:manage                | （迭代 3）切換開關（需 reason；AI 那兩項另需 system:configure）                                        |
+| `GET /api/ai/status`                                             | system:configure                   | （迭代 3）目前供應者、健康檢查與可用模型                                                               |
+| `POST /api/ai/test-invocations`                                  | system:configure＋AI 開關          | （迭代 3）介面層連線測試，走與正式功能相同的閘道                                                       |
+| `GET /api/ai/invocations`                                        | ai-invocation:read（唯讀角色亦可） | （迭代 3）AI 呼叫紀錄                                                                                  |
+| `GET /api/ops/database`                                          | backup:manage                      | （迭代 3）SQLite 必開設定與檔案大小（**不含檔案路徑**）                                                |
+| `GET /api/ops/runtime`                                           | backup:manage                      | （迭代 7）服務實際跑在哪個時區、哪個帳號底下，Prisma 引擎是不是自帶的                                  |
+| `GET /api/ops/updates`                                           | backup:manage                      | （迭代 7）歷次版本更新紀錄；由更新腳本寫入，這裡只讀                                                   |
+| `GET /api/backups`                                               | backup:manage                      | （迭代 3）備份歷程                                                                                     |
+| `POST /api/backups`                                              | backup:manage                      | （迭代 3）立即線上備份（`VACUUM INTO`）                                                                |
+| `POST /api/clinical-values/manual-entries`                       | clinical-value:manage              | （迭代 3）人工輸入臨床數值，整批全有或全無                                                             |
+| `GET /api/clinical-values`                                       | patient:monitor                    | （迭代 3）臨床數值清單（含被覆蓋的前一版）                                                             |
+| `GET /api/clinical-value-imports`                                | clinical-value:manage              | （迭代 3）最近的匯入批次                                                                               |
+| `GET /api/ai-jobs/:id`                                           | patient:monitor                    | （迭代 4）背景工作進度                                                                                 |
+| `GET /api/education/patients/:patientId`                         | patient:monitor                    | （迭代 4）衛教內容、完成紀錄、測驗與知識點                                                             |
+| `POST /api/education/contents`                                   | education:manage＋AI 開關          | （迭代 4）產生個人化衛教，排入佇列                                                                     |
+| `POST /api/education/discharge-summaries`                        | education:manage＋AI 開關          | （迭代 4）產生離院衛教重點，排入佇列                                                                   |
+| `POST /api/education/contents/:id/approve`                       | education:manage                   | （迭代 4）核可，病人端可見                                                                             |
+| `POST /api/education/contents/:id/reject`                        | education:manage                   | （迭代 4）退回（需 note）                                                                              |
+| `GET /api/device/education`                                      | 裝置＋Token                        | （迭代 4）已核可的衛教內容與適性測驗題目                                                               |
+| `POST /api/device/education/contents/:id/complete`               | 裝置＋Token                        | （迭代 4）我看完了                                                                                     |
+| `POST /api/device/quiz-attempts`                                 | 裝置＋Token                        | （迭代 4）送出測驗作答                                                                                 |
+| `POST /api/device/feedback-responses`                            | 裝置＋Token                        | （迭代 4）送出情緒／滿意度回饋                                                                         |
+| `GET /api/device/feedback-responses/mine`                        | 裝置＋Token                        | （迭代 4）本次療程是否已填                                                                             |
+| `GET /api/psychosocial/overview`                                 | patient:monitor                    | （迭代 4）心理社會彙總                                                                                 |
+| `GET /api/psychosocial/patients/:patientId`                      | patient:monitor                    | （迭代 4）單一病人的回饋與暫定規則比對                                                                 |
+| `GET /api/adequacy/patients/:patientId`                          | patient:monitor                    | （迭代 4）透析適足性趨勢。1005 起受「需要抽血數值的功能」開關控制，預設關閉                            |
+| `POST /api/adequacy/calculations`                                | clinical-value:manage              | （迭代 4）計算 URR 與 spKt/V。同上                                                                     |
+| `GET /api/nursing-records?treatmentSessionId=`                   | patient:monitor                    | （迭代 4）護理記錄清單                                                                                 |
+| `GET /api/nursing-records/:id`                                   | patient:monitor                    | （迭代 4）單筆護理記錄                                                                                 |
+| `POST /api/nursing-records/events`                               | nursing-record:write               | （迭代 4）以快速範本建立事件記錄                                                                       |
+| `POST /api/nursing-records/prefills`                             | nursing-record:write               | （迭代 4）依病人自報建立預填草稿                                                                       |
+| `POST /api/nursing-records/:id/ai-draft`                         | nursing-record:write＋AI 開關      | （迭代 4）AI 草擬初稿，排入佇列                                                                        |
+| `POST /api/nursing-records/:id/sign`                             | nursing-record:write               | （迭代 4）簽核，之後不可修改                                                                           |
+| `GET /api/sop/documents`                                         | sop:query                          | （迭代 4）收錄的文件                                                                                   |
+| `POST /api/sop/queries`                                          | sop:query                          | （迭代 4）SOP／藥品劑量查詢                                                                            |
+| `POST /api/help-requests/:id/arrive`                             | help-request:handle                | （迭代 5）登記到達床邊時間，只能登記一次                                                               |
+| `GET /api/help-requests/follow-ups/open`                         | patient:monitor                    | （迭代 5）待追蹤事項清單                                                                               |
+| `POST /api/help-requests/follow-ups/:followUpId/close`           | help-request:handle                | （迭代 5）結束追蹤事項（完成或取消）                                                                   |
+| `GET /api/help-resolution-options`                               | 登入態                             | （迭代 5）結案畫面用：只有啟用中的處理方式與處理結果                                                   |
+| `GET /api/help-resolution-options/all`                           | operational-setting:manage         | （迭代 5）設定畫面用：含已停用者                                                                       |
+| `PUT /api/help-resolution-options`                               | operational-setting:manage         | （迭代 5）新增或停用一個選項（代號限大寫英數與底線）                                                   |
+| `GET /api/operational-settings`                                  | 登入態                             | （迭代 5）營運參數現值（再發判定期間、勞動條件上下限、輪播門檻等）                                     |
+| `PUT /api/operational-settings/:key`                             | operational-setting:manage         | （迭代 5）調整某一項營運參數（**理由必填**）                                                           |
+| `GET /api/shifts?from=&to=`                                      | 登入態                             | （迭代 5）班表；一般護理師只讀得到自己的班                                                             |
+| `POST /api/shifts`                                               | shift:manage                       | （迭代 5）手動建立班次，違反勞動條件即擋下                                                             |
+| `POST /api/shifts/imports`                                       | shift:manage                       | （迭代 5）班表檔案匯入，整批全有或全無                                                                 |
+| `POST /api/shifts/:id/beds`                                      | shift:manage                       | （迭代 5）指定當班負責床位（整組取代，不累加）                                                         |
+| `POST /api/shifts/:id/cancel`                                    | shift:manage                       | （迭代 5）取消班次（轉為已取消，不從表上消失）                                                         |
+| `GET /api/shifts/change-requests`                                | 登入態                             | （迭代 5）調班申請；一般護理師只看得到自己送出的                                                       |
+| `POST /api/shifts/change-requests`                               | 登入態                             | （迭代 5）提出調班申請，**只能對自己的班次**                                                           |
+| `POST /api/shifts/change-requests/:id/decide`                    | shift:manage                       | （迭代 5）核准或駁回調班申請                                                                           |
+| `GET /api/baselines/metrics`                                     | 登入態                             | （迭代 5）五條成效指標的定義與量測方式                                                                 |
+| `GET /api/baselines/overview`                                    | 登入態                             | （迭代 5）建檔進度：還差幾項、哪幾項只有估算值                                                         |
+| `GET /api/baselines`                                             | 登入態                             | （迭代 5）歷次建檔紀錄（含已被取代的）                                                                 |
+| `POST /api/baselines`                                            | baseline:manage                    | （迭代 5）建檔一條成效基準（背書者必填）                                                               |
+| ~~`GET /api/device/carousel`~~                                   | 裝置＋Token                        | （迭代 6）本次綁定的輪播內容與行為參數。**迭代 16 拿掉**，改為 `GET /api/device/home`                  |
+| ~~`POST /api/device/carousel/view-events`~~                      | 裝置＋Token                        | （迭代 6）回報瀏覽事件。**迭代 16 拿掉**，改為 `POST /api/device/marquee/plays`                        |
+| `GET /api/carousel/items`                                        | carousel-content:manage            | （迭代 6）跑馬燈內容清單（含已下架；迭代 17 起含待核准與核准狀態）                                     |
+| `POST /api/carousel/items`                                       | carousel-content:manage            | （迭代 6）新增或修改跑馬燈內容（帶 id 為修改）；迭代 17 起新增的一律待核准，護理師沒有 AI 時用它寫公告 |
+| `GET /api/carousel/view-stats?days=`                             | carousel-content:manage            | （迭代 6）依卡片種類彙總的瀏覽狀況                                                                     |
+| `POST /api/clinical-values/file-imports`                         | clinical-value:manage              | （迭代 6）Excel／CSV 匯入，整批全有或全無                                                              |
+| `GET /api/import-field-mappings`                                 | clinical-value:manage              | （迭代 6）匯入欄位對應設定                                                                             |
+| `PUT /api/import-field-mappings/:targetField`                    | clinical-value:manage              | （迭代 6）修改某一個欄位的對應名稱或啟停用                                                             |
+| `GET /api/navigation`                                            | 登入態                             | （迭代 9）護理端畫導覽列用的清單。**關閉的功能不會出現在這裡**                                         |
+| `GET /api/navigation/placements`                                 | nav-placement:manage               | （迭代 9）設定畫面用：含關閉的功能、目前版位與上一次的理由                                             |
+| `PUT /api/navigation/placements/:key`                            | nav-placement:manage               | （迭代 9）改一項功能的版位（主列／更多選單／關閉），**理由必填**                                       |
+| `GET /api/content/help-categories`                               | 登入態                             | （迭代 9）求助類別（只有啟用中的），畫面上顯示文字用                                                   |
+| `GET /api/content/help-categories/all`                           | content:manage                     | （迭代 9）求助類別全部，含已停用                                                                       |
+| `PUT /api/content/help-categories`                               | content:manage                     | （迭代 9）新增或修改一個求助類別（帶識別碼為修改）                                                     |
+| `GET /api/content/questionnaire`                                 | 登入態                             | （迭代 9）目前生效的透析前問卷與它的版本號                                                             |
+| `PUT /api/content/questionnaire/items`                           | content:manage                     | （迭代 9）改一題問卷題目，**整份複製成新版本再套上改動**                                               |
+| `GET /api/content/quiz-bank`                                     | 登入態                             | （迭代 9）目前生效的衛教題庫與知識點                                                                   |
+| `PUT /api/content/quiz-topics`                                   | content:manage                     | （迭代 9）新增或修改一個衛教知識點                                                                     |
+| `PUT /api/content/quiz-questions`                                | content:manage                     | （迭代 9）改一題題庫題目，版本號跟著遞增                                                               |
+| `GET /api/content/feedback-form`                                 | 登入態                             | （迭代 9）目前生效的回饋題目與三個門檻                                                                 |
+| `PUT /api/content/feedback-items`                                | content:manage                     | （迭代 9）改一題回饋題目，版本號跟著遞增                                                               |
+| `GET /api/content/other-usage`                                   | content:manage                     | （迭代 9）「其他」被選用的次數；用得太多代表清單不夠用                                                 |
+| `GET /api/education/topics`                                      | education:manage                   | （迭代 9）產生衛教內容時可選的主題（停用的不出現）                                                     |
+| `GET /api/device/content/questionnaire`                          | 裝置＋Token                        | （迭代 9）平板取問卷題目；取到之後存在本機供離線使用                                                   |
+| `GET /api/device/content/help-categories`                        | 裝置＋Token                        | （迭代 9）平板取求助類別；改過的文字下一次取得就生效                                                   |
+| `POST /api/device/foreground`                                    | 裝置金鑰                           | （迭代 10）平板回報是否在最上層、是否釘選；迭代 12 起附外殼版本與契約版本                              |
+| `GET /api/device/shell-contract`                                 | 公開                               | （迭代 12）外殼契約版本握手。路徑與回應格式任何版本都不得變更                                          |
+| `GET /api/beds`                                                  | 登入態                             | （迭代 14）床位清單                                                                                    |
+| `PUT /api/beds`                                                  | operational-setting:manage         | （迭代 14）調整床位清單；有病人正在治療的床拿不掉                                                      |
+| `POST /api/devices/:id/bed`                                      | device:manage                      | （迭代 14）平板換床（簡易版拖曳）                                                                      |
+| `PUT /api/carousel/items/:id/targets`                            | carousel-content:manage            | （迭代 14）指定在哪幾床播                                                                              |
+| `POST /api/help-requests/:id/outcome`                            | help-request:handle                | （迭代 14）結案後補改處理結果                                                                          |
+| `POST /api/treatment-sessions/:id/reopen`                        | schedule:manage                    | （迭代 14.2）重新開啟今天已下機或取消的排班，沿用同一筆                                                |
+| `GET /api/hospital-sync/status`                                  | patient:monitor                    | （迭代 15）院方資料最後一次更新、是否超過提示時間                                                      |
+| `GET /api/hospital-sync/runs`                                    | operational-setting:manage         | （迭代 15）最近幾次抓取的結果（不含回應內容）                                                          |
+| `POST /api/hospital-sync/run`                                    | operational-setting:manage         | （迭代 15）手動再抓一次                                                                                |
+| `PUT /api/patients/:id/preferred-device`                         | binding:manage                     | （迭代 15）把平板配給病人，之後他每次透析自動接上                                                      |
+| `GET /api/patients/:id/latest-vital`                             | nursing-record:write               | （迭代 15）院方最近一筆血壓，低血壓處置範本帶入用                                                      |
+| `GET /api/device/stream`                                         | 裝置金鑰                           | （迭代 15）平板的 SSE：只通知「療程變了」「有新數值」，不帶數值                                        |
+| `GET /api/device/home`                                           | 裝置＋Token                        | （迭代 16）病人端首頁：本次透析面板、跑馬燈與行為參數、問卷是否到期                                    |
+| `POST /api/device/marquee/plays`                                 | 裝置＋Token                        | （迭代 16）每播完一則記一筆播放（不含病人）                                                            |
+| `GET /api/carousel/draft-topics`                                 | carousel-content:manage            | （迭代 17）可以要草稿的衛教主題                                                                        |
+| `POST /api/carousel/drafts`                                      | carousel-content:manage            | （迭代 17）要一份 AI 草稿（主題或公告事由）；AI 總開關關閉時不存在                                     |
+| `POST /api/carousel/items/:id/approve`                           | carousel-content:manage            | （迭代 17）核准即上架，可帶修改與播放床位；超過標題 12 字、內容 60 字擋下                              |
+| `POST /api/carousel/items/:id/reject`                            | carousel-content:manage            | （迭代 17）退回（產生中的也能取消）                                                                    |
+| `POST /api/carousel/items/:id/reopen`                            | carousel-content:manage            | （迭代 17）撤回成待核准，病人端立刻收不到                                                              |
+| `PUT /api/carousel/items/:id/schedule`                           | carousel-content:manage            | （迭代 17）上下架時間                                                                                  |
 
-> 表中各迭代的操作步驟分別在[迭代 3](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-3/index.md)、[迭代 4](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-4/index.md)、[迭代 5](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-5/index.md)、[迭代 6](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-6/index.md)、[迭代 7](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-7/index.md)、[迭代 8](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-8/index.md)、[迭代 9](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-9/index.md)、[迭代 10](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-10/index.md) 八本分冊。 本表逐條對齊後端啟動時印出的路由清單（目前 126 條）；日後新增端點時，以那份清單為準回頭補這張表。
+> 表中各迭代的操作步驟分別在[迭代 3](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-3/index.md)～[迭代 17](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17/index.md) 各分冊（索引見 §13）。 本表逐條對齊後端啟動時印出的路由清單（目前 136 條；1005 補齊迭代 10～17 新增的 22 條）；日後新增端點時，以那份清單為準回頭補這張表。
 
 - `h1` **［終端機］** 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。 → 409「此排班仍有進行中的裝置綁定，請先解除綁定」。解除後再取消則成功，狀態變 `CANCELLED`。
 - `h2` **［終端機］** 用 curl 查昨天的總覽。 → 回應中 `fromCache` 為 `false`（非當日改為直讀資料庫）；查今天則為 `true`。

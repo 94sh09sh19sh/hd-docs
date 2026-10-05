@@ -170,7 +170,7 @@
     <div class="meta">
       <span><b>依據</b> SRS v2.0 §3.2／§4.3／§7</span>
       <span><b>約束</b> 資料庫使用規範 §2／§7／§8／§14</span>
-      <span><b>對應</b> 迭代 16 完成時的程式（1005 只改圖版一的文字）</span>
+      <span><b>對應</b> 迭代 17 完成時的程式（1005 只改兩張圖的標籤）</span>
       <span><b>重繪</b> 2026-09-29（依 0926 改版：容器＋git clone、AI 閘道服務、實驗室通道只在開發環境、建置期連線分開畫）</span>
     </div>
   </header>
@@ -260,7 +260,7 @@
       <p class="claim">病人不登入、前端碰不到資料庫；即時通知走院內 SSE，所有 AI 呼叫先過閘道；護理師自己的資料與臨床資料分表。</p>
     </div>
     <figure>
-      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕；裝置綁定、照護業務（含病人端的本次透析面板與跑馬燈）、營運與排班、臨床資料匯入都寫入同一個 SQLite 檔案，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層，再經本系統的 AI 閘道服務（容器，不含模型）呼叫院內 AI 伺服器；唯一跨出醫院的是只在開發環境、經 SSH 通道使用的實驗室 GPU 伺服器，只送合成資料，正式環境設定拒絕啟用。規則引擎與對外報表服務是規劃中的元件。">
+      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕，平板也以院內 SSE 收到「有新數值」的通知；裝置綁定、照護業務（含病人端的本次透析面板與跑馬燈）、營運與排班、院方資料同步都寫入同一個 SQLite 檔案，院方資料同步每 3 分鐘唯讀抓取院方透析清單 API，自動完成的事走與護理師操作相同的服務，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層，再經本系統的 AI 閘道服務（容器，不含模型）呼叫院內 AI 伺服器；唯一跨出醫院的是只在開發環境、經 SSH 通道使用的實驗室 GPU 伺服器，只送合成資料，正式環境設定拒絕啟用。規則引擎與對外報表服務是規劃中的元件。">
         <defs>
           <marker id="p1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p1-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
@@ -295,7 +295,7 @@
         <path d="M 1350,175 H 740 V 122" class="link-push" marker-end="url(#p1-teal)"/>
 
         <!-- link labels -->
-        <text x="150" y="12" class="t-lbl-teal">指派後才核發限時 Session Token</text>
+        <text x="150" y="12" class="t-lbl-teal">指派後才核發限時 Session Token・新數值以 SSE 通知</text>
         <text x="292" y="165" class="t-lbl">每 3 秒輪詢・問卷／求助</text>
         <text x="648" y="165" text-anchor="end" class="t-lbl">指派・審閱・簽核</text>
         <text x="1344" y="330" text-anchor="end" class="t-lbl-teal">SSE 即時推送</text>
@@ -363,13 +363,13 @@
         <text x="612" y="420" text-anchor="middle" class="t-sub-s">班表・床位・成效基準</text>
         <text x="612" y="441" text-anchor="middle" class="t-sub-s">勞動條件檢查・可設定參數</text>
 
-        <!-- 臨床資料匯入 -->
+        <!-- 院方資料同步（迭代 15 起院方 API 是日常來源；人工輸入與檔案匯入留在專業版當備援） -->
         <rect x="722" y="350" width="168" height="120" rx="4" class="node"/>
         <rect x="710" y="372" width="24" height="16" rx="2" class="node"/>
         <rect x="710" y="404" width="24" height="16" rx="2" class="node"/>
-        <text x="806" y="396" text-anchor="middle" class="t-title-s">臨床資料匯入</text>
-        <text x="806" y="420" text-anchor="middle" class="t-sub-s">ClinicalDataSourcePort</text>
-        <text x="806" y="441" text-anchor="middle" class="t-sub-s">人工輸入・檔案・院方 API</text>
+        <text x="806" y="396" text-anchor="middle" class="t-title-s">院方資料同步</text>
+        <text x="806" y="420" text-anchor="middle" class="t-sub-s">病人・床位・療程・數值</text>
+        <text x="806" y="441" text-anchor="middle" class="t-sub-s">院方 API・人工・檔案</text>
 
         <!-- AI 閘道 : chip -->
         <rect x="916" y="350" width="168" height="120" rx="10" class="node"/>
@@ -444,7 +444,7 @@
         <text x="1160" y="920" text-anchor="middle" class="t-title-ext">實驗室 GPU 伺服器</text>
         <text x="1160" y="944" text-anchor="middle" class="t-sub">個人容器裡的 AI 閘道・院外</text>
       </svg>
-      <figcaption>兩條綠色虛線都是伺服器端送下來的：Session Token 要等護理師指派後才核發，平板在輪詢時領取；即時總覽由院內 SSE 長連線推給護理端與常駐總覽螢幕，推播中繼已整條拿掉。0927 起模型供應者介面層不直接連推論端點，一律經本系統的 AI 閘道服務（Python・LangChain 的容器，不含模型）；換模型只改閘道的設定檔，後端不動。鏽色線只剩一條：過渡期的實驗室 GPU 伺服器，只在開發環境經 SSH 通道使用，後端的 AI 閘道在程式裡強制只送合成資料，正式環境設定下選用它會直接拒絕啟動。迭代 5 新增的營運與排班模組是本系統第一個蒐集「護理師自己的資料」的地方：它與其他模組寫同一個檔案，但班表與成效基準自成資料表，不回寫臨床資料表。病人端首頁的「本次透析」面板與跑馬燈（1005 迭代 16，取代迭代 6 的閒置輪播）併在照護業務模組裡：面板與跑馬燈一律由後端組好再送到平板，只送畫面要用的欄位，畫面上不出現姓名與病歷號；面板的量測值來自臨床資料匯入（院方 API）寫進去的那幾張表。</figcaption>
+      <figcaption>兩條綠色虛線都是伺服器端送下來的：Session Token 要等護理師指派後才核發，平板在輪詢時領取；即時總覽由院內 SSE 長連線推給護理端與常駐總覽螢幕，推播中繼已整條拿掉。0927 起模型供應者介面層不直接連推論端點，一律經本系統的 AI 閘道服務（Python・LangChain 的容器，不含模型）；換模型只改閘道的設定檔，後端不動。鏽色線只剩一條：過渡期的實驗室 GPU 伺服器，只在開發環境經 SSH 通道使用，後端的 AI 閘道在程式裡強制只送合成資料，正式環境設定下選用它會直接拒絕啟動。迭代 5 新增的營運與排班模組是本系統第一個蒐集「護理師自己的資料」的地方：它與其他模組寫同一個檔案，但班表與成效基準自成資料表，不回寫臨床資料表。病人端首頁的「本次透析」面板與跑馬燈（1005 迭代 16，取代迭代 6 的閒置輪播）併在照護業務模組裡：面板與跑馬燈一律由後端組好再送到平板，只送畫面要用的欄位，畫面上不出現姓名與病歷號；面板的量測值來自院方資料同步寫進去的那幾張表。1005 迭代 15 起「臨床資料匯入」改稱院方資料同步：每 3 分鐘唯讀抓取院方透析清單 API，病人、床位、療程開始與下機由它自動完成，走的是護理師操作時同一支服務；平板除了輪詢，另以院內 SSE 收到「有新數值」的通知（不帶數值）。人工輸入與檔案匯入只留在專業版當備援。</figcaption>
     </figure>
   </section>
 
@@ -456,7 +456,7 @@
       <p class="claim">服務執行時院內一條對外連線都沒有；主機只在建置與更新時連出，實驗室通道只在開發環境。</p>
     </div>
     <figure>
-      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內一台與其他專案共用的 Windows 工作站，上面以 Docker 容器與 git clone 部署應用伺服器與本系統的 AI 閘道；SQLite 檔案在同一台主機的資料卷裡，唯讀整合 HIS/EMR，每日備份到院內另一台機器，AI 推論端點在另一台 DGX Spark 上。平板不經 MDM，改以自包 WebView 外殼加螢幕固定。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕。服務執行時沒有任何一條線跨出醫院；主機只在建置與更新時連出取得程式碼、映像檔與套件。過渡期的實驗室 GPU 伺服器只在開發環境由開發機經 SSH 通道使用，只送合成資料。">
+      <svg id="plate-02" viewBox="0 0 1240 1000" role="img" aria-label="實體架構圖：醫院院內網路含透析治療區的 15 台病人 Kiosk 平板、護理站的護理端裝置與常駐總覽螢幕，以及機房內一台與其他專案共用的 Windows 工作站，上面以 Docker 容器與 git clone 部署應用伺服器與本系統的 AI 閘道；SQLite 檔案在同一台主機的資料卷裡，唯讀整合 HIS/EMR，每日備份到院內另一台機器，AI 推論端點在另一台 DGX Spark 上。平板不經 MDM，改以自包 WebView 外殼加螢幕固定。平板與護理端以 HTTPS 連到應用伺服器，應用伺服器以 SSE 推送總覽給護理端與總覽螢幕，也以 SSE 通知平板有新數值；應用伺服器每 3 分鐘唯讀抓取院方透析清單 API，不寫回。服務執行時沒有任何一條線跨出醫院；主機只在建置與更新時連出取得程式碼、映像檔與套件。過渡期的實驗室 GPU 伺服器只在開發環境由開發機經 SSH 通道使用，只送合成資料。">
         <defs>
           <marker id="p2-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p2-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
@@ -496,12 +496,12 @@
         <path d="M 545,420 V 368 H 1175 V 185 H 1146" class="link-push" marker-end="url(#p2-teal)"/>
         <path d="M 760,368 V 244" class="link-push" marker-end="url(#p2-teal)"/>
 
-        <text x="312" y="294" class="t-lbl">HTTPS・每 3 秒輪詢</text>
+        <text x="312" y="294" class="t-lbl">HTTPS・每 3 秒輪詢・SSE 通知</text>
         <text x="698" y="314" text-anchor="end" class="t-lbl">HTTPS・院內網段</text>
         <text x="1163" y="310" text-anchor="end" class="t-lbl-teal">SSE 即時推送・院內</text>
         <text x="605" y="472" text-anchor="middle" class="t-lbl">Repository 層</text>
         <text x="605" y="492" text-anchor="middle" class="t-lbl">單一寫入者</text>
-        <text x="800" y="604" text-anchor="middle" class="t-lbl">唯讀查詢或檔案匯入・不寫回</text>
+        <text x="800" y="604" text-anchor="middle" class="t-lbl">每 3 分鐘唯讀抓取・不寫回</text>
         <text x="334" y="692" text-anchor="middle" class="t-lbl">每日線上備份</text>
         <text x="562" y="672" text-anchor="middle" class="t-lbl">院內推論・去識別化後</text>
         <text x="398" y="776" text-anchor="end" class="t-lbl-build">建置與更新時才連出</text>
@@ -563,7 +563,7 @@
         <path d="M 915,420 H 1115 V 556 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 c -16,16 -34,-16 -50,0 Z" class="node-legacy"/>
         <text x="1015" y="480" text-anchor="middle" class="t-title-legacy">HIS／EMR</text>
         <text x="1015" y="504" text-anchor="middle" class="t-sub-s">既有系統・唯讀</text>
-        <text x="1015" y="526" text-anchor="middle" class="t-sub-s">臨床數值・院方唯讀 API</text>
+        <text x="1015" y="526" text-anchor="middle" class="t-sub-s">透析清單・院方唯讀 API</text>
 
         <!-- 備份目的地 : cylinder -->
         <path d="M 110,640 L 110,712 A 90,14 0 0 0 290,712 L 290,640 Z" class="node"/>
@@ -607,7 +607,7 @@
         <text x="1010" y="914" text-anchor="middle" class="t-title-ext">實驗室 GPU 伺服器</text>
         <text x="1010" y="938" text-anchor="middle" class="t-sub-s">個人容器裡的 AI 閘道</text>
       </svg>
-      <figcaption>沒畫出來的線和畫出來的一樣重要：平板、護理端裝置、總覽螢幕、資料庫都沒有任何一條往外打的線。0926 起部署改為 Docker 容器＋git clone，主機只在建置與更新時連出取得程式碼、映像檔與套件（赭色點線），服務起來之後一條對外連線都沒有。應用伺服器與 AI 推論端點之間多了一格本系統的 AI 閘道（同一台主機上的容器，不含模型）。過渡期的實驗室 GPU 伺服器不再從院內主機連出：它只在開發環境由開發機經 SSH 通道使用，只送合成資料，正式環境設定下選用它會直接拒絕啟動。</figcaption>
+      <figcaption>沒畫出來的線和畫出來的一樣重要：平板、護理端裝置、總覽螢幕、資料庫都沒有任何一條往外打的線。0926 起部署改為 Docker 容器＋git clone，主機只在建置與更新時連出取得程式碼、映像檔與套件（赭色點線），服務起來之後一條對外連線都沒有。應用伺服器與 AI 推論端點之間多了一格本系統的 AI 閘道（同一台主機上的容器，不含模型）。過渡期的實驗室 GPU 伺服器不再從院內主機連出：它只在開發環境由開發機經 SSH 通道使用，只送合成資料，正式環境設定下選用它會直接拒絕啟動。1005 迭代 15 起應用伺服器每 3 分鐘唯讀抓取院方透析清單 API（不寫回），平板另以院內 SSE 收到有新數值的通知；兩條都在院內，圖上的線沒有增減。</figcaption>
     </figure>
   </section>
 
@@ -629,6 +629,7 @@
         <li><b>PostgreSQL 與即時狀態快取改為一個 SQLite 檔案。</b>檔案放在應用伺服器本機磁碟，即時狀態放在後端行程記憶體。</li>
         <li><b>新增元件。</b>臨床資料匯入、照護業務模組、備份目的地；規則引擎與對外報表服務以虛線標為規劃中。</li>
         <li><b>1005 迭代 16：照護業務模組的「閒置輪播・三層內容」改成「本次透析面板・跑馬燈」</b>；規則引擎與對外報表服務的迭代編號改成 18、19（1005 重排）。沒有新增任何元件或連線。</li>
+        <li><b>1005 迭代 15：「臨床資料匯入」改稱院方資料同步</b>，院方透析清單 API 成為病人、床位與療程的日常來源；圖版一的 Session Token 標籤補上平板的 SSE 通知，圖版二的 HIS／EMR 與它的連線改標「透析清單」「每 3 分鐘唯讀抓取」、平板的連線補上 SSE。<b>只改標籤，分區與連線一條未動</b>；開發與模擬部署用的模擬院方 API 不在圖上（正式環境不得啟動）。迭代 17 的跑馬燈草稿走既有的 AI 閘道，圖上不必改。</li>
         <li><b>迭代 6 補上閒置輪播與正式主機。</b>輪播併在照護業務模組裡（卡片由後端組好再送到平板）；兩張圖的「院內 AI 伺服器」標上 DGX Spark，應用伺服器標上容器部署。<b>沒有新增任何機器或網路連線</b>，圖版 02 的分區與線一條未改。</li>
         <li><b>迭代 5 再加一個營運與排班模組。</b>它是本系統第一個蒐集「護理師自己的資料」的地方——班表、床位分配、成效基準。與其他模組寫同一個檔案，但自成資料表，<b>不回寫臨床資料表</b>（資料庫使用規範 §11.2）。</li>
         <li><b>0919 第一次動到圖版 02 的分區與線。</b>應用伺服器由 DGX Spark 改為<b>院內另一台 Windows 工作站</b>（仍與其他專案共用），以離線安裝包部署；AI 推論端點退成<b>另一台機器</b>，兩者之間只有一條院內 HTTP 呼叫；<b>MDM 整格拿掉</b>，平板改以自包 WebView 外殼加螢幕固定，那條「註冊／遠端鎖定」的線一併消失；臨床數值來源由「待確認」改為院方唯讀 API。前面幾次都只換標籤，這一次真的少了一台機器、少了一條線。</li>
@@ -638,7 +639,7 @@
   </section>
 
   <footer>
-    依據 SRS v2.0 §3.2／§4.3／§7、實作規格書 v2.0 第 3 章與資料庫使用規範 §2／§7／§8／§11／§14 重繪（2026-09-29 更新：部署改為 Docker 容器＋git clone、多一格 AI 閘道服務、實驗室通道只在開發環境、建置期連線分開畫）
+    依據 SRS v2.0 §3.2／§4.3／§7、實作規格書 v2.0 第 3 章與資料庫使用規範 §2／§7／§8／§11／§14 重繪（2026-09-29 更新：部署改為 Docker 容器＋git clone、多一格 AI 閘道服務、實驗室通道只在開發環境、建置期連線分開畫；1005 補迭代 15 的標籤：院方資料同步、平板的 SSE 通知）
   </footer>
 
 </div>

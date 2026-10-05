@@ -1,8 +1,10 @@
 # 血液透析平板照護輔助系統 — 技術進度報告
 
-**適用讀者**：接手或協作的工程師 **報告日期**：2026-09-30 **版本**：迭代 14.5 完成（master） **Repo**：`94sh09sh19sh/hd-tablet-care`
+**適用讀者**：接手或協作的工程師 **報告日期**：2026-10-05 **版本**：迭代 17 完成（master） **Repo**：`94sh09sh19sh/hd-tablet-care`
 
-> 本版由 0909 定版（Iteration 2 時點）改寫。0909 之後的主要變化：需求於 0910 改為 v2.0（SaMD 三項改為有條件納入、資料庫改 SQLite、封閉網路）； 迭代 3 完成資料層遷移與四個平台機制；迭代 4 完成 AI 輔助內容與護理記錄；迭代 5 完成求助處理完整紀錄、護理師班表與成效基準；迭代 6 完成閒置輪播與檔案匯入；迭代 7 完成部署前的缺陷修正與版本更新的資料保護；迭代 8 完成兩端介面重新設計；迭代 9 完成導覽版位、功能開關與內容資料化；迭代 10 完成離線安裝包與平板佈建。 **0922 第一次進院失敗之後，0926 起的四個迭代把交付方式整個換掉**：迭代 11 改為 Docker ＋ `git clone`（安裝包撤除）、迭代 12 外殼 App 搬到獨立 repo 並以契約整合、迭代 13 新增 Python 的 AI 閘道服務、迭代 14 介面極簡重設計（護理端簡易版）；14.1～14.5 是使用者實際操作後的修正與院方回饋。 迭代編號在 0919、0926、1005 各重排一次：原「規則引擎」與「管理儀表板」現在是**迭代 18、19**，對照表見實作規格書 4.0.1、4.0.3、4.0.4。 **1005 新版需求（修訂中）**：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成迭代 15～17（實作規格書 0.5、4.13～4.15）；第三次進院見 4.19。 **1005 迭代 15 實作完成**：`modules/hospital-sync/`（抓取、解析、同步）、模擬院方 API、探測工具、兩張新表；`verify:iteration15`（7 步）與 `verify:iteration15:api`（12 步）全綠，見下方「迭代 15～19」與實作規格書 4.13。 **1005 迭代 16 實作完成**：病人端的三層輪播拿掉，換成「本次透析」面板（`TodayPanel`、自己畫的 SVG 折線圖 `LineChart`）與跑馬燈（`Marquee`）， 端點 `GET /device/home`（`modules/patient-home/`）；`verify:iteration16`（7 步）與 `verify:iteration16:api`（8 步）全綠，五支既有腳本依實作規格書 1.1 跟著改，見下方「迭代 16 完成」與 4.14。 **1005 迭代 17 實作完成**：跑馬燈內容改成 AI 草稿＋護理師核准（`carousel_items` 加七欄、`MarqueeDraftService`、隨版本帶入的草稿），「一句話」拿掉； `verify:iteration17`（8 步）與 `verify:iteration17:api`（9 步）全綠，五支既有腳本依實作規格書 1.1 第三次跟著改，見下方「迭代 17 完成」與 4.15。
+> 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化： **1001 第二次進院 B 級部分成功**——容器在院內主機上起來，護理端登入 `Failed to fetch`（`CORS_ORIGINS` 不放行護理端的來源），見部署手冊第十四冊之四、第十五冊之三； **1005 新版需求**：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成**迭代 15～17，同日完成**（實作規格書 0.5、4.13～4.15）。 三個迭代都在模擬院方 API 上驗收；院方 API 的實際長相要第三次進院以探測工具看一次（實作規格書 4.19）。
+>
+> 0909 之後的完整脈絡：需求於 0910 改為 v2.0（SaMD 三項改為有條件納入、資料庫改 SQLite、封閉網路）；迭代 3～6 完成資料層遷移、AI 輔助內容、求助處理與班表、閒置輪播與檔案匯入； 迭代 7～10 是第一次進院前的缺陷修正、介面重做、內容資料化與安裝包；**0922 第一次進院失敗之後**，迭代 11～14 把交付方式換成 Docker ＋ `git clone`、外殼 App 搬到獨立 repo、新增 Python 的 AI 閘道、介面極簡重設計，14.1～14.5 是實際操作後的修正。 迭代編號在 0919、0926、1005 各重排一次：原「規則引擎」與「管理儀表板」現在是**迭代 18、19**，對照表見實作規格書 4.0.1、4.0.3、4.0.4。
 
 ______________________________________________________________________
 
@@ -13,15 +15,15 @@ ______________________________________________________________________
 | 文件                                                                                                                            | 角色                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | [`srs.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)                                             | 功能需求來源（FR 編號皆引用自此）。v2.0 共六組：P 病人端、N 護理端、M 管理與營運、X 對外揭露、S 系統、R 高風險控制措施 |
-| [`implementation-spec.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)             | 範圍界定、技術棧與迭代 3～16 規劃，**衝突時以此為準**                                                                  |
+| [`implementation-spec.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)             | 範圍界定、技術棧與迭代 3～19 規劃，**衝突時以此為準**                                                                  |
 | [`database-policy.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)                     | 資料治理強制規則，**優先權等同實作規格書**                                                                             |
 | [`deployment-spec.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)                     | 部署形態、環境界線與交付方式（0912 新增，0926 改版為 v3.0：Docker ＋ `git clone`），**優先權等同實作規格書**           |
 | [`fde-assessment.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/fde-assessment/index.md)                       | 背景脈絡與選型理由                                                                                                     |
-| [`open-questions.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)                       | 唯一的待確認事項總表（Q-01～Q-34）。程式裡的暫定值多半對應其中一項                                                     |
+| [`open-questions.md`](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)                       | 唯一的待確認事項總表（Q-01～Q-35）。程式裡的暫定值多半對應其中一項                                                     |
 | [`../notes/uiux-design-baseline.md`](https://94sh09sh19sh.github.io/hd-docs/latest/notes/uiux-design-baseline/index.md)         | 介面設計基準（0919 新增，0927 改為極簡方向）。**動介面前先讀**，可執行版在 `.claude/skills/hd-uiux/`                   |
 | [`../reference/kiosk-shell-contract.md`](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md) | 病人端外殼 App 契約（0927 新增）。外殼在另一個私人 repo，兩邊只靠這一份帶版本號的契約對齊                              |
 
-動工前請至少讀完前三份。這個專案有不少「看起來繞路」的設計，幾乎都源自這些文件的硬性約束。系統實體與邏輯架構見[架構圖](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/architecture-diagrams/index.md)（**2026-09-29 依 0926 改版重繪**：應用伺服器改為 Docker 容器・`git clone`，後端與 AI 推論端點之間多一格 AI 閘道服務，過渡期的線改為「開發機 → SSH 通道 → 實驗室個人容器裡的 AI 閘道」，並把建置期才有的對外連線與執行期零連外分開畫）。圖片走 repo 相對路徑，文件站上就是 repo 裡的這兩個檔案。
+動工前請至少讀完前三份。這個專案有不少「看起來繞路」的設計，幾乎都源自這些文件的硬性約束。系統實體與邏輯架構見[架構圖](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/architecture-diagrams/index.md)（**2026-09-29 依 0926 改版重繪**：應用伺服器改為 Docker 容器・`git clone`，後端與 AI 推論端點之間多一格 AI 閘道服務，過渡期的線改為「開發機 → SSH 通道 → 實驗室個人容器裡的 AI 閘道」，並把建置期才有的對外連線與執行期零連外分開畫；**1005 補上迭代 15、16**：臨床資料匯入改標院方資料同步、平板多一條院內 SSE，兩張圖都只改標籤）。圖片走 repo 相對路徑，文件站上就是 repo 裡的這兩個檔案。
 
 ______________________________________________________________________
 
@@ -32,7 +34,9 @@ v0/
 ├── apps/
 │   ├── api/            NestJS — 後端唯一入口：身分驗證、裝置綁定、症狀回報、緊急通報、
 │   │                            即時狀態、稽核、MDM／模型／臨床資料三個介面層、功能開關、
-│   │                            備份、背景佇列、衛教、回饋、護理記錄、適足性、SOP 查詢
+│   │                            備份、背景佇列、衛教、回饋、護理記錄、適足性、SOP 查詢、
+│   │                            院方資料同步（迭代 15）、病人端首頁的面板與跑馬燈（迭代 16）；
+│   │                            另有模擬院方 API 與探測工具兩支獨立進入點（迭代 15）
 │   ├── nurse-pwa/      React PWA — 護理站主控台（專業版）、簡易版工作台（simple/）與常駐總覽螢幕（:5173）
 │   └── patient-pwa/    React PWA — 病人端平板 Kiosk，裝在外殼 App 裡（:5174）
 ├── packages/
@@ -46,7 +50,7 @@ v0/
 └── docs/               需求、報告、參考、測試與部署文件
 ```
 
-npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript（版控內全部 `.ts`／`.tsx`，含驗收腳本與產生的圖示資料；用同樣的計數方式，0923 時約 44,600 行）＋約 900 行 Python（AI 閘道）。 外殼 App（Kotlin）在另一個私人 repo `hd-kiosk-shell`，本 repo 以 `services/shell-builder/shell.pin` 釘住它的 tag（目前 `v0.3.0`）。
+npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript（版控內全部 `.ts`／`.tsx`，含驗收腳本與產生的圖示資料；用同樣的計數方式，0930 時約 50,800 行、0923 時約 44,600 行）＋約 900 行 Python（AI 閘道）。 compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`（模擬院方 API，與 `api` 同一個映像檔，不開埠）。 外殼 App（Kotlin）在另一個私人 repo `hd-kiosk-shell`，本 repo 以 `services/shell-builder/shell.pin` 釘住它的 tag（目前 `v0.3.0`）。
 
 **技術棧**：NestJS 11 · Prisma 6 · SQLite（測試與正式皆同）· React 19 · Vite 6 · TypeScript 5.7 · dnd-kit（簡易版拖曳）· Lucide 圖示與 Noto Sans TC 子集（自帶，不經 CDN） **部署與周邊**：Docker ＋ compose（專案名稱固定 `hd-tablet-care`，資料與金鑰兩個 external 資料卷）· AI 閘道 Python ＋ FastAPI ＋ LangChain · 外殼 App Android（Kotlin）
 
@@ -55,11 +59,13 @@ npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript�
 ```
 病人端 PWA ─┐                   ┌─→ Repository 層 ─→ Prisma ─→ SQLite 檔案（專案目錄外）
             ├─→ 後端 API ───────┤
-護理端 PWA ─┘  （SSE 回推）     └─→ AiGatewayService ─→ LlmProviderPort ─→ mock
-                                                                        └─→ lab／onprem ─→ ai-gateway 容器 ─→ 推論端點
+護理端 PWA ─┘  （SSE 回推）     ├─→ AiGatewayService ─→ LlmProviderPort ─→ mock
+                                │                                       └─→ lab／onprem ─→ ai-gateway 容器 ─→ 推論端點
+                                └─← HospitalSyncService ←─ 院方透析清單 API（每 3 分鐘、唯讀）
+                                                         └ 開發與模擬部署：hospital-api-sim
 ```
 
-**前端一律不直接碰資料庫，也不直接碰模型。** 兩個 PWA 都沒有資料庫或模型相關套件；後端是唯一開啟資料庫檔案的常駐寫入行程，也是唯一呼叫模型的地方。 **0927 起後端也不直接連推論端點**（DEP-41）：`lab`／`onprem` 一律打 AI 閘道，模型名稱只寫在閘道的 `config.yaml`。 病人端的正式建置與後端同一個來源：`patient-web` 以伺服器憑證提供 HTTPS，並把 `/api/` 轉送給 `api`（迭代 12），外殼只需信任一張院內 CA。
+**前端一律不直接碰資料庫，也不直接碰模型。** 兩個 PWA 都沒有資料庫或模型相關套件；後端是唯一開啟資料庫檔案的常駐寫入行程，也是唯一呼叫模型的地方。 **0927 起後端也不直接連推論端點**（DEP-41）：`lab`／`onprem` 一律打 AI 閘道，模型名稱只寫在閘道的 `config.yaml`。 病人端的正式建置與後端同一個來源：`patient-web` 以伺服器憑證提供 HTTPS，並把 `/api/` 轉送給 `api`（迭代 12），外殼只需信任一張院內 CA。 **1005 迭代 15 起院方 API 由後端拉取**（本系統不回寫院方任何資料）；同步寫入的每一筆都走與護理師操作相同的服務，見 5.21。平板除了原本每 3 秒的輪詢，另訂閱 `GET /device/stream`（SSE，事件只通知「有新資料」、不帶數值）。
 
 ______________________________________________________________________
 
@@ -93,7 +99,7 @@ ______________________________________________________________________
 
 ## 4. 資料模型
 
-共 56 張表，11 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
+共 58 張表，13 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
 
 | 分類                   | 表                                                                                                                                     | 加入於  |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------- |
@@ -118,36 +124,41 @@ ______________________________________________________________________
 | 衛教題庫（版本化）     | `quiz_topics`、`quiz_bank_versions`、`quiz_bank_questions`、`quiz_bank_question_options`                                               | 迭代 9  |
 | 回饋題目（版本化）     | `feedback_form_versions`、`feedback_form_items`                                                                                        | 迭代 9  |
 | 床位與輪播播放範圍     | `beds`、`carousel_item_targets`                                                                                                        | 迭代 14 |
+| 院方資料同步           | `hospital_api_fetch_runs`、`dialysis_vital_records`                                                                                    | 迭代 15 |
 
-迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。
+迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。 迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`； 迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）。全部只做加法。
 
 ### 值得注意的地方
 
-| 表                                                          | 值得注意的地方                                                                                                                                                                                 |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `nurses`                                                    | `role` / `status` 為字串；`canApproveNurses` 支援單獨分享審核權限                                                                                                                              |
-| `nurse_sessions`                                            | 存 JWT 的 `jti`，讓 token **可被主動作廢**（變更密碼、降權時）                                                                                                                                 |
-| `devices`                                                   | `apiKeyHash` 用 SHA-256（金鑰是 256-bit 隨機值，非使用者密碼）；MDM 狀態欄位。`bed_no`（迭代 14）＝平板貼在哪一床，**病人本身不存床號**：病人在哪一床＝他那台平板在哪一床                      |
-| `treatment_sessions`                                        | `@@unique([patientId, scheduledDate, shift])`                                                                                                                                                  |
-| `device_bindings`                                           | 綁定「病人＋平板＋療程時段」三者；`sessionTokenId` 存 jti，token 本身不寫入資料庫                                                                                                              |
-| `symptom_reports`                                           | `clientReportId` **唯一鍵** → 離線補傳的冪等保證；`reportedAt`（病人填寫時間）與 `receivedAt`（伺服器收到）分開存                                                                              |
-| `help_requests`                                             | `clientRequestId` 唯一鍵防重複；`routedTo` 記錄當下計算的分派結果供事後稽核                                                                                                                    |
-| `audit_logs`                                                | 關聯欄位皆正規化為外鍵；另冗餘記錄 `actorLabel`、`deviceSerialNo`，避免帳號日後異動導致軌跡失真                                                                                                |
-| `ai_invocations`                                            | 每次模型呼叫一列（provider、模型、耗時、是否去識別化、是否被擋）。迭代 4 的每一份 AI 產出都要能追回對應的一列                                                                                  |
-| `clinical_values`                                           | 每筆帶資料時間；覆蓋時保留前一版                                                                                                                                                               |
-| `ai_jobs`                                                   | 重新啟動時仍在執行的工作標為失敗，不會卡在「產生中」                                                                                                                                           |
-| `nursing_records`                                           | 簽核後不可改；記下起點（AI 初稿／預填／手寫）與 AI 初稿的處置（原樣採用／修改後採用／未採用）                                                                                                  |
-| `adequacy_calculations`                                     | 結果以整數存，並指回五筆原始 `clinical_values`；記公式版本 `DAUGIRDAS2-SPKTV-v1`                                                                                                               |
-| `quiz_attempts`、`education_contents`、`feedback_responses` | 記下當時的題庫、主題、規則版本字串；暫定內容換掉後舊紀錄仍可回溯                                                                                                                               |
-| `help_requests`                                             | 迭代 5 擴充五欄。`arrivedAt` 與 `acknowledgedAt` **是兩個獨立欄位，不互相填補**——理由見 5.15                                                                                                   |
-| `help_resolution_options`、`operational_settings`           | Q-13／Q-14 的暫代值存這裡，不寫死在程式。停用選項不刪列，既有紀錄才查得到文字；`operational_settings.updatedAt` 可為空，空＝從未被改過                                                         |
-| `nurse_shifts`                                              | 起訖時間逐筆存，不由班別反推（跨日班與臨時調整都靠它）；取消不刪列。屬 L2，一般護理師只查得到自己的                                                                                            |
-| `baseline_measurements`                                     | **只新增不覆寫**，舊版標 `superseded` 保留；估算值（`source=ESTIMATED`）在所有畫面帶警告；背書者必填                                                                                           |
-| `carousel_view_events`                                      | **沒有病人、綁定、平板或卡片內容欄位**，這是刻意的（見 5.19）。要做個人層級的閱讀分析前，先回頭讀規範第 11 條                                                                                  |
-| `import_field_mappings`                                     | 檔案欄位名稱是資料不是程式；`(profile_code, target_field)` 唯一。兩個目標欄位不得同時對應到同一個檔案欄位，設定時就擋下                                                                        |
-| `backup_runs`                                               | `sha256` 存完整雜湊；0929 起同一串另寫在 `BACKUP_DIR` 裡的 `<檔名>.sha256`（格式同 `sha256sum`）。**資料庫壞掉、服務起不來時這張表就查不到**，還原時的雜湊從那個檔拿                           |
-| `beds`                                                      | 床位清單是資料（系統管理可改）。~~預設 15 床~~ 1005 迭代 15 起全新環境不預設，院方資料出現的床號自動加進來（只新增、不再啟用停用的床）。有病人正在治療的床拿不掉，否則那位病人會從床位圖上消失 |
-| `treatment_sessions`                                        | 迭代 14.2 起可「重新開啟」：今天已下機或已取消的療程回到已排班、`ended_at` 清空，**沿用同一筆**（唯一鍵不動），當天的症狀回報與求助仍掛在它底下                                                |
+| 表                                                          | 值得注意的地方                                                                                                                                                                                                                        |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nurses`                                                    | `role` / `status` 為字串；`canApproveNurses` 支援單獨分享審核權限                                                                                                                                                                     |
+| `nurse_sessions`                                            | 存 JWT 的 `jti`，讓 token **可被主動作廢**（變更密碼、降權時）                                                                                                                                                                        |
+| `devices`                                                   | `apiKeyHash` 用 SHA-256（金鑰是 256-bit 隨機值，非使用者密碼）；MDM 狀態欄位。`bed_no`（迭代 14）＝平板貼在哪一床，**病人本身不存床號**：病人在哪一床＝他那台平板在哪一床                                                             |
+| `treatment_sessions`                                        | `@@unique([patientId, scheduledDate, shift])`                                                                                                                                                                                         |
+| `device_bindings`                                           | 綁定「病人＋平板＋療程時段」三者；`sessionTokenId` 存 jti，token 本身不寫入資料庫                                                                                                                                                     |
+| `symptom_reports`                                           | `clientReportId` **唯一鍵** → 離線補傳的冪等保證；`reportedAt`（病人填寫時間）與 `receivedAt`（伺服器收到）分開存                                                                                                                     |
+| `help_requests`                                             | `clientRequestId` 唯一鍵防重複；`routedTo` 記錄當下計算的分派結果供事後稽核                                                                                                                                                           |
+| `audit_logs`                                                | 關聯欄位皆正規化為外鍵；另冗餘記錄 `actorLabel`、`deviceSerialNo`，避免帳號日後異動導致軌跡失真                                                                                                                                       |
+| `ai_invocations`                                            | 每次模型呼叫一列（provider、模型、耗時、是否去識別化、是否被擋）。迭代 4 的每一份 AI 產出都要能追回對應的一列                                                                                                                         |
+| `clinical_values`                                           | 每筆帶資料時間；覆蓋時保留前一版                                                                                                                                                                                                      |
+| `ai_jobs`                                                   | 重新啟動時仍在執行的工作標為失敗，不會卡在「產生中」                                                                                                                                                                                  |
+| `nursing_records`                                           | 簽核後不可改；記下起點（AI 初稿／預填／手寫）與 AI 初稿的處置（原樣採用／修改後採用／未採用）                                                                                                                                         |
+| `adequacy_calculations`                                     | 結果以整數存，並指回五筆原始 `clinical_values`；記公式版本 `DAUGIRDAS2-SPKTV-v1`                                                                                                                                                      |
+| `quiz_attempts`、`education_contents`、`feedback_responses` | 記下當時的題庫、主題、規則版本字串；暫定內容換掉後舊紀錄仍可回溯                                                                                                                                                                      |
+| `help_requests`                                             | 迭代 5 擴充五欄。`arrivedAt` 與 `acknowledgedAt` **是兩個獨立欄位，不互相填補**——理由見 5.15                                                                                                                                          |
+| `help_resolution_options`、`operational_settings`           | Q-13／Q-14 的暫代值存這裡，不寫死在程式。停用選項不刪列，既有紀錄才查得到文字；`operational_settings.updatedAt` 可為空，空＝從未被改過                                                                                                |
+| `nurse_shifts`                                              | 起訖時間逐筆存，不由班別反推（跨日班與臨時調整都靠它）；取消不刪列。屬 L2，一般護理師只查得到自己的                                                                                                                                   |
+| `baseline_measurements`                                     | **只新增不覆寫**，舊版標 `superseded` 保留；估算值（`source=ESTIMATED`）在所有畫面帶警告；背書者必填                                                                                                                                  |
+| `carousel_view_events`                                      | **沒有病人、綁定、平板或卡片內容欄位**，這是刻意的（見 5.19）。要做個人層級的閱讀分析前，先回頭讀規範第 11 條                                                                                                                         |
+| `import_field_mappings`                                     | 檔案欄位名稱是資料不是程式；`(profile_code, target_field)` 唯一。兩個目標欄位不得同時對應到同一個檔案欄位，設定時就擋下                                                                                                               |
+| `backup_runs`                                               | `sha256` 存完整雜湊；0929 起同一串另寫在 `BACKUP_DIR` 裡的 `<檔名>.sha256`（格式同 `sha256sum`）。**資料庫壞掉、服務起不來時這張表就查不到**，還原時的雜湊從那個檔拿                                                                  |
+| `beds`                                                      | 床位清單是資料（系統管理可改）。~~預設 15 床~~ 1005 迭代 15 起全新環境不預設，院方資料出現的床號自動加進來（只新增、不再啟用停用的床）。有病人正在治療的床拿不掉，否則那位病人會從床位圖上消失                                        |
+| `treatment_sessions`                                        | 迭代 14.2 起可「重新開啟」：今天已下機或已取消的療程回到已排班、`ended_at` 清空，**沿用同一筆**（唯一鍵不動），當天的症狀回報與求助仍掛在它底下                                                                                       |
+| `treatment_sessions`                                        | 迭代 15：`source` 分人工與院方；`expected_end_at` 只當「預計結束」，**不拿它判定下機**（可能是預排值，院方欄位要第三次進院確認）；`nurse_modified_at`／`bed_nurse_modified_at` 有值時，同步不再改它的狀態／床位——**護理師的更正優先** |
+| `hospital_api_fetch_runs`                                   | 每次抓取一列（結果、重試次數、筆數、被拒的透析數、耗時、是否模擬），回應只存雜湊、**不存本文**——院方回應裡有姓名與病歷號                                                                                                              |
+| `dialysis_vital_records`                                    | 院方每一筆血壓、脈搏與累積脫水量，掛在療程與那一次抓取底下；**只收有綁定平板的病人**，沒配平板的病人的數值不寫進資料庫                                                                                                                |
+| `carousel_items`                                            | 迭代 17 起 `approval_status` 是病人端唯一的閘門：`listPlayable` 只取 `APPROVED`。既有內容遷移時標為已核准，新列預設待核准                                                                                                             |
 
 ______________________________________________________________________
 
@@ -247,7 +258,7 @@ ______________________________________________________________________
 
 ### 5.10 臨床資料來源介面層（FR-S05，迭代 3）
 
-`modules/clinical-data/`：`ClinicalDataSourcePort` ＋ `ManualEntryAdapter` ＋ `FileImportAdapter`（迭代 6）。院方 API（待 Q-09）之後再加一個實作，三者共用 `clinical_value_imports`／`clinical_values`。
+`modules/clinical-data/`：`ClinicalDataSourcePort` ＋ `ManualEntryAdapter` ＋ `FileImportAdapter`（迭代 6）＋ **`HospitalApiAdapter`（迭代 15，在 `modules/hospital-sync/`）**，三者共用 `clinical_value_imports`／`clinical_values`。 1005 起院方 API 是唯一的日常來源，人工輸入與檔案匯入只留在專業版當備援（FR-S05）；院方 API 那一支的同步機制見 5.21。
 
 - 一批**全有或全無**：任何一筆驗證失敗就整批不寫入，記 `CLINICAL_VALUES_IMPORT_REJECTED`。臨床數值只對一半比完全沒有更危險
 - 每筆帶資料時間；同一數值覆蓋時保留前一版
@@ -373,6 +384,20 @@ ______________________________________________________________________
 - **Excel 日期儲存格**在 exceljs 會以 UTC 解讀，但檔案上寫的是現場的時刻， 因此把 UTC 的年月日時分當成當地時間重組一次，與班表匯入的處理一致
 - **全有或全無**與重複匯入偵測沿用迭代 3 的 `ClinicalDataImportService`，一行都沒改： adapter 只負責「把來源轉成標準化數值並逐列指出格式問題」
 - 檔案以 base64 夾在 JSON 裡送上來，不走 multipart。上限 2 MB，少一種請求形式就少一套解析與錯誤處理
+
+### 5.21 院方資料同步（FR-S15／S16，迭代 15）
+
+判準只有一句：**院方 API 判斷得出來的事，就不要求護理師操作。** `modules/hospital-sync/` 依營運參數的頻率（預設 3 分鐘）向院方透析清單 API 拉一次， 把病人主檔、床位、病人在哪一床、療程開始與下機、四種數值一律由 API 判斷；護理師只做三件事：每位病人配一次平板、更正、以及 API 判斷不了時的處理。
+
+- **格式是讀同院 IDH 系統的程式推出來的**，不是院方文件：陣列沒有欄位名稱，只能靠位置認欄位（`@hd/shared` 的 `hospital-api.ts`，51 欄）。少欄或多欄的列不認，**那一次透析整個不寫入**——臨床數值只對一半比沒有更危險
+- **同步不另開寫入路徑**：建排班、綁定、換床、寫數值都呼叫護理師拖曳時用的那幾支服務，操作者是登入不了的系統帳號 `SYSTEM-HOSPITAL-SYNC`，稽核記成「院方資料同步」。簡易版與專業版因此看到的是同一套資料、同一種稽核
+- **護理師的更正優先**：提前結束或換床之後，同一筆療程的狀態與床位不再被同步改回去（`nurse_modified_at`、`bed_nurse_modified_at`）
+- **判斷不了的標出來，不猜**：預計結束時間可能是預排值，不拿它判定下機，過了很久還沒有結束體重就標「待確認下機」；平板沒自動接上時標出原因（平板正在別人的療程中、不在線上、停用或尚未佈建、院方的床位是停用的床或認不出來）；**還沒配平板的病人不算問題**，首波只有少數病人用平板，其餘只出現在床位圖上；超過設定時間沒更新，床位圖上方出現提示，這段期間護理師可到專業版手動處理
+- **正式環境的兩道防線**：啟動時位址的主機是 `hospital-api-sim` 就拒絕；抓到的回應帶 `x-hd-simulated` 就整次作廢。模擬部署要以 `HD_SIMULATION_DEPLOYMENT=yes` 明示
+- **推送**：有新資料時護理端串流多一種 `HOSPITAL_SYNC` 事件；平板訂閱 `GET /device/stream`，**事件只說「有新資料」、不帶數值**，平板收到後自己重取 `GET /device/home`
+- **探測工具** `npm run probe:hospital-api` 與同步共用解析程式，**只印結構與型別，不印任何值與位址**；位址在探測時當場輸入，不寫進 `.env`（部署手冊第十五冊 V-30a）
+
+實作位置與開發機怎麼開見 6「迭代 15」。
 
 ______________________________________________________________________
 
@@ -690,17 +715,58 @@ ______________________________________________________________________
 
 每一次都有自己的驗收腳本（`verify:iteration14-1`、`14-2`、`14-3`、`14-4`、`14-5`，前兩個另有 `:api`），並確認既有腳本全綠。 **14.5 在開發機實際看過**：合成平板綁定後，以無頭瀏覽器精確開 1280×800 與 800×1280（開發機螢幕只有 752 高，縮視窗做不出 800 高）；暗室裡看白底與 10 吋實機待做。 **14.3、14.4 還沒有在瀏覽器實際看過**（做變更的那個 clone 沒有資料庫），停掉後端、暫停後端模擬斷電、拔網路線、讓登入失效，以及一次送出九則求助，要在手動測試環境走一次。
 
+### 迭代 15：院方 API 介接與自動化（1005）
+
+機制見 5.21。驗收 `verify:iteration15`（7 步，不需後端）、`verify:iteration15:api`（12 步，要模擬院方 API）全綠；既有腳本兩處自身缺陷更正（迭代 4 的檔案路徑、迭代 2 的 UTC 日期），迭代 14 的端點白名單加兩支。 **模擬部署一輪與院方 API 的探測待做**（實作規格書 4.13 驗收現況、4.19）。
+
+| 要知道的               | 在哪裡                                                                                                                                                                                                                                                      |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 抓取、解析、同步       | `apps/api/src/modules/hospital-sync/`：`hospital-api.format.ts`（純解析，探測工具共用）、`hospital-api.client.ts`（30 秒逾時、重試 3 次）、`hospital-api.adapter.ts`（`ClinicalDataSourcePort` 第三個實作）、`hospital-sync.service.ts`（排程與同步）       |
+| 與護理師拖曳同一條路徑 | 同步呼叫 `ScheduleService.create`、`BindingService.create`、`DevicesService.setBed`、`ClinicalDataImportService.import`，操作者是登入不了的系統帳號 `SYSTEM-HOSPITAL-SYNC`；`AuditService.recordByNurse` 認得它，稽核記成 `HOSPITAL_SYNC`／「院方資料同步」 |
+| 護理師的更正優先       | `treatment_sessions.nurse_modified_at`（改狀態）與 `bed_nurse_modified_at`（換床）。兩支服務在操作者不是同步帳號時寫入                                                                                                                                      |
+| 模擬院方 API、探測工具 | `apps/api/src/hospital-api-sim.ts`（`npm run dev:hospital-sim`；compose 的 `simulation` 設定檔）、`apps/api/src/hospital-api-probe.ts`（`npm run probe:hospital-api`）                                                                                      |
+| 正式環境的兩道防線     | 啟動時：位址主機是 `hospital-api-sim` 就拒絕（`assertHospitalApiAllowed`）；抓取時：回應帶 `x-hd-simulated` 就整次作廢。模擬部署以 `HD_SIMULATION_DEPLOYMENT=yes` 明示                                                                                      |
+| 推送                   | 護理端串流多一種事件 `HOSPITAL_SYNC`；平板 `GET /device/stream`（`DeviceEventsService`，事件不帶數值）                                                                                                                                                      |
+| 開發機怎麼開           | `.env` 加 `HOSPITAL_API_BASE_URL=http://localhost:8090/dialysislist.php`，先 `npm run dev:hospital-sim` 再 `npm run dev:api`。不加就跟以前一樣，簡易版照人工流程                                                                                            |
+
+### 迭代 16：病人端「本次透析」面板與跑馬燈（1005）
+
+三層輪播拿掉，病人端首頁中間改成面板、底部一條跑馬燈（機制見 5.19 末段）。驗收 `verify:iteration16`（7 步）與 `verify:iteration16:api`（8 步）全綠，五支既有腳本依實作規格書 1.1 第二次刻意改動（`verify:iteration6`、`8`、`14`、`14:api`、`14-5`），斷言沒有放寬。 開發機 1280×800 與 800×1280 截圖不捲動；**跑馬燈的速度要請長者看過**（驗收第 10 條），開關因此預設關閉。
+
+| 要知道的         | 在哪裡                                                                                                                                                                                                   |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 病人端首頁的資料 | `apps/api/src/modules/patient-home/`：`patient-home.service.ts`（面板、跑馬燈、行為參數、問卷到期；夜間判定也搬到這裡）、`device-home.controller.ts`（`GET /device/home`、`POST /device/marquee/plays`） |
+| 護理端的內容管理 | `modules/carousel/` 只剩上下架、播放範圍、播放統計；路徑仍是 `/carousel`，稽核動作名稱不變                                                                                                               |
+| 畫面             | `patient-pwa/src/TodayPanel.tsx`、`LineChart.tsx`、`Marquee.tsx`；`CarouselScreen.tsx` 已刪。樣式在 `styles.css` 第 5 節，語彙 `--c-chart-line`、`--t-marquee`、`--t-display`（原 `--t-carousel`）       |
+| 驗收             | `verify:iteration16`（不需後端）、`verify:iteration16:api`（要模擬院方 API，與迭代 15 相同的前提）；`check:ui:design` 多一組「面板不做判讀」                                                             |
+| 開發機看畫面     | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容                                                                                                      |
+| 順手更正         | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查                                           |
+
+### 迭代 17：跑馬燈內容由 AI 生成、護理師核准（1005）
+
+護理師只核准或退回 AI 的「標題：內容」草稿；病人端只收已核准的。送進 AI 的只有衛教主題（SRS 附錄 C.6）或公告事由，**沒有任何病人資料**；格式不對或超過標題 12 字、內容 60 字就重新生成，最多三次。 「一句話」與「內容留白時播一句話」的退路一起拿掉。驗收 `verify:iteration17`（8 步）與 `verify:iteration17:api`（9 步）全綠，五支既有腳本依實作規格書 1.1 第三次跟著改（`verify:iteration6`、`14`、`14-2`、`14:api`、`16:api`）。 **隨版本帶入的草稿這一版不是實驗室模型寫的**，連上實驗室後用 `marquee:bundle` 重寫。
+
+| 要知道的                 | 在哪裡                                                                                                                                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 草稿怎麼生出來           | `modules/carousel/marquee-draft.service.ts`（排入背景佇列、經 `AiGatewayService.attempt` 呼叫、寫回、隨版本帶入的匯入）；提示與解析在 `marquee-draft.ts`，**不碰資料庫、不呼叫模型**，驗收腳本直接拿來測「超過字數就重新生成」 |
+| 核准、退回、撤回、上下架 | `modules/carousel/carousel.service.ts`；核准與退回在 `CarouselItemRepository` 是條件式更新（只動 `PENDING` 的那一列）                                                                                                          |
+| 病人端怎麼擋             | `CarouselItemRepository.listPlayable` 的條件多 `approval_status = APPROVED`——端點層擋，不是畫面藏                                                                                                                              |
+| 隨版本帶入的草稿         | `modules/carousel/marquee-bundle.ts`（資料檔）；重新生成 `npm run marquee:bundle -- --per-topic 2`（對著開發機跑著的後端要草稿，模型是模擬時拒跑；不寫入端點位址）                                                             |
+| 系統帳號多一個           | `SYSTEM-RELEASE-CONTENT`「隨版本帶入」，與 `SYSTEM-HOSPITAL-SYNC` 同規則：`nurseLabel()` 顯示中文、`NurseRepository` 的 `PEOPLE_ONLY` 排除                                                                                     |
+| 畫面                     | 簡易版 `simple/Trays.tsx` 的 `ContentTray`（草稿卡）、`actions.tsx` 的 `approveDraft`／`rejectDraft`／`requestDraft`、`Workbench.tsx` 的 `NewDraftForm`；專業版 `pages/CarouselPage.tsx` 改寫。圖示多 `check`、`ban`           |
+| 驗收                     | `verify:iteration17`（不需後端）、`verify:iteration17:api`（後端開著、模型用模擬即可，不需模擬院方 API）                                                                                                                       |
+
 ### 規模
 
-| 量測     | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 |
-| -------- | ---------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ------------ | -------------- |
-| API 路由 | 43               | 78          | 90          | 107         | 109         | 116         | 117          | 124            |
-| 資料表   | 10               | 29          | 36          | 39          | 40          | 54          | 54           | 56             |
-| 稽核動作 | 32               | 52          | 66          | 68          | 74          | 82          | 84           | 90             |
-| 權限碼   | 9                | 17          | 20          | 21          | 21          | 23          | 23           | 23             |
-| 角色     | 3                | 6           | 6           | 6           | 6           | 6           | 6            | 6              |
-| 功能開關 | —                | 10          | 10          | 10          | 10          | 11          | 11           | 12             |
-| 營運參數 | —                | —           | 6           | 12          | 12          | 20          | 20           | 22             |
+| 量測     | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 | 迭代 17 完成 |
+| -------- | ---------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ------------ | -------------- | ------------ |
+| API 路由 | 43               | 78          | 90          | 107         | 109         | 116         | 117          | 124            | 136          |
+| 資料表   | 10               | 29          | 36          | 39          | 40          | 54          | 54           | 56             | 58           |
+| 稽核動作 | 32               | 52          | 66          | 68          | 74          | 82          | 84           | 90             | 109          |
+| 權限碼   | 9                | 17          | 20          | 21          | 21          | 23          | 23           | 23             | 23           |
+| 角色     | 3                | 6           | 6           | 6           | 6           | 6           | 6            | 6              | 6            |
+| 功能開關 | —                | 10          | 10          | 10          | 10          | 11          | 11           | 12             | 12           |
+| 營運參數 | —                | —           | 6           | 12          | 12          | 20          | 20           | 22             | 27           |
 
 （迭代 6 沒有新增功能開關：輪播三層的開關在迭代 3 就已建好並預設關閉，這次做的是把它們的 「開啟條件」從「功能尚未實作」換成實際判定。迭代 7 只多一張 `update_runs` 與兩個維運端點， 新增的六種稽核動作全是更新流程與遷移防呆留下的軌跡。DEP-37 的三處補做沒有動到任何一張表， 改的是啟動時的判定與兩個維運端點多回傳的幾個欄位。**迭代 8 一張表都沒動、一個端點都沒加**， 因此表上沒有它那一欄。）
 
@@ -708,7 +774,9 @@ ______________________________________________________________________
 
 **迭代 10 幾乎沒有動資料模型**：`devices` 多三個欄位、一個平板端端點、兩種稽核動作， 就這樣。它的工作量全在 repo 之外——**把已經做好的東西變成一份帶得進院內的檔案**， 以及把「帶進去之後會發生什麼」實際試一次。
 
-**迭代 11～14.5 合起來只多 7 條路由、2 張表、6 種稽核動作**，而且全部是加法： 迭代 11、13 一條都沒加（它們的工作量在 compose、映像檔與 `services/`）；迭代 12 加一條外殼契約端點； 迭代 14 加四條（床位、平板換床、輪播播放範圍、結案後補改處理結果），14.2 加一條重新開啟療程；兩張表是 `beds` 與 `carousel_item_targets`。 新增的兩個營運參數是病人端任務的時點（心情、衛教），新增的開關是求助畫面的「其他」那一框。 **簡易版整個工作台沒有新增任何一條「專業版做得到、只是換個端點」的路由**——那是刻意的，見 6「迭代 14」。 （路由數沿用前幾欄的計法，以各迭代新增的端點累加。）
+**迭代 11～14.5 合起來只多 7 條路由、2 張表、6 種稽核動作**，而且全部是加法： 迭代 11、13 一條都沒加（它們的工作量在 compose、映像檔與 `services/`）；迭代 12 加一條外殼契約端點； 迭代 14 加四條（床位、平板換床、輪播播放範圍、結案後補改處理結果），14.2 加一條重新開啟療程；兩張表是 `beds` 與 `carousel_item_targets`。 新增的兩個營運參數是病人端任務的時點（心情、衛教），新增的開關是求助畫面的「其他」那一框。 **簡易版整個工作台沒有新增任何一條「專業版做得到、只是換個端點」的路由**——那是刻意的，見 6「迭代 14」。
+
+**迭代 15～17 合起來多 12 條路由（淨增）、2 張表、19 種稽核動作**： 迭代 15 加六條（院方資料同步的狀態、紀錄、手動再抓一次，配平板，帶入最近一筆血壓，平板的推送串流）與兩張表； 迭代 16 加兩條（`GET /device/home`、`POST /device/marquee/plays`）、拿掉兩條（`GET /device/carousel`、`POST /device/carousel/view-events`），**一張表都沒加**； 迭代 17 加六條（草稿主題、要一份草稿、核准、退回、撤回、上下架時間），在 `carousel_items` 加七欄。 功能開關的數字沒變，是因為輪播三層的開關停用、換成面板與跑馬燈，再加上 1005 的「需要抽血數值的功能」（三減三加）； 營運參數淨增五個：院方 API 四個（抓取頻率、多久沒更新要提示、待確認下機的時間、床號格式），跑馬燈三個（速度、開頭靜止、兩則間隔），輪播的卡片停留與細節頁退回兩個停用。 （路由數 0930 以前沿用各迭代新增的端點累加；迭代 17 那一欄改以控制器實際的路由裝飾器計數，兩種計法在 14.5 時點一致。）
 
 ### 共用常數的角色
 
@@ -724,6 +792,7 @@ ______________________________________________________________________
 - `nursing.ts` — 事件範本 `EVENT-TEMPLATES-v2`（1005 新增「透析中低血壓處置」）、AI 初稿處置、SOP 查詢結果類別
 - `operations.ts` — 迭代 5：`evaluateLabourRules()` 勞動條件判定、班別定義、成效基準指標定義，以及三處暫代值的**預設值**（注意：只是預設值，現行值一律讀資料表）。迭代 6 另加六項輪播行為參數的定義（1005 迭代 16 停用其中兩項——卡片停留與細節頁退回，列在 `RETIRED_OPERATIONAL_SETTING_KEYS`；新增跑馬燈的速度、開頭靜止、兩則間隔三項）
 - `carousel.ts` — 迭代 6：衛教與公告的內容型別與長度上限、播放紀錄的來源與種類。1005 迭代 16 起只剩護理端內容管理與統計要用的部分（病人端的輪播卡片型別拿掉），~~`marqueeBodyOf()` 決定跑馬燈那一則的「內容」~~。迭代 17 起多核准狀態、來源、長度上限（`marqueeLengthProblem()`，前後端共用）與草稿的請求型別，一句話與 `marqueeBodyOf()` 拿掉
+- `hospital-api.ts` — 迭代 15：院方透析清單 API 的 51 欄位置表（**陣列沒有欄位名稱，只能靠位置認**）、同步系統帳號、模擬標頭、抓取結果與「沒有自動接上」的原因、床號正規化。同步與探測工具共用這一份
 - `patient-home.ts` — 迭代 16：病人端首頁 `DeviceHomeView`、面板 `DialysisPanelView`（只有畫面要用的欄位）、跑馬燈的行為參數與一則的型別、`marqueeText()`
 - `kiosk-shell.ts` — 迭代 12：外殼契約版本、JS 介面型別、由外殼版本推算「版本正常／外殼過舊／版本不相容／未回報」。**契約的程式真本**，文件真本是《病人端外殼 App 契約》，兩者與 `shell.pin` 要一起改
 - `beds.ts` — 迭代 14：預設床位（15 床，`01`～`15`）。一樣只是「資料表空的時候寫入的預設值」；1005 起床號照醫院編號、不設上限（原本的 40 床上限已拿掉）
@@ -812,7 +881,7 @@ ______________________________________________________________________
 | 4   | **總覽無日期選擇器**            | `GET /overview?date=` 支援查其他日期，UI 只看當日                                                                | 視需求補                                                                       |
 | 5   | **總覽螢幕 8 小時後要重新登入** | `JWT_EXPIRES_IN` 預設 8 小時，全天開著的總覽螢幕到期後出現逾時提示                                               | 待 Q-10 確認螢幕位置與使用方式後，再決定是否給總覽螢幕專用的長效帳號或延長機制 |
 
-| 6 | **目標平板型號未定**（0930 已確定 10 吋） | 「不出現捲軸」在開發機 1280×800、800×1280 驗過（14.5 起以無頭瀏覽器精確開這兩個尺寸）；實機沒驗過 | 待 Q-33 的型號；定了之後在實機重做截圖驗收（`x150`）。院方若統一調過系統顯示大小，短邊就不是 800 | | 7 | ~~**既有驗收腳本有一處環境相依**~~ **1005 迭代 16 解除** | `verify:iteration14:api` 步驟 4 預設「第二層輪播」開著，但 `verify:iteration6` 跑完會把它關回去，而第二層要有上架中的內容才准開。先跑過迭代 6 的環境裡這一步不通過 | 迭代 16 輪播拿掉、那一步改讀跑馬燈，腳本自己開跑馬燈與取消夜間時段、跑完改回（實作規格書 1.1 的表） |
+| 6 | **目標平板型號未定**（0930 已確定 10 吋） | 「不出現捲軸」在開發機 1280×800、800×1280 驗過（14.5 起以無頭瀏覽器精確開這兩個尺寸）；實機沒驗過 | 待 Q-33 的型號；定了之後在實機重做截圖驗收（`x150`）。院方若統一調過系統顯示大小，短邊就不是 800 | | 7 | ~~**既有驗收腳本有一處環境相依**~~ **1005 迭代 16 解除** | `verify:iteration14:api` 步驟 4 預設「第二層輪播」開著，但 `verify:iteration6` 跑完會把它關回去，而第二層要有上架中的內容才准開。先跑過迭代 6 的環境裡這一步不通過 | 迭代 16 輪播拿掉、那一步改讀跑馬燈，腳本自己開跑馬燈與取消夜間時段、跑完改回（實作規格書 1.1 的表） | | 8 | **`verify:iteration13` 第 2 步誤判** | 這一步在 `apps/` 底下找 Ollama 字樣（後端不得直接連推論端點），找到的是迭代 13 自己的驗收程式 `verify-iteration13.ts`，於是不通過。迭代 16 的回歸清單沒有它，迭代 17 回歸時發現（實作規格書 4.15 驗收現況） | 掃描範圍排除驗收程式本身；依實作規格書 1.1，改既有腳本要記下理由 |
 
 **授權判斷本身沒有問題** — 全部在後端把關，前端只是沒藏好入口。
 
@@ -839,7 +908,7 @@ npm run dev                 # api:3000 · nurse:5173 · patient:5174
 
 既有的 `API_PORT` 在正式環境的行為也變了：**開發機留空照舊用 3000，正式環境留空即拒絕啟動**（DEP-37 第 2 項）。
 
-**迭代 11 起院內部署另有一份範本** `deploy/hospital.env.example`，只列 compose 要代換的變數（`HD_IMAGE_TAG`、`HD_BACKUP_DIR`、`HD_CONFIG_DIR`、三個 `HD_*_PORT`、`HD_PUBLIC_API_URL`、`MDM_KIOSK_BASE_URL`、`HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING` 等），逐項填法見部署手冊第十四冊之一。**compose 不整份倒進容器**（DEP-13），容器要什麼在 `docker-compose.yml` 明寫；`UPDATE_PROBE_URL` 由 compose 直接給 `db:update`。 迭代 12 新增 `KIOSK_SHELL_MIN_VERSION`（最低可用外殼版本，留空用程式預設）；`MDM_KIOSK_BASE_URL` 在正式環境**必須是 `https://`**（迭代 14.1 的佈建 QR code 就是它）。 迭代 13 起 `LLM_ENDPOINT` 指向 AI 閘道、`LLM_MODEL_ID` 留空，`LLM_TIMEOUT_SECONDS` 要比閘道 `config.yaml` 的逾時大。
+**迭代 11 起院內部署另有一份範本** `deploy/hospital.env.example`，只列 compose 要代換的變數（`HD_IMAGE_TAG`、`HD_BACKUP_DIR`、`HD_CONFIG_DIR`、三個 `HD_*_PORT`、`HD_PUBLIC_API_URL`、`MDM_KIOSK_BASE_URL`、`HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING` 等），逐項填法見部署手冊第十五冊之一（1001 起取代第十四冊之一）；迭代 15 多了 `HOSPITAL_API_BASE_URL` 與 `HD_SIMULATION_DEPLOYMENT` 兩個。**compose 不整份倒進容器**（DEP-13），容器要什麼在 `docker-compose.yml` 明寫；`UPDATE_PROBE_URL` 由 compose 直接給 `db:update`。 迭代 12 新增 `KIOSK_SHELL_MIN_VERSION`（最低可用外殼版本，留空用程式預設）；`MDM_KIOSK_BASE_URL` 在正式環境**必須是 `https://`**（迭代 14.1 的佈建 QR code 就是它）。 迭代 13 起 `LLM_ENDPOINT` 指向 AI 閘道、`LLM_MODEL_ID` 留空，`LLM_TIMEOUT_SECONDS` 要比閘道 `config.yaml` 的逾時大。 迭代 15 新增 `HOSPITAL_API_BASE_URL`（院方 API 的端點，**空白就是不抓**，簡易版照人工流程；院內的值不進 repo、不寫進任何文件）與 `SIMULATION_DEPLOYMENT`（compose 由 `HD_SIMULATION_DEPLOYMENT` 帶入，模擬部署填 `yes` 才准位址指向模擬院方 API）。抓取頻率是營運參數，不在 `.env`。 迭代 16、17 沒有新增環境變數：跑馬燈的速度與間隔都是營運參數。
 
 > 資料庫檔案與 `BACKUP_DIR` 必須在**專案目錄外的本機磁碟**。相對路徑、專案目錄內、網路路徑、雲端同步資料夾，後端與 seed 一律拒絕啟動。 後端是唯一的寫入者：跑 `prisma:migrate`、`db:seed`、`db:restore` 或任何資料修補腳本前，**先停掉後端**。
 
@@ -865,12 +934,15 @@ npm run verify:iteration14-2  # 14.2 — 8 步；另有 :api
 npm run verify:iteration14-3  # 14.3 — 6 步（不需後端）
 npm run verify:iteration14-4  # 14.4 — 5 步（不需後端）
 npm run verify:iteration14-5  # 14.5 — 5 步（不需後端）
+npm run verify:iteration15  # 迭代 15 — 7 步（不需後端）；另有 :api 12 步（要模擬院方 API）
+npm run verify:iteration16  # 迭代 16 — 7 步（不需後端）；另有 :api 8 步（要模擬院方 API）
+npm run verify:iteration17  # 迭代 17 — 8 步（不需後端）；另有 :api 9 步（模型用模擬即可）
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container
 ```
 
 腳本都會建立少量標記過的合成資料並逐項斷言，涵蓋主線流程、錯誤路徑、權限隔離、冪等去重、稽核事件。**改動後請全部跑過。**
 
-最近一次執行（2026-09-30，迭代 14.5 完成後）：`build`、`check:all` 六支、`verify:iteration8`、`verify:iteration14`、`14-1`、`14-2`、`14-3`、`14-4`、`14-5` 全綠；迭代 11～14.2 完成時各自跑過自己的 `:api` 與 `--live`（結果記在實作規格書 4.9～4.12.2 各節的「驗收現況」）。已知的一處環境相依見第 9 節第 7 項。
+最近一次執行（2026-10-05，迭代 17 完成時）：迭代 15～17 各自的腳本與 `:api` 全綠；既有腳本回歸（`verify:acceptance`、`verify:iteration2`～`12`、`14` 系列與各自的 `:api`、`check:all` 六支）全綠，依實作規格書 1.1 改寫的幾支一併重跑。 **例外是 `verify:iteration13`**：它的第 2 步在 `apps/` 底下找 Ollama 字樣，找到的是迭代 13 自己那支驗收程式，與迭代 15～17 無關，見第 9 節第 8 項；`verify:iteration13:api` 要 Docker Desktop，這次沒跑（迭代 15～17 沒有動 AI 閘道）。結果記在實作規格書 4.13～4.15 各節的「驗收現況」。 0930 那一次（迭代 14.5）：`build`、`check:all` 六支、`verify:iteration8`、`verify:iteration14`、`14-1`～`14-5` 全綠。第 9 節第 7 項的環境相依迭代 16 已解除。
 
 0919 的紀錄仍然成立：九支皆全數通過（`verify:iteration8` 不需要後端在跑，它驗的東西全部在前端原始碼與樣式表裡）；**盤點腳本全綠**——介面技術識別從 22 筆降到 0，遷移安全改成只掃上一次部署之後新增的那幾份（已經套用出去的遷移改不動，把它們掃出來只會得到一份改不動的清單，而**一支永遠是紅的檢查跟沒有那支檢查一樣：沒有人會再看它一眼**）。
 
@@ -878,12 +950,13 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 
 其中 `verify:iteration2` 改了一處，而且只有這一處：FR-N10 讓「只填自由文字即可結案」不再成立，那一段跟著改成新的結案方式。**迭代 2 原本要驗的行為一條都沒有放寬**——狀態轉換、留下處理者、總覽不再顯示待處理，斷言全部保留。這是目前唯一一次刻意改動既有驗收腳本，理由記在《實作規格書》1.1 節；其餘情況一律不得以「配合新功能」為由修改既有腳本。迭代 6 與迭代 7 都沒有再動過任何一支——迭代 7 的解除綁定回應只多了兩個欄位，既有欄位一個都沒有動，因此既有斷言原封不動仍然成立。
 
-完整的手動測試步驟另有[測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md)：主手冊加迭代 3～14.5 十七本分冊，**共 894 個可勾選的測試項**（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項）。 0919 以前那幾冊要人眼與實機的部分仍然成立（迭代 3 的總覽螢幕連續 4 小時與拔網路、迭代 6 輪播的四節手指確認、迭代 8 標 ⚠️ 的十一項、迭代 9 的三條畫面護欄）， 0926 之後的幾冊，**腳本驗不到、還沒走的**集中在這幾處：
+完整的手動測試步驟另有[測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md)：主手冊加迭代 3～17 二十本分冊，**共 1021 個可勾選的測試項**（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項；0930 定版時 894 項）。迭代 17 起項次改用兩個字母（`aa`）。 0919 以前那幾冊要人眼與實機的部分仍然成立（迭代 3 的總覽螢幕連續 4 小時與拔網路、迭代 6 輪播的四節手指確認、迭代 8 標 ⚠️ 的十一項、迭代 9 的三條畫面護欄）， 0926 之後的幾冊，**腳本驗不到、還沒走的**集中在這幾處：
 
 - **[迭代 11 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-11/index.md)** 的 43 項，對應的實測已在開發機走過一輪（演練紀錄第 8 節）；**斷電重開後服務自己回來**只能在院內那台主機驗（Q-27）
 - **[迭代 12 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-12/index.md)** 的 48 項：開發手機從下載頁安裝、釘住後退不出去、契約版本不合時平板上的提示列（§12.5～§12.7）——**要一支真的手機**
 - **[迭代 13 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-13/index.md)** 的 47 項：實驗室上的真模型實測與繁中品質紀錄（§13.4），等實驗室連線
 - **[迭代 14 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-14/index.md)** 的 56 項：九項任務由第三者一個動作完成並錄影（`x39`，Q-31）、開發機＋開發手機走一次部署一輪（`x56`）
+- **[迭代 15](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-15/index.md)～[17](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17/index.md)** 共 126 項：模擬部署（`--profile simulation`）走一輪、第三次進院在院內跑探測工具；**長者看跑馬燈速度**（迭代 16 §16.10，做完之前院內的開關保持關閉）；簡易版草稿卡在護理站解析度下實際看過（`aa9`～`aa26`）；實驗室模型重寫隨版本帶入的草稿（`aa32`、`aa33`）
 - **[迭代 14.1](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-14-1/index.md)～[14.5](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-14-5/index.md)** 共 95 項：真的平板掃佈建 QR code（`x72`～`x77`）、直式實機（Q-33）、14.3 的四種斷線情境在瀏覽器實際看一次（`x111`～`x128`）、14.4 一次送出九則求助在兩種尺寸下看一次（`x131`～`x139`）、14.5 在暗的透析室裡由醫護看一次白底（`x146`）與 10 吋實機（`x150`）
 
 ______________________________________________________________________
@@ -909,25 +982,27 @@ ______________________________________________________________________
 
 ## 12. 下一階段
 
-迭代 11～14.5 已完成（2026-09-26～30）。成效基準的建檔介面自迭代 5 就緒，**現在等的仍是現場的數字**：
+迭代 15～17 已完成（2026-10-05）。成效基準的建檔介面自迭代 5 就緒，**現在等的仍是現場的數字**：
 
 > ⏰ **成效基準的量測（Q-01）有時效性。** 這不是開發端能做的事。系統正式啟用前沒測到，之後所有「省下 X 分鐘」的說法都只能靠估算。
 
-### 第二次進院之前
+### 第三次進院之前
 
-**開發端已沒有擋住第二次進院的實作**，剩下的是實機與外部答覆：
+1001 第二次進院 B 級部分成功，卡在護理端登入（`CORS_ORIGINS` 不放行護理端的來源）。第三次進院的目標與順序在實作規格書 4.19：
 
-| 要做的事                                                            | 在哪裡                                          | 卡在誰                                     |
-| ------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------ |
-| 開發機＋開發手機走一次部署一輪，打出交給院方的 tag                  | 部署規範第 9 章、測試分冊 `x56`                 | 開發端（要人操作手機）                     |
-| 開發手機上的外殼實機驗收、真的平板掃佈建 QR code                    | 迭代 12 §12.5～§12.7、迭代 14.1 `x72`～`x77`    | 開發端                                     |
-| 實驗室上的真模型實測                                                | 部署手冊第十三冊                                | 實驗室連線（Q-08）                         |
-| 斷電重開後誰登入、防毒排除；Docker Desktop 的使用統計與市集自動更新 | 部署手冊第十冊 F-20、《部署規範》DEP-14、DEP-21 | **院方（Q-27）**。版本與連接埠 0930 已答覆 |
-| ~~對外連線是不是常態、範圍多大~~                                    | 《部署規範》建置期連線                          | **0930 已回覆（Q-32）**：常態、沒有限制    |
-| 目標平板型號（尺寸 0930 已確定 10 吋）、床位數與療程時段            | 迭代 14 驗收第 1 條、簡易版的時段暫代值         | 院方（Q-33、Q-34）                         |
-| 至少一位護理師操作過簡易版                                          | 迭代 14 驗收第 3 條                             | 護理長（Q-31）                             |
+| 要做的事                                                                                                              | 在哪裡                                       | 卡在誰                                      |
+| --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------- |
+| **院內主機的 IP 固定下來**，主機位址由名稱換成 IP                                                                     | 部署手冊第十五冊之四、清冊 Q-27 第 12 題     | **院方（資訊室）**。IP 會變就不換           |
+| 帶去的 tag 在開發機用 IP 模擬部署一次（含 `--profile simulation`），並故意用 `localhost` 開一次重現 `Failed to fetch` | 第十五冊之三 E-02；部署規範第 9 章第 8 項    | 開發端（要開 Docker Desktop）               |
+| 帶新 tag 是一次**更新**（迭代 15、17 各有一個遷移），照第十一冊 W-19 換版，不是重新 clone                             | 第十五冊之三 E-04                            | 開發端                                      |
+| 院內護理站的電腦登入成功之後，備份還原與重新開機各走一次                                                              | 第十五冊、第十五冊之三 E-09                  | 現場                                        |
+| 探測院方 API：只印結構、位址當場輸入不寫進 `.env`                                                                     | 第十五冊 V-30a、清冊 Q-09 第 9 題            | 現場；**本系統能不能用、要不要報備待 Q-35** |
+| 1001 那台主機有 15 床的預設床位（迭代 15 以前的版本建的），接上院方資料後到系統管理把 `01`～`15` 拿掉                 | 實作規格書 4.13 待做                         | 現場                                        |
+| 斷電重開後誰登入、Defender 排除、Docker Desktop 兩項設定、主機上的 Git、Docker Hub 的 DNS                             | 清冊 Q-27 其餘各題                           | 院方。不擋登入，但首波試用前要有答案        |
+| 開發手機上的外殼實機驗收、真的平板掃佈建 QR code                                                                      | 迭代 12 §12.5～§12.7、迭代 14.1 `x72`～`x77` | 開發端                                      |
+| 實驗室上的真模型實測；用 `marquee:bundle` 重寫隨版本帶入的草稿                                                        | 部署手冊第十三冊、迭代 17 `aa32`、`aa33`     | 實驗室連線（Q-08）                          |
 
-第一次部署的人照部署手冊**第十四冊**（第十一～十三冊的新手導讀版）走。
+第三次進院照部署手冊**第十五冊**（新手版第二版）與之三、之四走。
 
 ### 迭代 15～19（1005 第三次重排）
 
@@ -939,41 +1014,7 @@ ______________________________________________________________________
 | 18     | 規則引擎與三項高風險功能（原 7 → 11 → 15）   | 實作可以                                                                        | 法務書面確認（Q-02）＋臨床端門檻值（Q-03）                               |
 | 19     | 管理儀表板、獎勵、對外揭露（原 8 → 12 → 16） | 建置可以                                                                        | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21）          |
 
-迭代 15 的第一項是院方 API 探測工具，要趕在第三次進院前完成（實作規格書 4.19）——**1005 已完成**，指令在部署手冊第十五冊 V-30a；迭代 16、17 都不擋第三次進院。
-
-#### 迭代 15 完成（1005）
-
-| 要知道的                  | 在哪裡                                                                                                                                                                                                                                                      |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 抓取、解析、同步          | `apps/api/src/modules/hospital-sync/`：`hospital-api.format.ts`（純解析，探測工具共用）、`hospital-api.client.ts`（30 秒逾時、重試 3 次）、`hospital-api.adapter.ts`（`ClinicalDataSourcePort` 第三個實作）、`hospital-sync.service.ts`（排程與同步）       |
-| 與護理師拖曳同一條路徑    | 同步呼叫 `ScheduleService.create`、`BindingService.create`、`DevicesService.setBed`、`ClinicalDataImportService.import`，操作者是登入不了的系統帳號 `SYSTEM-HOSPITAL-SYNC`；`AuditService.recordByNurse` 認得它，稽核記成 `HOSPITAL_SYNC`／「院方資料同步」 |
-| 護理師的更正優先          | `treatment_sessions.nurse_modified_at`（改狀態）與 `bed_nurse_modified_at`（換床）。兩支服務在操作者不是同步帳號時寫入                                                                                                                                      |
-| 模擬院方 API、探測工具    | `apps/api/src/hospital-api-sim.ts`（`npm run dev:hospital-sim`；compose 的 `simulation` 設定檔）、`apps/api/src/hospital-api-probe.ts`（`npm run probe:hospital-api`）                                                                                      |
-| 正式環境的兩道防線        | 啟動時：位址主機是 `hospital-api-sim` 就拒絕（`assertHospitalApiAllowed`）；抓取時：回應帶 `x-hd-simulated` 就整次作廢。模擬部署以 `HD_SIMULATION_DEPLOYMENT=yes` 明示                                                                                      |
-| 推送                      | 護理端串流多一種事件 `HOSPITAL_SYNC`；平板 `GET /device/stream`（`DeviceEventsService`，事件不帶數值）                                                                                                                                                      |
-| 開發機怎麼開              | `.env` 加 `HOSPITAL_API_BASE_URL=http://localhost:8090/dialysislist.php`，先 `npm run dev:hospital-sim` 再 `npm run dev:api`。不加就跟以前一樣，簡易版照人工流程                                                                                            |
-| #### 迭代 16 完成（1005） |                                                                                                                                                                                                                                                             |
-
-| 要知道的         | 在哪裡                                                                                                                                                                                                   |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 病人端首頁的資料 | `apps/api/src/modules/patient-home/`：`patient-home.service.ts`（面板、跑馬燈、行為參數、問卷到期；夜間判定也搬到這裡）、`device-home.controller.ts`（`GET /device/home`、`POST /device/marquee/plays`） |
-| 護理端的內容管理 | `modules/carousel/` 只剩上下架、播放範圍、播放統計；路徑仍是 `/carousel`，稽核動作名稱不變                                                                                                               |
-| 畫面             | `patient-pwa/src/TodayPanel.tsx`、`LineChart.tsx`、`Marquee.tsx`；`CarouselScreen.tsx` 已刪。樣式在 `styles.css` 第 5 節，語彙 `--c-chart-line`、`--t-marquee`、`--t-display`（原 `--t-carousel`）       |
-| 驗收             | `verify:iteration16`（不需後端）、`verify:iteration16:api`（要模擬院方 API，與迭代 15 相同的前提）；`check:ui:design` 多一組「面板不做判讀」                                                             |
-| 開發機看畫面     | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容                                                                                                      |
-| 順手更正         | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查                                           |
-
-#### 迭代 17 完成（1005）
-
-| 要知道的                 | 在哪裡                                                                                                                                                                                                                         |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 草稿怎麼生出來           | `modules/carousel/marquee-draft.service.ts`（排入背景佇列、經 `AiGatewayService.attempt` 呼叫、寫回、隨版本帶入的匯入）；提示與解析在 `marquee-draft.ts`，**不碰資料庫、不呼叫模型**，驗收腳本直接拿來測「超過字數就重新生成」 |
-| 核准、退回、撤回、上下架 | `modules/carousel/carousel.service.ts`；核准與退回在 `CarouselItemRepository` 是條件式更新（只動 `PENDING` 的那一列）                                                                                                          |
-| 病人端怎麼擋             | `CarouselItemRepository.listPlayable` 的條件多 `approval_status = APPROVED`——端點層擋，不是畫面藏                                                                                                                              |
-| 隨版本帶入的草稿         | `modules/carousel/marquee-bundle.ts`（資料檔）；重新生成 `npm run marquee:bundle -- --per-topic 2`（對著開發機跑著的後端要草稿，模型是模擬時拒跑；不寫入端點位址）                                                             |
-| 系統帳號多一個           | `SYSTEM-RELEASE-CONTENT`「隨版本帶入」，與 `SYSTEM-HOSPITAL-SYNC` 同規則：`nurseLabel()` 顯示中文、`NurseRepository` 的 `PEOPLE_ONLY` 排除                                                                                     |
-| 畫面                     | 簡易版 `simple/Trays.tsx` 的 `ContentTray`（草稿卡）、`actions.tsx` 的 `approveDraft`／`rejectDraft`／`requestDraft`、`Workbench.tsx` 的 `NewDraftForm`；專業版 `pages/CarouselPage.tsx` 改寫。圖示多 `check`、`ban`           |
-| 驗收                     | `verify:iteration17`（不需後端）、`verify:iteration17:api`（後端開著、模型用模擬即可，不需模擬院方 API）                                                                                                                       |
+迭代 15 的第一項是院方 API 探測工具，要趕在第三次進院前完成（實作規格書 4.19）——**1005 已完成**，指令在部署手冊第十五冊 V-30a；迭代 16、17 都不擋第三次進院。三個迭代的實作位置見 6「迭代 15」～「迭代 17」。
 
 迭代 18 與其他迭代沒有相依，外部答覆若提早到齊可隨時往前插隊。 迭代 19 的成效指標會吃迭代 6 產生的 `carousel_view_events`（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料， 因此它只回答得了「哪一類內容有人看」這種問題。
 
@@ -1003,8 +1044,11 @@ ______________________________________________________________________
 - 護理長會想調的數字，有沒有放在只有工程師動得到的地方（`.env` 而非營運參數）
 - 簡易版要做的事，是不是只呼叫專業版原有的端點；真的要加端點，是不是只做加法（`npm run verify:iteration14`）
 - 用到的圖示有沒有在介面設計基準 4.6 登記、由 `sync-icons.mjs` 產生，而不是從套件或 CDN 直接引入
-- 動了 `docker-compose.yml`、`Dockerfile` 或 `deploy/hospital.env.example`，有沒有回頭核對部署手冊第十一、十四冊與兩本 `.env` 子手冊（`npm run check:container`）
+- 動了 `docker-compose.yml`、`Dockerfile` 或 `deploy/hospital.env.example`，有沒有回頭核對部署手冊第十一、十五冊與兩本 `.env` 子手冊（第十五冊之一、之二）（`npm run check:container`）
 - 動了外殼契約，有沒有三處一起改：契約文件、`kiosk-shell.ts`、`shell.pin`（`npm run verify:iteration12`）
+- 院方 API 判斷得出來的事，有沒有又要求護理師操作（SRS FR-S15）；同步要寫的東西，是不是走護理師操作時同一支服務
+- 病人端面板有沒有出現判讀：警戒線、正常範圍、紅色、預測（`npm run check:ui:design`）
+- 送進 AI 的東西有沒有任何病人資料；病人端看得到的 AI 產出，是不是一定先經護理師核准
 
 ______________________________________________________________________
 

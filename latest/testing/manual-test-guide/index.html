@@ -353,6 +353,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../weekly/2026-10-07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1007 — 第二次進院部分成功，院方 API 取代手動輸入（迭代 15～17）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../weekly/2026-09-30/" class="md-nav__link">
         
   
@@ -4066,9 +4094,9 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 9 · 126 條 API 路由 · 164 種稽核動作。
+對應版本：迭代 17 · 136 條 API 路由 · 109 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
-<strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-16-分冊">§13 分冊索引</a>。</p>
+<strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-17-分冊">§13 分冊索引</a>。</p>
 </blockquote>
 <p>本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。</p>
 <h2 id="操作端色籤">操作端色籤<a class="headerlink" href="#操作端色籤" title="Permanent link">&para;</a></h2>
@@ -4258,7 +4286,7 @@ npm<span class="w"> </span>run<span class="w"> </span>db:seed
 <tbody>
 <tr>
 <td><code>npm run build:shared</code></td>
-<td>把 <code>packages/shared</code> 的 TypeScript 編譯成 JS。裡面是<strong>前後端共用的型別與常數</strong>：求助分派規則、164 種稽核動作的代號、權限碼、導覽版位的預設值。</td>
+<td>把 <code>packages/shared</code> 的 TypeScript 編譯成 JS。裡面是<strong>前後端共用的型別與常數</strong>：求助分派規則、109 種稽核動作的代號、權限碼、導覽版位的預設值。</td>
 <td>後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。<strong>之後每次改動 shared 都要重跑</strong>（<code>npm run dev</code> 會自動先跑一次）。</td>
 </tr>
 <tr>
@@ -4997,7 +5025,7 @@ taskkill<span class="w"> </span>//PID<span class="w"> </span><span class="m">332
 <p>改了後端程式碼時，<code>npm run dev</code> 用的是 <code>nest start --watch</code>，會<strong>自動重新編譯並重新啟動</strong>，不必手動關。此時護理端的即時總覽會短暫顯示「串流中斷，改為定時更新」，後端起來後自動變回「即時連線中」。</p>
 </blockquote>
 <h2 id="09--api-附錄">09 · API 附錄<a class="headerlink" href="#09--api-附錄" title="Permanent link">&para;</a></h2>
-<p>後端啟動時會印出完整路由清單，目前共 <strong>126 條</strong>，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
+<p>後端啟動時會印出完整路由清單，目前共 <strong>136 條</strong>，下表逐條列出（迭代 16 拿掉的兩條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
 <h3 id="怎麼帶憑證">怎麼帶憑證<a class="headerlink" href="#怎麼帶憑證" title="Permanent link">&para;</a></h3>
 <p>護理端用 <strong>JWT</strong>；病人端平板用<strong>三個標頭</strong>（序號＋金鑰，寫入資料時再加 Session Token）。</p>
 <p><em>取得護理端權杖並呼叫（bash）</em></p>
@@ -5538,24 +5566,24 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>（迭代 5）建檔一條成效基準（背書者必填）</td>
 </tr>
 <tr>
-<td><code>GET /api/device/carousel</code></td>
+<td>~~<code>GET /api/device/carousel</code>~~</td>
 <td>裝置＋Token</td>
-<td>（迭代 6）本次綁定的輪播內容與行為參數</td>
+<td>（迭代 6）本次綁定的輪播內容與行為參數。<strong>迭代 16 拿掉</strong>，改為 <code>GET /api/device/home</code></td>
 </tr>
 <tr>
-<td><code>POST /api/device/carousel/view-events</code></td>
+<td>~~<code>POST /api/device/carousel/view-events</code>~~</td>
 <td>裝置＋Token</td>
-<td>（迭代 6）回報瀏覽事件（只有卡片種類、停留時間、點開次數）</td>
+<td>（迭代 6）回報瀏覽事件。<strong>迭代 16 拿掉</strong>，改為 <code>POST /api/device/marquee/plays</code></td>
 </tr>
 <tr>
 <td><code>GET /api/carousel/items</code></td>
 <td>carousel-content:manage</td>
-<td>（迭代 6）第二層內容清單（含已下架）</td>
+<td>（迭代 6）跑馬燈內容清單（含已下架；迭代 17 起含待核准與核准狀態）</td>
 </tr>
 <tr>
 <td><code>POST /api/carousel/items</code></td>
 <td>carousel-content:manage</td>
-<td>（迭代 6）新增或修改第二層內容（帶 id 為修改）</td>
+<td>（迭代 6）新增或修改跑馬燈內容（帶 id 為修改）；迭代 17 起新增的一律待核准，護理師沒有 AI 時用它寫公告</td>
 </tr>
 <tr>
 <td><code>GET /api/carousel/view-stats?days=</code></td>
@@ -5662,11 +5690,121 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>裝置＋Token</td>
 <td>（迭代 9）平板取求助類別；改過的文字下一次取得就生效</td>
 </tr>
+<tr>
+<td><code>POST /api/device/foreground</code></td>
+<td>裝置金鑰</td>
+<td>（迭代 10）平板回報是否在最上層、是否釘選；迭代 12 起附外殼版本與契約版本</td>
+</tr>
+<tr>
+<td><code>GET /api/device/shell-contract</code></td>
+<td>公開</td>
+<td>（迭代 12）外殼契約版本握手。路徑與回應格式任何版本都不得變更</td>
+</tr>
+<tr>
+<td><code>GET /api/beds</code></td>
+<td>登入態</td>
+<td>（迭代 14）床位清單</td>
+</tr>
+<tr>
+<td><code>PUT /api/beds</code></td>
+<td>operational-setting:manage</td>
+<td>（迭代 14）調整床位清單；有病人正在治療的床拿不掉</td>
+</tr>
+<tr>
+<td><code>POST /api/devices/:id/bed</code></td>
+<td>device:manage</td>
+<td>（迭代 14）平板換床（簡易版拖曳）</td>
+</tr>
+<tr>
+<td><code>PUT /api/carousel/items/:id/targets</code></td>
+<td>carousel-content:manage</td>
+<td>（迭代 14）指定在哪幾床播</td>
+</tr>
+<tr>
+<td><code>POST /api/help-requests/:id/outcome</code></td>
+<td>help-request:handle</td>
+<td>（迭代 14）結案後補改處理結果</td>
+</tr>
+<tr>
+<td><code>POST /api/treatment-sessions/:id/reopen</code></td>
+<td>schedule:manage</td>
+<td>（迭代 14.2）重新開啟今天已下機或取消的排班，沿用同一筆</td>
+</tr>
+<tr>
+<td><code>GET /api/hospital-sync/status</code></td>
+<td>patient:monitor</td>
+<td>（迭代 15）院方資料最後一次更新、是否超過提示時間</td>
+</tr>
+<tr>
+<td><code>GET /api/hospital-sync/runs</code></td>
+<td>operational-setting:manage</td>
+<td>（迭代 15）最近幾次抓取的結果（不含回應內容）</td>
+</tr>
+<tr>
+<td><code>POST /api/hospital-sync/run</code></td>
+<td>operational-setting:manage</td>
+<td>（迭代 15）手動再抓一次</td>
+</tr>
+<tr>
+<td><code>PUT /api/patients/:id/preferred-device</code></td>
+<td>binding:manage</td>
+<td>（迭代 15）把平板配給病人，之後他每次透析自動接上</td>
+</tr>
+<tr>
+<td><code>GET /api/patients/:id/latest-vital</code></td>
+<td>nursing-record:write</td>
+<td>（迭代 15）院方最近一筆血壓，低血壓處置範本帶入用</td>
+</tr>
+<tr>
+<td><code>GET /api/device/stream</code></td>
+<td>裝置金鑰</td>
+<td>（迭代 15）平板的 SSE：只通知「療程變了」「有新數值」，不帶數值</td>
+</tr>
+<tr>
+<td><code>GET /api/device/home</code></td>
+<td>裝置＋Token</td>
+<td>（迭代 16）病人端首頁：本次透析面板、跑馬燈與行為參數、問卷是否到期</td>
+</tr>
+<tr>
+<td><code>POST /api/device/marquee/plays</code></td>
+<td>裝置＋Token</td>
+<td>（迭代 16）每播完一則記一筆播放（不含病人）</td>
+</tr>
+<tr>
+<td><code>GET /api/carousel/draft-topics</code></td>
+<td>carousel-content:manage</td>
+<td>（迭代 17）可以要草稿的衛教主題</td>
+</tr>
+<tr>
+<td><code>POST /api/carousel/drafts</code></td>
+<td>carousel-content:manage</td>
+<td>（迭代 17）要一份 AI 草稿（主題或公告事由）；AI 總開關關閉時不存在</td>
+</tr>
+<tr>
+<td><code>POST /api/carousel/items/:id/approve</code></td>
+<td>carousel-content:manage</td>
+<td>（迭代 17）核准即上架，可帶修改與播放床位；超過標題 12 字、內容 60 字擋下</td>
+</tr>
+<tr>
+<td><code>POST /api/carousel/items/:id/reject</code></td>
+<td>carousel-content:manage</td>
+<td>（迭代 17）退回（產生中的也能取消）</td>
+</tr>
+<tr>
+<td><code>POST /api/carousel/items/:id/reopen</code></td>
+<td>carousel-content:manage</td>
+<td>（迭代 17）撤回成待核准，病人端立刻收不到</td>
+</tr>
+<tr>
+<td><code>PUT /api/carousel/items/:id/schedule</code></td>
+<td>carousel-content:manage</td>
+<td>（迭代 17）上下架時間</td>
+</tr>
 </tbody>
 </table>
 <blockquote>
-<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>、<a href="../iteration-4/">迭代 4</a>、<a href="../iteration-5/">迭代 5</a>、<a href="../iteration-6/">迭代 6</a>、<a href="../iteration-7/">迭代 7</a>、<a href="../iteration-8/">迭代 8</a>、<a href="../iteration-9/">迭代 9</a>、<a href="../iteration-10/">迭代 10</a> 八本分冊。
-本表逐條對齊後端啟動時印出的路由清單（目前 126 條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-17/">迭代 17</a> 各分冊（索引見 §13）。
+本表逐條對齊後端啟動時印出的路由清單（目前 136 條；1005 補齊迭代 10～17 新增的 22 條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>h1</code> <strong>［終端機］</strong> 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
