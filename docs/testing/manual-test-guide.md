@@ -1,9 +1,9 @@
 # 血液透析平板照護輔助系統 — 完整手動測試手冊
 
 > 從 `git clone` 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-> 對應版本：迭代 9 · 126 條 API 路由 · 164 種稽核動作。
+> 對應版本：迭代 17 · 136 條 API 路由 · 109 種稽核動作。
 > 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
-> **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--迭代-3-16-分冊)。
+> **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--迭代-3-17-分冊)。
 
 本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。
 
@@ -146,7 +146,7 @@ ls -l /d/hd-data            # Git Bash
 
 | 指令 | 在做什麼 | 為什麼需要 |
 |---|---|---|
-| `npm run build:shared` | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：求助分派規則、164 種稽核動作的代號、權限碼、導覽版位的預設值。 | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。 |
+| `npm run build:shared` | 把 `packages/shared` 的 TypeScript 編譯成 JS。裡面是**前後端共用的型別與常數**：求助分派規則、109 種稽核動作的代號、權限碼、導覽版位的預設值。 | 後端與兩個 PWA 都會 import 它。沒編譯過，後端一啟動就找不到模組。**之後每次改動 shared 都要重跑**（`npm run dev` 會自動先跑一次）。 |
 | `npm run prisma:migrate` | 讀 `apps/api/prisma/schema.prisma`，把資料表建到 `.env` 的 `DATABASE_URL` 指向的 SQLite 檔案，並產生 Prisma Client。本專案目前有六個 migration（迭代 3～7 各一個）。**這一支是開發用的**，正式環境改用 `npm run db:update`，見[迭代 7 分冊](iteration-7.md) §7.6、§7.7。 | 你的資料庫一開始是**空的**。這步建出 nurses、patients、devices、device_bindings、symptom_reports、help_requests、audit_logs 等資料表。沒跑過，後續任何操作都會失敗。 |
 | `npm run db:seed` | 灌入**虛構**測試資料：8 位病人（`HD-TEST-0001`～`0008`）與 15 台平板（`TB-01`～`TB-15`），並把平板金鑰寫到 `apps/api/.device-keys.json`。 | 沒有病人就不能建排班，沒有平板就不能指派。**它不建立任何護理師帳號** — 那是後端啟動時依 `.env` 自動建立的。可重複執行，已有資料時會自動略過。 |
 
@@ -728,7 +728,7 @@ taskkill //PID 33244 //F
 
 ## 09 · API 附錄
 
-後端啟動時會印出完整路由清單，目前共 **126 條**，下表逐條列出。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
+後端啟動時會印出完整路由清單，目前共 **136 條**，下表逐條列出（迭代 16 拿掉的兩條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
 
 ### 怎麼帶憑證
 
@@ -867,10 +867,10 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `GET /api/baselines/overview` | 登入態 | （迭代 5）建檔進度：還差幾項、哪幾項只有估算值 |
 | `GET /api/baselines` | 登入態 | （迭代 5）歷次建檔紀錄（含已被取代的） |
 | `POST /api/baselines` | baseline:manage | （迭代 5）建檔一條成效基準（背書者必填） |
-| `GET /api/device/carousel` | 裝置＋Token | （迭代 6）本次綁定的輪播內容與行為參數 |
-| `POST /api/device/carousel/view-events` | 裝置＋Token | （迭代 6）回報瀏覽事件（只有卡片種類、停留時間、點開次數） |
-| `GET /api/carousel/items` | carousel-content:manage | （迭代 6）第二層內容清單（含已下架） |
-| `POST /api/carousel/items` | carousel-content:manage | （迭代 6）新增或修改第二層內容（帶 id 為修改） |
+| ~~`GET /api/device/carousel`~~ | 裝置＋Token | （迭代 6）本次綁定的輪播內容與行為參數。**迭代 16 拿掉**，改為 `GET /api/device/home` |
+| ~~`POST /api/device/carousel/view-events`~~ | 裝置＋Token | （迭代 6）回報瀏覽事件。**迭代 16 拿掉**，改為 `POST /api/device/marquee/plays` |
+| `GET /api/carousel/items` | carousel-content:manage | （迭代 6）跑馬燈內容清單（含已下架；迭代 17 起含待核准與核准狀態） |
+| `POST /api/carousel/items` | carousel-content:manage | （迭代 6）新增或修改跑馬燈內容（帶 id 為修改）；迭代 17 起新增的一律待核准，護理師沒有 AI 時用它寫公告 |
 | `GET /api/carousel/view-stats?days=` | carousel-content:manage | （迭代 6）依卡片種類彙總的瀏覽狀況 |
 | `POST /api/clinical-values/file-imports` | clinical-value:manage | （迭代 6）Excel／CSV 匯入，整批全有或全無 |
 | `GET /api/import-field-mappings` | clinical-value:manage | （迭代 6）匯入欄位對應設定 |
@@ -892,9 +892,31 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `GET /api/education/topics` | education:manage | （迭代 9）產生衛教內容時可選的主題（停用的不出現） |
 | `GET /api/device/content/questionnaire` | 裝置＋Token | （迭代 9）平板取問卷題目；取到之後存在本機供離線使用 |
 | `GET /api/device/content/help-categories` | 裝置＋Token | （迭代 9）平板取求助類別；改過的文字下一次取得就生效 |
+| `POST /api/device/foreground` | 裝置金鑰 | （迭代 10）平板回報是否在最上層、是否釘選；迭代 12 起附外殼版本與契約版本 |
+| `GET /api/device/shell-contract` | 公開 | （迭代 12）外殼契約版本握手。路徑與回應格式任何版本都不得變更 |
+| `GET /api/beds` | 登入態 | （迭代 14）床位清單 |
+| `PUT /api/beds` | operational-setting:manage | （迭代 14）調整床位清單；有病人正在治療的床拿不掉 |
+| `POST /api/devices/:id/bed` | device:manage | （迭代 14）平板換床（簡易版拖曳） |
+| `PUT /api/carousel/items/:id/targets` | carousel-content:manage | （迭代 14）指定在哪幾床播 |
+| `POST /api/help-requests/:id/outcome` | help-request:handle | （迭代 14）結案後補改處理結果 |
+| `POST /api/treatment-sessions/:id/reopen` | schedule:manage | （迭代 14.2）重新開啟今天已下機或取消的排班，沿用同一筆 |
+| `GET /api/hospital-sync/status` | patient:monitor | （迭代 15）院方資料最後一次更新、是否超過提示時間 |
+| `GET /api/hospital-sync/runs` | operational-setting:manage | （迭代 15）最近幾次抓取的結果（不含回應內容） |
+| `POST /api/hospital-sync/run` | operational-setting:manage | （迭代 15）手動再抓一次 |
+| `PUT /api/patients/:id/preferred-device` | binding:manage | （迭代 15）把平板配給病人，之後他每次透析自動接上 |
+| `GET /api/patients/:id/latest-vital` | nursing-record:write | （迭代 15）院方最近一筆血壓，低血壓處置範本帶入用 |
+| `GET /api/device/stream` | 裝置金鑰 | （迭代 15）平板的 SSE：只通知「療程變了」「有新數值」，不帶數值 |
+| `GET /api/device/home` | 裝置＋Token | （迭代 16）病人端首頁：本次透析面板、跑馬燈與行為參數、問卷是否到期 |
+| `POST /api/device/marquee/plays` | 裝置＋Token | （迭代 16）每播完一則記一筆播放（不含病人） |
+| `GET /api/carousel/draft-topics` | carousel-content:manage | （迭代 17）可以要草稿的衛教主題 |
+| `POST /api/carousel/drafts` | carousel-content:manage | （迭代 17）要一份 AI 草稿（主題或公告事由）；AI 總開關關閉時不存在 |
+| `POST /api/carousel/items/:id/approve` | carousel-content:manage | （迭代 17）核准即上架，可帶修改與播放床位；超過標題 12 字、內容 60 字擋下 |
+| `POST /api/carousel/items/:id/reject` | carousel-content:manage | （迭代 17）退回（產生中的也能取消） |
+| `POST /api/carousel/items/:id/reopen` | carousel-content:manage | （迭代 17）撤回成待核准，病人端立刻收不到 |
+| `PUT /api/carousel/items/:id/schedule` | carousel-content:manage | （迭代 17）上下架時間 |
 
-> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)、[迭代 4](iteration-4.md)、[迭代 5](iteration-5.md)、[迭代 6](iteration-6.md)、[迭代 7](iteration-7.md)、[迭代 8](iteration-8.md)、[迭代 9](iteration-9.md)、[迭代 10](iteration-10.md) 八本分冊。
-> 本表逐條對齊後端啟動時印出的路由清單（目前 126 條）；日後新增端點時，以那份清單為準回頭補這張表。
+> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)～[迭代 17](iteration-17.md) 各分冊（索引見 §13）。
+> 本表逐條對齊後端啟動時印出的路由清單（目前 136 條；1005 補齊迭代 10～17 新增的 22 條）；日後新增端點時，以那份清單為準回頭補這張表。
 
 - [ ] `h1` **［終端機］** 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
   → 409「此排班仍有進行中的裝置綁定，請先解除綁定」。解除後再取消則成功，狀態變 `CANCELLED`。
