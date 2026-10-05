@@ -62,10 +62,12 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 十一、SOP 文件與查詢（迭代 4） | `sop_documents`、`sop_sections`、`sop_queries`、`sop_query_citations` | 查詢範圍內的文件原文，以及每一次查詢引用了哪幾段 |
 | 十二、求助處理與可設定的暫代值（迭代 5） | `help_resolution_options`、`operational_settings`、`help_request_follow_ups` | 求助結案時選的是哪一項處理方式與結果、那份清單本身、以及外部答覆未到前的各項暫定參數 |
 | 十三、護理師班表與成效基準（迭代 5） | `nurse_shifts`、`shift_bed_assignments`、`shift_change_requests`、`baseline_measurements` | 誰上哪一班、負責哪幾床、調班的來龍去脈；以及系統啟用前的人工量測結果 |
-| 十四、閒置輪播與檔案匯入（迭代 6） | `carousel_items`、`carousel_view_events`、`import_field_mappings` | 輪播第二層播什麼、哪一類卡片有人看、匯入檔案的欄位怎麼對上 |
+| 十四、閒置輪播與檔案匯入（迭代 6） | `carousel_items`、`carousel_view_events`、`import_field_mappings` | 衛教與公告播什麼（1005 起在跑馬燈播）、哪一類內容有播到、匯入檔案的欄位怎麼對上 |
 | 十五、版本更新紀錄（迭代 7） | `update_runs` | 每一次版本更新前備份了什麼、驗證還原成不成功、套用了哪幾個遷移、誰執行的 |
 | 十六、導覽版位與內容資料化（迭代 9） | `nav_placement_settings`、`help_categories`、`help_request_methods`、`questionnaire_*`、`quiz_*`、`feedback_form_*`、`symptom_answer_options` | 哪些功能出現在哪裡；病人與護理師看到的選項與題目是什麼，以及它們改過幾版 |
-| 十七、床位圖（迭代 14） | `beds`、`carousel_item_targets`（另有 `devices.bed_no`） | 透析室有哪幾床、每台平板貼在哪一床、哪則輪播內容只在哪幾床播 |
+| 十七、床位圖（迭代 14） | `beds`、`carousel_item_targets`（另有 `devices.bed_no`） | 透析室有哪幾床、每台平板貼在哪一床、哪則輪播內容（1005 起是跑馬燈內容）只在哪幾床播 |
+| 十八、院方 API 介接（迭代 15） | `hospital_api_fetch_runs`、`dialysis_vital_records` | 每一次抓院方 API 的結果；有綁定平板的病人在透析中的血壓、脈搏與脫水量 |
+| 十九、「本次透析」面板與跑馬燈（迭代 16） | 沒有新表（讀 `dialysis_vital_records`、`clinical_values`、`carousel_items`） | 病人平板上的兩張圖、五個數字與一條跑馬燈，各從哪裡來 |
 
 ### 每張表都有的三個欄位
 
@@ -395,7 +397,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `CAROUSEL_LAYER_1` `CAROUSEL_LAYER_2` `CAROUSEL_LAYER_3` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有輪播三層預設開啟） |
+| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）`TODAY_PANEL` `MARQUEE`（1005 迭代 16，「本次透析」面板與跑馬燈）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有 `TODAY_PANEL` 預設開啟；9.1～15 是輪播三層）。**`CAROUSEL_LAYER_1`～`3` 於 1005 停用**（`RETIRED_FEATURE_FLAG_KEYS`）：那三列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現 |
 | `enabled` | `BOOL` | 目前是否開啟 | `DEFAULT false`。⛔ **不得直接改資料庫開啟**——開啟必須經 `FeatureFlagsService`：它會判定開啟條件（實作規格書 3.7）、要求核准依據、寫入稽核。後端以記憶體中的狀態為準，直接改資料庫在重新啟動前也不會生效 |
 | `last_reason` | `TEXT?` | 最後一次切換時登記的核准依據或理由 | 開與關都必填（FR-S08、FR-M11），長度 2～500 字 |
 | `changed_by_id` | `TEXT?` | 最後一次是誰切換的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未切換過時為 NULL |
@@ -465,7 +467,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ## 七、院方臨床數值（迭代 3）
 
-FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `ClinicalDataSourcePort` 介面層：人工輸入、檔案匯入、院方 API 三種來源**共用同一組內部資料表**，輪播與儀表板只讀這兩張表、不認來源。迭代 3 只有人工輸入（`ManualEntryAdapter`）。
+FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `ClinicalDataSourcePort` 介面層：人工輸入、檔案匯入、院方 API 三種來源**共用同一組內部資料表**，病人端面板（1005 起取代輪播）與儀表板只讀這兩張表、不認來源。迭代 3 只有人工輸入（`ManualEntryAdapter`）。
 **1005 迭代 15 起院方 API（`HospitalApiAdapter`）是唯一的日常來源**：一次透析一批（全有或全無的單位），批次的 `source_type` 為 `HOSPITAL_API`、匯入者是「院方資料同步」，`content_hash` 留空（相同的值在送進來之前就濾掉了）。人工輸入與檔案匯入只留在專業版當備援。
 
 **三條硬性規則**（實作規格書 3.5、規範第 13 條）：
@@ -496,7 +498,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `id` | `TEXT` | 內部識別碼 | 主鍵。由應用層先產生，才能在同一個交易裡把舊值指向新值 |
 | `import_id` | `TEXT` | 屬於哪一批匯入 | 外鍵 → `clinical_value_imports.id`，`ON DELETE NO ACTION`。有索引 |
 | `patient_id` | `TEXT` | 哪一位病人的數值 | 外鍵 → `patients.id`，`ON DELETE NO ACTION`。與 `value_code`、`measured_at` 組成複合索引 |
-| `value_code` | `TEXT` | 數值種類：理想體重、目標脫水量、血紅素、白蛋白、Kt/V；迭代 4 另加透析適足性計算的五個輸入值 | 合法值見 `CLINICAL_VALUE_DEFINITIONS`：`DRY_WEIGHT` `UF_TARGET` `HEMOGLOBIN` `ALBUMIN` `KT_V`（輪播第三層，實際種類待院方確認，Q-09）；`BUN_PRE` `BUN_POST` `WEIGHT_POST` `UF_VOLUME` `SESSION_MINUTES`（迭代 4，FR-N07 的輸入，Q-26） |
+| `value_code` | `TEXT` | 數值種類：理想體重、目標脫水量、血紅素、白蛋白、Kt/V；迭代 4 另加透析適足性計算的五個輸入值 | 合法值見 `CLINICAL_VALUE_DEFINITIONS`：`DRY_WEIGHT` `UF_TARGET` `HEMOGLOBIN` `ALBUMIN` `KT_V`（原輪播第三層；1005 起病人端面板只顯示理想體重與目標脫水量，抽血數值與 Kt/V 病人端不顯示）；`BUN_PRE` `BUN_POST` `WEIGHT_POST` `UF_VOLUME` `SESSION_MINUTES`（迭代 4，FR-N07 的輸入，Q-26） |
 | `value_scaled` | `INT` | 數值本身 | ⛔ **不用浮點數**（規範 6.2）。以整數記錄、搭配下一欄的小數位數：理想體重 62.5 kg 存為 `625`。十進位字串與整數的轉換用 `parseScaledDecimal` / `formatScaledDecimal`，全程字串運算 |
 | `value_scale` | `INT` | 小數位數 | 理想體重 1、目標脫水量 0、Kt/V 2。逐列記錄，種類定義日後改變也不影響舊資料的解讀 |
 | `unit` | `TEXT` | 單位 | 如 `kg`、`mL`、`g/dL`；Kt/V 無單位時為空字串 |
@@ -821,7 +823,7 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
-| `setting_key` | `TEXT` UNIQUE | 這是哪一個參數 | 合法值見 `OperationalSettingKey`：`HELP_RECURRENCE_WINDOW_HOURS`（FR-N11 的再發判定期間，暫定 72 小時）、`LABOUR_MAX_SHIFT_HOURS`、`LABOUR_MIN_REST_HOURS`、`LABOUR_MAX_DAILY_HOURS`、`LABOUR_MAX_WEEKLY_HOURS`、`LABOUR_MAX_CONSECUTIVE_DAYS`（FR-M04，暫以勞動基準法基本條件為值）。迭代 6 另加六項輪播參數：`CAROUSEL_IDLE_THRESHOLD_SECONDS`（FR-P09，預設 60 秒）、`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（FR-P10）、`CAROUSEL_NIGHT_MODE_START_HOUR`／`CAROUSEL_NIGHT_MODE_END_HOUR`（夜間模式）、`SYMPTOM_DUE_INTERVAL_MINUTES`（FR-P13 問卷優先於輪播的判定） |
+| `setting_key` | `TEXT` UNIQUE | 這是哪一個參數 | 合法值見 `OperationalSettingKey`：`HELP_RECURRENCE_WINDOW_HOURS`（FR-N11 的再發判定期間，暫定 72 小時）、`LABOUR_MAX_SHIFT_HOURS`、`LABOUR_MIN_REST_HOURS`、`LABOUR_MAX_DAILY_HOURS`、`LABOUR_MAX_WEEKLY_HOURS`、`LABOUR_MAX_CONSECUTIVE_DAYS`（FR-M04，暫以勞動基準法基本條件為值）。迭代 6 另加六項輪播參數：`CAROUSEL_IDLE_THRESHOLD_SECONDS`（FR-P09，預設 60 秒；0926 起用在任務畫面閒置回首頁）、`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（FR-P10）、`CAROUSEL_NIGHT_MODE_START_HOUR`／`CAROUSEL_NIGHT_MODE_END_HOUR`（夜間模式）、`SYMPTOM_DUE_INTERVAL_MINUTES`（透析前問卷到期的判定）。**1005 迭代 16**：卡片停留與細節頁退回兩項停用（`RETIRED_OPERATIONAL_SETTING_KEYS`，列與修改紀錄保留），另加跑馬燈三項，見第十九節 |
 | `value` | `INT` | 目前的值 | 目前全部是整數（小時、日數）。日後若出現非整數參數，比照臨床數值改為「整數＋小數位數」，**不得改用浮點數** |
 | `last_reason` | `TEXT?` | 最後一次改動時填的理由 | 必填才改得動（後端驗證 2～500 字）。理由連同新舊值另寫入 `audit_logs` 的 `OPERATIONAL_SETTING_UPDATED` |
 | `updated_by_id` | `TEXT?` | 誰改的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
@@ -967,6 +969,9 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 三張表，兩件事。
 
+> **1005 迭代 16 拿掉病人端的輪播**：表不變、欄位不變。`carousel_items` 的內容改在面板底部的跑馬燈播（一則「標題：內容」，內容取 `body_text`、留白時取 `summary`），
+> `carousel_view_events` 改記跑馬燈每一則的播放（`layer` 多一個值 `MARQUEE`）。下面兩張表的說明是迭代 6 寫的，與現況不同的地方各自標了 1005。
+
 前兩張是**輪播**：第一層取自系統既有資料、第三層讀 `clinical_values`，兩層都不需要自己的表；
 只有第二層（中心自己寫的衛教與公告）與瀏覽事件需要存進資料表。
 第三張是**檔案匯入的欄位對應**——院方匯出檔的欄位名稱會被人改動，
@@ -981,8 +986,8 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 |---|---|---|---|
 | `item_kind` | `TEXT` | 這則是衛教還是公告 | 合法值 `STATIC_EDUCATION` / `ANNOUNCEMENT`（`CarouselItemKind`） |
 | `title` | `TEXT` | 卡片標題 | 最長 60 字 |
-| `summary` | `TEXT` | 卡片上顯示的一句話 | 最長 120 字。輪播畫面一次只讀得完一句 |
-| `body_text` | `TEXT?` | 點開細節頁後看到的說明 | 最長 1000 字。留空代表這張卡片不能點開（FR-P10） |
+| `summary` | `TEXT` | 卡片上顯示的一句話 | 最長 120 字。輪播畫面一次只讀得完一句。**1005**：跑馬燈只在 `body_text` 留白時播它；迭代 17 拿掉（新內容寫空字串，舊資料保留） |
+| `body_text` | `TEXT?` | 點開細節頁後看到的說明 | 最長 1000 字。留空代表這張卡片不能點開（FR-P10）。**1005**：跑馬燈的「內容」——一則就是「`title`：`body_text`」，沒有細節頁 |
 | `language` | `TEXT` | 內容語言 | BCP 47 語言標籤，預設 `zh-TW`。多語言輪播由日後的語言篩選使用 |
 | `sort_order` | `INT` | 播放順序 | 小的在前；同值時以建立時間排序 |
 | `active` | `BOOL` | 現在還播不播 | 預設 `true`。⛔ 不要刪列：下架即可，刪掉會讓稽核軌跡指向不存在的內容 |
@@ -991,8 +996,9 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `updated_by_id` | `TEXT?` | 最後誰改的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未被改過時為空 |
 
 **索引**：`(active, sort_order)`
-**與功能開關的關係**：第二層開關（`CAROUSEL_LAYER_2`）的開啟條件是「至少有一則在架上的內容」——
-沒有內容就開啟，病人只會看到空白的輪播，因此後端直接擋下（`FeatureFlagsService`）。
+**與功能開關的關係**：~~第二層開關（`CAROUSEL_LAYER_2`）的開啟條件是「至少有一則在架上的內容」——
+沒有內容就開啟，病人只會看到空白的輪播，因此後端直接擋下（`FeatureFlagsService`）。~~
+**1005 起**是 `MARQUEE`：開啟條件是速度經長者看過（把關在核准依據），不再以內容擋——一則都沒有時跑馬燈整條不出現，不會是空白。
 
 ### `carousel_view_events` — 輪播瀏覽事件（7 欄）
 
@@ -1003,10 +1009,10 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `occurred_at` | `TS` | 什麼時候看的 | 有索引。這是全表唯一與時間有關的欄位，且只到「事件寫入的時刻」 |
-| `layer` | `TEXT` | 哪一層 | 合法值 `LAYER_1` / `LAYER_2` / `LAYER_3`（`CarouselLayer`），由後端依 `card_kind` 推出，不採信平板送上來的值 |
-| `card_kind` | `TEXT` | 哪一類卡片 | 合法值見 `CarouselCardKind`，只到種類層級（療程進度、今日已回報內容、衛教完成度、靜態衛教、中心公告、臨床數值）。有索引 |
-| `dwell_ms` | `INT` | 這一輪停留多久 | 超過 30 分鐘的一律丟棄——平板被擱著沒人看的那段時間不是「瀏覽」 |
-| `detail_open_count` | `INT` | 這一輪被點開細節頁幾次 | 預設 0 |
+| `layer` | `TEXT` | 哪一層（1005 起：從哪裡播的） | 合法值 `LAYER_1` / `LAYER_2` / `LAYER_3`（1005 以前的輪播，由後端依 `card_kind` 推出），**1005 起另有 `MARQUEE`**（跑馬燈，`CarouselViewSource`）。一律由後端寫，不採信平板送上來的值 |
+| `card_kind` | `TEXT` | 哪一類卡片（1005 起：哪一類內容） | 1005 以前是卡片種類（療程進度、今日已回報內容、衛教完成度、靜態衛教、中心公告、臨床數值）；跑馬燈只記 `STATIC_EDUCATION` / `ANNOUNCEMENT`。有索引 |
+| `dwell_ms` | `INT` | 這一輪停留多久（1005 起：這一則從出現到離開多久） | 1005 以前超過 30 分鐘的一律丟棄；跑馬燈超過 10 分鐘的丟棄（標題 12 字、內容 60 字以最慢速度跑完約 73 秒，上限放寬給 1005 以前的長內容） |
+| `detail_open_count` | `INT` | 這一輪被點開細節頁幾次 | 預設 0。跑馬燈沒有細節頁，一律 0 |
 | `night_mode` | `BOOL` | 當下是否為夜間模式 | 預設 `false`。供日後比較晚班與日班的閱讀行為 |
 
 **⛔ 不要加欄位**：任何「哪一位病人」「哪一台平板」「哪一則內容」的欄位都會改變這張表的性質。
@@ -1260,6 +1266,30 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ---
 
+## 十九、「本次透析」面板與跑馬燈（迭代 16）——沒有新表
+
+1005 病人端首頁中間那一區由輪播改成「本次透析」面板與跑馬燈（SRS FR-P09～P11）。**一張表、一個欄位都沒加**，讀的是既有的表：
+
+| 畫面上的東西 | 讀哪裡 | 怎麼讀 |
+|---|---|---|
+| 血壓、累積脫水量兩張圖，脈搏 | `dialysis_vital_records` | 這次療程（`treatment_session_id`）的全部紀錄；值是 0 或空的那一筆不送 |
+| 「預計」參考線、透析前體重 | 同上 | `uf_set_ml`、`weight_pre_g` 是透析層級的值，取最後一筆不是 0 的 |
+| 理想體重 | `clinical_values` 的 `DRY_WEIGHT` | 目前有效、不是 0、最近的一筆；不限這一次透析，不是今天的畫面會帶月日 |
+| 目標脫水量 | `clinical_values` 的 `UF_TARGET` | 同上，但**只認與透析開始同一天的**——上一次透析的不拿來當今天的 |
+| 跑馬燈 | `carousel_items`（＋`carousel_item_targets`） | 在架上、期間內、指定給這一床或全部床位；夜間一則都不送 |
+| 每一則的播放 | 寫 `carousel_view_events` | `layer = MARQUEE` |
+
+**送到平板的只有畫面要用的欄位**：時間與值。SRS 取捨表標「不顯示」的東西（靜脈壓、血流速、透析液設定、體溫、肝素、透析器、血管通路、低血壓預測、姓名、病歷號）
+本來就不在這幾張表裡，或在表裡但不讀。平板端的本機快取掛在 Session 前綴底下，綁定解除時一併清掉。
+
+**`operational_settings` 多三個鍵**：`MARQUEE_CHARS_PER_MINUTE`（跑馬燈速度，預設 120 字／分鐘＝每秒 2 字，範圍 60～180）、
+`MARQUEE_LEAD_PAUSE_SECONDS`（每一則開頭靜止，預設 3）、`MARQUEE_GAP_SECONDS`（兩則之間的空白，預設 5）。速度經長者試看之後，採用的值與試看結果寫在那一列的 `last_reason`。
+**停用兩個鍵**：`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（跑馬燈不換卡、沒有細節頁）。列留在表裡，畫面上不再出現、改不到。
+
+**`feature_flags` 多兩個鍵**：`TODAY_PANEL`（預設開啟）、`MARQUEE`（預設關閉）；**停用三個鍵**：`CAROUSEL_LAYER_1`～`3`，列與切換紀錄保留。
+
+---
+
 ## 附錄 A：資料不流向哪裡
 
 同樣重要的是**沒有**蒐集什麼。以下都不在資料庫裡，且都是刻意的：
@@ -1279,8 +1309,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 對病人或護理師的任何評分、排名 | 測驗的答對題數是病人自己的作答結果，不是評分；「是否採納 AI 初稿」是治理證據，不是績效指標 |
 | SOP 查詢的模型回答全文 | 只存在對應的 `ai_invocations` 列（12 個月留存）；`sop_queries` 只存去識別化的問題、結果與引用段落 |
 | 護理師的個人績效總分、排名、任何「護理師×病人臨床結果」的關聯評分 | SRS 5.3 的硬性禁止事項。班表是管理工具，不是計分板；排名若日後有需要，一律於查詢時即時計算，**不寫入資料表**（規範 11.2、11.3） |
-| 輪播畫面上的病人姓名與病歷號 | 治療區內鄰床可見。床位分配只到 `bed_no` 層級（SRS 5.1 補充說明）。卡片由後端組好再送到平板，這條規則只在一處判定 |
-| 輪播瀏覽事件中的病人、綁定、平板與卡片內容 | `carousel_view_events` 只回答「哪一類內容有人看」；那個問題不需要知道是誰在看 |
+| 病人端首頁（1005 前是輪播畫面，之後是「本次透析」面板與跑馬燈）上的病人姓名與病歷號 | 治療區內鄰床可見。床位分配只到 `bed_no` 層級（SRS 5.1 補充說明）。面板與跑馬燈由後端組好再送到平板，這條規則只在一處判定 |
+| 播放紀錄（1005 前是輪播瀏覽事件）中的病人、綁定、平板與內容 | `carousel_view_events` 只回答「哪一類內容有播到」；那個問題不需要知道是誰在看 |
 | 匯入檔案的原始內容 | 只留內容雜湊供重複匯入偵測，以及解析後寫入 `clinical_values` 的數值；檔案本身不存進資料庫 |
 
 ## 附錄 B：Agent 動 schema 前的自我檢查

@@ -11,6 +11,8 @@
 > 迭代編號在 0919、0926、1005 各重排一次：原「規則引擎」與「管理儀表板」現在是**迭代 18、19**，對照表見實作規格書 4.0.1、4.0.3、4.0.4。
 > **1005 新版需求（修訂中）**：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成迭代 15～17（實作規格書 0.5、4.13～4.15）；第三次進院見 4.19。
 > **1005 迭代 15 實作完成**：`modules/hospital-sync/`（抓取、解析、同步）、模擬院方 API、探測工具、兩張新表；`verify:iteration15`（7 步）與 `verify:iteration15:api`（12 步）全綠，見下方「迭代 15～19」與實作規格書 4.13。
+> **1005 迭代 16 實作完成**：病人端的三層輪播拿掉，換成「本次透析」面板（`TodayPanel`、自己畫的 SVG 折線圖 `LineChart`）與跑馬燈（`Marquee`），
+> 端點 `GET /device/home`（`modules/patient-home/`）；`verify:iteration16`（7 步）與 `verify:iteration16:api`（8 步）全綠，五支既有腳本依實作規格書 1.1 跟著改，見下方「迭代 16 完成」與 4.14。
 
 ---
 
@@ -249,7 +251,8 @@ npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript�
 
 `modules/feature-flags/`，定義在 `shared/platform.ts`。
 
-- 迭代 3 的十個開關：高風險三項（`RISK_STRATIFICATION`、`INTRA_DIALYSIS_ALERT`、`DOSE_REFERENCE`）、AI 兩項（`AI_FEATURES`、`REAL_PATIENT_DATA_TO_AI`）、輪播三層、績效兩項（`PERF_INDIVIDUAL_L3`、`REWARD_SCORING`）。**全部預設關閉**。之後又加三個：迭代 9 的 `HANDHELD_FEATURES`，迭代 14.2 的 `HELP_NON_CLINICAL_GROUP`（求助畫面顯示「其他」那一框，預設關閉），1005 的 `LAB_VALUE_FEATURES`（需要抽血數值的功能：透析適足性、輪播第三層的抽血數值與 Kt/V，預設關閉；院方透析清單 API 沒有抽血數值）
+- 迭代 3 的十個開關：高風險三項（`RISK_STRATIFICATION`、`INTRA_DIALYSIS_ALERT`、`DOSE_REFERENCE`）、AI 兩項（`AI_FEATURES`、`REAL_PATIENT_DATA_TO_AI`）、輪播三層、績效兩項（`PERF_INDIVIDUAL_L3`、`REWARD_SCORING`）。**全部預設關閉**。之後又加三個：迭代 9 的 `HANDHELD_FEATURES`，迭代 14.2 的 `HELP_NON_CLINICAL_GROUP`（求助畫面顯示「其他」那一框，預設關閉），1005 的 `LAB_VALUE_FEATURES`（需要抽血數值的功能：透析適足性，預設關閉；院方透析清單 API 沒有抽血數值）。
+  **1005 迭代 16**：輪播三層停用（`RETIRED_FEATURE_FLAG_KEYS`，資料表的列與切換紀錄保留、後端載入時略過），換成 `TODAY_PANEL`（「本次透析」面板，**預設開啟**——9.1 起「預設全關」的唯一例外由它承接）與 `MARQUEE`（跑馬燈，預設關閉，速度要先經長者看過）
 - **`HELP_NON_CLINICAL_GROUP` 是唯一不擋後端的開關**：它只決定平板上有幾顆按鈕。平板停在舊畫面時病人按下去的求助照樣要送到，擋掉就是把求助丟掉
 - 開啟條件由後端逐項判定，不靠人記得。例如 `REAL_PATIENT_DATA_TO_AI` 只在 `LLM_PROVIDER=onprem` 時可開；高風險三項要 FR-R08 書面確認＋規則版本附有書面依據，規則引擎尚未建立，所以目前開不了
 - 開關關閉時，`feature-flag.guard.ts` 讓相關端點回 404，前端相關元素**完全不渲染**（不是 disabled）
@@ -358,6 +361,9 @@ npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript�
 
 ### 5.19 閒置輪播（FR-P09～P11、FR-P13，迭代 6）
 
+> **1005 迭代 16 拿掉輪播**，下面是迭代 6～15 的做法，留著對帳用。現行的病人端首頁見本節末「迭代 16 起：本次透析面板與跑馬燈」；
+> 「卡片在後端組好」「開關關閉時後端不送」「`muted` 與 `helpButtonAlwaysVisible` 寫進契約」三個決定原樣沿用。
+
 `modules/carousel/` ＋ `patient-pwa/CarouselScreen.tsx`。三層內容、一個端點：
 `GET /device/carousel` 回傳行為參數、開著的層、組好的卡片，以及 `questionnaireDue`。
 
@@ -377,6 +383,17 @@ npm workspaces monorepo，另有兩個容器服務。約 50,800 行 TypeScript�
 輪播畫面本身也在捕捉階段收下 `pointerdown`，點在卡片以外的任何地方立即退出，**沒有確認對話框**。
 求助按鈕不在輪播元件裡——它留在主畫面原處，輪播進行中只是把 `z-index` 抬到遮罩之上，
 因此位置與尺寸完全不變。
+
+**迭代 16 起：本次透析面板與跑馬燈**（SRS FR-P09～P11 的 1005 改寫）。`modules/patient-home/` ＋ `patient-pwa/TodayPanel.tsx`、`LineChart.tsx`、`Marquee.tsx`。
+`GET /device/home` 回傳行為參數、面板、跑馬燈與 `questionnaireDue`：
+
+- **面板只有畫面要用的欄位**：開始與預計結束時間、血壓與累積脫水量的點（只有時間與值）、設定脫水量、五個數字（各帶資料時間）。
+  取捨表標「不顯示」的東西沒有欄位可以放，後端也不讀。讀到 0 的一律不送。資料是這次療程的 `dialysis_vital_records`（迭代 15）與 `clinical_values`
+- **跑馬燈**：在架上、指定給這一床或全部床位的衛教與公告，一則「標題：內容」；**夜間一則都不送**。速度、開頭靜止、兩則間隔是營運參數（`MARQUEE_*`）
+- **圖自己用 SVG 畫**，字是疊在上面的 HTML、以像素定位（不用 `viewBox` 縮放）；**沒有刻度、格線、警戒線、正常範圍**，線的顏色是 `--c-chart-line` 不是語意色（`check:ui:design` 擋）
+- **跑馬燈用 Web Animations**：先靜止、再以「每秒幾字 × 字級」等速左移到整則離開、空白、下一則；不能點（`pointer-events: none`）；沒有內容、夜間、減少動態效果時整條不出現
+- **即時**：迭代 15 的 `VITALS_UPDATED` 推送一到平板就重取；推送斷了還有每分鐘一次的保底
+- 播放紀錄寫進原本的 `carousel_view_events`，`layer` 記 `MARQUEE`（**Schema 不變**）；`POST /device/marquee/plays`
 
 ### 5.20 檔案匯入與可設定的欄位對應（FR-S05，迭代 6）
 
@@ -818,8 +835,9 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 - `platform.ts` — 功能開關定義與開啟條件、模型與臨床資料介面層的共用型別
 - `education.ts` — 衛教主題 `EDU-TOPICS-v1`、題庫 `EDU-QUIZ-v1`、回饋題目與 `PSY-DEV-v1` 偏離規則
 - `nursing.ts` — 事件範本 `EVENT-TEMPLATES-v2`（1005 新增「透析中低血壓處置」）、AI 初稿處置、SOP 查詢結果類別
-- `operations.ts` — 迭代 5：`evaluateLabourRules()` 勞動條件判定、班別定義、成效基準指標定義，以及三處暫代值的**預設值**（注意：只是預設值，現行值一律讀資料表）。迭代 6 另加六項輪播行為參數的定義
-- `carousel.ts` — 迭代 6：輪播的層、卡片種類、卡片與行為參數型別、第二層內容的長度上限。`CAROUSEL_CARD_KIND_LAYER` 讓後端由卡片種類推出層別，不採信平板送上來的值
+- `operations.ts` — 迭代 5：`evaluateLabourRules()` 勞動條件判定、班別定義、成效基準指標定義，以及三處暫代值的**預設值**（注意：只是預設值，現行值一律讀資料表）。迭代 6 另加六項輪播行為參數的定義（1005 迭代 16 停用其中兩項——卡片停留與細節頁退回，列在 `RETIRED_OPERATIONAL_SETTING_KEYS`；新增跑馬燈的速度、開頭靜止、兩則間隔三項）
+- `carousel.ts` — 迭代 6：衛教與公告的內容型別與長度上限、播放紀錄的來源與種類。1005 迭代 16 起只剩護理端內容管理與統計要用的部分（病人端的輪播卡片型別拿掉），`marqueeBodyOf()` 決定跑馬燈那一則的「內容」
+- `patient-home.ts` — 迭代 16：病人端首頁 `DeviceHomeView`、面板 `DialysisPanelView`（只有畫面要用的欄位）、跑馬燈的行為參數與一則的型別、`marqueeText()`
 - `kiosk-shell.ts` — 迭代 12：外殼契約版本、JS 介面型別、由外殼版本推算「版本正常／外殼過舊／版本不相容／未回報」。**契約的程式真本**，文件真本是《病人端外殼 App 契約》，兩者與 `shell.pin` 要一起改
 - `beds.ts` — 迭代 14：預設床位（15 床，`01`～`15`）。一樣只是「資料表空的時候寫入的預設值」；1005 起床號照醫院編號、不設上限（原本的 40 床上限已拿掉）
 
@@ -913,7 +931,7 @@ SRS 第 6 章要求 < 5 秒。孟買時期在門檻邊緣浮動、偶爾超標�
 | 5 | **總覽螢幕 8 小時後要重新登入** | `JWT_EXPIRES_IN` 預設 8 小時，全天開著的總覽螢幕到期後出現逾時提示 | 待 Q-10 確認螢幕位置與使用方式後，再決定是否給總覽螢幕專用的長效帳號或延長機制 |
 
 | 6 | **目標平板型號未定**（0930 已確定 10 吋） | 「不出現捲軸」在開發機 1280×800、800×1280 驗過（14.5 起以無頭瀏覽器精確開這兩個尺寸）；實機沒驗過 | 待 Q-33 的型號；定了之後在實機重做截圖驗收（`x150`）。院方若統一調過系統顯示大小，短邊就不是 800 |
-| 7 | **既有驗收腳本有一處環境相依** | `verify:iteration14:api` 步驟 4 預設「第二層輪播」開著，但 `verify:iteration6` 跑完會把它關回去，而第二層要有上架中的內容才准開。先跑過迭代 6 的環境裡這一步不通過 | 依實作規格書 1.1 不得為配合新功能改既有腳本，記在 4.12.1；要處理就在迭代 6 腳本收尾時還原開關原狀 |
+| 7 | ~~**既有驗收腳本有一處環境相依**~~ **1005 迭代 16 解除** | `verify:iteration14:api` 步驟 4 預設「第二層輪播」開著，但 `verify:iteration6` 跑完會把它關回去，而第二層要有上架中的內容才准開。先跑過迭代 6 的環境裡這一步不通過 | 迭代 16 輪播拿掉、那一步改讀跑馬燈，腳本自己開跑馬燈與取消夜間時段、跑完改回（實作規格書 1.1 的表） |
 
 **授權判斷本身沒有問題** — 全部在後端把關，前端只是沒藏好入口。
 
@@ -1050,7 +1068,7 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 | 迭代 | 主題 | 可否立即開始 | 啟用前要等的外部答覆 |
 |---|---|---|---|
 | ~~15~~ | ~~院方 API 介接與自動化（1005）~~ | **實作完成（1005）**，模擬院方 API 上驗收通過 | 對真實資料啟用：第三次進院的探測（Q-09 第 9 題）、使用報備與連線（Q-35） |
-| 16 | 病人端「本次透析」面板與跑馬燈（1005） | 實作可以 | 無；實機待 Q-33 |
+| ~~16~~ | ~~病人端「本次透析」面板與跑馬燈（1005）~~ | **實作完成（1005）**，模擬院方 API 上驗收與開發機截圖通過；跑馬燈速度待長者試看 | 無；實機待 Q-33，病人試看待 Q-31 |
 | 17 | 跑馬燈內容由 AI 生成、護理師核准（1005） | 實作可以 | 正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿 |
 | 18 | 規則引擎與三項高風險功能（原 7 → 11 → 15） | 實作可以 | 法務書面確認（Q-02）＋臨床端門檻值（Q-03） |
 | 19 | 管理儀表板、獎勵、對外揭露（原 8 → 12 → 16） | 建置可以 | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21） |
@@ -1068,6 +1086,17 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 | 正式環境的兩道防線 | 啟動時：位址主機是 `hospital-api-sim` 就拒絕（`assertHospitalApiAllowed`）；抓取時：回應帶 `x-hd-simulated` 就整次作廢。模擬部署以 `HD_SIMULATION_DEPLOYMENT=yes` 明示 |
 | 推送 | 護理端串流多一種事件 `HOSPITAL_SYNC`；平板 `GET /device/stream`（`DeviceEventsService`，事件不帶數值） |
 | 開發機怎麼開 | `.env` 加 `HOSPITAL_API_BASE_URL=http://localhost:8090/dialysislist.php`，先 `npm run dev:hospital-sim` 再 `npm run dev:api`。不加就跟以前一樣，簡易版照人工流程 |
+#### 迭代 16 完成（1005）
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 病人端首頁的資料 | `apps/api/src/modules/patient-home/`：`patient-home.service.ts`（面板、跑馬燈、行為參數、問卷到期；夜間判定也搬到這裡）、`device-home.controller.ts`（`GET /device/home`、`POST /device/marquee/plays`） |
+| 護理端的內容管理 | `modules/carousel/` 只剩上下架、播放範圍、播放統計；路徑仍是 `/carousel`，稽核動作名稱不變 |
+| 畫面 | `patient-pwa/src/TodayPanel.tsx`、`LineChart.tsx`、`Marquee.tsx`；`CarouselScreen.tsx` 已刪。樣式在 `styles.css` 第 5 節，語彙 `--c-chart-line`、`--t-marquee`、`--t-display`（原 `--t-carousel`） |
+| 驗收 | `verify:iteration16`（不需後端）、`verify:iteration16:api`（要模擬院方 API，與迭代 15 相同的前提）；`check:ui:design` 多一組「面板不做判讀」 |
+| 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
+| 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
+
 迭代 18 與其他迭代沒有相依，外部答覆若提早到齊可隨時往前插隊。
 迭代 19 的成效指標會吃迭代 6 產生的 `carousel_view_events`（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，
 因此它只回答得了「哪一類內容有人看」這種問題。

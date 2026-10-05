@@ -170,7 +170,7 @@
     <div class="meta">
       <span><b>依據</b> SRS v2.0 §3.2／§4.3／§7</span>
       <span><b>約束</b> 資料庫使用規範 §2／§7／§8／§14</span>
-      <span><b>對應</b> 迭代 14.3 完成時的程式</span>
+      <span><b>對應</b> 迭代 16 完成時的程式（1005 只改圖版一的文字）</span>
       <span><b>重繪</b> 2026-09-29（依 0926 改版：容器＋git clone、AI 閘道服務、實驗室通道只在開發環境、建置期連線分開畫）</span>
     </div>
   </header>
@@ -260,7 +260,7 @@
       <p class="claim">病人不登入、前端碰不到資料庫；即時通知走院內 SSE，所有 AI 呼叫先過閘道；護理師自己的資料與臨床資料分表。</p>
     </div>
     <figure>
-      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕；裝置綁定、照護業務（含閒置輪播）、營運與排班、臨床資料匯入都寫入同一個 SQLite 檔案，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層，再經本系統的 AI 閘道服務（容器，不含模型）呼叫院內 AI 伺服器；唯一跨出醫院的是只在開發環境、經 SSH 通道使用的實驗室 GPU 伺服器，只送合成資料，正式環境設定拒絕啟用。規則引擎與對外報表服務是規劃中的元件。">
+      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕；裝置綁定、照護業務（含病人端的本次透析面板與跑馬燈）、營運與排班、臨床資料匯入都寫入同一個 SQLite 檔案，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層，再經本系統的 AI 閘道服務（容器，不含模型）呼叫院內 AI 伺服器；唯一跨出醫院的是只在開發環境、經 SSH 通道使用的實驗室 GPU 伺服器，只送合成資料，正式環境設定拒絕啟用。規則引擎與對外報表服務是規劃中的元件。">
         <defs>
           <marker id="p1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p1-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
@@ -353,7 +353,7 @@
         <text x="418" y="392" text-anchor="middle" class="t-title-s">照護業務模組</text>
         <text x="418" y="414" text-anchor="middle" class="t-sub-s">問卷・求助・護理記錄</text>
         <text x="418" y="434" text-anchor="middle" class="t-sub-s">衛教・回饋・適足性・SOP</text>
-        <text x="418" y="454" text-anchor="middle" class="t-sub-s">閒置輪播・三層內容</text>
+        <text x="418" y="454" text-anchor="middle" class="t-sub-s">本次透析面板・跑馬燈</text>
 
         <!-- 營運與排班模組（迭代 5）：本系統第一個蒐集「護理師自己的資料」的模組 -->
         <rect x="528" y="350" width="168" height="120" rx="4" class="node"/>
@@ -406,12 +406,12 @@
         <rect x="548" y="580" width="24" height="12" rx="2" class="node-plan"/>
         <rect x="548" y="602" width="24" height="12" rx="2" class="node-plan"/>
         <text x="656" y="596" text-anchor="middle" class="t-title-plan">規則引擎</text>
-        <text x="656" y="615" text-anchor="middle" class="t-sub-s">迭代 15・FR-R01</text>
+        <text x="656" y="615" text-anchor="middle" class="t-sub-s">迭代 18・FR-R01</text>
         <rect x="560" y="642" width="180" height="56" rx="4" class="node-plan"/>
         <rect x="548" y="652" width="24" height="12" rx="2" class="node-plan"/>
         <rect x="548" y="674" width="24" height="12" rx="2" class="node-plan"/>
         <text x="656" y="668" text-anchor="middle" class="t-title-plan">對外報表服務</text>
-        <text x="656" y="687" text-anchor="middle" class="t-sub-s">迭代 16・FR-X01</text>
+        <text x="656" y="687" text-anchor="middle" class="t-sub-s">迭代 19・FR-X01</text>
 
         <!-- 模型供應者介面層 -->
         <rect x="910" y="540" width="180" height="90" rx="4" class="node"/>
@@ -444,7 +444,7 @@
         <text x="1160" y="920" text-anchor="middle" class="t-title-ext">實驗室 GPU 伺服器</text>
         <text x="1160" y="944" text-anchor="middle" class="t-sub">個人容器裡的 AI 閘道・院外</text>
       </svg>
-      <figcaption>兩條綠色虛線都是伺服器端送下來的：Session Token 要等護理師指派後才核發，平板在輪詢時領取；即時總覽由院內 SSE 長連線推給護理端與常駐總覽螢幕，推播中繼已整條拿掉。0927 起模型供應者介面層不直接連推論端點，一律經本系統的 AI 閘道服務（Python・LangChain 的容器，不含模型）；換模型只改閘道的設定檔，後端不動。鏽色線只剩一條：過渡期的實驗室 GPU 伺服器，只在開發環境經 SSH 通道使用，後端的 AI 閘道在程式裡強制只送合成資料，正式環境設定下選用它會直接拒絕啟動。迭代 5 新增的營運與排班模組是本系統第一個蒐集「護理師自己的資料」的地方：它與其他模組寫同一個檔案，但班表與成效基準自成資料表，不回寫臨床資料表。迭代 6 的閒置輪播併在照護業務模組裡：卡片一律由後端組好再送到平板，畫面上不出現姓名與病歷號，第三層的臨床數值來自臨床資料匯入寫進去的那幾張表。</figcaption>
+      <figcaption>兩條綠色虛線都是伺服器端送下來的：Session Token 要等護理師指派後才核發，平板在輪詢時領取；即時總覽由院內 SSE 長連線推給護理端與常駐總覽螢幕，推播中繼已整條拿掉。0927 起模型供應者介面層不直接連推論端點，一律經本系統的 AI 閘道服務（Python・LangChain 的容器，不含模型）；換模型只改閘道的設定檔，後端不動。鏽色線只剩一條：過渡期的實驗室 GPU 伺服器，只在開發環境經 SSH 通道使用，後端的 AI 閘道在程式裡強制只送合成資料，正式環境設定下選用它會直接拒絕啟動。迭代 5 新增的營運與排班模組是本系統第一個蒐集「護理師自己的資料」的地方：它與其他模組寫同一個檔案，但班表與成效基準自成資料表，不回寫臨床資料表。病人端首頁的「本次透析」面板與跑馬燈（1005 迭代 16，取代迭代 6 的閒置輪播）併在照護業務模組裡：面板與跑馬燈一律由後端組好再送到平板，只送畫面要用的欄位，畫面上不出現姓名與病歷號；面板的量測值來自臨床資料匯入（院方 API）寫進去的那幾張表。</figcaption>
     </figure>
   </section>
 
@@ -628,6 +628,7 @@
         <li><b>外部 LLM 改為院內 AI 伺服器。</b>過渡期的實驗室 API 只送合成資料；AI Proxy 改為 AI 閘道，並加上背景佇列。</li>
         <li><b>PostgreSQL 與即時狀態快取改為一個 SQLite 檔案。</b>檔案放在應用伺服器本機磁碟，即時狀態放在後端行程記憶體。</li>
         <li><b>新增元件。</b>臨床資料匯入、照護業務模組、備份目的地；規則引擎與對外報表服務以虛線標為規劃中。</li>
+        <li><b>1005 迭代 16：照護業務模組的「閒置輪播・三層內容」改成「本次透析面板・跑馬燈」</b>；規則引擎與對外報表服務的迭代編號改成 18、19（1005 重排）。沒有新增任何元件或連線。</li>
         <li><b>迭代 6 補上閒置輪播與正式主機。</b>輪播併在照護業務模組裡（卡片由後端組好再送到平板）；兩張圖的「院內 AI 伺服器」標上 DGX Spark，應用伺服器標上容器部署。<b>沒有新增任何機器或網路連線</b>，圖版 02 的分區與線一條未改。</li>
         <li><b>迭代 5 再加一個營運與排班模組。</b>它是本系統第一個蒐集「護理師自己的資料」的地方——班表、床位分配、成效基準。與其他模組寫同一個檔案，但自成資料表，<b>不回寫臨床資料表</b>（資料庫使用規範 §11.2）。</li>
         <li><b>0919 第一次動到圖版 02 的分區與線。</b>應用伺服器由 DGX Spark 改為<b>院內另一台 Windows 工作站</b>（仍與其他專案共用），以離線安裝包部署；AI 推論端點退成<b>另一台機器</b>，兩者之間只有一條院內 HTTP 呼叫；<b>MDM 整格拿掉</b>，平板改以自包 WebView 外殼加螢幕固定，那條「註冊／遠端鎖定」的線一併消失；臨床數值來源由「待確認」改為院方唯讀 API。前面幾次都只換標籤，這一次真的少了一台機器、少了一條線。</li>
