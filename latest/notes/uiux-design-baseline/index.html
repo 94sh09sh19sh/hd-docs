@@ -2413,6 +2413,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4361,14 +4389,26 @@
 │ └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ ├──────────────┤
 │   …（床位數是資料，1005 起由院方資料帶進來）     │  📱 平板  🔒停用 │
 │                                              ├──────────────┤
-│                                              │  📣 輪播內容 ▦全部│
+│                                              │  📣 跑馬燈內容 ▦全部│
 └──────────────────────────────────────────────┴──────────────┘
 </code></pre></div>
 <p><strong>分區</strong>：床位圖在左，四種可以拖上去的東西在右，<strong>各自一個框、各自一個底色</strong>（M-2），不混在一起：
-病人（含新增、候床、下機兩個放置區）、護理師、平板（含停用區）、輪播內容（含新增與「全部床位」放置區）。</p>
+病人（含新增、候床、下機兩個放置區）、護理師、平板（含停用區）、跑馬燈內容（含草稿卡、「＋」與「全部床位」放置區；1005 以前叫輪播內容）。</p>
 <blockquote>
 <p><strong>1005（迭代 16）</strong>：病人端的輪播拿掉，這一框的衛教與公告改在病人端的<strong>跑馬燈</strong>播，框名與專業版導覽列的那一項一併改成「<strong>跑馬燈內容</strong>」；
-拖到某一床、拖到「全部」的意思不變。迭代 17 起這一框改成核准 AI 草稿（SRS FR-N17），屆時這一節與下表的兩列一起改寫。</p>
+拖到某一床、拖到「全部」的意思不變。</p>
+<p><strong>1005（迭代 17，SRS FR-N17）：這一框改成核准 AI 草稿。</strong> 護理師不再寫衛教與公告，只核准或退回：</p>
+<ul>
+<li>框的上方是<strong>一張草稿卡</strong>，卡上就是病人會看到的那一整則「<strong>標題：內容</strong>」，一字不省略、會換行——護理師核准的是整則，不是標題。
+  旁邊兩個圖示：<code>check</code> 核准（在全部床位播）、<code>ban</code> 退回。兩個形狀不同，不只顏色不同。</li>
+<li><strong>一次只放一張</strong>：待核准的先、最早寫好的先；處理完，下一張自己出現（衛教退回時，若沒有別的衛教草稿在等，系統接著要一份）。
+  還有幾張在等，卡旁邊寫一個數字。AI 正在寫的那一份畫成 <code>hourglass</code>，可以按 <code>ban</code> 不要它。</li>
+<li><strong>把草稿卡拖到某一床＝核准並只在那一床播</strong>，拖到「全部」＝核准。草稿卡與已核准的內容卡一樣拿得起來（拖或點來源、點目的地）。</li>
+<li>草稿卡下面是已核准的內容（迭代 14 那一排格子），用法不變。清單只分到草稿卡以外的高度，每頁幾格照剩下的算。</li>
+<li>「＋」<strong>只在 AI 開著時出現</strong>，點一下（不是拖）在框上長出表單：預設衛教，什麼都不必填（系統挑最久沒寫過的主題）；
+  選公告就輸入一次事由。院內還沒有 AI 時沒有「＋」——衛教草稿隨版本帶入，公告到專業版寫（N-6：關掉的功能就是不存在）。</li>
+<li>簡易版<strong>沒有修改</strong>：要改字到專業版「修改後核准」。簡易版只有核准一個動作是必要的（SRS FR-N17 補充說明）。</li>
+</ul>
 </blockquote>
 <p><strong>框裡的清單</strong>（0929，迭代 14.2）：格子同寬同高，每頁幾格依框的實際大小算，<strong>不寫死</strong>；分頁的 ‹ › 排在框底下放置區那一列的最前面，
 不另起一列（框只放得下一列時，另起的分頁列會被切掉）。<strong>停用的平板回到平板清單</strong>，排在備用的後面、帶鎖頭——
@@ -4410,10 +4450,22 @@
 <td>復原＝解除綁定並取消排班</td>
 </tr>
 <tr>
-<td>新增衛教或公告（0929）</td>
-<td>拖輪播內容框的「＋」到床位或「全部」</td>
-<td>點「＋」、再點目的地</td>
-<td>復原＝下架（輪播內容沒有刪除）</td>
+<td>~~新增衛教或公告（0929）~~ 要一份草稿（1005 迭代 17）</td>
+<td>~~拖輪播內容框的「＋」到床位或「全部」~~ —（點一下）</td>
+<td>點跑馬燈框的「＋」，公告輸入事由</td>
+<td>復原＝不要這一份（退掉，不換下一份）</td>
+</tr>
+<tr>
+<td>核准跑馬燈草稿（1005 迭代 17）</td>
+<td>拖草稿卡到床位（只在那一床播）或「全部」</td>
+<td>點草稿卡上的 <code>check</code>（全部床位）；或點草稿卡、再點床位</td>
+<td>復原＝撤回成待核准（同時下架）</td>
+</tr>
+<tr>
+<td>退回跑馬燈草稿（1005 迭代 17）</td>
+<td>—</td>
+<td>點草稿卡上的 <code>ban</code></td>
+<td>復原＝撤回成待核准</td>
 </tr>
 <tr>
 <td>指派平板與病人</td>
@@ -4434,7 +4486,7 @@
 <td>復原＝還原那幾床原本的負責人</td>
 </tr>
 <tr>
-<td>推送輪播內容</td>
+<td>推送跑馬燈內容（已核准的）</td>
 <td>拖內容卡到床位或「全部」</td>
 <td>點內容卡、再點床位</td>
 <td>復原＝還原原本的播放範圍</td>
@@ -4721,7 +4773,8 @@
 <p>護理端簡易版另有：<code>activity</code> 治療中、<code>triangle-alert</code> 待處理的求助、<code>octagon-alert</code> 緊急的求助、
 <code>shield-alert</code> 平板跳出固定畫面、<code>circle-arrow-up</code> 外殼版本過舊、<code>badge-alert</code> 外殼版本不相容、<code>wrench</code> 平板尚未佈建、<code>tablet-smartphone</code> 平板、
 <code>user</code> 病人、<code>user-plus</code> 新增病人、<code>stethoscope</code> 護理師、<code>megaphone</code> 公告、<code>layout-grid</code> 全部床位、<code>lock</code> 停用平板、
-<code>undo-2</code> 復原、<code>log-out</code> 下機、<code>arrow-left-right</code> 切換簡易版／專業版、<code>circle-x</code> 取消這筆求助、<code>plus</code> 新增輪播內容（14.2），
+<code>undo-2</code> 復原、<code>log-out</code> 下機、<code>arrow-left-right</code> 切換簡易版／專業版、<code>circle-x</code> 取消這筆求助、<code>plus</code> 要 AI 寫一份跑馬燈草稿（14.2 是「新增輪播內容」，1005 迭代 17 改），
+<code>check</code> 核准跑馬燈草稿（核准即上架）、<code>ban</code> 退回跑馬燈草稿（兩個都是 1005 迭代 17），
 <code>refresh-cw-off</code> 院方資料未更新、<code>clock-alert</code> 待確認下機、<code>unlink</code> 沒有自動接上平板或放上床（原因在提示裡）（三個都是 1005 迭代 15），
 以及處理方式：<code>scan-heart</code> 觀察生命徵象、<code>move</code> 調整姿勢、<code>gauge</code> 調整脫水、<code>droplets</code> 生理食鹽水回填、<code>pill</code> 給藥、
 <code>bandage</code> 局部處置、<code>phone-call</code> 通知醫師、<code>power</code> 提前結束療程、<code>package</code> 提供物品、<code>heart-handshake</code> 說明與安撫、<code>forward</code> 轉介
@@ -4957,6 +5010,8 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005）接了院方 API 時簡易版沒有「新增病人」</strong>，病人框是還沒配平板的病人；未更新提示、待確認下機、沒有自動接上都是圖示＋注意色</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）斷線時專業版每一頁與簡易版都看得到閃爍紅框與紅底橫幅</strong>；剛開頁面、換頁時不會誤閃；簡易版出現橫幅時仍沒有捲軸</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）專業版一次湧入很多則求助時，上緣最多三條加一列「還有幾則」</strong>，緊急的排前面，頁面本身一直看得到</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005 迭代 17）跑馬燈框的草稿卡是整則「標題：內容」</strong>，不截字；核准、退回各一個圖示，形狀不同；拖到某一床就是核准並只在那一床播；
+  AI 沒開時沒有「＋」；兩端都沒有「一句話」；專業版修改後超過 12／60 字，核准按不下去，字數旁邊寫「超過」</li>
 </ul>
 <h3 id="63-兩端共通">6.3 兩端共通<a class="headerlink" href="#63-兩端共通" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -5018,6 +5073,11 @@
 <td>3.5 簡易版工作台（0926）</td>
 <td><code>apps/nurse-pwa/src/simple/</code></td>
 <td><code>verify:iteration14</code>：簡易版只呼叫專業版已有的端點（另加三支加法端點）、每個拖曳有替代做法、有復原列</td>
+</tr>
+<tr>
+<td>3.5 跑馬燈內容框的草稿卡（1005 迭代 17）</td>
+<td><code>apps/nurse-pwa/src/simple/Trays.tsx</code> 的 <code>ContentTray</code>、<code>actions.tsx</code> 的 <code>approveDraft</code>／<code>rejectDraft</code>／<code>requestDraft</code>；專業版 <code>pages/CarouselPage.tsx</code>；樣式在 <code>workbench.css</code> 的 <code>.draft-card</code></td>
+<td><code>verify:iteration17</code>：卡上是整則「標題：內容」不截字、核准與退回各一個圖示、拖到某一床＝核准、都能一步復原、兩端沒有「一句話」、字數上限前後端同一支函式</td>
 </tr>
 <tr>
 <td>4.6 圖示（0926）</td>

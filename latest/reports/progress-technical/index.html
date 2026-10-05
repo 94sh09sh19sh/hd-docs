@@ -2717,6 +2717,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4324,7 +4352,9 @@
 <strong>1005 新版需求（修訂中）</strong>：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成迭代 15～17（實作規格書 0.5、4.13～4.15）；第三次進院見 4.19。
 <strong>1005 迭代 15 實作完成</strong>：<code>modules/hospital-sync/</code>（抓取、解析、同步）、模擬院方 API、探測工具、兩張新表；<code>verify:iteration15</code>（7 步）與 <code>verify:iteration15:api</code>（12 步）全綠，見下方「迭代 15～19」與實作規格書 4.13。
 <strong>1005 迭代 16 實作完成</strong>：病人端的三層輪播拿掉，換成「本次透析」面板（<code>TodayPanel</code>、自己畫的 SVG 折線圖 <code>LineChart</code>）與跑馬燈（<code>Marquee</code>），
-端點 <code>GET /device/home</code>（<code>modules/patient-home/</code>）；<code>verify:iteration16</code>（7 步）與 <code>verify:iteration16:api</code>（8 步）全綠，五支既有腳本依實作規格書 1.1 跟著改，見下方「迭代 16 完成」與 4.14。</p>
+端點 <code>GET /device/home</code>（<code>modules/patient-home/</code>）；<code>verify:iteration16</code>（7 步）與 <code>verify:iteration16:api</code>（8 步）全綠，五支既有腳本依實作規格書 1.1 跟著改，見下方「迭代 16 完成」與 4.14。
+<strong>1005 迭代 17 實作完成</strong>：跑馬燈內容改成 AI 草稿＋護理師核准（<code>carousel_items</code> 加七欄、<code>MarqueeDraftService</code>、隨版本帶入的草稿），「一句話」拿掉；
+<code>verify:iteration17</code>（8 步）與 <code>verify:iteration17:api</code>（9 步）全綠，五支既有腳本依實作規格書 1.1 第三次跟著改，見下方「迭代 17 完成」與 4.15。</p>
 </blockquote>
 <hr />
 <h2 id="1-專案脈絡">1. 專案脈絡<a class="headerlink" href="#1-專案脈絡" title="Permanent link">&para;</a></h2>
@@ -5946,7 +5976,7 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 <li><code>education.ts</code> — 衛教主題 <code>EDU-TOPICS-v1</code>、題庫 <code>EDU-QUIZ-v1</code>、回饋題目與 <code>PSY-DEV-v1</code> 偏離規則</li>
 <li><code>nursing.ts</code> — 事件範本 <code>EVENT-TEMPLATES-v2</code>（1005 新增「透析中低血壓處置」）、AI 初稿處置、SOP 查詢結果類別</li>
 <li><code>operations.ts</code> — 迭代 5：<code>evaluateLabourRules()</code> 勞動條件判定、班別定義、成效基準指標定義，以及三處暫代值的<strong>預設值</strong>（注意：只是預設值，現行值一律讀資料表）。迭代 6 另加六項輪播行為參數的定義（1005 迭代 16 停用其中兩項——卡片停留與細節頁退回，列在 <code>RETIRED_OPERATIONAL_SETTING_KEYS</code>；新增跑馬燈的速度、開頭靜止、兩則間隔三項）</li>
-<li><code>carousel.ts</code> — 迭代 6：衛教與公告的內容型別與長度上限、播放紀錄的來源與種類。1005 迭代 16 起只剩護理端內容管理與統計要用的部分（病人端的輪播卡片型別拿掉），<code>marqueeBodyOf()</code> 決定跑馬燈那一則的「內容」</li>
+<li><code>carousel.ts</code> — 迭代 6：衛教與公告的內容型別與長度上限、播放紀錄的來源與種類。1005 迭代 16 起只剩護理端內容管理與統計要用的部分（病人端的輪播卡片型別拿掉），~~<code>marqueeBodyOf()</code> 決定跑馬燈那一則的「內容」~~。迭代 17 起多核准狀態、來源、長度上限（<code>marqueeLengthProblem()</code>，前後端共用）與草稿的請求型別，一句話與 <code>marqueeBodyOf()</code> 拿掉</li>
 <li><code>patient-home.ts</code> — 迭代 16：病人端首頁 <code>DeviceHomeView</code>、面板 <code>DialysisPanelView</code>（只有畫面要用的欄位）、跑馬燈的行為參數與一則的型別、<code>marqueeText()</code></li>
 <li><code>kiosk-shell.ts</code> — 迭代 12：外殼契約版本、JS 介面型別、由外殼版本推算「版本正常／外殼過舊／版本不相容／未回報」。<strong>契約的程式真本</strong>，文件真本是《病人端外殼 App 契約》，兩者與 <code>shell.pin</code> 要一起改</li>
 <li><code>beds.ts</code> — 迭代 14：預設床位（15 床，<code>01</code>～<code>15</code>）。一樣只是「資料表空的時候寫入的預設值」；1005 起床號照醫院編號、不設上限（原本的 40 床上限已拿掉）</li>
@@ -6250,10 +6280,10 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 <td>無；實機待 Q-33，病人試看待 Q-31</td>
 </tr>
 <tr>
-<td>17</td>
-<td>跑馬燈內容由 AI 生成、護理師核准（1005）</td>
-<td>實作可以</td>
-<td>正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿</td>
+<td>~~17~~</td>
+<td>~~跑馬燈內容由 AI 生成、護理師核准（1005）~~</td>
+<td><strong>實作完成（1005）</strong>，驗收通過；隨版本帶入的草稿待實驗室模型重寫</td>
+<td>正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿；核准權限待 Q-28</td>
 </tr>
 <tr>
 <td>18</td>
@@ -6344,6 +6374,45 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 <tr>
 <td>順手更正</td>
 <td>營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查</td>
+</tr>
+</tbody>
+</table>
+<h4 id="迭代-17-完成1005">迭代 17 完成（1005）<a class="headerlink" href="#迭代-17-完成1005" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>要知道的</th>
+<th>在哪裡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>草稿怎麼生出來</td>
+<td><code>modules/carousel/marquee-draft.service.ts</code>（排入背景佇列、經 <code>AiGatewayService.attempt</code> 呼叫、寫回、隨版本帶入的匯入）；提示與解析在 <code>marquee-draft.ts</code>，<strong>不碰資料庫、不呼叫模型</strong>，驗收腳本直接拿來測「超過字數就重新生成」</td>
+</tr>
+<tr>
+<td>核准、退回、撤回、上下架</td>
+<td><code>modules/carousel/carousel.service.ts</code>；核准與退回在 <code>CarouselItemRepository</code> 是條件式更新（只動 <code>PENDING</code> 的那一列）</td>
+</tr>
+<tr>
+<td>病人端怎麼擋</td>
+<td><code>CarouselItemRepository.listPlayable</code> 的條件多 <code>approval_status = APPROVED</code>——端點層擋，不是畫面藏</td>
+</tr>
+<tr>
+<td>隨版本帶入的草稿</td>
+<td><code>modules/carousel/marquee-bundle.ts</code>（資料檔）；重新生成 <code>npm run marquee:bundle -- --per-topic 2</code>（對著開發機跑著的後端要草稿，模型是模擬時拒跑；不寫入端點位址）</td>
+</tr>
+<tr>
+<td>系統帳號多一個</td>
+<td><code>SYSTEM-RELEASE-CONTENT</code>「隨版本帶入」，與 <code>SYSTEM-HOSPITAL-SYNC</code> 同規則：<code>nurseLabel()</code> 顯示中文、<code>NurseRepository</code> 的 <code>PEOPLE_ONLY</code> 排除</td>
+</tr>
+<tr>
+<td>畫面</td>
+<td>簡易版 <code>simple/Trays.tsx</code> 的 <code>ContentTray</code>（草稿卡）、<code>actions.tsx</code> 的 <code>approveDraft</code>／<code>rejectDraft</code>／<code>requestDraft</code>、<code>Workbench.tsx</code> 的 <code>NewDraftForm</code>；專業版 <code>pages/CarouselPage.tsx</code> 改寫。圖示多 <code>check</code>、<code>ban</code></td>
+</tr>
+<tr>
+<td>驗收</td>
+<td><code>verify:iteration17</code>（不需後端）、<code>verify:iteration17:api</code>（後端開著、模型用模擬即可，不需模擬院方 API）</td>
 </tr>
 </tbody>
 </table>
