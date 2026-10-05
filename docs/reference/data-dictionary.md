@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 58 張表、581 個欄位、12 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 58 張表、588 個欄位、13 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -68,6 +68,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 十七、床位圖（迭代 14） | `beds`、`carousel_item_targets`（另有 `devices.bed_no`） | 透析室有哪幾床、每台平板貼在哪一床、哪則輪播內容（1005 起是跑馬燈內容）只在哪幾床播 |
 | 十八、院方 API 介接（迭代 15） | `hospital_api_fetch_runs`、`dialysis_vital_records` | 每一次抓院方 API 的結果；有綁定平板的病人在透析中的血壓、脈搏與脫水量 |
 | 十九、「本次透析」面板與跑馬燈（迭代 16） | 沒有新表（讀 `dialysis_vital_records`、`clinical_values`、`carousel_items`） | 病人平板上的兩張圖、五個數字與一條跑馬燈，各從哪裡來 |
+| 二十、跑馬燈內容的 AI 草稿與核准（迭代 17） | 沒有新表（`carousel_items` 加七欄） | 跑馬燈的每一則是誰生成、從哪個主題或事由來、誰核准、什麼時候上架 |
 
 ### 每張表都有的三個欄位
 
@@ -93,6 +94,9 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 寫入臨床數值時，那幾張表的「建立者」欄位是必填的護理師外鍵，由這一列承擔。它**登入不了**（狀態 `SUSPENDED`、密碼是當場產生又丟掉的亂數），
 帳號清單、審核清單與「資料庫裡有沒有使用者」（初始最高權限帳號的建立條件）都不算它；畫面與稽核顯示「院方資料同步」，不顯示它的帳號識別字。
 ⛔ 不要刪它、不要改它的狀態——同步會在下次啟動時找不到它而再建一列。
+
+**1005 迭代 17 起再多一列**：`work_id` 為 `SYSTEM-RELEASE-CONTENT`、顯示名稱「隨版本帶入」。隨版本帶進院內的跑馬燈衛教草稿（`carousel_items.source = BUNDLED`）
+首次啟動匯入時，`created_by_id` 由這一列承擔。規則與「院方資料同步」完全相同：登入不了、不算人、畫面顯示「隨版本帶入」。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -419,7 +423,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `invoked_at` | `TS` | 呼叫時間 | `DEFAULT CURRENT_TIMESTAMP`，有索引 |
 | `provider` | `TEXT` | 用的是哪一種模型供應者：模擬、實驗室 API、院內推論 | 合法值 `mock` / `lab` / `onprem`（`LlmProviderId`）。與 `outcome` 組成複合索引 |
 | `model_id` | `TEXT?` | 用的是哪一個模型 | 以推論端點實際回報的為準；經 AI 閘道時就是閘道 `config.yaml` 的那一個（後端 `LLM_MODEL_ID` 留空，迭代 13）。被擋下的請求沒有送出，此欄可能為空。⛔ 模型名稱只由設定提供，不寫在程式裡 |
-| `purpose` | `TEXT` | 哪一項功能發起的呼叫 | 合法值見 `AiPurpose`：`CONNECTIVITY_TEST`（迭代 3 的連線測試）；迭代 4 的 `EDUCATION_CONTENT`（個人化衛教）、`DISCHARGE_SUMMARY`（離院衛教重點）、`NURSING_RECORD_DRAFT`（護理記錄草擬）、`SOP_ANSWER`（SOP 查詢回答）。每項 AI 功能各登記一個，新增功能時在 `@hd/shared` 補上 |
+| `purpose` | `TEXT` | 哪一項功能發起的呼叫 | 合法值見 `AiPurpose`：`CONNECTIVITY_TEST`（迭代 3 的連線測試）；迭代 4 的 `EDUCATION_CONTENT`（個人化衛教）、`DISCHARGE_SUMMARY`（離院衛教重點）、`NURSING_RECORD_DRAFT`（護理記錄草擬）、`SOP_ANSWER`（SOP 查詢回答）；迭代 17 的 `MARQUEE_CONTENT`（跑馬燈內容草稿：只送主題或事由，`patient_id` 一律為空、`contains_real_patient_data` 一律為 false）。每項 AI 功能各登記一個，新增功能時在 `@hd/shared` 補上 |
 | `max_output_tokens` | `INT?` | 輸出長度上限 | 呼叫參數逐項成欄，不以 JSON 承載（6.1） |
 | `temperature_permille` | `INT?` | 取樣溫度 | 以千分位整數記錄（200 代表 0.2），不用浮點數 |
 | `reasoning_effort` | `TEXT?` | 思考程度 | `low` / `medium` / `high` |
@@ -521,9 +525,9 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 工作的內部識別碼 | 主鍵。前端以 `GET /api/ai-jobs/:id` 查進度 |
-| `job_type` | `TEXT` | 什麼工作：產生個人化衛教、產生離院衛教重點、草擬護理記錄 | 合法值 `EDUCATION_CONTENT` / `DISCHARGE_SUMMARY` / `NURSING_RECORD_DRAFT`（`AiJobType`）。各功能模組在啟動時向 `AiJobQueueService` 登記自己的處理程式 |
+| `job_type` | `TEXT` | 什麼工作：產生個人化衛教、產生離院衛教重點、草擬護理記錄、（迭代 17）產生跑馬燈內容草稿 | 合法值 `EDUCATION_CONTENT` / `DISCHARGE_SUMMARY` / `NURSING_RECORD_DRAFT` / `MARQUEE_CONTENT`（`AiJobType`）。各功能模組在啟動時向 `AiJobQueueService` 登記自己的處理程式 |
 | `status` | `TEXT` | 排隊中、產生中、已完成、失敗 | 合法值 `QUEUED` / `RUNNING` / `SUCCEEDED` / `FAILED`（`AiJobStatus`），與 `queued_at` 組成複合索引。只有 `QUEUED` 能被改成 `RUNNING`（條件式更新），同一件不會被處理兩次。後端重新啟動時仍為 `RUNNING` 的工作一律收斂為 `FAILED` |
-| `target_type` | `TEXT` | 工作結果要寫回哪一種資料 | `EducationContent` 或 `NursingRecord`（模型名）。比照 `audit_logs` 的寫法，刻意不設外鍵 |
+| `target_type` | `TEXT` | 工作結果要寫回哪一種資料 | `EducationContent`、`NursingRecord` 或（迭代 17）`CarouselItem`（模型名）。比照 `audit_logs` 的寫法，刻意不設外鍵 |
 | `target_id` | `TEXT` | 要寫回的那一列 | 與 `target_type` 組成複合索引，用來找「這筆記錄最近一次的工作」 |
 | `patient_id` | `TEXT?` | 與哪位病人相關 | 外鍵 → `patients.id`，`ON DELETE NO ACTION` |
 | `requested_by_id` | `TEXT` | 誰按下產生的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。背景執行時發出的模型呼叫也記在這個人名下 |
@@ -971,13 +975,16 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 > **1005 迭代 16 拿掉病人端的輪播**：表不變、欄位不變。`carousel_items` 的內容改在面板底部的跑馬燈播（一則「標題：內容」，內容取 `body_text`、留白時取 `summary`），
 > `carousel_view_events` 改記跑馬燈每一則的播放（`layer` 多一個值 `MARQUEE`）。下面兩張表的說明是迭代 6 寫的，與現況不同的地方各自標了 1005。
+>
+> **1005 迭代 17**：`carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源），**只播「已核准」的**；
+> 「內容留白時播一句話」的退路拿掉，`summary` 不再使用。新欄位的說明在第二十節，下表的列也各自標了。
 
 前兩張是**輪播**：第一層取自系統既有資料、第三層讀 `clinical_values`，兩層都不需要自己的表；
 只有第二層（中心自己寫的衛教與公告）與瀏覽事件需要存進資料表。
 第三張是**檔案匯入的欄位對應**——院方匯出檔的欄位名稱會被人改動，
 那是別人的系統，不會為了我們保持不變，所以「哪一欄是理想體重」必須是資料而不是程式。
 
-### `carousel_items` — 輪播第二層內容（14 欄）
+### `carousel_items` — 輪播第二層內容，1005 起是跑馬燈內容（21 欄；迭代 17 加七欄，見第二十節）
 
 **蒐集的意義**：FR-P11 的第二層是靜態衛教與中心公告，由護理端在管理介面上架。
 這是輪播三層中唯一「人自己寫」的一層，因此也是唯一需要編輯、排序與上下架的一層。
@@ -985,17 +992,17 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `item_kind` | `TEXT` | 這則是衛教還是公告 | 合法值 `STATIC_EDUCATION` / `ANNOUNCEMENT`（`CarouselItemKind`） |
-| `title` | `TEXT` | 卡片標題 | 最長 60 字 |
-| `summary` | `TEXT` | 卡片上顯示的一句話 | 最長 120 字。輪播畫面一次只讀得完一句。**1005**：跑馬燈只在 `body_text` 留白時播它；迭代 17 拿掉（新內容寫空字串，舊資料保留） |
-| `body_text` | `TEXT?` | 點開細節頁後看到的說明 | 最長 1000 字。留空代表這張卡片不能點開（FR-P10）。**1005**：跑馬燈的「內容」——一則就是「`title`：`body_text`」，沒有細節頁 |
+| `title` | `TEXT` | 卡片標題 | 最長 60 字。**迭代 17 起**：上限 12 字（`marqueeLengthProblem`，以 Unicode 字元計），超過的核准不了；產生中時是空字串 |
+| `summary` | `TEXT` | 卡片上顯示的一句話 | 最長 120 字。輪播畫面一次只讀得完一句。**1005**：跑馬燈只在 `body_text` 留白時播它。**迭代 17 起不再使用**：新內容一律寫空字串，舊資料保留；API 的請求與回應都沒有這個欄位。只有一句話、內容留白的舊內容整則不播。⛔ 欄位不刪（只做加法），下一版才考慮 |
+| `body_text` | `TEXT?` | 點開細節頁後看到的說明 | 最長 1000 字。留空代表這張卡片不能點開（FR-P10）。**1005**：跑馬燈的「內容」——一則就是「`title`：`body_text`」，沒有細節頁。**迭代 17 起**：上限 60 字；產生中、產生失敗時為空 |
 | `language` | `TEXT` | 內容語言 | BCP 47 語言標籤，預設 `zh-TW`。多語言輪播由日後的語言篩選使用 |
 | `sort_order` | `INT` | 播放順序 | 小的在前；同值時以建立時間排序 |
-| `active` | `BOOL` | 現在還播不播 | 預設 `true`。⛔ 不要刪列：下架即可，刪掉會讓稽核軌跡指向不存在的內容 |
+| `active` | `BOOL` | 現在還播不播 | 預設 `true`。⛔ 不要刪列：下架即可，刪掉會讓稽核軌跡指向不存在的內容。**迭代 17 起**：只有已核准的才可能是 `true`（核准即設為 `true`；退回、撤回設為 `false`）；新列一律明確寫入 |
 | `starts_at` / `ends_at` | `TS?` | 上架與下架時間 | 皆可為空，代表不限期間。過濾在資料庫做，平板拿到的就已經是「現在播得出來」的內容 |
-| `created_by_id` | `TEXT` | 誰上架的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
+| `created_by_id` | `TEXT` | 誰上架的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。**迭代 17 起**是「誰要的草稿或誰寫的公告」；隨版本帶入的是「隨版本帶入」那個系統帳號 |
 | `updated_by_id` | `TEXT?` | 最後誰改的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未被改過時為空 |
 
-**索引**：`(active, sort_order)`
+**索引**：`(active, sort_order)`、（迭代 17）`(approval_status)`
 **與功能開關的關係**：~~第二層開關（`CAROUSEL_LAYER_2`）的開啟條件是「至少有一則在架上的內容」——
 沒有內容就開啟，病人只會看到空白的輪播，因此後端直接擋下（`FeatureFlagsService`）。~~
 **1005 起**是 `MARQUEE`：開啟條件是速度經長者看過（把關在核准依據），不再以內容擋——一則都沒有時跑馬燈整條不出現，不會是空白。
@@ -1287,6 +1294,32 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 **停用兩個鍵**：`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（跑馬燈不換卡、沒有細節頁）。列留在表裡，畫面上不再出現、改不到。
 
 **`feature_flags` 多兩個鍵**：`TODAY_PANEL`（預設開啟）、`MARQUEE`（預設關閉）；**停用三個鍵**：`CAROUSEL_LAYER_1`～`3`，列與切換紀錄保留。
+
+---
+
+## 二十、跑馬燈內容的 AI 草稿與核准（迭代 17）——沒有新表
+
+1005 SRS FR-N17：護理師不再寫衛教與公告，只核准 AI 生成的標題與內容；「一句話」拿掉。**只做加法**：`carousel_items` 加七欄，遷移 `iteration17_marquee_approval`。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `approval_status` | `TEXT` | 這一則現在是產生中、待核准、已核准、已退回還是產生失敗 | 合法值 `GENERATING` / `PENDING` / `APPROVED` / `REJECTED` / `FAILED`（`CarouselApprovalStatus`），預設 `PENDING`。**病人端的查詢（`listPlayable`）只撈 `APPROVED`**——沒核准的不會被讀出來，不是讀出來再藏。核准、退回都是條件式更新（只動 `PENDING` 的那一列），兩人同時按不會核准兩次。遷移時既有的列由 `UPDATE … WHERE approval_status = 'PENDING'` 改成 `APPROVED`：它們是核准制度以前護理師直接上架的，本來就在播。⛔ 預設值刻意不是 `APPROVED`：新程式忘了指定時寧可不播 |
+| `approved_by_id` | `TEXT?` | 誰核准的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。核准制度以前上架的內容為空。撤回成待核准時清掉（原本的核准者留在稽核軌跡 `CAROUSEL_ITEM_REOPENED`） |
+| `approved_at` | `TS?` | 什麼時候核准、上架 | 同上。畫面上「核准制度以前上架」就是這一欄為空的已核准內容 |
+| `ai_job_id` | `TEXT?` | 生成它的那一件背景工作 | 外鍵 → `ai_jobs.id`，`ON DELETE NO ACTION`。經它找得到那一次模型呼叫（`ai_jobs.ai_invocation_id` → `ai_invocations` 的模型、提示與輸出）；重新生成過的，最後一次那一筆記在 `ai_jobs` 上，每一次都在 `ai_invocations` |
+| `announcement_reason` | `TEXT?` | 公告事由：護理師輸入的那一句（例如「10/10 停診」） | 最長 100 字（`ANNOUNCEMENT_REASON_MAX_LENGTH`）。AI 只依它寫，送進模型的只有這一句。衛教與護理師直接寫的公告為空 |
+| `topic_code` | `TEXT?` | 衛教草稿的主題 | 附錄 C.6 的主題識別碼（衛教題庫 `quiz_topics.code`，`EDU_*`），**只能是啟用中的主題**。刻意不設外鍵，與 `education_contents.topic_code` 同一個寫法。公告為空。挑「最久沒生成過的主題」靠這一欄 |
+| `source` | `TEXT` | 這一則是怎麼來的 | 合法值 `MANUAL`（護理師撰寫，含核准制度以前的全部內容）/ `AI_GENERATED` / `BUNDLED`（隨版本帶入）（`CarouselItemSource`），預設 `MANUAL` |
+
+**隨版本帶入的草稿**：院內推論端點就位之前（Q-07），衛教草稿由開發端事先生成、存在 `apps/api/src/modules/carousel/marquee-bundle.ts`，
+**首次啟動時匯入為 `PENDING`、`source = BUNDLED`**，建立者是「隨版本帶入」那個系統帳號。每一則寫一筆 `MARQUEE_DRAFT_IMPORTED` 稽核（記下生成的模型與閘道設定），
+整批再寫一筆以 `MARQUEE-BUNDLE-<版本>` 為 `target_id` 的——**有這一筆就不再匯入**，護理師全部退回之後重新啟動也不會再倒一次。
+
+**稽核軌跡多七個動作**：`MARQUEE_DRAFT_REQUESTED`（要一份草稿）、`MARQUEE_DRAFT_GENERATED`（生成完成，記模型與次數）、`MARQUEE_DRAFT_IMPORTED`、
+`CAROUSEL_ITEM_APPROVED`（記核准者、播放範圍、上下架時間；修改後核准時記下改前與改後＝留稿）、`CAROUSEL_ITEM_REJECTED`、`CAROUSEL_ITEM_REOPENED`、`CAROUSEL_ITEM_SCHEDULE_CHANGED`。
+`CAROUSEL_ITEM_UPSERTED` 留著，迭代 17 起只用在「護理師寫一則公告（待核准）」。
+
+**沒有送進模型的東西**：任何病人資料。衛教只送主題名稱與主題重點，公告只送事由；`ai_invocations.patient_id` 一律為空。
 
 ---
 

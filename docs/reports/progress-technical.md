@@ -13,6 +13,8 @@
 > **1005 迭代 15 實作完成**：`modules/hospital-sync/`（抓取、解析、同步）、模擬院方 API、探測工具、兩張新表；`verify:iteration15`（7 步）與 `verify:iteration15:api`（12 步）全綠，見下方「迭代 15～19」與實作規格書 4.13。
 > **1005 迭代 16 實作完成**：病人端的三層輪播拿掉，換成「本次透析」面板（`TodayPanel`、自己畫的 SVG 折線圖 `LineChart`）與跑馬燈（`Marquee`），
 > 端點 `GET /device/home`（`modules/patient-home/`）；`verify:iteration16`（7 步）與 `verify:iteration16:api`（8 步）全綠，五支既有腳本依實作規格書 1.1 跟著改，見下方「迭代 16 完成」與 4.14。
+> **1005 迭代 17 實作完成**：跑馬燈內容改成 AI 草稿＋護理師核准（`carousel_items` 加七欄、`MarqueeDraftService`、隨版本帶入的草稿），「一句話」拿掉；
+> `verify:iteration17`（8 步）與 `verify:iteration17:api`（9 步）全綠，五支既有腳本依實作規格書 1.1 第三次跟著改，見下方「迭代 17 完成」與 4.15。
 
 ---
 
@@ -836,7 +838,7 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 - `education.ts` — 衛教主題 `EDU-TOPICS-v1`、題庫 `EDU-QUIZ-v1`、回饋題目與 `PSY-DEV-v1` 偏離規則
 - `nursing.ts` — 事件範本 `EVENT-TEMPLATES-v2`（1005 新增「透析中低血壓處置」）、AI 初稿處置、SOP 查詢結果類別
 - `operations.ts` — 迭代 5：`evaluateLabourRules()` 勞動條件判定、班別定義、成效基準指標定義，以及三處暫代值的**預設值**（注意：只是預設值，現行值一律讀資料表）。迭代 6 另加六項輪播行為參數的定義（1005 迭代 16 停用其中兩項——卡片停留與細節頁退回，列在 `RETIRED_OPERATIONAL_SETTING_KEYS`；新增跑馬燈的速度、開頭靜止、兩則間隔三項）
-- `carousel.ts` — 迭代 6：衛教與公告的內容型別與長度上限、播放紀錄的來源與種類。1005 迭代 16 起只剩護理端內容管理與統計要用的部分（病人端的輪播卡片型別拿掉），`marqueeBodyOf()` 決定跑馬燈那一則的「內容」
+- `carousel.ts` — 迭代 6：衛教與公告的內容型別與長度上限、播放紀錄的來源與種類。1005 迭代 16 起只剩護理端內容管理與統計要用的部分（病人端的輪播卡片型別拿掉），~~`marqueeBodyOf()` 決定跑馬燈那一則的「內容」~~。迭代 17 起多核准狀態、來源、長度上限（`marqueeLengthProblem()`，前後端共用）與草稿的請求型別，一句話與 `marqueeBodyOf()` 拿掉
 - `patient-home.ts` — 迭代 16：病人端首頁 `DeviceHomeView`、面板 `DialysisPanelView`（只有畫面要用的欄位）、跑馬燈的行為參數與一則的型別、`marqueeText()`
 - `kiosk-shell.ts` — 迭代 12：外殼契約版本、JS 介面型別、由外殼版本推算「版本正常／外殼過舊／版本不相容／未回報」。**契約的程式真本**，文件真本是《病人端外殼 App 契約》，兩者與 `shell.pin` 要一起改
 - `beds.ts` — 迭代 14：預設床位（15 床，`01`～`15`）。一樣只是「資料表空的時候寫入的預設值」；1005 起床號照醫院編號、不設上限（原本的 40 床上限已拿掉）
@@ -1069,7 +1071,7 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 |---|---|---|---|
 | ~~15~~ | ~~院方 API 介接與自動化（1005）~~ | **實作完成（1005）**，模擬院方 API 上驗收通過 | 對真實資料啟用：第三次進院的探測（Q-09 第 9 題）、使用報備與連線（Q-35） |
 | ~~16~~ | ~~病人端「本次透析」面板與跑馬燈（1005）~~ | **實作完成（1005）**，模擬院方 API 上驗收與開發機截圖通過；跑馬燈速度待長者試看 | 無；實機待 Q-33，病人試看待 Q-31 |
-| 17 | 跑馬燈內容由 AI 生成、護理師核准（1005） | 實作可以 | 正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿 |
+| ~~17~~ | ~~跑馬燈內容由 AI 生成、護理師核准（1005）~~ | **實作完成（1005）**，驗收通過；隨版本帶入的草稿待實驗室模型重寫 | 正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿；核准權限待 Q-28 |
 | 18 | 規則引擎與三項高風險功能（原 7 → 11 → 15） | 實作可以 | 法務書面確認（Q-02）＋臨床端門檻值（Q-03） |
 | 19 | 管理儀表板、獎勵、對外揭露（原 8 → 12 → 16） | 建置可以 | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21） |
 
@@ -1096,6 +1098,18 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 | 驗收 | `verify:iteration16`（不需後端）、`verify:iteration16:api`（要模擬院方 API，與迭代 15 相同的前提）；`check:ui:design` 多一組「面板不做判讀」 |
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
+
+#### 迭代 17 完成（1005）
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 草稿怎麼生出來 | `modules/carousel/marquee-draft.service.ts`（排入背景佇列、經 `AiGatewayService.attempt` 呼叫、寫回、隨版本帶入的匯入）；提示與解析在 `marquee-draft.ts`，**不碰資料庫、不呼叫模型**，驗收腳本直接拿來測「超過字數就重新生成」 |
+| 核准、退回、撤回、上下架 | `modules/carousel/carousel.service.ts`；核准與退回在 `CarouselItemRepository` 是條件式更新（只動 `PENDING` 的那一列） |
+| 病人端怎麼擋 | `CarouselItemRepository.listPlayable` 的條件多 `approval_status = APPROVED`——端點層擋，不是畫面藏 |
+| 隨版本帶入的草稿 | `modules/carousel/marquee-bundle.ts`（資料檔）；重新生成 `npm run marquee:bundle -- --per-topic 2`（對著開發機跑著的後端要草稿，模型是模擬時拒跑；不寫入端點位址） |
+| 系統帳號多一個 | `SYSTEM-RELEASE-CONTENT`「隨版本帶入」，與 `SYSTEM-HOSPITAL-SYNC` 同規則：`nurseLabel()` 顯示中文、`NurseRepository` 的 `PEOPLE_ONLY` 排除 |
+| 畫面 | 簡易版 `simple/Trays.tsx` 的 `ContentTray`（草稿卡）、`actions.tsx` 的 `approveDraft`／`rejectDraft`／`requestDraft`、`Workbench.tsx` 的 `NewDraftForm`；專業版 `pages/CarouselPage.tsx` 改寫。圖示多 `check`、`ban` |
+| 驗收 | `verify:iteration17`（不需後端）、`verify:iteration17:api`（後端開著、模型用模擬即可，不需模擬院方 API） |
 
 迭代 18 與其他迭代沒有相依，外部答覆若提早到齊可隨時往前插隊。
 迭代 19 的成效指標會吃迭代 6 產生的 `carousel_view_events`（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，
