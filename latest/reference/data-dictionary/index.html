@@ -1864,6 +1864,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#十九本次透析面板與跑馬燈迭代-16沒有新表" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十九、「本次透析」面板與跑馬燈（迭代 16）——沒有新表
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#附錄-a資料不流向哪裡" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2896,6 +2907,34 @@
     
   
     迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 16 分冊
   
 
     
@@ -4674,6 +4713,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#十九本次透析面板與跑馬燈迭代-16沒有新表" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十九、「本次透析」面板與跑馬燈（迭代 16）——沒有新表
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#附錄-a資料不流向哪裡" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4914,7 +4964,7 @@
 <tr>
 <td>十四、閒置輪播與檔案匯入（迭代 6）</td>
 <td><code>carousel_items</code>、<code>carousel_view_events</code>、<code>import_field_mappings</code></td>
-<td>輪播第二層播什麼、哪一類卡片有人看、匯入檔案的欄位怎麼對上</td>
+<td>衛教與公告播什麼（1005 起在跑馬燈播）、哪一類內容有播到、匯入檔案的欄位怎麼對上</td>
 </tr>
 <tr>
 <td>十五、版本更新紀錄（迭代 7）</td>
@@ -4929,7 +4979,17 @@
 <tr>
 <td>十七、床位圖（迭代 14）</td>
 <td><code>beds</code>、<code>carousel_item_targets</code>（另有 <code>devices.bed_no</code>）</td>
-<td>透析室有哪幾床、每台平板貼在哪一床、哪則輪播內容只在哪幾床播</td>
+<td>透析室有哪幾床、每台平板貼在哪一床、哪則輪播內容（1005 起是跑馬燈內容）只在哪幾床播</td>
+</tr>
+<tr>
+<td>十八、院方 API 介接（迭代 15）</td>
+<td><code>hospital_api_fetch_runs</code>、<code>dialysis_vital_records</code></td>
+<td>每一次抓院方 API 的結果；有綁定平板的病人在透析中的血壓、脈搏與脫水量</td>
+</tr>
+<tr>
+<td>十九、「本次透析」面板與跑馬燈（迭代 16）</td>
+<td>沒有新表（讀 <code>dialysis_vital_records</code>、<code>clinical_values</code>、<code>carousel_items</code>）</td>
+<td>病人平板上的兩張圖、五個數字與一條跑馬燈，各從哪裡來</td>
 </tr>
 </tbody>
 </table>
@@ -6036,7 +6096,7 @@
 <td><code>flag_key</code></td>
 <td><code>TEXT</code> UNIQUE</td>
 <td>開關的識別字，例如「AI 輔助功能總開關」</td>
-<td>合法值見 <code>@hd/shared</code> 的 <code>FeatureFlagKey</code>：<code>RISK_STRATIFICATION</code> <code>INTRA_DIALYSIS_ALERT</code> <code>DOSE_REFERENCE</code> <code>AI_FEATURES</code> <code>REAL_PATIENT_DATA_TO_AI</code> <code>CAROUSEL_LAYER_1</code> <code>CAROUSEL_LAYER_2</code> <code>CAROUSEL_LAYER_3</code> <code>PERF_INDIVIDUAL_L3</code> <code>REWARD_SCORING</code> <code>HANDHELD_FEATURES</code> <code>HELP_NON_CLINICAL_GROUP</code>（0929）<code>LAB_VALUE_FEATURES</code>（1005，需要抽血數值的功能）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有輪播三層預設開啟）</td>
+<td>合法值見 <code>@hd/shared</code> 的 <code>FeatureFlagKey</code>：<code>RISK_STRATIFICATION</code> <code>INTRA_DIALYSIS_ALERT</code> <code>DOSE_REFERENCE</code> <code>AI_FEATURES</code> <code>REAL_PATIENT_DATA_TO_AI</code> <code>PERF_INDIVIDUAL_L3</code> <code>REWARD_SCORING</code> <code>HANDHELD_FEATURES</code> <code>HELP_NON_CLINICAL_GROUP</code>（0929）<code>LAB_VALUE_FEATURES</code>（1005，需要抽血數值的功能）<code>TODAY_PANEL</code> <code>MARQUEE</code>（1005 迭代 16，「本次透析」面板與跑馬燈）。後端啟動時自動補齊缺少的列，套用各自的預設值（只有 <code>TODAY_PANEL</code> 預設開啟；9.1～15 是輪播三層）。<strong><code>CAROUSEL_LAYER_1</code>～<code>3</code> 於 1005 停用</strong>（<code>RETIRED_FEATURE_FLAG_KEYS</code>）：那三列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現</td>
 </tr>
 <tr>
 <td><code>enabled</code></td>
@@ -6295,7 +6355,7 @@
 <strong>注意</strong>：備份一律用 <code>VACUUM INTO</code>，不直接複製資料庫檔案。舊備份不自動刪除，留存世代數待醫院定案（Q-05）。</p>
 <hr />
 <h2 id="七院方臨床數值迭代-3">七、院方臨床數值（迭代 3）<a class="headerlink" href="#七院方臨床數值迭代-3" title="Permanent link">&para;</a></h2>
-<p>FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 <code>ClinicalDataSourcePort</code> 介面層：人工輸入、檔案匯入、院方 API 三種來源<strong>共用同一組內部資料表</strong>，輪播與儀表板只讀這兩張表、不認來源。迭代 3 只有人工輸入（<code>ManualEntryAdapter</code>）。
+<p>FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 <code>ClinicalDataSourcePort</code> 介面層：人工輸入、檔案匯入、院方 API 三種來源<strong>共用同一組內部資料表</strong>，病人端面板（1005 起取代輪播）與儀表板只讀這兩張表、不認來源。迭代 3 只有人工輸入（<code>ManualEntryAdapter</code>）。
 <strong>1005 迭代 15 起院方 API（<code>HospitalApiAdapter</code>）是唯一的日常來源</strong>：一次透析一批（全有或全無的單位），批次的 <code>source_type</code> 為 <code>HOSPITAL_API</code>、匯入者是「院方資料同步」，<code>content_hash</code> 留空（相同的值在送進來之前就濾掉了）。人工輸入與檔案匯入只留在專業版當備援。</p>
 <p><strong>三條硬性規則</strong>（實作規格書 3.5、規範第 13 條）：</p>
 <ul>
@@ -6398,7 +6458,7 @@
 <td><code>value_code</code></td>
 <td><code>TEXT</code></td>
 <td>數值種類：理想體重、目標脫水量、血紅素、白蛋白、Kt/V；迭代 4 另加透析適足性計算的五個輸入值</td>
-<td>合法值見 <code>CLINICAL_VALUE_DEFINITIONS</code>：<code>DRY_WEIGHT</code> <code>UF_TARGET</code> <code>HEMOGLOBIN</code> <code>ALBUMIN</code> <code>KT_V</code>（輪播第三層，實際種類待院方確認，Q-09）；<code>BUN_PRE</code> <code>BUN_POST</code> <code>WEIGHT_POST</code> <code>UF_VOLUME</code> <code>SESSION_MINUTES</code>（迭代 4，FR-N07 的輸入，Q-26）</td>
+<td>合法值見 <code>CLINICAL_VALUE_DEFINITIONS</code>：<code>DRY_WEIGHT</code> <code>UF_TARGET</code> <code>HEMOGLOBIN</code> <code>ALBUMIN</code> <code>KT_V</code>（原輪播第三層；1005 起病人端面板只顯示理想體重與目標脫水量，抽血數值與 Kt/V 病人端不顯示）；<code>BUN_PRE</code> <code>BUN_POST</code> <code>WEIGHT_POST</code> <code>UF_VOLUME</code> <code>SESSION_MINUTES</code>（迭代 4，FR-N07 的輸入，Q-26）</td>
 </tr>
 <tr>
 <td><code>value_scaled</code></td>
@@ -7495,7 +7555,7 @@
 <td><code>setting_key</code></td>
 <td><code>TEXT</code> UNIQUE</td>
 <td>這是哪一個參數</td>
-<td>合法值見 <code>OperationalSettingKey</code>：<code>HELP_RECURRENCE_WINDOW_HOURS</code>（FR-N11 的再發判定期間，暫定 72 小時）、<code>LABOUR_MAX_SHIFT_HOURS</code>、<code>LABOUR_MIN_REST_HOURS</code>、<code>LABOUR_MAX_DAILY_HOURS</code>、<code>LABOUR_MAX_WEEKLY_HOURS</code>、<code>LABOUR_MAX_CONSECUTIVE_DAYS</code>（FR-M04，暫以勞動基準法基本條件為值）。迭代 6 另加六項輪播參數：<code>CAROUSEL_IDLE_THRESHOLD_SECONDS</code>（FR-P09，預設 60 秒）、<code>CAROUSEL_CARD_INTERVAL_SECONDS</code>、<code>CAROUSEL_DETAIL_TIMEOUT_SECONDS</code>（FR-P10）、<code>CAROUSEL_NIGHT_MODE_START_HOUR</code>／<code>CAROUSEL_NIGHT_MODE_END_HOUR</code>（夜間模式）、<code>SYMPTOM_DUE_INTERVAL_MINUTES</code>（FR-P13 問卷優先於輪播的判定）</td>
+<td>合法值見 <code>OperationalSettingKey</code>：<code>HELP_RECURRENCE_WINDOW_HOURS</code>（FR-N11 的再發判定期間，暫定 72 小時）、<code>LABOUR_MAX_SHIFT_HOURS</code>、<code>LABOUR_MIN_REST_HOURS</code>、<code>LABOUR_MAX_DAILY_HOURS</code>、<code>LABOUR_MAX_WEEKLY_HOURS</code>、<code>LABOUR_MAX_CONSECUTIVE_DAYS</code>（FR-M04，暫以勞動基準法基本條件為值）。迭代 6 另加六項輪播參數：<code>CAROUSEL_IDLE_THRESHOLD_SECONDS</code>（FR-P09，預設 60 秒；0926 起用在任務畫面閒置回首頁）、<code>CAROUSEL_CARD_INTERVAL_SECONDS</code>、<code>CAROUSEL_DETAIL_TIMEOUT_SECONDS</code>（FR-P10）、<code>CAROUSEL_NIGHT_MODE_START_HOUR</code>／<code>CAROUSEL_NIGHT_MODE_END_HOUR</code>（夜間模式）、<code>SYMPTOM_DUE_INTERVAL_MINUTES</code>（透析前問卷到期的判定）。<strong>1005 迭代 16</strong>：卡片停留與細節頁退回兩項停用（<code>RETIRED_OPERATIONAL_SETTING_KEYS</code>，列與修改紀錄保留），另加跑馬燈三項，見第十九節</td>
 </tr>
 <tr>
 <td><code>value</code></td>
@@ -7895,6 +7955,10 @@
 <hr />
 <h2 id="十四閒置輪播與檔案匯入迭代-6">十四、閒置輪播與檔案匯入（迭代 6）<a class="headerlink" href="#十四閒置輪播與檔案匯入迭代-6" title="Permanent link">&para;</a></h2>
 <p>三張表，兩件事。</p>
+<blockquote>
+<p><strong>1005 迭代 16 拿掉病人端的輪播</strong>：表不變、欄位不變。<code>carousel_items</code> 的內容改在面板底部的跑馬燈播（一則「標題：內容」，內容取 <code>body_text</code>、留白時取 <code>summary</code>），
+<code>carousel_view_events</code> 改記跑馬燈每一則的播放（<code>layer</code> 多一個值 <code>MARQUEE</code>）。下面兩張表的說明是迭代 6 寫的，與現況不同的地方各自標了 1005。</p>
+</blockquote>
 <p>前兩張是<strong>輪播</strong>：第一層取自系統既有資料、第三層讀 <code>clinical_values</code>，兩層都不需要自己的表；
 只有第二層（中心自己寫的衛教與公告）與瀏覽事件需要存進資料表。
 第三張是<strong>檔案匯入的欄位對應</strong>——院方匯出檔的欄位名稱會被人改動，
@@ -7928,13 +7992,13 @@
 <td><code>summary</code></td>
 <td><code>TEXT</code></td>
 <td>卡片上顯示的一句話</td>
-<td>最長 120 字。輪播畫面一次只讀得完一句</td>
+<td>最長 120 字。輪播畫面一次只讀得完一句。<strong>1005</strong>：跑馬燈只在 <code>body_text</code> 留白時播它；迭代 17 拿掉（新內容寫空字串，舊資料保留）</td>
 </tr>
 <tr>
 <td><code>body_text</code></td>
 <td><code>TEXT?</code></td>
 <td>點開細節頁後看到的說明</td>
-<td>最長 1000 字。留空代表這張卡片不能點開（FR-P10）</td>
+<td>最長 1000 字。留空代表這張卡片不能點開（FR-P10）。<strong>1005</strong>：跑馬燈的「內容」——一則就是「<code>title</code>：<code>body_text</code>」，沒有細節頁</td>
 </tr>
 <tr>
 <td><code>language</code></td>
@@ -7975,8 +8039,9 @@
 </tbody>
 </table>
 <p><strong>索引</strong>：<code>(active, sort_order)</code>
-<strong>與功能開關的關係</strong>：第二層開關（<code>CAROUSEL_LAYER_2</code>）的開啟條件是「至少有一則在架上的內容」——
-沒有內容就開啟，病人只會看到空白的輪播，因此後端直接擋下（<code>FeatureFlagsService</code>）。</p>
+<strong>與功能開關的關係</strong>：~~第二層開關（<code>CAROUSEL_LAYER_2</code>）的開啟條件是「至少有一則在架上的內容」——
+沒有內容就開啟，病人只會看到空白的輪播，因此後端直接擋下（<code>FeatureFlagsService</code>）。~~
+<strong>1005 起</strong>是 <code>MARQUEE</code>：開啟條件是速度經長者看過（把關在核准依據），不再以內容擋——一則都沒有時跑馬燈整條不出現，不會是空白。</p>
 <h3 id="carousel_view_events--輪播瀏覽事件7-欄"><code>carousel_view_events</code> — 輪播瀏覽事件（7 欄）<a class="headerlink" href="#carousel_view_events--輪播瀏覽事件7-欄" title="Permanent link">&para;</a></h3>
 <p><strong>蒐集的意義</strong>：迭代 8 要回答「哪一類內容真的有人看」。
 這張表刻意<strong>只</strong>回答那個問題：沒有病人、沒有綁定、沒有平板序號、沒有卡片內容。
@@ -8000,26 +8065,26 @@
 <tr>
 <td><code>layer</code></td>
 <td><code>TEXT</code></td>
-<td>哪一層</td>
-<td>合法值 <code>LAYER_1</code> / <code>LAYER_2</code> / <code>LAYER_3</code>（<code>CarouselLayer</code>），由後端依 <code>card_kind</code> 推出，不採信平板送上來的值</td>
+<td>哪一層（1005 起：從哪裡播的）</td>
+<td>合法值 <code>LAYER_1</code> / <code>LAYER_2</code> / <code>LAYER_3</code>（1005 以前的輪播，由後端依 <code>card_kind</code> 推出），<strong>1005 起另有 <code>MARQUEE</code></strong>（跑馬燈，<code>CarouselViewSource</code>）。一律由後端寫，不採信平板送上來的值</td>
 </tr>
 <tr>
 <td><code>card_kind</code></td>
 <td><code>TEXT</code></td>
-<td>哪一類卡片</td>
-<td>合法值見 <code>CarouselCardKind</code>，只到種類層級（療程進度、今日已回報內容、衛教完成度、靜態衛教、中心公告、臨床數值）。有索引</td>
+<td>哪一類卡片（1005 起：哪一類內容）</td>
+<td>1005 以前是卡片種類（療程進度、今日已回報內容、衛教完成度、靜態衛教、中心公告、臨床數值）；跑馬燈只記 <code>STATIC_EDUCATION</code> / <code>ANNOUNCEMENT</code>。有索引</td>
 </tr>
 <tr>
 <td><code>dwell_ms</code></td>
 <td><code>INT</code></td>
-<td>這一輪停留多久</td>
-<td>超過 30 分鐘的一律丟棄——平板被擱著沒人看的那段時間不是「瀏覽」</td>
+<td>這一輪停留多久（1005 起：這一則從出現到離開多久）</td>
+<td>1005 以前超過 30 分鐘的一律丟棄；跑馬燈超過 10 分鐘的丟棄（標題 12 字、內容 60 字以最慢速度跑完約 73 秒，上限放寬給 1005 以前的長內容）</td>
 </tr>
 <tr>
 <td><code>detail_open_count</code></td>
 <td><code>INT</code></td>
 <td>這一輪被點開細節頁幾次</td>
-<td>預設 0</td>
+<td>預設 0。跑馬燈沒有細節頁，一律 0</td>
 </tr>
 <tr>
 <td><code>night_mode</code></td>
@@ -8722,6 +8787,56 @@
 <code>HOSPITAL_BED_NO_FORMAT</code>（院方床位轉床號：0 原樣、1 改字母在前、2 改數字在前，預設 0）。</p>
 <p><strong>院方 API 的位址不在資料庫裡</strong>：只在主機設定目錄的 <code>.env</code>（DEP-46），不寫進資料庫、日誌、稽核或任何回應。</p>
 <hr />
+<h2 id="十九本次透析面板與跑馬燈迭代-16沒有新表">十九、「本次透析」面板與跑馬燈（迭代 16）——沒有新表<a class="headerlink" href="#十九本次透析面板與跑馬燈迭代-16沒有新表" title="Permanent link">&para;</a></h2>
+<p>1005 病人端首頁中間那一區由輪播改成「本次透析」面板與跑馬燈（SRS FR-P09～P11）。<strong>一張表、一個欄位都沒加</strong>，讀的是既有的表：</p>
+<table>
+<thead>
+<tr>
+<th>畫面上的東西</th>
+<th>讀哪裡</th>
+<th>怎麼讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>血壓、累積脫水量兩張圖，脈搏</td>
+<td><code>dialysis_vital_records</code></td>
+<td>這次療程（<code>treatment_session_id</code>）的全部紀錄；值是 0 或空的那一筆不送</td>
+</tr>
+<tr>
+<td>「預計」參考線、透析前體重</td>
+<td>同上</td>
+<td><code>uf_set_ml</code>、<code>weight_pre_g</code> 是透析層級的值，取最後一筆不是 0 的</td>
+</tr>
+<tr>
+<td>理想體重</td>
+<td><code>clinical_values</code> 的 <code>DRY_WEIGHT</code></td>
+<td>目前有效、不是 0、最近的一筆；不限這一次透析，不是今天的畫面會帶月日</td>
+</tr>
+<tr>
+<td>目標脫水量</td>
+<td><code>clinical_values</code> 的 <code>UF_TARGET</code></td>
+<td>同上，但<strong>只認與透析開始同一天的</strong>——上一次透析的不拿來當今天的</td>
+</tr>
+<tr>
+<td>跑馬燈</td>
+<td><code>carousel_items</code>（＋<code>carousel_item_targets</code>）</td>
+<td>在架上、期間內、指定給這一床或全部床位；夜間一則都不送</td>
+</tr>
+<tr>
+<td>每一則的播放</td>
+<td>寫 <code>carousel_view_events</code></td>
+<td><code>layer = MARQUEE</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>送到平板的只有畫面要用的欄位</strong>：時間與值。SRS 取捨表標「不顯示」的東西（靜脈壓、血流速、透析液設定、體溫、肝素、透析器、血管通路、低血壓預測、姓名、病歷號）
+本來就不在這幾張表裡，或在表裡但不讀。平板端的本機快取掛在 Session 前綴底下，綁定解除時一併清掉。</p>
+<p><strong><code>operational_settings</code> 多三個鍵</strong>：<code>MARQUEE_CHARS_PER_MINUTE</code>（跑馬燈速度，預設 120 字／分鐘＝每秒 2 字，範圍 60～180）、
+<code>MARQUEE_LEAD_PAUSE_SECONDS</code>（每一則開頭靜止，預設 3）、<code>MARQUEE_GAP_SECONDS</code>（兩則之間的空白，預設 5）。速度經長者試看之後，採用的值與試看結果寫在那一列的 <code>last_reason</code>。
+<strong>停用兩個鍵</strong>：<code>CAROUSEL_CARD_INTERVAL_SECONDS</code>、<code>CAROUSEL_DETAIL_TIMEOUT_SECONDS</code>（跑馬燈不換卡、沒有細節頁）。列留在表裡，畫面上不再出現、改不到。</p>
+<p><strong><code>feature_flags</code> 多兩個鍵</strong>：<code>TODAY_PANEL</code>（預設開啟）、<code>MARQUEE</code>（預設關閉）；<strong>停用三個鍵</strong>：<code>CAROUSEL_LAYER_1</code>～<code>3</code>，列與切換紀錄保留。</p>
+<hr />
 <h2 id="附錄-a資料不流向哪裡">附錄 A：資料不流向哪裡<a class="headerlink" href="#附錄-a資料不流向哪裡" title="Permanent link">&para;</a></h2>
 <p>同樣重要的是<strong>沒有</strong>蒐集什麼。以下都不在資料庫裡，且都是刻意的：</p>
 <table>
@@ -8785,12 +8900,12 @@
 <td>SRS 5.3 的硬性禁止事項。班表是管理工具，不是計分板；排名若日後有需要，一律於查詢時即時計算，<strong>不寫入資料表</strong>（規範 11.2、11.3）</td>
 </tr>
 <tr>
-<td>輪播畫面上的病人姓名與病歷號</td>
-<td>治療區內鄰床可見。床位分配只到 <code>bed_no</code> 層級（SRS 5.1 補充說明）。卡片由後端組好再送到平板，這條規則只在一處判定</td>
+<td>病人端首頁（1005 前是輪播畫面，之後是「本次透析」面板與跑馬燈）上的病人姓名與病歷號</td>
+<td>治療區內鄰床可見。床位分配只到 <code>bed_no</code> 層級（SRS 5.1 補充說明）。面板與跑馬燈由後端組好再送到平板，這條規則只在一處判定</td>
 </tr>
 <tr>
-<td>輪播瀏覽事件中的病人、綁定、平板與卡片內容</td>
-<td><code>carousel_view_events</code> 只回答「哪一類內容有人看」；那個問題不需要知道是誰在看</td>
+<td>播放紀錄（1005 前是輪播瀏覽事件）中的病人、綁定、平板與內容</td>
+<td><code>carousel_view_events</code> 只回答「哪一類內容有播到」；那個問題不需要知道是誰在看</td>
 </tr>
 <tr>
 <td>匯入檔案的原始內容</td>
