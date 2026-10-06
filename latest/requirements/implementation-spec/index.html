@@ -1461,6 +1461,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4151-迭代-171停用統一把病人拖到平板一鍵展示病人端1006" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.1 迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2207,6 +2218,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2836,6 +2875,34 @@
     
   
     迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 分冊
   
 
     
@@ -4349,6 +4416,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4151-迭代-171停用統一把病人拖到平板一鍵展示病人端1006" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.1 迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4809,9 +4887,9 @@
 <td>3.5；第三次進院確認</td>
 </tr>
 <tr>
-<td>平板由護理師每位病人配一次</td>
-<td>API 不知道平板。這是 FR-S15 唯一留給護理師的一步</td>
-<td>SRS FR-S15</td>
+<td>~~平板由護理師每位病人配一次~~ <strong>平板由護理師每次透析配一次：把病人拖到平板，床號由 API 補</strong>（1006 迭代 17.1）</td>
+<td>API 不知道平板。這是 FR-S15 唯一留給護理師的一步；1006 使用者決定不要「配一次、之後自動接上」</td>
+<td>SRS FR-S15；4.15.1</td>
 </tr>
 <tr>
 <td>生命徵象紀錄只存有綁定平板的病人</td>
@@ -4934,6 +5012,44 @@
 <td><code>verify:iteration14</code> 第 6 步</td>
 <td>「簡易版只用既有端點」的加法清單多五支（要一份、核准、退回、撤回、上下架），並逐支驗<strong>專業版也在用</strong>（撤回只有簡易版用，與播放範圍同一類）</td>
 <td>判準不變：清單外的一支都不准用；新的五支是取代被需求拿掉的那一支</td>
+</tr>
+</tbody>
+</table>
+<p><strong>迭代 17.1 是第四次</strong>（1006）：使用者指示拿掉「每位病人配一次平板、之後自動接上」與簡易版的停用區，配平板改成把病人拖到平板。
+驗那兩件事的腳本不改就跑不下去。做法照舊——<strong>還成立的行為照驗、換一條路驗，檢查內容不放寬</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration15:api</code></td>
+<td>驗收 2 的「配過平板的病人自動進入療程」改成「護理師配平板（<code>POST /bindings</code>）→ 平板自動放到院方的床 → 院方判定開始後開始時間改成院方的」；「平板不在線上不接」改成「沒人配就不接、手動解除後同步照院方接回、停用的配不了、使用中的停不了」；驗收 9 的「自動接上的操作者是院方資料同步」改成「配平板是護理師、自動下機是院方資料同步」</td>
+<td>自動建療程、開始時間是院方的、生命徵象只收有平板的、推送、下機、更正不改回去、稽核分得出同步，原樣驗；多驗四件新規則</td>
+</tr>
+<tr>
+<td><code>verify:iteration16:api</code></td>
+<td>準備步驟的配平板改走 <code>POST /bindings</code></td>
+<td>面板與跑馬燈的每一項原樣驗；「橫軸起點是院方的開始時間」因此多驗了配平板不改開始時間</td>
+</tr>
+<tr>
+<td><code>verify:iteration15</code> 第 1、3 步</td>
+<td>「病人框是放平板的地方」「平板拖到病人身上」「配平板用 <code>setPreferredDevice</code>」改成「病人是拿起來拖到平板上的」「放置區是平板」「配平板用 <code>createBinding</code>」；加驗那支端點已拿掉</td>
+<td>「接了院方 API 沒有新增病人」「配平板一步完成、可復原」「兩端同一支端點」照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration14-2</code> 第 3 步</td>
+<td>「停用的平板回到清單、帶鎖頭、停用區只剩放置」改成「停用的不在平板框、沒有停用區、系統管理能停用與解除停用」</td>
+<td>「平板框只收一份清單」照驗；原本要防的「停用的一多就蓋住平板框」因為停用的根本不在框裡而不會發生</td>
+</tr>
+<tr>
+<td><code>verify:iteration14-1</code> 第 7 步</td>
+<td>「BedCell 與 Trays 各自呼叫 <code>enrollmentVisual</code>」改成「兩處共用的 <code>TabletChip</code> 呼叫它」</td>
+<td>「平板標籤畫出尚未佈建」照驗</td>
 </tr>
 </tbody>
 </table>
@@ -5399,7 +5515,10 @@
 </tr>
 </tbody>
 </table>
-<p><strong>自動綁定</strong>：<code>patients</code> 加一欄「配給他的平板」（<code>preferred_device_id</code>，加法）。API 判定透析開始時，那台平板在線上、而且沒有別的進行中綁定，就以<strong>與護理師拖曳完全相同的路徑</strong>建立療程與綁定、核發 Session Token；任一條件不成立就不綁，床位格標示原因（SRS FR-S15 第 2 條界線）。</p>
+<p>~~<strong>自動綁定</strong>：<code>patients</code> 加一欄「配給他的平板」（<code>preferred_device_id</code>，加法）。API 判定透析開始時，那台平板在線上、而且沒有別的進行中綁定，就以<strong>與護理師拖曳完全相同的路徑</strong>建立療程與綁定、核發 Session Token；任一條件不成立就不綁，床位格標示原因（SRS FR-S15 第 2 條界線）。~~</p>
+<p><strong>1006（迭代 17.1）起不自動綁定</strong>：平板與病人的配對每次透析由護理師做（簡易版把病人拖到平板；專業版排班與指派頁「指派平板」，同一支 <code>POST /bindings</code>）。
+配好之後<strong>後端把平板放到這次療程的床</strong>（API 的床號），不標「手動換床」；目的床的平板正在服務別人就不搬。<code>preferred_device_id</code> 欄位留著，不讀不寫。
+API 判定開始之前就配的，開始時間之後改成 API 的那一刻；已經判定開始的，配平板不改開始時間。見 4.15.1。</p>
 <p><strong>護理師的更正優先</strong>：療程與床位各加一個「護理師改過」的時間欄（加法）。同步遇到有這個標記的就跳過，不改回去。</p>
 <p><strong>稽核</strong>：同步做的每一件事都寫稽核軌跡，操作者是「院方資料同步」，與人的操作分得出來。</p>
 <p><strong>抓取</strong>：</p>
@@ -6948,9 +7067,9 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>一個群組一次開關，目前涵蓋「我到床邊了」。它的開啟條件系統驗不到（護理師手上有沒有裝置），因此條件視為成立，把關落在「切換必須登記核准依據」那一條</td>
 </tr>
 <tr>
-<td>離院衛教拆成獨立一頁</td>
-<td><code>pages/DischargeEducationPage.tsx</code></td>
-<td>不是為了頁面太長：混在「衛教」裡就沒辦法乾淨地只關掉其中一件</td>
+<td>~~離院衛教拆成獨立一頁~~ 1006 迭代 17.1 併回「結束與離院衛教」頁，成為那一頁裡可以單獨關掉的一段</td>
+<td>~~<code>pages/DischargeEducationPage.tsx</code>~~ <code>pages/EducationPage.tsx</code> 的 <code>DischargeSection</code>；導覽定義的 <code>partOf</code></td>
+<td>不是為了頁面太長：混在「衛教」裡就沒辦法乾淨地只關掉其中一件。1006 用 <code>partOf</code> 做到「同一頁、照樣能單獨關」</td>
 </tr>
 <tr>
 <td>求助類別資料化</td>
@@ -8135,7 +8254,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </thead>
 <tbody>
 <tr>
-<td><strong>沒接院方 API 的環境，簡易版照迭代 14 的人工流程</strong></td>
+<td><strong>沒接院方 API 的環境，簡易版照迭代 14 的人工流程</strong>（1006 迭代 17.1 起改成兩種環境都是「病人拖到平板」，使用者決定）</td>
 <td>位址空白就是不抓（3.5），那時沒有任何事能由 API 判斷；拿掉新增病人，護理師只能切到專業版。接了才換成配平板</td>
 <td><code>simple/Workbench.tsx</code> 的 <code>hospitalApi</code></td>
 </tr>
@@ -8667,6 +8786,72 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p>既有腳本：<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>10</code>、<code>12:api</code>、<code>14:api</code>、<code>14-1:api</code>、<code>14-2:api</code>、<code>15:api</code>、<code>16:api</code>、<code>verify:iteration8</code>、<code>11</code>、<code>12</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>check:all</code> 六支全綠，
 其中五支依 1.1 的表跟著改。<strong><code>verify:iteration13</code> 不通過，與這次無關</strong>：它的第 2 步在 <code>apps/</code> 底下找 Ollama 字樣，找到的是迭代 13 自己那支 <code>verify-iteration13.ts</code>（迭代 16 的回歸清單也沒有它）；<code>verify:iteration13:api</code> 要 Docker Desktop，這次沒跑（迭代 17 沒有動 AI 閘道）。</p>
 <p><strong>待做</strong>：實驗室模型重寫隨版本帶入的草稿（<code>aa32</code>、<code>aa33</code>）；誰有權核准（Q-28 第 3 題）；簡易版與專業版在護理站解析度下實際看過（<code>aa9</code>～<code>aa26</code>）。</p>
+<h3 id="4151-迭代-171停用統一把病人拖到平板一鍵展示病人端1006">4.15.1 迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）<a class="headerlink" href="#4151-迭代-171停用統一把病人拖到平板一鍵展示病人端1006" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-06 完成。</strong> 使用者一次提出七件事，逐項紀錄在《<a href="../../notes/iteration-17-1-fixes/">迭代 17.1 修正紀錄</a>》，
+手動測試在《<a href="../../testing/iteration-17-1/">迭代 17.1 分冊</a>》（<code>aa37</code>～<code>aa66</code>）。不是新的範圍，迭代 18 的內容一項都沒動。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>改了什麼</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>「鎖定」與「停用」統一叫「停用」</td>
+<td>畫面、稽核動作名稱、錯誤訊息；資料欄位與端點路徑不改</td>
+<td>FR-S10</td>
+</tr>
+<tr>
+<td>2</td>
+<td>正在透析的平板不能停用</td>
+<td>後端擋（409）；停用時從床位拿下來</td>
+<td>FR-N16</td>
+</tr>
+<tr>
+<td>3</td>
+<td>停用放到系統管理</td>
+<td>系統管理新增「平板停用」分頁；簡易版停用區、裝置管理的遠端鎖定拿掉</td>
+<td>FR-N15、FR-S11</td>
+</tr>
+<tr>
+<td>4</td>
+<td>刪除病人頁長期指定平板</td>
+<td>病人頁一欄、<code>PUT /patients/:id/preferred-device</code> 拿掉；同步不再自動接上平板；欄位留著不讀不寫</td>
+<td>FR-S15</td>
+</tr>
+<tr>
+<td>5</td>
+<td>簡易版把病人拖到平板，床號由院方資料補</td>
+<td>放置區改成平板（<code>TABLET_SLOT</code>），兩種環境都是；配好之後後端把平板放到療程的床</td>
+<td>FR-N16、FR-S15</td>
+</tr>
+<tr>
+<td>6</td>
+<td>進院前看病人端、產生透析到一半的截圖</td>
+<td><code>npm run demo:patient</code>（另一個全新的資料庫、模擬院方資料已透析約 100 分鐘）；<code>-- --screenshot</code> 直接截圖</td>
+<td>—</td>
+</tr>
+<tr>
+<td>7</td>
+<td>護理端改名</td>
+<td>「跑馬燈內容」→「公告與院內衛教」；「衛教」→「結束與離院衛教」，離院衛教併成那一頁裡的一段（預設仍關閉）</td>
+<td>FR-N17、FR-S11</td>
+</tr>
+</tbody>
+</table>
+<p><strong>三個由使用者決定的</strong>（1006）：沒接院方資料的環境也改成病人拖到平板；看病人端用一鍵展示指令；離院衛教與結束衛教合併，離院（病人用自己手機帶回家）方式未定暫不開放。</p>
+<p><strong>連帶改的兩處後端行為</strong>：手動解除（換平板、復原）不再標「護理師改過」，只有下機才標——否則配錯了按復原，那一筆療程從此不會被院方資料接回；
+先配好平板的療程，院方開始時間跨過班別界線時跟著換班別，不另建一筆沒有平板的療程。配平板時院方已判定開始的療程不改開始時間。</p>
+<p><strong>驗收現況（1006）</strong>：<code>verify:iteration17-1</code>（新增，6 步，不需後端）全部通過；<code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>check:all</code> 六支全綠，
+其中三支依 1.1 第四次改寫；<code>verify:iteration14:api</code>、<code>14-2:api</code>、<code>17:api</code> 對著 <code>demo:patient</code> 的後端全部通過。
+<strong><code>verify:iteration15:api</code>、<code>16:api</code> 已改寫但 1006 沒有跑</strong>：兩支在午夜前後拒絕執行，跑的時候已過 23 點（分冊 <code>aa66</code>）。
+在瀏覽器實際看過病人端 1280×800 與 800×1280、護理端簡易版 1366×768 的配平板與復原、系統管理的「平板停用」。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -8994,6 +9179,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~跑馬燈內容由 AI 生成、護理師核准（1005）~~</td>
 <td><strong>實作已完成（1005）</strong>，腳本驗收通過；隨版本帶入的草稿待實驗室模型重寫</td>
 <td>無；正式環境的 AI 生成需 Q-07，在那之前用隨版本帶入的草稿；誰有權核准待 Q-28</td>
+</tr>
+<tr>
+<td>~~17.1~~</td>
+<td>~~停用統一、把病人拖到平板、一鍵展示病人端（1006）~~</td>
+<td><strong>已完成（1006）</strong>，腳本驗收與開發機截圖通過；<code>verify:iteration15:api</code>、<code>16:api</code> 待白天跑</td>
+<td>無</td>
 </tr>
 <tr>
 <td>18</td>

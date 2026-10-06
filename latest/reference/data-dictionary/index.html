@@ -2373,6 +2373,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3002,6 +3030,34 @@
     
   
     迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 分冊
   
 
     
@@ -5344,8 +5400,8 @@
 <tr>
 <td><code>preferred_device_id</code></td>
 <td><code>TEXT?</code> → <code>devices</code></td>
-<td>（迭代 15）<strong>配給這位病人的平板</strong>。院方資料判定透析開始時，系統就以這一台自動開始這次療程；護理師每位病人只配一次</td>
-<td><code>ON DELETE NO ACTION</code>，有索引。<strong>不設唯一</strong>：一台平板早班給一位、午班給另一位是常態。配與取消都寫 <code>PATIENT_PREFERRED_DEVICE_SET</code></td>
+<td>（迭代 15）~~<strong>配給這位病人的平板</strong>。院方資料判定透析開始時，系統就以這一台自動開始這次療程；護理師每位病人只配一次~~ <strong>1006（迭代 17.1）起不再使用</strong>：平板每次透析由護理師配，不長期配給病人</td>
+<td><code>ON DELETE NO ACTION</code>，有索引。<strong>程式不讀不寫</strong>，欄位留著不刪（只做加法），已經填過的值不清；共用型別 <code>PatientSummary</code> 已沒有這個欄位。舊的 <code>PATIENT_PREFERRED_DEVICE_SET</code> 稽核照舊查得到，不會再產生新的</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
@@ -5423,8 +5479,8 @@
 <tr>
 <td><code>mdm_locked</code></td>
 <td><code>BOOL</code></td>
-<td>是否已遠端鎖定</td>
-<td><code>DEFAULT false</code>。<strong>與 <code>status</code> 正交</strong> — 一台鎖定中的平板仍可能同時是 <code>BOUND</code>。不要把兩者合併成單一狀態機</td>
+<td>是否已停用（1006 以前畫面上叫「遠端鎖定」）</td>
+<td><code>DEFAULT false</code>。<strong>與 <code>status</code> 正交</strong>，不要把兩者合併成單一狀態機。1006（迭代 17.1）起畫面上的「停用」就是這一欄（<code>status</code> 的 <code>RETIRED</code> 沒有流程會設定）；<strong>正在服務病人的平板後端不讓停用</strong>，停用時 <code>bed_no</code> 一併清空。稽核動作 <code>DEVICE_MDM_LOCKED</code>／<code>UNLOCKED</code> 的中文名稱改成「停用平板」「解除停用平板」</td>
 </tr>
 <tr>
 <td><code>mdm_kiosk_url</code></td>
@@ -8375,7 +8431,7 @@
 <td><code>nav_key</code></td>
 <td><code>TEXT</code></td>
 <td>哪一個功能</td>
-<td>唯一鍵。合法值為 <code>@hd/shared</code> 的 <code>NavItemKey</code>（17 項）</td>
+<td>唯一鍵。合法值為 <code>@hd/shared</code> 的 <code>NavItemKey</code>（17 項）。1006（迭代 17.1）起 <code>DISCHARGE_EDUCATION</code> 是「結束與離院衛教」頁裡的一段（定義帶 <code>partOf</code>）：沒有自己的連結，<code>placement</code> 不收 <code>PRIMARY</code>，所屬那一頁關了它也跟著關；畫面名稱 <code>CAROUSEL</code> 叫「公告與院內衛教」、<code>EDUCATION</code> 叫「結束與離院衛教」（名稱在共用常數，不在這張表）</td>
 </tr>
 <tr>
 <td><code>placement</code></td>

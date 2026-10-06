@@ -1207,6 +1207,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-171停用統一把病人拖到平板一鍵展示病人端1006" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-17跑馬燈內容由-ai-生成護理師核准1005" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2175,6 +2186,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2804,6 +2843,34 @@
     
   
     迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 分冊
   
 
     
@@ -4229,6 +4296,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-171停用統一把病人拖到平板一鍵展示病人端1006" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-17跑馬燈內容由-ai-生成護理師核准1005" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4457,8 +4535,8 @@
 
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
 <p><strong>適用讀者</strong>：接手或協作的工程師
-<strong>報告日期</strong>：2026-10-05
-<strong>版本</strong>：迭代 17 完成（master）
+<strong>報告日期</strong>：2026-10-06
+<strong>版本</strong>：迭代 17.1 完成（master）
 <strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
 <blockquote>
 <p>本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -6084,6 +6162,54 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 </tr>
 </tbody>
 </table>
+<h3 id="迭代-171停用統一把病人拖到平板一鍵展示病人端1006">迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）<a class="headerlink" href="#迭代-171停用統一把病人拖到平板一鍵展示病人端1006" title="Permanent link">&para;</a></h3>
+<p>使用者一次提出七件事（《<a href="../../notes/iteration-17-1-fixes/">迭代 17.1 修正紀錄</a>》）。工程上要知道的：</p>
+<table>
+<thead>
+<tr>
+<th>要知道的</th>
+<th>在哪裡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>不再自動接上平板</strong></td>
+<td><code>HospitalSyncService</code> 拿掉 <code>tryAutoBind</code>、<code>setPreferredDevice</code>；<code>PUT /patients/:id/preferred-device</code> 拿掉；<code>patients.preferred_device_id</code> 留著不讀不寫</td>
+</tr>
+<tr>
+<td>配平板時平板跟著療程的床</td>
+<td><code>BindingService.followSessionBed</code>：直接用 <code>DeviceRepository.moveToBed</code>，<strong>不經 <code>DevicesService.setBed</code></strong>（那一支會標「護理師手動換床」，之後同步就不跟院方換床）；目的床的平板正在服務別人就不搬</td>
+</tr>
+<tr>
+<td>手動解除不算更正</td>
+<td><code>releaseByNurse</code> 只有 <code>NORMAL_DISCHARGE</code> 才 <code>markNurseModified</code>；手動解除後療程退回已排班，下一次同步照院方接回進行中</td>
+</tr>
+<tr>
+<td>開始時間</td>
+<td>綁定交易裡，進行中且已有開始時間的療程不覆寫；同步在院方判定開始時把先配好的療程改成院方的開始時間；跨班別時進行中的那一筆也跟著換班別</td>
+</tr>
+<tr>
+<td>停用</td>
+<td><code>DevicesService.setLocked</code>：有進行中綁定就 409；停用時清 <code>bed_no</code>。入口只剩專業版 <code>pages/SystemTabletsCard.tsx</code></td>
+</tr>
+<tr>
+<td>簡易版</td>
+<td>放置區 <code>TABLET_SLOT</code>；<code>Pickable</code> 帶 <code>target</code> 時同時是放置區（<code>useDraggable</code> 與 <code>useDroppable</code> 掛同一個節點）；<code>TabletChip</code> 兩處共用；接了院方資料時 <code>tabletOnBed</code> 只把有綁定的平板畫在床上</td>
+</tr>
+<tr>
+<td>導覽的「一頁裡的一段」</td>
+<td><code>NavItemDefinition.partOf</code>：<code>viewFor</code> 不給連結、放進 <code>NavigationView.sections</code>；<code>isAvailable</code> 連所屬頁一起看；<code>PRIMARY</code> 擋下。<code>DISCHARGE_EDUCATION</code> 是第一個</td>
+</tr>
+<tr>
+<td>一鍵展示</td>
+<td><code>npm run demo:patient</code>（<code>apps/api/scripts/demo-patient.ts</code>）：資料庫放在 <code>DATABASE_URL</code> 旁的 <code>demo/</code>（DEP-37 擋暫存目錄）、<code>nest build</code> 後以 <code>dist/main.js</code> 起後端、模擬院方 API 用新的 <code>HOSPITAL_API_SIM_IN_PROGRESS_MINUTES</code>；截圖在 Windows 經 PowerShell <code>Start-Process -Wait</code> 叫 Chrome</td>
+</tr>
+<tr>
+<td>驗收</td>
+<td><code>verify:iteration17-1</code>（6 步，不需後端）；依實作規格書 1.1 第四次改寫 <code>verify:iteration14-1</code>、<code>14-2</code>、<code>15</code>、<code>15:api</code>、<code>16:api</code>。<strong><code>15:api</code>、<code>16:api</code> 1006 沒有跑</strong>（午夜前後拒絕執行）</td>
+</tr>
+</tbody>
+</table>
 <h3 id="迭代-17跑馬燈內容由-ai-生成護理師核准1005">迭代 17：跑馬燈內容由 AI 生成、護理師核准（1005）<a class="headerlink" href="#迭代-17跑馬燈內容由-ai-生成護理師核准1005" title="Permanent link">&para;</a></h3>
 <p>護理師只核准或退回 AI 的「標題：內容」草稿；病人端只收已核准的。送進 AI 的只有衛教主題（SRS 附錄 C.6）或公告事由，<strong>沒有任何病人資料</strong>；格式不對或超過標題 12 字、內容 60 字就重新生成，最多三次。
 「一句話」與「內容留白時播一句話」的退路一起拿掉。驗收 <code>verify:iteration17</code>（8 步）與 <code>verify:iteration17:api</code>（9 步）全綠，五支既有腳本依實作規格書 1.1 第三次跟著改（<code>verify:iteration6</code>、<code>14</code>、<code>14-2</code>、<code>14:api</code>、<code>16:api</code>）。
@@ -6459,6 +6585,8 @@ npm<span class="w"> </span>run<span class="w"> </span>verify:iteration14-5<span 
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration15<span class="w">  </span><span class="c1"># 迭代 15 — 7 步（不需後端）；另有 :api 12 步（要模擬院方 API）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration16<span class="w">  </span><span class="c1"># 迭代 16 — 7 步（不需後端）；另有 :api 8 步（要模擬院方 API）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17<span class="w">  </span><span class="c1"># 迭代 17 — 8 步（不需後端）；另有 :api 9 步（模型用模擬即可）</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-1<span class="w">  </span><span class="c1"># 17.1 — 6 步（不需後端）</span>
+npm<span class="w"> </span>run<span class="w"> </span>demo:patient<span class="w">        </span><span class="c1"># 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot &lt;檔名&gt; 直接截圖</span>
 npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w">           </span><span class="c1"># 六支盤點腳本（不需後端），0926 起多了 check:container</span>
 </code></pre></div>
 <p>腳本都會建立少量標記過的合成資料並逐項斷言，涵蓋主線流程、錯誤路徑、權限隔離、冪等去重、稽核事件。<strong>改動後請全部跑過。</strong></p>
@@ -6474,7 +6602,7 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 離院衛教與班表、成效基準首波是關閉的，因此先確認關著時真的擋得住，再暫時提供、驗完關回去——
 <strong>驗收腳本不該因為預設是關的就跳過那一段，也不該把它留在開著的狀態。</strong></p>
 <p>其中 <code>verify:iteration2</code> 改了一處，而且只有這一處：FR-N10 讓「只填自由文字即可結案」不再成立，那一段跟著改成新的結案方式。<strong>迭代 2 原本要驗的行為一條都沒有放寬</strong>——狀態轉換、留下處理者、總覽不再顯示待處理，斷言全部保留。這是目前唯一一次刻意改動既有驗收腳本，理由記在《實作規格書》1.1 節；其餘情況一律不得以「配合新功能」為由修改既有腳本。迭代 6 與迭代 7 都沒有再動過任何一支——迭代 7 的解除綁定回應只多了兩個欄位，既有欄位一個都沒有動，因此既有斷言原封不動仍然成立。</p>
-<p>完整的手動測試步驟另有<a href="../../testing/manual-test-guide/">測試手冊</a>：主手冊加迭代 3～17 二十本分冊，<strong>共 1021 個可勾選的測試項</strong>（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項；0930 定版時 894 項）。迭代 17 起項次改用兩個字母（<code>aa</code>）。
+<p>完整的手動測試步驟另有<a href="../../testing/manual-test-guide/">測試手冊</a>：主手冊加迭代 3～17 二十一本分冊，<strong>共 1051 個可勾選的測試項</strong>（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項；0930 定版時 894 項）。迭代 17 起項次改用兩個字母（<code>aa</code>）。
 0919 以前那幾冊要人眼與實機的部分仍然成立（迭代 3 的總覽螢幕連續 4 小時與拔網路、迭代 6 輪播的四節手指確認、迭代 8 標 ⚠️ 的十一項、迭代 9 的三條畫面護欄），
 0926 之後的幾冊，<strong>腳本驗不到、還沒走的</strong>集中在這幾處：</p>
 <ul>

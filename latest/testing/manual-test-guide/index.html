@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/">
       
       
-        <link rel="prev" href="../../notes/idh-reference-survey/">
+        <link rel="prev" href="../../notes/iteration-17-1-fixes/">
       
       
         <link rel="next" href="../iteration-3/">
@@ -1374,6 +1374,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2622,6 +2650,34 @@
     
   
     迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 分冊
   
 
     
@@ -4094,7 +4150,7 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 17 · 136 條 API 路由 · 109 種稽核動作。
+對應版本：迭代 17.1 · 135 條 API 路由 · 109 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
 <strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-17-分冊">§13 分冊索引</a>。</p>
 </blockquote>
@@ -5025,7 +5081,7 @@ taskkill<span class="w"> </span>//PID<span class="w"> </span><span class="m">332
 <p>改了後端程式碼時，<code>npm run dev</code> 用的是 <code>nest start --watch</code>，會<strong>自動重新編譯並重新啟動</strong>，不必手動關。此時護理端的即時總覽會短暫顯示「串流中斷，改為定時更新」，後端起來後自動變回「即時連線中」。</p>
 </blockquote>
 <h2 id="09--api-附錄">09 · API 附錄<a class="headerlink" href="#09--api-附錄" title="Permanent link">&para;</a></h2>
-<p>後端啟動時會印出完整路由清單，目前共 <strong>136 條</strong>，下表逐條列出（迭代 16 拿掉的兩條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
+<p>後端啟動時會印出完整路由清單，目前共 <strong>135 條</strong>，下表逐條列出（迭代 16 拿掉的兩條、迭代 17.1 拿掉的一條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
 <h3 id="怎麼帶憑證">怎麼帶憑證<a class="headerlink" href="#怎麼帶憑證" title="Permanent link">&para;</a></h3>
 <p>護理端用 <strong>JWT</strong>；病人端平板用<strong>三個標頭</strong>（序號＋金鑰，寫入資料時再加 Session Token）。</p>
 <p><em>取得護理端權杖並呼叫（bash）</em></p>
@@ -5746,9 +5802,9 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>（迭代 15）手動再抓一次</td>
 </tr>
 <tr>
-<td><code>PUT /api/patients/:id/preferred-device</code></td>
-<td>binding:manage</td>
-<td>（迭代 15）把平板配給病人，之後他每次透析自動接上</td>
+<td>~~<code>PUT /api/patients/:id/preferred-device</code>~~</td>
+<td>~~binding:manage~~</td>
+<td>~~（迭代 15）把平板配給病人，之後他每次透析自動接上~~ <strong>迭代 17.1 拿掉</strong>：平板每次透析由護理師配（<code>POST /api/bindings</code>）</td>
 </tr>
 <tr>
 <td><code>GET /api/patients/:id/latest-vital</code></td>
@@ -5804,7 +5860,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 </table>
 <blockquote>
 <p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-17/">迭代 17</a> 各分冊（索引見 §13）。
-本表逐條對齊後端啟動時印出的路由清單（目前 136 條；1005 補齊迭代 10～17 新增的 22 條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+本表逐條對齊後端啟動時印出的路由清單（目前 135 條；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>h1</code> <strong>［終端機］</strong> 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
@@ -6090,10 +6146,15 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <td>護理師不再寫衛教與公告，<strong>只核准 AI 生成的「標題：內容」</strong>，核准即上架、沒核准的病人端收不到；沒有 AI 時衛教草稿隨版本帶入、公告由護理師寫；簡易版草稿卡核准一步、退回換下一份、拖到某一床；專業版修改後核准、上下架時間；標題 12 字、內容 60 字的上限；兩端沒有「一句話」；AI 呼叫不含病人資料</td>
 <td><code>aa1</code>–<code>aa36</code></td>
 </tr>
+<tr>
+<td><a href="../iteration-17-1/">迭代 17.1 — 停用統一、把病人拖到平板、一鍵展示病人端</a></td>
+<td>簡易版<strong>把病人拖到平板</strong>（兩種環境都是），接了院方資料時平板自己跑到那一床、復原不算更正院方資料；「鎖定」都叫「停用」、只在系統管理、正在透析的停用不了；病人頁沒有「配給的平板」；護理端的「公告與院內衛教」「結束與離院衛教」（離院衛教併成一段）；<strong><code>npm run demo:patient</code> 不必進院就看得到病人透析到一半的畫面</strong>、可直接截圖</td>
+<td><code>aa37</code>–<code>aa66</code></td>
+</tr>
 </tbody>
 </table>
 <p>走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。</p>
-<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（二十本分冊的「前置」都建立在這些上面）：</p>
+<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（二十一本分冊的「前置」都建立在這些上面）：</p>
 <table>
 <thead>
 <tr>
