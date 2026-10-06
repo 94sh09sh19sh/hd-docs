@@ -1207,6 +1207,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-172簡易版中間改成平板病人框重新整理與排序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-171停用統一把病人拖到平板一鍵展示病人端1006" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2214,6 +2225,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2871,6 +2910,34 @@
     
   
     迭代 17.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 分冊
   
 
     
@@ -4296,6 +4363,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-172簡易版中間改成平板病人框重新整理與排序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-171停用統一把病人拖到平板一鍵展示病人端1006" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4536,7 +4614,7 @@
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
 <p><strong>適用讀者</strong>：接手或協作的工程師
 <strong>報告日期</strong>：2026-10-06
-<strong>版本</strong>：迭代 17.1 完成（master）
+<strong>版本</strong>：迭代 17.2 完成（master）
 <strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
 <blockquote>
 <p>本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -6162,6 +6240,42 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 </tr>
 </tbody>
 </table>
+<h3 id="迭代-172簡易版中間改成平板病人框重新整理與排序1007">迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）<a class="headerlink" href="#迭代-172簡易版中間改成平板病人框重新整理與排序1007" title="Permanent link">&para;</a></h3>
+<p>使用者看了 1006 的簡易版截圖提出兩件事（《<a href="../../notes/iteration-17-2-fixes/">迭代 17.2 修正紀錄</a>》）。工程上要知道的：</p>
+<table>
+<thead>
+<tr>
+<th>要知道的</th>
+<th>在哪裡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中間是平板</td>
+<td><code>simple/TabletCell.tsx</code>（取代 <code>BedCell.tsx</code>）；<code>model.ts</code> 的 <code>shownTablets</code>（沒停用的、依序號）、<code>tabletView</code>、<code>tabletBed</code>（接了院方資料只有服務中的平板有床號）。平板格是 <code>DropZone</code>，<code>Pickable</code> 不再兼放置區；<code>DragItem</code> 只剩 <code>PATIENT</code>、<code>NEW_PATIENT</code>、<code>CONTENT</code>、<code>DRAFT</code>，<code>DropTarget</code> 沒有 <code>BED</code></td>
+</tr>
+<tr>
+<td>右邊兩框</td>
+<td><code>Trays.tsx</code> 拿掉 <code>NurseTray</code>、<code>TabletTray</code>、<code>TabletChip</code>；<code>--c-zone-nurse</code>、<code>--c-zone-tablet</code> 與 <code>check:ui:design</code> 的四列搭配一起拿掉；簡易版不再呼叫 <code>listShifts</code>、<code>assignShiftBeds</code></td>
+</tr>
+<tr>
+<td>病人框順序</td>
+<td><code>model.ts</code> 的 <code>trayOrder</code>：療程 <code>IN_PROGRESS</code> 的依 <code>startedAt</code> 由晚到早，其餘 <code>Intl.Collator('zh-TW-u-co-stroke')</code>；<code>verify:iteration17-2</code> 用 TypeScript 編譯器把 <code>model.ts</code> 轉成 JavaScript 載入、實際跑一次</td>
+</tr>
+<tr>
+<td>重新整理</td>
+<td><code>Workbench.tsx</code> 的 <code>refreshFromHospital</code> → <code>api.runHospitalSync()</code> → <code>reload()</code>；<code>POST /hospital-sync/run</code> 權限改 <code>PATIENT_MONITOR</code>（<code>HospitalSyncService.run</code> 本來就共用進行中的那一次）；圖示 <code>refresh-cw</code> 登記</td>
+</tr>
+<tr>
+<td>沒接院方資料時的床</td>
+<td><code>actions.tsx</code> 的 <code>setTabletBed</code>（取代 <code>moveTablet</code>，同一支 <code>setDeviceBed</code>）；<code>TabletCell</code> 的床號按鈕要 <code>DEVICE_MANAGE</code></td>
+</tr>
+<tr>
+<td>驗收</td>
+<td><code>verify:iteration17-2</code>（6 步，不需後端）；依實作規格書 1.1 第五次改寫 <code>verify:iteration14</code>、<code>14-1</code>、<code>14-2</code>、<code>15</code>、<code>17</code>、<code>17-1</code>。接了院方資料的畫面還沒在瀏覽器看過（午夜 <code>demo:patient</code> 拒跑）</td>
+</tr>
+</tbody>
+</table>
 <h3 id="迭代-171停用統一把病人拖到平板一鍵展示病人端1006">迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）<a class="headerlink" href="#迭代-171停用統一把病人拖到平板一鍵展示病人端1006" title="Permanent link">&para;</a></h3>
 <p>使用者一次提出七件事（《<a href="../../notes/iteration-17-1-fixes/">迭代 17.1 修正紀錄</a>》）。工程上要知道的：</p>
 <table>
@@ -6586,6 +6700,7 @@ npm<span class="w"> </span>run<span class="w"> </span>verify:iteration15<span cl
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration16<span class="w">  </span><span class="c1"># 迭代 16 — 7 步（不需後端）；另有 :api 8 步（要模擬院方 API）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17<span class="w">  </span><span class="c1"># 迭代 17 — 8 步（不需後端）；另有 :api 9 步（模型用模擬即可）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-1<span class="w">  </span><span class="c1"># 17.1 — 6 步（不需後端）</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-2<span class="w">  </span><span class="c1"># 17.2 — 6 步（不需後端）</span>
 npm<span class="w"> </span>run<span class="w"> </span>demo:patient<span class="w">        </span><span class="c1"># 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot &lt;檔名&gt; 直接截圖</span>
 npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w">           </span><span class="c1"># 六支盤點腳本（不需後端），0926 起多了 check:container</span>
 </code></pre></div>

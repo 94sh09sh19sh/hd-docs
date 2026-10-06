@@ -1472,6 +1472,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4152-迭代-172簡易版中間改成平板病人框重新整理與排序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.2 迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2246,6 +2257,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2903,6 +2942,34 @@
     
   
     迭代 17.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 分冊
   
 
     
@@ -4427,6 +4494,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4152-迭代-172簡易版中間改成平板病人框重新整理與排序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.2 迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5050,6 +5128,48 @@
 <td><code>verify:iteration14-1</code> 第 7 步</td>
 <td>「BedCell 與 Trays 各自呼叫 <code>enrollmentVisual</code>」改成「兩處共用的 <code>TabletChip</code> 呼叫它」</td>
 <td>「平板標籤畫出尚未佈建」照驗</td>
+</tr>
+</tbody>
+</table>
+<p><strong>迭代 17.2 是第五次</strong>（1007）：使用者指示簡易版中間從床位圖改成平板、右邊只留病人與公告與院內衛教兩框。床位格（<code>BedCell.tsx</code>）、平板框、護理師框與「拖到床位」這種放置區都不在了，讀那些檔案與名稱的腳本不改就跑不下去。做法照舊——<strong>還成立的行為照驗、換一條路驗，檢查內容不放寬</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration14</code> 第 5、6 步</td>
+<td>拿得起來的東西從五種（含護理師、平板）改成三種；讀的檔從 <code>BedCell.tsx</code> 改成 <code>TabletCell.tsx</code>；「簡易版只用既有端點」的加法清單多 <code>runHospitalSync</code>（專業版系統管理也用），「兩端同一支」的清單以它換掉只剩專業版用的 <code>assignShiftBeds</code></td>
+<td>「每一種拿得起來的都用 Pickable」「清單外的一支都不准用」判準不變</td>
+</tr>
+<tr>
+<td><code>verify:iteration14-1</code> 第 7 步</td>
+<td>「兩處共用的 <code>TabletChip</code> 標尚未佈建」改成「中間的 <code>TabletCell</code> 標尚未佈建，而且沒有第二個平板畫法」</td>
+<td>「平板畫出尚未佈建」照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration14-2</code> 第 1、3、4 步</td>
+<td>面板掛「超出畫面就翻過去」改驗 <code>TabletCell</code>；「平板框只收一份清單、停用的不在裡面」改驗中間的 <code>shownTablets</code>；草稿卡的放置區從「任何一床」改成「任何一台有床號的平板」</td>
+<td>面板翻轉、停用的不出現、草稿卡拖到某處＝核准照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration15</code> 第 1、2 步</td>
+<td><code>fromBed</code> 改名 <code>fromTablet</code>；「沒有平板、正在透析的病人畫在床位格上」改成「在病人框裡標出來、拖得到下機」；「待確認下機」多驗病人框的角落圖示</td>
+<td>「看得到、下得了機、待確認下機點一下或拖下機就確認」照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration17</code> 第 3、4 步</td>
+<td>掃「一句話」的檔案清單換成 <code>TabletCell.tsx</code>；「拖到某一床＝只在那一床播」改成「拖到某一台有床號的平板＝只在它那一床播」</td>
+<td>「兩端沒有一句話」「核准並只在一床播」照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration17-1</code> 第 1、3 步</td>
+<td>「病人與＋不拖到床位」改成「沒有床位這種放置區」；「平板框與床位格共用 <code>TabletChip</code>、<code>Pickable</code> 兼放置區」改成「中間的平板格整格是放置區、點選替代照樣有」；「只有服務中的平板畫在床上」改成「只有服務中的平板標床號」</td>
+<td>放置區是平板、配平板一步可復原、接了院方資料時沒在用的平板不跟著舊床走，照驗</td>
 </tr>
 </tbody>
 </table>
@@ -8852,6 +8972,39 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 其中三支依 1.1 第四次改寫；<code>verify:iteration14:api</code>、<code>14-2:api</code>、<code>17:api</code> 對著 <code>demo:patient</code> 的後端全部通過。
 <strong><code>verify:iteration15:api</code>、<code>16:api</code> 已改寫但 1006 沒有跑</strong>：兩支在午夜前後拒絕執行，跑的時候已過 23 點（分冊 <code>aa66</code>）。
 在瀏覽器實際看過病人端 1280×800 與 800×1280、護理端簡易版 1366×768 的配平板與復原、系統管理的「平板停用」。</p>
+<h3 id="4152-迭代-172簡易版中間改成平板病人框重新整理與排序1007">4.15.2 迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）<a class="headerlink" href="#4152-迭代-172簡易版中間改成平板病人框重新整理與排序1007" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-07 完成。</strong> 使用者看了 1006 的簡易版截圖提出兩件事，紀錄在《<a href="../../notes/iteration-17-2-fixes/">迭代 17.2 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-17-2/">迭代 17.2 分冊</a>》（<code>aa67</code>～<code>aa86</code>）。不是新的範圍，迭代 18 的內容一項都沒動。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>改了什麼</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>簡易版中間改成平板</td>
+<td>床位格換成平板格（<code>TabletCell</code>），一格一台沒停用的平板、依序號排，整格是放病人的地方；右上角是床號（接了院方資料由院方補，沒接時點床號設床）；平板框、護理師框拿掉</td>
+<td>FR-N15、FR-N16</td>
+</tr>
+<tr>
+<td>2</td>
+<td>病人框重新整理與排序</td>
+<td><code>refresh-cw</code> 立即抓一次院方資料（<code>POST /hospital-sync/run</code>，權限放寬到一般護理師）；順序 <code>trayOrder</code>：正在透析的在上面、越晚開始越上面，其餘依姓名筆畫</td>
+<td>FR-N15、FR-S15</td>
+</tr>
+</tbody>
+</table>
+<p><strong>後端只改一行</strong>：<code>POST /hospital-sync/run</code> 的權限從「營運參數調整」改成「看即時總覽」。配平板時平板跟著院方的床是 17.1 就有的（<code>followSessionBed</code>）。
+<strong>順手更正 17.1 的一個缺陷</strong>：平板框要有裝置管理權限才出現，一般護理師在接了院方資料時找不到平板可以配；平板移到中間之後人人看得到。</p>
+<p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-2</code>（新增，6 步，不需後端；病人框的順序拿 <code>trayOrder</code> 實際跑一次假資料）全部通過；<code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>check:ui</code>、<code>check:ui:design</code> 全綠，其中六支依 1.1 第五次改寫。
+在開發機（沒接院方資料）以無頭 Chrome 在 1366×768 實際看過：中間的平板格、右上角床號、拿起病人時能配的平板整格亮起、配好與復原列。
+<strong>接了院方資料的畫面還沒在瀏覽器看過</strong>：做的時候是午夜，<code>npm run demo:patient</code> 在午夜前後兩小時拒跑（分冊 §17.2.1、§17.2.2 要白天做）。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -9184,6 +9337,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~17.1~~</td>
 <td>~~停用統一、把病人拖到平板、一鍵展示病人端（1006）~~</td>
 <td><strong>已完成（1006）</strong>，腳本驗收與開發機截圖通過；<code>verify:iteration15:api</code>、<code>16:api</code> 待白天跑</td>
+<td>無</td>
+</tr>
+<tr>
+<td>~~17.2~~</td>
+<td>~~簡易版中間改成平板、病人框重新整理與排序（1007）~~</td>
+<td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過；接了院方資料的畫面待白天以 <code>demo:patient</code> 看</td>
 <td>無</td>
 </tr>
 <tr>

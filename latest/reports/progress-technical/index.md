@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 技術進度報告
 
-**適用讀者**：接手或協作的工程師 **報告日期**：2026-10-06 **版本**：迭代 17.1 完成（master） **Repo**：`94sh09sh19sh/hd-tablet-care`
+**適用讀者**：接手或協作的工程師 **報告日期**：2026-10-06 **版本**：迭代 17.2 完成（master） **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化： **1001 第二次進院 B 級部分成功**——容器在院內主機上起來，護理端登入 `Failed to fetch`（`CORS_ORIGINS` 不放行護理端的來源），見部署手冊第十四冊之四、第十五冊之三； **1005 新版需求**：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成**迭代 15～17，同日完成**（實作規格書 0.5、4.13～4.15）。 三個迭代都在模擬院方 API 上驗收；院方 API 的實際長相要第三次進院以探測工具看一次（實作規格書 4.19）。
 >
@@ -742,6 +742,19 @@ ______________________________________________________________________
 | 開發機看畫面     | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容                                                                                                      |
 | 順手更正         | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查                                           |
 
+### 迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）
+
+使用者看了 1006 的簡易版截圖提出兩件事（《[迭代 17.2 修正紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/iteration-17-2-fixes/index.md)》）。工程上要知道的：
+
+| 要知道的           | 在哪裡                                                                                                                                                                                                                                                                                                |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 中間是平板         | `simple/TabletCell.tsx`（取代 `BedCell.tsx`）；`model.ts` 的 `shownTablets`（沒停用的、依序號）、`tabletView`、`tabletBed`（接了院方資料只有服務中的平板有床號）。平板格是 `DropZone`，`Pickable` 不再兼放置區；`DragItem` 只剩 `PATIENT`、`NEW_PATIENT`、`CONTENT`、`DRAFT`，`DropTarget` 沒有 `BED` |
+| 右邊兩框           | `Trays.tsx` 拿掉 `NurseTray`、`TabletTray`、`TabletChip`；`--c-zone-nurse`、`--c-zone-tablet` 與 `check:ui:design` 的四列搭配一起拿掉；簡易版不再呼叫 `listShifts`、`assignShiftBeds`                                                                                                                 |
+| 病人框順序         | `model.ts` 的 `trayOrder`：療程 `IN_PROGRESS` 的依 `startedAt` 由晚到早，其餘 `Intl.Collator('zh-TW-u-co-stroke')`；`verify:iteration17-2` 用 TypeScript 編譯器把 `model.ts` 轉成 JavaScript 載入、實際跑一次                                                                                         |
+| 重新整理           | `Workbench.tsx` 的 `refreshFromHospital` → `api.runHospitalSync()` → `reload()`；`POST /hospital-sync/run` 權限改 `PATIENT_MONITOR`（`HospitalSyncService.run` 本來就共用進行中的那一次）；圖示 `refresh-cw` 登記                                                                                     |
+| 沒接院方資料時的床 | `actions.tsx` 的 `setTabletBed`（取代 `moveTablet`，同一支 `setDeviceBed`）；`TabletCell` 的床號按鈕要 `DEVICE_MANAGE`                                                                                                                                                                                |
+| 驗收               | `verify:iteration17-2`（6 步，不需後端）；依實作規格書 1.1 第五次改寫 `verify:iteration14`、`14-1`、`14-2`、`15`、`17`、`17-1`。接了院方資料的畫面還沒在瀏覽器看過（午夜 `demo:patient` 拒跑）                                                                                                        |
+
 ### 迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）
 
 使用者一次提出七件事（《[迭代 17.1 修正紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/iteration-17-1-fixes/index.md)》）。工程上要知道的：
@@ -954,6 +967,7 @@ npm run verify:iteration15  # 迭代 15 — 7 步（不需後端）；另有 :ap
 npm run verify:iteration16  # 迭代 16 — 7 步（不需後端）；另有 :api 8 步（要模擬院方 API）
 npm run verify:iteration17  # 迭代 17 — 8 步（不需後端）；另有 :api 9 步（模型用模擬即可）
 npm run verify:iteration17-1  # 17.1 — 6 步（不需後端）
+npm run verify:iteration17-2  # 17.2 — 6 步（不需後端）
 npm run demo:patient        # 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot <檔名> 直接截圖
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container
 ```

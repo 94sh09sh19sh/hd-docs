@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/">
       
       
-        <link rel="prev" href="../../notes/iteration-17-1-fixes/">
+        <link rel="prev" href="../../notes/iteration-17-2-fixes/">
       
       
         <link rel="next" href="../iteration-3/">
@@ -1402,6 +1402,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2678,6 +2706,34 @@
     
   
     迭代 17.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 分冊
   
 
     
@@ -4150,7 +4206,7 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 17.1 · 135 條 API 路由 · 109 種稽核動作。
+對應版本：迭代 17.2 · 135 條 API 路由 · 109 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
 <strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-17-分冊">§13 分冊索引</a>。</p>
 </blockquote>
@@ -5798,8 +5854,8 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 </tr>
 <tr>
 <td><code>POST /api/hospital-sync/run</code></td>
-<td>operational-setting:manage</td>
-<td>（迭代 15）手動再抓一次</td>
+<td>~~operational-setting:manage~~ patient:monitor</td>
+<td>（迭代 15）手動再抓一次。<strong>迭代 17.2 起一般護理師也能按</strong>：簡易版病人框的重新整理就是這一支</td>
 </tr>
 <tr>
 <td>~~<code>PUT /api/patients/:id/preferred-device</code>~~</td>
@@ -6151,10 +6207,15 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <td>簡易版<strong>把病人拖到平板</strong>（兩種環境都是），接了院方資料時平板自己跑到那一床、復原不算更正院方資料；「鎖定」都叫「停用」、只在系統管理、正在透析的停用不了；病人頁沒有「配給的平板」；護理端的「公告與院內衛教」「結束與離院衛教」（離院衛教併成一段）；<strong><code>npm run demo:patient</code> 不必進院就看得到病人透析到一半的畫面</strong>、可直接截圖</td>
 <td><code>aa37</code>–<code>aa66</code></td>
 </tr>
+<tr>
+<td><a href="../iteration-17-2/">迭代 17.2 — 簡易版中間改成平板、病人框重新整理與排序</a></td>
+<td>簡易版<strong>中間是平板</strong>，整格是放病人的地方、右上角自動出現床號；右邊只剩病人與公告與院內衛教；病人框的<strong>重新整理</strong>（立即抓一次院方資料、一般護理師也能按）與順序（正在透析的在上面、越晚開始越上面，其餘依姓名筆畫）；沒接院方資料時點床號設床</td>
+<td><code>aa67</code>–<code>aa86</code></td>
+</tr>
 </tbody>
 </table>
 <p>走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。</p>
-<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（二十一本分冊的「前置」都建立在這些上面）：</p>
+<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（二十二本分冊的「前置」都建立在這些上面）：</p>
 <table>
 <thead>
 <tr>
