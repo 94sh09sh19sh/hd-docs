@@ -157,7 +157,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `gender` | `TEXT?` | 性別 | 選填。seed 產生 `'M'` / `'F'`，**應用層目前未強制列舉**，屬已知粗糙處 |
 | `note` | `TEXT?` | 備註欄，護理端自由填寫 | 自由文字。⛔ 不要用它承載結構化資料（違反 6.1）— 需要結構就開欄位或開表。測試資料一律標註「合成測試資料，非真實病人」 |
 | `active` | `BOOL` | 這位病人是否仍在本中心接受治療。轉院或結案的病人設為否，但資料保留 | `DEFAULT true`。有索引。**停用是設 false，不是刪除** — 刪除會連帶影響歷史綁定與稽核 |
-| `preferred_device_id` | `TEXT?` → `devices` | （迭代 15）**配給這位病人的平板**。院方資料判定透析開始時，系統就以這一台自動開始這次療程；護理師每位病人只配一次 | `ON DELETE NO ACTION`，有索引。**不設唯一**：一台平板早班給一位、午班給另一位是常態。配與取消都寫 `PATIENT_PREFERRED_DEVICE_SET` |
+| `preferred_device_id` | `TEXT?` → `devices` | （迭代 15）~~**配給這位病人的平板**。院方資料判定透析開始時，系統就以這一台自動開始這次療程；護理師每位病人只配一次~~ **1006（迭代 17.1）起不再使用**：平板每次透析由護理師配，不長期配給病人 | `ON DELETE NO ACTION`，有索引。**程式不讀不寫**，欄位留著不刪（只做加法），已經填過的值不清；共用型別 `PatientSummary` 已沒有這個欄位。舊的 `PATIENT_PREFERRED_DEVICE_SET` 稽核照舊查得到，不會再產生新的 |
 | `created_at` | `TS` | 建檔時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 
@@ -182,7 +182,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `api_key_hash` | `TEXT` | 平板身分金鑰的雜湊。平板要向後端取得綁定狀態時，必須出示金鑰證明自己是登記在案的裝置 | SHA-256（金鑰是 256-bit 隨機值而非使用者密碼，故不需 bcrypt）。平板以 `x-device-key` 標頭送出。⛔ 明文金鑰只在註冊當下產生一次，不存入資料庫 |
 | `mdm_enrolled` | `BOOL` | 是否已納入行動裝置管理 | `DEFAULT false`。本階段 MDM 只做**介面層**（《實作規格書》3.3），此欄反映的是介面層的狀態 |
 | `mdm_enrollment_id` | `TEXT?` | MDM 系統給這台平板的註冊編號 | 選填。Android Enterprise 的識別碼，本階段為介面層預留 |
-| `mdm_locked` | `BOOL` | 是否已遠端鎖定 | `DEFAULT false`。**與 `status` 正交** — 一台鎖定中的平板仍可能同時是 `BOUND`。不要把兩者合併成單一狀態機 |
+| `mdm_locked` | `BOOL` | 是否已停用（1006 以前畫面上叫「遠端鎖定」） | `DEFAULT false`。**與 `status` 正交**，不要把兩者合併成單一狀態機。1006（迭代 17.1）起畫面上的「停用」就是這一欄（`status` 的 `RETIRED` 沒有流程會設定）；**正在服務病人的平板後端不讓停用**，停用時 `bed_no` 一併清空。稽核動作 `DEVICE_MDM_LOCKED`／`UNLOCKED` 的中文名稱改成「停用平板」「解除停用平板」 |
 | `mdm_kiosk_url` | `TEXT?` | Kiosk（單一 App）模式要鎖定顯示的網址 | 選填。設定時寫 `DEVICE_MDM_KIOSK_CONFIGURED` 稽核 |
 | `last_seen_at` | `TS?` | 這台平板最後一次與後端通訊的時間。用來發現離線或故障的機器 | 平板請求時更新。⚠️ 更新頻繁，避免放進頻繁查詢的交易中 |
 | `kiosk_foreground` | `BOOL?` | 平板最後一次回報時是否停在病人端畫面上（迭代 10 逸出偵測；迭代 12 起在外殼裡是「可見而且仍釘選」） | 空值＝從未回報（還沒裝外殼），與「已跳出」分開 |
@@ -1096,7 +1096,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `nav_key` | `TEXT` | 哪一個功能 | 唯一鍵。合法值為 `@hd/shared` 的 `NavItemKey`（17 項） |
+| `nav_key` | `TEXT` | 哪一個功能 | 唯一鍵。合法值為 `@hd/shared` 的 `NavItemKey`（17 項）。1006（迭代 17.1）起 `DISCHARGE_EDUCATION` 是「結束與離院衛教」頁裡的一段（定義帶 `partOf`）：沒有自己的連結，`placement` 不收 `PRIMARY`，所屬那一頁關了它也跟著關；畫面名稱 `CAROUSEL` 叫「公告與院內衛教」、`EDUCATION` 叫「結束與離院衛教」（名稱在共用常數，不在這張表） |
 | `placement` | `TEXT` | 主列／更多選單／關閉 | `PRIMARY` / `MENU` / `OFF`（`NavPlacement`）。⛔ **`OFF` 不是「藏起來」**：前端不註冊路由、後端回 404 |
 | `last_reason` | `TEXT?` | 上一次調整的理由 | 每次調整必填，長度下限由服務層把關 |
 | `changed_by_id` | `TEXT?` | 誰調的 | → `nurses.id` |

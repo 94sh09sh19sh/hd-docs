@@ -1,8 +1,8 @@
 # 血液透析平板照護輔助系統 — 技術進度報告
 
 **適用讀者**：接手或協作的工程師
-**報告日期**：2026-10-05
-**版本**：迭代 17 完成（master）
+**報告日期**：2026-10-06
+**版本**：迭代 17.1 完成（master）
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -848,6 +848,22 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
+### 迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）
+
+使用者一次提出七件事（《[迭代 17.1 修正紀錄](../notes/iteration-17-1-fixes.md)》）。工程上要知道的：
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| **不再自動接上平板** | `HospitalSyncService` 拿掉 `tryAutoBind`、`setPreferredDevice`；`PUT /patients/:id/preferred-device` 拿掉；`patients.preferred_device_id` 留著不讀不寫 |
+| 配平板時平板跟著療程的床 | `BindingService.followSessionBed`：直接用 `DeviceRepository.moveToBed`，**不經 `DevicesService.setBed`**（那一支會標「護理師手動換床」，之後同步就不跟院方換床）；目的床的平板正在服務別人就不搬 |
+| 手動解除不算更正 | `releaseByNurse` 只有 `NORMAL_DISCHARGE` 才 `markNurseModified`；手動解除後療程退回已排班，下一次同步照院方接回進行中 |
+| 開始時間 | 綁定交易裡，進行中且已有開始時間的療程不覆寫；同步在院方判定開始時把先配好的療程改成院方的開始時間；跨班別時進行中的那一筆也跟著換班別 |
+| 停用 | `DevicesService.setLocked`：有進行中綁定就 409；停用時清 `bed_no`。入口只剩專業版 `pages/SystemTabletsCard.tsx` |
+| 簡易版 | 放置區 `TABLET_SLOT`；`Pickable` 帶 `target` 時同時是放置區（`useDraggable` 與 `useDroppable` 掛同一個節點）；`TabletChip` 兩處共用；接了院方資料時 `tabletOnBed` 只把有綁定的平板畫在床上 |
+| 導覽的「一頁裡的一段」 | `NavItemDefinition.partOf`：`viewFor` 不給連結、放進 `NavigationView.sections`；`isAvailable` 連所屬頁一起看；`PRIMARY` 擋下。`DISCHARGE_EDUCATION` 是第一個 |
+| 一鍵展示 | `npm run demo:patient`（`apps/api/scripts/demo-patient.ts`）：資料庫放在 `DATABASE_URL` 旁的 `demo/`（DEP-37 擋暫存目錄）、`nest build` 後以 `dist/main.js` 起後端、模擬院方 API 用新的 `HOSPITAL_API_SIM_IN_PROGRESS_MINUTES`；截圖在 Windows 經 PowerShell `Start-Process -Wait` 叫 Chrome |
+| 驗收 | `verify:iteration17-1`（6 步，不需後端）；依實作規格書 1.1 第四次改寫 `verify:iteration14-1`、`14-2`、`15`、`15:api`、`16:api`。**`15:api`、`16:api` 1006 沒有跑**（午夜前後拒絕執行） |
+
 ### 迭代 17：跑馬燈內容由 AI 生成、護理師核准（1005）
 
 護理師只核准或退回 AI 的「標題：內容」草稿；病人端只收已核准的。送進 AI 的只有衛教主題（SRS 附錄 C.6）或公告事由，**沒有任何病人資料**；格式不對或超過標題 12 字、內容 60 字就重新生成，最多三次。
@@ -1082,6 +1098,8 @@ npm run verify:iteration14-5  # 14.5 — 5 步（不需後端）
 npm run verify:iteration15  # 迭代 15 — 7 步（不需後端）；另有 :api 12 步（要模擬院方 API）
 npm run verify:iteration16  # 迭代 16 — 7 步（不需後端）；另有 :api 8 步（要模擬院方 API）
 npm run verify:iteration17  # 迭代 17 — 8 步（不需後端）；另有 :api 9 步（模型用模擬即可）
+npm run verify:iteration17-1  # 17.1 — 6 步（不需後端）
+npm run demo:patient        # 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot <檔名> 直接截圖
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container
 ```
 
@@ -1103,7 +1121,7 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 
 其中 `verify:iteration2` 改了一處，而且只有這一處：FR-N10 讓「只填自由文字即可結案」不再成立，那一段跟著改成新的結案方式。**迭代 2 原本要驗的行為一條都沒有放寬**——狀態轉換、留下處理者、總覽不再顯示待處理，斷言全部保留。這是目前唯一一次刻意改動既有驗收腳本，理由記在《實作規格書》1.1 節；其餘情況一律不得以「配合新功能」為由修改既有腳本。迭代 6 與迭代 7 都沒有再動過任何一支——迭代 7 的解除綁定回應只多了兩個欄位，既有欄位一個都沒有動，因此既有斷言原封不動仍然成立。
 
-完整的手動測試步驟另有[測試手冊](../testing/manual-test-guide.md)：主手冊加迭代 3～17 二十本分冊，**共 1021 個可勾選的測試項**（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項；0930 定版時 894 項）。迭代 17 起項次改用兩個字母（`aa`）。
+完整的手動測試步驟另有[測試手冊](../testing/manual-test-guide.md)：主手冊加迭代 3～17 二十一本分冊，**共 1051 個可勾選的測試項**（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項；0930 定版時 894 項）。迭代 17 起項次改用兩個字母（`aa`）。
 0919 以前那幾冊要人眼與實機的部分仍然成立（迭代 3 的總覽螢幕連續 4 小時與拔網路、迭代 6 輪播的四節手指確認、迭代 8 標 ⚠️ 的十一項、迭代 9 的三條畫面護欄），
 0926 之後的幾冊，**腳本驗不到、還沒走的**集中在這幾處：
 
