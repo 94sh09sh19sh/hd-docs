@@ -434,8 +434,8 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `redaction_count` | `INT` | 移除了幾處可識別資訊 | `DEFAULT 0` |
 | `contains_real_patient_data` | `BOOL` | 這次請求是否帶有真實病人資料 | 呼叫端宣告**或**系統依病歷號判定（無法證明是合成資料即為真實）。為 true 且供應者在院外時一律擋下 |
 | `prompt_text` | `TEXT?` | 送給模型的提示，**已去識別化** | ⛔ **原始提示從不寫入資料庫**，去識別化在寫入之前完成（第 14 條）。被擋下的請求此欄為 NULL |
-| `output_text` | `TEXT?` | 模型回傳的內容 | 失敗或被擋下時為 NULL |
-| `error_message` | `TEXT?` | 失敗原因 | 不含推論伺服器的回應原文，避免夾帶提示內容 |
+| `output_text` | `TEXT?` | 模型回傳的內容 | 呼叫失敗或被擋下時為 NULL。**迭代 17.3 起有一種失敗有值**：輸出含簡體字或中國大陸用語而被退回重寫的那一次，記成 `FAILURE` 並留下模型寫的原文，查得到它為什麼被退回 |
+| `error_message` | `TEXT?` | 失敗原因 | 不含推論伺服器的回應原文，避免夾帶提示內容。用語不合格被退回的，開頭固定是「輸出含簡體字或中國大陸用語：」，後面列出哪個詞改成什麼（迭代 17.3） |
 | `content_expires_at` | `TS` | 提示與輸出內容的留存到期日 | 呼叫時設為 12 個月後（規範 8.2 建議值）。**期限未定案前只標記、不實際刪除** |
 | `actor_nurse_id` | `TEXT?` | 誰發起的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
 | `patient_id` | `TEXT?` | 與哪一位病人相關 | 外鍵 → `patients.id`，`ON DELETE NO ACTION`，有索引 |

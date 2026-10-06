@@ -1,8 +1,8 @@
 # 血液透析平板照護輔助系統 — 技術進度報告
 
 **適用讀者**：接手或協作的工程師
-**報告日期**：2026-10-06
-**版本**：迭代 17.2 完成（master）
+**報告日期**：2026-10-07
+**版本**：迭代 17.3 完成（master）
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -278,6 +278,7 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 - 閘道有兩個入口：`invoke()` 給 HTTP 端點，失敗拋例外；`attempt()`（迭代 4 新增）給背景工作，被擋或失敗時也回傳該次呼叫的紀錄 id，才能寫回工作結果
 - 切換 provider 只改設定：`verify:iteration4` 以備份還原檔另起一個 `LLM_PROVIDER=lab` 的後端，接到腳本內的本機假端點，驗證同一份程式只改環境變數即可切換，且帶真實病人資料的請求一次都沒送出去
 - **迭代 13 起 `lab`／`onprem` 的另一端是 AI 閘道容器**，不是推論端點本身；`LLM_MODEL_ID` 接閘道時留空，`/ai/status` 顯示閘道回報的模型。正式環境設定（`DEPLOYMENT_ENV=production`）下 `LLM_PROVIDER=lab` 直接拒絕啟動（DEP-40）
+- **迭代 17.3 起閘道多一道用語把關**：系統提示最後附上 `ZH_TW_SYSTEM_RULE`；輸出經 `@hd/shared` 的 `findZhTwIssues` 查到簡體字、中國大陸用語或台灣不這樣寫的字形，就記一列 `FAILURE`（留 `outputText`，`errorMessage` 開頭「輸出含簡體字或中國大陸用語」）、把 `zhTwRetryNote` 附進提示重送；背景用途最多 3 次、`SOP_ANSWER` 2 次，用完回 `LANGUAGE_REJECTED`（`invoke()` 轉成 422）
 
 ### 5.10 臨床資料來源介面層（FR-S05，迭代 3）
 
@@ -848,6 +849,19 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
+### 迭代 17.3：所有 AI 生成內容禁用簡體字與中國大陸用語（1007）
+
+使用者指示系統中所有 AI 生成的內容禁用支語與簡體字（《[迭代 17.3 修正紀錄](../notes/iteration-17-3-fixes.md)》）。工程上要知道的：
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 把關在閘道 | `AiGatewayService.attempt()` 的生成迴圈（見 5.9）。全系統只有這裡呼叫 `provider.generate`，`verify:iteration17-3` 步驟 7 會掃一次 |
+| 字表 | `packages/shared/zh-tw/` 三個 txt：`words.txt`（人工維護，160 組，37 個詞以註解放行）、`simplified.txt`（3795 字）、`variants.txt`（41 字），後兩份由 `scripts/zh-tw-data.mjs --opencc <目錄>` 從 OpenCC 字表產生。`npm run zh-tw:data` 產生 `packages/shared/src/zh-tw-data.ts`，**改 txt 一定要重新產生**，`-- --check` 只比對 |
+| 檢查函式 | `packages/shared/src/zh-tw.ts`：`findZhTwIssues`（較長的詞命中時不另報被它包住的短詞，與 hook 相同）、`describeZhTwIssues`、`zhTwRetryNote`；字表延到第一次用到才解析 |
+| 隨版本帶入的草稿 | `MarqueeDraftService.ensureBundleImported` 多查一次 `languageProblem`，不合格的不匯入、寫進稽核 |
+| 沒有動的 | 資料表、端點、稽核動作的種類、兩端畫面都沒動。`AiAttemptFailureKind` 多一個 `LANGUAGE_REJECTED`，呼叫端原本的 `if (!result.ok)` 照樣接住 |
+| 驗收 | `verify:iteration17-3`（7 步，不需後端、不需資料庫；閘道用替身組起來）；`verify:iteration3`、`4`、`17:api` 回歸未改 |
+
 ### 迭代 17.2：簡易版中間改成平板、病人框重新整理與排序（1007）
 
 使用者看了 1006 的簡易版截圖提出兩件事（《[迭代 17.2 修正紀錄](../notes/iteration-17-2-fixes.md)》）。工程上要知道的：
@@ -1113,6 +1127,8 @@ npm run verify:iteration16  # 迭代 16 — 7 步（不需後端）；另有 :ap
 npm run verify:iteration17  # 迭代 17 — 8 步（不需後端）；另有 :api 9 步（模型用模擬即可）
 npm run verify:iteration17-1  # 17.1 — 6 步（不需後端）
 npm run verify:iteration17-2  # 17.2 — 6 步（不需後端）
+npm run verify:iteration17-3  # 17.3 — 7 步（不需後端、不需資料庫）
+npm run zh-tw:data          # 17.3：改了 packages/shared/zh-tw/ 的詞庫之後重新產生資料檔；-- --check 只比對
 npm run demo:patient        # 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot <檔名> 直接截圖
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container
 ```
