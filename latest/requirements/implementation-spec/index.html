@@ -1505,6 +1505,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4155-迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.5 迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2493,6 +2504,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-5-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.5 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3242,6 +3281,34 @@
     
   
     迭代 17.4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.5 分冊
   
 
     
@@ -4799,6 +4866,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4155-迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.5 迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5482,6 +5560,24 @@
 <td><code>verify:iteration14</code> 第 1 步</td>
 <td>「首頁沒有姓名與病歷號」改成「首頁沒有病歷號」加「姓名只畫在基本資訊區那一處」</td>
 <td>病歷號照驗；「面板、圖、跑馬燈沒有姓名與病歷號」原樣驗；姓名多驗了只能出現一次。<code>verify:iteration6:api</code>、<code>16:api</code> 驗的是<strong>首頁資料</strong>沒有姓名，那一條仍然成立，沒有改</td>
+</tr>
+</tbody>
+</table>
+<p><strong>迭代 17.5 是第七次</strong>（1007）：使用者決定院方資料沒有預計結束時間時，三處進度統一用開始後四小時（院方硬性規定）。迭代 15 的腳本斷言「沒有預計結束時用綁定的有效期限」，不改就一定不通過。
+這一次也是<strong>需求本身改了</strong>（SRS 取捨表 1007 補的四小時規則），改成驗新的規則，其餘照舊：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration15</code> 第 4 步</td>
+<td>「療程進度條沒有預計結束時用綁定的有效期限」改成「用 <code>plannedDialysisEndMs</code>（開始後四小時）」</td>
+<td>「有預計結束就用它」「起點是透析開始、沒有院方資料時退回綁定時間」原樣驗；四小時的規則本身由 <code>verify:iteration17-5</code> 實際跑一次</td>
 </tr>
 </tbody>
 </table>
@@ -9399,7 +9495,50 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>後端與資料表都沒動</strong>。這是 0926 起「首頁只到床號」那條規則的反轉：鄰床看得到姓名，使用者知情決定；病歷號、面板、跑馬燈的限制不變。</p>
 <p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-4</code>（新增，5 步，不需後端）全部通過；<code>verify:iteration8</code>、<code>14</code>、<code>14-5</code>、<code>16</code>、<code>17-1</code>、<code>17-2</code>、<code>check:ui</code>、<code>check:ui:design</code> 全綠，其中 <code>verify:iteration14</code> 依 1.1 第六次改寫。
 在 <code>npm run demo:patient</code> 上另配三位透析中的病人，以無頭 Chrome 截了病人端 1280×800 與 800×1280 各兩張、護理端簡易版 1366×768 與 1920×1080 各一張（放在 1007 週報附錄）。
-<strong>截圖時發現一件既有的事</strong>：院方資料沒有預計結束時間時，護理端平板格的進度條改用「平板配上的時間」算，剛配上的病人透析了 100 分鐘仍接近 0%；病人端的進度條與面板的橫軸又各用另一個終點。三處要用哪一個終點待使用者決定，這次沒改（修正紀錄第 4 節）。<strong>1007 使用者決定</strong>：統一用開始後 4 小時——本透析中心透析一律四小時，是院方硬性規定；要改的是護理端 <code>progressOf</code> 與病人端 <code>App.tsx</code>，實作另排。</p>
+<strong>截圖時發現一件既有的事</strong>：院方資料沒有預計結束時間時，護理端平板格的進度條改用「平板配上的時間」算，剛配上的病人透析了 100 分鐘仍接近 0%；病人端的進度條與面板的橫軸又各用另一個終點。三處要用哪一個終點待使用者決定，這次沒改（修正紀錄第 4 節）。<strong>1007 使用者決定</strong>：統一用開始後 4 小時——本透析中心透析一律四小時，是院方硬性規定；要改的是護理端 <code>progressOf</code> 與病人端 <code>App.tsx</code>，~~實作另排~~ <strong>1007 迭代 17.5 已改</strong>（4.15.5）。</p>
+<h3 id="4155-迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007">4.15.5 迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）<a class="headerlink" href="#4155-迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-07 完成。</strong> 4.15.4 截圖時發現的既有問題，使用者決定三處統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定，不是建議。紀錄在《<a href="../../notes/iteration-17-5-fixes/">迭代 17.5 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-17-5/">迭代 17.5 分冊</a>》（<code>aa105</code>～<code>aa110</code>）。不是新的範圍，迭代 18 的內容一項都沒動。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>改了什麼</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>四小時寫在一處</td>
+<td><code>@hd/shared</code> 的 <code>DIALYSIS_SESSION_MINUTES = 240</code> 與 <code>plannedDialysisEndMs(開始, 預計結束)</code>：有預計結束用它，沒有、讀不懂或早於開始就是開始後四小時</td>
+<td>SRS 取捨表（1007）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>病人端進度條</td>
+<td>終點改用它，不再用綁定的有效期限</td>
+<td>FR-P14</td>
+</tr>
+<tr>
+<td>3</td>
+<td>面板橫軸</td>
+<td>改用它，檔內常數拿掉</td>
+<td>FR-P11</td>
+</tr>
+<tr>
+<td>4</td>
+<td>護理端平板格</td>
+<td>改用它；起點與病人端相同（透析開始，沒有院方資料時退回平板配上的時間），不再退回綁定進度</td>
+<td>FR-N15</td>
+</tr>
+</tbody>
+</table>
+<p><strong>後端與資料表都沒動</strong>。刻意沒改的兩處（專業版總覽與常駐總覽螢幕畫綁定進度、沒有預計結束時不判定「待確認下機」）列在修正紀錄第 4 節，待使用者決定。</p>
+<p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-5</code>（新增，5 步，不需後端；<code>plannedDialysisEndMs</code> 實際跑一次）全部通過；<code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>、<code>14-2</code>、<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code> 全綠，其中 <code>verify:iteration15</code> 依 1.1 第七次改寫。
+在 <code>npm run demo:patient</code> 上重截 1007 週報附錄的六張圖：沒有預計結束時間的 B1、B3，護理端平板格與病人端進度條、面板橫軸一致（17.4 時接近 0%）。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -9751,6 +9890,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~病人平板加回姓名與現在時間（1007）~~</td>
 <td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過；從病床的距離看得不看得清楚待實機</td>
 <td>無；實機待 Q-33</td>
+</tr>
+<tr>
+<td>~~17.5~~</td>
+<td>~~沒有預計結束時間時，三處進度統一用開始後四小時（1007）~~</td>
+<td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過</td>
+<td>無；院方資料多常缺這一欄待第三次進院探測</td>
 </tr>
 <tr>
 <td>18</td>
