@@ -2043,6 +2043,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2764,6 +2792,34 @@
     
   
     迭代 17.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 分冊
   
 
     
@@ -4289,7 +4345,7 @@
 <h3 id="24-0926-起的病人端版面首頁三區任務依時點出現">2.4 0926 起的病人端版面：首頁三區、任務依時點出現<a class="headerlink" href="#24-0926-起的病人端版面首頁三區任務依時點出現" title="Permanent link">&para;</a></h3>
 <p><strong>首頁</strong>（FR-P14）由上而下三區，以框線與底色分開，整頁不捲動：</p>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────┐
-│ 🛏 05   ▓▓▓▓▓░░░   📋 📖  │  ← 基本資訊：床號、療程進度（圖形）、待完成任務的圖示
+│ 🛏 05 王○○ ▓▓▓░ 📋  10:42 │  ← 基本資訊：床號、姓名（1007）、療程進度（圖形）、待完成任務的圖示、現在時間（1007）
 ├─────────────────────────┤
 │   本次透析               │  ← 1005 起：兩張折線圖加五個數字，常駐、不必操作（2.5）
 │   （圖、數字、資料時間）   │
@@ -4310,8 +4366,8 @@
 <tbody>
 <tr>
 <td>基本資訊</td>
-<td>床號、療程進度條、待完成任務的圖示（點了就繼續）、求助狀態與離線狀態各一個圖示加一句話</td>
-<td><strong>姓名與病歷號</strong>（首頁與面板同屬鄰床可見的畫面）、時段與開始時間的文字、平板序號</td>
+<td>床號、<strong>姓名</strong>（1007）、療程進度條、待完成任務的圖示（點了就繼續）、求助狀態與離線狀態各一個圖示加一句話、<strong>現在時間</strong>（1007）</td>
+<td><strong>病歷號</strong>（首頁與面板同屬鄰床可見的畫面）、~~姓名~~（1007 起放回，見下）、時段與開始時間的文字、平板序號</td>
 </tr>
 <tr>
 <td>~~輪播內容~~ 本次透析（1005）</td>
@@ -4325,6 +4381,14 @@
 </tr>
 </tbody>
 </table>
+<p><strong>姓名與現在時間（1007，迭代 17.4）</strong>：0926 起首頁只到床號，1007 使用者看了截圖說「只有床位好像怪怪的」，指示病人平板<strong>還是要有病人姓名與現在時間</strong>。</p>
+<ul>
+<li><strong>姓名</strong>放在床號右邊（<code>.home-name</code>），比床號小一級（<code>--t-number</code>），床號仍是最先看到的那一個；<strong>只在基本資訊區</strong>——面板、跑馬燈照舊不放</li>
+<li><strong>病歷號仍不上首頁</strong>；首頁資料（<code>GET /device/home</code>）照舊沒有任何病人欄位，姓名取自平板本來就在輪詢的綁定狀態</li>
+<li><strong>現在時間</strong>在基本資訊區最右邊（<code>&lt;time className="home-now"&gt;</code>），24 小時制時分、<code>--t-number</code>，每 30 秒更新；<strong>不加圖示</strong>——時鐘圖示已經代表療程進度條（4.6「一個圖示只代表一件事」）</li>
+<li><strong>直放時</strong>一列放不下：第一列是床號、姓名、時間，進度條、任務與狀態排到第二列，不讓時間單獨掉下去</li>
+<li>鄰床看得到姓名，這是使用者知情的取捨；理由與影響見《<a href="../iteration-17-4-fixes/">迭代 17.4 修正紀錄</a>》</li>
+</ul>
 <p><strong>任務畫面</strong>（FR-P15）：透析前問卷、心情問卷、衛教在各自的時點<strong>自動以全螢幕出現</strong>，一題一頁：</p>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────┐
 │ 📋  ● ● ○ ○ ○        🏠 │  ← 任務圖示、第幾題（圓點）、回首頁
@@ -5372,7 +5436,8 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 內文對比度 ≥ 7:1</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 單手在畫面下半部可完成所有主線操作</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 夜間模式只改亮度，不改版面與字級；<strong>（0930）白底上調暗的區塊真的變暗了</strong></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）首頁只有三區</strong>，沒有其他常駐入口；首頁與~~輪播~~面板、跑馬燈都看不到姓名與病歷號</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）首頁只有三區</strong>，沒有其他常駐入口；首頁看不到病歷號；面板、跑馬燈看不到姓名與病歷號（~~首頁也看不到姓名~~ <strong>1007 起姓名放回基本資訊區</strong>）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1007）基本資訊區有床號、姓名、現在時間</strong>；直放時第一列是這三樣</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）首頁與每一個任務畫面在 4.10 的兩個尺寸下都沒有捲軸</strong>；（0930）兩個方向的字一樣大</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0930）病人端是白底</strong>，沒有另做深色區塊；按下去看得出按到</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）任務畫面一題一頁</strong>，閒置逾時自動回首頁；按回首頁後任務變成基本資訊區的圖示</li>
@@ -5452,7 +5517,12 @@
 <tr>
 <td>2.4 首頁三區、任務畫面（0926）</td>
 <td><code>apps/patient-pwa/src/HomeScreen.tsx</code>、<code>TaskFrame.tsx</code>、<code>tasks/</code></td>
-<td><code>npm run verify:iteration14</code>：首頁只有三區、首頁沒有姓名與病歷號、每個任務畫面包在 <code>TaskFrame</code> 裡</td>
+<td><code>npm run verify:iteration14</code>：首頁只有三區、首頁沒有病歷號（1007 起姓名只在基本資訊區）、每個任務畫面包在 <code>TaskFrame</code> 裡</td>
+</tr>
+<tr>
+<td>2.4 姓名與現在時間（1007 迭代 17.4）</td>
+<td><code>HomeScreen.tsx</code> 的 <code>.home-name</code>、<code>.home-now</code>；<code>clock.ts</code>；<code>styles.css</code> 的直放排法</td>
+<td><code>verify:iteration17-4</code>：姓名來自綁定狀態且只出現一次、首頁資料與等待配對的回應沒有病人欄位、時間靠右不加圖示、直放第一列是床號姓名時間</td>
 </tr>
 <tr>
 <td>3.5 簡易版工作台（0926）</td>

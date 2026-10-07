@@ -1207,6 +1207,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-174病人平板加回姓名與現在時間1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.4：病人平板加回姓名與現在時間（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-173所有-ai-生成內容禁用簡體字與中國大陸用語1007" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2422,6 +2433,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3143,6 +3182,34 @@
     
   
     迭代 17.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 分冊
   
 
     
@@ -4568,6 +4635,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-174病人平板加回姓名與現在時間1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.4：病人平板加回姓名與現在時間（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-173所有-ai-生成內容禁用簡體字與中國大陸用語1007" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4830,7 +4908,7 @@
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
 <p><strong>適用讀者</strong>：接手或協作的工程師
 <strong>報告日期</strong>：2026-10-07
-<strong>版本</strong>：迭代 17.3 完成（master）
+<strong>版本</strong>：迭代 17.4 完成（master）
 <strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
 <blockquote>
 <p>本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -6457,6 +6535,46 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 </tr>
 </tbody>
 </table>
+<h3 id="迭代-174病人平板加回姓名與現在時間1007">迭代 17.4：病人平板加回姓名與現在時間（1007）<a class="headerlink" href="#迭代-174病人平板加回姓名與現在時間1007" title="Permanent link">&para;</a></h3>
+<p>使用者指示病人平板還是要有病人姓名與現在時間（《<a href="../../notes/iteration-17-4-fixes/">迭代 17.4 修正紀錄</a>》）。工程上要知道的：</p>
+<table>
+<thead>
+<tr>
+<th>要知道的</th>
+<th>在哪裡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>姓名的來源</td>
+<td><code>DeviceSessionState</code> 的 <code>patient.displayName</code>（<code>GET /device/session</code>，迭代 1 起就有）；<code>App.tsx</code> 傳給 <code>HomeScreen</code> 的 <code>patientName</code>。<strong><code>DeviceHomeView</code> 不加欄位</strong>——面板的資料仍然拿不到姓名</td>
+</tr>
+<tr>
+<td>畫面</td>
+<td><code>HomeScreen.tsx</code> 的 <code>.home-name</code>（床號右邊）、<code>&lt;time className="home-now"&gt;</code>（最右邊，<code>margin-left: auto</code>）；直放時 <code>styles.css</code> 把 <code>.home-progress</code>、<code>.home-tasks</code>、<code>.home-status</code> 排到第二列（<code>order: 1</code>）</td>
+</tr>
+<tr>
+<td>時分</td>
+<td><code>patient-pwa/src/clock.ts</code> 的 <code>TIME</code>、<code>useMinuteClock</code>（每 30 秒），<code>TodayPanel.tsx</code> 也改用它</td>
+</tr>
+<tr>
+<td>改了的驗收</td>
+<td><code>verify:iteration14</code> 第 1 步：「首頁沒有姓名與病歷號」改成「首頁沒有病歷號、姓名只畫在 <code>.home-name</code> 一處」（實作規格書 1.1 第六次）。<code>verify:iteration6:api</code>、<code>16:api</code> 驗首頁資料沒有姓名，仍成立、沒改</td>
+</tr>
+<tr>
+<td>驗收</td>
+<td><code>verify:iteration17-4</code>（5 步，不需後端）</td>
+</tr>
+<tr>
+<td>沒有動的</td>
+<td>後端、資料表、端點、圖示登記</td>
+</tr>
+<tr>
+<td>截圖時發現的既有問題</td>
+<td>院方資料沒有 <code>expectedEndAt</code> 時，護理端 <code>TabletCell</code> 的 <code>progressOf</code> 退回綁定進度、病人端 <code>App.tsx</code> 用 <code>binding.expiresAt</code>、<code>TodayPanel</code> 用開始後 4 小時，三處終點不同；待使用者決定，這次沒改</td>
+</tr>
+</tbody>
+</table>
 <h3 id="迭代-173所有-ai-生成內容禁用簡體字與中國大陸用語1007">迭代 17.3：所有 AI 生成內容禁用簡體字與中國大陸用語（1007）<a class="headerlink" href="#迭代-173所有-ai-生成內容禁用簡體字與中國大陸用語1007" title="Permanent link">&para;</a></h3>
 <p>使用者指示系統中所有 AI 生成的內容禁用支語與簡體字（《<a href="../../notes/iteration-17-3-fixes/">迭代 17.3 修正紀錄</a>》）。工程上要知道的：</p>
 <table>
@@ -6963,6 +7081,7 @@ npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17<span cl
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-1<span class="w">  </span><span class="c1"># 17.1 — 6 步（不需後端）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-2<span class="w">  </span><span class="c1"># 17.2 — 6 步（不需後端）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-3<span class="w">  </span><span class="c1"># 17.3 — 7 步（不需後端、不需資料庫）</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-4<span class="w">  </span><span class="c1"># 17.4 — 5 步（不需後端）</span>
 npm<span class="w"> </span>run<span class="w"> </span>zh-tw:data<span class="w">          </span><span class="c1"># 17.3：改了 packages/shared/zh-tw/ 的詞庫之後重新產生資料檔；-- --check 只比對</span>
 npm<span class="w"> </span>run<span class="w"> </span>demo:patient<span class="w">        </span><span class="c1"># 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot &lt;檔名&gt; 直接截圖</span>
 npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w">           </span><span class="c1"># 六支盤點腳本（不需後端），0926 起多了 check:container</span>

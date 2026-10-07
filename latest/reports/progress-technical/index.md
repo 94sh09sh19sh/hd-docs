@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 技術進度報告
 
-**適用讀者**：接手或協作的工程師 **報告日期**：2026-10-07 **版本**：迭代 17.3 完成（master） **Repo**：`94sh09sh19sh/hd-tablet-care`
+**適用讀者**：接手或協作的工程師 **報告日期**：2026-10-07 **版本**：迭代 17.4 完成（master） **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化： **1001 第二次進院 B 級部分成功**——容器在院內主機上起來，護理端登入 `Failed to fetch`（`CORS_ORIGINS` 不放行護理端的來源），見部署手冊第十四冊之四、第十五冊之三； **1005 新版需求**：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成**迭代 15～17，同日完成**（實作規格書 0.5、4.13～4.15）。 三個迭代都在模擬院方 API 上驗收；院方 API 的實際長相要第三次進院以探測工具看一次（實作規格書 4.19）。
 >
@@ -743,6 +743,20 @@ ______________________________________________________________________
 | 開發機看畫面     | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容                                                                                                      |
 | 順手更正         | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查                                           |
 
+### 迭代 17.4：病人平板加回姓名與現在時間（1007）
+
+使用者指示病人平板還是要有病人姓名與現在時間（《[迭代 17.4 修正紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/iteration-17-4-fixes/index.md)》）。工程上要知道的：
+
+| 要知道的             | 在哪裡                                                                                                                                                                                                      |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 姓名的來源           | `DeviceSessionState` 的 `patient.displayName`（`GET /device/session`，迭代 1 起就有）；`App.tsx` 傳給 `HomeScreen` 的 `patientName`。**`DeviceHomeView` 不加欄位**——面板的資料仍然拿不到姓名                |
+| 畫面                 | `HomeScreen.tsx` 的 `.home-name`（床號右邊）、`<time className="home-now">`（最右邊，`margin-left: auto`）；直放時 `styles.css` 把 `.home-progress`、`.home-tasks`、`.home-status` 排到第二列（`order: 1`） |
+| 時分                 | `patient-pwa/src/clock.ts` 的 `TIME`、`useMinuteClock`（每 30 秒），`TodayPanel.tsx` 也改用它                                                                                                               |
+| 改了的驗收           | `verify:iteration14` 第 1 步：「首頁沒有姓名與病歷號」改成「首頁沒有病歷號、姓名只畫在 `.home-name` 一處」（實作規格書 1.1 第六次）。`verify:iteration6:api`、`16:api` 驗首頁資料沒有姓名，仍成立、沒改     |
+| 驗收                 | `verify:iteration17-4`（5 步，不需後端）                                                                                                                                                                    |
+| 沒有動的             | 後端、資料表、端點、圖示登記                                                                                                                                                                                |
+| 截圖時發現的既有問題 | 院方資料沒有 `expectedEndAt` 時，護理端 `TabletCell` 的 `progressOf` 退回綁定進度、病人端 `App.tsx` 用 `binding.expiresAt`、`TodayPanel` 用開始後 4 小時，三處終點不同；待使用者決定，這次沒改              |
+
 ### 迭代 17.3：所有 AI 生成內容禁用簡體字與中國大陸用語（1007）
 
 使用者指示系統中所有 AI 生成的內容禁用支語與簡體字（《[迭代 17.3 修正紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/iteration-17-3-fixes/index.md)》）。工程上要知道的：
@@ -985,6 +999,7 @@ npm run verify:iteration17  # 迭代 17 — 8 步（不需後端）；另有 :ap
 npm run verify:iteration17-1  # 17.1 — 6 步（不需後端）
 npm run verify:iteration17-2  # 17.2 — 6 步（不需後端）
 npm run verify:iteration17-3  # 17.3 — 7 步（不需後端、不需資料庫）
+npm run verify:iteration17-4  # 17.4 — 5 步（不需後端）
 npm run zh-tw:data          # 17.3：改了 packages/shared/zh-tw/ 的詞庫之後重新產生資料檔；-- --check 只比對
 npm run demo:patient        # 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot <檔名> 直接截圖
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container

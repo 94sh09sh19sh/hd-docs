@@ -1494,6 +1494,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4154-迭代-174病人平板加回姓名與現在時間1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.4 迭代 17.4：病人平板加回姓名與現在時間（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2454,6 +2465,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3175,6 +3214,34 @@
     
   
     迭代 17.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 分冊
   
 
     
@@ -4721,6 +4788,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4154-迭代-174病人平板加回姓名與現在時間1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.4 迭代 17.4：病人平板加回姓名與現在時間（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5386,6 +5464,24 @@
 <td><code>verify:iteration17-1</code> 第 1、3 步</td>
 <td>「病人與＋不拖到床位」改成「沒有床位這種放置區」；「平板框與床位格共用 <code>TabletChip</code>、<code>Pickable</code> 兼放置區」改成「中間的平板格整格是放置區、點選替代照樣有」；「只有服務中的平板畫在床上」改成「只有服務中的平板標床號」</td>
 <td>放置區是平板、配平板一步可復原、接了院方資料時沒在用的平板不跟著舊床走，照驗</td>
+</tr>
+</tbody>
+</table>
+<p><strong>迭代 17.4 是第六次</strong>（1007）：使用者指示病人平板的基本資訊區加回病人姓名與現在時間。迭代 14 的腳本斷言「首頁原始碼裡沒有姓名」，不改就一定不通過。
+這一次是<strong>需求本身改了</strong>（SRS FR-P14 補充說明 1007），不是換一條路驗同一件事；改成驗新的規則，其餘照舊：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration14</code> 第 1 步</td>
+<td>「首頁沒有姓名與病歷號」改成「首頁沒有病歷號」加「姓名只畫在基本資訊區那一處」</td>
+<td>病歷號照驗；「面板、圖、跑馬燈沒有姓名與病歷號」原樣驗；姓名多驗了只能出現一次。<code>verify:iteration6:api</code>、<code>16:api</code> 驗的是<strong>首頁資料</strong>沒有姓名，那一條仍然成立，沒有改</td>
 </tr>
 </tbody>
 </table>
@@ -9224,7 +9320,8 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <strong>順手更正 17.1 的一個缺陷</strong>：平板框要有裝置管理權限才出現，一般護理師在接了院方資料時找不到平板可以配；平板移到中間之後人人看得到。</p>
 <p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-2</code>（新增，6 步，不需後端；病人框的順序拿 <code>trayOrder</code> 實際跑一次假資料）全部通過；<code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>check:ui</code>、<code>check:ui:design</code> 全綠，其中六支依 1.1 第五次改寫。
 在開發機（沒接院方資料）以無頭 Chrome 在 1366×768 實際看過：中間的平板格、右上角床號、拿起病人時能配的平板整格亮起、配好與復原列。
-<strong>接了院方資料的畫面還沒在瀏覽器看過</strong>：做的時候是午夜，<code>npm run demo:patient</code> 在午夜前後兩小時拒跑（分冊 §17.2.1、§17.2.2 要白天做）。</p>
+<strong>接了院方資料的畫面還沒在瀏覽器看過</strong>：做的時候是午夜，<code>npm run demo:patient</code> 在午夜前後兩小時拒跑（分冊 §17.2.1、§17.2.2 要白天做）。
+<strong>1007 白天補看</strong>（迭代 17.4 截圖時）：在 <code>demo:patient</code> 上配了四位透析中的病人，1366×768 與 1920×1080 看到右上角床號、病人框正在透析的在上面且越晚開始越上面、其餘依筆畫；重新整理只看到按鈕、沒有按。</p>
 <h3 id="4153-迭代-173所有-ai-生成內容禁用簡體字與中國大陸用語1007">4.15.3 迭代 17.3：所有 AI 生成內容禁用簡體字與中國大陸用語（1007）<a class="headerlink" href="#4153-迭代-173所有-ai-生成內容禁用簡體字與中國大陸用語1007" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>2026-10-07 完成。</strong> 使用者指示系統中所有 AI 生成的內容禁用支語與簡體字，紀錄在《<a href="../../notes/iteration-17-3-fixes/">迭代 17.3 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-17-3/">迭代 17.3 分冊</a>》（<code>aa87</code>～<code>aa96</code>）。不是新的範圍，迭代 18 的內容一項都沒動。</p>
@@ -9265,6 +9362,44 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-3</code>（新增，7 步，不需後端；閘道用替身組起來實際跑一次重寫與最後一次照樣交出，並確認前端只看得到交出的那一筆）追加調整後全部通過；<code>verify:iteration3</code>、<code>4</code>、<code>17:api</code> 對著開發機的後端全部通過，未改；<code>check:all</code> 六支全綠。
 最初的版本在開發機實際走過一次（公告事由夾一個詞庫裡的詞，模擬模型連續 3 次照抄）；追加調整後的行為由分冊 <code>aa88</code>～<code>aa91</code> 驗。
 <strong>實驗室的真模型多常被退回還沒看</strong>（分冊 <code>aa92</code>、<code>aa93</code>）。</p>
+<h3 id="4154-迭代-174病人平板加回姓名與現在時間1007">4.15.4 迭代 17.4：病人平板加回姓名與現在時間（1007）<a class="headerlink" href="#4154-迭代-174病人平板加回姓名與現在時間1007" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-07 完成。</strong> 使用者看了病人平板只有床號，覺得怪，指示病人平板還是要有病人姓名與現在時間，紀錄在《<a href="../../notes/iteration-17-4-fixes/">迭代 17.4 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-17-4/">迭代 17.4 分冊</a>》（<code>aa97</code>～<code>aa104</code>）。不是新的範圍，迭代 18 的內容一項都沒動。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>改了什麼</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>姓名</td>
+<td>基本資訊區床號右邊（<code>.home-name</code>）；取自平板輪詢的綁定狀態（<code>GET /device/session</code> 本來就帶），<strong>首頁資料不加欄位</strong>；面板與跑馬燈照舊不放，病歷號照舊不上首頁</td>
+<td>FR-P14</td>
+</tr>
+<tr>
+<td>2</td>
+<td>現在時間</td>
+<td>基本資訊區最右邊（<code>&lt;time className="home-now"&gt;</code>），24 小時制時分、每 30 秒更新、不加圖示；時分的寫法收成 <code>clock.ts</code> 一份，面板也改用它</td>
+<td>FR-P14</td>
+</tr>
+<tr>
+<td>3</td>
+<td>直放的排法</td>
+<td>一列放不下時，第一列床號、姓名、時間，進度條與任務、狀態排到第二列</td>
+<td>FR-P14</td>
+</tr>
+</tbody>
+</table>
+<p><strong>後端與資料表都沒動</strong>。這是 0926 起「首頁只到床號」那條規則的反轉：鄰床看得到姓名，使用者知情決定；病歷號、面板、跑馬燈的限制不變。</p>
+<p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-4</code>（新增，5 步，不需後端）全部通過；<code>verify:iteration8</code>、<code>14</code>、<code>14-5</code>、<code>16</code>、<code>17-1</code>、<code>17-2</code>、<code>check:ui</code>、<code>check:ui:design</code> 全綠，其中 <code>verify:iteration14</code> 依 1.1 第六次改寫。
+在 <code>npm run demo:patient</code> 上另配三位透析中的病人，以無頭 Chrome 截了病人端 1280×800 與 800×1280 各兩張、護理端簡易版 1366×768 與 1920×1080 各一張（放在 1007 週報附錄）。
+<strong>截圖時發現一件既有的事</strong>：院方資料沒有預計結束時間時，護理端平板格的進度條改用「平板配上的時間」算，剛配上的病人透析了 100 分鐘仍接近 0%；病人端的進度條與面板的橫軸又各用另一個終點。三處要用哪一個終點待使用者決定，這次沒改（修正紀錄第 4 節）。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -9602,7 +9737,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td>~~17.2~~</td>
 <td>~~簡易版中間改成平板、病人框重新整理與排序（1007）~~</td>
-<td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過；接了院方資料的畫面待白天以 <code>demo:patient</code> 看</td>
+<td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過；接了院方資料的畫面 1007 白天以 <code>demo:patient</code> 看過（重新整理沒按）</td>
 <td>無</td>
 </tr>
 <tr>
@@ -9610,6 +9745,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~所有 AI 生成內容禁用簡體字與中國大陸用語（1007）~~</td>
 <td><strong>已完成（1007）</strong>，腳本驗收通過（同日追加調整：最後一次照樣交出、前端不留痕跡）；實驗室真模型的退回比例待看</td>
 <td>無</td>
+</tr>
+<tr>
+<td>~~17.4~~</td>
+<td>~~病人平板加回姓名與現在時間（1007）~~</td>
+<td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過；從病床的距離看得不看得清楚待實機</td>
+<td>無；實機待 Q-33</td>
 </tr>
 <tr>
 <td>18</td>
