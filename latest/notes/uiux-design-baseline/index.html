@@ -4494,7 +4494,7 @@
   每一格同高，一頁放幾列才算得出來。只做到「不捲動」而不分頁，結果是放不下的類別被切掉、病人看不到</li>
 <li><strong>「其他」那一框（如廁、環境、口渴、機器）是功能開關，預設關閉</strong>（0929）：關閉時只剩「不舒服」一框，
   組尾接非臨床組的「其他，請有人過來一下」。按鈕少一半；要上廁所、機器在叫，仍然有一顆送得出去</li>
-<li>為什麼時點是營運參數不是寫死：~~療程長度因人而異，四小時是常態不是規定~~，護理部要能改。<strong>1007 更正</strong>：本透析中心透析一律四小時，是院方硬性規定；時點照舊是營運參數（問卷與衛教要在第幾分鐘出現是另一件事），療程進度的終點沒有預計結束時間時以開始後四小時計（迭代 17.5）</li>
+<li>為什麼時點是營運參數不是寫死：~~療程長度因人而異，四小時是常態不是規定~~，護理部要能改。<strong>1007 更正</strong>：本透析中心透析一律四小時，是院方硬性規定；時點照舊是營運參數（問卷與衛教要在第幾分鐘出現是另一件事），療程一律在開始後四小時結束，院方資料有沒有預計結束時間都一樣（迭代 17.5）</li>
 </ul>
 <p><strong>這一版刪掉的字</strong>（M-3 的判準：刪掉之後病人還能不能完成動作）：「您好」「病歷號」「療程時段」「開始時間」
 「平板序號」「觸碰螢幕任一處即可回到主畫面」「點一下看說明」（改成 💡 圖示）、各按鈕底下的副標、
@@ -4547,7 +4547,7 @@
 <td>實作規格書 0.5：機器累計的脫水量含輸液與食物，與它同基準的是設定脫水量</td>
 </tr>
 <tr>
-<td>橫軸從透析開始到預計結束，只在兩端標時間</td>
+<td>橫軸從透析開始到預計結束（1007 迭代 17.5 起一律開始後四小時），只在兩端標時間</td>
 <td>曲線長到哪，透析就進行到哪；不必讀刻度</td>
 </tr>
 <tr>
@@ -5001,7 +5001,7 @@
 </tr>
 <tr>
 <td>下機只有拖到「下機」</td>
-<td>院方資料出現結束體重就自動下機；過了預計結束很久還沒有，床位格出現「待確認下機」（<code>clock-alert</code>＋注意色），點一下即確認，<strong>一樣延後 8 秒才送出</strong></td>
+<td>院方資料出現結束體重就自動下機；過了預計結束（1007 迭代 17.5 起一律開始後四小時）很久還沒有，床位格出現「待確認下機」（<code>clock-alert</code>＋注意色），點一下即確認，<strong>一樣延後 8 秒才送出</strong></td>
 </tr>
 <tr>
 <td>—</td>
@@ -5582,8 +5582,8 @@
 </tr>
 <tr>
 <td>2.4／2.5 療程進度的終點（1007 迭代 17.5）</td>
-<td><code>@hd/shared</code> 的 <code>plannedDialysisEndMs</code>；呼叫端是病人端 <code>App.tsx</code>、<code>TodayPanel.tsx</code>，護理端 <code>simple/TabletCell.tsx</code> 的 <code>progressOf</code></td>
-<td><code>verify:iteration17-5</code>：四小時只寫在 <code>@hd/shared</code> 一處並實際跑一次、三處都呼叫它、護理端起點與病人端相同、不再退回綁定進度</td>
+<td><code>@hd/shared</code> 的 <code>plannedDialysisEndMs</code>、<code>dialysisProgress</code>；呼叫端是病人端 <code>App.tsx</code>、<code>TodayPanel.tsx</code>，簡易版 <code>simple/TabletCell.tsx</code> 的 <code>progressOf</code>，專業版即時總覽與總覽螢幕模式畫的是後端 <code>composeBindingProgress</code> 算好的值</td>
+<td><code>verify:iteration17-5</code>：四小時只寫在 <code>@hd/shared</code> 一處並實際跑一次、一律開始後四小時（不看院方的預計結束）、五處都用它、起點相同</td>
 </tr>
 <tr>
 <td>3.5 簡易版工作台（0926）</td>

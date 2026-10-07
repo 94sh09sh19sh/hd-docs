@@ -5998,7 +5998,7 @@
 <td><code>expected_end_at</code></td>
 <td><code>TS?</code></td>
 <td>（迭代 15）院方資料的透析結束時間，當「預計」用</td>
-<td>⚠️ 可能是預排值，<strong>不拿它判定下機</strong>（下機看結束體重）。療程進度條與「待確認下機」用它</td>
+<td>⚠️ 可能是預排值，<strong>不拿它判定下機</strong>（下機看結束體重）。~~療程進度條與「待確認下機」用它~~ <strong>1007 迭代 17.5 起只記錄</strong>：透析一律開始後四小時結束（院方硬性規定），進度與「待確認下機」都以 <code>started_at</code> 加四小時計</td>
 </tr>
 <tr>
 <td><code>nurse_modified_at</code></td>
@@ -9288,7 +9288,7 @@
 <p><strong>唯一約束</strong>：<code>(patient_id, dialysis_started_at, recorded_at)</code>——資料表層的最後一道防線，同步本身先查過已寫的紀錄時間才寫。
 <strong>寫入時</strong>推一則「有新紀錄」給那一台平板（<code>GET /device/stream</code>，事件不帶數值），並寫一筆 <code>HOSPITAL_VITALS_RECORDED</code> 稽核（一次抓取一筆，寫幾筆、幾位病人）。</p>
 <p><strong><code>operational_settings</code> 多四個鍵</strong>：<code>HOSPITAL_API_FETCH_INTERVAL_MINUTES</code>（抓取頻率，預設 3、範圍 1～30）、
-<code>HOSPITAL_API_STALE_ALERT_MINUTES</code>（多久沒更新就提示，預設 10）、<code>HOSPITAL_END_CONFIRM_AFTER_MINUTES</code>（過了預計結束多久標示待確認下機，預設 60）、
+<code>HOSPITAL_API_STALE_ALERT_MINUTES</code>（多久沒更新就提示，預設 10）、<code>HOSPITAL_END_CONFIRM_AFTER_MINUTES</code>（過了預計結束多久標示待確認下機，預設 60；1007 迭代 17.5 起預計結束一律是開始後四小時）、
 <code>HOSPITAL_BED_NO_FORMAT</code>（院方床位轉床號：0 原樣、1 改字母在前、2 改數字在前，預設 0）。</p>
 <p><strong>院方 API 的位址不在資料庫裡</strong>：只在主機設定目錄的 <code>.env</code>（DEP-46），不寫進資料庫、日誌、稽核或任何回應。</p>
 <hr />

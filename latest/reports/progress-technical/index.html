@@ -1207,10 +1207,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007" class="md-nav__link">
+  <a href="#迭代-175透析一律開始後四小時結束1007" class="md-nav__link">
     <span class="md-ellipsis">
       
-        迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）
+        迭代 17.5：透析一律開始後四小時結束（1007）
       
     </span>
   </a>
@@ -4702,10 +4702,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007" class="md-nav__link">
+  <a href="#迭代-175透析一律開始後四小時結束1007" class="md-nav__link">
     <span class="md-ellipsis">
       
-        迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）
+        迭代 17.5：透析一律開始後四小時結束（1007）
       
     </span>
   </a>
@@ -5378,7 +5378,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 </tr>
 <tr>
 <td><code>treatment_sessions</code></td>
-<td>迭代 15：<code>source</code> 分人工與院方；<code>expected_end_at</code> 只當「預計結束」，<strong>不拿它判定下機</strong>（可能是預排值，院方欄位要第三次進院確認）；<code>nurse_modified_at</code>／<code>bed_nurse_modified_at</code> 有值時，同步不再改它的狀態／床位——<strong>護理師的更正優先</strong></td>
+<td>迭代 15：<code>source</code> 分人工與院方；<code>expected_end_at</code> 只當「預計結束」，<strong>不拿它判定下機</strong>（可能是預排值，院方欄位要第三次進院確認；1007 迭代 17.5 起只記錄，透析一律開始後四小時結束）；<code>nurse_modified_at</code>／<code>bed_nurse_modified_at</code> 有值時，同步不再改它的狀態／床位——<strong>護理師的更正優先</strong></td>
 </tr>
 <tr>
 <td><code>hospital_api_fetch_runs</code></td>
@@ -5593,7 +5593,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <li><strong>格式是讀同院 IDH 系統的程式推出來的</strong>，不是院方文件：陣列沒有欄位名稱，只能靠位置認欄位（<code>@hd/shared</code> 的 <code>hospital-api.ts</code>，51 欄）。少欄或多欄的列不認，<strong>那一次透析整個不寫入</strong>——臨床數值只對一半比沒有更危險</li>
 <li><strong>同步不另開寫入路徑</strong>：建排班、綁定、換床、寫數值都呼叫護理師拖曳時用的那幾支服務，操作者是登入不了的系統帳號 <code>SYSTEM-HOSPITAL-SYNC</code>，稽核記成「院方資料同步」。簡易版與專業版因此看到的是同一套資料、同一種稽核</li>
 <li><strong>護理師的更正優先</strong>：提前結束或換床之後，同一筆療程的狀態與床位不再被同步改回去（<code>nurse_modified_at</code>、<code>bed_nurse_modified_at</code>）</li>
-<li><strong>判斷不了的標出來，不猜</strong>：預計結束時間可能是預排值，不拿它判定下機，過了很久還沒有結束體重就標「待確認下機」；平板沒自動接上時標出原因（平板正在別人的療程中、不在線上、停用或尚未佈建、院方的床位是停用的床或認不出來）；<strong>還沒配平板的病人不算問題</strong>，首波只有少數病人用平板，其餘只出現在床位圖上；超過設定時間沒更新，床位圖上方出現提示，這段期間護理師可到專業版手動處理</li>
+<li><strong>判斷不了的標出來，不猜</strong>：預計結束時間可能是預排值，不拿它判定下機，過了很久還沒有結束體重就標「待確認下機」（1007 迭代 17.5 起「預計結束」一律是開始後四小時）；平板沒自動接上時標出原因（平板正在別人的療程中、不在線上、停用或尚未佈建、院方的床位是停用的床或認不出來）；<strong>還沒配平板的病人不算問題</strong>，首波只有少數病人用平板，其餘只出現在床位圖上；超過設定時間沒更新，床位圖上方出現提示，這段期間護理師可到專業版手動處理</li>
 <li><strong>正式環境的兩道防線</strong>：啟動時位址的主機是 <code>hospital-api-sim</code> 就拒絕；抓到的回應帶 <code>x-hd-simulated</code> 就整次作廢。模擬部署要以 <code>HD_SIMULATION_DEPLOYMENT=yes</code> 明示</li>
 <li><strong>推送</strong>：有新資料時護理端串流多一種 <code>HOSPITAL_SYNC</code> 事件；平板訂閱 <code>GET /device/stream</code>，<strong>事件只說「有新資料」、不帶數值</strong>，平板收到後自己重取 <code>GET /device/home</code></li>
 <li><strong>探測工具</strong> <code>npm run probe:hospital-api</code> 與同步共用解析程式，<strong>只印結構與型別，不印任何值與位址</strong>；位址在探測時當場輸入，不寫進 <code>.env</code>（部署手冊第十五冊 V-30a）</li>
@@ -6613,8 +6613,8 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 </tr>
 </tbody>
 </table>
-<h3 id="迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007">迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）<a class="headerlink" href="#迭代-175沒有預計結束時間時三處進度統一用開始後四小時1007" title="Permanent link">&para;</a></h3>
-<p>使用者決定 17.4 截圖時發現的既有問題三處統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定（《<a href="../../notes/iteration-17-5-fixes/">迭代 17.5 修正紀錄</a>》）。工程上要知道的：</p>
+<h3 id="迭代-175透析一律開始後四小時結束1007">迭代 17.5：透析一律開始後四小時結束（1007）<a class="headerlink" href="#迭代-175透析一律開始後四小時結束1007" title="Permanent link">&para;</a></h3>
+<p>使用者決定 17.4 截圖時發現的既有問題統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定；同日追加<strong>不管院方資料有沒有預計結束時間都是四小時</strong>，專業版也全面套用（《<a href="../../notes/iteration-17-5-fixes/">迭代 17.5 修正紀錄</a>》）。工程上要知道的：</p>
 <table>
 <thead>
 <tr>
@@ -6625,23 +6625,23 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 <tbody>
 <tr>
 <td>四小時寫在哪</td>
-<td><code>@hd/shared</code> 的 <code>DIALYSIS_SESSION_MINUTES = 240</code> 與 <code>plannedDialysisEndMs(startedAtMs, expectedEndAt)</code>（<code>hospital-api.ts</code>）。有預計結束用它；<code>null</code>、空字串、讀不懂或早於開始一律開始後四小時</td>
+<td><code>@hd/shared</code> 的 <code>DIALYSIS_SESSION_MINUTES = 240</code>、<code>plannedDialysisEndMs(startedAtMs)</code>（<strong>只收開始時間</strong>）、<code>dialysisProgress(startedAtMs, nowMs)</code>（<code>hospital-api.ts</code>）</td>
 </tr>
 <tr>
-<td>三處</td>
-<td>病人端 <code>App.tsx</code> 的 <code>endsAt</code>、<code>TodayPanel.tsx</code> 的 <code>plannedEnd</code>（原本的 <code>DEFAULT_SESSION_MS</code> 拿掉）、護理端 <code>TabletCell.tsx</code> 的 <code>progressOf</code>。護理端起點改成 <code>state.startedAt ?? state.binding?.boundAt</code>，與病人端相同；不再退回 <code>binding.progressPercent</code></td>
-</tr>
-<tr>
-<td>改了的驗收</td>
-<td><code>verify:iteration15</code> 第 4 步：「沒有預計結束時用綁定的有效期限」改成「用 <code>plannedDialysisEndMs</code>」（實作規格書 1.1 第七次）</td>
-</tr>
-<tr>
-<td>驗收</td>
-<td><code>verify:iteration17-5</code>（5 步，不需後端；transpile <code>hospital-api.ts</code> 實際跑一次）</td>
+<td>用到的地方</td>
+<td>病人端 <code>App.tsx</code> 的 <code>endsAt</code>、<code>TodayPanel.tsx</code> 的 <code>plannedEnd</code>（原本的 <code>DEFAULT_SESSION_MS</code> 拿掉）、簡易版 <code>TabletCell.tsx</code> 的 <code>progressOf</code>（起點 <code>state.startedAt ?? state.binding?.boundAt</code>）；後端 <code>RealtimeStateService</code> 的 <code>composeBindingProgress</code>（專業版 <code>OverviewPage</code>、常駐總覽 <code>WallDisplayPage</code> 畫的 <code>progressPercent</code>、<code>elapsedMinutes</code>，起點 <code>session.startedAt ?? binding.boundAt</code>）與 <code>awaitingDischargeConfirm</code>（開始後四小時加門檻）</td>
 </tr>
 <tr>
 <td>沒有動的</td>
-<td>後端、資料表、端點。專業版 <code>OverviewPage</code>、常駐總覽 <code>WallDisplayPage</code> 仍畫 <code>binding.progressPercent</code>（綁定進度）；後端 <code>awaitingDischargeConfirm</code> 仍只在有 <code>expectedEndAt</code> 時判定——兩處都待使用者決定（修正紀錄第 4 節）</td>
+<td>資料表、端點。<code>expected_end_at</code>／<code>expectedEndAt</code> 照樣記錄與回傳，只是不再拿來算；綁定有效期限 <code>expiresAt</code>（到期自動解除）不改</td>
+</tr>
+<tr>
+<td>改了的驗收</td>
+<td><code>verify:iteration15</code> 第 4 步改成「一律 <code>plannedDialysisEndMs(開始)</code>」；<code>verify:iteration15:api</code> 的待確認下機改成「院方預計結束已過、開始才 30 分鐘 → 不標」＋「開始 310 分鐘前、沒有預計結束 → 標」（實作規格書 1.1 第七次）</td>
+</tr>
+<tr>
+<td>驗收</td>
+<td><code>verify:iteration17-5</code>（6 步，不需後端；transpile <code>hospital-api.ts</code> 實際跑一次）；<code>15:api</code>、<code>16:api</code>、<code>14:api</code>、<code>17:api</code> 對著模擬院方 API 通過</td>
 </tr>
 </tbody>
 </table>
@@ -7300,9 +7300,9 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 <td>—</td>
 </tr>
 <tr>
-<td>專業版總覽與常駐總覽螢幕要不要也改成透析進度；沒有預計結束時要不要用開始後四小時判定「待確認下機」</td>
-<td>迭代 17.5 修正紀錄第 4 節</td>
-<td>使用者決定</td>
+<td>~~專業版總覽與常駐總覽螢幕要不要也改成透析進度；沒有預計結束時要不要用開始後四小時判定「待確認下機」~~ <strong>1007 使用者決定全面套用，迭代 17.5 追加已完成</strong></td>
+<td>迭代 17.5 修正紀錄</td>
+<td>—</td>
 </tr>
 <tr>
 <td>開發手機上的外殼實機驗收、真的平板掃佈建 QR code</td>
