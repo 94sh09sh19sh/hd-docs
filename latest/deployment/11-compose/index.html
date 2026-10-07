@@ -4365,7 +4365,7 @@
 <td>DEP-37 第 2 項、<a href="../10-first-visit/">F-17</a></td>
 </tr>
 <tr>
-<td><strong>斷電之後誰開機、誰登入？有 UPS 嗎？</strong> Docker Desktop 要有人登入才會起來</td>
+<td><strong>斷電之後誰開機、誰登入？有 UPS 嗎？</strong> Docker Desktop 要有人登入才會起來（<strong>1007 已答</strong>：斷電後出現警示，護理長會重新登入；不設自動登入。UPS 沒有答到）</td>
 <td>DEP-21 第 4 項、<a href="../10-first-visit/">F-18、F-19</a></td>
 </tr>
 <tr>
@@ -4377,11 +4377,11 @@
 <td>Q-32</td>
 </tr>
 <tr>
-<td>Docker Desktop 的 <strong>Send usage statistics</strong> 能不能關？（0922 看到是開著的，那是整台主機的設定）</td>
+<td>Docker Desktop 的 <strong>Send usage statistics</strong> 能不能關？（0922 看到是開著的，那是整台主機的設定）（<strong>1007 已答：關</strong>）</td>
 <td>DEP-14、Q-27 第 9 題</td>
 </tr>
 <tr>
-<td><strong>Microsoft Store 的自動更新能不能改成手動？</strong> 不改的話 Docker Desktop 可能在透析班中自己更新、重新啟動</td>
+<td><strong>Microsoft Store 的自動更新能不能改成手動？</strong> 不改的話 Docker Desktop 可能在透析班中自己更新、重新啟動（<strong>1007 已答：先不改</strong>，實際使用發現嚴重影響再改）</td>
 <td>DEP-21 第 5 項、Q-27 第 10 題</td>
 </tr>
 <tr>
@@ -4393,7 +4393,7 @@
 <td>DEP-04、Q-27 第 11 題、<a href="../14d-second-visit/">第十四冊之四</a> M-02</td>
 </tr>
 <tr>
-<td>（1001 追加）<strong>護理站與平板用哪個名稱或 IP 連這台主機？IP 能不能固定？</strong> <code>.env</code> 的三個位址都要用它，平板的伺服器憑證也簽這個名字</td>
+<td>（1001 追加）<strong>護理站與平板用哪個名稱或 IP 連這台主機？IP 能不能固定？</strong> <code>.env</code> 的三個位址都要用它，平板的伺服器憑證也簽這個名字（<strong>1007 已答：用 IP，IP 是固定的</strong>）</td>
 <td>DEP-37、Q-27 第 12 題、M-04</td>
 </tr>
 <tr>
@@ -4494,13 +4494,13 @@
 <td>2</td>
 <td>General → Send usage statistics</td>
 <td>不勾</td>
-<td>院外連線（FR-S07）。院內主機 0922 是開著的，<strong>關不關等資訊室答覆</strong>（Q-27 第 9 題），答覆前只看不改</td>
+<td>院外連線（FR-S07）。院內主機 0922 是開著的，~~<strong>關不關等資訊室答覆</strong>（Q-27 第 9 題），答覆前只看不改~~ <strong>1007 答覆可以關</strong>（Q-27 第 9 題）</td>
 </tr>
 <tr>
 <td>3</td>
 <td>Software updates → Automatically check for updates</td>
 <td>不勾</td>
-<td>更新 Docker 是院方的變更。<strong>從 Microsoft Store 裝的</strong>，這一項改由市集的自動更新決定，要到市集設定看（<a href="../10-first-visit/">F-16</a>）；能不能改成手動待資訊室答覆（Q-27 第 10 題）</td>
+<td>更新 Docker 是院方的變更。<strong>從 Microsoft Store 裝的</strong>，這一項改由市集的自動更新決定，要到市集設定看（<a href="../10-first-visit/">F-16</a>）；能不能改成手動待資訊室答覆（Q-27 第 10 題）。<strong>1007 答覆：先不改</strong>，只看、記下現行設定</td>
 </tr>
 <tr>
 <td>4</td>
@@ -4909,7 +4909,7 @@
 <hr />
 <h3 id="w-18-重新開機測試dep-21-第-4-項">W-18 重新開機測試（DEP-21 第 4 項）<a class="headerlink" href="#w-18-重新開機測試dep-21-第-4-項" title="Permanent link">&para;</a></h3>
 <p><strong>這一條決定這條路線在院內能不能用。</strong> <code>restart: unless-stopped</code> 只管 Docker 起來之後；Docker Desktop 是隨使用者登入啟動的程式，<strong>沒人登入，容器就不會起來</strong>。</p>
-<p><strong>做什麼</strong>：重新開機 → 照院方平常的方式登入（或不登入，看院方答覆）→ 等三分鐘 → <code>docker compose --env-file $cfg ps</code> 與 W-16 的 health。</p>
+<p><strong>做什麼</strong>：重新開機 → 照院方平常的方式登入（~~或不登入，看院方答覆~~ <strong>1007 答覆</strong>：斷電後由護理長以 Administrator 重新登入，這一步就是模擬護理長）→ 之後不碰任何東西，等三分鐘 → <code>docker compose --env-file $cfg ps</code> 與 W-16 的 health。</p>
 <p><strong>怎麼知道成功了</strong>：三個服務自己回到 <code>Up</code>，health 正常，<strong>中間沒有人手動開 Docker Desktop</strong>。</p>
 <p><strong>沒過的話</strong>：記下實況（有沒有自動登入、Docker Desktop 有沒有起來），這是 Q-27 要談的事，不在現場硬改院方的登入設定。</p>
 <hr />

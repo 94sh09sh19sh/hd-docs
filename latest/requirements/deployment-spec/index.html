@@ -4519,12 +4519,12 @@
 </tr>
 <tr>
 <td>4</td>
-<td><strong>開機後 Docker Desktop 會自己起來</strong></td>
+<td><strong>開機後 Docker Desktop 會自己起來</strong>。<strong>1007 答覆</strong>：不設開機自動登入；斷電後護理端出現警示，<strong>護理長會到主機重新登入</strong>。所以要做到的是「護理長登入之後不必再做任何事」：Docker Desktop 勾「登入時啟動」、容器 <code>restart: unless-stopped</code>；交接文件寫給護理長看的步驟</td>
 <td>Docker Desktop 是隨使用者登入啟動的程式，不是系統服務。沒有人登入，容器就不會起來，<code>restart: unless-stopped</code> 也救不了（Q-27）</td>
 </tr>
 <tr>
 <td>5</td>
-<td>（0930 新增）<strong>Docker Desktop 不在透析班中自己更新</strong></td>
+<td>（0930 新增）<strong>Docker Desktop 不在透析班中自己更新</strong>。<strong>1007 答覆：市集自動更新先不改</strong>，實際使用發現嚴重影響再改；在那之前這一項做不到，發現 Docker Desktop 自己更新過就記進部署紀錄</td>
 <td>院內那一套是從 Microsoft Store 裝的，更新由市集的自動更新決定；更新時 Docker 重新啟動，容器全部中斷。市集設定管的是整台主機的 App，要資訊室同意才能改成手動（Q-27 第 10 題）</td>
 </tr>
 </tbody>
@@ -4578,7 +4578,7 @@
 <li><code>npm run check:egress</code> 的掃描範圍改為<strong>映像檔會帶進去的全部內容</strong>，外加 compose 檔與 AI 閘道</li>
 <li>例外只有一條，而且只在開發環境成立：AI 閘道經 SSH 通道連實驗室（DEP-40）</li>
 <li>建置階段連出去（git、映像檔、套件、Prisma 引擎、Android 建置相依）是允許的，<strong>但建置階段不得掛載任何資料卷</strong>——建置時碰不到資料，資料就出不去</li>
-<li>（0930 補記）這一條管的是本系統的程式。<strong>主機上 Docker Desktop 自己的使用統計（Send usage statistics）0922 看到是開著的</strong>，那是 Docker Desktop 送往 Docker 公司的常駐連線，本系統的程式不經過它，但送出什麼開發端無法擔保。它是整台主機的設定，能不能關待 Q-27 第 9 題</li>
+<li>（0930 補記）這一條管的是本系統的程式。<strong>主機上 Docker Desktop 自己的使用統計（Send usage statistics）0922 看到是開著的</strong>，那是 Docker Desktop 送往 Docker 公司的常駐連線，本系統的程式不經過它，但送出什麼開發端無法擔保。它是整台主機的設定，能不能關待 Q-27 第 9 題。<strong>1007 答覆：第三次進院關掉</strong>，關掉之後服務執行期間就沒有這一條院外連線</li>
 </ul>
 <p><strong>DEP-46｜（1005 新增）院方 API 的位址只放設定目錄的 <code>.env</code>；模擬院方 API 只在開發與模擬部署。</strong></p>
 <ul>
@@ -5170,7 +5170,7 @@
 </tr>
 <tr>
 <td>10</td>
-<td><strong>斷電重開後，無人操作下服務自己回來</strong>（含 Docker Desktop 隨登入啟動）</td>
+<td><strong>斷電重開後，~~無人操作下~~ 護理長登入 Windows 之後不必再做任何事，服務自己回來</strong>（含 Docker Desktop 隨登入啟動；1007 答覆不設自動登入）</td>
 <td>DEP-21 第 4 項</td>
 </tr>
 <tr>
@@ -5311,7 +5311,7 @@
 </tr>
 <tr>
 <td>Q-27</td>
-<td>主機的 Docker 資料位置、防毒排除、斷電重開與自動登入、共用資源額度、Docker Desktop 的使用統計與市集自動更新（版本與連接埠 0930 已答覆）</td>
+<td>主機的 Docker 資料位置、防毒排除、斷電重開與自動登入、共用資源額度、Docker Desktop 的使用統計與市集自動更新（版本與連接埠 0930 已答覆；<strong>1007 已答</strong>：IP 固定、斷電後護理長重新登入、使用統計關掉、市集自動更新先不改）</td>
 </tr>
 <tr>
 <td>Q-32</td>

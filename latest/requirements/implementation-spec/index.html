@@ -6290,7 +6290,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 </tr>
 <tr>
 <td>開機</td>
-<td>斷電重開後 Docker Desktop 要能在無人操作下起來（DEP-21 第 4 項、Q-27）</td>
+<td>斷電重開後 Docker Desktop 要能在無人操作下起來（DEP-21 第 4 項、Q-27）。<strong>1007 答覆</strong>：不設自動登入，斷電後出現警示由護理長重新登入；要求改成「護理長登入之後不必再做任何事」</td>
 </tr>
 <tr>
 <td>防毒</td>
@@ -9142,7 +9142,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 <tr>
 <td><strong>核准權限沿用「跑馬燈內容」（護理師以上）</strong></td>
-<td>誰有權核准是 Q-28 第 3 題，未答前不另設角色；要限護理長時改權限設定，不改程式</td>
+<td>誰有權核准是 Q-28 第 3 題，未答前不另設角色；要限護理長時改權限設定，不改程式。<strong>1007 答覆所有護理師都可以</strong>，沿用即是定案（一般護理師本來就有這個權限）</td>
 <td>共用常數 <code>Permission.CAROUSEL_CONTENT_MANAGE</code></td>
 </tr>
 <tr>
@@ -9221,7 +9221,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </table>
 <p>既有腳本：<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>10</code>、<code>12:api</code>、<code>14:api</code>、<code>14-1:api</code>、<code>14-2:api</code>、<code>15:api</code>、<code>16:api</code>、<code>verify:iteration8</code>、<code>11</code>、<code>12</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>check:all</code> 六支全綠，
 其中五支依 1.1 的表跟著改。<strong><code>verify:iteration13</code> 不通過，與這次無關</strong>：它的第 2 步在 <code>apps/</code> 底下找 Ollama 字樣，找到的是迭代 13 自己那支 <code>verify-iteration13.ts</code>（迭代 16 的回歸清單也沒有它）；<code>verify:iteration13:api</code> 要 Docker Desktop，這次沒跑（迭代 17 沒有動 AI 閘道）。</p>
-<p><strong>待做</strong>：實驗室模型重寫隨版本帶入的草稿（<code>aa32</code>、<code>aa33</code>）；誰有權核准（Q-28 第 3 題）；簡易版與專業版在護理站解析度下實際看過（<code>aa9</code>～<code>aa26</code>）。</p>
+<p><strong>待做</strong>：實驗室模型重寫隨版本帶入的草稿（<code>aa32</code>、<code>aa33</code>）；~~誰有權核准（Q-28 第 3 題）~~（1007 已答：所有護理師）；簡易版與專業版在護理站解析度下實際看過（<code>aa9</code>～<code>aa26</code>）。</p>
 <h3 id="4151-迭代-171停用統一把病人拖到平板一鍵展示病人端1006">4.15.1 迭代 17.1：停用統一、把病人拖到平板、一鍵展示病人端（1006）<a class="headerlink" href="#4151-迭代-171停用統一把病人拖到平板一鍵展示病人端1006" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>2026-10-06 完成。</strong> 使用者一次提出七件事，逐項紀錄在《<a href="../../notes/iteration-17-1-fixes/">迭代 17.1 修正紀錄</a>》，
@@ -9399,7 +9399,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>後端與資料表都沒動</strong>。這是 0926 起「首頁只到床號」那條規則的反轉：鄰床看得到姓名，使用者知情決定；病歷號、面板、跑馬燈的限制不變。</p>
 <p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-4</code>（新增，5 步，不需後端）全部通過；<code>verify:iteration8</code>、<code>14</code>、<code>14-5</code>、<code>16</code>、<code>17-1</code>、<code>17-2</code>、<code>check:ui</code>、<code>check:ui:design</code> 全綠，其中 <code>verify:iteration14</code> 依 1.1 第六次改寫。
 在 <code>npm run demo:patient</code> 上另配三位透析中的病人，以無頭 Chrome 截了病人端 1280×800 與 800×1280 各兩張、護理端簡易版 1366×768 與 1920×1080 各一張（放在 1007 週報附錄）。
-<strong>截圖時發現一件既有的事</strong>：院方資料沒有預計結束時間時，護理端平板格的進度條改用「平板配上的時間」算，剛配上的病人透析了 100 分鐘仍接近 0%；病人端的進度條與面板的橫軸又各用另一個終點。三處要用哪一個終點待使用者決定，這次沒改（修正紀錄第 4 節）。</p>
+<strong>截圖時發現一件既有的事</strong>：院方資料沒有預計結束時間時，護理端平板格的進度條改用「平板配上的時間」算，剛配上的病人透析了 100 分鐘仍接近 0%；病人端的進度條與面板的橫軸又各用另一個終點。三處要用哪一個終點待使用者決定，這次沒改（修正紀錄第 4 節）。<strong>1007 使用者決定</strong>：統一用開始後 4 小時——本透析中心透析一律四小時，是院方硬性規定；要改的是護理端 <code>progressOf</code> 與病人端 <code>App.tsx</code>，實作另排。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -9726,7 +9726,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~17~~</td>
 <td>~~跑馬燈內容由 AI 生成、護理師核准（1005）~~</td>
 <td><strong>實作已完成（1005）</strong>，腳本驗收通過；隨版本帶入的草稿待實驗室模型重寫</td>
-<td>無；正式環境的 AI 生成需 Q-07，在那之前用隨版本帶入的草稿；誰有權核准待 Q-28</td>
+<td>無；正式環境的 AI 生成需 Q-07，在那之前用隨版本帶入的草稿；誰有權核准 1007 已答（所有護理師，Q-28）</td>
 </tr>
 <tr>
 <td>~~17.1~~</td>
@@ -9770,9 +9770,10 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>0926 的優先順序</strong>：Q-29（隨身碟與掃毒）<strong>作廢</strong>——院方不准用隨身碟，交付改走 git clone。現在擋住第二次進院的是 <strong>Q-27</strong>（主機的 Docker、連接埠、斷電重開後誰登入）與新增的 <strong>Q-32</strong>（對外連線是不是常態、範圍多大）。兩題都要在本週問出去。</p>
 <p><strong>0930 更新</strong>：Q-32 已回覆——對外連線是常態、沒有限制，部署路線「連得出去」的前提成立。Q-27 的 Docker 版本（29.3.1、Compose v5.1.1）與連接埠（<code>13000</code>、<code>18080</code>、<code>18081</code>）也有答案。<strong>剩下擋第二次進院的是 Q-27 未答的題</strong>：斷電重開後誰登入、防毒排除，以及 0930 追加的 Docker Desktop 兩項設定（使用統計能不能關、市集自動更新能不能改手動）。</p>
 <p><strong>1005 更新</strong>：1001 第二次進院部分成功、卡在護理端登入（部署手冊第十五冊之三）。<strong>擋第三次進院的是 Q-27 第 12 題</strong>：使用者決定主機位址改用 IP，要資訊室把那個 IP 固定下來；其餘照 4.19。迭代 15～17 都不擋第三次進院。</p>
+<p><strong>1007 更新</strong>：Q-27 第 12 題已答——<strong>IP 是固定的</strong>，第三次進院照換。同日另答第 4 題（斷電後出現警示由護理長重新登入）、第 9 題（使用統計第三次進院關閉）、第 10 題（市集自動更新先不改）；Q-28 第 3 題（所有護理師都可以核准）與暫代相同，不必改程式。<strong>第三次進院已沒有待院方答覆的前提。</strong></p>
 <h3 id="419-第三次進院1005-新增">4.19 第三次進院（1005 新增）<a class="headerlink" href="#419-第三次進院1005-新增" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：護理站的電腦登得進護理端——1001 卡在這裡（部署手冊<a href="../../deployment/15c-why-1001-failed/">第十五冊之三</a>）；同時把主機位址從名稱換成 IP，並探測一次院方 API。</p>
-<p><strong>1005 使用者決定：主機位址改用 IP。</strong> 換法照部署手冊<a href="../../deployment/15d-switch-host-to-ip/">第十五冊之四</a>。平板一台都還沒佈建，現在換代價最小；<strong>前提是資訊室把那個 IP 固定下來</strong>（Q-27 第 12 題），IP 會變就不要換。</p>
+<p><strong>1005 使用者決定：主機位址改用 IP。</strong> 換法照部署手冊<a href="../../deployment/15d-switch-host-to-ip/">第十五冊之四</a>。平板一台都還沒佈建，現在換代價最小；<strong>前提是資訊室把那個 IP 固定下來</strong>（Q-27 第 12 題），IP 會變就不要換。<strong>1007 答覆：IP 是固定的</strong>，前提成立。</p>
 <table>
 <thead>
 <tr>
@@ -9784,7 +9785,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tbody>
 <tr>
 <td>出發前</td>
-<td>資訊室書面確認 IP，而且已經固定</td>
+<td>資訊室書面確認 IP，而且已經固定（<strong>1007 答覆已固定</strong>；護理站與平板的網段連不連得到，T-01 第 2、3 題照問）</td>
 <td>第十五冊之三 E-01、第十五冊之四 T-01</td>
 </tr>
 <tr>
@@ -9819,8 +9820,13 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 <tr>
 <td>現場</td>
-<td>其餘 1001 沒做到的：備份與還原、重新開機、平板、AI 閘道、冒煙測試與交接</td>
-<td>E-09</td>
+<td>其餘 1001 沒做到的：備份與還原、重新開機、平板、AI 閘道、冒煙測試與交接。<strong>重新開機照 1007 的答覆測</strong>：開機、以 Administrator 登入（模擬護理長），之後不碰任何東西，服務要自己回來</td>
+<td>E-09、第十五冊 V-19</td>
+</tr>
+<tr>
+<td>現場</td>
+<td>（1007 新增）<strong>關掉 Docker Desktop 的使用統計</strong>（Q-27 第 9 題）；市集自動更新照舊不改（第 10 題）</td>
+<td>第十五冊 V-05</td>
 </tr>
 <tr>
 <td>現場</td>
@@ -9887,7 +9893,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>開工前只要記住兩件事</strong>：</p>
 <ol>
 <li>清冊裡只有 Q-01（成效基準的量測人力與時程）有時效性。<strong>0919 起它改排下週執行</strong>——首波只開放少數人，紙本流程仍在跑，量測的時機還沒過；真正關上這扇門的是全單位改用系統的那一天</li>
-<li><strong>Q-27 剩下的題要問出去</strong>（0930 起 Q-32 已回覆：對外連線是常態、沒有限制）。它擋的是第二次進院：斷電重開後誰登入、防毒排除、Docker Desktop 的使用統計與市集自動更新——開機沒人登入，服務就回不來</li>
+<li><strong>Q-27 剩下的題要問出去</strong>（0930 起 Q-32 已回覆：對外連線是常態、沒有限制）。~~它擋的是第二次進院：斷電重開後誰登入、防毒排除、Docker Desktop 的使用統計與市集自動更新——開機沒人登入，服務就回不來~~ <strong>1007 起</strong>斷電重開（護理長重新登入）、IP、Docker Desktop 兩項設定都已答；剩防毒排除、Git、DNS 等，不擋第三次進院，但防毒排除之前不得輸入真實病人資料</li>
 </ol>
 <hr />
 <h2 id="7-已知風險">7. 已知風險<a class="headerlink" href="#7-已知風險" title="Permanent link">&para;</a></h2>
