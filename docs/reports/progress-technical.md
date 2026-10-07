@@ -27,7 +27,7 @@
 | [`database-policy.md`](../requirements/database-policy.md) | 資料治理強制規則，**優先權等同實作規格書** |
 | [`deployment-spec.md`](../requirements/deployment-spec.md) | 部署形態、環境界線與交付方式（0912 新增，0926 改版為 v3.0：Docker ＋ `git clone`），**優先權等同實作規格書** |
 | [`fde-assessment.md`](../requirements/fde-assessment.md) | 背景脈絡與選型理由 |
-| [`open-questions.md`](../requirements/open-questions.md) | 唯一的待確認事項總表（Q-01～Q-36）。程式裡的暫定值多半對應其中一項 |
+| [`open-questions.md`](../requirements/open-questions.md) | 唯一的待確認事項總表（Q-01～Q-37）。程式裡的暫定值多半對應其中一項 |
 | [`../notes/uiux-design-baseline.md`](../notes/uiux-design-baseline.md) | 介面設計基準（0919 新增，0927 改為極簡方向）。**動介面前先讀**，可執行版在 `.claude/skills/hd-uiux/` |
 | [`../reference/kiosk-shell-contract.md`](../reference/kiosk-shell-contract.md) | 病人端外殼 App 契約（0927 新增）。外殼在另一個私人 repo，兩邊只靠這一份帶版本號的契約對齊 |
 
