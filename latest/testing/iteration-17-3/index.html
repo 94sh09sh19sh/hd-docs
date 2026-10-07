@@ -2374,10 +2374,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1731--擋得住不合格就退回重寫連續不合格就失敗-" class="md-nav__link">
+  <a href="#1731--不合格就退回重寫最後一次照樣交出前端看不出來-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        17.3.1 · 擋得住：不合格就退回重寫，連續不合格就失敗 🖥
+        17.3.1 · 不合格就退回重寫，最後一次照樣交出，前端看不出來 🖥
       
     </span>
   </a>
@@ -3318,10 +3318,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1731--擋得住不合格就退回重寫連續不合格就失敗-" class="md-nav__link">
+  <a href="#1731--不合格就退回重寫最後一次照樣交出前端看不出來-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        17.3.1 · 擋得住：不合格就退回重寫，連續不合格就失敗 🖥
+        17.3.1 · 不合格就退回重寫，最後一次照樣交出，前端看不出來 🖥
       
     </span>
   </a>
@@ -3396,8 +3396,8 @@
 操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
 項次接著迭代 17.2 分冊編（<code>aa87</code> 起；17.2 用到 <code>aa86</code>），小版沿用那個迭代的字母。</p>
 </blockquote>
-<p><strong>這一冊驗一件事</strong>：AI 寫出來的內容只要含簡體字、中國大陸用語或台灣不這樣寫的字形，<strong>系統就退回請它重寫</strong>；連續不合格就整次失敗，不交出內容。
-沒違規的照舊，一次就好。</p>
+<p><strong>這一冊驗一件事</strong>：AI 寫出來的內容只要含簡體字、中國大陸用語或台灣不這樣寫的字形，<strong>系統就退回請它重寫</strong>；最後一次仍不合格也照樣交出。
+沒違規的照舊，一次就好。<strong>兩端畫面上任何時候都看不出這道把關</strong>——退回的紀錄只在資料庫裡。</p>
 <table>
 <thead>
 <tr>
@@ -3429,7 +3429,7 @@
 <tbody>
 <tr>
 <td>§17.3.1</td>
-<td>擋得住：不合格就退回重寫，連續不合格就失敗</td>
+<td>不合格就退回重寫，最後一次照樣交出，前端看不出來</td>
 <td>🖥</td>
 <td>修正紀錄 3.2</td>
 </tr>
@@ -3455,29 +3455,32 @@
 </table>
 <p><strong>前置</strong>：系統管理的「AI 輔助功能」開著（迭代 17 分冊 <code>aa1</code>）。</p>
 <p><strong>怎麼讓模擬模型寫出不合格的內容</strong>：模擬模型寫公告時，會把護理師輸入的<strong>事由照抄進內容</strong>。
-所以在事由裡夾一個詞庫裡的詞，模擬模型每一次都會寫出那個詞，正好用來看「連續不合格」那條路。
+所以在事由裡夾一個詞庫裡的詞，模擬模型每一次都會寫出那個詞，正好用來看「一直不合格」那條路。
 詞從 <code>packages/shared/zh-tw/words.txt</code> 挑：<strong>沒有 <code>#</code> 開頭的任一行，Tab 左邊那個詞</strong>（右邊是台灣的說法）。</p>
 <hr />
-<h2 id="1731--擋得住不合格就退回重寫連續不合格就失敗-">17.3.1 · 擋得住：不合格就退回重寫，連續不合格就失敗 🖥<a class="headerlink" href="#1731--擋得住不合格就退回重寫連續不合格就失敗-" title="Permanent link">&para;</a></h2>
+<h2 id="1731--不合格就退回重寫最後一次照樣交出前端看不出來-">17.3.1 · 不合格就退回重寫，最後一次照樣交出，前端看不出來 🖥<a class="headerlink" href="#1731--不合格就退回重寫最後一次照樣交出前端看不出來-" title="Permanent link">&para;</a></h2>
 <p>護理端開 <code>http://localhost:5173</code>，用有「公告與院內衛教」權限的帳號登入，進<strong>專業版 → 公告與院內衛教</strong>。</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa87</code> <strong>［護理端］</strong> 公告事由輸入「10/10 停診」，按要一份。
   → 幾秒後「待核准」多一則「中心公告」，內容是事由加上模擬輸出的尾巴。<strong>與迭代 17 時完全相同</strong>——沒違規的不受影響。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa88</code> <strong>［護理端］</strong> 公告事由輸入「10/10 停診，」再接一個從 <code>words.txt</code> 挑的詞，按要一份。
-  → 那一則變成<strong>產生失敗</strong>，底下一行寫「連續 3 次輸出都含簡體字或中國大陸用語（最後一次：中國大陸用語「（那個詞）」→「（右邊那個說法）」），請再試一次」；旁邊有「重新生成」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa89</code> <strong>［護理端］</strong> 系統管理 → AI 呼叫紀錄。
-  → 最上面三筆都是<strong>失敗</strong>，錯誤訊息都以「輸出含簡體字或中國大陸用語：」開頭，接著寫哪個詞改成什麼；<code>aa87</code> 那一筆是成功。</li>
+  → 幾秒後（比 <code>aa87</code> 稍久）「待核准」照樣多一則，內容含那個詞（第 3 次仍不合格，照樣交出）。<strong>畫面上沒有「產生失敗」，也沒有任何提到簡體字、用語或重寫的文字</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa89</code> <strong>［護理端］</strong> 系統管理 → AI 呼叫紀錄；再到稽核軌跡，篩「AI 模型呼叫」。
+  → 兩處都只多<strong>一筆成功</strong>，與 <code>aa87</code> 那一筆長得一樣；沒有任何失敗列、錯誤訊息或說明提到用語。點開那一筆的提示，<strong>最後沒有重寫附註</strong>。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa90</code> <strong>［資料庫］</strong> <code>npm run prisma:studio</code>，開 <code>AiInvocation</code>，看最新的三筆（依 <code>invokedAt</code> 排）。
-  → 三筆的 <code>outputText</code> 都留著模擬模型寫的原文；<strong>第二、三筆的 <code>promptText</code> 最後多一段</strong>「上一次的輸出用了簡體字或中國大陸用語：…。請改用台灣的繁體中文與台灣的說法重寫，其餘要求不變。」，第一筆沒有。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa91</code> <strong>［護理端］</strong> 系統管理 → 稽核軌跡，篩「AI 模型呼叫」。
-  → 對應的三筆都是失敗：前兩筆寫「第 1 次（第 2 次）輸出含簡體字或中國大陸用語（…），已退回重寫」，第三筆寫「連續 3 次不合格，不交出內容」。</li>
+  → 資料庫裡三筆都在：前兩筆 <code>FAILURE</code>、<code>errorMessage</code> 以「輸出含簡體字或中國大陸用語：」開頭，第三筆 <code>SUCCESS</code>；三筆的 <code>outputText</code> 都留著原文。
+  <strong>第二、三筆的 <code>promptText</code> 最後多一段</strong>「上一次的輸出用了簡體字或中國大陸用語：…。請改用台灣的繁體中文與台灣的說法重寫，其餘要求不變。」，第一筆沒有。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa91</code> <strong>［資料庫］</strong> 同一個畫面開 <code>AuditLog</code>，看最新的三筆「AI 模型呼叫」（<code>action</code> 是 <code>AI_INVOKED</code>）。
+  → 三筆都在：前兩筆 <code>FAILURE</code>，說明寫「第 1 次（第 2 次）輸出含簡體字或中國大陸用語（…），已退回重寫」；第三筆 <code>SUCCESS</code>，說明與 <code>aa87</code> 那一筆的格式相同。
+  終端機跑後端的那個視窗會有一行 <code>WARN [AiGatewayService] …第 3 次仍輸出含簡體字或中國大陸用語（…），照樣交出</code>。</li>
 </ul>
 <h2 id="1732--實驗室模型實際會不會寫出大陸用語-">17.3.2 · 實驗室模型實際會不會寫出大陸用語 🧪<a class="headerlink" href="#1732--實驗室模型實際會不會寫出大陸用語-" title="Permanent link">&para;</a></h2>
 <p><code>.env</code> 設 <code>LLM_PROVIDER=lab</code>，照部署手冊第十三冊開好通道，<code>npm run dev</code>。<strong>只送合成資料</strong>——這一節只用跑馬燈的衛教主題與公告事由，本來就不帶病人資料。</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa92</code> <strong>［護理端］</strong> 專業版 → 公告與院內衛教，連續要 10 份衛教草稿（主題不指定，系統會輪流挑），再要 3 份公告（事由自己寫，用台灣的說法）。
-  → 每一份不是進「待核准」就是「產生失敗」，不會卡在「產生中」。進了待核准的<strong>逐字看一次</strong>：沒有簡體字、沒有大陸用語、沒有台灣不這樣寫的字形（<code>packages/shared/zh-tw/variants.txt</code> 左邊那一欄）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa93</code> <strong>［護理端］</strong> 系統管理 → AI 呼叫紀錄，數一下這 13 份總共送了幾次、其中幾次是「輸出含簡體字或中國大陸用語」。
+  → 每一份都進「待核准」（超過字數重寫三次仍超過的才會「產生失敗」），不會卡在「產生中」。<strong>逐字看一次</strong>：沒有簡體字、沒有大陸用語、沒有台灣不這樣寫的字形（<code>packages/shared/zh-tw/variants.txt</code> 左邊那一欄）。
+  有的話，表示那一份重寫到最後一次仍不合格、照樣交出了——記下來，核准前請護理師改掉。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa93</code> <strong>［資料庫］</strong> <code>npm run prisma:studio</code>，開 <code>AiInvocation</code>，數一下這 13 份總共送了幾次、其中幾次的 <code>errorMessage</code> 以「輸出含簡體字或中國大陸用語」開頭（<strong>護理端的 AI 呼叫紀錄不列這幾筆</strong>，只能看資料庫）。
   → 記下來回填修正紀錄第 5 節（「沒有驗的」那一段）。<strong>被退回的比例偏高</strong>（例如超過三成）就要回頭看系統提示或換模型，不是放寬詞庫。</li>
 </ul>
 <h2 id="1733--改詞庫-">17.3.3 · 改詞庫 🖥<a class="headerlink" href="#1733--改詞庫-" title="Permanent link">&para;</a></h2>

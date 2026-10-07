@@ -5735,7 +5735,7 @@
 <p><strong>0927 補（迭代 13 實作時發現）</strong>：<code>HttpLlmProvider</code> 原本把 <code>LLM_MODEL_ID</code> 當必填，還拿它核對模型清單，換模型就得同時改 <code>config.yaml</code> 與後端 <code>.env</code>，第 9 條做不到。改了一處：<strong>接閘道時 <code>LLM_MODEL_ID</code> 留空</strong>，請求不帶 <code>model</code>，由閘道決定並在回應裡回報實際模型，<code>ai_invocations</code> 記那一個。第 2 條「模型名稱只寫在 <code>config.yaml</code>」因此是程式強制，不只是慣例。</p>
 <p><strong>1007 補（迭代 17.3）</strong>：硬性規則再加一條：</p>
 <ol>
-<li><strong>AI 生成的內容禁用簡體字與中國大陸用語</strong>（含台灣不這樣寫的繁體字形）。由 <code>AiGatewayService</code> 統一把關：系統提示最後一律附上台灣用語的規則；輸出查到問題就記一筆失敗的呼叫紀錄、把「哪個詞改成什麼」附進提示請模型重寫，背景生成最多送 3 次、SOP 查詢最多 2 次，連續不合格就整次失敗（<code>LANGUAGE_REJECTED</code>），不交出內容。字表在 <code>packages/shared/zh-tw/</code>，由 <code>npm run zh-tw:data</code> 產生資料檔。<strong>不得另開一條繞過閘道的呼叫路徑</strong>——第 1 條本來就這樣規定，這一條讓它多一個理由</li>
+<li><strong>AI 生成的內容禁用簡體字與中國大陸用語</strong>（含台灣不這樣寫的繁體字形）。由 <code>AiGatewayService</code> 統一把關：系統提示最後一律附上台灣用語的規則；輸出查到問題就記一筆失敗的呼叫紀錄、把「哪個詞改成什麼」附進提示請模型重寫，背景生成最多送 3 次、SOP 查詢最多 2 次，最後一次仍不合格也照樣交出。<strong>前端不得出現這道把關的痕跡</strong>：退回的那幾次照第 5 條記呼叫紀錄與稽核，但回給前端的清單不列、提示截掉重寫附註（<code>apps/api/src/common/zh-tw-retry.ts</code>）。字表在 <code>packages/shared/zh-tw/</code>，由 <code>npm run zh-tw:data</code> 產生資料檔。<strong>不得另開一條繞過閘道的呼叫路徑</strong>——第 1 條本來就這樣規定，這一條讓它多一個理由</li>
 </ol>
 <h3 id="35-臨床資料來源介面層-clinicaldatasourceport新增">3.5 臨床資料來源介面層 <code>ClinicalDataSourcePort</code>（新增）<a class="headerlink" href="#35-臨床資料來源介面層-clinicaldatasourceport新增" title="Permanent link">&para;</a></h3>
 <p>對應 FR-S05。院方尚未確定給 API 還是 Excel，因此先定介面。</p>
@@ -9248,21 +9248,22 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td>2</td>
 <td>AI 閘道把關</td>
-<td>3.4 第 11 條：系統提示附規則、輸出不合格退回重寫、連續不合格整次失敗；每一次都留呼叫紀錄與稽核</td>
+<td>3.4 第 11 條：系統提示附規則、輸出不合格退回重寫、最後一次仍不合格也照樣交出；每一次都留呼叫紀錄與稽核</td>
 <td>FR-S06</td>
 </tr>
 <tr>
 <td>3</td>
-<td>隨版本帶入的草稿</td>
-<td>匯入時字數之外也查用語</td>
-<td>FR-N17</td>
+<td>前端不留痕跡</td>
+<td>退回的那幾次在呼叫紀錄清單與稽核查詢不列，提示截掉重寫附註；資料庫照記</td>
+<td>FR-S06</td>
 </tr>
 </tbody>
 </table>
 <p><strong>使用者決定的四件事</strong>（1007）：照 Claude Code 的方式擋下並請模型重寫；詞庫另做一份醫療用的；首頁「其他文件」收成一行連結（文件整理）；台灣不這樣寫的字形一起擋。
-<strong>資料表、端點、畫面都沒動</strong>：退回的那幾次記成既有的「失敗」，稽核沿用「AI 模型呼叫」，產生失敗的顯示沿用各功能原本的樣子。</p>
-<p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-3</code>（新增，7 步，不需後端；閘道用替身組起來實際跑一次重寫與失敗）全部通過；<code>verify:iteration3</code>、<code>4</code>、<code>17:api</code> 對著開發機的後端全部通過，未改；<code>check:all</code> 六支全綠。
-在開發機實際走過一次：公告事由夾一個詞庫裡的詞，模擬模型連續 3 次照抄、3 次都被退回，那一則標產生失敗並寫明原因；不夾的照常進待核准。
+<strong>同日追加調整</strong>（1007，仍算 17.3）：最後一次仍不合格也照樣交出，不再整次失敗；任何時候都不能讓前端出現這道把關的痕跡——退回的紀錄資料庫照記、回給前端前濾掉（使用者在三個方案中選定）。隨版本帶入的草稿匯入時不再另查用語。
+<strong>資料表、端點、畫面都沒動</strong>：退回的那幾次記成既有的「失敗」，稽核沿用「AI 模型呼叫」。</p>
+<p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-3</code>（新增，7 步，不需後端；閘道用替身組起來實際跑一次重寫與最後一次照樣交出，並確認前端只看得到交出的那一筆）追加調整後全部通過；<code>verify:iteration3</code>、<code>4</code>、<code>17:api</code> 對著開發機的後端全部通過，未改；<code>check:all</code> 六支全綠。
+最初的版本在開發機實際走過一次（公告事由夾一個詞庫裡的詞，模擬模型連續 3 次照抄）；追加調整後的行為由分冊 <code>aa88</code>～<code>aa91</code> 驗。
 <strong>實驗室的真模型多常被退回還沒看</strong>（分冊 <code>aa92</code>、<code>aa93</code>）。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
@@ -9607,7 +9608,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <tr>
 <td>~~17.3~~</td>
 <td>~~所有 AI 生成內容禁用簡體字與中國大陸用語（1007）~~</td>
-<td><strong>已完成（1007）</strong>，腳本驗收與開發機實測通過；實驗室真模型的退回比例待看</td>
+<td><strong>已完成（1007）</strong>，腳本驗收通過（同日追加調整：最後一次照樣交出、前端不留痕跡）；實驗室真模型的退回比例待看</td>
 <td>無</td>
 </tr>
 <tr>

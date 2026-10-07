@@ -3543,7 +3543,9 @@
 <blockquote>
 <p><strong>系統中所有 AI 生成的內容，禁用中國大陸用語與簡體字。</strong></p>
 </blockquote>
-<p>本文件記錄做法、使用者當場決定的四件事、開發端做的判斷，以及影響到哪些既有規則。</p>
+<p>本文件記錄做法、使用者決定的事、開發端做的判斷，以及影響到哪些既有規則。</p>
+<p><strong>同日追加調整（1007，仍算 17.3）</strong>：使用者把「連續不合格就整次失敗」改成<strong>最後一次仍不合格也照樣交出</strong>，
+並要求<strong>任何時候都不能讓前端出現這道把關的痕跡或訊息</strong>。下文已改成調整後的樣子，調整的經過見第 1 節第 5、6 題。</p>
 <ul>
 <li>功能需求來源仍是《<a href="../../requirements/srs/">軟體需求規格書</a>》；本次在 FR-S06 補一段「AI 生成內容的用語」（SRS 自己的版本歷程定版日補）</li>
 <li>範圍與技術選型仍以《<a href="../../requirements/implementation-spec/">實作規格書</a>》為準（3.4 加第 11 條硬性規則，4.15.3 節是本文件的摘要）</li>
@@ -3554,7 +3556,7 @@
 這次是把同一條規矩延伸到<strong>系統自己產生的內容</strong>——病人平板上的衛教、跑馬燈、離院衛教重點，護理師看到的護理記錄初稿與 SOP 查詢回答。</p>
 <hr />
 <h2 id="1-使用者的決定1007">1. 使用者的決定（1007）<a class="headerlink" href="#1-使用者的決定1007" title="Permanent link">&para;</a></h2>
-<p>開工前問了四件事，使用者當場決定：</p>
+<p>開工前問了四件事，使用者當場決定；第 5、6 題是同日追加調整時的決定：</p>
 <table>
 <thead>
 <tr>
@@ -3583,6 +3585,16 @@
 <td>4</td>
 <td>台灣不這樣寫的繁體字形（OpenCC 繁體標準裡「為」「裡」「眾」的另一種寫法）要不要一起擋</td>
 <td><strong>一起擋</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>（同日追加）重寫到最後一次仍不合格時</td>
+<td><strong>照樣交出</strong>，不算失敗；不再有「用語不合格而失敗」這種結果</td>
+</tr>
+<tr>
+<td>6</td>
+<td>（同日追加）前端不能出現這道把關的痕跡，退回的那幾次要不要記</td>
+<td><strong>資料庫照記每一次</strong>（稽核完整），回給前端之前濾掉。開發端原本只想寫後端日誌、不寫呼叫紀錄與稽核，但那會少記稽核、違反實作規格書 3.4 第 5 條，提出三個方案請使用者選</td>
 </tr>
 </tbody>
 </table>
@@ -3615,13 +3627,13 @@
 </tr>
 <tr>
 <td>3</td>
-<td><strong>AI 閘道的把關</strong>：每一次呼叫的系統提示最後附上規則；輸出查到問題就退回重寫，連續不合格就整次失敗、不交出內容</td>
+<td><strong>AI 閘道的把關</strong>：每一次呼叫的系統提示最後附上規則；輸出查到問題就退回重寫，最後一次仍不合格也照樣交出</td>
 <td><code>apps/api/src/modules/ai/ai-gateway.service.ts</code></td>
 </tr>
 <tr>
 <td>4</td>
-<td><strong>隨版本帶入的跑馬燈草稿</strong>：匯入時字數之外也查用語</td>
-<td><code>marquee-draft.service.ts</code> 的 <code>ensureBundleImported</code></td>
+<td><strong>前端不留痕跡</strong>：退回的那幾次照記呼叫紀錄與稽核，但呼叫紀錄清單與稽核查詢不列；回給前端的提示截掉重寫附註</td>
+<td><code>apps/api/src/common/zh-tw-retry.ts</code>，兩個 repository 的 <code>query</code>、<code>platform-mappers.ts</code></td>
 </tr>
 <tr>
 <td>5</td>
@@ -3645,13 +3657,13 @@
         │
      有問題
         ↓
-  記一筆失敗的呼叫紀錄（留輸出原文、錯誤訊息寫哪個詞改成什麼）
-        ↓
-  還有次數？── 有 ──→ 原提示 ＋「上一次的輸出用了…：「甲」→「乙」…。請改用台灣的繁體中文與台灣的說法重寫，其餘要求不變。」→ 再送一次
+  已是最後一次？── 是 ──→ 照樣交出，記成成功（後端日誌留一行警告）
         │
-       沒有
+        否
         ↓
-  整次失敗（LANGUAGE_REJECTED），訊息「連續 N 次輸出都含簡體字或中國大陸用語（最後一次：…），請再試一次」
+  記一筆失敗的呼叫紀錄（留輸出原文、錯誤訊息寫哪個詞改成什麼）與一筆失敗的稽核
+        ↓
+  原提示 ＋「上一次的輸出用了…：「甲」→「乙」…。請改用台灣的繁體中文與台灣的說法重寫，其餘要求不變。」→ 再送一次
 </code></pre></div>
 <table>
 <thead>
@@ -3668,17 +3680,22 @@
 <td>2</td>
 </tr>
 <tr>
-<td>連續不合格時</td>
-<td>背景工作標失敗，畫面上與其他失敗一樣顯示原因，可以再要一次</td>
-<td>回「查詢失敗」並附原因，照樣列出檢索到的段落</td>
+<td>最後一次仍不合格時</td>
+<td>照樣交出，與第一次就合格的一樣進「待核准」或成為初稿</td>
+<td>照樣回答</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li><strong>每一次送出都各記一筆呼叫紀錄與稽核</strong>：退回的那幾次記成失敗、留下模型寫的原文，系統管理的「AI 呼叫紀錄」查得到模型寫了什麼、被退回的原因；合格那一次的稽核寫「用語不合格退回重寫後第 N 次合格」</li>
-<li><strong>跑馬燈超過字數的重新生成另外算</strong>（迭代 17 的 <code>generateWithinLimits</code>）：閘道回「用語不合格」時跑馬燈不再重試，直接標失敗，所以一份草稿最多仍是 3 次</li>
+<li><strong>每一次送出都各記一筆呼叫紀錄與稽核</strong>（實作規格書 3.4 第 5 條不變）：退回的那幾次記成失敗、留下模型寫的原文，錯誤訊息開頭固定是「輸出含簡體字或中國大陸用語」</li>
+<li><strong>前端看不到這道把關</strong>（使用者 1007 追加的要求）：</li>
+<li>系統管理的「AI 呼叫紀錄」與「稽核軌跡」<strong>不列退回的那幾筆</strong>——查詢時濾掉，資料庫裡都在（<code>HIDE_ZH_TW_REJECTED_INVOCATIONS</code>、<code>HIDE_ZH_TW_REJECTED_AUDITS</code>）</li>
+<li>交出那一筆的提示若是重寫過的，資料庫記實際送出的那一份；<strong>回給前端時截掉重寫附註</strong>（<code>withoutZhTwRetryNote</code>），連線測試的結果也一樣</li>
+<li>交出那一筆的稽核說明與沒重寫過的完全相同，看不出送了幾次</li>
+<li>沒有用語相關的錯誤訊息、沒有 422，畫面上也沒有任何用語相關的文字（<code>verify:iteration17-3</code> 步驟 7 掃兩端原始檔）</li>
+<li>要查退回的情形只能直接看資料庫（分冊 <code>aa90</code>、<code>aa93</code>）</li>
+<li><strong>跑馬燈超過字數的重新生成另外算</strong>（迭代 17 的 <code>generateWithinLimits</code>）：閘道一律交出內容，所以一份草稿超過字數時每一輪都可能再各重寫用語，最壞情況共送 9 次。背景工作不急，模擬模型也不會違規，沒有另外設上限</li>
 <li><strong>衛教內容可能要英語、越南語、印尼語</strong>（FR-P04）：規則寫的是「輸出中文時」，字表也只認得中文，其他語言不受影響</li>
-<li>連線測試這一支 HTTP 端點收到連續不合格時回 422（不誤報成「模型供應者呼叫失敗」）</li>
 </ul>
 <h3 id="33-三份字表">3.3 三份字表<a class="headerlink" href="#33-三份字表" title="Permanent link">&para;</a></h3>
 <p><strong>支語詞庫</strong>（<code>packages/shared/zh-tw/words.txt</code>，格式與開發端的 hook 詞庫相同：一行一組，<code>支語&lt;TAB&gt;建議用語</code>，<code>#</code> 開頭為註解）：</p>
@@ -3701,12 +3718,13 @@
 隨版本帶入的 14 則跑馬燈衛教草稿也查不到。以後放行或補詞，這一步就是回歸。</p>
 <h3 id="34-隨版本帶入的跑馬燈草稿">3.4 隨版本帶入的跑馬燈草稿<a class="headerlink" href="#34-隨版本帶入的跑馬燈草稿" title="Permanent link">&para;</a></h3>
 <p>院內推論端點就位之前（Q-07），衛教草稿是開發端事先生成、隨版本帶進去的（迭代 17）。它們生成時就經過閘道（<code>npm run marquee:bundle</code> 走正式功能那一條路），
-所以本來就會被把關；<strong>匯入時再查一次</strong>，是防資料檔被手改過。查到的不匯入，原因寫進匯入那一筆稽核（與超過字數的處理相同）。現有的 14 則全部合格。</p>
+所以本來就會被把關。<strong>匯入時不另查用語</strong>：最初的版本匯入時再查一次、查到的不匯入並寫進稽核，但那會讓稽核軌跡出現「因用語未匯入」，
+1007 追加調整時拿掉了。現有的 14 則全部合格（<code>verify:iteration17-3</code> 步驟 3 照樣查）。</p>
 <h3 id="35-沒有做的事">3.5 沒有做的事<a class="headerlink" href="#35-沒有做的事" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>不自動替換</strong>：一個簡體字可能對到兩個繁體字（頭髮的「髮」與發生的「發」在簡體是同一個字），一個大陸用語在台灣也可能有兩種說法，機械替換會換錯；交給模型依上下文重寫</li>
 <li><strong>護理師自己寫的、改的字不查</strong>：使用者說的是「AI 生成的內容」。護理師修改後核准的跑馬燈、手寫的護理記錄不經過閘道，不在這次範圍</li>
-<li><strong>病人端與護理端的畫面沒有任何改動</strong>：失敗時的顯示沿用各功能原本的「生成失敗」</li>
+<li><strong>病人端與護理端的畫面沒有任何改動</strong>：用語不合格不會造成失敗，畫面上也沒有任何地方提到這道把關</li>
 </ul>
 <hr />
 <h2 id="4-開發端在實作時做的判斷">4. 開發端在實作時做的判斷<a class="headerlink" href="#4-開發端在實作時做的判斷" title="Permanent link">&para;</a></h2>
@@ -3727,8 +3745,23 @@
 </tr>
 <tr>
 <td>退回的那幾次記成「失敗」，不另開一種結果</td>
-<td>呼叫紀錄的結果欄沿用成功、失敗、擋下三種，<strong>資料表不動</strong>；錯誤訊息開頭固定寫「輸出含簡體字或中國大陸用語」，查得出來</td>
-<td>同上</td>
+<td>呼叫紀錄的結果欄沿用成功、失敗、擋下三種，<strong>資料表不動</strong>；錯誤訊息開頭固定寫「輸出含簡體字或中國大陸用語」，查得出來，也是前端濾掉時認的記號</td>
+<td>同上；<code>common/zh-tw-retry.ts</code> 的 <code>ZH_TW_REJECTED_MESSAGE</code></td>
+</tr>
+<tr>
+<td>濾掉的條件只認「AI 模型呼叫、失敗、說明含那句話」（稽核）與「失敗、錯誤訊息以那句話開頭」（呼叫紀錄）</td>
+<td>連線失敗、被擋下等其他失敗照常列出；錯誤訊息或說明為空的紀錄不會被誤濾（條件拆成 OR，SQL 的 NULL 不會讓整列消失）</td>
+<td><code>common/zh-tw-retry.ts</code></td>
+</tr>
+<tr>
+<td>濾在 repository 的 <code>query</code>，不在前端</td>
+<td>前端收不到就不可能顯示；這兩支 <code>query</code> 只給系統管理的清單用</td>
+<td><code>ai-invocation.repository.ts</code>、<code>audit-log.repository.ts</code></td>
+</tr>
+<tr>
+<td>最後一次仍不合格時，後端日誌留一行警告</td>
+<td>那一筆在資料庫裡記成成功，日後要查「交出去的有沒有違規」可從日誌找，或拿 <code>outputText</code> 重跑 <code>findZhTwIssues</code></td>
+<td><code>ai-gateway.service.ts</code></td>
 </tr>
 <tr>
 <td>稽核沿用「AI 模型呼叫」這個動作，不新增稽核動作</td>
@@ -3765,16 +3798,6 @@
 <td>這六個在台灣也通行（例如「污染」「排泄」的寫法）；擋了會誤傷正常的衛教用語</td>
 <td>同上的 <code>VARIANT_KEEP</code></td>
 </tr>
-<tr>
-<td>連線測試收到連續不合格回 422</td>
-<td>原本的預設是 503「模型供應者呼叫失敗」，會讓人以為是連線問題</td>
-<td><code>ai-gateway.service.ts</code> 的 <code>invoke</code></td>
-</tr>
-<tr>
-<td>隨版本帶入的草稿匯入時也查</td>
-<td>生成時已經過閘道，這一道只防資料檔被手改過；多查一次沒有成本</td>
-<td><code>marquee-draft.service.ts</code></td>
-</tr>
 </tbody>
 </table>
 <hr />
@@ -3788,8 +3811,8 @@
 </thead>
 <tbody>
 <tr>
-<td><code>verify:iteration17-3</code>（新增，7 步，不需後端；閘道用替身組起來，實際跑一次「不合格 → 重寫 → 合格」與「連續不合格 → 失敗」）</td>
-<td>全部通過</td>
+<td><code>verify:iteration17-3</code>（新增，7 步，不需後端；閘道用替身組起來，實際跑一次「不合格 → 重寫 → 合格」與「一直不合格 → 最後一次照樣交出」，並把前端的過濾條件套在替身的紀錄上，確認前端只看得到交出的那一筆）</td>
+<td>全部通過（1007 追加調整後重跑）</td>
 </tr>
 <tr>
 <td><code>verify:iteration3</code>、<code>verify:iteration4</code>、<code>verify:iteration17:api</code>（對著開發機的後端，模擬模型）</td>

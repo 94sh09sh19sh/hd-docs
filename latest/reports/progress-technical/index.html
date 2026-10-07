@@ -5310,7 +5310,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <li>閘道有兩個入口：<code>invoke()</code> 給 HTTP 端點，失敗拋例外；<code>attempt()</code>（迭代 4 新增）給背景工作，被擋或失敗時也回傳該次呼叫的紀錄 id，才能寫回工作結果</li>
 <li>切換 provider 只改設定：<code>verify:iteration4</code> 以備份還原檔另起一個 <code>LLM_PROVIDER=lab</code> 的後端，接到腳本內的本機假端點，驗證同一份程式只改環境變數即可切換，且帶真實病人資料的請求一次都沒送出去</li>
 <li><strong>迭代 13 起 <code>lab</code>／<code>onprem</code> 的另一端是 AI 閘道容器</strong>，不是推論端點本身；<code>LLM_MODEL_ID</code> 接閘道時留空，<code>/ai/status</code> 顯示閘道回報的模型。正式環境設定（<code>DEPLOYMENT_ENV=production</code>）下 <code>LLM_PROVIDER=lab</code> 直接拒絕啟動（DEP-40）</li>
-<li><strong>迭代 17.3 起閘道多一道用語把關</strong>：系統提示最後附上 <code>ZH_TW_SYSTEM_RULE</code>；輸出經 <code>@hd/shared</code> 的 <code>findZhTwIssues</code> 查到簡體字、中國大陸用語或台灣不這樣寫的字形，就記一列 <code>FAILURE</code>（留 <code>outputText</code>，<code>errorMessage</code> 開頭「輸出含簡體字或中國大陸用語」）、把 <code>zhTwRetryNote</code> 附進提示重送；背景用途最多 3 次、<code>SOP_ANSWER</code> 2 次，用完回 <code>LANGUAGE_REJECTED</code>（<code>invoke()</code> 轉成 422）</li>
+<li><strong>迭代 17.3 起閘道多一道用語把關</strong>：系統提示最後附上 <code>ZH_TW_SYSTEM_RULE</code>；輸出經 <code>@hd/shared</code> 的 <code>findZhTwIssues</code> 查到簡體字、中國大陸用語或台灣不這樣寫的字形，就記一列 <code>FAILURE</code>（留 <code>outputText</code>，<code>errorMessage</code> 開頭「輸出含簡體字或中國大陸用語」）、把 <code>zhTwRetryNote</code> 附進提示重送；背景用途最多 3 次、<code>SOP_ANSWER</code> 2 次，最後一次仍不合格也記成 <code>SUCCESS</code> 照樣交出（後端日誌留一行 <code>WARN</code>）。<strong>前端不留痕跡</strong>：退回的那幾列與對應的稽核在資料庫照記，<code>AiInvocationRepository.query</code>、<code>AuditLogRepository.query</code> 套 <code>common/zh-tw-retry.ts</code> 的條件濾掉；<code>toAiInvocationEntry</code> 以 <code>withoutZhTwRetryNote</code> 截掉提示後面的重寫附註</li>
 </ul>
 <h3 id="510-臨床資料來源介面層fr-s05迭代-3">5.10 臨床資料來源介面層（FR-S05，迭代 3）<a class="headerlink" href="#510-臨床資料來源介面層fr-s05迭代-3" title="Permanent link">&para;</a></h3>
 <p><code>modules/clinical-data/</code>：<code>ClinicalDataSourcePort</code> ＋ <code>ManualEntryAdapter</code> ＋ <code>FileImportAdapter</code>（迭代 6）＋ <strong><code>HospitalApiAdapter</code>（迭代 15，在 <code>modules/hospital-sync/</code>）</strong>，三者共用 <code>clinical_value_imports</code>／<code>clinical_values</code>。
@@ -6480,12 +6480,20 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 <td><code>packages/shared/src/zh-tw.ts</code>：<code>findZhTwIssues</code>（較長的詞命中時不另報被它包住的短詞，與 hook 相同）、<code>describeZhTwIssues</code>、<code>zhTwRetryNote</code>；字表延到第一次用到才解析</td>
 </tr>
 <tr>
+<td>最後一次仍不合格</td>
+<td>照樣交出、記成 <code>SUCCESS</code>，不會失敗；<code>AiAttemptFailureKind</code> 沒有多任何一種，也沒有 422</td>
+</tr>
+<tr>
+<td>前端不留痕跡</td>
+<td><code>apps/api/src/common/zh-tw-retry.ts</code>：<code>HIDE_ZH_TW_REJECTED_INVOCATIONS</code>、<code>HIDE_ZH_TW_REJECTED_AUDITS</code> 套在兩個 repository 的 <code>query</code>（只認錯誤訊息或稽核說明裡的「輸出含簡體字或中國大陸用語」，其他失敗照常列出）；<code>withoutZhTwRetryNote</code> 在 <code>toAiInvocationEntry</code> 截掉重寫附註。資料庫照記每一次</td>
+</tr>
+<tr>
 <td>隨版本帶入的草稿</td>
-<td><code>MarqueeDraftService.ensureBundleImported</code> 多查一次 <code>languageProblem</code>，不合格的不匯入、寫進稽核</td>
+<td>匯入時不另查用語（最初的版本有查，會讓稽核出現「因用語未匯入」，1007 追加調整時拿掉）</td>
 </tr>
 <tr>
 <td>沒有動的</td>
-<td>資料表、端點、稽核動作的種類、兩端畫面都沒動。<code>AiAttemptFailureKind</code> 多一個 <code>LANGUAGE_REJECTED</code>，呼叫端原本的 <code>if (!result.ok)</code> 照樣接住</td>
+<td>資料表、端點、稽核動作的種類、兩端畫面都沒動</td>
 </tr>
 <tr>
 <td>驗收</td>
