@@ -624,7 +624,7 @@ ______________________________________________________________________
 
 | 定版                                                                       | 日期       | 異動                                                       |
 | -------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------- |
-| 1007                                                                       | 2026-10-07 | 「裝置管理」改名「新增裝置」                               |
+| [1007](https://94sh09sh19sh.github.io/hd-docs/1007/deployment/02-dry-run/) | 2026-10-07 | 「裝置管理」改名「新增裝置」                               |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/deployment/02-dry-run/) | 2026-09-23 | 首次定版。在一台乾淨的機器上把院內那一整套從頭到尾彩排一次 |
 
 [← 上一冊 · 開發機準備](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/01-dev-machine/index.md) · [回部署手冊總覽](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md) · [下一冊 · 平板與外殼 App →](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/03-tablet-shell/index.md)
