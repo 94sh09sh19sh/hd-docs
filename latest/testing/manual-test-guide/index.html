@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/">
       
       
-        <link rel="prev" href="../../notes/iteration-17-5-fixes/">
+        <link rel="prev" href="../../notes/iteration-17-6-fixes/">
       
       
         <link rel="next" href="../iteration-3/">
@@ -1644,6 +1644,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-6-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3040,6 +3068,34 @@
     
   
     迭代 17.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 分冊
   
 
     
@@ -4512,7 +4568,7 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 17.5 · 135 條 API 路由 · 109 種稽核動作。
+對應版本：迭代 17.6 · 135 條 API 路由 · 109 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
 <strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-17-分冊">§13 分冊索引</a>。</p>
 </blockquote>
@@ -4724,7 +4780,7 @@ npm<span class="w"> </span>run<span class="w"> </span>db:seed
 <p><code>db:seed</code> 寫出的 <code>apps/api/.device-keys.json</code> 是<strong>明文金鑰</strong>，而資料庫裡只存雜湊值。
 拿另一個 <code>DATABASE_URL</code> 再跑一次 <code>prisma:migrate</code> 或 <code>db:seed</code>（例如 §12 換資料庫、或臨時試另一個檔案），
 這個檔案會被<strong>整份覆蓋</strong>，原本那顆資料庫的平板金鑰就再也拿不回來，病人端只會停在「裝置尚未佈建」。
-補救只有兩條：在護理端「裝置管理」重新註冊幾台新平板（<code>f20</code>，會當場給新金鑰），或照 §11 重置資料庫重來。</p>
+補救只有兩條：在護理端「新增裝置」（1007 以前叫裝置管理）重新註冊幾台新平板（<code>f20</code>，會當場給新金鑰），或照 §11 重置資料庫重來。</p>
 </blockquote>
 <h3 id="啟動">啟動<a class="headerlink" href="#啟動" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -6533,10 +6589,15 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <td>不管院方資料有沒有預計結束時間，透析都是<strong>開始後四小時結束</strong>（院方硬性規定）：病人端進度條與面板橫軸、簡易版平板格、專業版即時總覽、總覽螢幕模式的進度一致；待確認下機也照這一條</td>
 <td><code>aa105</code>–<code>aa113</code></td>
 </tr>
+<tr>
+<td><a href="../iteration-17-6/">迭代 17.6 — 公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序</a></td>
+<td>簡易版公告與院內衛教的<strong>草稿換得到後面幾則</strong>、「＋」不佔清單格子；專業版主列六項、<strong>沒有「病人」那一頁</strong>，「新增裝置」只有註冊新平板與平板清單；系統管理「平板停用」解除佈建與登記佈建；排班與指派的病人下拉選單與簡易版病人框同序、重新整理</td>
+<td><code>aa114</code>–<code>aa130</code></td>
+</tr>
 </tbody>
 </table>
 <p>走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。</p>
-<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（二十五本分冊的「前置」都建立在這些上面）：</p>
+<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（二十六本分冊的「前置」都建立在這些上面）：</p>
 <table>
 <thead>
 <tr>

@@ -1516,6 +1516,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4156-迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.6 迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2532,6 +2543,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-6-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3309,6 +3348,34 @@
     
   
     迭代 17.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 分冊
   
 
     
@@ -4877,6 +4944,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4156-迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.6 迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5584,6 +5662,50 @@
 <td><code>verify:iteration15:api</code> 驗收 6 的待確認下機</td>
 <td>「乙的院方預計結束放到 70 分鐘前 → 標」改成「乙（開始 30 分鐘）院方預計結束放到 70 分鐘前 → <strong>不標</strong>」加「新增庚（開始 310 分鐘前、沒有預計結束、沒有結束體重）→ <strong>標</strong>，點一下確認下機、同步不改回去」</td>
 <td>「過了結束再加門檻仍沒有結束體重就標」「點一下確認」「同步不改回去」照驗；多驗了院方的預計結束不影響判定</td>
+</tr>
+</tbody>
+</table>
+<p><strong>迭代 17.6 是第八次</strong>（1007）：使用者指示專業版拿掉「病人」那一頁、「裝置管理」改成「新增裝置」，簡易版公告與院內衛教的草稿要能換到後面幾則。
+主列因此從 7 項變 6 項，病人頁的檔案不在了，<code>createPatient</code> 只剩簡易版（沒接院方資料時）在用；草稿卡不再固定放第一則。讀那些檔案、斷言那些數字的腳本不改就跑不下去。
+這一次也是<strong>需求本身改了</strong>（SRS 院方 API 取代表「新增病人」那一列 1007 補的專業版病人頁），改成驗新的規則，其餘照舊：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration9:api</code> 第 2、10 步</td>
+<td>「主列剛好 7 項」改成「主列與預設版位一致、不超過 7 項」</td>
+<td>上限 7 項、順序照預設版位、選單與關閉的那幾項原樣驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration14</code> 第 6 步</td>
+<td>「兩端都用同一支」的清單拿掉 <code>createPatient</code>，另驗專業版<strong>沒有</strong>呼叫它</td>
+<td>「簡易版只用既有端點與登記過的加法端點」照驗（<code>createPatient</code> 是既有端點）；其餘幾支兩端同一支照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration14-2</code> 第 4 步</td>
+<td>只改說明文字：「＋」從清單最前面移到框左欄圖示底下</td>
+<td>「＋」在那一框、只在 AI 開著時出現、表單與端點照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration15</code> 第 3 步</td>
+<td>專業版呼叫端的檔案清單拿掉 <code>PatientsPage.tsx</code></td>
+<td>要驗的 <code>createBinding</code>、<code>completeTreatmentSession</code> 本來就在排班與指派頁，判準不變</td>
+</tr>
+<tr>
+<td><code>verify:iteration17</code> 第 4 步</td>
+<td>「<code>pending[0] ?? generating[0]</code>」改成「待核准在前、產生中在後排成一列，草稿卡放目前選到的那一則」</td>
+<td>「一次只放一張、待核准的先、處理完下一張自己出現」照驗；換則本身由 <code>verify:iteration17-6</code> 驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration17-1</code> 第 2 步</td>
+<td>「病人頁沒有『配給的平板』那一欄」改成「病人頁已刪除、排班與指派頁沒有那一欄」</td>
+<td>「護理端沒有呼叫配給病人平板的端點」原樣驗</td>
 </tr>
 </tbody>
 </table>
@@ -6596,6 +6718,8 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 驗收方式那一條已寫進 <code>verify:iteration7</code>，不是只寫在手動測試手冊裡。
 次要原因 2 依原判斷不改程式，改在測試手冊寫明要用不同的瀏覽器設定檔。
 以下保留缺陷的定位過程——<strong>同一個入口設計再出現時，要認得出它</strong>。</p>
+<p><strong>1007 迭代 17.6</strong>：使用者指示修法 1 的「目前有效綁定」清單與排班與指派重複，拿掉（裝置管理也改名「新增裝置」，見 4.15.6）。
+跨日的綁定仍由修法 2 的提示列出，按一下跳到那一天就解得掉；<strong>畫面上「不改日期就解除」這一條因此不再成立</strong>，<code>verify:iteration7</code> 驗的是後端（不依日期的清單端點與解除），照樣通過。</p>
 </blockquote>
 <p><strong>回報症狀</strong>：在本機測試時，護理端有時無法解除某個綁定。懷疑的情境有很多種——未解除就關閉病人端或護理端、斷網、伺服器重新啟動、在本機綁定多台病人端裝置。</p>
 <p><strong>定位結果：主因只有一個，而且與上面列的情境都無關。</strong></p>
@@ -9559,6 +9683,64 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-5</code>（新增，6 步，不需後端；<code>plannedDialysisEndMs</code>、<code>dialysisProgress</code> 實際跑一次）全部通過；<code>verify:iteration15:api</code> 12 步、<code>16:api</code>、<code>14:api</code>、<code>17:api</code> 對著開發機的後端（模擬院方 API）全部通過；
 <code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>、<code>14-2</code>、<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code> 全綠，其中 <code>verify:iteration15</code> 與 <code>15:api</code> 依 1.1 第七次改寫。
 第一版（追加之前）在 <code>npm run demo:patient</code> 上重截 1007 週報附錄的六張圖：沒有預計結束時間的 B1、B3，護理端平板格與病人端進度條、面板橫軸一致（17.4 時接近 0%）。模擬院方資料的預計結束一律剛好四小時，追加之後畫面不變；追加之後另在 <code>demo:patient</code> 上看過專業版即時總覽與總覽螢幕模式，進度與簡易版一致（兩張圖補在週報附錄）。</p>
+<h3 id="4156-迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007">4.15.6 迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）<a class="headerlink" href="#4156-迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-07 完成。</strong> 使用者一次交代五件護理端畫面的調整。紀錄在《<a href="../../notes/iteration-17-6-fixes/">迭代 17.6 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-17-6/">迭代 17.6 分冊</a>》（<code>aa114</code>～<code>aa130</code>）。
+不是新的範圍，迭代 18 的內容一項都沒動。專業版「維持 0919 版面」的例外，與 0929 的斷線示警、求助橫幅上限同類（使用者直接指示）。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>改了什麼</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>簡易版草稿換則</td>
+<td>公告與院內衛教框的草稿卡原本固定放第一則；不只一則時卡底下一列「‹ 第幾則／共幾則 ›」，核准、退回、拖到平板都是卡上那一則</td>
+<td>FR-N17</td>
+</tr>
+<tr>
+<td>2</td>
+<td>「＋」不佔清單格子</td>
+<td>要 AI 寫草稿的「＋」移到框左欄圖示底下；草稿卡長高時清單只剩一格，原本「＋」佔掉那一格、已核准的第一則被切掉一半</td>
+<td>FR-N17</td>
+</tr>
+<tr>
+<td>3</td>
+<td>裝置管理改名新增裝置</td>
+<td>唯一的動作是註冊新平板，底下照樣列出所有平板的狀態；「目前有效綁定」（與排班與指派重複）、平板清單的操作欄拿掉</td>
+<td>FR-S01</td>
+</tr>
+<tr>
+<td>4</td>
+<td>解除佈建移到系統管理</td>
+<td>系統管理「平板停用」每一台多「解除佈建」，解除之後照樣列著、可以「登記佈建」</td>
+<td>FR-S01</td>
+</tr>
+<tr>
+<td>5</td>
+<td>專業版拿掉病人頁</td>
+<td>導覽項 <code>PATIENTS</code>、路由、<code>PatientsPage.tsx</code> 一起拿掉；主列 6 項。病人主檔一律由院方 API 建立；病人清單端點照留（其他頁要讀）</td>
+<td>FR-S15、FR-S11</td>
+</tr>
+<tr>
+<td>6</td>
+<td>排班與指派的病人下拉選單</td>
+<td>順序用簡易版病人框同一支 <code>trayOrder</code>；旁邊「重新整理」立即抓一次院方資料（<code>runHospitalSync</code>），只在接了院方資料時出現</td>
+<td>FR-N01、FR-S15</td>
+</tr>
+</tbody>
+</table>
+<p><strong>資料表與端點都沒動</strong>。後端只有導覽項的定義少了一項；舊環境資料表裡「病人」那一列版位不刪，載入時認不得的識別碼本來就略過。
+3.15 修法 1 的「目前有效綁定」清單（不依日期，解決跨午夜的綁定解不掉）拿掉之後，跨日的綁定仍由排班頁的提示列出、一鍵跳到那一天解除（3.15 修法 2）。</p>
+<p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-6</code>（新增，6 步，不需後端）全部通過；<code>verify:iteration9:api</code> 依 1.1 第八次改寫後 10 步全部通過、<code>14:api</code> 通過（開發機的後端）；
+<code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>、<code>14-2</code>、<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>、<code>17-5</code>、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code> 全綠，其中 <code>verify:iteration14</code>、<code>14-2</code>、<code>15</code>、<code>17</code>、<code>17-1</code> 依 1.1 第八次改寫。
+在 <code>npm run demo:patient</code> 上以無頭 Chrome 1366×768 看過：簡易版 14 則草稿換到第二則、沒有捲軸；專業版主列六項、新增裝置兩塊；系統管理解除佈建 → 登記佈建來回一次；排班與指派的下拉選單與簡易版病人框同序。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -9916,6 +10098,12 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>~~透析一律開始後四小時結束（1007）~~</td>
 <td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過</td>
 <td>無；院方資料的預計結束多常缺、是不是剛好四小時待第三次進院探測</td>
+</tr>
+<tr>
+<td>~~17.6~~</td>
+<td>~~公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）~~</td>
+<td><strong>已完成（1007）</strong>，腳本驗收與開發機截圖通過</td>
+<td>無</td>
 </tr>
 <tr>
 <td>18</td>

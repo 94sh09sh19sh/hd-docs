@@ -2099,6 +2099,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-6-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2876,6 +2904,34 @@
     
   
     迭代 17.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 分冊
   
 
     
@@ -4758,21 +4814,21 @@
 </tr>
 <tr>
 <td>4</td>
-<td>裝置管理</td>
-<td>平板有狀況時；也是看 Kiosk 逸出狀態的地方</td>
+<td>~~裝置管理~~ 新增裝置（1007）</td>
+<td>~~平板有狀況時~~ 來了新平板時註冊；也是看 Kiosk 逸出狀態的地方。<strong>1007 改名</strong>：唯一的動作是註冊新平板，底下列出所有平板的狀態；目前有效綁定拿掉（與排班與指派重複），解除佈建移到系統管理的「平板停用」</td>
+</tr>
+<tr>
+<td>~~5~~</td>
+<td>~~病人~~</td>
+<td>~~新病人或資料要改的時候~~ <strong>1007 拿掉</strong>：病人主檔一律由院方 API 建立</td>
 </tr>
 <tr>
 <td>5</td>
-<td>病人</td>
-<td>新病人或資料要改的時候</td>
-</tr>
-<tr>
-<td>6</td>
 <td>~~輪播內容~~ ~~跑馬燈內容（1005）~~ 公告與院內衛教（1006）</td>
 <td>內容維護。<strong>這一項是主列裡最邊緣的，若護理長覺得用不到，改設定收進選單</strong>。1006 改名：「跑馬燈」說的是病人端怎麼播，護理師看不出用途</td>
 </tr>
 <tr>
-<td>7</td>
+<td>6</td>
 <td>總覽螢幕模式</td>
 <td>開護理站那台大螢幕用，一天按一次</td>
 </tr>
@@ -4787,6 +4843,9 @@
 兩者是類似的東西，不要讓護理師用兩次。離院衛教在版位設定裡仍是一項（預設關閉），但它是那一頁裡的一段：沒有自己的連結，
 只有「開放」與「關閉」，放不上主列；開放時那一段才出現在「結束與離院衛教」頁上。結束衛教是病人在平板上看的；
 離院衛教之後要設計成讓病人用自己的手機帶回家，方式未定，暫不開放。</p>
+<p><strong>1007（迭代 17.6）</strong>：使用者指示改專業版的四件事——「病人」那一頁拿掉、「裝置管理」改名「<strong>新增裝置</strong>」（只剩註冊新平板與平板清單）、
+解除佈建移到系統管理的「平板停用」與停用同一處、排班與指派的病人下拉選單與簡易版病人框同一個順序並有重新整理（只在接了院方資料時）。
+主列因此是 6 項。這是「專業版不動」的第三個例外（前兩個是 4.4 的斷線示警與求助橫幅上限），一樣是使用者直接指示。</p>
 </blockquote>
 <p><strong>最右側固定</strong>：系統管理（只有具權限者看得到）、使用者名稱與登出。</p>
 <p><strong>三條規則</strong>：</p>
@@ -5061,6 +5120,8 @@
 <li>沒有平板、院方資料說正在透析的病人：原本畫在床上，改成在<strong>病人框最上面</strong>，角落標 <code>activity</code>；過了預計結束很久的改標 <code>clock-alert</code>，拖到「下機」就是確認</li>
 <li><strong>病人框的順序</strong>（<code>trayOrder</code>）：正在透析的在上面，<strong>越晚開始越上面</strong>；其餘依姓名筆畫（<code>Intl.Collator('zh-TW-u-co-stroke')</code>）。「今天有排班」「床位有問題」不再影響順序，只留框線與圖示</li>
 <li><strong>重新整理</strong>：病人框左欄、框的圖示底下一顆 <code>refresh-cw</code>，立即抓一次院方資料（與專業版系統管理「立即同步」同一支端點，一般護理師也能按），抓的時候先停用。<strong>沒接院方資料時沒有這顆</strong>——3.5 原本「簡易版刪掉『重新整理』按鈕（即時串流本來就會更新）」說的是重取畫面；這一顆抓的是院方資料，即時串流管不到，所以留</li>
+<li><strong>（1007 迭代 17.6）草稿換則</strong>：公告與院內衛教框的草稿卡一次放一則；不只一則時卡底下一列「‹ 第幾則／共幾則 ›」（<code>chevron-left</code>／<code>chevron-right</code>，與清單分頁同一組），核准、退回、拖到平板都是卡上那一則。原本固定是第一則，後面幾則看不到</li>
+<li><strong>（1007 迭代 17.6）「＋」在框左欄</strong>：要 AI 寫草稿的「＋」從清單最前面移到框左欄圖示底下（與病人框的重新整理同一處）。草稿卡長高時清單只剩一格高，「＋」佔掉那一格會把已核准的第一則切掉一半</li>
 </ul>
 <hr />
 <h2 id="4-共用的設計系統">4. 共用的設計系統<a class="headerlink" href="#4-共用的設計系統" title="Permanent link">&para;</a></h2>
@@ -5514,6 +5575,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005）接了院方 API 時簡易版沒有「新增病人」</strong>，病人框是還沒配平板的病人；未更新提示、待確認下機、沒有自動接上都是圖示＋注意色</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1006）配平板是把病人拖到平板</strong>（兩種環境都是），拿著病人時只有能配的平板會亮；簡易版沒有停用區，停用只在系統管理的「平板停用」</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1007）簡易版中間是平板</strong>，右上角是床號；右邊只有病人、公告與院內衛教兩框；病人框正在透析的在上面（越晚開始越上面），其餘依筆畫；接了院方資料才有重新整理</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1007 迭代 17.6）草稿卡不只一則時換得到後面幾則</strong>；「＋」不佔清單的格子；專業版主列 6 項（沒有「病人」，「新增裝置」只有註冊與清單），解除佈建在系統管理；排班與指派的病人下拉選單與簡易版病人框同序</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）斷線時專業版每一頁與簡易版都看得到閃爍紅框與紅底橫幅</strong>；剛開頁面、換頁時不會誤閃；簡易版出現橫幅時仍沒有捲軸</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）專業版一次湧入很多則求助時，上緣最多三條加一列「還有幾則」</strong>，緊急的排前面，頁面本身一直看得到</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005 迭代 17）跑馬燈框的草稿卡是整則「標題：內容」</strong>，不截字；核准、退回各一個圖示，形狀不同；拖到某一床就是核准並只在那一床播；
@@ -5604,6 +5666,11 @@
 <td>3.5.3 中間是平板、病人框順序與重新整理（1007 迭代 17.2）</td>
 <td><code>apps/nurse-pwa/src/simple/TabletCell.tsx</code>；<code>model.ts</code> 的 <code>shownTablets</code>、<code>tabletBed</code>、<code>trayOrder</code>；<code>Trays.tsx</code> 的 <code>PatientTray</code>；<code>Workbench.tsx</code> 的 <code>refreshFromHospital</code></td>
 <td><code>verify:iteration17-2</code>：中間一格一台平板、床號在右上、右邊只剩兩框、順序實際跑一次、重新整理與專業版同一支端點</td>
+</tr>
+<tr>
+<td>3.3、3.5.3 專業版新增裝置、拿掉病人頁、排班頁的病人順序；簡易版草稿換則（1007 迭代 17.6）</td>
+<td><code>packages/shared/src/navigation.ts</code>；護理端 <code>pages/DevicesPage.tsx</code>、<code>SystemTabletsCard.tsx</code>、<code>ConsolePage.tsx</code>（呼叫 <code>simple/model.ts</code> 的 <code>trayOrder</code>）；<code>simple/Trays.tsx</code> 的 <code>ContentTray</code>、<code>workbench.css</code> 的 <code>.draft-pager</code></td>
+<td><code>verify:iteration17-6</code>：草稿換則、「＋」不佔格子、新增裝置只呼叫註冊與讀清單、解除佈建在系統管理、病人頁拿掉且主列 6 項、排班頁用 <code>trayOrder</code> 與重新整理</td>
 </tr>
 <tr>
 <td>4.6 圖示（0926）</td>

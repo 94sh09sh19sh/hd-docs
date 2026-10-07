@@ -1207,6 +1207,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-175透析一律開始後四小時結束1007" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2500,6 +2511,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-6-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3277,6 +3316,34 @@
     
   
     迭代 17.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 分冊
   
 
     
@@ -4702,6 +4769,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#迭代-175透析一律開始後四小時結束1007" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4986,7 +5064,7 @@
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
 <p><strong>適用讀者</strong>：接手或協作的工程師
 <strong>報告日期</strong>：2026-10-07
-<strong>版本</strong>：迭代 17.5 完成（master）
+<strong>版本</strong>：迭代 17.6 完成（master）
 <strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
 <blockquote>
 <p>本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -6613,6 +6691,50 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 </tr>
 </tbody>
 </table>
+<h3 id="迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007">迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）<a class="headerlink" href="#迭代-176公告草稿換則新增裝置拿掉病人頁排班頁的病人順序1007" title="Permanent link">&para;</a></h3>
+<p>使用者一次交代五件護理端畫面的調整（《<a href="../../notes/iteration-17-6-fixes/">迭代 17.6 修正紀錄</a>》）。工程上要知道的：</p>
+<table>
+<thead>
+<tr>
+<th>要知道的</th>
+<th>在哪裡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>草稿換則</td>
+<td><code>simple/Trays.tsx</code> 的 <code>ContentTray</code>：<code>drafts = [...pending, ...generating]</code>、<code>draftIndex</code>，不只一則時 <code>.draft-pager</code>（<code>workbench.css</code>）；「＋」改用 <code>Tray</code> 的 <code>tool</code>（框左欄），不再是 <code>usePaged</code> 的 <code>lead</code></td>
+</tr>
+<tr>
+<td>新增裝置</td>
+<td>導覽名稱在 <code>packages/shared/src/navigation.ts</code>（識別碼仍是 <code>DEVICES</code>、路徑 <code>/devices</code>）；<code>pages/DevicesPage.tsx</code> 只呼叫 <code>registerDevice</code>、<code>listDevices</code>，「目前有效綁定」與平板清單的操作欄拿掉</td>
+</tr>
+<tr>
+<td>解除佈建</td>
+<td><code>pages/SystemTabletsCard.tsx</code> 列出全部平板（不只佈建好的）：<code>unenroll</code> 要確認、<code>enroll</code> 給解除佈建的；端點與權限（<code>DEVICE_MANAGE</code>）不變</td>
+</tr>
+<tr>
+<td>病人頁拿掉</td>
+<td><code>NavItemKey.PATIENTS</code>、<code>App.tsx</code> 的對應、<code>pages/PatientsPage.tsx</code> 都拿掉；資料表 <code>nav_placement_settings</code> 舊環境留下的那一列不刪（<code>NavigationService.reload</code> 略過認不得的識別碼）。<code>GET /patients</code>、<code>POST /patients</code> 照留</td>
+</tr>
+<tr>
+<td>排班頁的病人順序</td>
+<td><code>pages/ConsolePage.tsx</code> 呼叫 <code>simple/model.ts</code> 的 <code>trayOrder({ sessions }, patients)</code>（參數改成 <code>Pick&lt;World, 'sessions'&gt;</code>）；「重新整理」呼叫 <code>api.runHospitalSync()</code> 再 <code>load()</code>，只在 <code>hospitalSync.configured</code> 時畫</td>
+</tr>
+<tr>
+<td>改了的驗收</td>
+<td>實作規格書 1.1 <strong>第八次</strong>：<code>verify:iteration9:api</code> 主列不再寫死 7 項；<code>14</code> 的兩端同一支清單拿掉 <code>createPatient</code>；<code>14-2</code> 說明文字；<code>15</code> 的檔案清單；<code>17</code> 的「一次只放一張」；<code>17-1</code> 病人頁已刪除</td>
+</tr>
+<tr>
+<td>驗收</td>
+<td><code>verify:iteration17-6</code>（6 步，不需後端）；<code>9:api</code>、<code>14:api</code> 對著開發機的後端通過</td>
+</tr>
+<tr>
+<td>沒有動的</td>
+<td>資料表、端點、權限、圖示登記</td>
+</tr>
+</tbody>
+</table>
 <h3 id="迭代-175透析一律開始後四小時結束1007">迭代 17.5：透析一律開始後四小時結束（1007）<a class="headerlink" href="#迭代-175透析一律開始後四小時結束1007" title="Permanent link">&para;</a></h3>
 <p>使用者決定 17.4 截圖時發現的既有問題統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定；同日追加<strong>不管院方資料有沒有預計結束時間都是四小時</strong>，專業版也全面套用（《<a href="../../notes/iteration-17-5-fixes/">迭代 17.5 修正紀錄</a>》）。工程上要知道的：</p>
 <table>
@@ -7111,8 +7233,8 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 <tr>
 <td>2</td>
 <td><strong>DevicesPage 未依權限隱藏 UI</strong></td>
-<td>一般護理師看得到註冊表單與 MDM 按鈕，按下去才 403</td>
-<td>加 <code>can(Permission.DEVICE_MANAGE)</code> 條件渲染（<code>PatientsPage</code> 已經這樣做了）</td>
+<td>一般護理師看得到註冊表單~~與 MDM 按鈕~~，按下去才 403（1007 迭代 17.6 起這一頁的佈建按鈕都移到系統管理，那裡本來就只給有權限的帳號；剩註冊表單）</td>
+<td>加 <code>can(Permission.DEVICE_MANAGE)</code> 條件渲染</td>
 </tr>
 <tr>
 <td>3</td>
@@ -7192,7 +7314,8 @@ npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-1<span 
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-2<span class="w">  </span><span class="c1"># 17.2 — 6 步（不需後端）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-3<span class="w">  </span><span class="c1"># 17.3 — 7 步（不需後端、不需資料庫）</span>
 npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-4<span class="w">  </span><span class="c1"># 17.4 — 5 步（不需後端）</span>
-npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-5<span class="w">  </span><span class="c1"># 17.5 — 5 步（不需後端）</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-5<span class="w">  </span><span class="c1"># 17.5 — 6 步（不需後端）</span>
+npm<span class="w"> </span>run<span class="w"> </span>verify:iteration17-6<span class="w">  </span><span class="c1"># 17.6 — 6 步（不需後端）</span>
 npm<span class="w"> </span>run<span class="w"> </span>zh-tw:data<span class="w">          </span><span class="c1"># 17.3：改了 packages/shared/zh-tw/ 的詞庫之後重新產生資料檔；-- --check 只比對</span>
 npm<span class="w"> </span>run<span class="w"> </span>demo:patient<span class="w">        </span><span class="c1"># 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot &lt;檔名&gt; 直接截圖</span>
 npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w">           </span><span class="c1"># 六支盤點腳本（不需後端），0926 起多了 check:container</span>
