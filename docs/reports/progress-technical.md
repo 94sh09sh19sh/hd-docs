@@ -2,7 +2,7 @@
 
 **適用讀者**：接手或協作的工程師
 **報告日期**：2026-10-07
-**版本**：迭代 17.6 完成（master）
+**版本**：迭代 17.7 完成（master）
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -113,7 +113,7 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 
 ## 4. 資料模型
 
-共 58 張表，13 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
+共 59 張表，14 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
 
 | 分類 | 表 | 加入於 |
 |---|---|---|
@@ -264,7 +264,7 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 
 `modules/feature-flags/`，定義在 `shared/platform.ts`。
 
-- 迭代 3 的十個開關：高風險三項（`RISK_STRATIFICATION`、`INTRA_DIALYSIS_ALERT`、`DOSE_REFERENCE`）、AI 兩項（`AI_FEATURES`、`REAL_PATIENT_DATA_TO_AI`）、輪播三層、績效兩項（`PERF_INDIVIDUAL_L3`、`REWARD_SCORING`）。**全部預設關閉**。之後又加三個：迭代 9 的 `HANDHELD_FEATURES`，迭代 14.2 的 `HELP_NON_CLINICAL_GROUP`（求助畫面顯示「其他」那一框，預設關閉），1005 的 `LAB_VALUE_FEATURES`（需要抽血數值的功能：透析適足性，預設關閉；院方透析清單 API 沒有抽血數值）。
+- 迭代 3 的十個開關：高風險三項（`RISK_STRATIFICATION`、`INTRA_DIALYSIS_ALERT`、`DOSE_REFERENCE`）、AI 兩項（`AI_FEATURES`、`REAL_PATIENT_DATA_TO_AI`）、輪播三層、績效兩項（`PERF_INDIVIDUAL_L3`、`REWARD_SCORING`）。**全部預設關閉**。之後又加三個：迭代 9 的 `HANDHELD_FEATURES`，迭代 14.2 的 `HELP_NON_CLINICAL_GROUP`（求助畫面顯示「其他」那一框，預設關閉），1005 的 `LAB_VALUE_FEATURES`（需要抽血數值的功能：透析適足性，預設關閉；院方透析清單 API 沒有抽血數值），1007 迭代 17.7 的 `MANUAL_PATIENT_CREATE`（護理師自己新增病人，預設關閉；兩個版本同一個開關，**新增病人的端點不跟著擋**，見實作規格書 3.7）。
   **1005 迭代 16**：輪播三層停用（`RETIRED_FEATURE_FLAG_KEYS`，資料表的列與切換紀錄保留、後端載入時略過），換成 `TODAY_PANEL`（「本次透析」面板，**預設開啟**——9.1 起「預設全關」的唯一例外由它承接）與 `MARQUEE`（跑馬燈，預設關閉，速度要先經長者看過）
 - **`HELP_NON_CLINICAL_GROUP` 是唯一不擋後端的開關**：它只決定平板上有幾顆按鈕。平板停在舊畫面時病人按下去的求助照樣要送到，擋掉就是把求助丟掉
 - 開啟條件由後端逐項判定，不靠人記得。例如 `REAL_PATIENT_DATA_TO_AI` 只在 `LLM_PROVIDER=onprem` 時可開；高風險三項要 FR-R08 書面確認＋規則版本附有書面依據，規則引擎尚未建立，所以目前開不了
@@ -849,6 +849,24 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
+### 迭代 17.7：新增病人回到開關後面、平板管理、醫院格式的床號、衛教拖到平板（1007）
+
+使用者一次交代四件事（《[迭代 17.7 修正紀錄](../notes/iteration-17-7-fixes.md)》）。工程上要知道的：
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 新增病人的開關 | `packages/shared/src/platform.ts` 的 `MANUAL_PATIENT_CREATE`（群組 `MANUAL_FALLBACK`，預設關閉）；開啟條件在 `feature-flags.service.ts` 的 `judge`。`POST /patients` **不加** `@RequireFeatureFlag`（驗收腳本與 seed 要用；3.7 的例外） |
+| 專業版新增病人 | `pages/ConsolePage.tsx` 建立排班的下一列（`form[aria-label="新增病人"]`），`createPatient` 之後 `setPatientId`；**病人頁與 `PATIENTS` 識別碼沒有加回來** |
+| 簡易版的「＋」 | `World.manualPatient`（開關且有 `PATIENT_MANAGE`）；`accepts` 的 `NEW_PATIENT` 與 `PatientTray` 的 `canCreate` 都只看它，不再看 `hospitalApi` |
+| 平板管理 | `SystemPage.tsx` 分頁標籤與 `SystemTabletsCard.tsx` 卡片標題；分頁識別碼仍是 `tablets` |
+| 開發床號 | `packages/shared/src/beds.ts` 的 `DEFAULT_BED_NOS`：A1～A9、B1～B8 去掉 4 號。只有 `prisma/seed.ts` 用；已建好的資料庫不會自己換 |
+| 內容指定平板 | 新表 `carousel_item_device_targets`（遷移 `20261007180000_iteration17_7_device_targets`，只做加法）；`CarouselItemRepository.replaceTargets(id, bedNos, deviceIds, actor)`、`listPlayable(now, bedNo, deviceId)`（兩張表都沒列＝全部床位，床號或平板對得上就播）；`approve` 與 `setTargets` 多收 `deviceIds`，回應多 `targetDevices` |
+| 簡易版放得上哪裡 | `simple/model.ts` 的 `tabletTakesContent`：有病人配著（`activeBinding`）或有床號（`tabletBed`）；`actions.tsx` 的 `pushContent`／`approveDraft` 收 `DeviceSummary`，送 `deviceIds` |
+| 播放範圍的寫法 | `@hd/shared` 的 `describeCarouselScope(bedNos, serials)`：簡易版內容卡、專業版公告與院內衛教頁、`CarouselService` 的稽核紀錄共用 |
+| 改了的驗收 | 實作規格書 1.1 **第九次**：`14` 的兩端同一支清單把 `createPatient` 加回去；`14-2`、`17` 的草稿放置條件改成 `tabletTakesContent`、核准帶 `deviceIds`；`15` 的新增病人看開關；`17-1`、`17-6` 的分頁名稱與專業版新增病人 |
+| 驗收 | `verify:iteration17-7`（5 步，不需後端）；`3:api`、`4:api`、`9:api`、`14:api`、`17:api` 對著開發機的後端通過；`demo:patient` 上以端點與無頭 Chrome 看過沒有床號的平板收得到指定給它的內容 |
+| 沒有動的 | 權限、圖示登記、稽核動作種類、路由數 |
+
 ### 迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）
 
 使用者一次交代五件護理端畫面的調整（《[迭代 17.6 修正紀錄](../notes/iteration-17-6-fixes.md)》）。工程上要知道的：
@@ -1174,6 +1192,7 @@ npm run verify:iteration17-3  # 17.3 — 7 步（不需後端、不需資料庫�
 npm run verify:iteration17-4  # 17.4 — 5 步（不需後端）
 npm run verify:iteration17-5  # 17.5 — 6 步（不需後端）
 npm run verify:iteration17-6  # 17.6 — 6 步（不需後端）
+npm run verify:iteration17-7  # 17.7 — 5 步（不需後端；先 build:shared）
 npm run zh-tw:data          # 17.3：改了 packages/shared/zh-tw/ 的詞庫之後重新產生資料檔；-- --check 只比對
 npm run demo:patient        # 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot <檔名> 直接截圖
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container
@@ -1312,6 +1331,7 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1007 | 2026-10-07 | 改寫到迭代 17.7：迭代 15～17 的架構、資料表與端點；17.1～17.7 工程上要知道的事（每一次一張表）；資料表 59 張、遷移 14 個；驗收腳本清單補到 `verify:iteration17-7`；開放議題與下次進院清單更新 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/reports/progress-technical/) | 2026-09-30 | 改寫到迭代 14.5：迭代 11～14 與 14.1～14.5 的實作、規模表、驗收腳本清單與手動測試 894 項；已知問題第 6 項改為平板型號未定（尺寸 0930 已確定）；Q-27、Q-32 的 0930 答覆 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/reports/progress-technical/) | 2026-09-23 | 補上迭代 7～10：部署前的缺陷修正與資料保護、兩端介面重新設計、導覽版位與內容資料化、離線安裝包與平板佈建。規模表加一欄（資料表 40 → 54、營運參數 12 → 20），共用常數那一節改寫——附錄 C 的內容搬進資料表之後，那幾份常數只剩「把舊版補寫成第 1 版」一個用途 |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/reports/progress-technical/) | 2026-09-16 | 改寫到迭代 6：封閉網路化、AI 輔助與護理記錄、求助處理與班表、閒置輪播與檔案匯入；資料庫改為 SQLite、推播改為院內 SSE 與常駐總覽螢幕，並換上重繪的架構圖 |

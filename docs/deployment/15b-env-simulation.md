@@ -301,5 +301,6 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BA
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1007 | 2026-10-07 | 首次定版。第十五冊之二：模擬部署的 .env 怎麼填（取代第十四冊之二） |
 
 [← 回第十五冊](15-from-zero.md)　[← 回部署手冊總覽](index.md)

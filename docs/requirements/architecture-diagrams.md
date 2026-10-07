@@ -159,6 +159,7 @@ chrome --headless=new --disable-gpu --hide-scrollbars \
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1007 | 2026-10-07 | 1005 迭代 15、16 兩張圖只改標籤：「臨床資料匯入」改稱院方資料同步、HIS／EMR 改標透析清單院方唯讀 API、閒置輪播改為本次透析面板與跑馬燈，平板多一條院內即時通知；分區與連線不變 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/requirements/architecture-diagrams/) | 2026-09-30 | 兩張圖依 0926 改版重繪：容器部署、外殼 App 在另一個 repo、AI 閘道；補上 Git Bash 裡 Chrome 無頭模式沒有輸出的坑；Q-27、Q-32 的 0930 答覆 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/requirements/architecture-diagrams/) | 2026-09-23 | 依 0919 改版重繪：應用伺服器改為共用 Windows 工作站（離線安裝包），AI 推論退成另一台機器，機房裡的 MDM 整格與其連線拿掉，臨床數值確定走院方唯讀 API；補上產圖時的兩個坑 |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/requirements/architecture-diagrams/) | 2026-09-16 | 兩張圖依 v2.0 重繪並更新到迭代 6：拿掉推播中繼與外部 LLM，改畫 SQLite、SSE、院內 AI 伺服器、營運與排班模組、閒置輪播三層；圖二未動——班表與輪播沒有新增任何機器或網路連線 |

@@ -265,6 +265,7 @@ docker compose --env-file $cfg config --quiet
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1007 | 2026-10-07 | `JWT_SECRET` 改用 PowerShell 產生；1001 起由第十五冊之二取代，開頭標明 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/deployment/14b-env-simulation/) | 2026-09-30 | 首次定版。0929 新增：模擬部署（開發機部署實測）的 .env 逐項填法，與實際部署的差異總表；0930 同步連接埠 |
 
 [← 回第十四冊](14-from-zero.md)　[← 回部署手冊總覽](index.md)
