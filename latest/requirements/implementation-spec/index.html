@@ -1527,6 +1527,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4157-迭代-177新增病人回到開關後面平板管理醫院格式的床號衛教拖到平板1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.7 迭代 17.7：新增病人回到開關後面、平板管理、醫院格式的床號、衛教拖到平板（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2599,6 +2610,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-7-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3404,6 +3443,34 @@
     
   
     迭代 17.6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 分冊
   
 
     
@@ -4983,6 +5050,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4157-迭代-177新增病人回到開關後面平板管理醫院格式的床號衛教拖到平板1007" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15.7 迭代 17.7：新增病人回到開關後面、平板管理、醫院格式的床號、衛教拖到平板（1007）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5737,6 +5815,50 @@
 </tr>
 </tbody>
 </table>
+<p><strong>迭代 17.7 是第九次</strong>（1007）：使用者指示專業版補回新增病人、與簡易版一起預設關閉，系統管理「平板停用」改名「平板管理」，公告與院內衛教拖到有病人配著的平板就要能播。
+<code>createPatient</code> 因此又是兩端都用、簡易版的「＋」不再看有沒有接院方 API、內容放得上的平板從「有床號」放寬、核准帶的是平板而不是床號、分頁換了名字。斷言那些條件的腳本不改就跑不下去。
+這一次也是<strong>需求本身改了</strong>（SRS 院方 API 取代表「新增病人」那一列與簡易版任務表 1007 補的兩處），改成驗新的規則，其餘照舊：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration14</code> 第 6 步</td>
+<td>「專業版<strong>沒有</strong>呼叫 <code>createPatient</code>」拿掉，<code>createPatient</code> 回到「兩端都用同一支」的清單</td>
+<td>兩端同一支照驗（多驗一支）；「簡易版只用既有端點與登記過的加法端點」照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration14-2</code> 第 4 步</td>
+<td>草稿卡放得上的平板：「<code>tabletBed(...) !== null</code>」改成「<code>tabletTakesContent</code>」（有病人配著或有床號）</td>
+<td>草稿卡拿得起來、放得上平板與「全部」照驗；放寬的那一種情形由 <code>verify:iteration17-7</code> 拿假資料跑五種組合，沒有病人也沒有床號的照樣放不上</td>
+</tr>
+<tr>
+<td><code>verify:iteration15</code> 第 1 步</td>
+<td>「接了院方 API 就沒有新增病人」三項改成「開關關著就沒有、開著就有（接不接院方 API 都一樣）」</td>
+<td>沒有新增病人的時候整個不出現、有的時候走迭代 14 的人工流程，兩邊照驗；判準從「有沒有接院方 API」換成開關</td>
+</tr>
+<tr>
+<td><code>verify:iteration17</code> 第 4 步</td>
+<td>「拖到某一台有床號的平板＝只在它那一床播、核准帶 <code>bedNos</code>」改成「放得上有病人配著或有床號的平板、只在那台平板播、核准帶 <code>deviceIds</code>」</td>
+<td>「核准是一個請求、範圍跟核准一起送、可以一步復原」照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration17-1</code> 第 1 步</td>
+<td>分頁名稱「平板停用」改成「平板管理」</td>
+<td>只給有裝置管理權限的帳號、停用與解除停用都在這一頁照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration17-6</code> 第 3、4 步</td>
+<td>分頁名稱同上；「專業版沒有新增病人」改成「沒有病人頁，新增病人在排班與指派、由開關決定」</td>
+<td>病人頁與 <code>PATIENTS</code> 識別碼不存在照驗；解除佈建的權限照驗</td>
+</tr>
+</tbody>
+</table>
 <h3 id="12-本階段納入">1.2 本階段納入<a class="headerlink" href="#12-本階段納入" title="Permanent link">&para;</a></h3>
 <p>SRS 第 5 章全部 73 條需求（FR-P01～P15、FR-N01～N17、FR-M01～M12、FR-X01～X05、FR-S01～S16、FR-R01～R08），依第 4 章分十七次迭代實作（迭代 3～19）。<strong>0919 由 60 條增為 63 條</strong>：新增 FR-S10（介面不得洩漏內部技術識別）、FR-S11（版位與功能可設定）、FR-S12（更新不得破壞既有資料）。<strong>0926 由 63 條增為 70 條</strong>：新增 FR-P14～P15（病人端首頁三區、任務依時點出現）、FR-N14～N16（簡易版與專業版、單一工作台、一步完成）、FR-S13（AI 閘道）、FR-S14（外殼 App 契約）。<strong>1005 由 70 條增為 73 條</strong>：新增 FR-N17（跑馬燈內容由 AI 生成、護理師核准）、FR-S15（院方 API 優先）、FR-S16（院方 API 介接與即時推送）。</p>
 <h3 id="13-明確排除本階段完全不碰">1.3 明確排除（本階段完全不碰）<a class="headerlink" href="#13-明確排除本階段完全不碰" title="Permanent link">&para;</a></h3>
@@ -6378,11 +6500,17 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <td><strong>關</strong></td>
 <td>院方提供血紅素、白蛋白、透析前後 BUN 的來源（透析清單 API 沒有）。涵蓋透析適足性（關閉時「病人趨勢」不出現那一張卡、端點擋下）與輪播第三層的抽血數值與 Kt/V。<strong>1005 起病人端不再顯示抽血數值，這個開關只剩護理端在用</strong>。系統驗不到來源是否到位，由切換的人寫在核准依據裡</td>
 </tr>
+<tr>
+<td><strong>護理師自己新增病人</strong> <code>MANUAL_PATIENT_CREATE</code>（FR-N01／FR-N16，1007 迭代 17.7 新增）</td>
+<td><strong>關</strong></td>
+<td>無，隨時可開；病人原則上由院方 API 建立（FR-S15），院方資料缺人時才開。<strong>兩個版本同一個開關</strong>：專業版排班與指派「建立排班」的下一列、簡易版病人框的「＋」。<strong>例外：新增病人的端點（<code>POST /patients</code>）不跟著擋</strong>——驗收腳本與開發環境的 seed 都用它建合成病人，端點本來就要病人管理權限、寫稽核軌跡；這個開關管的是畫面上的入口。之後院方資料出現同一個病歷號，以院方資料為準</td>
+</tr>
 </tbody>
 </table>
 <p><strong>0919 新增的一條硬性規則</strong>：開關關閉時，<strong>尚未實作的功能連「停用的入口」都不得出現</strong>（DEP-34）。已實作但關閉的功能同樣不出現入口，但它的後端端點回傳的是「功能未啟用」而不是 404——兩者在稽核軌跡上要分得出來。</p>
 <p><strong>開關的顯示名稱</strong>：功能開關清單在護理端是給人看的，<strong>不得印出上表左欄那些識別字</strong>（FR-S10）。識別字留在後端與稽核紀錄裡。</p>
-<p><strong>硬性規則</strong>：開關為關閉時，相關介面元素<strong>完全不出現</strong>，而不是顯示為停用。後端端點也要一併擋下，不能只靠前端隱藏。</p>
+<p><strong>硬性規則</strong>：開關為關閉時，相關介面元素<strong>完全不出現</strong>，而不是顯示為停用。後端端點也要一併擋下，不能只靠前端隱藏。
+（目前唯一的例外是 1007 的「護理師自己新增病人」，理由寫在上表那一列；要再開例外，比照它寫在表裡。）</p>
 <h3 id="38-即時通知與常駐總覽螢幕改寫取代推播">3.8 即時通知與常駐總覽螢幕（改寫，取代推播）<a class="headerlink" href="#38-即時通知與常駐總覽螢幕改寫取代推播" title="Permanent link">&para;</a></h3>
 <p><strong>推播服務整條移除。</strong> 現有實作為護理端 SSE 長連線加病人端輪詢，維持不變，並補上兩件事：</p>
 <ol>
@@ -9769,6 +9897,53 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-6</code>（新增，6 步，不需後端）全部通過；<code>verify:iteration9:api</code> 依 1.1 第八次改寫後 10 步全部通過、<code>14:api</code> 通過（開發機的後端）；
 <code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>、<code>14-2</code>、<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>、<code>17-5</code>、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code> 全綠，其中 <code>verify:iteration14</code>、<code>14-2</code>、<code>15</code>、<code>17</code>、<code>17-1</code> 依 1.1 第八次改寫。
 在 <code>npm run demo:patient</code> 上以無頭 Chrome 1366×768 看過：簡易版 14 則草稿換到第二則、沒有捲軸；專業版主列六項、新增裝置兩塊；系統管理解除佈建 → 登記佈建來回一次；排班與指派的下拉選單與簡易版病人框同序。</p>
+<h3 id="4157-迭代-177新增病人回到開關後面平板管理醫院格式的床號衛教拖到平板1007">4.15.7 迭代 17.7：新增病人回到開關後面、平板管理、醫院格式的床號、衛教拖到平板（1007）<a class="headerlink" href="#4157-迭代-177新增病人回到開關後面平板管理醫院格式的床號衛教拖到平板1007" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-07 完成。</strong> 使用者一次交代四件事。紀錄在《<a href="../../notes/iteration-17-7-fixes/">迭代 17.7 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-17-7/">迭代 17.7 分冊</a>》（<code>aa131</code>～<code>aa146</code>）。
+不是新的範圍，迭代 18 的內容一項都沒動。多了一張資料表，只做加法、只服務「拖到平板」這一個動作。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>改了什麼</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>新增病人回到開關後面</td>
+<td>新開關 <code>MANUAL_PATIENT_CREATE</code>（3.7），<strong>預設關閉</strong>；專業版排班與指派「建立排班」的下一列補回新增病人（建好自動選進病人選單；病人頁沒有加回來），簡易版病人框的「＋」改看同一個開關、不再看有沒有接院方 API</td>
+<td>FR-N01、FR-N16、FR-S15</td>
+</tr>
+<tr>
+<td>2</td>
+<td>平板停用改名平板管理</td>
+<td>系統管理的分頁與卡片標題；畫面上提到它的字一起改</td>
+<td>FR-S01</td>
+</tr>
+<tr>
+<td>3</td>
+<td>醫院格式的床號</td>
+<td>開發環境 seed 的 15 床從 01～15 改成 A1、A2、A3、A5～A9、B1～B3、B5～B8（區碼＋數字、沒有 4 號床）；簡易版沒接院方資料時手選床位列的就是它們。已建好的資料庫不會自己換</td>
+<td>FR-N15</td>
+</tr>
+<tr>
+<td>4</td>
+<td>衛教拖到平板</td>
+<td>簡易版公告與院內衛教放得上<strong>有病人配著或有床號</strong>的平板，指定的是那台平板；新表 <code>carousel_item_device_targets</code>，核准與播放範圍兩支端點多收 <code>deviceIds</code>、回應多 <code>targetDevices</code>；病人端「兩張表都沒列＝全部床位，床號或平板對得上就播」</td>
+<td>FR-N17、FR-P10</td>
+</tr>
+</tbody>
+</table>
+<p><strong>資料表</strong>：多一張 <code>carousel_item_device_targets</code>（遷移 <code>20261007180000_iteration17_7_device_targets</code>，<code>check:migration</code> 無發現）。<strong>端點</strong>：沒有新增，兩支既有端點多一個可不帶的欄位，只帶床號的舊請求照樣可用。</p>
+<p><strong>驗收現況（1007）</strong>：<code>verify:iteration17-7</code>（新增，5 步，不需後端）全部通過；<code>verify:iteration3:api</code>、<code>4:api</code>、<code>9:api</code>、<code>14:api</code>、<code>17:api</code> 對著開發機的後端通過；
+<code>verify:iteration8</code>、<code>11</code>、<code>12</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>、<code>17-5</code>、<code>17-6</code>、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code> 全綠，其中 <code>verify:iteration14</code>、<code>14-2</code>、<code>15</code>、<code>17</code>、<code>17-1</code>、<code>17-6</code> 依 1.1 第九次改寫。
+<code>verify:iteration13</code>（不需後端那一支）有一項不通過，是改動之前就有的情形（掃到驗收腳本裡的「Ollama」字樣），與本次無關。
+在 <code>npm run demo:patient</code> 上看過：開關關著兩邊都沒有新增病人、開著兩邊都有，專業版新增之後病人選單自動選好；DEMO-01 拿掉床號之後，簡易版把內容點到它上面、病人端跑馬燈有那一則，只給 DEMO-02 的那一則它看不到，指定不存在的平板回 400。
+<strong>沒有驗的</strong>：新的 seed 床號在手選床位面板上的樣子（展示環境接了模擬院方資料、沒有手選面板；開發機的資料庫是改動之前建的）。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <p><strong>這個迭代與迭代 4～6 沒有相依，若外部答覆提早到齊，可隨時往前插隊。</strong></p>
@@ -10483,6 +10658,11 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1007</td>
+<td>2026-10-07</td>
+<td>依 1005 新版需求重排迭代 15～19（院方 API、本次透析面板與跑馬燈、AI 草稿核准；規則引擎與儀表板順延為 18、19），三個迭代的實作結果與驗收；新增 4.15.1～4.15.7（迭代 17.1～17.7）；1.1 記下第三～九次改寫既有驗收腳本；3.7 新增 <code>LAB_VALUE_FEATURES</code>、<code>MANUAL_PATIENT_CREATE</code>（端點不跟著擋的例外）；3.5 床號正規化做成設定；透析一律開始後四小時</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/0930/requirements/implementation-spec/">0930</a></td>
 <td>2026-09-30</td>

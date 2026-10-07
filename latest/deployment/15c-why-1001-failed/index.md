@@ -251,8 +251,8 @@ ______________________________________________________________________
 
 ## 版本歷程
 
-| 定版 | 日期 | 異動 |
-| ---- | ---- | ---- |
-|      |      |      |
+| 定版 | 日期       | 異動                                                                |
+| ---- | ---------- | ------------------------------------------------------------------- |
+| 1007 | 2026-10-07 | 首次定版。第十五冊之三：1001 為什麼登不進去、下一次怎麼做（`E-xx`） |
 
 [← 第十四冊之四 · 第二次進院紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14d-second-visit/index.md)　[← 回第十五冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15-from-zero/index.md)　[← 回部署手冊總覽](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)　[第十五冊之四 · 主機位址從名稱改成 IP →](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15d-switch-host-to-ip/index.md)

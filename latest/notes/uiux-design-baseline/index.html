@@ -2155,6 +2155,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-7-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2960,6 +2988,34 @@
     
   
     迭代 17.6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 分冊
   
 
     
@@ -4874,6 +4930,9 @@
 <p><strong>1007（迭代 17.6）</strong>：使用者指示改專業版的四件事——「病人」那一頁拿掉、「裝置管理」改名「<strong>新增裝置</strong>」（只剩註冊新平板與平板清單）、
 解除佈建移到系統管理的「平板停用」與停用同一處、排班與指派的病人下拉選單與簡易版病人框同一個順序並有重新整理（只在接了院方資料時）。
 主列因此是 6 項。這是「專業版不動」的第三個例外（前兩個是 4.4 的斷線示警與求助橫幅上限），一樣是使用者直接指示。</p>
+<p><strong>1007（迭代 17.7）</strong>：系統管理的「平板停用」分頁改名「<strong>平板管理</strong>」（17.6 起裡面不只停用）。
+專業版補回<strong>新增病人</strong>，放在排班與指派「建立排班」的下一列（病歷號、姓名、「新增病人」，建好自動選進病人選單），<strong>病人頁沒有加回來</strong>；
+「護理師自己新增病人」功能開關開著、而且有病人管理權限才出現，<strong>預設關閉</strong>，關著整列不出現（N-6），與簡易版病人框的「＋」同一個開關。</p>
 </blockquote>
 <p><strong>最右側固定</strong>：系統管理（只有具權限者看得到）、使用者名稱與登出。</p>
 <p><strong>三條規則</strong>：</p>
@@ -5055,7 +5114,7 @@
 撤掉它等於改寫那個時間，而那正是成效指標要用的資料（SRS FR-N10 的「確認時間與到達時間分開」）。
 按錯的代價是一筆早了幾秒的確認，比可以被撤掉的確認時間小得多。</p>
 <p><strong>一步完成不得以犧牲紀錄換取</strong>（SRS 5.2）：簡易版呼叫的是<strong>專業版同一支端點</strong>，稽核軌跡與結構化欄位完全相同；
-權限檢查也相同——沒有裝置管理權限的帳號，平板框（與系統管理的「平板停用」）根本不出現（N-6）。
+權限檢查也相同——沒有裝置管理權限的帳號，平板框（與系統管理的「平板停用」，1007 迭代 17.7 起叫「平板管理」）根本不出現（N-6）。
 <strong>導覽版位也相同</strong>：「班表」在導覽版位裡是關閉的（首波預設）時，簡易版不出現護理師框，「排班與床位分配」那一項也就不在——
 關閉的功能就是不存在，不會因為換了一個畫面就繞過去（實作規格書 3.13）。</p>
 <p><strong>床位清單是資料</strong>（系統管理 → 營運參數 → 床位清單；1005 起全新環境不再預設 15 床，接了院方 API 時院方出現的床號自動加進來）。<strong>有病人正在治療的床拿不掉</strong>：
@@ -5076,7 +5135,7 @@
 <tbody>
 <tr>
 <td>病人框：還沒上床的病人，加「＋」新增病人</td>
-<td><strong>今天要透析、還沒配平板的病人</strong>，以及平板沒有自動接上的病人。沒有「＋」——病人主檔由院方資料建立</td>
+<td><strong>今天要透析、還沒配平板的病人</strong>，以及平板沒有自動接上的病人。~~沒有「＋」——病人主檔由院方資料建立~~ <strong>1007 迭代 17.7 起「＋」看「護理師自己新增病人」開關（預設關閉），接不接院方 API 都一樣</strong></td>
 </tr>
 <tr>
 <td>把病人拖到床位（指派平板與病人）</td>
@@ -5117,7 +5176,7 @@
   所以點選替代是：手上拿著病人時點平板＝放下；手上沒東西時點平板＝拿起平板</li>
 <li>接了院方資料時，<strong>床位圖上只畫正在服務病人的平板</strong>；沒在用的平板都在平板框裡（床號是上一位病人的，下一次配給誰就跟著誰走）</li>
 <li>復原＝解除這次配對（手動解除，不算護理師更正院方資料，下一次同步照院方資料把療程接回進行中），沒接院方資料時平板放回原本的床</li>
-<li><strong>「鎖定」一律叫「停用」</strong>。停用太不常用，<strong>入口只留專業版系統管理的「平板停用」分頁</strong>：簡易版的停用區、專業版裝置管理的「遠端鎖定」都拿掉；
+<li><strong>「鎖定」一律叫「停用」</strong>。停用太不常用，<strong>入口只留專業版系統管理的「平板停用」分頁</strong>（1007 迭代 17.7 起叫「平板管理」）：簡易版的停用區、專業版裝置管理的「遠端鎖定」都拿掉；
   停用的平板不出現在平板框裡。<strong>正在透析使用的平板不能停用</strong>（後端擋下，那一列不畫停用按鈕、寫「先下機才能停用」）；停用時從床位拿下來</li>
 <li>「跑馬燈內容」改叫「<strong>公告與院內衛教</strong>」（專業版導覽列、簡易版那一框）；內容的種類「衛教」改叫「院內衛教」。病人端照舊是跑馬燈</li>
 </ul>
@@ -5144,11 +5203,13 @@
 <li>左上角是狀態圖示與序號，後面接平板的警示（離線、尚未佈建、跳出固定畫面、版本）。沒在用叫「<strong>空著</strong>」、畫平板、虛線框</li>
 <li>格子裡其餘與床位格相同：病人（拖到候床或下機）與進度條、待確認下機、求助、院方床位有問題、只在這一床播的內容。<strong>樣式沿用 <code>.bed</code> 那一套</strong></li>
 <li><strong>右邊只剩兩框</strong>：病人、公告與院內衛教。平板框（平板就在中間）與當班護理師框（床位分配到專業版）拿掉，兩框的底色一起拿掉</li>
-<li>公告與院內衛教拖到<strong>有床號的平板</strong>＝只在它那一床播；沒有床號的平板拿著內容時不亮</li>
+<li>公告與院內衛教拖到<strong>有床號的平板</strong>＝只在它那一床播；沒有床號的平板拿著內容時不亮（<strong>1007 迭代 17.7 改寫，見本節最後</strong>）</li>
 <li>沒有平板、院方資料說正在透析的病人：原本畫在床上，改成在<strong>病人框最上面</strong>，角落標 <code>activity</code>；過了預計結束很久的改標 <code>clock-alert</code>，拖到「下機」就是確認</li>
 <li><strong>病人框的順序</strong>（<code>trayOrder</code>）：正在透析的在上面，<strong>越晚開始越上面</strong>；其餘依姓名筆畫（<code>Intl.Collator('zh-TW-u-co-stroke')</code>）。「今天有排班」「床位有問題」不再影響順序，只留框線與圖示</li>
 <li><strong>重新整理</strong>：病人框左欄、框的圖示底下一顆 <code>refresh-cw</code>，立即抓一次院方資料（與專業版系統管理「立即同步」同一支端點，一般護理師也能按），抓的時候先停用。<strong>沒接院方資料時沒有這顆</strong>——3.5 原本「簡易版刪掉『重新整理』按鈕（即時串流本來就會更新）」說的是重取畫面；這一顆抓的是院方資料，即時串流管不到，所以留</li>
 <li><strong>（1007 迭代 17.6）草稿換則</strong>：公告與院內衛教框的草稿卡一次放一則；不只一則時卡底下一列「‹ 第幾則／共幾則 ›」（<code>chevron-left</code>／<code>chevron-right</code>，與清單分頁同一組），核准、退回、拖到平板都是卡上那一則。原本固定是第一則，後面幾則看不到</li>
+<li><strong>（1007 迭代 17.7）內容拖到平板</strong>：公告與院內衛教（已核准的與草稿卡）放得上<strong>有病人配著，或有床號</strong>的平板，指定的是<strong>那台平板</strong>，不是它那一床（使用者 1007：中間改成平板之後，沒有床號的平板放不上，有病人配著就要能播）。沒有病人也沒有床號的平板拿著內容時不亮。格子角落的喇叭數字是「只在這台平板播的內容」；播放範圍的字寫成「A1 床、平板 TB-03」</li>
+<li><strong>（1007 迭代 17.7）新增病人與手選床位</strong>：病人框的「＋」只看「護理師自己新增病人」開關（預設關閉）。沒接院方資料時點平板右上角選床，列的是床位清單裡的床；開發機 seed 的床號照醫院的寫法（A1、A2、A3、A5…，沒有 4 號床），不再是 01～15</li>
 <li><strong>（1007 迭代 17.6）「＋」在框左欄</strong>：要 AI 寫草稿的「＋」從清單最前面移到框左欄圖示底下（與病人框的重新整理同一處）。草稿卡長高時清單只剩一格高，「＋」佔掉那一格會把已核准的第一則切掉一半</li>
 </ul>
 <hr />
@@ -5600,10 +5661,11 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版的九項任務每一項都是一個動作</strong>，都有不拖曳的替代做法，都能一步復原（「接緊急通報」除外，理由見 3.5）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版與專業版做同一件事，稽核軌跡與結構化欄位完全相同</strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）簡易版在護理站的解析度下沒有捲軸</strong>（1005 起床數多時只有床位圖自己捲動，整頁仍沒有捲軸）</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005）接了院方 API 時簡易版沒有「新增病人」</strong>，病人框是還沒配平板的病人；未更新提示、待確認下機、沒有自動接上都是圖示＋注意色</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1006）配平板是把病人拖到平板</strong>（兩種環境都是），拿著病人時只有能配的平板會亮；簡易版沒有停用區，停用只在系統管理的「平板停用」</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005）接了院方 API 時簡易版沒有「新增病人」</strong>（1007 迭代 17.7 起改看開關，預設關閉），病人框是還沒配平板的病人；未更新提示、待確認下機、沒有自動接上都是圖示＋注意色</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1006）配平板是把病人拖到平板</strong>（兩種環境都是），拿著病人時只有能配的平板會亮；簡易版沒有停用區，停用只在系統管理的「平板停用」（1007 迭代 17.7 起叫「平板管理」）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1007）簡易版中間是平板</strong>，右上角是床號；右邊只有病人、公告與院內衛教兩框；病人框正在透析的在上面（越晚開始越上面），其餘依筆畫；接了院方資料才有重新整理</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1007 迭代 17.6）草稿卡不只一則時換得到後面幾則</strong>；「＋」不佔清單的格子；專業版主列 6 項（沒有「病人」，「新增裝置」只有註冊與清單），解除佈建在系統管理；排班與指派的病人下拉選單與簡易版病人框同序</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1007 迭代 17.7）「護理師自己新增病人」開關關著兩個版本都沒有新增病人</strong>；系統管理分頁叫「平板管理」；內容放得上有病人配著、沒有床號的平板</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）斷線時專業版每一頁與簡易版都看得到閃爍紅框與紅底橫幅</strong>；剛開頁面、換頁時不會誤閃；簡易版出現橫幅時仍沒有捲軸</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）專業版一次湧入很多則求助時，上緣最多三條加一列「還有幾則」</strong>，緊急的排前面，頁面本身一直看得到</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005 迭代 17）跑馬燈框的草稿卡是整則「標題：內容」</strong>，不截字；核准、退回各一個圖示，形狀不同；拖到某一床就是核准並只在那一床播；
@@ -5701,6 +5763,11 @@
 <td><code>verify:iteration17-6</code>：草稿換則、「＋」不佔格子、新增裝置只呼叫註冊與讀清單、解除佈建在系統管理、病人頁拿掉且主列 6 項、排班頁用 <code>trayOrder</code> 與重新整理</td>
 </tr>
 <tr>
+<td>3.3、3.5.3 新增病人回到開關後面、平板管理、內容拖到平板、開發床號（1007 迭代 17.7）</td>
+<td><code>packages/shared/src/platform.ts</code> 的 <code>MANUAL_PATIENT_CREATE</code>、<code>beds.ts</code> 的 <code>DEFAULT_BED_NOS</code>；護理端 <code>pages/ConsolePage.tsx</code>、<code>SystemPage.tsx</code>、<code>SystemTabletsCard.tsx</code>；<code>simple/model.ts</code> 的 <code>tabletTakesContent</code>、<code>actions.tsx</code> 的 <code>pushContent</code>／<code>approveDraft</code></td>
+<td><code>verify:iteration17-7</code>：兩個版本看同一個開關、預設關閉；分頁改名；床號格式（實際讀共用套件）；<code>tabletTakesContent</code> 拿假資料跑五種情形</td>
+</tr>
+<tr>
 <td>4.6 圖示（0926）</td>
 <td><code>scripts/sync-icons.mjs</code> 的登記表 → 兩端的 <code>src/icon-data.ts</code></td>
 <td><code>verify:iteration14</code>：畫面用到的每個圖示名稱都在登記表裡；登記表沒有重複</td>
@@ -5789,6 +5856,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1007</td>
+<td>2026-10-07</td>
+<td>1005 病人端中間改成本次透析面板與跑馬燈（不判讀、不能點、整則跑完）、簡易版接院方 API 的規則；1006～1007：把病人拖到平板、中間改成平板與病人框順序、病人平板加回姓名與現在時間、進度終點一律開始後四小時、專業版拿掉病人頁與新增裝置、草稿換則；迭代 17.7 平板管理、新增病人回到開關後面、內容拖到平板</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/0930/notes/uiux-design-baseline/">0930</a></td>
 <td>2026-09-30</td>

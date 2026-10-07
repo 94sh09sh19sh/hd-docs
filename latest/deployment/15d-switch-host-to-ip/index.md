@@ -417,8 +417,8 @@ ______________________________________________________________________
 
 ## 版本歷程
 
-| 定版 | 日期 | 異動 |
-| ---- | ---- | ---- |
-|      |      |      |
+| 定版 | 日期       | 異動                                                        |
+| ---- | ---------- | ----------------------------------------------------------- |
+| 1007 | 2026-10-07 | 首次定版。第十五冊之四：院內主機位址從名稱改成 IP（`T-xx`） |
 
 [← 第十五冊之三 · 1001 為什麼登不進去](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15c-why-1001-failed/index.md)　[← 回第十五冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15-from-zero/index.md)　[← 回部署手冊總覽](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)
