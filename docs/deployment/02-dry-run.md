@@ -633,7 +633,7 @@ Get-TimeZone
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1007 | 2026-10-07 | 「裝置管理」改名「新增裝置」 |
+| [1007](https://94sh09sh19sh.github.io/hd-docs/1007/deployment/02-dry-run/) | 2026-10-07 | 「裝置管理」改名「新增裝置」 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/deployment/02-dry-run/) | 2026-09-23 | 首次定版。在一台乾淨的機器上把院內那一整套從頭到尾彩排一次 |
 
 [← 上一冊 · 開發機準備](01-dev-machine.md) · [回部署手冊總覽](index.md) · [下一冊 · 平板與外殼 App →](03-tablet-shell.md)

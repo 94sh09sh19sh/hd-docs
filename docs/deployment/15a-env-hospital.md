@@ -369,6 +369,6 @@ Select-String -Path $cfg -Pattern '^(HD_IMAGE_TAG|HD_BACKUP_DIR|HD_CONFIG_DIR|HD
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1007 | 2026-10-07 | 首次定版。第十五冊之一：實際部署的 .env 怎麼填（取代第十四冊之一） |
+| [1007](https://94sh09sh19sh.github.io/hd-docs/1007/deployment/15a-env-hospital/) | 2026-10-07 | 首次定版。第十五冊之一：實際部署的 .env 怎麼填（取代第十四冊之一） |
 
 [← 回第十五冊](15-from-zero.md)　[← 回部署手冊總覽](index.md)

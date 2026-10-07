@@ -547,7 +547,7 @@ LlmProviderPort（抽象介面）
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1007 | 2026-10-07 | 數值名稱改用院方 API 的稱呼（理想體重、目標脫水量、結束體重），與 1005 使用者對參考調查的決定一致 |
+| [1007](https://94sh09sh19sh.github.io/hd-docs/1007/requirements/fde-assessment/) | 2026-10-07 | 數值名稱改用院方 API 的稱呼（理想體重、目標脫水量、結束體重），與 1005 使用者對參考調查的決定一致 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/requirements/fde-assessment/) | 2026-09-30 | 新增「0926 追加」：第一次進院失敗之後的四項修正（容器＋git clone、實驗室使用規範、外殼獨立 repo、介面極簡）；7.3 補實驗室規範對串接方式的影響 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/requirements/fde-assessment/) | 2026-09-23 | 新增 0919 三項前提修正：應用主機改為 Windows 工作站、平板免 MDM、院方授權採用預設選項與題庫；7.4 部署形態依主機變更重評，由容器改為離線安裝包，臨床資料來源確定走 API |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/0916/requirements/fde-assessment/) | 2026-09-16 | 改版為 v2.0：SaMD 邊界由整條排除改為有條件納入，選型理由改述為封閉網路與院內地端推論；待確認事項移交《尚待確認事項清冊》，部署相關敘述改指《部署規範》 |

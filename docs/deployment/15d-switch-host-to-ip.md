@@ -426,6 +426,6 @@ docker compose --env-file $cfg restart patient-web
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1007 | 2026-10-07 | 首次定版。第十五冊之四：院內主機位址從名稱改成 IP（`T-xx`） |
+| [1007](https://94sh09sh19sh.github.io/hd-docs/1007/deployment/15d-switch-host-to-ip/) | 2026-10-07 | 首次定版。第十五冊之四：院內主機位址從名稱改成 IP（`T-xx`） |
 
 [← 第十五冊之三 · 1001 為什麼登不進去](15c-why-1001-failed.md)　[← 回第十五冊](15-from-zero.md)　[← 回部署手冊總覽](index.md)
