@@ -2,7 +2,7 @@
 
 **適用讀者**：接手或協作的工程師
 **報告日期**：2026-10-07
-**版本**：迭代 17.5 完成（master）
+**版本**：迭代 17.6 完成（master）
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -849,6 +849,21 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
+### 迭代 17.6：公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序（1007）
+
+使用者一次交代五件護理端畫面的調整（《[迭代 17.6 修正紀錄](../notes/iteration-17-6-fixes.md)》）。工程上要知道的：
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 草稿換則 | `simple/Trays.tsx` 的 `ContentTray`：`drafts = [...pending, ...generating]`、`draftIndex`，不只一則時 `.draft-pager`（`workbench.css`）；「＋」改用 `Tray` 的 `tool`（框左欄），不再是 `usePaged` 的 `lead` |
+| 新增裝置 | 導覽名稱在 `packages/shared/src/navigation.ts`（識別碼仍是 `DEVICES`、路徑 `/devices`）；`pages/DevicesPage.tsx` 只呼叫 `registerDevice`、`listDevices`，「目前有效綁定」與平板清單的操作欄拿掉 |
+| 解除佈建 | `pages/SystemTabletsCard.tsx` 列出全部平板（不只佈建好的）：`unenroll` 要確認、`enroll` 給解除佈建的；端點與權限（`DEVICE_MANAGE`）不變 |
+| 病人頁拿掉 | `NavItemKey.PATIENTS`、`App.tsx` 的對應、`pages/PatientsPage.tsx` 都拿掉；資料表 `nav_placement_settings` 舊環境留下的那一列不刪（`NavigationService.reload` 略過認不得的識別碼）。`GET /patients`、`POST /patients` 照留 |
+| 排班頁的病人順序 | `pages/ConsolePage.tsx` 呼叫 `simple/model.ts` 的 `trayOrder({ sessions }, patients)`（參數改成 `Pick<World, 'sessions'>`）；「重新整理」呼叫 `api.runHospitalSync()` 再 `load()`，只在 `hospitalSync.configured` 時畫 |
+| 改了的驗收 | 實作規格書 1.1 **第八次**：`verify:iteration9:api` 主列不再寫死 7 項；`14` 的兩端同一支清單拿掉 `createPatient`；`14-2` 說明文字；`15` 的檔案清單；`17` 的「一次只放一張」；`17-1` 病人頁已刪除 |
+| 驗收 | `verify:iteration17-6`（6 步，不需後端）；`9:api`、`14:api` 對著開發機的後端通過 |
+| 沒有動的 | 資料表、端點、權限、圖示登記 |
+
 ### 迭代 17.5：透析一律開始後四小時結束（1007）
 
 使用者決定 17.4 截圖時發現的既有問題統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定；同日追加**不管院方資料有沒有預計結束時間都是四小時**，專業版也全面套用（《[迭代 17.5 修正紀錄](../notes/iteration-17-5-fixes.md)》）。工程上要知道的：
@@ -1081,7 +1096,7 @@ SRS 第 6 章要求 < 5 秒。孟買時期在門檻邊緣浮動、偶爾超標�
 | # | 問題 | 現況 | 建議 |
 |---|---|---|---|
 | 1 | **重複病歷號回 500** | `PatientsService.create` 沒攔 Prisma `P2002`，唯一鍵衝突直接冒成 500 | 攔截後改回 409 ＋ 中文訊息，與其他地方一致 |
-| 2 | **DevicesPage 未依權限隱藏 UI** | 一般護理師看得到註冊表單與 MDM 按鈕，按下去才 403 | 加 `can(Permission.DEVICE_MANAGE)` 條件渲染（`PatientsPage` 已經這樣做了） |
+| 2 | **DevicesPage 未依權限隱藏 UI** | 一般護理師看得到註冊表單~~與 MDM 按鈕~~，按下去才 403（1007 迭代 17.6 起這一頁的佈建按鈕都移到系統管理，那裡本來就只給有權限的帳號；剩註冊表單） | 加 `can(Permission.DEVICE_MANAGE)` 條件渲染 |
 | 3 | **專業版取消排班無 UI** | `POST /treatment-sessions/:id/cancel` 端點存在；迭代 14 起簡易版「病人上床」的復原會呼叫它，**專業版仍沒有按鈕** | 在 `ConsolePage` 補一顆按鈕 |
 | 4 | **總覽無日期選擇器** | `GET /overview?date=` 支援查其他日期，UI 只看當日 | 視需求補 |
 | 5 | **總覽螢幕 8 小時後要重新登入** | `JWT_EXPIRES_IN` 預設 8 小時，全天開著的總覽螢幕到期後出現逾時提示 | 待 Q-10 確認螢幕位置與使用方式後，再決定是否給總覽螢幕專用的長效帳號或延長機制 |
@@ -1157,7 +1172,8 @@ npm run verify:iteration17-1  # 17.1 — 6 步（不需後端）
 npm run verify:iteration17-2  # 17.2 — 6 步（不需後端）
 npm run verify:iteration17-3  # 17.3 — 7 步（不需後端、不需資料庫）
 npm run verify:iteration17-4  # 17.4 — 5 步（不需後端）
-npm run verify:iteration17-5  # 17.5 — 5 步（不需後端）
+npm run verify:iteration17-5  # 17.5 — 6 步（不需後端）
+npm run verify:iteration17-6  # 17.6 — 6 步（不需後端）
 npm run zh-tw:data          # 17.3：改了 packages/shared/zh-tw/ 的詞庫之後重新產生資料檔；-- --check 只比對
 npm run demo:patient        # 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot <檔名> 直接截圖
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container

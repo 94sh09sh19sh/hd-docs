@@ -1096,7 +1096,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `nav_key` | `TEXT` | 哪一個功能 | 唯一鍵。合法值為 `@hd/shared` 的 `NavItemKey`（17 項）。1006（迭代 17.1）起 `DISCHARGE_EDUCATION` 是「結束與離院衛教」頁裡的一段（定義帶 `partOf`）：沒有自己的連結，`placement` 不收 `PRIMARY`，所屬那一頁關了它也跟著關；畫面名稱 `CAROUSEL` 叫「公告與院內衛教」、`EDUCATION` 叫「結束與離院衛教」（名稱在共用常數，不在這張表） |
+| `nav_key` | `TEXT` | 哪一個功能 | 唯一鍵。合法值為 `@hd/shared` 的 `NavItemKey`（~~17 項~~ 1007 迭代 17.6 起 16 項：`PATIENTS` 拿掉，舊環境留下的那一列不刪，載入時認不得的識別碼略過）。1006（迭代 17.1）起 `DISCHARGE_EDUCATION` 是「結束與離院衛教」頁裡的一段（定義帶 `partOf`）：沒有自己的連結，`placement` 不收 `PRIMARY`，所屬那一頁關了它也跟著關；畫面名稱 `CAROUSEL` 叫「公告與院內衛教」、`EDUCATION` 叫「結束與離院衛教」（名稱在共用常數，不在這張表） |
 | `placement` | `TEXT` | 主列／更多選單／關閉 | `PRIMARY` / `MENU` / `OFF`（`NavPlacement`）。⛔ **`OFF` 不是「藏起來」**：前端不註冊路由、後端回 404 |
 | `last_reason` | `TEXT?` | 上一次調整的理由 | 每次調整必填，長度下限由服務層把關 |
 | `changed_by_id` | `TEXT?` | 誰調的 | → `nurses.id` |
