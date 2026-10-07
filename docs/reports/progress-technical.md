@@ -2,7 +2,7 @@
 
 **適用讀者**：接手或協作的工程師
 **報告日期**：2026-10-07
-**版本**：迭代 17.4 完成（master）
+**版本**：迭代 17.5 完成（master）
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
@@ -849,6 +849,18 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
+### 迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）
+
+使用者決定 17.4 截圖時發現的既有問題三處統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定（《[迭代 17.5 修正紀錄](../notes/iteration-17-5-fixes.md)》）。工程上要知道的：
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 四小時寫在哪 | `@hd/shared` 的 `DIALYSIS_SESSION_MINUTES = 240` 與 `plannedDialysisEndMs(startedAtMs, expectedEndAt)`（`hospital-api.ts`）。有預計結束用它；`null`、空字串、讀不懂或早於開始一律開始後四小時 |
+| 三處 | 病人端 `App.tsx` 的 `endsAt`、`TodayPanel.tsx` 的 `plannedEnd`（原本的 `DEFAULT_SESSION_MS` 拿掉）、護理端 `TabletCell.tsx` 的 `progressOf`。護理端起點改成 `state.startedAt ?? state.binding?.boundAt`，與病人端相同；不再退回 `binding.progressPercent` |
+| 改了的驗收 | `verify:iteration15` 第 4 步：「沒有預計結束時用綁定的有效期限」改成「用 `plannedDialysisEndMs`」（實作規格書 1.1 第七次） |
+| 驗收 | `verify:iteration17-5`（5 步，不需後端；transpile `hospital-api.ts` 實際跑一次） |
+| 沒有動的 | 後端、資料表、端點。專業版 `OverviewPage`、常駐總覽 `WallDisplayPage` 仍畫 `binding.progressPercent`（綁定進度）；後端 `awaitingDischargeConfirm` 仍只在有 `expectedEndAt` 時判定——兩處都待使用者決定（修正紀錄第 4 節） |
+
 ### 迭代 17.4：病人平板加回姓名與現在時間（1007）
 
 使用者指示病人平板還是要有病人姓名與現在時間（《[迭代 17.4 修正紀錄](../notes/iteration-17-4-fixes.md)》）。工程上要知道的：
@@ -861,7 +873,7 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 改了的驗收 | `verify:iteration14` 第 1 步：「首頁沒有姓名與病歷號」改成「首頁沒有病歷號、姓名只畫在 `.home-name` 一處」（實作規格書 1.1 第六次）。`verify:iteration6:api`、`16:api` 驗首頁資料沒有姓名，仍成立、沒改 |
 | 驗收 | `verify:iteration17-4`（5 步，不需後端） |
 | 沒有動的 | 後端、資料表、端點、圖示登記 |
-| 截圖時發現的既有問題 | 院方資料沒有 `expectedEndAt` 時，護理端 `TabletCell` 的 `progressOf` 退回綁定進度、病人端 `App.tsx` 用 `binding.expiresAt`、`TodayPanel` 用開始後 4 小時，三處終點不同；這次沒改。**1007 使用者決定統一用開始後 4 小時**（本透析中心一律四小時，是院方硬性規定）：要改 `progressOf` 與 `App.tsx`，實作另排 |
+| 截圖時發現的既有問題 | 院方資料沒有 `expectedEndAt` 時，護理端 `TabletCell` 的 `progressOf` 退回綁定進度、病人端 `App.tsx` 用 `binding.expiresAt`、`TodayPanel` 用開始後 4 小時，三處終點不同；這次沒改。**1007 使用者決定統一用開始後 4 小時**（本透析中心一律四小時，是院方硬性規定）：要改 `progressOf` 與 `App.tsx`，~~實作另排~~ **迭代 17.5 已改**（見上一節） |
 
 ### 迭代 17.3：所有 AI 生成內容禁用簡體字與中國大陸用語（1007）
 
@@ -1145,6 +1157,7 @@ npm run verify:iteration17-1  # 17.1 — 6 步（不需後端）
 npm run verify:iteration17-2  # 17.2 — 6 步（不需後端）
 npm run verify:iteration17-3  # 17.3 — 7 步（不需後端、不需資料庫）
 npm run verify:iteration17-4  # 17.4 — 5 步（不需後端）
+npm run verify:iteration17-5  # 17.5 — 5 步（不需後端）
 npm run zh-tw:data          # 17.3：改了 packages/shared/zh-tw/ 的詞庫之後重新產生資料檔；-- --check 只比對
 npm run demo:patient        # 17.1：一鍵展示病人端（模擬院方資料、另一個全新的資料庫）；-- --screenshot <檔名> 直接截圖
 npm run check:all           # 六支盤點腳本（不需後端），0926 起多了 check:container
@@ -1220,7 +1233,8 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 | 探測院方 API：只印結構、位址當場輸入不寫進 `.env` | 第十五冊 V-30a、清冊 Q-09 第 9 題 | 現場；**本系統能不能用、要不要報備待 Q-35** |
 | 1001 那台主機有 15 床的預設床位（迭代 15 以前的版本建的），接上院方資料後到系統管理把 `01`～`15` 拿掉 | 實作規格書 4.13 待做 | 現場 |
 | Defender 排除、主機上的 Git、Docker Hub 的 DNS（斷電重開、Docker Desktop 兩項設定 1007 已答） | 清冊 Q-27 其餘各題 | 院方。不擋登入，但首波試用前要有答案 |
-| 沒有預計結束時間時三處進度統一用開始後 4 小時（1007 決定） | 迭代 17.4 修正紀錄第 4 節 | 開發端 |
+| ~~沒有預計結束時間時三處進度統一用開始後 4 小時（1007 決定）~~ **1007 迭代 17.5 已完成** | 迭代 17.5 修正紀錄 | — |
+| 專業版總覽與常駐總覽螢幕要不要也改成透析進度；沒有預計結束時要不要用開始後四小時判定「待確認下機」 | 迭代 17.5 修正紀錄第 4 節 | 使用者決定 |
 | 開發手機上的外殼實機驗收、真的平板掃佈建 QR code | 迭代 12 §12.5～§12.7、迭代 14.1 `x72`～`x77` | 開發端 |
 | 實驗室上的真模型實測；用 `marquee:bundle` 重寫隨版本帶入的草稿 | 部署手冊第十三冊、迭代 17 `aa32`、`aa33` | 實驗室連線（Q-08） |
 
