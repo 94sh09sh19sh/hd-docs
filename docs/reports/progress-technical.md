@@ -171,7 +171,7 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 | `backup_runs` | `sha256` 存完整雜湊；0929 起同一串另寫在 `BACKUP_DIR` 裡的 `<檔名>.sha256`（格式同 `sha256sum`）。**資料庫壞掉、服務起不來時這張表就查不到**，還原時的雜湊從那個檔拿 |
 | `beds` | 床位清單是資料（系統管理可改）。~~預設 15 床~~ 1005 迭代 15 起全新環境不預設，院方資料出現的床號自動加進來（只新增、不再啟用停用的床）。有病人正在治療的床拿不掉，否則那位病人會從床位圖上消失 |
 | `treatment_sessions` | 迭代 14.2 起可「重新開啟」：今天已下機或已取消的療程回到已排班、`ended_at` 清空，**沿用同一筆**（唯一鍵不動），當天的症狀回報與求助仍掛在它底下 |
-| `treatment_sessions` | 迭代 15：`source` 分人工與院方；`expected_end_at` 只當「預計結束」，**不拿它判定下機**（可能是預排值，院方欄位要第三次進院確認）；`nurse_modified_at`／`bed_nurse_modified_at` 有值時，同步不再改它的狀態／床位——**護理師的更正優先** |
+| `treatment_sessions` | 迭代 15：`source` 分人工與院方；`expected_end_at` 只當「預計結束」，**不拿它判定下機**（可能是預排值，院方欄位要第三次進院確認；1007 迭代 17.5 起只記錄，透析一律開始後四小時結束）；`nurse_modified_at`／`bed_nurse_modified_at` 有值時，同步不再改它的狀態／床位——**護理師的更正優先** |
 | `hospital_api_fetch_runs` | 每次抓取一列（結果、重試次數、筆數、被拒的透析數、耗時、是否模擬），回應只存雜湊、**不存本文**——院方回應裡有姓名與病歷號 |
 | `dialysis_vital_records` | 院方每一筆血壓、脈搏與累積脫水量，掛在療程與那一次抓取底下；**只收有綁定平板的病人**，沒配平板的病人的數值不寫進資料庫 |
 | `carousel_items` | 迭代 17 起 `approval_status` 是病人端唯一的閘門：`listPlayable` 只取 `APPROVED`。既有內容遷移時標為已核准，新列預設待核准 |
@@ -432,7 +432,7 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 - **格式是讀同院 IDH 系統的程式推出來的**，不是院方文件：陣列沒有欄位名稱，只能靠位置認欄位（`@hd/shared` 的 `hospital-api.ts`，51 欄）。少欄或多欄的列不認，**那一次透析整個不寫入**——臨床數值只對一半比沒有更危險
 - **同步不另開寫入路徑**：建排班、綁定、換床、寫數值都呼叫護理師拖曳時用的那幾支服務，操作者是登入不了的系統帳號 `SYSTEM-HOSPITAL-SYNC`，稽核記成「院方資料同步」。簡易版與專業版因此看到的是同一套資料、同一種稽核
 - **護理師的更正優先**：提前結束或換床之後，同一筆療程的狀態與床位不再被同步改回去（`nurse_modified_at`、`bed_nurse_modified_at`）
-- **判斷不了的標出來，不猜**：預計結束時間可能是預排值，不拿它判定下機，過了很久還沒有結束體重就標「待確認下機」；平板沒自動接上時標出原因（平板正在別人的療程中、不在線上、停用或尚未佈建、院方的床位是停用的床或認不出來）；**還沒配平板的病人不算問題**，首波只有少數病人用平板，其餘只出現在床位圖上；超過設定時間沒更新，床位圖上方出現提示，這段期間護理師可到專業版手動處理
+- **判斷不了的標出來，不猜**：預計結束時間可能是預排值，不拿它判定下機，過了很久還沒有結束體重就標「待確認下機」（1007 迭代 17.5 起「預計結束」一律是開始後四小時）；平板沒自動接上時標出原因（平板正在別人的療程中、不在線上、停用或尚未佈建、院方的床位是停用的床或認不出來）；**還沒配平板的病人不算問題**，首波只有少數病人用平板，其餘只出現在床位圖上；超過設定時間沒更新，床位圖上方出現提示，這段期間護理師可到專業版手動處理
 - **正式環境的兩道防線**：啟動時位址的主機是 `hospital-api-sim` 就拒絕；抓到的回應帶 `x-hd-simulated` 就整次作廢。模擬部署要以 `HD_SIMULATION_DEPLOYMENT=yes` 明示
 - **推送**：有新資料時護理端串流多一種 `HOSPITAL_SYNC` 事件；平板訂閱 `GET /device/stream`，**事件只說「有新資料」、不帶數值**，平板收到後自己重取 `GET /device/home`
 - **探測工具** `npm run probe:hospital-api` 與同步共用解析程式，**只印結構與型別，不印任何值與位址**；位址在探測時當場輸入，不寫進 `.env`（部署手冊第十五冊 V-30a）
@@ -849,17 +849,17 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
-### 迭代 17.5：沒有預計結束時間時，三處進度統一用開始後四小時（1007）
+### 迭代 17.5：透析一律開始後四小時結束（1007）
 
-使用者決定 17.4 截圖時發現的既有問題三處統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定（《[迭代 17.5 修正紀錄](../notes/iteration-17-5-fixes.md)》）。工程上要知道的：
+使用者決定 17.4 截圖時發現的既有問題統一用開始後四小時——本透析中心透析一律四小時，是院方硬性規定；同日追加**不管院方資料有沒有預計結束時間都是四小時**，專業版也全面套用（《[迭代 17.5 修正紀錄](../notes/iteration-17-5-fixes.md)》）。工程上要知道的：
 
 | 要知道的 | 在哪裡 |
 |---|---|
-| 四小時寫在哪 | `@hd/shared` 的 `DIALYSIS_SESSION_MINUTES = 240` 與 `plannedDialysisEndMs(startedAtMs, expectedEndAt)`（`hospital-api.ts`）。有預計結束用它；`null`、空字串、讀不懂或早於開始一律開始後四小時 |
-| 三處 | 病人端 `App.tsx` 的 `endsAt`、`TodayPanel.tsx` 的 `plannedEnd`（原本的 `DEFAULT_SESSION_MS` 拿掉）、護理端 `TabletCell.tsx` 的 `progressOf`。護理端起點改成 `state.startedAt ?? state.binding?.boundAt`，與病人端相同；不再退回 `binding.progressPercent` |
-| 改了的驗收 | `verify:iteration15` 第 4 步：「沒有預計結束時用綁定的有效期限」改成「用 `plannedDialysisEndMs`」（實作規格書 1.1 第七次） |
-| 驗收 | `verify:iteration17-5`（5 步，不需後端；transpile `hospital-api.ts` 實際跑一次） |
-| 沒有動的 | 後端、資料表、端點。專業版 `OverviewPage`、常駐總覽 `WallDisplayPage` 仍畫 `binding.progressPercent`（綁定進度）；後端 `awaitingDischargeConfirm` 仍只在有 `expectedEndAt` 時判定——兩處都待使用者決定（修正紀錄第 4 節） |
+| 四小時寫在哪 | `@hd/shared` 的 `DIALYSIS_SESSION_MINUTES = 240`、`plannedDialysisEndMs(startedAtMs)`（**只收開始時間**）、`dialysisProgress(startedAtMs, nowMs)`（`hospital-api.ts`） |
+| 用到的地方 | 病人端 `App.tsx` 的 `endsAt`、`TodayPanel.tsx` 的 `plannedEnd`（原本的 `DEFAULT_SESSION_MS` 拿掉）、簡易版 `TabletCell.tsx` 的 `progressOf`（起點 `state.startedAt ?? state.binding?.boundAt`）；後端 `RealtimeStateService` 的 `composeBindingProgress`（專業版 `OverviewPage`、常駐總覽 `WallDisplayPage` 畫的 `progressPercent`、`elapsedMinutes`，起點 `session.startedAt ?? binding.boundAt`）與 `awaitingDischargeConfirm`（開始後四小時加門檻） |
+| 沒有動的 | 資料表、端點。`expected_end_at`／`expectedEndAt` 照樣記錄與回傳，只是不再拿來算；綁定有效期限 `expiresAt`（到期自動解除）不改 |
+| 改了的驗收 | `verify:iteration15` 第 4 步改成「一律 `plannedDialysisEndMs(開始)`」；`verify:iteration15:api` 的待確認下機改成「院方預計結束已過、開始才 30 分鐘 → 不標」＋「開始 310 分鐘前、沒有預計結束 → 標」（實作規格書 1.1 第七次） |
+| 驗收 | `verify:iteration17-5`（6 步，不需後端；transpile `hospital-api.ts` 實際跑一次）；`15:api`、`16:api`、`14:api`、`17:api` 對著模擬院方 API 通過 |
 
 ### 迭代 17.4：病人平板加回姓名與現在時間（1007）
 
@@ -1234,7 +1234,7 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 | 1001 那台主機有 15 床的預設床位（迭代 15 以前的版本建的），接上院方資料後到系統管理把 `01`～`15` 拿掉 | 實作規格書 4.13 待做 | 現場 |
 | Defender 排除、主機上的 Git、Docker Hub 的 DNS（斷電重開、Docker Desktop 兩項設定 1007 已答） | 清冊 Q-27 其餘各題 | 院方。不擋登入，但首波試用前要有答案 |
 | ~~沒有預計結束時間時三處進度統一用開始後 4 小時（1007 決定）~~ **1007 迭代 17.5 已完成** | 迭代 17.5 修正紀錄 | — |
-| 專業版總覽與常駐總覽螢幕要不要也改成透析進度；沒有預計結束時要不要用開始後四小時判定「待確認下機」 | 迭代 17.5 修正紀錄第 4 節 | 使用者決定 |
+| ~~專業版總覽與常駐總覽螢幕要不要也改成透析進度；沒有預計結束時要不要用開始後四小時判定「待確認下機」~~ **1007 使用者決定全面套用，迭代 17.5 追加已完成** | 迭代 17.5 修正紀錄 | — |
 | 開發手機上的外殼實機驗收、真的平板掃佈建 QR code | 迭代 12 §12.5～§12.7、迭代 14.1 `x72`～`x77` | 開發端 |
 | 實驗室上的真模型實測；用 `marquee:bundle` 重寫隨版本帶入的草稿 | 部署手冊第十三冊、迭代 17 `aa32`、`aa33` | 實驗室連線（Q-08） |
 
