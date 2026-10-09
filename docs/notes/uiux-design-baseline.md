@@ -297,10 +297,11 @@
 | ~~5~~ | ~~病人~~ | ~~新病人或資料要改的時候~~ **1007 拿掉**：病人主檔一律由院方 API 建立 |
 | 5 | ~~輪播內容~~ ~~跑馬燈內容（1005）~~ 公告與院內衛教（1006） | 內容維護。**這一項是主列裡最邊緣的，若護理長覺得用不到，改設定收進選單**。1006 改名：「跑馬燈」說的是病人端怎麼播，護理師看不出用途 |
 | 6 | 總覽螢幕模式 | 開護理站那台大螢幕用，一天按一次 |
+| 7 | 護理紀錄（1010） | **1010 院方要求從選單移到主列**：紀錄改成複製貼上交給院內的正式紀錄之後，每個班都會用到。排在最後——寫紀錄是事件處理完之後的事。主列因此滿 7 項（上限）；既有環境由版本更新的遷移移過來，護理長改過的不動 |
 
 **選單（「更多」下拉）——用得到，但不是每天：**
 
-帳號審核、護理紀錄、~~衛教~~ 結束與離院衛教（1006）、SOP 查詢、臨床數值、病人趨勢、稽核軌跡
+帳號審核、~~護理紀錄~~（1010 移到主列）、~~衛教~~ 結束與離院衛教（1006）、SOP 查詢、臨床數值、病人趨勢、稽核軌跡
 
 **關閉——首波不提供：**
 
@@ -589,15 +590,34 @@
 | `book-open` | 衛教 | `message-circle-heart` | 心情問卷 |
 | `send` | 已送出，等護理站確認 | `user-check` | 護理師已接手 |
 | `circle-check` | 完成／已處理 | `hourglass` | 等待中 |
-| `x` | 關閉 | `monitor-dot` | 透析機 |
-| `syringe` | 血管通路（打針的地方） | `toilet` | 如廁 |
-| `thermometer-sun` | 環境（冷熱、燈光、被子） | `message-circle-question` | 其他（請說明） |
+| `x` | 關閉 | `monitor-dot` | 透析機（1010 起只有護理端用） |
+| `syringe` | 血管通路（打針的地方；1010 起只有護理端用） | `toilet` | 如廁 |
+| `thermometer-sun` | 環境（冷熱、燈光、被子；1010 起只有護理端用） | `message-circle-question` | 其他（請說明） |
 | `circle-dot` | 院方自訂的選項（沒有登記圖示時的替代） | `chevron-left`／`chevron-right` | 上一個／下一個（上一題、上一頁） |
 
 病人端另有：`house` 回首頁、`clock` 療程時間、
 `laugh`／`smile`／`meh`／`frown`／`angry` 心情的五個等級、`circle` 選項「沒有」、`square`／`square-check` 複選、
-`lightbulb` 說明（點開看更多），以及求助類別：`rotate-3d` 頭暈、`zap` 抽筋、`waves` 噁心想吐、`heart-pulse` 胸悶胸痛很喘、
-`brain` 頭痛、`hand` 皮膚癢、`thermometer` 發冷發燒、`droplet` 出血、`person-standing` 身體其他地方不舒服、`glass-water` 口渴肚子餓。
+`lightbulb` 說明（點開看更多），以及求助類別（下一段）。
+
+**求助類別的圖示要畫出症狀本身（1010，迭代 17.8）**。院方反映緊急回報的圖示與文字不太相符（閃電代表抽筋、波浪代表想吐、大腦代表頭痛），希望即使不看文字也能知道是什麼症狀。Lucide 沒有畫症狀的圖示，所以這十三個**由本專案自己畫**（`scripts/icons-custom/`，照 Lucide 的規格：24×24、線寬 2、圓角、不填色），登記表第四欄寫 `custom`；**仍然配字**，字是正式的意思，圖是幫忙認。原本的 `rotate-3d`、`zap`、`waves`、`heart-pulse`、`brain`、`hand`、`thermometer`、`droplet`、`person-standing`、`glass-water` 拿掉，`monitor-dot`、`syringe`、`thermometer-sun` 病人端不再用（護理端的處理方式照用）。
+
+| 圖示 | 求助類別 | 畫的是什麼 |
+|---|---|---|
+| `symptom-dizzy` | 頭暈、冒冷汗、快昏倒 | 一張臉、旁邊一圈轉的漩渦、一滴汗 |
+| `symptom-cramp` | 抽筋 | 側面的小腿，小腿肚裡一道閃電、旁邊三道痛的線 |
+| `symptom-nausea` | 想吐、噁心 | 瞇緊的眼睛、波浪的嘴 |
+| `symptom-chest` | 胸悶、胸痛、很喘 | 上半身，胸口一顆心，頭旁邊喘氣的線 |
+| `symptom-headache` | 頭痛 | 頭頂裂開的閃電、皺眉 |
+| `symptom-itch` | 皮膚很癢 | 一隻手臂，上面三道抓的痕跡與幾點紅疹 |
+| `symptom-chill` | 發冷、發抖、覺得發燒 | 一個人兩邊發抖的鋸齒，旁邊一支溫度計 |
+| `symptom-access` | 打針的地方流血、腫、痛 | 手臂、扎進去的針、底下一滴血 |
+| `symptom-bleeding` | 其他地方流血止不住 | 一道傷口與接連滴下的血 |
+| `symptom-other` | 身體其他地方不舒服 | 一個人，旁邊一個問號 |
+| `machine-alarm` | 機器一直叫 | 一台機器與兩道聲波 |
+| `room-comfort` | 會冷／會熱／燈太亮／要蓋被子 | 躺著蓋被子的人，上面一個太陽、一片雪花 |
+| `drink-food` | 口渴、肚子餓 | 一杯水，一碗飯與一雙筷子 |
+
+`toilet`（如廁）與 `message-circle-question`（其他，請說明）本來就對得上，沿用。**畫得好不好由不知道對照的人判斷**：把字遮起來看圖說症狀（實作規格書 4.15.8 驗收第 9 條；院方試看在清冊 Q-31 第 7 題）。
 
 護理端簡易版另有：`activity` 治療中、`triangle-alert` 待處理的求助、`octagon-alert` 緊急的求助、
 `shield-alert` 平板跳出固定畫面、`circle-arrow-up` 外殼版本過舊、`badge-alert` 外殼版本不相容、`wrench` 平板尚未佈建、`tablet-smartphone` 平板、
