@@ -1,6 +1,6 @@
 # 血液透析中心平板照護輔助系統 — 進度首頁
 
-**本週定版**：1007
+**本週定版**：1007｜**1014 修訂中**
 
 > 每週三開會日定版一次。下方連結**永遠指向現行版**，網址不變；日期標的是它最後一次定版的週次。
 
@@ -51,7 +51,7 @@
 | 醫師、護理部、法規承辦人 | [臨床端進度報告](reports/progress-clinical.md) | 1007 |
 | 接手或協作的工程師 | [技術端進度報告](reports/progress-technical.md) | 1007 |
 | 要看系統實體與邏輯長什麼樣 | [架構圖](requirements/architecture-diagrams.md) | 1007 |
-| 要查資料庫蒐集了哪些資料 | [資料字典](reference/data-dictionary.md) — 59 張表 593 個欄位逐欄說明 | 1007 |
+| 要查資料庫蒐集了哪些資料 | [資料字典](reference/data-dictionary.md) — 59 張表 593 個欄位逐欄說明 | 1007 · 修訂中 |
 | 沒有技術背景，想聽懂會議上那些詞 | [這套系統是用什麼蓋的](reference/tech-stack-explained.md) | 1007 |
 | 要改外殼 App，或查它與系統怎麼對接 | [病人端外殼 App 契約](reference/kiosk-shell-contract.md) — 外殼在另一個私人 repo，兩邊只靠這一份帶版本號的契約對齊 | 1007 |
 | 要動手驗收 | [完整手動測試手冊](testing/manual-test-guide.md) — 主手冊加迭代 3～17 二十七本分冊，1131 項逐條驗證 | 1007 |
@@ -65,7 +65,7 @@
 |---|---|---|
 | [FDE 數位化評估報告](requirements/fde-assessment.md) | 背景脈絡與選型理由 | 1007 |
 | [軟體需求規格書（SRS）](requirements/srs.md) | 功能需求來源（FR 編號出處） | 1007 |
-| [資料庫使用規範](requirements/database-policy.md) | 資料治理強制規則，優先權等同實作規格書 | 1007 |
+| [資料庫使用規範](requirements/database-policy.md) | 資料治理強制規則，優先權等同實作規格書 | 1007 · 修訂中 |
 | [實作規格書](requirements/implementation-spec.md) | 範圍與技術選型，**衝突時以此為準** | 1007 |
 | [部署規範](requirements/deployment-spec.md) | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1007 |
 | [尚待確認事項清冊](requirements/open-questions.md) | 卡住進度的問題總表，其餘文件不再各自維護 | 1007 |
