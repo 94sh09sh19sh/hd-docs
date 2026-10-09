@@ -1,7 +1,7 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 60 張表、600 個欄位、15 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`）
-**來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`
+**範圍**：目前資料庫實際蒐集的全部資料 — 66 張表、653 個欄位、16 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`）
+**來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
 ---
@@ -266,7 +266,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ## 四、病人自述內容
 
-> ⚠️ **這一類全部是「病人自己說的」**。這幾張表**不存**風險分層、趨勢預警或嚴重度推論——那屬 FR-P03／FR-P05，迭代 11 以規則引擎實作（0919 編號重排前稱迭代 7），受功能開關與書面確認閘門約束，結果另存專屬資料表。任何看起來像「分級」的欄位（`present`、`severity`、`routed_to`）在下方都有明確說明它為什麼**不是**臨床判斷。
+> ⚠️ **這一類全部是「病人自己說的」**。這幾張表**不存**風險分層、趨勢預警或嚴重度推論——那屬 FR-P03／FR-P05，**1010 迭代 18 以規則引擎實作**（0919 起編號幾度重排：7 → 11 → 15 → 18），受功能開關與書面確認閘門約束，結果另存專屬資料表（第二十一節的 `rule_evaluations`）。任何看起來像「分級」的欄位（`present`、`severity`、`routed_to`）在下方都有明確說明它為什麼**不是**臨床判斷。
 
 ### `symptom_reports` — 透析前症狀問卷送出紀錄（13 欄）
 
@@ -303,7 +303,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `symptom_report_id` | `TEXT` | 屬於哪一份問卷 | 外鍵 → `symptom_reports.id`，`ON DELETE CASCADE` |
 | `item_code` | `TEXT` | 題目的識別字。10 題分別是水腫、喘、發燒、通路出血、通路紅腫痛、胸悶、頭暈、抽筋、噁心、皮膚癢 | 合法值取自 `PRE_DIALYSIS_SYMPTOM_QUESTIONS`：`EDEMA` `DYSPNEA` `FEVER` `ACCESS_BLEEDING` `ACCESS_ABNORMAL` `CHEST_DISCOMFORT` `DIZZINESS` `CRAMP` `NAUSEA` `ITCHING`。有索引。題目中文與白話說明查 `SYMPTOM_QUESTION_BY_CODE` |
 | `answer_value` | `TEXT` | 病人選的答案。多數題目是四級（沒有／輕微／中等／嚴重），發燒與通路出血是二選一（沒有／有） | 合法值 `NONE` `MILD` `MODERATE` `SEVERE` `NO` `YES`（`SYMPTOM_ANSWER_VALUES`）。**量表由題目決定**：`SEVERITY` 題只能用前四個，`YES_NO` 題只能用後兩個，對照表在 `SYMPTOM_SCALE_OPTIONS` |
-| `present` | `BOOL` | 病人是否表示「有這個症狀」。**這只是把答案原樣轉成是／否方便計數與顯示，不是嚴重度分級，也不是任何風險判斷** | 由 `SYMPTOM_PRESENT_VALUES`（`MILD` `MODERATE` `SEVERE` `YES`）機械式推導。⛔ **禁止**在此欄之上疊加任何加權、評分或門檻邏輯 — 那屬 FR-P03 風險分層，只能經由迭代 11 的規則引擎 |
+| `present` | `BOOL` | 病人是否表示「有這個症狀」。**這只是把答案原樣轉成是／否方便計數與顯示，不是嚴重度分級，也不是任何風險判斷** | 由 `SYMPTOM_PRESENT_VALUES`（`MILD` `MODERATE` `SEVERE` `YES`）機械式推導。⛔ **禁止**在此欄之上疊加任何加權、評分或門檻邏輯 — 那屬 FR-P03 風險分層，只能經由迭代 18 的規則引擎（第二十一節） |
 | `created_at` | `TS` | 寫入時間 | 見共通欄位 |
 
 **唯一約束**：`(symptom_report_id, item_code)` — 同一份問卷的同一題只能有一個答案。
@@ -1357,6 +1357,111 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 `CAROUSEL_ITEM_UPSERTED` 留著，迭代 17 起只用在「護理師寫一則公告（待核准）」。
 
 **沒有送進模型的東西**：任何病人資料。衛教只送主題名稱與主題重點，公告只送事由；`ai_invocations.patient_id` 一律為空。
+
+## 二十一、規則引擎與三項高風險功能（迭代 18）
+
+**蒐集的意義**：風險分層（FR-P03）、療程中預警（FR-P05）、劑量調整參考（FR-N06）與適足性的趨勢推估（FR-N07 的預測部分）**一律由規則計算，不經語言模型**（SRS FR-R01）。
+這一節的六張表記三件事：**規則與它的每一個版本**（門檻、文字範本、書面依據出處）、**每一次比對**（對誰、用哪一版、引用了哪幾筆資料、組出什麼字）、**誰檢視過、有沒有採納**（FR-R06、FR-N13）。
+規格書列的是四張；門檻值與引用的資料各拆一張明細表，不用 JSON 欄位承載（規範 6.1 第 2 條）。遷移 `iteration18_rule_engine`，只做加法。
+級聯刪除只留「版本 → 門檻」「比對 → 引用資料」兩條；其餘一律 `NO ACTION`——這些是治理紀錄，留存期限定案前不刪。
+
+> ⚠️ **這一節的表才是「系統的判讀」放的地方**。第四節的症狀與求助是病人自己說的，第十八節的生命徵象是院方量的；把它們拿來比門檻、組成文字的，只有這裡。
+> 每一筆比對都標了**合成資料或真實病人**（`data_mode`）與**當時版本是草稿還是生效中**：書面確認閘門沒開（院內主機設定檔 `HIGH_RISK_WRITTEN_CONFIRMATION` 空白）時，`data_mode = REAL` 的列一筆都不會出現。
+
+### `rule_definitions` — 規則（7 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `rule_code` | `TEXT` | 規則代號，印在每一則輸出裡（例如 RISK-IDWG-01） | 唯一。第一次啟動寫入六條預設規則（`DEFAULT_RULE_DEFINITIONS`），之後不再寫；畫面上沒有新增規則的入口 |
+| `name` | `TEXT` | 規則名稱 | — |
+| `feature` | `TEXT` | 屬於哪一項功能 | 合法值 `RISK_STRATIFICATION` / `INTRA_DIALYSIS_ALERT` / `DOSE_REFERENCE` / `ADEQUACY_PREDICTION`（`RuleFeature`，就是那一項的功能開關識別字）。有索引 |
+| `kind` | `TEXT` | 比對的形態（體重增幅、收縮壓低於門檻的次數、同一時段…） | 合法值見 `RuleKind`（六種）。決定後端用哪一個評估器（`modules/rules/evaluators.ts`）；新增一種形態才要改程式 |
+| `active` | `BOOL` | 整條規則還用不用 | `DEFAULT true`。目前沒有畫面會改它 |
+| `created_at` | `TS` | 寫入時間 | 見共通欄位 |
+
+### `rule_versions` — 規則版本（15 欄）
+
+**一經使用即不可修改**（實作規格書 3.6 第 1 條）：有任何一筆 `rule_evaluations` 指向的版本，內容改不了；要改門檻就出新版本。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `definition_id` | `TEXT` → `rule_definitions` | 哪一條規則 | `ON DELETE NO ACTION`。與 `version_no` 唯一 |
+| `version_no` | `INT` | 第幾版 | 從 1 起，新版本接在最大的後面 |
+| `status` | `TEXT` | 草稿、生效中、已停用 | 合法值 `DRAFT` / `ACTIVE` / `RETIRED`（`RuleVersionStatus`），有索引。**草稿只對合成資料病人執行**；`source_citation` 是空的不得為 `ACTIVE`（FR-R02）；同一條規則同時只有一版 `ACTIVE`，新的生效時舊的改 `RETIRED`（同一個交易）；`RETIRED` 不能再生效 |
+| `met_template` | `TEXT` | 符合時的文字範本 | 大括號裡是這一種規則登記過的欄位（`RULE_KIND_BY_KEY[kind].placeholders`）。⛔ 出現 `RULE_CONCLUSION_WORDS`（風險、診斷、建議、低血壓…）存不進去（FR-R04）。最長 300 字 |
+| `not_met_template` | `TEXT` | 未符合時的文字範本 | 同上 |
+| `source_citation` | `TEXT?` | 臨床端書面依據的出處 | 空值＝標不了生效。預設規則只有兩條收縮壓相關的有值（同院 IDH 系統） |
+| `protocol_excerpt` | `TEXT?` | 逐字照抄的 protocol 條文 | 劑量調整參考（`HB_OUT_OF_RANGE`）必填；符合時原樣接在輸出後面。不受結論字詞的限制（是原文引用） |
+| `note` | `TEXT?` | 備註 | 預設規則寫明「合成資料示範值」 |
+| `created_by_id` | `TEXT?` → `nurses` | 誰建立的 | `ON DELETE NO ACTION`。預設規則為空（畫面顯示「系統預設」） |
+| `created_at` | `TS` | 建立時間 | — |
+| `activated_by_id` | `TEXT?` → `nurses` | 誰標為生效 | `ON DELETE NO ACTION`。只有系統管理者標得了 |
+| `activated_at` | `TS?` | 什麼時候標為生效 | — |
+| `activation_reason` | `TEXT?` | 標為生效的依據（誰確認的、哪一份文件） | 必填才標得了；同時寫進稽核 `RULE_VERSION_ACTIVATED` |
+| `retired_at` | `TS?` | 什麼時候被較新的版本取代 | — |
+
+### `rule_version_parameters` — 規則版本的門檻（4 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `version_id` | `TEXT` → `rule_versions` | 哪一版 | `ON DELETE CASCADE`（主表 → 自己的明細）。與 `param_key` 唯一 |
+| `param_key` | `TEXT` | 哪一項門檻 | 合法值見那一種規則的 `params`（例如 `gainPercentTenths`、`nadirLowMmhg`）。畫面只顯示中文名稱與單位 |
+| `value_scaled` | `INT` | 門檻值 | **整數＋小數位數**（小數位數由參數定義決定），不用浮點數（規範 6.2）：4.0% 存 40、1.20 存 120。超出參數定義的上下限存不進去（只擋打錯，不是臨床判斷） |
+
+### `rule_evaluations` — 每一次比對（13 欄）
+
+**同一版規則對同一筆資料只比一次**（`rule_version_id`＋`patient_id`＋`subject_key` 唯一）：定時比對（每 3 分鐘）與護理師按「立即比對」撞在一起，唯一鍵擋下後一筆。資料不夠（例如還沒有透析前體重）就不寫這一列。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `rule_version_id` | `TEXT` → `rule_versions` | 用哪一版 | `ON DELETE NO ACTION`。**永遠指向當時的版本**，之後出了新版本也不改 |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人 | `ON DELETE NO ACTION`。與 `evaluated_at` 組成索引 |
+| `treatment_session_id` | `TEXT?` → `treatment_sessions` | 哪一次療程 | `ON DELETE NO ACTION`。風險分層與療程中預警才有；劑量調整參考與適足性推估為空 |
+| `subject_key` | `TEXT` | 比的是哪一筆資料 | `session:<療程>`、`hb:<血紅素那一筆臨床數值>`、`ktv:<最近一次適足性計算>` |
+| `feature` | `TEXT` | 屬於哪一項功能 | 冗餘保留，待檢視依開關篩選不必再 join 兩層 |
+| `met` | `BOOL` | 符不符合 | 只有 `true` 的是要檢視的輸出；與 `evaluated_at` 組成索引 |
+| `statement` | `TEXT` | 組出來的那一句事實陳述 | 由版本範本組出，**不經模型**（FR-R01、FR-R04）。不含姓名與病歷號；劑量調整參考符合時條文原樣接在後面 |
+| `data_mode` | `TEXT` | 這位病人是合成資料還是真實病人 | 合法值 `SYNTHETIC` / `REAL`（`RuleDataMode`），依病歷號前綴判定（規範第 10 條）。閘門沒開時不會有 `REAL` |
+| `version_status_at_run` | `TEXT` | 比對當下這一版是草稿還是生效中 | `DRAFT` 只會出現在 `SYNTHETIC` |
+| `trigger` | `TEXT` | 定時比對還是有人按了立即比對 | 合法值 `SCHEDULED` / `MANUAL`（`RuleTrigger`） |
+| `triggered_by_id` | `TEXT?` → `nurses` | 誰按的 | `ON DELETE NO ACTION`。定時比對為空 |
+| `evaluated_at` | `TS` | 比對的時間 | — |
+
+### `rule_evaluation_inputs` — 一次比對引用的資料（8 欄）
+
+「點開看得到完整依據」（FR-R03）的那一半。來源不只一張表，比照 `audit_logs` 以來源型別＋識別碼記錄，**並留下當時的值**——來源那一列之後被更正，依據照樣看得到比對當下的數字。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `evaluation_id` | `TEXT` → `rule_evaluations` | 哪一次比對 | `ON DELETE CASCADE`（主表 → 自己的明細）。有索引 |
+| `sort_order` | `INT` | 顯示順序 | 從 1 起 |
+| `source_type` | `TEXT` | 資料來自哪裡 | 合法值 `VITAL_RECORD` / `CLINICAL_VALUE` / `HELP_REQUEST` / `TREATMENT_SESSION` / `ADEQUACY_CALCULATION`（`RuleInputSource`） |
+| `source_id` | `TEXT` | 那一列的識別碼 | **刻意不設外鍵**（來源表不只一種）。對到 `dialysis_vital_records`、`clinical_values`、`help_requests`、`treatment_sessions`、`adequacy_calculations` 其中之一 |
+| `label` | `TEXT` | 這一筆是什麼（「本次透析前體重」「求助『頭暈、冒冷汗、快昏倒』」…） | 由評估器組出；求助用按下當時的字（`help_requests.category_label`） |
+| `value_text` | `TEXT` | 當時的值（含單位） | 例如「64.0 kg」「開始後第 120 分鐘 86 mmHg（開始收縮壓 130，門檻 90）」 |
+| `observed_at` | `TS?` | 那一筆的時間（量測時間、按下的時間） | — |
+
+### `rule_evaluation_reviews` — 檢視與是否採納（6 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `evaluation_id` | `TEXT` → `rule_evaluations` | 哪一則輸出 | `ON DELETE NO ACTION`。有索引。**一筆都沒有＝待檢視**，即時總覽一直顯示；可以不只一筆（換人看、改判斷），以最新的為準 |
+| `reviewer_id` | `TEXT` → `nurses` | 誰檢視的 | `ON DELETE NO ACTION` |
+| `adopted` | `BOOL` | 有沒有採納 | 只能對 `met = true` 的比對登記 |
+| `not_adopted_reason` | `TEXT?` | 未採納的原因 | 選填，最長 300 字；採納時一律為空。連同採納與否寫進稽核 `RULE_OUTPUT_REVIEWED` |
+| `reviewed_at` | `TS` | 檢視的時間 | — |
+
+**稽核軌跡多九個動作**：`RULE_DEFAULTS_SEEDED`（第一次啟動寫入預設規則）、`RULE_VERSION_CREATED`、`RULE_VERSION_UPDATED`（只有沒用過的草稿）、`RULE_VERSION_ACTIVATED`、
+`RULE_VERSION_CHANGE_REJECTED`（沒有出處標為生效、改用過的版本、範本有結論字詞…）、`RULE_EVALUATION_REQUESTED`（按了立即比對）、`RULE_EVALUATION_BLOCKED`（真實病人被閘門擋下；定時比對同一位病人一天記一筆）、
+`RULE_OUTPUT_REVIEWED`、`RULE_GATE_STATE_RECORDED`（啟動時閘門狀態與上一次記的不同才記）。
+
+**沒有送進模型的東西**：這一節的全部。規則模組不引用 AI 閘道與模型供應者（`verify:iteration18` 第 1 步逐檔檢查），比對前後 `ai_invocations` 一筆都不多（`verify:iteration18:api` 第 6 步）。
 
 ---
 

@@ -214,6 +214,16 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
   這個位址**不進 repo、不寫進任何文件、不貼進任何紀錄**（DEP-46）。
 - `HD_SIMULATION_DEPLOYMENT` 是模擬部署才填 `yes` 的開關。院內填了它，抄錯的模擬設定就擋不住了——後端靠它空白，才會在位址指向模擬時拒絕啟動。
 
+### 1.11 判斷規則的書面確認閘門（1010 新增）
+
+| 變數 | 填什麼 |
+|---|---|
+| `HIGH_RISK_WRITTEN_CONFIRMATION` | **（空白）**——法務／資訊室對 TFDA 分類的書面確認（清冊 Q-02）拿到之前，**一律空白** |
+
+- 空白時，風險分層提示、療程中預警、劑量調整參考、透析適足性趨勢推估**只對合成資料病人執行**，真實病人一律擋下並寫進稽核軌跡；這四項的功能開關預設也都是關的。
+- 拿到書面確認之後，**只填文號**（不貼文件內容、200 字以內），照第 5 節 `up -d` 讓 `api` 換上新設定。護理端系統管理「判斷規則」會顯示「已登記（文號）」，稽核軌跡記下這一次改變。
+- 這一項**畫面上改不了**，刻意的：「系統以設定強制」（SRS FR-R08），要動得到院內主機才改得了。只填它還不夠，每一條規則另要在畫面上附出處、標為生效（清冊 Q-03）。
+
 ---
 
 ## 2. 填好的樣子
@@ -258,6 +268,8 @@ LLM_HEALTH_TIMEOUT_SECONDS=5
 HOSPITAL_API_BASE_URL=
 HD_SIMULATION_DEPLOYMENT=
 
+HIGH_RISK_WRITTEN_CONFIRMATION=
+
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -297,6 +309,7 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 - [ ] `JWT_SECRET` 是這次新產生的
 - [ ] `LLM_PROVIDER=mock`
 - [ ] `HOSPITAL_API_BASE_URL` 與 `HD_SIMULATION_DEPLOYMENT` **都是空白**（1005 新增）
+- [ ] `HIGH_RISK_WRITTEN_CONFIRMATION` **是空白**（1010 新增；書面確認拿到之前）
 - [ ] 整份沒有任何一個值加了引號
 
 ---
@@ -319,7 +332,7 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 
 | 改了 | 要做什麼 |
 |---|---|
-| `CORS_ORIGINS`、`JWT_*`、`SUPER_ADMIN_*`、`BACKUP_DAILY_AT`、`DB_DISK_MIN_FREE_MB`、`KIOSK_SHELL_MIN_VERSION`、`LLM_*`、其他營運參數 | `docker compose --env-file $cfg up -d`（compose 會自己重建設定有變的容器） |
+| `CORS_ORIGINS`、`JWT_*`、`SUPER_ADMIN_*`、`BACKUP_DAILY_AT`、`DB_DISK_MIN_FREE_MB`、`KIOSK_SHELL_MIN_VERSION`、`LLM_*`、`HIGH_RISK_WRITTEN_CONFIRMATION`、其他營運參數 | `docker compose --env-file $cfg up -d`（compose 會自己重建設定有變的容器） |
 | 三個埠 | 先向資訊室登記 → `up -d`；位址裡的埠也要一起改 |
 | `HD_PUBLIC_API_URL` | `docker compose --env-file $cfg build` 再 `up -d`——**它寫在網頁檔案裡，不重建沒用**。做完用第十五冊 V-17 第二段確認 |
 | `MDM_KIOSK_BASE_URL` | **原則上不改。** 非改不可時：`up -d api` → 重跑 `shell-builder`（它會重簽伺服器憑證，V-22）→ 重新備份金鑰（V-23）→ `restart patient-web`（V-24）→ **每一台平板清除資料、重新佈建**。三個位址的主機一起從名稱換成 IP 的完整步驟在[第十五冊之四](15d-switch-host-to-ip.md) |
