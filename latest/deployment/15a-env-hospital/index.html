@@ -2741,6 +2741,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3595,6 +3623,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#111-判斷規則的書面確認閘門1010-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 判斷規則的書面確認閘門（1010 新增）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4068,6 +4107,17 @@
     <span class="md-ellipsis">
       
         1.10 院方透析清單 API（1005 新增）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-判斷規則的書面確認閘門1010-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 判斷規則的書面確認閘門（1010 新增）
       
     </span>
   </a>
@@ -4627,6 +4677,26 @@
   這個位址<strong>不進 repo、不寫進任何文件、不貼進任何紀錄</strong>（DEP-46）。</li>
 <li><code>HD_SIMULATION_DEPLOYMENT</code> 是模擬部署才填 <code>yes</code> 的開關。院內填了它，抄錯的模擬設定就擋不住了——後端靠它空白，才會在位址指向模擬時拒絕啟動。</li>
 </ul>
+<h3 id="111-判斷規則的書面確認閘門1010-新增">1.11 判斷規則的書面確認閘門（1010 新增）<a class="headerlink" href="#111-判斷規則的書面確認閘門1010-新增" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>變數</th>
+<th>填什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HIGH_RISK_WRITTEN_CONFIRMATION</code></td>
+<td><strong>（空白）</strong>——法務／資訊室對 TFDA 分類的書面確認（清冊 Q-02）拿到之前，<strong>一律空白</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>空白時，風險分層提示、療程中預警、劑量調整參考、透析適足性趨勢推估<strong>只對合成資料病人執行</strong>，真實病人一律擋下並寫進稽核軌跡；這四項的功能開關預設也都是關的。</li>
+<li>拿到書面確認之後，<strong>只填文號</strong>（不貼文件內容、200 字以內），照第 5 節 <code>up -d</code> 讓 <code>api</code> 換上新設定。護理端系統管理「判斷規則」會顯示「已登記（文號）」，稽核軌跡記下這一次改變。</li>
+<li>這一項<strong>畫面上改不了</strong>，刻意的：「系統以設定強制」（SRS FR-R08），要動得到院內主機才改得了。只填它還不夠，每一條規則另要在畫面上附出處、標為生效（清冊 Q-03）。</li>
+</ul>
 <hr />
 <h2 id="2-填好的樣子">2. 填好的樣子<a class="headerlink" href="#2-填好的樣子" title="Permanent link">&para;</a></h2>
 <p>照 0.3 節的假設填完，會像這樣（說明行省略）。<strong>角括號那幾處要換成你自己的，<code>&lt;主機&gt;</code> 三處換成同一個值</strong>：</p>
@@ -4667,6 +4737,8 @@ LLM_HEALTH_TIMEOUT_SECONDS=5
 HOSPITAL_API_BASE_URL=
 HD_SIMULATION_DEPLOYMENT=
 
+HIGH_RISK_WRITTEN_CONFIRMATION=
+
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -4695,6 +4767,7 @@ REALTIME_HEARTBEAT_SECONDS=20
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>JWT_SECRET</code> 是這次新產生的</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>LLM_PROVIDER=mock</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>HOSPITAL_API_BASE_URL</code> 與 <code>HD_SIMULATION_DEPLOYMENT</code> <strong>都是空白</strong>（1005 新增）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>HIGH_RISK_WRITTEN_CONFIRMATION</code> <strong>是空白</strong>（1010 新增；書面確認拿到之前）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 整份沒有任何一個值加了引號</li>
 </ul>
 <hr />
@@ -4719,7 +4792,7 @@ REALTIME_HEARTBEAT_SECONDS=20
 </thead>
 <tbody>
 <tr>
-<td><code>CORS_ORIGINS</code>、<code>JWT_*</code>、<code>SUPER_ADMIN_*</code>、<code>BACKUP_DAILY_AT</code>、<code>DB_DISK_MIN_FREE_MB</code>、<code>KIOSK_SHELL_MIN_VERSION</code>、<code>LLM_*</code>、其他營運參數</td>
+<td><code>CORS_ORIGINS</code>、<code>JWT_*</code>、<code>SUPER_ADMIN_*</code>、<code>BACKUP_DAILY_AT</code>、<code>DB_DISK_MIN_FREE_MB</code>、<code>KIOSK_SHELL_MIN_VERSION</code>、<code>LLM_*</code>、<code>HIGH_RISK_WRITTEN_CONFIRMATION</code>、其他營運參數</td>
 <td><code>docker compose --env-file $cfg up -d</code>（compose 會自己重建設定有變的容器）</td>
 </tr>
 <tr>

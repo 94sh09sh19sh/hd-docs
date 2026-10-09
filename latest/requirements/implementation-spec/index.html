@@ -3728,6 +3728,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6284,6 +6312,28 @@
 </tbody>
 </table>
 <p>迭代 4 的後端驗收沒改：它簽核時只送整份文字，後端照「D：」這類段名拆回各段，照樣通過。</p>
+<p><strong>迭代 18 是第十一次</strong>（1010）：三項高風險功能有了規則版本，開關本身開得起來——書面確認閘門與書面依據改擋在<strong>每一次比對</strong>（3.6、3.7）。兩支腳本拿「規則引擎還沒做的高風險開關」驗「條件不符就擋下並留稽核」，不改就一定不通過。這一次是<strong>換一條路驗同一件事</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration3</code> 第 3 步</td>
+<td>「高風險功能未符合開啟條件時擋下」改用「允許真實病人資料進入 AI 流程」（模型供應者不是院內地端推論時一定不符）</td>
+<td>「未符合開啟條件就 409」照驗；高風險功能的閘門改由 <code>verify:iteration18:api</code> 驗（真實病人擋下並記錄、草稿只對合成資料執行）</td>
+</tr>
+<tr>
+<td><code>verify:iteration6</code> 第 5 步</td>
+<td>同上</td>
+<td>「條件不符的開關擋下並留稽核」照驗</td>
+</tr>
+</tbody>
+</table>
 <h3 id="12-本階段納入">1.2 本階段納入<a class="headerlink" href="#12-本階段納入" title="Permanent link">&para;</a></h3>
 <p>SRS 第 5 章全部 81 條需求（FR-P01～P19、FR-N01～N20、FR-M01～M12、FR-X01～X05、FR-S01～S17、FR-R01～R08），依第 4 章分二十一次迭代實作（迭代 3～23）。<strong>0919 由 60 條增為 63 條</strong>：新增 FR-S10（介面不得洩漏內部技術識別）、FR-S11（版位與功能可設定）、FR-S12（更新不得破壞既有資料）。<strong>0926 由 63 條增為 70 條</strong>：新增 FR-P14～P15（病人端首頁三區、任務依時點出現）、FR-N14～N16（簡易版與專業版、單一工作台、一步完成）、FR-S13（AI 閘道）、FR-S14（外殼 App 契約）。<strong>1005 由 70 條增為 73 條</strong>：新增 FR-N17（跑馬燈內容由 AI 生成、護理師核准）、FR-S15（院方 API 優先）、FR-S16（院方 API 介接與即時推送）。<strong>1010 由 73 條增為 81 條</strong>：新增 FR-P16～P19（遊戲、現有功能的小幅遊戲化、病友小撇步、送花）、FR-N18（護理紀錄交給院內的正式紀錄）、FR-N19～N20（被聽見的回覆、遊戲資料的狀態評估彙整）、FR-S17（病人之間只有匿名的彙總）。</p>
 <h3 id="13-明確排除本階段完全不碰">1.3 明確排除（本階段完全不碰）<a class="headerlink" href="#13-明確排除本階段完全不碰" title="Permanent link">&para;</a></h3>
@@ -6330,7 +6380,7 @@
 <tr>
 <td>FR-P03、FR-P05、FR-N06</td>
 <td><strong>法務／資訊室對 TFDA 分類的書面確認</strong>（FR-R08）＋<strong>臨床端提供的規則門檻值</strong>（FR-R02）</td>
-<td>規則引擎、介面、稽核紀錄全部可實作；只能對合成資料執行</td>
+<td>規則引擎、介面、稽核紀錄全部可實作；只能對合成資料執行。<strong>1010 迭代 18 已實作</strong>：書面確認填進院內主機設定檔才開，規則版本附了出處才能標為生效，兩者缺一，真實病人一律擋下（3.6）</td>
 </tr>
 <tr>
 <td>所有 AI 生成功能</td>
@@ -6359,8 +6409,8 @@
 </tr>
 <tr>
 <td><strong>三項高風險功能於首波不提供服務</strong></td>
-<td>尚未實作</td>
-<td><strong>介面上完全不出現，後端端點一併擋下</strong>（DEP-34）。不做灰色按鈕、不做「敬請期待」</td>
+<td>~~尚未實作~~ <strong>1010 迭代 18 已實作，開關預設關閉</strong></td>
+<td><strong>介面上完全不出現，後端端點一併擋下</strong>（DEP-34）。不做灰色按鈕、不做「敬請期待」。開關開了也只對合成資料病人執行，直到書面確認登記（3.6）</td>
 </tr>
 </tbody>
 </table>
@@ -6867,6 +6917,129 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <li><strong>不自動觸發任何動作</strong>（FR-R05）：不改醫囑、不改處理優先順序、不自動通知醫師。</li>
 <li>三項功能各有獨立開關（FR-R07），走 3.7 的功能開關中心。</li>
 </ol>
+<p><strong>1010 迭代 18 實作結果</strong>（驗收見 4.16）：</p>
+<table>
+<thead>
+<tr>
+<th>事項</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>規則的形態</td>
+<td>六種固定的比對形態（<code>RuleKind</code>），每一種怎麼算寫在後端的評估器（純函式，不碰資料庫也不碰模型）；門檻、文案範本、書面依據出處寫在規則版本裡。新增一種形態才要改程式，改門檻只要出新版本</td>
+</tr>
+<tr>
+<td>資料表</td>
+<td>規格書列的四張之外，<strong>門檻值與引用的歷史資料各拆一張明細表</strong>（<code>rule_version_parameters</code>、<code>rule_evaluation_inputs</code>），不用 JSON 欄位承載（《資料庫使用規範》6.1 第 2 條）。共六張，全部是加法</td>
+</tr>
+<tr>
+<td>預設規則</td>
+<td>第一次啟動寫入六條、<strong>全部是草稿</strong>（下表）；系統不替任何人標為生效</td>
+</tr>
+<tr>
+<td>挑哪一版</td>
+<td>真實病人<strong>只用生效中的版本</strong>；合成資料病人有生效的用生效的，沒有就用最新的草稿（「合成資料模式」）</td>
+</tr>
+<tr>
+<td>書面確認閘門（FR-R08）</td>
+<td><strong>院內主機設定檔的 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code></strong> 填書面確認的文號才算開，空值就是沒開；畫面上只看得到狀態、改不了。沒開時真實病人整位不比對：立即比對回 403 並寫稽核，定時比對略過（同一位病人一天記一筆）</td>
+</tr>
+<tr>
+<td>標為生效（FR-R02）</td>
+<td>沒有書面依據出處的版本擋下並寫稽核；劑量調整參考另要 protocol 條文。同一條規則同時只有一版生效，新的生效時舊的自動停用；停用的不能再生效</td>
+</tr>
+<tr>
+<td>不可修改（第 1 條）</td>
+<td>有任何一筆執行紀錄指向的版本改不了（條件寫在同一個更新裡，檢查與寫入之間有人用了也不會改到）；沒用過的草稿可以改</td>
+</tr>
+<tr>
+<td>範本把關（第 4 條）</td>
+<td>建立版本時，範本出現「風險、診斷、疑似、可能、危險、高危、建議、應該、必須、需要、不正常、惡化、低血壓、病人有、患有」就存不進去，逐字列出；範本只能用那一種規則登記過的欄位。protocol 條文是原樣引用，不受這一條限制</td>
+</tr>
+<tr>
+<td>逐字引用（FR-N06）</td>
+<td>劑量調整參考符合時，條文原樣接在事實陳述後面：「…所依據的 protocol 條文：「&lt;條文&gt;」」</td>
+</tr>
+<tr>
+<td>什麼時候比</td>
+<td>每 3 分鐘定時比對一次（當日排了或進行中的療程跑風險分層與療程中預警；有血紅素、有適足性計算的病人跑另外兩項）；護理師在「病人趨勢」按「立即比對」。<strong>同一版規則對同一筆資料（某次療程、某筆血紅素、某次適足性計算）只比一次</strong></td>
+</tr>
+<tr>
+<td>資料不夠</td>
+<td>不比對、不留紀錄，下一輪再看（例如還沒有透析前體重、適足性計算不到 3 次）</td>
+</tr>
+<tr>
+<td>不自動觸發（第 5 條）</td>
+<td>比對結果只寫成紀錄：不推送、不通知、不改即時總覽任何一列的順序或顏色</td>
+</tr>
+<tr>
+<td>出現在哪裡</td>
+<td><strong>只在專業版</strong>：即時總覽底下「判斷輔助：待檢視」（沒有人標記已檢視之前一直在）、病人趨勢最上面「判斷輔助」（含血紅素趨勢圖、立即比對）、系統管理「判斷規則」分頁（閘門狀態、版本管理）。<strong>簡易版、病人端、總覽螢幕都沒有</strong></td>
+</tr>
+<tr>
+<td>權限</td>
+<td>看輸出、檢視、立即比對：病人監看（護理師以上）；看規則版本：能切換高風險開關的人；建立、修改、標為生效：系統管理者（SRS 4.2「AI 規則／模型參數調整」）。稽核角色讀得到每一筆執行紀錄的依據，不受開關影響</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>功能</th>
+<th>比對什麼</th>
+<th>預設門檻</th>
+<th>書面依據出處</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RISK-IDWG-01</td>
+<td>風險分層（FR-P03）</td>
+<td>本次透析前體重比上一次結束體重增加多少，占理想體重的百分比</td>
+<td>4.0%（示範值）</td>
+<td>未附</td>
+</tr>
+<tr>
+<td>RISK-HYPO-01</td>
+<td>風險分層（FR-P03）</td>
+<td>過去 28 天的療程有幾次收縮壓低於門檻</td>
+<td>開始收縮壓 &lt; 160 用 90、≥ 160 用 100；&lt; 50 不採計；至少 1 次</td>
+<td>同院 IDH 系統（參考調查 6.2）；回看天數與次數是開發端暫定</td>
+</tr>
+<tr>
+<td>ALERT-SYM-01</td>
+<td>療程中預警（FR-P05）</td>
+<td>近 3 次療程有幾次在差不多同一個時間點按了同一種「身體不舒服」</td>
+<td>至少 2 次、中位數前後 30 分鐘（示範值）</td>
+<td>未附</td>
+</tr>
+<tr>
+<td>ALERT-HYPO-01</td>
+<td>療程中預警（FR-P05）</td>
+<td>近 3 次療程有幾次在差不多同一個時間點收縮壓低於門檻</td>
+<td>收縮壓門檻同上；至少 2 次、前後 30 分鐘</td>
+<td>收縮壓門檻同院 IDH 系統；其餘開發端暫定</td>
+</tr>
+<tr>
+<td>DOSE-HB-01</td>
+<td>劑量調整參考（FR-N06）</td>
+<td>最近一筆血紅素在上下限之外</td>
+<td>10.0～12.0 g/dL、60 天內（示範值）</td>
+<td>未附；條文是寫明「不是院方 protocol」的示範字</td>
+</tr>
+<tr>
+<td>ADEQ-KTV-01</td>
+<td>適足性推估（FR-N07）</td>
+<td>最近幾次 spKt/V 的直線趨勢推估下一次</td>
+<td>低於 1.20、至少 3 次（示範值）</td>
+<td>未附</td>
+</tr>
+</tbody>
+</table>
+<p>兩條收縮壓相關的附了出處、<strong>標得了生效</strong>；能不能拿另一套系統的程式當書面依據，由標為生效的人判斷（參考調查 9.2 第 2 項的建議是不能，開啟前請醫師簽一次）。其餘四條沒有出處，標不了生效，只能跑合成資料。</p>
 <h3 id="37-功能開關中心新增">3.7 功能開關中心（新增）<a class="headerlink" href="#37-功能開關中心新增" title="Permanent link">&para;</a></h3>
 <p>對應 FR-S08。以下每一項都要能獨立開關，切換寫入稽核軌跡並記錄核准依據：</p>
 <table>
@@ -6881,7 +7054,7 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <tr>
 <td><code>RISK_STRATIFICATION</code>（FR-P03）</td>
 <td>關</td>
-<td>FR-R08 書面確認＋規則版本有依據</td>
+<td>~~FR-R08 書面確認＋規則版本有依據~~ <strong>1010 迭代 18</strong>：這一項至少有一個規則版本。書面確認與書面依據<strong>改擋在每一次比對</strong>：缺一，真實病人一律擋下，只對合成資料病人執行（3.6）。若擋在開關上，「閘門沒開時只對合成資料執行」那一種狀態就不存在（4.16 驗收第 9 條驗不了）；兩件事的現況寫在開關的說明裡</td>
 </tr>
 <tr>
 <td><code>INTRA_DIALYSIS_ALERT</code>（FR-P05）</td>
@@ -6892,6 +7065,11 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <td><code>DOSE_REFERENCE</code>（FR-N06）</td>
 <td>關</td>
 <td>同上</td>
+</tr>
+<tr>
+<td><strong><code>ADEQUACY_PREDICTION</code></strong>（FR-N07 的預測部分，1010 迭代 18 新增）</td>
+<td>關</td>
+<td>同上；另需「需要抽血數值的功能」開著才看得到（適足性那張卡本身跟著那個開關）。SRS 寫 FR-N07「預測部分適用 FR-R」，FR-R07 要求各有獨立開關，所以另立一個，不併進劑量調整參考</td>
 </tr>
 <tr>
 <td><code>AI_FEATURES</code></td>
@@ -7672,7 +7850,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td><strong>18</strong></td>
 <td>規則引擎與三項高風險功能（內容不變）</td>
-<td>使用者指定本週完成；與其他迭代沒有相依。外部答覆（Q-02、Q-03）仍不到，<strong>照 4.16 做到合成資料驗收</strong></td>
+<td>使用者指定本週完成；與其他迭代沒有相依。外部答覆（Q-02、Q-03）仍不到，<strong>照 4.16 做到合成資料驗收</strong>。<strong>1010 完成</strong></td>
 </tr>
 <tr>
 <td><strong>19</strong></td>
@@ -10589,6 +10767,64 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>不做</strong>：病人端血壓圖的正常區間（SRS FR-P11 補充說明，判斷不合理）。</p>
 <p><strong>驗收現況（1010）</strong>：<code>verify:iteration17-8</code>（新增，6 步，不需要後端）與 <code>verify:iteration17-8:api</code>（新增，6 步）全部通過；<code>verify:iteration4</code>、<code>verify:iteration9</code> 通過（開發機的後端）；<code>verify:iteration8</code>、<code>14</code>、<code>14-2</code>、<code>14-5</code>、<code>16</code>、<code>17-4</code>、<code>17-6</code>、<code>17-7</code>、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>、<code>check:migration</code> 全綠，其中 <code>verify:iteration14</code>、<code>17-6</code> 依 1.1 第十次改寫。以無頭 Chrome 在 1366×768 看過護理紀錄頁；自畫圖示在 96px 與 48px 看過。<strong>待做</strong>：院內 IP 上實際複製一次（<code>aa157</code>）、遮字認圖示（驗收第 9 條，<code>aa165</code>）。</p>
 <h3 id="416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延">4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）<a class="headerlink" href="#416-迭代-18規則引擎與三項高風險功能原迭代-7--11--151005-再順延" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-10 完成（合成資料驗收）。</strong> 手動測試在《<a href="../../testing/iteration-18/">迭代 18 分冊</a>》（<code>ab1</code>～<code>ab26</code>）。做法見 3.6 末段「1010 迭代 18 實作結果」，開關見 3.7。
+Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處，<strong>對真實病人一筆都不會比對</strong>；差別只在能不能對真實病人啟用，實作與合成資料驗收已完成。</p>
+</blockquote>
+<p><strong>1010 開發端的判斷</strong>（使用者要推翻時改右欄那一處即可）：</p>
+<table>
+<thead>
+<tr>
+<th>判斷</th>
+<th>理由</th>
+<th>寫在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>書面確認閘門放在院內主機的設定檔，不做成畫面上的開關</td>
+<td>FR-R08「以設定強制，而非僅寫在文件裡」；改它要動得到院內主機，不是任何一個登入得了的帳號按一下就算</td>
+<td>3.6；《部署手冊》第十五冊之一、之二</td>
+</tr>
+<tr>
+<td>開關只要求有規則版本，閘門與書面依據擋在每一次比對</td>
+<td>擋在開關上，驗收第 9 條「閘門沒開時只對合成資料執行」那一種狀態就不存在</td>
+<td>3.7</td>
+</tr>
+<tr>
+<td>適足性推估另立一個開關</td>
+<td>FR-N07「預測部分適用 FR-R」，FR-R07 要各有獨立開關</td>
+<td>3.7</td>
+</tr>
+<tr>
+<td>只放專業版；簡易版、病人端、總覽螢幕不放</td>
+<td>簡易版只做每班必做的事（FR-N14）；判讀不給病人看（SRS 5.6、FR-P11 補充說明）；總覽螢幕只放求助</td>
+<td>3.6</td>
+</tr>
+<tr>
+<td>預設六條規則全部是草稿，四條的門檻是示範值</td>
+<td>門檻值就是臨床判斷（Q-03），開發端訂的只能跑合成資料；示範值讓合成資料驗收有東西可比</td>
+<td>3.6</td>
+</tr>
+<tr>
+<td>療程中預警比的是<strong>病人按的求助</strong>與院方收縮壓</td>
+<td>透析中沒有定時問卷的資料（透析前問卷是透析前填的）；求助類別「身體不舒服」那一組是病人自己說的症狀</td>
+<td>3.6</td>
+</tr>
+<tr>
+<td>劑量調整參考只看血紅素，沒有 EPO</td>
+<td>本系統沒有 EPO 劑量的資料來源；血紅素也要人工輸入或檔案匯入（院方透析清單 API 沒有）</td>
+<td>3.6</td>
+</tr>
+<tr>
+<td>比對結果不推送，待檢視每 60 秒重讀一次</td>
+<td>FR-R05 不自動通知；待檢視本來就要一直留著，晚一分鐘看到不影響</td>
+<td>3.6</td>
+</tr>
+</tbody>
+</table>
+<p><strong>驗收現況（1010）</strong>：<code>verify:iteration18</code>（新增，6 步，不需要後端；評估器的邊界實際跑一次）與 <code>verify:iteration18:api</code>（新增，9 步，十條驗收標準逐條）全部通過；<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>14:api</code>、<code>17:api</code>、<code>17-8:api</code> 對著開發機的後端通過，<code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>～<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>～<code>17-8</code>、<code>check:all</code> 全綠，其中 <code>verify:iteration3</code>、<code>6</code> 依 1.1 第十一次改寫。以無頭 Chrome 在 1366×768 看過即時總覽的待檢視、看依據、病人趨勢、系統管理「判斷規則」與建立新版本的表單。
+<strong>沒有驗的</strong>：臨床端逐句讀一次輸出文字（驗收第 3 條的人工那一半，<code>ab25</code>）；院內主機上填了文號的閘門（要等 Q-02）。</p>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <blockquote>
 <p><strong>1010：本週做，排在迭代 17.8 之後</strong>（4.0.5）。內容與驗收標準不變；Q-02、Q-03 仍沒有答覆，照下方「這兩項不到齊」那一段做到合成資料驗收。低血壓那一組門檻 1005 已決定套用同院 IDH 系統的值（清冊 Q-03），規則版本的書面依據出處照那段寫。</p>
@@ -10670,7 +10906,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 </tr>
 </tbody>
 </table>
-<p><strong>Schema 變更</strong>：新增 <code>rule_definitions</code>、<code>rule_versions</code>、<code>rule_evaluations</code>、<code>rule_evaluation_reviews</code>。</p>
+<p><strong>Schema 變更</strong>：新增 <code>rule_definitions</code>、<code>rule_versions</code>、<code>rule_evaluations</code>、<code>rule_evaluation_reviews</code>。<strong>1010 實作時另加兩張明細表</strong> <code>rule_version_parameters</code>、<code>rule_evaluation_inputs</code>（3.6），遷移 <code>20261011090000_iteration18_rule_engine</code>，<code>check:migration</code> 無發現。</p>
 <p><strong>驗收標準</strong>：</p>
 <ol>
 <li>三項功能的計算過程<strong>完全不呼叫語言模型</strong>（可用停掉 provider 的方式驗證：provider 不可用時三項功能仍正常運作）</li>
@@ -10971,10 +11207,10 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <td>無（Q-37 已結案）；圖示的長者試看排在 Q-31</td>
 </tr>
 <tr>
-<td>18</td>
-<td>規則引擎與三項高風險功能（原 7 → 11 → 15）</td>
-<td><strong>本週做（1010）</strong></td>
-<td>啟用需法務書面確認＋臨床端門檻值</td>
+<td>~~18~~</td>
+<td>~~規則引擎與三項高風險功能（原 7 → 11 → 15）~~</td>
+<td><strong>已完成（1010）</strong>，合成資料驗收與開發機截圖通過；臨床端逐句讀輸出待做</td>
+<td>對真實病人啟用需 Q-02 書面確認（文號填進院內主機設定檔）＋Q-03 門檻與依據（新版本附出處後標為生效）</td>
 </tr>
 <tr>
 <td>19</td>
@@ -11013,7 +11249,7 @@ v1.0 為共用主機訂的隔離要求整條回來，落實方式改在安裝包
 <p><strong>0930 更新</strong>：Q-32 已回覆——對外連線是常態、沒有限制，部署路線「連得出去」的前提成立。Q-27 的 Docker 版本（29.3.1、Compose v5.1.1）與連接埠（<code>13000</code>、<code>18080</code>、<code>18081</code>）也有答案。<strong>剩下擋第二次進院的是 Q-27 未答的題</strong>：斷電重開後誰登入、防毒排除，以及 0930 追加的 Docker Desktop 兩項設定（使用統計能不能關、市集自動更新能不能改手動）。</p>
 <p><strong>1005 更新</strong>：1001 第二次進院部分成功、卡在護理端登入（部署手冊第十五冊之三）。<strong>擋第三次進院的是 Q-27 第 12 題</strong>：使用者決定主機位址改用 IP，要資訊室把那個 IP 固定下來；其餘照 4.19。迭代 15～17 都不擋第三次進院。</p>
 <p><strong>1007 更新</strong>：Q-27 第 12 題已答——<strong>IP 是固定的</strong>，第三次進院照換。同日另答第 4 題（斷電後出現警示由護理長重新登入）、第 9 題（使用統計第三次進院關閉）、第 10 題（市集自動更新先不改）；Q-28 第 3 題（所有護理師都可以核准）與暫代相同，不必改程式。<strong>第三次進院已沒有待院方答覆的前提。</strong></p>
-<p><strong>1010 更新</strong>：Q-37（護理紀錄怎麼接上現有作業）院方已答：複製貼上、DART 或 SOAP（迭代 17.8）。迭代 18、19 本週做，遊戲化排在後面（4.0.5）；<strong>整張表沒有一個迭代被外部答覆擋住實作</strong>，擋住的只有對真實病人啟用。</p>
+<p><strong>1010 更新</strong>：Q-37（護理紀錄怎麼接上現有作業）院方已答：複製貼上、DART 或 SOAP（迭代 17.8）。迭代 18、19 本週做，遊戲化排在後面（4.0.5）；<strong>整張表沒有一個迭代被外部答覆擋住實作</strong>，擋住的只有對真實病人啟用。同日迭代 18 完成：Q-02、Q-03 沒有答覆，四項判斷輔助只對合成資料病人執行。</p>
 <h3 id="419-第三次進院1005-新增">4.19 第三次進院（1005 新增）<a class="headerlink" href="#419-第三次進院1005-新增" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：護理站的電腦登得進護理端——1001 卡在這裡（部署手冊<a href="../../deployment/15c-why-1001-failed/">第十五冊之三</a>）；同時把主機位址從名稱換成 IP，並探測一次院方 API。</p>
 <p><strong>1005 使用者決定：主機位址改用 IP。</strong> 換法照部署手冊<a href="../../deployment/15d-switch-host-to-ip/">第十五冊之四</a>。平板一台都還沒佈建，現在換代價最小；<strong>前提是資訊室把那個 IP 固定下來</strong>（Q-27 第 12 題），IP 會變就不要換。<strong>1007 答覆：IP 是固定的</strong>，前提成立。</p>

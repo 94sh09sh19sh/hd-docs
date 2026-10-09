@@ -1322,10 +1322,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7--高風險三項有條件納入排在迭代-18原迭代-7--11--15" class="md-nav__link">
+  <a href="#7--高風險三項有條件納入1010-迭代-18-完成實作原迭代-7--11--15" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. 🔒 高風險三項：有條件納入，排在迭代 18（原迭代 7 → 11 → 15）
+        7. 🔒 高風險三項：有條件納入，1010 迭代 18 完成實作（原迭代 7 → 11 → 15）
       
     </span>
   </a>
@@ -3619,6 +3619,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5146,10 +5174,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7--高風險三項有條件納入排在迭代-18原迭代-7--11--15" class="md-nav__link">
+  <a href="#7--高風險三項有條件納入1010-迭代-18-完成實作原迭代-7--11--15" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. 🔒 高風險三項：有條件納入，排在迭代 18（原迭代 7 → 11 → 15）
+        7. 🔒 高風險三項：有條件納入，1010 迭代 18 完成實作（原迭代 7 → 11 → 15）
       
     </span>
   </a>
@@ -5501,7 +5529,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 </ul>
 <hr />
 <h2 id="4-資料模型">4. 資料模型<a class="headerlink" href="#4-資料模型" title="Permanent link">&para;</a></h2>
-<p>共 60 張表，15 個 migration：<code>init</code>、<code>iteration3_closed_network</code>、<code>iteration4_ai_content</code>、<code>iteration5_help_resolution_shifts_baseline</code>、<code>iteration6_carousel_file_import</code>、<code>iteration7_update_runs</code>、<code>iteration9_navigation_content</code>、<code>iteration9_help_category_label</code>、<code>iteration10_kiosk_foreground</code>、<code>iteration12_kiosk_shell_version</code>、<code>iteration14_beds</code>、<code>iteration15_hospital_api</code>、<code>iteration17_marquee_approval</code>、<code>iteration17_7_device_targets</code>、<code>iteration17_8_nursing_record_format</code>（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，<code>check:migration</code> 把關）。逐欄說明見《<a href="../../reference/data-dictionary/">資料字典</a>》。</p>
+<p>共 66 張表，16 個 migration：<code>init</code>、<code>iteration3_closed_network</code>、<code>iteration4_ai_content</code>、<code>iteration5_help_resolution_shifts_baseline</code>、<code>iteration6_carousel_file_import</code>、<code>iteration7_update_runs</code>、<code>iteration9_navigation_content</code>、<code>iteration9_help_category_label</code>、<code>iteration10_kiosk_foreground</code>、<code>iteration12_kiosk_shell_version</code>、<code>iteration14_beds</code>、<code>iteration15_hospital_api</code>、<code>iteration17_marquee_approval</code>、<code>iteration17_7_device_targets</code>、<code>iteration17_8_nursing_record_format</code>、<code>iteration18_rule_engine</code>（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，<code>check:migration</code> 把關）。逐欄說明見《<a href="../../reference/data-dictionary/">資料字典</a>》。</p>
 <table>
 <thead>
 <tr>
@@ -5631,11 +5659,16 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <td><code>nursing_record_sections</code></td>
 <td>迭代 17.8</td>
 </tr>
+<tr>
+<td>規則引擎（判斷輔助）</td>
+<td><code>rule_definitions</code>、<code>rule_versions</code>、<code>rule_version_parameters</code>、<code>rule_evaluations</code>、<code>rule_evaluation_inputs</code>、<code>rule_evaluation_reviews</code></td>
+<td>迭代 18</td>
+</tr>
 </tbody>
 </table>
 <p>迭代 10、12 沒有新表，只在 <code>devices</code> 加欄位：前景回報三欄（迭代 10）、<code>shell_version</code> 與 <code>shell_contract_version</code>（迭代 12）；迭代 14 另加 <code>devices.bed_no</code>。
 迭代 15 除了兩張新表，另加 <code>patients.preferred_device_id</code>（配給病人的平板）、<code>treatment_sessions</code> 五欄（<code>source</code>、<code>bed_no</code>、<code>expected_end_at</code>、<code>nurse_modified_at</code>、<code>bed_nurse_modified_at</code>）與 <code>beds.source</code>；
-迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 <code>carousel_view_events</code>）；迭代 17 在 <code>carousel_items</code> 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 <code>nursing_records</code> 加 <code>record_format</code>，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列。全部只做加法。</p>
+迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 <code>carousel_view_events</code>）；迭代 17 在 <code>carousel_items</code> 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 <code>nursing_records</code> 加 <code>record_format</code>，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）。全部只做加法。</p>
 <h3 id="值得注意的地方">值得注意的地方<a class="headerlink" href="#值得注意的地方" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5816,7 +5849,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <li>迭代 3 的十個開關：高風險三項（<code>RISK_STRATIFICATION</code>、<code>INTRA_DIALYSIS_ALERT</code>、<code>DOSE_REFERENCE</code>）、AI 兩項（<code>AI_FEATURES</code>、<code>REAL_PATIENT_DATA_TO_AI</code>）、輪播三層、績效兩項（<code>PERF_INDIVIDUAL_L3</code>、<code>REWARD_SCORING</code>）。<strong>全部預設關閉</strong>。之後又加三個：迭代 9 的 <code>HANDHELD_FEATURES</code>，迭代 14.2 的 <code>HELP_NON_CLINICAL_GROUP</code>（求助畫面顯示「其他」那一框，預設關閉），1005 的 <code>LAB_VALUE_FEATURES</code>（需要抽血數值的功能：透析適足性，預設關閉；院方透析清單 API 沒有抽血數值），1007 迭代 17.7 的 <code>MANUAL_PATIENT_CREATE</code>（護理師自己新增病人，預設關閉；兩個版本同一個開關，<strong>新增病人的端點不跟著擋</strong>，見實作規格書 3.7）。
   <strong>1005 迭代 16</strong>：輪播三層停用（<code>RETIRED_FEATURE_FLAG_KEYS</code>，資料表的列與切換紀錄保留、後端載入時略過），換成 <code>TODAY_PANEL</code>（「本次透析」面板，<strong>預設開啟</strong>——9.1 起「預設全關」的唯一例外由它承接）與 <code>MARQUEE</code>（跑馬燈，預設關閉，速度要先經長者看過）</li>
 <li><strong><code>HELP_NON_CLINICAL_GROUP</code> 是唯一不擋後端的開關</strong>：它只決定平板上有幾顆按鈕。平板停在舊畫面時病人按下去的求助照樣要送到，擋掉就是把求助丟掉</li>
-<li>開啟條件由後端逐項判定，不靠人記得。例如 <code>REAL_PATIENT_DATA_TO_AI</code> 只在 <code>LLM_PROVIDER=onprem</code> 時可開；高風險三項要 FR-R08 書面確認＋規則版本附有書面依據，規則引擎尚未建立，所以目前開不了</li>
+<li>開啟條件由後端逐項判定，不靠人記得。例如 <code>REAL_PATIENT_DATA_TO_AI</code> 只在 <code>LLM_PROVIDER=onprem</code> 時可開；高風險三項（1010 迭代 18 起加上 <code>ADEQUACY_PREDICTION</code>，共四項）只要求那一項有規則版本——<strong>書面確認閘門（<code>.env</code> 的 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code>）與書面依據擋在每一次比對</strong>，缺一則真實病人一律擋下、只對合成資料執行（見第 7 節）</li>
 <li>開關關閉時，<code>feature-flag.guard.ts</code> 讓相關端點回 404，前端相關元素<strong>完全不渲染</strong>（不是 disabled）</li>
 <li>切換須填核准依據並寫稽核，條件不符被拒的嘗試也寫（<code>FEATURE_FLAG_CHANGE_REJECTED</code>）。AI 兩項需 <code>system:configure</code>，其餘需 <code>feature-flag:manage</code></li>
 </ul>
@@ -7471,20 +7504,25 @@ Noto Sans TC 以 <code>scripts/subset-font.py</code> 做成約 1.6MB 的子集�
 依《資料庫使用規範》18.2「一次更新只做加法」，它們在下一版才移除。</p>
 <p><strong>改動 <code>packages/shared</code> 後必須重跑 <code>npm run build:shared</code></strong>（<code>npm run dev</code> 會自動先跑一次）。</p>
 <hr />
-<h2 id="7--高風險三項有條件納入排在迭代-18原迭代-7--11--15">7. 🔒 高風險三項：有條件納入，排在迭代 18（原迭代 7 → 11 → 15）<a class="headerlink" href="#7--高風險三項有條件納入排在迭代-18原迭代-7--11--15" title="Permanent link">&para;</a></h2>
+<h2 id="7--高風險三項有條件納入1010-迭代-18-完成實作原迭代-7--11--15">7. 🔒 高風險三項：有條件納入，1010 迭代 18 完成實作（原迭代 7 → 11 → 15）<a class="headerlink" href="#7--高風險三項有條件納入1010-迭代-18-完成實作原迭代-7--11--15" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p><strong>編號重排過兩次</strong>：0919 部署前的四個修正迭代占用了 7～10，規則引擎順延為迭代 11；0926 第一次進院失敗之後的四件事又占用了 11～14，再順延為迭代 15；1005 院方 API 等三件事占用 15～17，又順延為<strong>迭代 18</strong>。內容一字未改，只是往後挪。0916 以前的紀錄裡「迭代 7」、0923 以前的「迭代 11」、1005 以前的「迭代 15」指的都是本節，對帳時看實作規格書 4.0.1、4.0.3、4.0.4 的對照表。</p>
-<p><strong>首波試用期間，這三項尚未實作，一律不提供服務</strong>：介面上不出現入口，後端端點一併擋下（DEP-34）。不做灰色按鈕、不做「敬請期待」。</p>
+<p><strong>首波試用期間一律不提供服務</strong>：~~這三項尚未實作~~ 1010 起已實作，但開關預設關閉；關著時介面上不出現入口，後端端點一併擋下（DEP-34）。不做灰色按鈕、不做「敬請期待」。</p>
 </blockquote>
 <p><strong>FR-P03</strong>（風險分層）、<strong>FR-P05</strong>（預警）、<strong>FR-N06</strong>（劑量建議）在 Iteration 2 時因高 SaMD 風險整條排除。0910 起改為<strong>納入</strong>，現排在迭代 18，以自建規則引擎實作並受 FR-R01～R08 約束（實作規格書 1.4、3.6、4.16）。</p>
-<p>目前狀態：</p>
+<p>目前狀態（1010 迭代 18 完成，細節見實作規格書 3.6 末段與 4.16）：</p>
 <ul>
-<li>規則引擎與三項功能<strong>一行都還沒寫</strong></li>
-<li>三個功能開關已在迭代 3 建好，預設關閉；開啟條件由後端判定，規則引擎不存在，所以目前開不了</li>
-<li>啟用需要兩個外部答覆：TFDA 分類書面確認（Q-02）與臨床端的規則門檻值（Q-03）。<strong>兩者不到，迭代 18 仍可完成實作與合成資料驗收</strong>，差別只在能不能對真實病人開</li>
-<li>FR-N07 的「預測」部分也併入迭代 18；迭代 4 只做計算與趨勢圖</li>
+<li>後端 <code>modules/rules/</code>：評估器是純函式（<code>evaluators.ts</code>，六種比對形態），服務只負責挑版本、讀歷史資料、寫執行紀錄與檢視紀錄。<strong>模組不引用 AI 閘道與模型供應者</strong>（<code>verify:iteration18</code> 逐檔檢查），文字一律由版本範本組出</li>
+<li>六條預設規則第一次啟動寫入，<strong>全部是草稿</strong>；兩條收縮壓相關的出處寫同院 IDH 系統、標得了生效，其餘四條是示範值、沒有出處</li>
+<li><strong>挑版本</strong>：真實病人只用生效中的版本；合成資料病人有生效的用生效的，沒有就用最新的草稿</li>
+<li><strong>書面確認閘門在 <code>.env</code></strong>（<code>HIGH_RISK_WRITTEN_CONFIRMATION</code>，空值＝沒開），畫面只看得到。沒開時真實病人整位不比對：立即比對回 403＋稽核、定時比對略過（一天記一筆）</li>
+<li>版本一經使用就改不了（條件寫在同一個 <code>updateMany</code> 的 where 裡）；沒有出處標不了生效；範本出現結論字詞存不進去</li>
+<li>每 3 分鐘定時比對＋「立即比對」；同一版規則對同一筆資料（<code>subject_key</code>）只比一次，唯一鍵擋重複</li>
+<li>介面只在專業版：即時總覽的待檢視、病人趨勢的判斷輔助、系統管理「判斷規則」；簡易版、病人端、總覽螢幕都沒有</li>
+<li>FR-N07 的「預測」部分另立開關 <code>ADEQUACY_PREDICTION</code>，還要 <code>LAB_VALUE_FEATURES</code> 開著</li>
+<li>對真實病人啟用仍要兩個外部答覆：TFDA 分類書面確認（Q-02，文號填進 <code>.env</code>）與臨床端的規則門檻值（Q-03，新版本附出處後標為生效）</li>
 </ul>
-<p>在迭代 18 之前，現有功能照舊維持這條線：</p>
+<p>迭代 18 以外的現有功能照舊維持這條線：</p>
 <ul>
 <li>求助分派 <code>routeHelpRequest()</code> 的輸入<strong>只有</strong>病人自選的類型與急迫度，不讀歷史資料</li>
 <li>症狀趨勢摘要只做原樣列出與次數統計，不加權、不分級、不預測、不產生建議文字</li>
@@ -7816,10 +7854,10 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 <td>無（Q-37 已結案）</td>
 </tr>
 <tr>
-<td>18</td>
-<td>規則引擎與三項高風險功能（原 7 → 11 → 15）</td>
-<td><strong>本週做（1010）</strong></td>
-<td>法務書面確認（Q-02）＋臨床端門檻值（Q-03）</td>
+<td>~~18~~</td>
+<td>~~規則引擎與三項高風險功能（原 7 → 11 → 15）~~</td>
+<td><strong>已完成（1010）</strong>，合成資料驗收與開發機截圖通過；臨床端逐句讀輸出待做</td>
+<td>對真實病人啟用：法務書面確認（Q-02）＋臨床端門檻值（Q-03）</td>
 </tr>
 <tr>
 <td>19</td>

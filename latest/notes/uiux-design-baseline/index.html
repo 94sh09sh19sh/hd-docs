@@ -1417,6 +1417,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#36-判斷輔助的輸出1010迭代-18只有專業版" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 判斷輔助的輸出（1010，迭代 18，只有專業版）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3196,6 +3207,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4237,6 +4276,17 @@
     <span class="md-ellipsis">
       
         3.5 0926 起的護理端簡易版：一張床位圖（1007 起中間改成平板，見 3.5.3）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-判斷輔助的輸出1010迭代-18只有專業版" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 判斷輔助的輸出（1010，迭代 18，只有專業版）
       
     </span>
   </a>
@@ -5385,6 +5435,50 @@
 <li><strong>（1007 迭代 17.6）「＋」在框左欄</strong>：要 AI 寫草稿的「＋」從清單最前面移到框左欄圖示底下（與病人框的重新整理同一處）。草稿卡長高時清單只剩一格高，「＋」佔掉那一格會把已核准的第一則切掉一半</li>
 </ul>
 <hr />
+<h3 id="36-判斷輔助的輸出1010迭代-18只有專業版">3.6 判斷輔助的輸出（1010，迭代 18，只有專業版）<a class="headerlink" href="#36-判斷輔助的輸出1010迭代-18只有專業版" title="Permanent link">&para;</a></h3>
+<p>風險分層提示、療程中預警、劑量調整參考、透析適足性趨勢推估的輸出（實作規格書 3.6）。這是系統第一次在護理端畫面上放「規則比對出來的東西」，所以規則比別處嚴：</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>只放專業版</strong>：即時總覽底下「判斷輔助：待檢視」、病人趨勢最上面「判斷輔助」、系統管理「判斷規則」分頁。簡易版、病人端、總覽螢幕都沒有</td>
+<td>簡易版只做每班必做的事；判讀不給病人看（2.5 的同一條理由）；總覽螢幕是給求助用的，多一種東西就分走注意力</td>
+</tr>
+<tr>
+<td><strong>四項開關全關時整塊不存在</strong>（N-6），不是灰色、不是「尚未開放」</td>
+<td>DEP-34</td>
+</tr>
+<tr>
+<td><strong>不用紅色、不用注意色當底</strong>：事實陳述用一般的 <code>.statement</code>，旁邊固定一條 <code>.disclaimer</code>「僅供參考，非診斷結果。」</td>
+<td>紅色是求助的；比對結果不是警報，顏色一重就變成系統在下結論（FR-R04）</td>
+</tr>
+<tr>
+<td><strong>待檢視放在求助表格之後</strong>，不插進表格、不改任何一列的順序或顏色</td>
+<td>N-1「兩秒內看出有沒有事」看的是求助；FR-R05 不改處理順序</td>
+</tr>
+<tr>
+<td><strong>輸出文字原樣顯示</strong>，畫面不另加形容詞；「看依據」展開門檻、引用的資料、規則版本、書面依據出處</td>
+<td>文字由規則範本組出、已經過結論字詞的把關；畫面再加字就繞過了那一道</td>
+</tr>
+<tr>
+<td><strong>已檢視・採納／未採納不跳確認</strong>；未採納的原因是一格選填的輸入框</td>
+<td>N-5：日常動作沒有阻力</td>
+</tr>
+<tr>
+<td>合成資料的那一則帶「合成資料」小標（注意色＋字）</td>
+<td>閘門沒開時畫面上只會有合成資料，看得出來就不會誤以為是真的病人</td>
+</tr>
+<tr>
+<td>系統管理的書面確認閘門<strong>只顯示狀態，沒有任何開關</strong></td>
+<td>它在院內主機的設定檔（FR-R08「以設定強制」）</td>
+</tr>
+</tbody>
+</table>
 <h2 id="4-共用的設計系統">4. 共用的設計系統<a class="headerlink" href="#4-共用的設計系統" title="Permanent link">&para;</a></h2>
 <p>兩端各有各的版面，但底層的語彙要一致——同一個顏色在兩邊代表同一件事，否則維護的人會混亂。</p>
 <h3 id="41-顏色">4.1 顏色<a class="headerlink" href="#41-顏色" title="Permanent link">&para;</a></h3>
@@ -5917,8 +6011,13 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1007 迭代 17.7）「護理師自己新增病人」開關關著兩個版本都沒有新增病人</strong>；系統管理分頁叫「平板管理」；內容放得上有病人配著、沒有床號的平板</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）斷線時專業版每一頁與簡易版都看得到閃爍紅框與紅底橫幅</strong>；剛開頁面、換頁時不會誤閃；簡易版出現橫幅時仍沒有捲軸</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0929）專業版一次湧入很多則求助時，上緣最多三條加一列「還有幾則」</strong>，緊急的排前面，頁面本身一直看得到</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005 迭代 17）跑馬燈框的草稿卡是整則「標題：內容」</strong>，不截字；核准、退回各一個圖示，形狀不同；拖到某一床就是核准並只在那一床播；
-  AI 沒開時沒有「＋」；兩端都沒有「一句話」；專業版修改後超過 12／60 字，核准按不下去，字數旁邊寫「超過」</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1005 迭代 17）跑馬燈框的草稿卡是整則「標題：內容」</strong>，不截字；核准、退回各一個圖示，形狀不同；拖到某一床就是核准並只在那一床播；
+  AI 沒開時沒有「＋」；兩端都沒有「一句話」；專業版修改後超過 12／60 字，核准按不下去，字數旁邊寫「超過」</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 18）判斷輔助只在專業版</strong>：四項開關全關時即時總覽與病人趨勢都沒有那一塊；每一則旁邊都有「僅供參考，非診斷結果。」；沒有紅色；已檢視・採納／未採納不跳確認；系統管理的書面確認閘門沒有開關</p>
+</li>
 </ul>
 <h3 id="63-兩端共通">6.3 兩端共通<a class="headerlink" href="#63-兩端共通" title="Permanent link">&para;</a></h3>
 <ul class="task-list">

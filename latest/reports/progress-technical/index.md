@@ -99,36 +99,37 @@ ______________________________________________________________________
 
 ## 4. 資料模型
 
-共 60 張表，15 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
+共 66 張表，16 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
 
-| 分類                             | 表                                                                                                                                     | 加入於    |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| 帳號與登入憑證                   | `nurses`、`nurse_sessions`                                                                                                             | 迭代 1    |
-| 主檔                             | `patients`、`devices`                                                                                                                  | 迭代 1    |
-| 排班與綁定                       | `treatment_sessions`、`device_bindings`                                                                                                | 迭代 1    |
-| 稽核軌跡                         | `audit_logs`                                                                                                                           | 迭代 1    |
-| 病人自述內容                     | `symptom_reports`、`symptom_answers`、`help_requests`                                                                                  | 迭代 2    |
-| 系統治理                         | `feature_flags`、`ai_invocations`、`backup_runs`                                                                                       | 迭代 3    |
-| 院方臨床數值                     | `clinical_value_imports`、`clinical_values`                                                                                            | 迭代 3    |
-| 背景佇列                         | `ai_jobs`                                                                                                                              | 迭代 4    |
-| 衛教、測驗與回饋                 | `education_contents`、`education_completions`、`quiz_attempts`、`quiz_answers`、`feedback_responses`、`feedback_answers`               | 迭代 4    |
-| 護理記錄與計算                   | `nursing_records`、`nursing_record_fields`、`adequacy_calculations`                                                                    | 迭代 4    |
-| SOP 文件與查詢                   | `sop_documents`、`sop_sections`、`sop_queries`、`sop_query_citations`                                                                  | 迭代 4    |
-| 求助處理與可設定暫代值           | `help_resolution_options`、`operational_settings`、`help_request_follow_ups`                                                           | 迭代 5    |
-| 護理師班表與成效基準             | `nurse_shifts`、`shift_bed_assignments`、`shift_change_requests`、`baseline_measurements`                                              | 迭代 5    |
-| 閒置輪播與檔案匯入               | `carousel_items`、`carousel_view_events`、`import_field_mappings`                                                                      | 迭代 6    |
-| 版本更新紀錄                     | `update_runs`                                                                                                                          | 迭代 7    |
-| 導覽版位                         | `nav_placement_settings`                                                                                                               | 迭代 9    |
-| 求助類別與處理方式               | `help_categories`、`help_request_methods`                                                                                              | 迭代 9    |
-| 透析前問卷（版本化）             | `questionnaire_versions`、`questionnaire_items`、`questionnaire_item_options`、`questionnaire_item_triggers`、`symptom_answer_options` | 迭代 9    |
-| 衛教題庫（版本化）               | `quiz_topics`、`quiz_bank_versions`、`quiz_bank_questions`、`quiz_bank_question_options`                                               | 迭代 9    |
-| 回饋題目（版本化）               | `feedback_form_versions`、`feedback_form_items`                                                                                        | 迭代 9    |
-| 床位與輪播播放範圍               | `beds`、`carousel_item_targets`                                                                                                        | 迭代 14   |
-| 院方資料同步                     | `hospital_api_fetch_runs`、`dialysis_vital_records`                                                                                    | 迭代 15   |
-| 跑馬燈只在某幾台平板播           | `carousel_item_device_targets`                                                                                                         | 迭代 17.7 |
-| 護理記錄依格式分段（DART／SOAP） | `nursing_record_sections`                                                                                                              | 迭代 17.8 |
+| 分類                             | 表                                                                                                                                      | 加入於    |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| 帳號與登入憑證                   | `nurses`、`nurse_sessions`                                                                                                              | 迭代 1    |
+| 主檔                             | `patients`、`devices`                                                                                                                   | 迭代 1    |
+| 排班與綁定                       | `treatment_sessions`、`device_bindings`                                                                                                 | 迭代 1    |
+| 稽核軌跡                         | `audit_logs`                                                                                                                            | 迭代 1    |
+| 病人自述內容                     | `symptom_reports`、`symptom_answers`、`help_requests`                                                                                   | 迭代 2    |
+| 系統治理                         | `feature_flags`、`ai_invocations`、`backup_runs`                                                                                        | 迭代 3    |
+| 院方臨床數值                     | `clinical_value_imports`、`clinical_values`                                                                                             | 迭代 3    |
+| 背景佇列                         | `ai_jobs`                                                                                                                               | 迭代 4    |
+| 衛教、測驗與回饋                 | `education_contents`、`education_completions`、`quiz_attempts`、`quiz_answers`、`feedback_responses`、`feedback_answers`                | 迭代 4    |
+| 護理記錄與計算                   | `nursing_records`、`nursing_record_fields`、`adequacy_calculations`                                                                     | 迭代 4    |
+| SOP 文件與查詢                   | `sop_documents`、`sop_sections`、`sop_queries`、`sop_query_citations`                                                                   | 迭代 4    |
+| 求助處理與可設定暫代值           | `help_resolution_options`、`operational_settings`、`help_request_follow_ups`                                                            | 迭代 5    |
+| 護理師班表與成效基準             | `nurse_shifts`、`shift_bed_assignments`、`shift_change_requests`、`baseline_measurements`                                               | 迭代 5    |
+| 閒置輪播與檔案匯入               | `carousel_items`、`carousel_view_events`、`import_field_mappings`                                                                       | 迭代 6    |
+| 版本更新紀錄                     | `update_runs`                                                                                                                           | 迭代 7    |
+| 導覽版位                         | `nav_placement_settings`                                                                                                                | 迭代 9    |
+| 求助類別與處理方式               | `help_categories`、`help_request_methods`                                                                                               | 迭代 9    |
+| 透析前問卷（版本化）             | `questionnaire_versions`、`questionnaire_items`、`questionnaire_item_options`、`questionnaire_item_triggers`、`symptom_answer_options`  | 迭代 9    |
+| 衛教題庫（版本化）               | `quiz_topics`、`quiz_bank_versions`、`quiz_bank_questions`、`quiz_bank_question_options`                                                | 迭代 9    |
+| 回饋題目（版本化）               | `feedback_form_versions`、`feedback_form_items`                                                                                         | 迭代 9    |
+| 床位與輪播播放範圍               | `beds`、`carousel_item_targets`                                                                                                         | 迭代 14   |
+| 院方資料同步                     | `hospital_api_fetch_runs`、`dialysis_vital_records`                                                                                     | 迭代 15   |
+| 跑馬燈只在某幾台平板播           | `carousel_item_device_targets`                                                                                                          | 迭代 17.7 |
+| 護理記錄依格式分段（DART／SOAP） | `nursing_record_sections`                                                                                                               | 迭代 17.8 |
+| 規則引擎（判斷輔助）             | `rule_definitions`、`rule_versions`、`rule_version_parameters`、`rule_evaluations`、`rule_evaluation_inputs`、`rule_evaluation_reviews` | 迭代 18   |
 
-迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。 迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`； 迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 `nursing_records` 加 `record_format`，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列。全部只做加法。
+迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。 迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`； 迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 `nursing_records` 加 `record_format`，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）。全部只做加法。
 
 ### 值得注意的地方
 
@@ -246,7 +247,7 @@ ______________________________________________________________________
 
 - 迭代 3 的十個開關：高風險三項（`RISK_STRATIFICATION`、`INTRA_DIALYSIS_ALERT`、`DOSE_REFERENCE`）、AI 兩項（`AI_FEATURES`、`REAL_PATIENT_DATA_TO_AI`）、輪播三層、績效兩項（`PERF_INDIVIDUAL_L3`、`REWARD_SCORING`）。**全部預設關閉**。之後又加三個：迭代 9 的 `HANDHELD_FEATURES`，迭代 14.2 的 `HELP_NON_CLINICAL_GROUP`（求助畫面顯示「其他」那一框，預設關閉），1005 的 `LAB_VALUE_FEATURES`（需要抽血數值的功能：透析適足性，預設關閉；院方透析清單 API 沒有抽血數值），1007 迭代 17.7 的 `MANUAL_PATIENT_CREATE`（護理師自己新增病人，預設關閉；兩個版本同一個開關，**新增病人的端點不跟著擋**，見實作規格書 3.7）。 **1005 迭代 16**：輪播三層停用（`RETIRED_FEATURE_FLAG_KEYS`，資料表的列與切換紀錄保留、後端載入時略過），換成 `TODAY_PANEL`（「本次透析」面板，**預設開啟**——9.1 起「預設全關」的唯一例外由它承接）與 `MARQUEE`（跑馬燈，預設關閉，速度要先經長者看過）
 - **`HELP_NON_CLINICAL_GROUP` 是唯一不擋後端的開關**：它只決定平板上有幾顆按鈕。平板停在舊畫面時病人按下去的求助照樣要送到，擋掉就是把求助丟掉
-- 開啟條件由後端逐項判定，不靠人記得。例如 `REAL_PATIENT_DATA_TO_AI` 只在 `LLM_PROVIDER=onprem` 時可開；高風險三項要 FR-R08 書面確認＋規則版本附有書面依據，規則引擎尚未建立，所以目前開不了
+- 開啟條件由後端逐項判定，不靠人記得。例如 `REAL_PATIENT_DATA_TO_AI` 只在 `LLM_PROVIDER=onprem` 時可開；高風險三項（1010 迭代 18 起加上 `ADEQUACY_PREDICTION`，共四項）只要求那一項有規則版本——**書面確認閘門（`.env` 的 `HIGH_RISK_WRITTEN_CONFIRMATION`）與書面依據擋在每一次比對**，缺一則真實病人一律擋下、只對合成資料執行（見第 7 節）
 - 開關關閉時，`feature-flag.guard.ts` 讓相關端點回 404，前端相關元素**完全不渲染**（不是 disabled）
 - 切換須填核准依據並寫稽核，條件不符被拒的嘗試也寫（`FEATURE_FLAG_CHANGE_REJECTED`）。AI 兩項需 `system:configure`，其餘需 `feature-flag:manage`
 
@@ -911,22 +912,27 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 7. 🔒 高風險三項：有條件納入，排在迭代 18（原迭代 7 → 11 → 15）
+## 7. 🔒 高風險三項：有條件納入，1010 迭代 18 完成實作（原迭代 7 → 11 → 15）
 
 > **編號重排過兩次**：0919 部署前的四個修正迭代占用了 7～10，規則引擎順延為迭代 11；0926 第一次進院失敗之後的四件事又占用了 11～14，再順延為迭代 15；1005 院方 API 等三件事占用 15～17，又順延為**迭代 18**。內容一字未改，只是往後挪。0916 以前的紀錄裡「迭代 7」、0923 以前的「迭代 11」、1005 以前的「迭代 15」指的都是本節，對帳時看實作規格書 4.0.1、4.0.3、4.0.4 的對照表。
 >
-> **首波試用期間，這三項尚未實作，一律不提供服務**：介面上不出現入口，後端端點一併擋下（DEP-34）。不做灰色按鈕、不做「敬請期待」。
+> **首波試用期間一律不提供服務**：~~這三項尚未實作~~ 1010 起已實作，但開關預設關閉；關著時介面上不出現入口，後端端點一併擋下（DEP-34）。不做灰色按鈕、不做「敬請期待」。
 
 **FR-P03**（風險分層）、**FR-P05**（預警）、**FR-N06**（劑量建議）在 Iteration 2 時因高 SaMD 風險整條排除。0910 起改為**納入**，現排在迭代 18，以自建規則引擎實作並受 FR-R01～R08 約束（實作規格書 1.4、3.6、4.16）。
 
-目前狀態：
+目前狀態（1010 迭代 18 完成，細節見實作規格書 3.6 末段與 4.16）：
 
-- 規則引擎與三項功能**一行都還沒寫**
-- 三個功能開關已在迭代 3 建好，預設關閉；開啟條件由後端判定，規則引擎不存在，所以目前開不了
-- 啟用需要兩個外部答覆：TFDA 分類書面確認（Q-02）與臨床端的規則門檻值（Q-03）。**兩者不到，迭代 18 仍可完成實作與合成資料驗收**，差別只在能不能對真實病人開
-- FR-N07 的「預測」部分也併入迭代 18；迭代 4 只做計算與趨勢圖
+- 後端 `modules/rules/`：評估器是純函式（`evaluators.ts`，六種比對形態），服務只負責挑版本、讀歷史資料、寫執行紀錄與檢視紀錄。**模組不引用 AI 閘道與模型供應者**（`verify:iteration18` 逐檔檢查），文字一律由版本範本組出
+- 六條預設規則第一次啟動寫入，**全部是草稿**；兩條收縮壓相關的出處寫同院 IDH 系統、標得了生效，其餘四條是示範值、沒有出處
+- **挑版本**：真實病人只用生效中的版本；合成資料病人有生效的用生效的，沒有就用最新的草稿
+- **書面確認閘門在 `.env`**（`HIGH_RISK_WRITTEN_CONFIRMATION`，空值＝沒開），畫面只看得到。沒開時真實病人整位不比對：立即比對回 403＋稽核、定時比對略過（一天記一筆）
+- 版本一經使用就改不了（條件寫在同一個 `updateMany` 的 where 裡）；沒有出處標不了生效；範本出現結論字詞存不進去
+- 每 3 分鐘定時比對＋「立即比對」；同一版規則對同一筆資料（`subject_key`）只比一次，唯一鍵擋重複
+- 介面只在專業版：即時總覽的待檢視、病人趨勢的判斷輔助、系統管理「判斷規則」；簡易版、病人端、總覽螢幕都沒有
+- FR-N07 的「預測」部分另立開關 `ADEQUACY_PREDICTION`，還要 `LAB_VALUE_FEATURES` 開著
+- 對真實病人啟用仍要兩個外部答覆：TFDA 分類書面確認（Q-02，文號填進 `.env`）與臨床端的規則門檻值（Q-03，新版本附出處後標為生效）
 
-在迭代 18 之前，現有功能照舊維持這條線：
+迭代 18 以外的現有功能照舊維持這條線：
 
 - 求助分派 `routeHelpRequest()` 的輸入**只有**病人自選的類型與急迫度，不讀歷史資料
 - 症狀趨勢摘要只做原樣列出與次數統計，不加權、不分級、不預測、不產生建議文字
@@ -1130,7 +1136,7 @@ ______________________________________________________________________
 | ~~16~~   | ~~病人端「本次透析」面板與跑馬燈（1005）~~                                   | **實作完成（1005）**，模擬院方 API 上驗收與開發機截圖通過；跑馬燈速度待長者試看 | 無；實機待 Q-33，病人試看待 Q-31                                                          |
 | ~~17~~   | ~~跑馬燈內容由 AI 生成、護理師核准（1005）~~                                 | **實作完成（1005）**，驗收通過；隨版本帶入的草稿待實驗室模型重寫                | 正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿；核准權限 1007 已答（所有護理師，Q-28） |
 | ~~17.8~~ | ~~護理紀錄補上線前的缺口、緊急回報的圖示（1010）~~                           | **已完成（1010）**，腳本驗收通過                                                | 無（Q-37 已結案）                                                                         |
-| 18       | 規則引擎與三項高風險功能（原 7 → 11 → 15）                                   | **本週做（1010）**                                                              | 法務書面確認（Q-02）＋臨床端門檻值（Q-03）                                                |
+| ~~18~~   | ~~規則引擎與三項高風險功能（原 7 → 11 → 15）~~                               | **已完成（1010）**，合成資料驗收與開發機截圖通過；臨床端逐句讀輸出待做          | 對真實病人啟用：法務書面確認（Q-02）＋臨床端門檻值（Q-03）                                |
 | 19       | 管理儀表板、獎勵、對外揭露（原 8 → 12 → 16）                                 | **本週做（1010）**                                                              | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21）                           |
 | 20～23   | 遊戲化之一～之四（1010）：現有功能的遊戲化、透析小花園、麻將連連看、記憶相簿 | 可以；21、23 先寫分析子文件與起始的圖                                           | 無；開給病人前要長者實際玩過（Q-31 第 8 題）                                              |
 
