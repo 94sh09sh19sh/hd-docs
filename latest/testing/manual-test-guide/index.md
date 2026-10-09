@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 完整手動測試手冊
 
-> 從 `git clone` 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。 對應版本：迭代 17.7 · 135 條 API 路由 · 109 種稽核動作。 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。 **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--%E8%BF%AD%E4%BB%A3-3-17-%E5%88%86%E5%86%8A)。
+> 從 `git clone` 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。 對應版本：迭代 17.8 · 137 條 API 路由 · 111 種稽核動作。 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。 **本頁是主手冊**：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 [§13 分冊索引](#13--%E8%BF%AD%E4%BB%A3-3-17-%E5%88%86%E5%86%8A)。
 
 本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。
 
@@ -557,7 +557,7 @@ taskkill //PID 33244 //F
 
 ## 09 · API 附錄
 
-後端啟動時會印出完整路由清單，目前共 **135 條**，下表逐條列出（迭代 16 拿掉的兩條、迭代 17.1 拿掉的一條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
+後端啟動時會印出完整路由清單，目前共 **137 條**，下表逐條列出（迭代 16 拿掉的兩條、迭代 17.1 拿掉的一條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。
 
 ### 怎麼帶憑證
 
@@ -673,7 +673,9 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `POST /api/nursing-records/events`                               | nursing-record:write                           | （迭代 4）以快速範本建立事件記錄                                                                                         |
 | `POST /api/nursing-records/prefills`                             | nursing-record:write                           | （迭代 4）依病人自報建立預填草稿                                                                                         |
 | `POST /api/nursing-records/:id/ai-draft`                         | nursing-record:write＋AI 開關                  | （迭代 4）AI 草擬初稿，排入佇列                                                                                          |
-| `POST /api/nursing-records/:id/sign`                             | nursing-record:write                           | （迭代 4）簽核，之後不可修改                                                                                             |
+| `POST /api/nursing-records/:id/sign`                             | nursing-record:write                           | （迭代 4）簽核，之後不可修改。迭代 17.8 起有格式的記錄送 `sections`（只送 `finalText` 時照段名拆回）                     |
+| `POST /api/nursing-records/:id/post-vitals`                      | nursing-record:write                           | （迭代 17.8）把事件時間之後的院方量測補進反應那一段（只有草稿）                                                          |
+| `POST /api/nursing-records/:id/copied`                           | patient:monitor                                | （迭代 17.8）按了複製：只寫稽核（整份或哪一段），不送內容                                                                |
 | `GET /api/sop/documents`                                         | sop:query                                      | （迭代 4）收錄的文件                                                                                                     |
 | `POST /api/sop/queries`                                          | sop:query                                      | （迭代 4）SOP／藥品劑量查詢                                                                                              |
 | `POST /api/help-requests/:id/arrive`                             | help-request:handle                            | （迭代 5）登記到達床邊時間，只能登記一次                                                                                 |
@@ -744,7 +746,7 @@ curl -s http://localhost:3000/api/device/symptom-reports/mine \
 | `POST /api/carousel/items/:id/reopen`                            | carousel-content:manage                        | （迭代 17）撤回成待核准，病人端立刻收不到                                                                                |
 | `PUT /api/carousel/items/:id/schedule`                           | carousel-content:manage                        | （迭代 17）上下架時間                                                                                                    |
 
-> 表中各迭代的操作步驟分別在[迭代 3](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-3/index.md)～[迭代 17](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17/index.md) 各分冊（索引見 §13）。 本表逐條對齊後端啟動時印出的路由清單（目前 135 條；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。
+> 表中各迭代的操作步驟分別在[迭代 3](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-3/index.md)～[迭代 17](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17/index.md) 各分冊（索引見 §13）。 本表逐條對齊後端啟動時印出的路由清單（目前 137 條；1010 迭代 17.8 加兩條；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。
 
 - `h1` **［終端機］** 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。 → 409「此排班仍有進行中的裝置綁定，請先解除綁定」。解除後再取消則成功，狀態變 `CANCELLED`。
 - `h2` **［終端機］** 用 curl 查昨天的總覽。 → 回應中 `fromCache` 為 `false`（非當日改為直讀資料庫）；查今天則為 `true`。
@@ -888,10 +890,11 @@ ______________________________________________________________________
 | [迭代 17.5 — 透析一律開始後四小時結束](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17-5/index.md)                                     | 不管院方資料有沒有預計結束時間，透析都是**開始後四小時結束**（院方硬性規定）：病人端進度條與面板橫軸、簡易版平板格、專業版即時總覽、總覽螢幕模式的進度一致；待確認下機也照這一條                                                                                                                                                  | `aa105`–`aa113`        |
 | [迭代 17.6 — 公告草稿換則、新增裝置、拿掉病人頁、排班頁的病人順序](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17-6/index.md)         | 簡易版公告與院內衛教的**草稿換得到後面幾則**、「＋」不佔清單格子；專業版主列六項、**沒有「病人」那一頁**，「新增裝置」只有註冊新平板與平板清單；系統管理「平板停用」解除佈建與登記佈建；排班與指派的病人下拉選單與簡易版病人框同序、重新整理                                                                                      | `aa114`–`aa130`        |
 | [迭代 17.7 — 新增病人回到開關後面、平板管理、醫院格式的床號、衛教拖到平板](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17-7/index.md) | 「護理師自己新增病人」開關**關著兩邊都沒有、開著兩邊都有**（專業版排班與指派那一列、簡易版病人框的「＋」）；系統管理分頁叫「**平板管理**」；簡易版手選床位是 A1、A2、A3、A5…（沒有 4 號床）；**公告與院內衛教放得上有病人配著、沒有床號的平板**，病人端照播                                                                       | `aa131`–`aa146`        |
+| [迭代 17.8 — 護理紀錄補上線前的缺口、緊急回報的圖示](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-17-8/index.md)                       | 護理紀錄在**主列第 7 項**；記錄依系統管理選的格式分段（**DART 預設、SOAP**），事件時間與院方量測寫在段落裡、讀到 0 的不帶；「帶入處置後數值」；簽核後**整份或逐段複製**，用院內 IP 開也複製得出來；AI 沒開照樣走完；緊急回報的圖示**畫出症狀本身**                                                                                | `aa147`–`aa168`        |
 
 走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。
 
-**開始任何一本分冊之前，先把這四樣東西準備好**（二十七本分冊的「前置」都建立在這些上面）：
+**開始任何一本分冊之前，先把這四樣東西準備好**（二十八本分冊的「前置」都建立在這些上面）：
 
 | 要準備的                      | 在哪裡弄出來                                                                                                                |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------- |

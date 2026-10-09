@@ -2717,6 +2717,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-17-8-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3550,6 +3578,34 @@
     
   
     迭代 17.7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 分冊
   
 
     
@@ -5445,7 +5501,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 </ul>
 <hr />
 <h2 id="4-資料模型">4. 資料模型<a class="headerlink" href="#4-資料模型" title="Permanent link">&para;</a></h2>
-<p>共 59 張表，14 個 migration：<code>init</code>、<code>iteration3_closed_network</code>、<code>iteration4_ai_content</code>、<code>iteration5_help_resolution_shifts_baseline</code>、<code>iteration6_carousel_file_import</code>、<code>iteration7_update_runs</code>、<code>iteration9_navigation_content</code>、<code>iteration9_help_category_label</code>、<code>iteration10_kiosk_foreground</code>、<code>iteration12_kiosk_shell_version</code>、<code>iteration14_beds</code>、<code>iteration15_hospital_api</code>、<code>iteration17_marquee_approval</code>、<code>iteration17_7_device_targets</code>（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，<code>check:migration</code> 把關）。逐欄說明見《<a href="../../reference/data-dictionary/">資料字典</a>》。</p>
+<p>共 60 張表，15 個 migration：<code>init</code>、<code>iteration3_closed_network</code>、<code>iteration4_ai_content</code>、<code>iteration5_help_resolution_shifts_baseline</code>、<code>iteration6_carousel_file_import</code>、<code>iteration7_update_runs</code>、<code>iteration9_navigation_content</code>、<code>iteration9_help_category_label</code>、<code>iteration10_kiosk_foreground</code>、<code>iteration12_kiosk_shell_version</code>、<code>iteration14_beds</code>、<code>iteration15_hospital_api</code>、<code>iteration17_marquee_approval</code>、<code>iteration17_7_device_targets</code>、<code>iteration17_8_nursing_record_format</code>（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，<code>check:migration</code> 把關）。逐欄說明見《<a href="../../reference/data-dictionary/">資料字典</a>》。</p>
 <table>
 <thead>
 <tr>
@@ -5565,11 +5621,21 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <td><code>hospital_api_fetch_runs</code>、<code>dialysis_vital_records</code></td>
 <td>迭代 15</td>
 </tr>
+<tr>
+<td>跑馬燈只在某幾台平板播</td>
+<td><code>carousel_item_device_targets</code></td>
+<td>迭代 17.7</td>
+</tr>
+<tr>
+<td>護理記錄依格式分段（DART／SOAP）</td>
+<td><code>nursing_record_sections</code></td>
+<td>迭代 17.8</td>
+</tr>
 </tbody>
 </table>
 <p>迭代 10、12 沒有新表，只在 <code>devices</code> 加欄位：前景回報三欄（迭代 10）、<code>shell_version</code> 與 <code>shell_contract_version</code>（迭代 12）；迭代 14 另加 <code>devices.bed_no</code>。
 迭代 15 除了兩張新表，另加 <code>patients.preferred_device_id</code>（配給病人的平板）、<code>treatment_sessions</code> 五欄（<code>source</code>、<code>bed_no</code>、<code>expected_end_at</code>、<code>nurse_modified_at</code>、<code>bed_nurse_modified_at</code>）與 <code>beds.source</code>；
-迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 <code>carousel_view_events</code>）；迭代 17 在 <code>carousel_items</code> 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）。全部只做加法。</p>
+迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 <code>carousel_view_events</code>）；迭代 17 在 <code>carousel_items</code> 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 <code>nursing_records</code> 加 <code>record_format</code>，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列。全部只做加法。</p>
 <h3 id="值得注意的地方">值得注意的地方<a class="headerlink" href="#值得注意的地方" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7744,10 +7810,10 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 <td>正式環境的 AI 需 Q-07；在那之前用隨版本帶入的草稿；核准權限 1007 已答（所有護理師，Q-28）</td>
 </tr>
 <tr>
-<td>17.8</td>
-<td>護理紀錄補上線前的缺口、緊急回報的圖示（1010）</td>
-<td><strong>本週第一個</strong></td>
-<td>無（Q-37 1010 已答）</td>
+<td>~~17.8~~</td>
+<td>~~護理紀錄補上線前的缺口、緊急回報的圖示（1010）~~</td>
+<td><strong>已完成（1010）</strong>，腳本驗收通過</td>
+<td>無（Q-37 已結案）</td>
 </tr>
 <tr>
 <td>18</td>

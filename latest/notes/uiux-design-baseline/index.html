@@ -2294,6 +2294,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-8-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3127,6 +3155,34 @@
     
   
     迭代 17.7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 分冊
   
 
     
@@ -5027,10 +5083,15 @@
 <td>總覽螢幕模式</td>
 <td>開護理站那台大螢幕用，一天按一次</td>
 </tr>
+<tr>
+<td>7</td>
+<td>護理紀錄（1010）</td>
+<td><strong>1010 院方要求從選單移到主列</strong>：紀錄改成複製貼上交給院內的正式紀錄之後，每個班都會用到。排在最後——寫紀錄是事件處理完之後的事。主列因此滿 7 項（上限）；既有環境由版本更新的遷移移過來，護理長改過的不動</td>
+</tr>
 </tbody>
 </table>
 <p><strong>選單（「更多」下拉）——用得到，但不是每天：</strong></p>
-<p>帳號審核、護理紀錄、~~衛教~~ 結束與離院衛教（1006）、SOP 查詢、臨床數值、病人趨勢、稽核軌跡</p>
+<p>帳號審核、~~護理紀錄~~（1010 移到主列）、~~衛教~~ 結束與離院衛教（1006）、SOP 查詢、臨床數值、病人趨勢、稽核軌跡</p>
 <p><strong>關閉——首波不提供：</strong></p>
 <p>班表、成效基準、離院衛教，以及所有需手持裝置才能用的功能（DEP-29）</p>
 <blockquote>
@@ -5507,17 +5568,17 @@
 <td><code>x</code></td>
 <td>關閉</td>
 <td><code>monitor-dot</code></td>
-<td>透析機</td>
+<td>透析機（1010 起只有護理端用）</td>
 </tr>
 <tr>
 <td><code>syringe</code></td>
-<td>血管通路（打針的地方）</td>
+<td>血管通路（打針的地方；1010 起只有護理端用）</td>
 <td><code>toilet</code></td>
 <td>如廁</td>
 </tr>
 <tr>
 <td><code>thermometer-sun</code></td>
-<td>環境（冷熱、燈光、被子）</td>
+<td>環境（冷熱、燈光、被子；1010 起只有護理端用）</td>
 <td><code>message-circle-question</code></td>
 <td>其他（請說明）</td>
 </tr>
@@ -5531,8 +5592,85 @@
 </table>
 <p>病人端另有：<code>house</code> 回首頁、<code>clock</code> 療程時間、
 <code>laugh</code>／<code>smile</code>／<code>meh</code>／<code>frown</code>／<code>angry</code> 心情的五個等級、<code>circle</code> 選項「沒有」、<code>square</code>／<code>square-check</code> 複選、
-<code>lightbulb</code> 說明（點開看更多），以及求助類別：<code>rotate-3d</code> 頭暈、<code>zap</code> 抽筋、<code>waves</code> 噁心想吐、<code>heart-pulse</code> 胸悶胸痛很喘、
-<code>brain</code> 頭痛、<code>hand</code> 皮膚癢、<code>thermometer</code> 發冷發燒、<code>droplet</code> 出血、<code>person-standing</code> 身體其他地方不舒服、<code>glass-water</code> 口渴肚子餓。</p>
+<code>lightbulb</code> 說明（點開看更多），以及求助類別（下一段）。</p>
+<p><strong>求助類別的圖示要畫出症狀本身（1010，迭代 17.8）</strong>。院方反映緊急回報的圖示與文字不太相符（閃電代表抽筋、波浪代表想吐、大腦代表頭痛），希望即使不看文字也能知道是什麼症狀。Lucide 沒有畫症狀的圖示，所以這十三個<strong>由本專案自己畫</strong>（<code>scripts/icons-custom/</code>，照 Lucide 的規格：24×24、線寬 2、圓角、不填色），登記表第四欄寫 <code>custom</code>；<strong>仍然配字</strong>，字是正式的意思，圖是幫忙認。原本的 <code>rotate-3d</code>、<code>zap</code>、<code>waves</code>、<code>heart-pulse</code>、<code>brain</code>、<code>hand</code>、<code>thermometer</code>、<code>droplet</code>、<code>person-standing</code>、<code>glass-water</code> 拿掉，<code>monitor-dot</code>、<code>syringe</code>、<code>thermometer-sun</code> 病人端不再用（護理端的處理方式照用）。</p>
+<table>
+<thead>
+<tr>
+<th>圖示</th>
+<th>求助類別</th>
+<th>畫的是什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symptom-dizzy</code></td>
+<td>頭暈、冒冷汗、快昏倒</td>
+<td>一張臉、旁邊一圈轉的漩渦、一滴汗</td>
+</tr>
+<tr>
+<td><code>symptom-cramp</code></td>
+<td>抽筋</td>
+<td>側面的小腿，小腿肚裡一道閃電、旁邊三道痛的線</td>
+</tr>
+<tr>
+<td><code>symptom-nausea</code></td>
+<td>想吐、噁心</td>
+<td>瞇緊的眼睛、波浪的嘴</td>
+</tr>
+<tr>
+<td><code>symptom-chest</code></td>
+<td>胸悶、胸痛、很喘</td>
+<td>上半身，胸口一顆心，頭旁邊喘氣的線</td>
+</tr>
+<tr>
+<td><code>symptom-headache</code></td>
+<td>頭痛</td>
+<td>頭頂裂開的閃電、皺眉</td>
+</tr>
+<tr>
+<td><code>symptom-itch</code></td>
+<td>皮膚很癢</td>
+<td>一隻手臂，上面三道抓的痕跡與幾點紅疹</td>
+</tr>
+<tr>
+<td><code>symptom-chill</code></td>
+<td>發冷、發抖、覺得發燒</td>
+<td>一個人兩邊發抖的鋸齒，旁邊一支溫度計</td>
+</tr>
+<tr>
+<td><code>symptom-access</code></td>
+<td>打針的地方流血、腫、痛</td>
+<td>手臂、扎進去的針、底下一滴血</td>
+</tr>
+<tr>
+<td><code>symptom-bleeding</code></td>
+<td>其他地方流血止不住</td>
+<td>一道傷口與接連滴下的血</td>
+</tr>
+<tr>
+<td><code>symptom-other</code></td>
+<td>身體其他地方不舒服</td>
+<td>一個人，旁邊一個問號</td>
+</tr>
+<tr>
+<td><code>machine-alarm</code></td>
+<td>機器一直叫</td>
+<td>一台機器與兩道聲波</td>
+</tr>
+<tr>
+<td><code>room-comfort</code></td>
+<td>會冷／會熱／燈太亮／要蓋被子</td>
+<td>躺著蓋被子的人，上面一個太陽、一片雪花</td>
+</tr>
+<tr>
+<td><code>drink-food</code></td>
+<td>口渴、肚子餓</td>
+<td>一杯水，一碗飯與一雙筷子</td>
+</tr>
+</tbody>
+</table>
+<p><code>toilet</code>（如廁）與 <code>message-circle-question</code>（其他，請說明）本來就對得上，沿用。<strong>畫得好不好由不知道對照的人判斷</strong>：把字遮起來看圖說症狀（實作規格書 4.15.8 驗收第 9 條；院方試看在清冊 Q-31 第 7 題）。</p>
 <p>護理端簡易版另有：<code>activity</code> 治療中、<code>triangle-alert</code> 待處理的求助、<code>octagon-alert</code> 緊急的求助、
 <code>shield-alert</code> 平板跳出固定畫面、<code>circle-arrow-up</code> 外殼版本過舊、<code>badge-alert</code> 外殼版本不相容、<code>wrench</code> 平板尚未佈建、<code>tablet-smartphone</code> 平板、
 <code>user</code> 病人、<code>user-plus</code> 新增病人、<code>stethoscope</code> 護理師、<code>megaphone</code> 公告、<code>layout-grid</code> 全部床位、<code>lock</code> 停用平板（1006 起畫面上不再用：停用移到系統管理，那裡是文字按鈕；登記留著）、
