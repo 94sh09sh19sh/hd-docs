@@ -5577,7 +5577,7 @@
 <p>這些約束來自《資料庫使用規範》6.1。資料庫已經是 SQLite，它們的理由從「將來要遷到醫院資料庫」變成「不要被任何一種資料庫綁死」——優先權下降，但一條都不放寬：</p>
 <ol>
 <li><strong>不使用 Prisma enum</strong> — 所有列舉值都是 <code>TEXT</code>，合法值由 <code>@hd/shared</code> 常數與 class-validator 在<strong>應用層</strong>把關。</li>
-<li><strong>不使用 JSON 欄位</strong>承載結構化關聯資料 — 一律正規化成資料表與外鍵。</li>
+<li><strong>不使用 JSON 欄位</strong>承載結構化關聯資料 — 一律正規化成資料表與外鍵。唯一的例外是遊戲盤面快照（1010 起，規範 6.1 的例外段落與六條界線）；遊戲的資料表還沒建立，建立時在本文件逐欄寫明快照的格式與版本。</li>
 <li><strong>不使用資料庫專屬預設值</strong> — UUID 由 Prisma client 在應用層產生。</li>
 <li><strong>命名</strong>：欄位 <code>snake_case</code>，表名複數 <code>snake_case</code>。</li>
 <li><strong>稽核欄位不因階段省略</strong> — 誰、何時、對誰、做了什麼，設計時就納入。</li>

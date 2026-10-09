@@ -4844,6 +4844,18 @@
 <li><strong>稽核欄位不因階段而省略</strong> — 誰、何時、對誰、做了什麼，設計時就納入。</li>
 <li><strong>級聯路徑只留一條</strong> — 這一條原本是為 SQL Server 而設，SQLite 沒有這個限制。<strong>仍然保留</strong>，因為多條級聯刪除路徑本身就難以推理，跟哪一種資料庫無關。</li>
 </ol>
+<h4 id="第-2-條的唯一例外遊戲盤面快照1010-新增">第 2 條的唯一例外：遊戲盤面快照（1010 新增）<a class="headerlink" href="#第-2-條的唯一例外遊戲盤面快照1010-新增" title="Permanent link">&para;</a></h4>
+<p>遊戲化的<strong>盤面快照</strong>——牌怎麼排、哪幾張消掉了、花園哪一格種什麼、長到哪裡——可以用一個 <code>TEXT</code> 欄位存 JSON 字串（不用 Prisma 的 <code>Json</code> 型別）。</p>
+<p><strong>為什麼可以</strong>：第 2 條管的是「結構化<strong>關聯</strong>資料」。盤面快照不連到任何其他資料表，資料庫也從來不查它裡面，只用來讓病人換了平板、隔了幾天還能接著玩：整份讀出、整份寫回。拆成欄位拿不到外鍵與查詢的保護，卻會讓每一次遊戲規則的微調（例如花園從 3×4 改成 3×5）都變成第 18 條的正式環境資料庫遷移。分析見《<a href="../../notes/dialysis-gamification-decisions/">透析中的遊戲化之一</a>》第 3.5 節。</p>
+<p><strong>界線</strong>，缺一條就不算例外，照第 2 條正規化：</p>
+<ol>
+<li>只限<strong>遊戲盤面快照</strong>，每位病人每款遊戲一列</li>
+<li>內容不得有病人識別資料、臨床數值，也不得有任何其他資料表的編號</li>
+<li>不得被任何資料表參照；資料庫裡不得以 <code>json_extract</code> 或任何方式查詢它的內容（第 5 條）</li>
+<li>要有格式版本欄位；寫入前、讀出後都在應用層驗證格式；舊版快照的升級寫在程式裡並有測試；大小設上限（例如 16 KB）</li>
+<li>狀態評估、彙總、統計要用的資料（每一步的操作、完成了沒、開了什麼花、送了什麼花）<strong>一律另存正規欄位</strong>，不從快照裡取</li>
+<li><strong>例外只此一處。</strong> 其他資料想比照辦理，要由使用者決定後改寫本段，不得自行類推</li>
+</ol>
 <h3 id="62-sqlite-特有的型別注意事項">6.2 SQLite 特有的型別注意事項<a class="headerlink" href="#62-sqlite-特有的型別注意事項" title="Permanent link">&para;</a></h3>
 <p>SQLite 只有五種儲存類別（NULL、INTEGER、REAL、TEXT、BLOB），與 PostgreSQL 的差異必須知道：</p>
 <table>
@@ -5437,6 +5449,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 存取控制邏輯是否寫在後端應用層？→ 不得依賴檔案權限或前端隱藏</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 是否在業務邏輯中直接寫 SQL 或 SQLite 方言？→ 改走 Repository／ORM 層</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 新欄位若帶小數，是否誤用了浮點數？→ 臨床數值一律改整數最小單位或 TEXT</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 是否把結構化資料存成 JSON 字串？→ 只有第 6.1 條的遊戲盤面快照例外可以，而且六條界線都要守；其餘一律正規化</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 是否新增了第二個會寫入資料庫的行程？→ 不允許</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 測試資料是否為虛構合成資料？→ 若不是，一律替換</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Schema 是否包含稽核軌跡所需欄位？→ 若無，補齊後再實作</li>
