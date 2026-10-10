@@ -360,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    1014 — 規則引擎與護理紀錄完成，四條規則的門檻請醫師確認（迭代 17.8～18.1）
+    1014 — 規則引擎、護理紀錄、管理儀表板完成，四條規則的門檻請醫師確認（迭代 17.8～19）
   
 
     
@@ -3851,6 +3851,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 19 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6462,6 +6490,23 @@
 </tr>
 </tbody>
 </table>
+<p><strong>迭代 19 是第十三次</strong>（1010）：「獎勵制度」「對外報表」兩頁新增時預設關閉（指標定義與核准角色待護理部確認，4.17），預設關閉的功能從 3 項變 5 項。<code>verify:iteration9:api</code> 寫死「首波關閉 3 項」，不改就一定不通過：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration9:api</code> 第 2 步</td>
+<td>「關閉的剛好是班表、成效基準、離院衛教 3 項」改成「關閉的剛好是共用定義裡預設關閉的那一組，而且那 3 項都在裡面」</td>
+<td>數量與每一項仍逐一比對，拿來比的從寫死的清單換成預設版位的真本；「關閉的不出現在導覽上」照驗</td>
+</tr>
+</tbody>
+</table>
 <h3 id="12-本階段納入">1.2 本階段納入<a class="headerlink" href="#12-本階段納入" title="Permanent link">&para;</a></h3>
 <p>SRS 第 5 章全部 81 條需求（FR-P01～P19、FR-N01～N20、FR-M01～M12、FR-X01～X05、FR-S01～S17、FR-R01～R08），依第 4 章分二十一次迭代實作（迭代 3～23）。<strong>0919 由 60 條增為 63 條</strong>：新增 FR-S10（介面不得洩漏內部技術識別）、FR-S11（版位與功能可設定）、FR-S12（更新不得破壞既有資料）。<strong>0926 由 63 條增為 70 條</strong>：新增 FR-P14～P15（病人端首頁三區、任務依時點出現）、FR-N14～N16（簡易版與專業版、單一工作台、一步完成）、FR-S13（AI 閘道）、FR-S14（外殼 App 契約）。<strong>1005 由 70 條增為 73 條</strong>：新增 FR-N17（跑馬燈內容由 AI 生成、護理師核准）、FR-S15（院方 API 優先）、FR-S16（院方 API 介接與即時推送）。<strong>1010 由 73 條增為 81 條</strong>：新增 FR-P16～P19（遊戲、現有功能的小幅遊戲化、病友小撇步、送花）、FR-N18（護理紀錄交給院內的正式紀錄）、FR-N19～N20（被聽見的回覆、遊戲資料的狀態評估彙整）、FR-S17（病人之間只有匿名的彙總）。</p>
 <h3 id="13-明確排除本階段完全不碰">1.3 明確排除（本階段完全不碰）<a class="headerlink" href="#13-明確排除本階段完全不碰" title="Permanent link">&para;</a></h3>
@@ -7228,12 +7273,12 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <tr>
 <td><code>PERF_INDIVIDUAL_L3</code>（FR-M11）</td>
 <td>關</td>
-<td>護理部書面同意＋計分規則公告＋觀察期完成</td>
+<td>護理部書面同意＋計分規則公告＋觀察期完成。<strong>1010 迭代 19</strong>：系統驗「至少一條已公告的計分規則」與「至少結算過一個觀察期」；護理部書面同意系統驗不到，寫在切換時必填的核准依據（文號），連同切換寫稽核。關著時別人的個人層級數字（個人層級計分、臨時調動候補）一律 403 並寫稽核；<strong>本人看自己的不跟著擋</strong>（4.17）</td>
 </tr>
 <tr>
 <td><code>REWARD_SCORING</code></td>
 <td>關</td>
-<td>觀察期完成（FR-M09）</td>
+<td>觀察期完成（FR-M09）。<strong>1010 迭代 19</strong>：至少結算過一個觀察期才開得起來；關著時只能開始觀察期，計分期結算時也不寫點數</td>
 </tr>
 <tr>
 <td><strong>需手持裝置的功能群組</strong>（0919 新增）</td>
@@ -7390,6 +7435,37 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td>禁止交叉評分</td>
 <td>不得建立「護理師×病人臨床結果」的關聯資料表</td>
+</tr>
+</tbody>
+</table>
+<p><strong>1010 迭代 19 實作結果</strong>（4.17）：</p>
+<table>
+<thead>
+<tr>
+<th>實作要求</th>
+<th>怎麼做的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分級標在端點上</td>
+<td>端點掛 <code>@DataLevel(L1／L2／L3／L3_SELF／L4)</code>；全域的資料分級守衛（排在導覽版位之後、功能開關之前）依角色比對該級的權限，L3 另看 <code>PERF_INDIVIDUAL_L3</code> 與宣告用途。唯讀角色進不進得來看權限，不看標記：醫院管理層只有 L1 的權限</td>
+</tr>
+<tr>
+<td>L3／L4 查詢逐次留痕</td>
+<td>L3 由服務寫 <code>PERFORMANCE_L3_QUERIED</code>（誰、查了哪幾位或哪一班、區間、用途）；總開關關著被擋的寫 <code>PERFORMANCE_L3_QUERY_BLOCKED</code>；本人看自己的也寫，用途記「本人自我檢視」。L4（稽核軌跡原始列）每次查詢寫 <code>AUDIT_LOG_QUERIED</code>，查完才記；用途選填（既有的驗收腳本都在打它），沒宣告記成「未宣告用途」，稽核原始列的用途清單裡沒有「獎勵計分審閱」</td>
+</tr>
+<tr>
+<td>不設「總分」「排名」欄位</td>
+<td>計分一列一條規則（<code>reward_scores</code>），個人層級的表依工作 ID 排，回應裡沒有總分與排名</td>
+</tr>
+<tr>
+<td>績效與臨床資料表分離</td>
+<td>新的資料存取層只讀臨床資料表、只取算數字要的欄位（不取姓名、病歷號、床號），寫的只有績效自己的表</td>
+</tr>
+<tr>
+<td>禁止交叉評分</td>
+<td>十張新表沒有一張同時掛護理師與病人；計分事件只有流程面（結案有填處理方式與結果、簽核護理紀錄、審閱衛教、完成追蹤事項），歸給做那件事的人</td>
 </tr>
 </tbody>
 </table>
@@ -7989,7 +8065,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td><strong>19</strong></td>
 <td>管理儀表板、獎勵制度與對外揭露（內容不變）</td>
-<td>使用者指定本週完成；吃迭代 5 起累積的求助、班表、跑馬燈播放紀錄（4.0 原則 4）</td>
+<td>使用者指定本週完成；吃迭代 5 起累積的求助、班表、跑馬燈播放紀錄（4.0 原則 4）。<strong>1010 完成</strong></td>
 </tr>
 <tr>
 <td><strong>20</strong></td>
@@ -11127,6 +11203,95 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <p><strong>驗收現況（1010）</strong>：<code>verify:iteration18-1</code>（新增，5 步，不需要後端）與 <code>verify:iteration18-1:api</code>（新增，6 步）全部通過；<code>verify:iteration18</code> 依 1.1 第十二次改寫後通過，<code>verify:iteration18:api</code>、<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>14:api</code>、<code>17:api</code>、<code>17-8:api</code> 對著開發機的後端通過；<code>verify:iteration11</code>、<code>14</code>、<code>15</code>、<code>17</code>、<code>17-7</code>、<code>17-8</code>、<code>check:all</code> 全綠。以無頭 Chrome 在 1366×768 看過「判斷規則」的閘門卡與登記表單。
 <strong>沒有驗的</strong>：醫師確認四條規則的門檻（1014 週報）；真的文號（Q-02）。</p>
 <h3 id="417-迭代-19管理儀表板獎勵制度與對外揭露原迭代-8--12--161005-再順延">4.17 迭代 19：管理儀表板、獎勵制度與對外揭露（原迭代 8 → 12 → 16，1005 再順延）<a class="headerlink" href="#417-迭代-19管理儀表板獎勵制度與對外揭露原迭代-8--12--161005-再順延" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-10 完成。</strong> 手動測試在《<a href="../../testing/iteration-19/">迭代 19 分冊</a>》（<code>ac1</code>～<code>ac35</code>）。資料分級的做法見 3.10 末段，兩個開關見 3.7。
+外部依賴三項都沒有答覆：個人層級與獎勵計分兩個開關照預設關著、四條計分規則全是草稿、「獎勵制度」「對外報表」兩頁預設關閉；<strong>成效基準還沒量</strong>（Q-01），成效儀表板多數指標寫「基準尚未建檔」，照驗收第 8 條不拿估計值頂替。</p>
+</blockquote>
+<p><strong>1010 開發端的判斷</strong>（使用者要推翻時改右欄那一處即可）：</p>
+<table>
+<thead>
+<tr>
+<th>判斷</th>
+<th>理由</th>
+<th>寫在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自我檢視（FR-M10）不跟著 L3 總開關擋，看別人的才擋</td>
+<td>《資料庫使用規範》11.3 第 4 條「每一位護理師都能查閱自己的原始計分事件並提出更正」是 L3 能開的<strong>前提</strong>；擋住它，總開關永遠開不起來。驗收第 2 條讀成「別人的個人層級數字完全不出現」</td>
+<td>3.10 末段；<code>DataLevel.L3_SELF</code></td>
+</tr>
+<tr>
+<td>本人查看自己的也寫稽核（用途「本人自我檢視」）</td>
+<td>驗收第 3 條「每一次 L3 查詢都留痕」沒有例外；多一筆紀錄不傷人，少一筆就說不清</td>
+<td>3.10 末段</td>
+</tr>
+<tr>
+<td>稽核原始列的用途<strong>選填</strong></td>
+<td>二十支既有的驗收腳本都在查稽核軌跡；改成必填要全部重寫。沒宣告的照樣記，記成「未宣告用途」，看得出誰沒宣告；畫面一律先選才查</td>
+<td>3.10 末段</td>
+</tr>
+<tr>
+<td>稽核角色看 L3 也要總開關</td>
+<td>SRS 4.2 稽核角色那一列寫「可」，但 11.1 寫 L3「須經啟用流程」；取嚴的那一邊</td>
+<td>3.10 末段</td>
+</tr>
+<tr>
+<td>計分事件只有四種流程面的事，<strong>不含回應速度</strong></td>
+<td>FDE 評估 5.4「不以病人臨床結果計分」、5.3「不得以誰回應比較快作為派工依據」；回應時間只在全單位與各班的儀表板出現</td>
+<td><code>@hd/shared</code> 的 <code>RewardEventSource</code></td>
+</tr>
+<tr>
+<td>預設四條規則全是草稿、每件 1 點</td>
+<td>指標的實際定義與權重要護理部確認（Q-20）；1 點只表示「這件事算」</td>
+<td><code>DEFAULT_REWARD_RULES</code></td>
+</tr>
+<tr>
+<td>觀察期可以回溯（起訖在過去）</td>
+<td>「只看不算」看的是已經發生的資料；回溯不影響任何人的計分</td>
+<td><code>RewardsService.createPeriod</code></td>
+</tr>
+<tr>
+<td>期間過完才能結算</td>
+<td>結算以當下已公告的規則算點數，期間還沒過完就算會少算</td>
+<td><code>RewardsService.closePeriod</code></td>
+</tr>
+<tr>
+<td>對外報表暫代的核准角色：護理長與最高權限帳號，<strong>產生者不能核准</strong></td>
+<td>《資料庫使用規範》12.2 建議「護理部主管加資訊室」；指定之前（Q-21）至少要兩個人</td>
+<td><code>EXTERNAL_REPORT_APPROVE</code></td>
+</tr>
+<tr>
+<td>成效基準只用全單位、沒被取代的那一筆；量的不是同一件事（口頭衛教次數 vs 平板看完次數）只並列不相減；系統這一側不到 5 筆不比</td>
+<td>驗收第 8 條要指得出基準；拿不同的量相減、拿三筆的中位數比，數字經不起追問</td>
+<td><code>compareWithBaseline</code></td>
+</tr>
+<tr>
+<td>事件記錄「事後補寫」的界線暫訂 60 分鐘</td>
+<td>基準量的是「當下寫 vs 事後補」，系統要一條線才算得出比例；定義待護理部確認</td>
+<td><code>LATE_CHARTING_THRESHOLD_MINUTES</code></td>
+</tr>
+<tr>
+<td>技能標記是護理長自己訂的字，系統不預設</td>
+<td>FR-M03 要「依技能標記」，但院方沒有標記清單；寫死一份清單等於替護理部決定</td>
+<td><code>nurse_skill_tags</code></td>
+</tr>
+<tr>
+<td>對外展示環境的銷毀記在資料目錄的 <code>showcase-ledger.log</code></td>
+<td>12.3 要求建立與銷毀寫稽核軌跡；銷毀之後展示資料庫已經不在，那一筆只能記在外面。建立同時寫進展示資料庫自己的稽核</td>
+<td><code>scripts/showcase.ts</code></td>
+</tr>
+<tr>
+<td>「成效與工作量」放選單；「獎勵制度」「對外報表」預設關閉</td>
+<td>主列 1010 起已滿 7 項；後兩者的外部依賴沒有答覆，照 DEP-34 不提供</td>
+<td><code>NAV_ITEM_DEFINITIONS</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Schema 變更（實作結果）</strong>：規格書列的七張之外，對外報表的指標與每一格（<code>external_report_metrics</code>、<code>external_report_items</code>）、護理師的技能標記（<code>nurse_skill_tags</code>）各一張，不用 JSON 欄位承載。遷移 <code>20261011150000_iteration19_performance_rewards_external</code>，只做加法，<code>check:migration</code> 無發現。</p>
+<p><strong>驗收現況（1010）</strong>：<code>verify:iteration19</code>（新增，7 步，不需要後端；比對基準、中位數、禁止欄位實際跑一次）與 <code>verify:iteration19:api</code>（新增，10 步，十條驗收標準逐條）全部通過；<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>14:api</code>、<code>17:api</code>、<code>17-8:api</code>、<code>18:api</code>、<code>18-1:api</code> 對著開發機的後端通過，<code>verify:iteration8</code>、<code>11</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>～<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>～<code>17-8</code>、<code>18</code>、<code>18-1</code>、<code>check:all</code> 全綠，其中 <code>verify:iteration9:api</code> 依 1.1 第十三次改寫。<code>npm run showcase -- --seed-only</code> 建出展示資料庫，以展示模式啟動後端、以醫院管理層登入看得到 30 天的合成數字；展示模式去開開發用的資料庫，拒絕啟動。以無頭 Chrome 在 1366×768 看過成效、各班工作量、簡報模式、獎勵制度三個分頁、對外報表與醫院管理層登入的首頁。
+<strong>沒有驗的</strong>：對外展示環境在另一台機器上開一次（<code>ac31</code>～<code>ac34</code>）；簡報模式實際列印；護理部確認指標與權重（Q-20）、核准角色指定（Q-21）、L3 的書面同意（Q-04）。</p>
 <p><strong>目標</strong>：完成新增任務一的呈現與計分部分，以及對外揭露。前面三個迭代累積的資料在這裡變成可看的東西。</p>
 <blockquote>
 <p><strong>1010：本週做，排在迭代 18 之後</strong>（4.0.5）。內容與驗收標準不變。成效基準（Q-01）還沒量，L1 儀表板的「基準對照」照驗收第 8 條<strong>指得出沒有基準</strong>，不拿任何估計值頂替。</p>
@@ -11413,10 +11578,10 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <td>對真實病人啟用需 Q-02 書面確認（文號填進院內主機設定檔）＋Q-03 門檻與依據（新版本附出處後標為生效）</td>
 </tr>
 <tr>
-<td>19</td>
-<td>管理儀表板、獎勵、對外揭露（原 8 → 12 → 16）</td>
-<td><strong>本週做（1010）</strong></td>
-<td>L3 啟用需護理部同意；指標定義需確認</td>
+<td>~~19~~</td>
+<td>~~管理儀表板、獎勵、對外揭露（原 8 → 12 → 16）~~</td>
+<td><strong>已完成（1010）</strong>，腳本驗收與開發機截圖通過；對外展示環境在另一台機器上開一次待做</td>
+<td>L3 啟用需護理部書面同意（Q-04）；指標定義與權重需護理部確認（Q-20）；對外報表的核准角色需護理部與資訊室指定（Q-21）</td>
 </tr>
 <tr>
 <td>20</td>
@@ -11449,7 +11614,7 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <p><strong>0930 更新</strong>：Q-32 已回覆——對外連線是常態、沒有限制，部署路線「連得出去」的前提成立。Q-27 的 Docker 版本（29.3.1、Compose v5.1.1）與連接埠（<code>13000</code>、<code>18080</code>、<code>18081</code>）也有答案。<strong>剩下擋第二次進院的是 Q-27 未答的題</strong>：斷電重開後誰登入、防毒排除，以及 0930 追加的 Docker Desktop 兩項設定（使用統計能不能關、市集自動更新能不能改手動）。</p>
 <p><strong>1005 更新</strong>：1001 第二次進院部分成功、卡在護理端登入（部署手冊第十五冊之三）。<strong>擋第三次進院的是 Q-27 第 12 題</strong>：使用者決定主機位址改用 IP，要資訊室把那個 IP 固定下來；其餘照 4.19。迭代 15～17 都不擋第三次進院。</p>
 <p><strong>1007 更新</strong>：Q-27 第 12 題已答——<strong>IP 是固定的</strong>，第三次進院照換。同日另答第 4 題（斷電後出現警示由護理長重新登入）、第 9 題（使用統計第三次進院關閉）、第 10 題（市集自動更新先不改）；Q-28 第 3 題（所有護理師都可以核准）與暫代相同，不必改程式。<strong>第三次進院已沒有待院方答覆的前提。</strong></p>
-<p><strong>1010 更新</strong>：Q-37（護理紀錄怎麼接上現有作業）院方已答：複製貼上、DART 或 SOAP（迭代 17.8）。迭代 18、19 本週做，遊戲化排在後面（4.0.5）；<strong>整張表沒有一個迭代被外部答覆擋住實作</strong>，擋住的只有對真實病人啟用。同日迭代 18 完成：Q-02、Q-03 沒有答覆，四項判斷輔助只對合成資料病人執行。</p>
+<p><strong>1010 更新</strong>：Q-37（護理紀錄怎麼接上現有作業）院方已答：複製貼上、DART 或 SOAP（迭代 17.8）。迭代 18、19 本週做，遊戲化排在後面（4.0.5）；<strong>整張表沒有一個迭代被外部答覆擋住實作</strong>，擋住的只有對真實病人啟用。同日迭代 18 完成：Q-02、Q-03 沒有答覆，四項判斷輔助只對合成資料病人執行。同日迭代 19 完成：個人層級與獎勵計分兩個開關照預設關著，計分規則全是草稿，「獎勵制度」「對外報表」兩頁照預設關閉，等護理部確認指標、核准角色指定後再開。</p>
 <h3 id="419-第三次進院1005-新增">4.19 第三次進院（1005 新增）<a class="headerlink" href="#419-第三次進院1005-新增" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：護理站的電腦登得進護理端——1001 卡在這裡（部署手冊<a href="../../deployment/15c-why-1001-failed/">第十五冊之三</a>）；同時把主機位址從名稱換成 IP，並探測一次院方 API。</p>
 <p><strong>1005 使用者決定：主機位址改用 IP。</strong> 換法照部署手冊<a href="../../deployment/15d-switch-host-to-ip/">第十五冊之四</a>。平板一台都還沒佈建，現在換代價最小；<strong>前提是資訊室把那個 IP 固定下來</strong>（Q-27 第 12 題），IP 會變就不要換。<strong>1007 答覆：IP 是固定的</strong>，前提成立。</p>

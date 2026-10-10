@@ -236,13 +236,6 @@
         <path d="M1219,22 H1275 V58 c -9,8 -19,-8 -28,0 c -9,8 -19,-8 -28,0 Z" class="node-legacy"/>
         <text x="1247" y="100" text-anchor="middle" class="t-sub-s">既有系統（唯讀）</text>
       </g>
-      <!-- 10 planned component -->
-      <g>
-        <rect x="1233" y="26" width="48" height="40" rx="3" class="node-plan"/>
-        <rect x="1226" y="34" width="14" height="8" rx="2" class="node-plan"/>
-        <rect x="1226" y="50" width="14" height="8" rx="2" class="node-plan"/>
-        <text x="1254" y="100" text-anchor="middle" class="t-sub-s">規劃中</text>
-      </g>
     </svg>
     <div class="lines">
       <span><svg viewBox="0 0 52 12" aria-hidden="true"><line x1="0" y1="6" x2="40" y2="6" class="link"/><polygon points="40,1 52,6 40,11" class="mk-ink"/></svg>請求／資料寫入（前端或上游發起）</span>
@@ -260,7 +253,7 @@
       <p class="claim">病人不登入、前端碰不到資料庫；即時通知走院內 SSE，所有 AI 呼叫先過閘道；護理師自己的資料與臨床資料分表。</p>
     </div>
     <figure>
-      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕，平板也以院內 SSE 收到「有新數值」的通知；裝置綁定、照護業務（含病人端的本次透析面板與跑馬燈）、營運與排班、院方資料同步都寫入同一個 SQLite 檔案，院方資料同步每 3 分鐘唯讀抓取院方透析清單 API，自動完成的事走與護理師操作相同的服務，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層，再經本系統的 AI 閘道服務（容器，不含模型）呼叫院內 AI 伺服器；唯一跨出醫院的是只在開發環境、經 SSH 通道使用的實驗室 GPU 伺服器，只送合成資料，正式環境設定拒絕啟用。規則引擎（判斷輔助）已實作，只做規則比對、不經 AI；對外報表服務是規劃中的元件。">
+      <svg id="plate-01" viewBox="0 -76 1400 1060" role="img" aria-label="全端架構圖：醫院院內網路框住病人端 PWA、護理端 PWA、常駐總覽螢幕與整層後端。三個前端只經 API Gateway 進入後端；裝置綁定服務在護理師指派後才核發 Session Token 給平板；即時狀態服務以院內 SSE 推送給護理端與總覽螢幕，平板也以院內 SSE 收到「有新數值」的通知；裝置綁定、照護業務（含病人端的本次透析面板與跑馬燈）、營運與排班、院方資料同步都寫入同一個 SQLite 檔案，院方資料同步每 3 分鐘唯讀抓取院方透析清單 API，自動完成的事走與護理師操作相同的服務，其中營運與排班寫的是班表與成效基準，與臨床資料分表存放；AI 閘道經模型供應者介面層，再經本系統的 AI 閘道服務（容器，不含模型）呼叫院內 AI 伺服器；唯一跨出醫院的是只在開發環境、經 SSH 通道使用的實驗室 GPU 伺服器，只送合成資料，正式環境設定拒絕啟用。規則引擎（判斷輔助）已實作，只做規則比對、不經 AI；對外報表服務已實作，只輸出聚合值、經另一人核准後才取得出來。">
         <defs>
           <marker id="p1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-ink"/></marker>
           <marker id="p1-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="mk-teal"/></marker>
@@ -400,17 +393,17 @@
         <text x="345" y="652" text-anchor="middle" class="t-sub-s">統計與報表走唯讀連線</text>
         <text x="345" y="672" text-anchor="middle" class="t-sub-s">班表與成效基準不回寫臨床資料表</text>
 
-        <!-- 規則引擎：1010 迭代 18 已實作（實線）；對外報表服務仍是規劃中（虛線） -->
+        <!-- 規則引擎：1010 迭代 18 已實作（實線）；對外報表服務：1010 迭代 19 已實作（實線） -->
         <rect x="560" y="570" width="180" height="56" rx="4" class="node"/>
         <rect x="548" y="580" width="24" height="12" rx="2" class="node"/>
         <rect x="548" y="602" width="24" height="12" rx="2" class="node"/>
         <text x="656" y="596" text-anchor="middle" class="t-title-s">規則引擎</text>
         <text x="656" y="615" text-anchor="middle" class="t-sub-s">判斷輔助・不經 AI</text>
-        <rect x="560" y="642" width="180" height="56" rx="4" class="node-plan"/>
-        <rect x="548" y="652" width="24" height="12" rx="2" class="node-plan"/>
-        <rect x="548" y="674" width="24" height="12" rx="2" class="node-plan"/>
-        <text x="656" y="668" text-anchor="middle" class="t-title-plan">對外報表服務</text>
-        <text x="656" y="687" text-anchor="middle" class="t-sub-s">規劃中・迭代 19</text>
+        <rect x="560" y="642" width="180" height="56" rx="4" class="node"/>
+        <rect x="548" y="652" width="24" height="12" rx="2" class="node"/>
+        <rect x="548" y="674" width="24" height="12" rx="2" class="node"/>
+        <text x="656" y="668" text-anchor="middle" class="t-title-s">對外報表服務</text>
+        <text x="656" y="687" text-anchor="middle" class="t-sub-s">只出聚合值・核准後取出</text>
 
         <!-- 模型供應者介面層 -->
         <rect x="910" y="540" width="180" height="90" rx="4" class="node"/>
@@ -627,6 +620,7 @@
         <li><b>外部 LLM 改為院內 AI 伺服器。</b>過渡期的實驗室 API 只送合成資料；AI Proxy 改為 AI 閘道，並加上背景佇列。</li>
         <li><b>PostgreSQL 與即時狀態快取改為一個 SQLite 檔案。</b>檔案放在應用伺服器本機磁碟，即時狀態放在後端行程記憶體。</li>
         <li><b>新增元件。</b>臨床資料匯入、照護業務模組、備份目的地；規則引擎與對外報表服務以虛線標為規劃中。</li>
+        <li><b>1010 迭代 19：對外報表服務完成，從虛線改成實線</b>，副標改成「只出聚合值・核准後取出」；圖上已沒有任何「規劃中」的元件，圖例那一格拿掉。它是後端裡的一個模組，讀同一個 SQLite 檔案（統計走唯讀連線）、自己的報表存在同一個檔案，<b>沒有新增任何連線</b>——取出的檔案由護理站電腦下載，交給誰是人的事，不是系統的一條線。</li>
         <li><b>1010 迭代 18：規則引擎完成，從虛線改成實線</b>，副標改成「判斷輔助・不經 AI」；對外報表服務仍是虛線（迭代 19）。規則引擎是後端裡的一個模組，寫的是同一個 SQLite 檔案、讀歷史資料走唯讀連線，<b>沒有新增任何連線</b>；它不呼叫 AI 閘道，所以與模型那一側之間也沒有線。</li>
         <li><b>1005 迭代 16：照護業務模組的「閒置輪播・三層內容」改成「本次透析面板・跑馬燈」</b>；規則引擎與對外報表服務的迭代編號改成 18、19（1005 重排）。沒有新增任何元件或連線。</li>
         <li><b>1005 迭代 15：「臨床資料匯入」改稱院方資料同步</b>，院方透析清單 API 成為病人、床位與療程的日常來源；圖版一的 Session Token 標籤補上平板的 SSE 通知，圖版二的 HIS／EMR 與它的連線改標「透析清單」「每 3 分鐘唯讀抓取」、平板的連線補上 SSE。<b>只改標籤，分區與連線一條未動</b>；開發與模擬部署用的模擬院方 API 不在圖上（正式環境不得啟動）。迭代 17 的跑馬燈草稿走既有的 AI 閘道，圖上不必改。</li>

@@ -360,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    1014 — 規則引擎與護理紀錄完成，四條規則的門檻請醫師確認（迭代 17.8～18.1）
+    1014 — 規則引擎、護理紀錄、管理儀表板完成，四條規則的門檻請醫師確認（迭代 17.8～19）
   
 
     
@@ -1450,6 +1450,17 @@
     <span class="md-ellipsis">
       
         3.6 判斷輔助的輸出（1010，迭代 18，只有專業版）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-成效獎勵與對外報表1010迭代-19只有專業版" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 成效、獎勵與對外報表（1010，迭代 19，只有專業版）
       
     </span>
   </a>
@@ -3319,6 +3330,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 19 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4371,6 +4410,17 @@
     <span class="md-ellipsis">
       
         3.6 判斷輔助的輸出（1010，迭代 18，只有專業版）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-成效獎勵與對外報表1010迭代-19只有專業版" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 成效、獎勵與對外報表（1010，迭代 19，只有專業版）
       
     </span>
   </a>
@@ -5563,6 +5613,66 @@
 </tr>
 </tbody>
 </table>
+<h3 id="37-成效獎勵與對外報表1010迭代-19只有專業版">3.7 成效、獎勵與對外報表（1010，迭代 19，只有專業版）<a class="headerlink" href="#37-成效獎勵與對外報表1010迭代-19只有專業版" title="Permanent link">&para;</a></h3>
+<p>管理儀表板（成效、各班工作量、簡報模式）、獎勵制度、對外報表（實作規格書 4.17）。這是系統第一次把<strong>跟人有關的數字</strong>放上畫面，規則照資料分級走（《資料庫使用規範》11.1）：</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>三頁都不上主列</strong>：「成效與工作量」在選單；「獎勵制度」「對外報表」預設關閉</td>
+<td>主列 1010 起已滿 7 項（3.3）；指標定義與核准角色還沒確認的功能不提供（N-6）</td>
+</tr>
+<tr>
+<td><strong>成效只有全單位的合計</strong>，每一列寫「這段期間、樣本數、上線前的基準、差多少」；<strong>差多少只在有基準、量的是同一件事、樣本夠時才寫</strong>，其他照實寫原因</td>
+<td>驗收第 8 條：每一個「改善了多少」都指得出基準。空著或寫「—」會被讀成「沒變」</td>
+</tr>
+<tr>
+<td>改善、變差用小標（完成色「改善」、注意色「變差」）＋字，<strong>不用紅色</strong></td>
+<td>變差不是警報；紅色是求助的</td>
+</tr>
+<tr>
+<td><strong>各班工作量依透析班別合計，看不到任何一位護理師</strong>；鐘點分布的橫條用一般色（<code>--accent</code>），不用語意色</td>
+<td>多不是壞事；FDE 評估 5.3「不拿回應速度派工」</td>
+</tr>
+<tr>
+<td><strong>簡報模式一頁</strong>：對照基準、其他數字、<strong>還沒做到的</strong>放在同一頁，有「列印」；列印時導覽列、分頁鈕、期間欄位都不印</td>
+<td>驗收第 9 條：不只呈現好的數字</td>
+</tr>
+<tr>
+<td><strong>「我的計分」只看得到自己</strong>；每一筆原始事件都列出、不寫病人；「這一筆不該算」「少算了一筆」是展開一列輸入框，<strong>不跳確認</strong></td>
+<td>FR-M10；更正申請是日常動作（N-5）</td>
+</tr>
+<tr>
+<td><strong>沒有排名、沒有總分</strong>：單位中位數只在有這件事的護理師至少五位時才給；「個人層級」的表依工作 ID 排</td>
+<td>《資料庫使用規範》11.3；FDE 評估 5.4「不做公開排名」</td>
+</tr>
+<tr>
+<td><strong>「個人層級」分頁與排班頁的「找候補」只在個人層級總開關開著時出現</strong>；查之前先選用途（「其他」要寫一句），不選按不下去</td>
+<td>N-6；每一次查看都寫進稽核，用途是 11.2 要的</td>
+</tr>
+<tr>
+<td>停用計分規則、結算期間用 <code>ConfirmButton</code>；公告、核准、退回要先寫依據或說明才按得下去</td>
+<td>N-5：結算後不能改、停用影響之後的結算；依據本身就是阻力</td>
+</tr>
+<tr>
+<td><strong>對外報表的「核准」產生的人自己看不到</strong>；取出是下載一個 CSV，只有已核准的才有那顆鈕</td>
+<td>FR-X03；後端一併擋</td>
+</tr>
+<tr>
+<td>稽核軌跡<strong>先選查詢用途</strong>才列出紀錄，用途記到登出為止（<code>sessionStorage</code>）</td>
+<td>稽核原始列每一次查詢都留痕（L4）；換頁不必每次重選</td>
+</tr>
+<tr>
+<td>對外展示環境：每一頁左下角固定一小塊「展示環境：…都是虛構的合成資料」（<code>.showcase-badge</code>，不吃點擊），不是橫幅</td>
+<td>FR-X05；外部的人截圖帶走時看得出不是真的醫院。簡易版版面算好不捲動，多一條橫幅就擠出捲軸</td>
+</tr>
+</tbody>
+</table>
 <h2 id="4-共用的設計系統">4. 共用的設計系統<a class="headerlink" href="#4-共用的設計系統" title="Permanent link">&para;</a></h2>
 <p>兩端各有各的版面，但底層的語彙要一致——同一個顏色在兩邊代表同一件事，否則維護的人會混亂。</p>
 <h3 id="41-顏色">4.1 顏色<a class="headerlink" href="#41-顏色" title="Permanent link">&para;</a></h3>
@@ -6101,6 +6211,9 @@
 </li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 18）判斷輔助只在專業版</strong>：四項開關全關時即時總覽與病人趨勢都沒有那一塊；每一則旁邊都有「僅供參考，非診斷結果。」；沒有紅色；已檢視・採納／未採納不跳確認；系統管理的書面確認閘門只有系統管理者看得到「登記書面確認」，要填文號與理由才按得下去（18.1）</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 19）成效、獎勵、對外報表只在專業版</strong>：成效的「差多少」只在有基準時寫，其他寫原因；沒有排名與總分；「個人層級」與「找候補」只在總開關開著時出現、先選用途；稽核軌跡先選用途；對外報表的產生者看不到核准鈕；簡報模式列印時只印那一頁</p>
 </li>
 </ul>
 <h3 id="63-兩端共通">6.3 兩端共通<a class="headerlink" href="#63-兩端共通" title="Permanent link">&para;</a></h3>

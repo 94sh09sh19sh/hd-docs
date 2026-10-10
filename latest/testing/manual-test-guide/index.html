@@ -360,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    1014 — 規則引擎與護理紀錄完成，四條規則的門檻請醫師確認（迭代 17.8～18.1）
+    1014 — 規則引擎、護理紀錄、管理儀表板完成，四條規則的門檻請醫師確認（迭代 17.8～19）
   
 
     
@@ -3472,6 +3472,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 19 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4931,7 +4959,7 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 18.1 · 158 條 API 路由 · 121 種稽核動作。
+對應版本：迭代 19 · 181 條 API 路由 · 141 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
 <strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-18-分冊">§13 分冊索引</a>。</p>
 </blockquote>
@@ -5862,7 +5890,7 @@ taskkill<span class="w"> </span>//PID<span class="w"> </span><span class="m">332
 <p>改了後端程式碼時，<code>npm run dev</code> 用的是 <code>nest start --watch</code>，會<strong>自動重新編譯並重新啟動</strong>，不必手動關。此時護理端的即時總覽會短暫顯示「串流中斷，改為定時更新」，後端起來後自動變回「即時連線中」。</p>
 </blockquote>
 <h2 id="09--api-附錄">09 · API 附錄<a class="headerlink" href="#09--api-附錄" title="Permanent link">&para;</a></h2>
-<p>後端啟動時會印出完整路由清單，目前共 <strong>137 條</strong>，下表逐條列出（迭代 16 拿掉的兩條、迭代 17.1 拿掉的一條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
+<p>後端啟動時會印出完整路由清單，目前共 <strong>181 條</strong>，下表逐條列出（迭代 16 拿掉的兩條、迭代 17.1 拿掉的一條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
 <h3 id="怎麼帶憑證">怎麼帶憑證<a class="headerlink" href="#怎麼帶憑證" title="Permanent link">&para;</a></h3>
 <p>護理端用 <strong>JWT</strong>；病人端平板用<strong>三個標頭</strong>（序號＋金鑰，寫入資料時再加 Session Token）。</p>
 <p><em>取得護理端權杖並呼叫（bash）</em></p>
@@ -6702,11 +6730,126 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>patient:monitor</td>
 <td>（迭代 18）立即比對一位病人；真實病人在書面確認閘門沒開時回 403 並寫稽核</td>
 </tr>
+<tr>
+<td><code>GET /api/showcase</code></td>
+<td>公開</td>
+<td>（迭代 19）是不是對外展示環境（只回是或否），護理端依它畫左下角的標記</td>
+</tr>
+<tr>
+<td><code>GET /api/performance/effectiveness?from=&amp;to=</code></td>
+<td>performance:l1-read（L1）</td>
+<td>（迭代 19）成效儀表板：九個指標、對照成效基準（差多少只在有基準、量的是同一件事、樣本至少 5 時才算）、每日快照、量不到的基準。醫院管理層也看得到</td>
+</tr>
+<tr>
+<td><code>GET /api/performance/brief?from=&amp;to=</code></td>
+<td>performance:l1-read（L1）</td>
+<td>（迭代 19）簡報模式：對照基準的、其他數字、未達成事項</td>
+</tr>
+<tr>
+<td><code>GET /api/performance/workload?from=&amp;to=</code></td>
+<td>performance:l2-read（L2）</td>
+<td>（迭代 19）各班工作量：依透析班別，沒有任何一位護理師</td>
+</tr>
+<tr>
+<td><code>POST /api/performance/snapshots</code></td>
+<td>system:configure</td>
+<td>（迭代 19）手動補記每日指標快照（平常排程每小時看一次）</td>
+</tr>
+<tr>
+<td><code>GET /api/rewards</code></td>
+<td>reward:self</td>
+<td>（迭代 19）計分規則（含已停用）、計分期間、兩個績效開關的狀態</td>
+</tr>
+<tr>
+<td><code>POST /api/rewards/rules</code></td>
+<td>reward:manage</td>
+<td>（迭代 19）建立計分規則（草稿）；以舊版為底時沿用代號、版本加一</td>
+</tr>
+<tr>
+<td><code>POST /api/rewards/rules/:id/publish</code></td>
+<td>reward:manage</td>
+<td>（迭代 19）公告草稿（要理由）；同代號原本公告中的那一版停用；已公告的回 409</td>
+</tr>
+<tr>
+<td><code>POST /api/rewards/rules/:id/retire</code></td>
+<td>reward:manage</td>
+<td>（迭代 19）停用（要理由）</td>
+</tr>
+<tr>
+<td><code>POST /api/rewards/periods</code></td>
+<td>reward:manage</td>
+<td>（迭代 19）開始觀察期或計分期；計分期要「獎勵計分」開著；與進行中的期間重疊回 409</td>
+</tr>
+<tr>
+<td><code>POST /api/rewards/periods/:id/close</code></td>
+<td>reward:manage</td>
+<td>（迭代 19）結算；過了訖日才能結算；計分期而且「獎勵計分」開著才寫計分</td>
+</tr>
+<tr>
+<td><code>GET /api/rewards/me?periodId=</code></td>
+<td>reward:self（L3 限本人）</td>
+<td>（迭代 19）自己的計分、每一筆原始事件（不含病人）、更正申請；每次查看寫稽核</td>
+</tr>
+<tr>
+<td><code>POST /api/rewards/disputes</code></td>
+<td>reward:self</td>
+<td>（迭代 19）更正申請：這一筆不該算（只能指自己的事件）、少算了一筆</td>
+</tr>
+<tr>
+<td><code>GET /api/rewards/disputes</code></td>
+<td>reward:manage</td>
+<td>（迭代 19）全部更正申請</td>
+</tr>
+<tr>
+<td><code>POST /api/rewards/disputes/:id/decide</code></td>
+<td>reward:manage</td>
+<td>（迭代 19）接受或不接受；不能處理自己的；已結算的計分期替那位護理師重算</td>
+</tr>
+<tr>
+<td><code>GET /api/rewards/individual?periodId=&amp;purpose=&amp;purposeNote=</code></td>
+<td>performance:l3-read（L3）</td>
+<td>（迭代 19）個人層級計分；個人層級總開關關著 403 並寫稽核，沒宣告用途 400；沒有總分與排名</td>
+</tr>
+<tr>
+<td><code>GET /api/staffing/skills</code></td>
+<td>shift:manage</td>
+<td>（迭代 19）每位可排班護理師的技能標記；跟著「班表」的版位</td>
+</tr>
+<tr>
+<td><code>PUT /api/staffing/skills/:nurseId</code></td>
+<td>shift:manage</td>
+<td>（迭代 19）整組換掉一位護理師的技能標記</td>
+</tr>
+<tr>
+<td><code>GET /api/staffing/change-requests/:id/candidates?purpose=</code></td>
+<td>shift:manage＋performance:l3-read（L3）</td>
+<td>（迭代 19）臨時調動候補：違反勞動條件的另列；同 L3 的總開關與用途</td>
+</tr>
+<tr>
+<td><code>GET /api/external-reports</code></td>
+<td>external-report:generate 或 approve</td>
+<td>（迭代 19）對外報表清單；跟著「對外報表」的版位</td>
+</tr>
+<tr>
+<td><code>POST /api/external-reports</code></td>
+<td>external-report:generate</td>
+<td>（迭代 19）產生（待核准）：只有聚合值、樣本少於 5 的分組不存、訖日最晚昨天、含禁止欄位整份不產生</td>
+</tr>
+<tr>
+<td><code>POST /api/external-reports/:id/decide</code></td>
+<td>external-report:approve</td>
+<td>（迭代 19）核准或退回；產生者自己回 403</td>
+</tr>
+<tr>
+<td><code>GET /api/external-reports/:id/export</code></td>
+<td>external-report:generate 或 approve</td>
+<td>（迭代 19）取出 CSV；未核准回 409 並寫稽核</td>
+</tr>
 </tbody>
 </table>
 <blockquote>
-<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-18/">迭代 18</a> 各分冊（索引見 §13）。
-本表逐條對齊後端啟動時印出的路由清單（目前 158 條；1010 迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-19/">迭代 19</a> 各分冊（索引見 §13）。
+本表逐條對齊後端啟動時印出的路由清單（目前 181 條；1010 迭代 19 加 23 條、照清單重數過，與表一致；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>h1</code> <strong>［終端機］</strong> 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
@@ -7042,10 +7185,15 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <td>系統管理者在「判斷規則」<strong>填文號與理由登記、填理由取消登記</strong>，護理長只看得到；每一次都寫稽核；設定檔不再有這一項；四條沒有出處的規則換成<strong>依文獻選的建議值</strong>（仍只對合成資料執行），既有資料庫啟動時補一個草稿版本</td>
 <td><code>ab27</code>–<code>ab40</code></td>
 </tr>
+<tr>
+<td><a href="../iteration-19/">迭代 19 — 管理儀表板、獎勵制度與對外揭露</a></td>
+<td><strong>成效與工作量</strong>：全單位成效對照上線前的基準（沒有基準就寫原因）、各班工作量、一頁式簡報模式含未達成事項，<strong>醫院管理層只看得到這一頁</strong>；<strong>獎勵制度</strong>：計分規則公告後不可改、觀察期只計算不計分、本人看自己的計分與每一筆原始事件並提出更正、個人層級要總開關與宣告用途、<strong>沒有總分與排名</strong>；臨時調動候補；稽核軌跡先選用途；<strong>對外報表</strong>樣本少於 5 不呈現、要另一人核准才取得出來；<strong><code>npm run showcase</code> 對外展示環境</strong></td>
+<td><code>ac1</code>–<code>ac35</code></td>
+</tr>
 </tbody>
 </table>
 <p>走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。</p>
-<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（三十本分冊的「前置」都建立在這些上面）：</p>
+<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（三十一本分冊的「前置」都建立在這些上面）：</p>
 <table>
 <thead>
 <tr>
