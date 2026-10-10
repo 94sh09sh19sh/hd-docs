@@ -1395,6 +1395,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#28-麻將連連看1011迭代-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 麻將連連看（1011，迭代 22）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1505,6 +1516,17 @@
     <span class="md-ellipsis">
       
         3.9 送花在護理端（1010，迭代 21）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-病人詳細資訊1011迭代-22只有專業版" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 病人詳細資訊（1011，迭代 22，只有專業版）
       
     </span>
   </a>
@@ -3486,6 +3508,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 22 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4483,6 +4533,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#28-麻將連連看1011迭代-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 麻將連連看（1011，迭代 22）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4593,6 +4654,17 @@
     <span class="md-ellipsis">
       
         3.9 送花在護理端（1010，迭代 21）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-病人詳細資訊1011迭代-22只有專業版" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 病人詳細資訊（1011，迭代 22，只有專業版）
       
     </span>
   </a>
@@ -5403,6 +5475,51 @@
 <li>遊戲畫面一樣包在 <code>TaskFrame</code> 裡（頂列多一個可以放按鈕或一行字的位置 <code>tools</code>）；求助區照常在下面</li>
 <li>遊戲玩到一半任務時點到了：等這一步走完（送花、種到大家的花園等連線的那一下）就讓任務全螢幕出現，<strong>做完</strong>任務問一次「回到剛剛的遊戲？」（FR-P15 補）</li>
 </ul>
+<h3 id="28-麻將連連看1011迭代-22">2.8 麻將連連看（1011，迭代 22）<a class="headerlink" href="#28-麻將連連看1011迭代-22" title="Permanent link">&para;</a></h3>
+<p>狀態評估資料最乾淨的一款（實作規格書 4.22；遊戲化分析 7.2）。開關：麻將連連看；今日牌局的完成人數另要「病人之間的互動」。<strong>關著時每一個畫面與迭代 17.7 一模一樣</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>畫面</th>
+<th>長什麼樣子</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>遊戲選單</td>
+<td>多一顆「麻將連連看」（<code>grid-2x2</code>）</td>
+<td>只在開關開著時出現</td>
+</tr>
+<tr>
+<td>開哪一桌（<code>MahjongGame</code>）</td>
+<td>標題、一句「點兩張一樣的牌，就會消掉」、下緣兩顆大按鈕「開一桌」（<code>grid-2x2</code>）「今日牌局」（<code>calendar-check</code>）</td>
+<td>今天這一班的那一桌做過了、或手上還有沒消完的一桌，「今日牌局」不出現；有沒消完的一桌時點進來直接是那一桌</td>
+</tr>
+<tr>
+<td>牌桌</td>
+<td>一格一張、<strong>只鋪一層</strong>；頂列右邊「提示」（<code>scan-search</code>＋字）靠在回首頁旁邊</td>
+<td>每張至少 80×104px（<code>--tile-min-w</code>／<code>--tile-min-h</code>），放得下多大就多大（最大 <code>--tile-max-w</code>），比例固定；一桌最多 4×8，兩種方向都不捲動（直放 4×8 剛好 80px 一張）；牌的底是象牙白 <code>--c-tile-face</code>、框是 <code>--c-line</code></td>
+</tr>
+<tr>
+<td>選起來、提示</td>
+<td>選起來：外框加粗成 8px 一般色實線；提示：4px 一般色<strong>虛線</strong>外框</td>
+<td>形狀不同，不只靠顏色（P-4）；點錯只把第一張取消選取，<strong>沒有任何「錯」的顯示、不晃動</strong></td>
+</tr>
+<tr>
+<td>完成</td>
+<td>完成記號「完成了」（與迭代 20 的完成記號同一個樣子）；今日牌局另有一句「今天這一班有 N 個人完成了今日牌局」；下緣「開一桌」「今日牌局」</td>
+<td><strong>不顯示花了多久、第幾桌、第幾級</strong>；人數句照最低人數門檻，湊不到就不顯示</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>沒有計時、沒有級數、沒有分數</strong>：難度悄悄調，畫面上不出現任何「升級」「第幾級」；找一對的時間只記在操作紀錄，病人端從不顯示</li>
+<li><strong>沒有紅色</strong>：牌面圖檔的紅色（「萬」字、紅中、筒子與條子上的紅點）一律改深棕 <code>#5a3c14</code>（4.1）；牌面是畫的一部分，不是介面語意色</li>
+<li>牌面只用 <code>&lt;img&gt;</code> 畫（<code>assets/mahjong-tiles/</code>，CC0、清過的 SVG），<strong>不要自己貼 SVG、不要用 innerHTML</strong>；換牌面重跑 <code>scripts/mahjong-tiles.mjs</code></li>
+<li><strong>唯一的動畫</strong>：消掉的那一對 0.3 秒淡出、有連線規則時畫一條線停留 0.3 秒，只在點擊之後、只做一次（4.4 的遊戲例外）</li>
+<li>卡住時自動重排，頂列寫一句「牌重新排過了，可以接著找」——不是錯誤，也不是提醒</li>
+</ul>
 <hr />
 <h2 id="3-族群二透析室護理師護理端">3. 族群二：透析室護理師（護理端）<a class="headerlink" href="#3-族群二透析室護理師護理端" title="Permanent link">&para;</a></h2>
 <h3 id="31-這群人的事實">3.1 這群人的事實<a class="headerlink" href="#31-這群人的事實" title="Permanent link">&para;</a></h3>
@@ -5988,6 +6105,38 @@
 </tr>
 </tbody>
 </table>
+<h3 id="310-病人詳細資訊1011迭代-22只有專業版">3.10 病人詳細資訊（1011，迭代 22，只有專業版）<a class="headerlink" href="#310-病人詳細資訊1011迭代-22只有專業版" title="Permanent link">&para;</a></h3>
+<p>選單多一頁「病人詳細資訊」（<code>PatientDetailPage</code>）：<strong>透析小花園、麻將連連看、狀態評估彙整至少一個開著才存在</strong>——都關著時連結、路由、系統管理的版位清單都沒有（N-6）。主列滿 7 項，不上主列。</p>
+<table>
+<thead>
+<tr>
+<th>區塊</th>
+<th>長什麼樣子</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>病人詳細資訊</td>
+<td>卡片右上是病人選單；選了之後姓名、病歷號、今天的班別與床號</td>
+<td><strong>不預先帶第一位</strong>：選了才調閱，每一次調閱寫稽核；沒選時寫「選一位病人。每一次調閱都會記在稽核軌跡」</td>
+</tr>
+<tr>
+<td>最近幾次有沒有玩</td>
+<td>最近 10 次療程：日期、班別、透析小花園「有／沒有」、麻將連連看「開了幾桌、完成幾桌」</td>
+<td>只有做了沒有，<strong>沒有成績、沒有排名</strong>；欄位跟著開關</td>
+</tr>
+<tr>
+<td>狀態評估彙整（遊戲資料）</td>
+<td>每一項指標一個小標題、底下一句陳述（<code>.statement</code>）；最下面一行「由固定算式算出・計算時間・完成幾桌」與固定一句免責（<code>.disclaimer</code>）</td>
+<td>「狀態評估彙整」開關開著才出現；<strong>不用紅色、不用 <code>.statement-alert</code></strong>；差距達設定幅度只在句尾多一行灰字</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>整頁唯讀</strong>：沒有任何會改資料的按鈕。社工、醫師（3.1 的兩個新角色）登入只看得到這一頁，不進簡易版</li>
+<li>送花那一格（3.9）<strong>留在病人趨勢</strong>：回「謝謝你的花」是寫入，社工、醫師不能做</li>
+</ul>
 <h2 id="4-共用的設計系統">4. 共用的設計系統<a class="headerlink" href="#4-共用的設計系統" title="Permanent link">&para;</a></h2>
 <p>兩端各有各的版面，但底層的語彙要一致——同一個顏色在兩邊代表同一件事，否則維護的人會混亂。</p>
 <h3 id="41-顏色">4.1 顏色<a class="headerlink" href="#41-顏色" title="Permanent link">&para;</a></h3>
@@ -6032,6 +6181,7 @@
 <p><strong>折線圖的線不是語意色</strong>（1005，迭代 16）：「本次透析」面板的線一律用 <code>--c-chart-line</code>（深靛藍），參考線用框線灰 <code>--c-line</code>。
 四種語意色都各有意思，拿來畫量測值就等於替數值下評語（2.5）。<code>check:ui:design</code> 會擋：圖的顏色與任何一種語意色相同、偏紅，
 或面板、圖、跑馬燈的樣式與元件引用了語意色。
+<strong>麻將牌面的紅色改深棕</strong>（1011，迭代 22；遊戲化決定第 2 節第 2 題）：現成牌面的「萬」字、紅中與筒子條子上的紅點，一律改成深棕 <code>#5a3c14</code>（色相約 34°，不算偏紅；刻意不與注意色 <code>--c-attention</code> 同一色，牌不是「待處理」）。牌靠字與花樣分辨，本來就不靠顏色。牌的底色象牙白 <code>--c-tile-face</code> 只是牌的顏色，不是語意色。
 0919～0929 病人端是深色底，改版的理由與色碼對照見《<a href="../iteration-14-5-fixes/">迭代 14.5 修正紀錄</a>》2.1。</p>
 <h3 id="42-字級">4.2 字級<a class="headerlink" href="#42-字級" title="Permanent link">&para;</a></h3>
 <table>
@@ -6117,7 +6267,8 @@
   但快照裡找不到的一律留著——寧可多留一則，也不能漏掉一則。<strong>不要改成限制高度加捲軸</strong>：黏在上緣的小框裡再捲一次，藏起來的等於看不到。
   這是「專業版不動」（FR-N14）的第二個例外，出自使用者 0929 的回報：大量求助湧入時，一則一條、沒有上限的橫幅疊得比畫面還高，
   每一頁都被蓋住。<strong>真的需要它的時候，它反而讓整個畫面不能用。</strong>
-- <strong>遊戲也沒有動畫</strong>（1010 迭代 21）：遊戲化決定第 6 節原本預備把「點擊後 0.3 秒的動畫」寫成不算「自己動」的例外；透析小花園用不到，點下去畫面直接換，這條例外<strong>沒有開</strong>。麻將連連看（迭代 22）若需要，到時候再在這裡補</p>
+- <strong>遊戲也沒有動畫</strong>（1010 迭代 21）：遊戲化決定第 6 節原本預備把「點擊後 0.3 秒的動畫」寫成不算「自己動」的例外；透析小花園用不到，點下去畫面直接換，這條例外<strong>沒有開</strong>。麻將連連看（迭代 22）若需要，到時候再在這裡補
+- <strong>遊戲的點擊後動畫</strong>（1011 迭代 22，<strong>例外開了</strong>）：麻將連連看消掉的那一對 0.3 秒淡出、有連線規則時畫一條線停留 0.3 秒（遊戲化分析 7.2）。<strong>它不算「自己動」</strong>：只在病人點了之後、只做一次、0.3 秒就停。界線：只用 <code>transition</code>（不用 <code>@keyframes</code>），只用在麻將那一段樣式；<strong>開了「減少動態效果」時元件不畫淡出也不畫線，全域規則也把 <code>transition</code> 拿掉</strong>。其他畫面不要拿這條例外加動畫</p>
 <h3 id="45-暗色與夜間">4.5 暗色與夜間<a class="headerlink" href="#45-暗色與夜間" title="Permanent link">&para;</a></h3>
 <ul>
 <li>病人端已有夜間模式（晚班調暗），<strong>調暗不得改變版面與字級</strong>，只改亮度</li>
@@ -6201,7 +6352,8 @@
 <strong>1010 迭代 20 補</strong>：<code>book-heart</code> 我的衛教小本子、<code>users</code> 病友小撇步（我也是這樣做的；護理端核准清單的病友小撇步也用它）；
 兩端共用的貼圖 <code>heart</code> 送你一顆愛心、<code>thumbs-up</code> 給你按個讚、<code>sun</code> 祝你今天好心情、<code>hand-heart</code> 我們都在這裡，<code>message-square-heart</code> 護理師回你的一句話（預設回覆）；
 護理端另有 <code>scroll-text</code> 跑馬燈的「你知道嗎」。
-<strong>1010 迭代 21 補</strong>（病人端）：<code>gamepad-2</code> 遊戲（基本資訊區的遊戲圖示與遊戲選單）、<code>sprout</code> 透析小花園、<code>droplet</code> 澆水（<code>droplets</code> 已經是護理端的「生理食鹽水回填」，所以用單一顆的）、<code>book-image</code> 台灣花卉圖鑑、<code>trees</code> 大家的花園、<code>gift</code> 送花給護理站、<code>history</code> 以前的花園；護理端 <code>flower-2</code> 病人送給護理站的花。
+<strong>1011 迭代 22 補</strong>（病人端）：<code>grid-2x2</code> 麻將連連看（遊戲選單、開一桌）、<code>scan-search</code> 麻將的提示（框出一對可以消的牌）、<code>calendar-check</code> 今日牌局。<code>lightbulb</code> 已經是「說明（點開看更多）」、<code>layout-grid</code> 已經是護理端的「全部床位」，所以不用它們。</p>
+<p><strong>1010 迭代 21 補</strong>（病人端）：<code>gamepad-2</code> 遊戲（基本資訊區的遊戲圖示與遊戲選單）、<code>sprout</code> 透析小花園、<code>droplet</code> 澆水（<code>droplets</code> 已經是護理端的「生理食鹽水回填」，所以用單一顆的）、<code>book-image</code> 台灣花卉圖鑑、<code>trees</code> 大家的花園、<code>gift</code> 送花給護理站、<code>history</code> 以前的花園；護理端 <code>flower-2</code> 病人送給護理站的花。
 同日修好圖示產生器的一個舊問題：屬性名稱帶數字的（<code>&lt;line&gt;</code> 的 <code>x1</code>、<code>y2</code>）原本被漏掉，<code>line</code> 畫不出來；護理端的 <code>badge-alert</code>、<code>user-plus</code>、<code>unlink</code> 因此補回原本少掉的幾筆線。</p>
 <p><strong>求助類別的圖示要畫出症狀本身（1010，迭代 17.8）</strong>。院方反映緊急回報的圖示與文字不太相符（閃電代表抽筋、波浪代表想吐、大腦代表頭痛），希望即使不看文字也能知道是什麼症狀。Lucide 沒有畫症狀的圖示，所以這十三個<strong>由本專案自己畫</strong>（<code>scripts/icons-custom/</code>，照 Lucide 的規格：24×24、線寬 2、圓角、不填色），登記表第四欄寫 <code>custom</code>；<strong>仍然配字</strong>，字是正式的意思，圖是幫忙認。原本的 <code>rotate-3d</code>、<code>zap</code>、<code>waves</code>、<code>heart-pulse</code>、<code>brain</code>、<code>hand</code>、<code>thermometer</code>、<code>droplet</code>、<code>person-standing</code>、<code>glass-water</code> 拿掉，<code>monitor-dot</code>、<code>syringe</code>、<code>thermometer-sun</code> 病人端不再用（護理端的處理方式照用）。</p>
 <table>
@@ -6507,6 +6659,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0930）病人端是白底</strong>，沒有另做深色區塊；按下去看得出按到</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（0926）任務畫面一題一頁</strong>，閒置逾時自動回首頁；按回首頁後任務變成基本資訊區的圖示</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 20）三個遊戲化開關全關時每一個畫面與迭代 17.7 一樣</strong>；開著時：完成記號沒有動畫、那一句與答案無關、測驗結果沒有勾叉與分數、小本子只有已經懂的主題、小撇步沒有輸入框、回覆不寫護理師是誰；首頁不多任何入口</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1011 迭代 22）麻將連連看</strong>：每張至少 80×104px、只鋪一層、4×8 兩種方向都不捲動；沒有計時、級數、分數、花了多久；牌面沒有紅色；點錯沒有任何「錯」的顯示；唯一的動畫是點擊後 0.3 秒，減少動態效果時不做</li>
 </ul>
 <h3 id="62-護理端">6.2 護理端<a class="headerlink" href="#62-護理端" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -6541,6 +6694,7 @@
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 20）遊戲化在護理端的三處都掛在開關後面</strong>；回覆那一欄沒有提醒色、紅點、未讀數，主列與簡易版都不碰；核准清單的病友小撇步只有選過幾次，沒有是誰</p>
 </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1011 迭代 22）病人詳細資訊</strong>只在相關開關開著時存在、不預先帶病人、整頁唯讀；狀態評估彙整不用紅色與警示樣式；社工、醫師只看得到這一頁</li>
 </ul>
 <h3 id="63-兩端共通">6.3 兩端共通<a class="headerlink" href="#63-兩端共通" title="Permanent link">&para;</a></h3>
 <ul class="task-list">

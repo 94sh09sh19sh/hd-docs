@@ -18,7 +18,7 @@
 | §4.8 | 切換供應者與真實病人資料閘門     | 4.2 驗收 3、4      |
 | §4.9 | 自動化驗收                       | —                  |
 
-**前置**（帳號怎麼生出來見主手冊 [§13](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/#13--%E8%BF%AD%E4%BB%A3-3-21-%E5%88%86%E5%86%8A)）：
+**前置**（帳號怎麼生出來見主手冊 [§13](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/#13--%E8%BF%AD%E4%BB%A3-3-22-%E5%88%86%E5%86%8A)）：
 
 - 已執行 `npm run db:seed`（會建立 4 份虛構 SOP 文件）。沒跑過的話 §4.6 的 SOP 查詢會查不到任何段落。
 - 以**最高權限帳號**到「系統管理 → 功能開關」開啟「AI 輔助功能總開關」並填核准依據（步驟見《[迭代 3 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-3/index.md)》`l18`）。這個開關**只有 SUPER_ADMIN 切得動**，護理長與管理者都會看到「僅限系統管理者」。**測完記得關回去。**

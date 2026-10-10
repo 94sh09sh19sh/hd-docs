@@ -3563,6 +3563,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 22 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5214,7 +5242,8 @@
 <li>狀態評估、彙總、統計要用的資料（每一步的操作、完成了沒、開了什麼花、送了什麼花）<strong>一律另存正規欄位</strong>，不從快照裡取</li>
 <li><strong>例外只此一處。</strong> 其他資料想比照辦理，要由使用者決定後改寫本段，不得自行類推</li>
 </ol>
-<p><strong>1010 迭代 21 實作</strong>：<code>game_saves.snapshot</code>（<code>TEXT</code>），每位病人每款遊戲一列、帶 <code>format_version</code>；寫入前與讀出後都以 <code>@hd/shared</code> 的 <code>validateGardenSnapshot</code>（白名單欄位）驗、上限 16 KB，驗不過整筆擋下（後端回 422）、不猜不覆寫；舊版升級寫在 <code>upgradeGardenSnapshot</code>。每一步、圖鑑、送花、共同花園的格子都是正規的表（<code>game_events</code>、<code>garden_collection</code>、<code>flower_gifts</code>、<code>shared_garden_plots</code>）。程式裡沒有任何查 JSON 內容的函式（<code>verify:iteration21</code> 第 5 步搜一次）。逐欄說明見《<a href="../../reference/data-dictionary/">資料字典</a>》第二十四節。</p>
+<p><strong>1010 迭代 21 實作</strong>：<code>game_saves.snapshot</code>（<code>TEXT</code>），每位病人每款遊戲一列、帶 <code>format_version</code>；寫入前與讀出後都以 <code>@hd/shared</code> 的 <code>validateGardenSnapshot</code>（白名單欄位）驗、上限 16 KB，驗不過整筆擋下（後端回 422）、不猜不覆寫；舊版升級寫在 <code>upgradeGardenSnapshot</code>。每一步、圖鑑、送花、共同花園的格子都是正規的表（<code>game_events</code>、<code>garden_collection</code>、<code>flower_gifts</code>、<code>shared_garden_plots</code>）。程式裡沒有任何查 JSON 內容的函式（<code>verify:iteration21</code> 第 5 步搜一次）。逐欄說明見《<a href="../../reference/data-dictionary/">資料字典</a>》第二十四節。
+<strong>1011 迭代 22</strong>：麻將連連看的存檔是同一張表的第二款（<code>game_code = MAHJONG</code>，<code>validateMahjongSnapshot</code> 驗、同樣上限 16 KB）；快照只存牌碼不存圖。狀態評估要用的每一步（第幾桌、找到一對的時間、提示、點錯、點的位置）照第 5 條另存在 <code>game_events</code> 的正規欄位，資料字典第二十五節。</p>
 <h3 id="62-sqlite-特有的型別注意事項">6.2 SQLite 特有的型別注意事項<a class="headerlink" href="#62-sqlite-特有的型別注意事項" title="Permanent link">&para;</a></h3>
 <p>SQLite 只有五種儲存類別（NULL、INTEGER、REAL、TEXT、BLOB），與 PostgreSQL 的差異必須知道：</p>
 <table>
@@ -5981,6 +6010,10 @@
 <tr>
 <td>關開關</td>
 <td>資料表照留、不再寫入（狀態評估彙整例外：關的是顯示，紀錄照寫）；<strong>不因關開關而刪資料</strong>，以前的資料照留存規定處理</td>
+</tr>
+<tr>
+<td>狀態評估陳述（1011 迭代 22）</td>
+<td><strong>讀的時候才算，不寫進任何資料表</strong>（與心情問卷的趨勢偏離同一個做法）；調閱寫稽核（<code>PATIENT_DETAIL_VIEWED</code>、<code>GAME_TREND_VIEWED</code>）。社工、醫師是唯讀角色，只有這一項權限</td>
 </tr>
 </tbody>
 </table>
