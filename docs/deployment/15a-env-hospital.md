@@ -306,6 +306,7 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 - [ ] `LLM_PROVIDER=mock`
 - [ ] `HOSPITAL_API_BASE_URL` 與 `HD_SIMULATION_DEPLOYMENT` **都是空白**（1005 新增）
 - [ ] **沒有** `HIGH_RISK_WRITTEN_CONFIRMATION` 這一行（1010 迭代 18.1 起拿掉；書面確認改在系統管理登記）
+- [ ] **沒有** `SHOWCASE_MODE` 這一行（1010 迭代 19：那是對外展示環境用的，由 `npm run showcase` 在另一台機器上帶起來；正式環境設定下它本來就開不起來，寫了等於多一個看不懂的設定）
 - [ ] 整份沒有任何一個值加了引號
 
 ---

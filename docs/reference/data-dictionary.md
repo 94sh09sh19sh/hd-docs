@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 67 張表、659 個欄位、17 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 77 張表、753 個欄位、18 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -69,6 +69,8 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 十八、院方 API 介接（迭代 15） | `hospital_api_fetch_runs`、`dialysis_vital_records` | 每一次抓院方 API 的結果；有綁定平板的病人在透析中的血壓、脈搏與脫水量 |
 | 十九、「本次透析」面板與跑馬燈（迭代 16） | 沒有新表（讀 `dialysis_vital_records`、`clinical_values`、`carousel_items`） | 病人平板上的兩張圖、五個數字與一條跑馬燈，各從哪裡來 |
 | 二十、跑馬燈內容的 AI 草稿與核准（迭代 17） | 沒有新表（`carousel_items` 加七欄） | 跑馬燈的每一則是誰生成、從哪個主題或事由來、誰核准、什麼時候上架 |
+| 二十一、規則引擎與三項高風險功能（迭代 18） | `rule_definitions`、`rule_versions`、`rule_version_parameters`、`rule_evaluations`、`rule_evaluation_inputs`、`rule_evaluation_reviews`、`rule_gate_changes`（1010 迭代 18.1） | 判斷規則與它的每一版、每一次比對引用了什麼、誰檢視過、書面確認閘門的登記 |
+| 二十二、管理儀表板、獎勵制度與對外揭露（迭代 19） | `metric_definitions`、`metric_snapshots`、`reward_rules`、`reward_periods`、`reward_scores`、`score_disputes`、`nurse_skill_tags`、`external_reports`、`external_report_metrics`、`external_report_items` | 指標怎麼算、每天全單位與各班的值；計分規則、期間、結算的計分與更正；誰有哪些技能；哪些聚合數字經誰核准離開醫院。**沒有總分、沒有排名、沒有同時掛護理師與病人的表** |
 
 ### 每張表都有的三個欄位
 
@@ -1477,6 +1479,170 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `changed_at` | `TS` | 什麼時候 | `DEFAULT now`，有索引（取最新一列用） |
 
 **沒有送進模型的東西**：這一節的全部。規則模組不引用 AI 閘道與模型供應者（`verify:iteration18` 第 1 步逐檔檢查），比對前後 `ai_invocations` 一筆都不多（`verify:iteration18:api` 第 6 步）。
+
+---
+
+## 二十二、管理儀表板、獎勵制度與對外揭露（迭代 19）
+
+**蒐集的意義**：成效儀表板（FR-M06）、各班工作量（FR-M05）、獎勵制度（FR-M08～M11）、臨時調動候補（FR-M03）與對外報表（FR-X01～X04）。
+**算數字用的全部是既有紀錄**（求助、護理紀錄、衛教、症狀問卷的時間戳；FDE 評估 5.1），這一節的表只存三種東西：**定義**（指標、計分規則、技能標記）、**算過一次就不再改的結果**（每日快照、結算的計分、產生的對外報表）、**人的決定**（計分期間、更正申請、核准）。
+規格書列的是七張；對外報表的指標與每一格、護理師的技能標記各一張，不用 JSON 欄位承載（規範 6.1 第 2 條）。遷移 `iteration19_performance_rewards_external`，只做加法。
+級聯刪除只留「對外報表 → 指標、每一格」兩條（主表 → 自己的明細）；其餘一律 `NO ACTION`。
+
+> ⚠️ **這一節是「跟人有關的數字」放的地方，硬性界線三條**（實作規格書 3.10、《資料庫使用規範》11.2）：
+> 1. **沒有總分、沒有排名**欄位——`reward_scores` 一列只有一條規則；要排就在查詢時算（目前畫面上也不排）
+> 2. **沒有任何一張表同時掛護理師與病人**——計分事件只有流程面，歸給做那件事的人，不看病人的臨床結果
+> 3. **不回寫任何臨床資料表**——讀臨床資料走唯讀連線、只取算數字要的欄位（不取姓名、病歷號、床號）
+>
+> 每一次看別人的個人層級數字（L3）、每一次查稽核原始列（L4），寫在 `audit_logs`（`PERFORMANCE_L3_QUERIED`、`AUDIT_LOG_QUERIED`），不另開表。
+
+### `metric_definitions` — 指標定義（9 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `code` | `TEXT` | 指標代號 | 唯一。真本是 `@hd/shared` 的 `METRIC_DEFINITIONS`（九條），啟動時補上沒有的；**已有的不回頭改**，改名只改共用定義 |
+| `label` | `TEXT` | 指標名稱 | 寫入當時的名稱 |
+| `unit` | `TEXT` | 單位 | — |
+| `scale` | `INT` | 小數位數 | 值以「整數＋小數位數」記錄（規範 6.2） |
+| `level` | `TEXT` | 最細到哪一級 | 目前全部是 `L1`；切到透析班別的數字由端點宣告為 L2 |
+| `direction` | `TEXT` | 越低越好、越高越好、沒有方向 | 合法值 `LOWER_IS_BETTER` / `HIGHER_IS_BETTER` / `NEUTRAL`。決定畫面寫「改善」還是「變差」 |
+| `baseline_code` | `TEXT?` | 對照哪一條成效基準 | `baseline_measurements.metric_code`；沒有對應的為空。量的不是同一件事的（衛教次數）照樣填，但共用定義標 `baselineComparable: false`，不相減 |
+| `created_at` | `TS` | 寫入時間 | — |
+
+### `metric_snapshots` — 每日指標快照（8 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `definition_id` | `TEXT` → `metric_definitions` | 哪一個指標 | `ON DELETE NO ACTION`。與 `period_date`、`scope_key` 唯一 |
+| `period_date` | `TS` | 哪一天（台北日期） | 存「當日 00:00 UTC」，與 `treatment_sessions.scheduled_date` 同一套。有索引 |
+| `scope_key` | `TEXT` | 範圍 | `UNIT`（全單位）或 `MORNING` / `AFTERNOON` / `EVENING`（透析班別）。**沒有個人** |
+| `value_scaled` | `INT?` | 值 | 沒有樣本時為空 |
+| `value_scale` | `INT` | 小數位數 | — |
+| `sample_size` | `INT` | 樣本數 | — |
+| `computed_at` | `TS` | 什麼時候算的 | **一天過完才記，記了不改**：啟動時與之後每小時補還沒記的日子（往回最多 60 天），今天不記。之後補登的結案不回頭改已記的那一天；儀表板的期間值是當場算的，不受影響 |
+
+### `reward_rules` — 計分規則（14 欄）
+
+**一經公告即不可修改**：要改就以它為底新增一版（同一個 `rule_code`，`version_no` 加一），公告新版時同代號原本公告中的那一版改 `RETIRED`（同一個交易）。設定內容對全體護理師公開（已公告與已停用的都看得到，FR-M08）。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `rule_code` | `TEXT` | 規則代號（RW-HELP-01…） | 與 `version_no` 唯一 |
+| `version_no` | `INT` | 第幾版 | — |
+| `event_source` | `TEXT` | 算哪一種事 | 合法值（`RewardEventSource`，**只有流程面**）：`HELP_RESOLVED_COMPLETE`（結案且處理方式與結果都有填，歸結案者）、`NURSING_RECORD_SIGNED`（歸簽核者）、`EDUCATION_REVIEWED`（衛教核可或退回，歸審閱者）、`FOLLOW_UP_CLOSED`（追蹤事項完成，歸完成者）。⛔ 不得加回應速度、不得加任何病人的臨床結果 |
+| `title` | `TEXT` | 名稱 | — |
+| `description` | `TEXT` | 說明 | — |
+| `points_per_event` | `INT` | 每件幾點 | 0～100。預設四條都是 1（只表示「這件事算」），權重待護理部確認（Q-20） |
+| `status` | `TEXT` | 草稿、已公告、已停用 | 合法值 `DRAFT` / `PUBLISHED` / `RETIRED`，有索引。第一次啟動寫入的四條是 `DRAFT`；草稿不計分 |
+| `created_by_id` | `TEXT?` → `nurses` | 誰建立的 | `ON DELETE NO ACTION`。預設規則為空 |
+| `created_at` | `TS` | 建立時間 | — |
+| `published_by_id` | `TEXT?` → `nurses` | 誰公告的 | `ON DELETE NO ACTION`。只有護理長（`reward:manage`） |
+| `published_at` | `TS?` | 什麼時候公告 | — |
+| `publish_reason` | `TEXT?` | 公告依據 | 必填才公告得了；同時寫稽核 `REWARD_RULE_PUBLISHED` |
+| `retired_at` | `TS?` | 什麼時候停用 | — |
+
+### `reward_periods` — 計分期間（11 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `label` | `TEXT` | 名稱 | — |
+| `start_date` | `TS` | 起日 | 「當日 00:00 UTC」，含頭含尾 |
+| `end_date` | `TS` | 訖日 | 同上。與進行中的期間重疊的開不起來 |
+| `mode` | `TEXT` | 觀察期或計分期 | `OBSERVATION`（只計算不計分，FR-M09）/ `SCORING`。計分期要「獎勵計分」開著才開得起來 |
+| `status` | `TEXT` | 進行中、已結算 | `OPEN` / `CLOSED`，有索引。**過了訖日才能結算** |
+| `opened_by_id` | `TEXT` → `nurses` | 誰開始的 | `ON DELETE NO ACTION` |
+| `opened_at` | `TS` | — | — |
+| `closed_by_id` | `TEXT?` → `nurses` | 誰結算的 | `ON DELETE NO ACTION` |
+| `closed_at` | `TS?` | — | — |
+| `scored` | `BOOL` | 結算時有沒有產生點數 | `DEFAULT false`。計分期而且結算當下「獎勵計分」開著才是 true；觀察期一律 false。**已結算的觀察期是兩個績效開關的開啟條件** |
+
+### `reward_scores` — 結算出來的計分（7 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `period_id` | `TEXT` → `reward_periods` | 哪一期 | `ON DELETE NO ACTION`。與 `nurse_id`、`reward_rule_id` 唯一 |
+| `nurse_id` | `TEXT` → `nurses` | 哪一位護理師 | `ON DELETE NO ACTION`，有索引 |
+| `reward_rule_id` | `TEXT` → `reward_rules` | 哪一版規則 | `ON DELETE NO ACTION`。結算當下公告中的那一版；之後停用照樣指著它 |
+| `event_count` | `INT` | 算到幾件 | 已接受「這一筆不該算」的事件不算 |
+| `points` | `INT` | 點數 | `event_count × points_per_event`。**沒有總分欄**：一位護理師一期的總點數只在查詢時加 |
+| `computed_at` | `TS` | 什麼時候算的 | 衍生資料：結算後接受了一筆更正，那位護理師那一期的列整批換掉 |
+
+### `score_disputes` — 計分更正申請（12 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `period_id` | `TEXT` → `reward_periods` | 哪一期 | `ON DELETE NO ACTION` |
+| `nurse_id` | `TEXT` → `nurses` | 誰提出的 | `ON DELETE NO ACTION`。與 `period_id` 有索引 |
+| `kind` | `TEXT` | 這一筆不該算、少算了一筆 | `EXCLUDE_EVENT` / `MISSING_EVENT`。接受「這一筆不該算」後那一筆不再計入；「少算了一筆」只留紀錄，由護理長查證 |
+| `event_source` | `TEXT?` | 哪一種事件 | `RewardEventSource` |
+| `event_id` | `TEXT?` | 哪一筆 | 來源表的識別碼（比照 `audit_logs` 以型別＋識別碼指向，不掛外鍵）。只能指提出者自己那一期的事件 |
+| `description` | `TEXT` | 申請的說明 | — |
+| `status` | `TEXT` | 處理中、已接受、未接受 | `OPEN` / `ACCEPTED` / `REJECTED`，有索引 |
+| `filed_at` | `TS` | 提出時間 | — |
+| `decided_by_id` | `TEXT?` → `nurses` | 誰處理的 | `ON DELETE NO ACTION`。不能是提出者自己 |
+| `decided_at` | `TS?` | — | — |
+| `decision_note` | `TEXT?` | 查證結果 | 必填才處理得了 |
+
+### `nurse_skill_tags` — 護理師的技能標記（5 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `nurse_id` | `TEXT` → `nurses` | 哪一位 | `ON DELETE NO ACTION`。與 `tag` 唯一 |
+| `tag` | `TEXT` | 標記 | 護理長自己訂的字，系統不預設；每人最多 10 個、每個 20 字內。臨時調動候補依「與請假的人相同的標記」排序 |
+| `assigned_by_id` | `TEXT` → `nurses` | 誰標的 | `ON DELETE NO ACTION` |
+| `assigned_at` | `TS` | — | — |
+
+### `external_reports` — 對外報表（15 欄）
+
+**產生階段就排除**：只存聚合值，樣本少於 5 的分組**不寫進資料庫**（只記拿掉了幾組）；姓名、病歷號、床號、工作 ID、精確時間戳在計算時就不取，期間只到「日」（《資料庫使用規範》12.2）。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `title` | `TEXT` | 報表名稱 | 產生時與每一格一起過禁止欄位的檢查（`findForbiddenExternalText`），命中整份不產生 |
+| `recipient` | `TEXT` | 給誰 | — |
+| `purpose` | `TEXT` | 用途 | — |
+| `from_date` | `TS` | 起日 | 「當日 00:00 UTC」 |
+| `to_date` | `TS` | 訖日 | 最晚昨天（只報過完的日子） |
+| `grouping` | `TEXT` | 怎麼分組 | `UNIT`（全單位）/ `TREATMENT_SHIFT`（透析班別） |
+| `suppressed_group_count` | `INT` | 樣本不足、沒呈現的分組數 | — |
+| `status` | `TEXT` | 待核准、已核准、已退回 | `PENDING_APPROVAL` / `APPROVED` / `REJECTED`，有索引。**只有 `APPROVED` 取得出來** |
+| `generated_by_id` | `TEXT` → `nurses` | 誰產生的 | `ON DELETE NO ACTION` |
+| `generated_at` | `TS` | — | — |
+| `decided_by_id` | `TEXT?` → `nurses` | 誰核准或退回 | `ON DELETE NO ACTION`。不能是產生者；暫由護理長與最高權限帳號擔任（Q-21） |
+| `decided_at` | `TS?` | — | — |
+| `decision_note` | `TEXT?` | 核准或退回的說明 | — |
+| `export_count` | `INT` | 取出了幾次 | `DEFAULT 0`。每一次取出另寫稽核 `EXTERNAL_REPORT_EXPORTED` |
+
+### `external_report_metrics` — 報表要了哪些指標（4 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `report_id` | `TEXT` → `external_reports` | 哪一份 | `ON DELETE CASCADE`（主表 → 自己的明細）。與 `metric_code` 唯一 |
+| `metric_code` | `TEXT` | 哪一個指標 | 整個指標都因樣本不足被拿掉時，這裡照樣查得到「有要過」 |
+| `sort_order` | `INT` | 順序 | — |
+
+### `external_report_items` — 報表的每一格（9 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `report_id` | `TEXT` → `external_reports` | 哪一份 | `ON DELETE CASCADE`，有索引 |
+| `sort_order` | `INT` | 順序 | — |
+| `metric_code` | `TEXT` | 哪一個指標 | — |
+| `metric_label` | `TEXT` | 指標名稱 | 產生當時的名稱 |
+| `group_label` | `TEXT` | 哪一組 | 「全單位」或「早班」「午班」「晚班」 |
+| `value_text` | `TEXT` | 值 | 產生當時的文字，之後不重算 |
+| `unit` | `TEXT` | 單位 | — |
+| `sample_size` | `INT` | 樣本數 | 一定 ≥ 5 |
 
 ---
 

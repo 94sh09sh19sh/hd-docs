@@ -2,10 +2,10 @@
 
 **適用讀者**：接手或協作的工程師
 **報告日期**：2026-10-10
-**版本**：迭代 18.1 完成（master）
+**版本**：迭代 19 完成（master）
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
-> **1010 補記**：同一天完成**迭代 17.8**（護理紀錄移到主列、DART／SOAP 分段與複製貼上、緊急回報的圖示自畫）、**迭代 18**（規則引擎與三項高風險功能，加上適足性推估）與**迭代 18.1**（書面確認閘門從 `.env` 改放進系統管理、四條規則換成依文獻選的建議門檻），見第 6、7 節；遊戲化寫成兩份其他文件並排成迭代 20～23。
+> **1010 補記**：同一天完成**迭代 17.8**（護理紀錄移到主列、DART／SOAP 分段與複製貼上、緊急回報的圖示自畫）、**迭代 18**（規則引擎與三項高風險功能，加上適足性推估）與**迭代 18.1**（書面確認閘門從 `.env` 改放進系統管理、四條規則換成依文獻選的建議門檻），見第 6、7 節；同日再完成**迭代 19**（管理儀表板、獎勵制度與對外揭露：資料分級守衛、十張新表、23 條路由、對外展示環境），見第 6 節「迭代 19」；遊戲化寫成兩份其他文件並排成迭代 20～23。
 >
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
 > **1001 第二次進院 B 級部分成功**——容器在院內主機上起來，護理端登入 `Failed to fetch`（`CORS_ORIGINS` 不放行護理端的來源），見部署手冊第十四冊之四、第十五冊之三；
@@ -115,7 +115,7 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 
 ## 4. 資料模型
 
-共 67 張表，17 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
+共 77 張表，18 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
 
 | 分類 | 表 | 加入於 |
 |---|---|---|
@@ -145,6 +145,10 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 | 護理記錄依格式分段（DART／SOAP） | `nursing_record_sections` | 迭代 17.8 |
 | 規則引擎（判斷輔助） | `rule_definitions`、`rule_versions`、`rule_version_parameters`、`rule_evaluations`、`rule_evaluation_inputs`、`rule_evaluation_reviews` | 迭代 18 |
 | 書面確認閘門的登記紀錄（只增不改） | `rule_gate_changes` | 迭代 18.1 |
+| 指標與每日快照（全單位、透析班別；不記個人） | `metric_definitions`、`metric_snapshots` | 迭代 19 |
+| 獎勵制度（沒有總分、沒有排名欄） | `reward_rules`、`reward_periods`、`reward_scores`、`score_disputes` | 迭代 19 |
+| 臨時調動候補的技能標記 | `nurse_skill_tags` | 迭代 19 |
+| 對外報表（只存聚合值） | `external_reports`、`external_report_metrics`、`external_report_items` | 迭代 19 |
 
 迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。
 迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`；
@@ -855,6 +859,28 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
+### 迭代 19：管理儀表板、獎勵制度與對外揭露（1010）
+
+細節在實作規格書 3.10 末段、4.17。工程上要知道的：
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 資料分級 | 端點掛 `@DataLevel(L1／L2／L3／L3_SELF／L4)`（`common/decorators.ts`，同時開放給唯讀角色）；全域 `DataLevelGuard`（`common/guards/data-level.guard.ts`）排在 `NavItemGuard` 之後、`FeatureFlagGuard` 之前：依角色比對該級的權限碼（`performance:l1-read`、`l2-read`、`l3-read`、`reward:self`、`audit:read`），L3 另看 `PERF_INDIVIDUAL_L3` 與 `purpose`（關著 403 並寫 `PERFORMANCE_L3_QUERY_BLOCKED`）。「誰查了誰」由服務寫 `PERFORMANCE_L3_QUERIED` |
+| 角色 | 醫院管理層只有 `performance:l1-read`；稽核角色多 L1～L3；護理師以上有 L1 與 `reward:self`；護理長多 `reward:manage` 與對外報表的產生、核准；最高權限帳號另有對外報表核准（暫代 Q-21）。導覽上不要求權限的項（班表）不再給唯讀角色 |
+| 指標 | `@hd/shared` 的 `performance.ts`（`METRIC_DEFINITIONS` 九條、比對基準的狀態、對外報表的禁止欄位檢查）；計算是 `modules/performance/metric-calc.ts` 的純函式，儀表板、快照、對外報表共用；`compareWithBaseline` 只用全單位、沒被取代的基準，量的不是同一件事、樣本不到 5 都不相減 |
+| 讀臨床資料 | `PerformanceRepository` 全部走唯讀連線、只 `select` 算數字要的欄位；**沒有任何一個方法寫臨床資料表**（`verify:iteration19` 掃） |
+| 每日快照 | `MetricSnapshotTask`：啟動時與每小時補還沒記的日子（往回 60 天、今天不記），記了不改；`POST /performance/snapshots` 手動補 |
+| 獎勵 | `rewards.service.ts`：事件來源四種（流程面），歸給做那件事的人；觀察期不寫 `reward_scores`；計分期結算時「獎勵計分」開著才寫；接受「這一筆不該算」後已結算的那位重算；**沒有總分、沒有排名**，個人層級的表依工作 ID 排 |
+| 開關 | `FeatureFlagsService` 的 `NOT_YET_BUILT` 清空；`judgePerformance`：已結算的觀察期（兩項都要）、已公告的規則（個人層級另要）；書面同意寫在核准依據 |
+| 候補 | `staffing.service.ts`：`evaluateLabourRules` 擋掉的另列；依相同技能標記、近 7 天時數、連續時數排 |
+| 稽核原始列 | `GET /audit-logs` 宣告 L4，查完寫 `AUDIT_LOG_QUERIED`（用途選填、沒宣告記「未宣告用途」）；畫面先選用途才查 |
+| 對外報表 | `external-reports.service.ts`：訖日最晚昨天、樣本少於 5 不存、`findForbiddenExternalText` 命中整份不產生、產生者不能核准、未核准取出 409 並寫稽核；CSV 不寫任何人的名字或工作 ID |
+| 展示環境 | `apps/api/scripts/showcase.ts`（`npm run showcase`）：資料目錄底下另一個資料庫檔案、faker 產生 30 天、建立寫展示資料庫自己的稽核（`SHOWCASE_CREATED`），建立與銷毀另記 `showcase-ledger.log`；`SHOWCASE_MODE` 擋正式環境、院方 API、非模擬的模型，`ShowcaseGuard` 只開有那一筆稽核的資料庫；`GET /showcase`（公開）給護理端畫左下角的標記 |
+| 畫面 | 只在專業版：`PerformancePage`、`RewardsPage`、`ExternalReportsPage`、`ShiftStaffingCards`（候補與技能標記）、`AuditPage` 的用途、`showcase-badge.tsx`。新的三頁不上主列：成效在選單，獎勵制度與對外報表預設關閉 |
+| Schema | 十張表（遷移 `20261011150000_iteration19_performance_rewards_external`，只做加法）；規格書列的七張之外，對外報表的指標與每一格、技能標記各一張 |
+| 改了的驗收 | 實作規格書 1.1 **第十三次**：`verify:iteration9:api` 的「首波關閉 3 項」改成比對共用定義的預設關閉 |
+| 驗收 | `verify:iteration19`（7 步，不需後端；比對基準與中位數實際跑一次）、`verify:iteration19:api`（10 步，十條驗收標準逐條） |
+
 ### 迭代 18.1：書面確認閘門改放進系統管理、四條規則的建議門檻（1010）
 
 使用者看過迭代 18 之後交代（《[迭代 18.1 修正紀錄](../notes/iteration-18-1-fixes.md)》）。工程上要知道的：
@@ -1023,15 +1049,15 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 
 ### 規模
 
-| 量測 | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 | 迭代 17 完成 | 迭代 18.1 完成 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| API 路由 | 43 | 78 | 90 | 107 | 109 | 116 | 117 | 124 | 136 | 158 |
-| 資料表 | 10 | 29 | 36 | 39 | 40 | 54 | 54 | 56 | 58 | 67 |
-| 稽核動作 | 32 | 52 | 66 | 68 | 74 | 82 | 84 | 90 | 109 | 121 |
-| 權限碼 | 9 | 17 | 20 | 21 | 21 | 23 | 23 | 23 | 23 | 23 |
-| 角色 | 3 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
-| 功能開關 | — | 10 | 10 | 10 | 10 | 11 | 11 | 12 | 12 | 14 |
-| 營運參數 | — | — | 6 | 12 | 12 | 20 | 20 | 22 | 27 | 28 |
+| 量測 | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 | 迭代 17 完成 | 迭代 18.1 完成 | 迭代 19 完成 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| API 路由 | 43 | 78 | 90 | 107 | 109 | 116 | 117 | 124 | 136 | 158 | 181 |
+| 資料表 | 10 | 29 | 36 | 39 | 40 | 54 | 54 | 56 | 58 | 67 | 77 |
+| 稽核動作 | 32 | 52 | 66 | 68 | 74 | 82 | 84 | 90 | 109 | 121 | 141 |
+| 權限碼 | 9 | 17 | 20 | 21 | 21 | 23 | 23 | 23 | 23 | 23 | 30 |
+| 角色 | 3 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
+| 功能開關 | — | 10 | 10 | 10 | 10 | 11 | 11 | 12 | 12 | 14 | 14 |
+| 營運參數 | — | — | 6 | 12 | 12 | 20 | 20 | 22 | 27 | 28 | 28 |
 
 （迭代 6 沒有新增功能開關：輪播三層的開關在迭代 3 就已建好並預設關閉，這次做的是把它們的
 「開啟條件」從「功能尚未實作」換成實際判定。迭代 7 只多一張 `update_runs` 與兩個維運端點，
@@ -1064,6 +1090,8 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 **迭代 17.1～18.1 合起來多 22 條路由、9 張表、12 種稽核動作**：17.1～17.7 多的是平板與內容指定的端點、`carousel_item_device_targets`；
 17.8 加兩條（帶入處置後數值、記下複製）與 `nursing_record_sections`、一個營運參數（護理紀錄格式）；18 加九條與六張表、一個開關（`ADEQUACY_PREDICTION`）；18.1 加一條（`PUT /rules/gate`）與 `rule_gate_changes`。
 17.7 另加開關 `MANUAL_PATIENT_CREATE`。路由數照後端啟動時印出的清單與路由裝飾器兩種計法對過（1010 都是 158）；測試手冊附錄之前寫的 146 是少算，18.1 收尾時更正。
+
+**迭代 19 多 23 條路由、10 張表、20 種稽核動作、7 個權限碼**，功能開關與營運參數沒有增加（績效兩個開關迭代 3 就建好了，這次把「尚未實作」換成實際的開啟條件）。路由照後端啟動時印出的清單重數：181，與測試手冊附錄逐條對齊。
 
 ### 共用常數的角色
 
@@ -1346,14 +1374,14 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 | ~~17.8~~ | ~~護理紀錄補上線前的缺口、緊急回報的圖示（1010）~~ | **已完成（1010）**，腳本驗收通過 | 無（Q-37 已結案） |
 | ~~18~~ | ~~規則引擎與三項高風險功能（原 7 → 11 → 15）~~ | **已完成（1010）**，合成資料驗收與開發機截圖通過；臨床端逐句讀輸出待做 | 對真實病人啟用：法務書面確認（Q-02）＋臨床端門檻值（Q-03） |
 | ~~18.1~~ | ~~書面確認閘門改放進系統管理、四條規則的建議門檻（1010）~~ | **已完成（1010）**，腳本驗收通過 | 四條規則的門檻請醫師確認（1014 週報、Q-03） |
-| 19 | 管理儀表板、獎勵、對外揭露（原 8 → 12 → 16） | **本週做（1010）** | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21） |
+| ~~19~~ | ~~管理儀表板、獎勵、對外揭露（原 8 → 12 → 16）~~ | **已完成（1010）** | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21） |
 | 20～23 | 遊戲化之一～之四（1010）：現有功能的遊戲化、透析小花園、麻將連連看、記憶相簿 | 可以；21、23 先寫分析子文件與起始的圖 | 無；開給病人前要長者實際玩過（Q-31 第 8 題） |
 
 迭代 15 的第一項是院方 API 探測工具，要趕在第三次進院前完成（實作規格書 4.19）——**1005 已完成**，指令在部署手冊第十五冊 V-30a；迭代 16、17 都不擋第三次進院。三個迭代的實作位置見 6「迭代 15」～「迭代 17」。
 
 ~~迭代 18 與其他迭代沒有相依，外部答覆若提早到齊可隨時往前插隊。~~ 迭代 18 與 18.1 已於 1010 完成，對真實病人啟用仍等 Q-02、Q-03。
-迭代 19 的成效指標會吃迭代 6 產生的 `carousel_view_events`（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，
-因此它只回答得了「哪一類內容有人看」這種問題。
+~~迭代 19 的成效指標會吃迭代 6 產生的 `carousel_view_events`（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，
+因此它只回答得了「哪一類內容有人看」這種問題。~~ 迭代 19 已於 1010 完成：九個成效指標讀的是求助、護理紀錄、衛教完成、症狀問卷的時間戳，**沒有用到播放紀錄**（它只回答得了「哪一類內容有人看」，不是成效）。
 
 **1010 的順序**（實作規格書 4.0.5）：17.8 → 18 → 19 → 20～23。**這一次沒有改號**：排在 18 前面的只有小迭代 17.8。
 17.8 的兩個技術重點：院內以 `http://<IP>` 開護理端，不是安全來源，**複製要退回 `document.execCommand('copy')`**；護理紀錄的預設版位改主列，但既有環境的版位存在資料表、不會被預設值覆蓋，要一次性的資料遷移。
