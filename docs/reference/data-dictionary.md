@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 66 張表、653 個欄位、16 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 67 張表、659 個欄位、17 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -1361,19 +1361,19 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 ## 二十一、規則引擎與三項高風險功能（迭代 18）
 
 **蒐集的意義**：風險分層（FR-P03）、療程中預警（FR-P05）、劑量調整參考（FR-N06）與適足性的趨勢推估（FR-N07 的預測部分）**一律由規則計算，不經語言模型**（SRS FR-R01）。
-這一節的六張表記三件事：**規則與它的每一個版本**（門檻、文字範本、書面依據出處）、**每一次比對**（對誰、用哪一版、引用了哪幾筆資料、組出什麼字）、**誰檢視過、有沒有採納**（FR-R06、FR-N13）。
+這一節的七張表記四件事（第七張 `rule_gate_changes` 是 1010 迭代 18.1 加的書面確認閘門登記紀錄）：**規則與它的每一個版本**（門檻、文字範本、書面依據出處）、**每一次比對**（對誰、用哪一版、引用了哪幾筆資料、組出什麼字）、**誰檢視過、有沒有採納**（FR-R06、FR-N13）。
 規格書列的是四張；門檻值與引用的資料各拆一張明細表，不用 JSON 欄位承載（規範 6.1 第 2 條）。遷移 `iteration18_rule_engine`，只做加法。
 級聯刪除只留「版本 → 門檻」「比對 → 引用資料」兩條；其餘一律 `NO ACTION`——這些是治理紀錄，留存期限定案前不刪。
 
 > ⚠️ **這一節的表才是「系統的判讀」放的地方**。第四節的症狀與求助是病人自己說的，第十八節的生命徵象是院方量的；把它們拿來比門檻、組成文字的，只有這裡。
-> 每一筆比對都標了**合成資料或真實病人**（`data_mode`）與**當時版本是草稿還是生效中**：書面確認閘門沒開（院內主機設定檔 `HIGH_RISK_WRITTEN_CONFIRMATION` 空白）時，`data_mode = REAL` 的列一筆都不會出現。
+> 每一筆比對都標了**合成資料或真實病人**（`data_mode`）與**當時版本是草稿還是生效中**：書面確認閘門沒開（`rule_gate_changes` 最新一列不是登記；迭代 18 時看的是院內主機設定檔，18.1 起改在系統管理登記）時，`data_mode = REAL` 的列一筆都不會出現。
 
 ### `rule_definitions` — 規則（7 欄）
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `rule_code` | `TEXT` | 規則代號，印在每一則輸出裡（例如 RISK-IDWG-01） | 唯一。第一次啟動寫入六條預設規則（`DEFAULT_RULE_DEFINITIONS`），之後不再寫；畫面上沒有新增規則的入口 |
+| `rule_code` | `TEXT` | 規則代號，印在每一則輸出裡（例如 RISK-IDWG-01） | 唯一。第一次啟動寫入六條預設規則（`DEFAULT_RULE_DEFINITIONS`），之後不再寫規則本身（版本見下一張表的 `created_by_id`）；畫面上沒有新增規則的入口 |
 | `name` | `TEXT` | 規則名稱 | — |
 | `feature` | `TEXT` | 屬於哪一項功能 | 合法值 `RISK_STRATIFICATION` / `INTRA_DIALYSIS_ALERT` / `DOSE_REFERENCE` / `ADEQUACY_PREDICTION`（`RuleFeature`，就是那一項的功能開關識別字）。有索引 |
 | `kind` | `TEXT` | 比對的形態（體重增幅、收縮壓低於門檻的次數、同一時段…） | 合法值見 `RuleKind`（六種）。決定後端用哪一個評估器（`modules/rules/evaluators.ts`）；新增一種形態才要改程式 |
@@ -1394,8 +1394,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `not_met_template` | `TEXT` | 未符合時的文字範本 | 同上 |
 | `source_citation` | `TEXT?` | 臨床端書面依據的出處 | 空值＝標不了生效。預設規則只有兩條收縮壓相關的有值（同院 IDH 系統） |
 | `protocol_excerpt` | `TEXT?` | 逐字照抄的 protocol 條文 | 劑量調整參考（`HB_OUT_OF_RANGE`）必填；符合時原樣接在輸出後面。不受結論字詞的限制（是原文引用） |
-| `note` | `TEXT?` | 備註 | 預設規則寫明「合成資料示範值」 |
-| `created_by_id` | `TEXT?` → `nurses` | 誰建立的 | `ON DELETE NO ACTION`。預設規則為空（畫面顯示「系統預設」） |
+| `note` | `TEXT?` | 備註 | 預設規則：兩條收縮壓的寫套用同院 IDH 系統；其餘四條迭代 18 寫「合成資料示範值」，**18.1 起寫「開發端依文獻選的建議值，尚未經臨床端確認，不是書面依據」與出處**（文獻不填進 `source_citation`） |
+| `created_by_id` | `TEXT?` → `nurses` | 誰建立的 | `ON DELETE NO ACTION`。系統建立的為空（畫面顯示「系統預設」）：第一次啟動寫入的第 1 版，以及 **18.1 起預設規則的門檻或備註改了時，啟動時補上的草稿版本**（`RulesService.upgradeDefaults`：沒有一版的門檻與備註跟新的一樣才補，有 `ACTIVE` 版本的規則不補） |
 | `created_at` | `TS` | 建立時間 | — |
 | `activated_by_id` | `TEXT?` → `nurses` | 誰標為生效 | `ON DELETE NO ACTION`。只有系統管理者標得了 |
 | `activated_at` | `TS?` | 什麼時候標為生效 | — |
@@ -1459,7 +1459,22 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 **稽核軌跡多九個動作**：`RULE_DEFAULTS_SEEDED`（第一次啟動寫入預設規則）、`RULE_VERSION_CREATED`、`RULE_VERSION_UPDATED`（只有沒用過的草稿）、`RULE_VERSION_ACTIVATED`、
 `RULE_VERSION_CHANGE_REJECTED`（沒有出處標為生效、改用過的版本、範本有結論字詞…）、`RULE_EVALUATION_REQUESTED`（按了立即比對）、`RULE_EVALUATION_BLOCKED`（真實病人被閘門擋下；定時比對同一位病人一天記一筆）、
-`RULE_OUTPUT_REVIEWED`、`RULE_GATE_STATE_RECORDED`（啟動時閘門狀態與上一次記的不同才記）。
+`RULE_OUTPUT_REVIEWED`、`RULE_GATE_STATE_RECORDED`（啟動時閘門狀態與上一次記的不同才記；**18.1 起不再產生**）。
+18.1 再多一個：`RULE_GATE_CHANGED`（系統管理者登記或取消登記書面確認，記文號與理由）。預設規則補上草稿版本時沿用 `RULE_DEFAULTS_SEEDED`，`detail` 寫「補上草稿版本」與哪幾條第幾版。
+
+### `rule_gate_changes` — 書面確認閘門的登記紀錄（6 欄，迭代 18.1）
+
+法務／資訊室對 TFDA 分類的書面確認（SRS FR-R08）。**只增不改**：每一次登記或取消登記都是新的一列，**最新一列就是現況**；一列都沒有＝從來沒登記過（閘門沒開）。
+迭代 18 時閘門是院內主機設定檔的 `HIGH_RISK_WRITTEN_CONFIRMATION`；1010 使用者指示改放進系統管理，設定檔不再有這一項。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `opened` | `BOOL` | 這一次是登記（開）還是取消登記（關） | 現況＝最新一列的這一欄（同時要有 `reference`） |
+| `reference` | `TEXT?` | 書面確認的文號 | 登記時必填、最長 200 字（`RULE_GATE_REFERENCE_MAX_LENGTH`）；取消登記時為空。只是給人核對的字，系統不解析 |
+| `reason` | `TEXT` | 理由 | 必填。連同文號寫進稽核 `RULE_GATE_CHANGED` |
+| `changed_by_id` | `TEXT` → `nurses` | 誰登記或取消的 | `ON DELETE NO ACTION`。只有系統管理者（`system:configure`）做得到 |
+| `changed_at` | `TS` | 什麼時候 | `DEFAULT now`，有索引（取最新一列用） |
 
 **沒有送進模型的東西**：這一節的全部。規則模組不引用 AI 閘道與模型供應者（`verify:iteration18` 第 1 步逐檔檢查），比對前後 `ai_invocations` 一筆都不多（`verify:iteration18:api` 第 6 步）。
 

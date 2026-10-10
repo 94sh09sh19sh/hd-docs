@@ -184,13 +184,11 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 - `hospital-api-sim` 是模擬院方 API，跟 `api` 用同一個映像檔，**只在 `--profile simulation` 時啟動**（第十五冊 V-30a），不開埠，只有 `api` 連得到。病人全是虛構的
 - compose 把後端固定成正式環境設定，模擬部署也一樣；**沒有 `HD_SIMULATION_DEPLOYMENT=yes`，位址指向模擬時後端拒絕啟動**——院內就是靠這一條擋住抄錯的設定，V-30a 最後會故意清空它驗一次
 
-### 1.10 判斷規則的書面確認閘門（1010 新增）
+### 1.10 判斷規則的書面確認閘門（1010 新增，同日迭代 18.1 拿掉）
 
-| 變數 | 填什麼 | 與實際部署不同 |
-|---|---|---|
-| `HIGH_RISK_WRITTEN_CONFIRMATION` | **（空白）** | 相同：兩邊都空白（院內要等書面確認，模擬部署永遠不填） |
+**`.env` 裡沒有這一項了**（迭代 18 時是 `HIGH_RISK_WRITTEN_CONFIRMATION`）。迭代 18.1 起書面確認由系統管理者在護理端系統管理「判斷規則」登記；**模擬部署永遠不登記**。照舊版範本填過的設定目錄，那一行刪掉即可（留著不生效，後端啟動時提醒一聲）。
 
-- 空白時判斷輔助只對合成資料病人執行。模擬院方 API 的病人病歷號是 99 開頭、沒有合成資料前綴，系統當真實病人看，**模擬部署上比對不到它們是對的**；要看判斷輔助的畫面，照《完整手動測試手冊》迭代 18 分冊 `ab12` 在開發機上看。
+- 沒登記時判斷輔助只對合成資料病人執行。模擬院方 API 的病人病歷號是 99 開頭、沒有合成資料前綴，系統當真實病人看，**模擬部署上比對不到它們是對的**；要看判斷輔助的畫面，照《完整手動測試手冊》迭代 18 分冊 `ab12` 在開發機上看。
 
 ---
 
@@ -236,8 +234,6 @@ LLM_HEALTH_TIMEOUT_SECONDS=5
 HOSPITAL_API_BASE_URL=http://hospital-api-sim:8090/dialysislist.php
 HD_SIMULATION_DEPLOYMENT=yes
 
-HIGH_RISK_WRITTEN_CONFIRMATION=
-
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -267,7 +263,7 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BA
 - [ ] **`HD_SHELL_SIGNING=dev`**
 - [ ] `LLM_PROVIDER=mock`
 - [ ] `HOSPITAL_API_BASE_URL` 指向 `hospital-api-sim`、`HD_SIMULATION_DEPLOYMENT=yes`（1005 新增）
-- [ ] `HIGH_RISK_WRITTEN_CONFIRMATION` **是空白**（1010 新增）
+- [ ] **沒有** `HIGH_RISK_WRITTEN_CONFIRMATION` 這一行（1010 迭代 18.1 起拿掉）
 - [ ] 整份沒有任何一個值加了引號
 
 ---
@@ -297,7 +293,7 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BA
 | `HD_SHELL_SIGNING` | **`hospital`** | **`dev`** |
 | `HOSPITAL_API_BASE_URL`（1005） | 空白（第三次進院只探測；探測過、報備過才填院方的位址） | `http://hospital-api-sim:8090/dialysislist.php` |
 | `HD_SIMULATION_DEPLOYMENT`（1005） | **永遠空白** | **`yes`** |
-| `HIGH_RISK_WRITTEN_CONFIRMATION`（1010） | 空白；書面確認拿到後填文號 | **永遠空白** |
+| ~~`HIGH_RISK_WRITTEN_CONFIRMATION`（1010）~~ | 18.1 起不在設定檔：書面確認拿到後在系統管理登記 | 18.1 起不在設定檔：**永遠不登記** |
 | `JWT_SECRET` | 院內當場產生 | 每一輪各自產生 |
 | `SUPER_ADMIN_*` | 護理長給的工號與名字、臨時密碼 | `sim-admin` 之類的虛構值 |
 | 其他 | 相同 | 相同 |
