@@ -2438,6 +2438,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/dialysis-gamification-garden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：小花園的植物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3894,6 +3922,34 @@
     
   
     迭代 20 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 21 分冊
   
 
     
@@ -6535,6 +6591,33 @@
 </tr>
 </tbody>
 </table>
+<p><strong>迭代 21 是第十四次</strong>（1010）：病人端首頁多一個遊戲圖示（SRS FR-P14 1010 補），遊戲化的開關從 3 個變 6 個（3.7）。三支腳本寫死「首頁唯一可點的是待完成任務」「遊戲化的開關正好 3 個、小花園與送花還沒有開關」，需求本身改了，不改就一定不通過：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration14</code> 第 2 步</td>
+<td>「首頁上唯一可點的是待完成任務的圖示」改成「可點的只有待完成任務與遊戲圖示」</td>
+<td>沒有其他功能的常駐入口照驗；遊戲圖示只在開關開著時出現由 <code>verify:iteration21</code> 第 3 步驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration20</code> 第 2 步</td>
+<td>「遊戲化的開關正好 3 個」改成「迭代 20 的三個都在」；「小花園、送花、病人之間的互動還沒有開關」改成「麻將、相簿還沒有開關」</td>
+<td>三個開關的預設值、顯示名稱、開啟條件照驗；迭代 21 的三個由 <code>verify:iteration21</code> 第 2 步驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration20:api</code> 步驟 1</td>
+<td>「開關中心的遊戲化只有這三個」改成「有這三個、沒有麻將與相簿」</td>
+<td>三個全關時平板與六支端點的驗法不變</td>
+</tr>
+</tbody>
+</table>
 <h3 id="12-本階段納入">1.2 本階段納入<a class="headerlink" href="#12-本階段納入" title="Permanent link">&para;</a></h3>
 <p>SRS 第 5 章全部 81 條需求（FR-P01～P19、FR-N01～N20、FR-M01～M12、FR-X01～X05、FR-S01～S17、FR-R01～R08），依第 4 章分二十一次迭代實作（迭代 3～23）。<strong>0919 由 60 條增為 63 條</strong>：新增 FR-S10（介面不得洩漏內部技術識別）、FR-S11（版位與功能可設定）、FR-S12（更新不得破壞既有資料）。<strong>0926 由 63 條增為 70 條</strong>：新增 FR-P14～P15（病人端首頁三區、任務依時點出現）、FR-N14～N16（簡易版與專業版、單一工作台、一步完成）、FR-S13（AI 閘道）、FR-S14（外殼 App 契約）。<strong>1005 由 70 條增為 73 條</strong>：新增 FR-N17（跑馬燈內容由 AI 生成、護理師核准）、FR-S15（院方 API 優先）、FR-S16（院方 API 介接與即時推送）。<strong>1010 由 73 條增為 81 條</strong>：新增 FR-P16～P19（遊戲、現有功能的小幅遊戲化、病友小撇步、送花）、FR-N18（護理紀錄交給院內的正式紀錄）、FR-N19～N20（被聽見的回覆、遊戲資料的狀態評估彙整）、FR-S17（病人之間只有匿名的彙總）。</p>
 <h3 id="13-明確排除本階段完全不碰">1.3 明確排除（本階段完全不碰）<a class="headerlink" href="#13-明確排除本階段完全不碰" title="Permanent link">&para;</a></h3>
@@ -7367,19 +7450,19 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <tr>
 <td><strong>透析小花園</strong>（FR-P16）</td>
 <td>關</td>
-<td>植物插畫已有起始的一批（4.21）；<strong>開啟時連帶開啟「送花」，關閉時連帶關閉</strong></td>
+<td>植物插畫已有起始的一批（4.21）；<strong>開啟時連帶開啟「送花」，關閉時連帶關閉</strong>。<strong>1010 迭代 21</strong>：<code>GARDEN</code>；插畫是程式產生的向量圖，開關中心數得出「12 種花、24 張背景」；連動那一次切換的操作者是按小花園的人，理由記成「隨透析小花園開啟（關閉）（小花園的核准依據：…）」</td>
 <td>21</td>
 </tr>
 <tr>
 <td><strong>送花</strong>（FR-P19、FR-N12）</td>
 <td>關</td>
-<td><strong>透析小花園開著</strong>（<code>judge</code> 的開啟前提）；可以單獨關</td>
+<td><strong>透析小花園開著</strong>（<code>judge</code> 的開啟前提）；可以單獨關。<strong>1010 迭代 21</strong>：<code>FLOWER_GIFTS</code>；關掉時平板沒有「送給照顧我的護理師們」、總覽螢幕沒有花瓶、病人趨勢沒有那一格，「謝謝你的花」也回不了</td>
 <td>21</td>
 </tr>
 <tr>
 <td><strong>病人之間的互動</strong>（FR-S17）</td>
 <td>關</td>
-<td>無（一班直接取自療程的班別，1010 第三輪）；其中的共同花園要<strong>透析小花園也開著</strong>才出現</td>
+<td>無（一班直接取自療程的班別，1010 第三輪）；其中的共同花園要<strong>透析小花園也開著</strong>才出現。<strong>1010 迭代 21</strong>：<code>PEER_INTERACTION</code>；共同花園的兩支端點要兩個開關都開著（開關守衛可以列好幾個，全部開著才放行）</td>
 <td>21</td>
 </tr>
 <tr>
@@ -7405,7 +7488,8 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <p>護理紀錄的格式（DART／SOAP，FR-N18）<strong>不是開關</strong>，是營運參數（迭代 17.8）：兩種都是「開」，只是選哪一種。</p>
 <p>連動（小花園帶著送花）是新的行為：連動造成的那一次切換一樣寫稽核軌跡，理由記成「隨透析小花園開啟（或關閉）」。
 <strong>九個遊戲化開關全關時，病人端、護理端、總覽螢幕都要與迭代 17.7 一模一樣</strong>——這一條是迭代 20～23 每一個的驗收標準。
-<strong>1010 迭代 20 實作</strong>：開關中心只建這次做的三個（新的分組「病人平板的遊戲化」），其餘六個隨迭代 21～23 的功能一起加——功能還沒做，連開關都不出現（DEP-34）。</p>
+<strong>1010 迭代 20 實作</strong>：開關中心只建這次做的三個（新的分組「病人平板的遊戲化」），其餘六個隨迭代 21～23 的功能一起加——功能還沒做，連開關都不出現（DEP-34）。
+<strong>1010 迭代 21 實作</strong>：同一個分組多三個（透析小花園、送花、病人之間的互動），共六個；麻將連連看、狀態評估彙整、記憶相簿隨迭代 22、23 加。</p>
 <p><strong>0919 新增的一條硬性規則</strong>：開關關閉時，<strong>尚未實作的功能連「停用的入口」都不得出現</strong>（DEP-34）。已實作但關閉的功能同樣不出現入口，但它的後端端點回傳的是「功能未啟用」而不是 404——兩者在稽核軌跡上要分得出來。</p>
 <p><strong>開關的顯示名稱</strong>：功能開關清單在護理端是給人看的，<strong>不得印出上表左欄那些識別字</strong>（FR-S10）。識別字留在後端與稽核紀錄裡。</p>
 <p><strong>硬性規則</strong>：開關為關閉時，相關介面元素<strong>完全不出現</strong>，而不是顯示為停用。後端端點也要一併擋下，不能只靠前端隱藏。
@@ -8104,7 +8188,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td><strong>21</strong></td>
 <td>遊戲化之二：透析小花園、送花、匿名彙總</td>
-<td>階段 2。<strong>前置</strong>：植物分析子文件與起始的插畫（決定 5.2）</td>
+<td>階段 2。<strong>前置</strong>：植物分析子文件與起始的插畫（決定 5.2）。<strong>1010 完成</strong></td>
 </tr>
 <tr>
 <td><strong>22</strong></td>
@@ -11619,10 +11703,10 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <td>無；預設小撇步與預設回覆的措辭請護理部看過（不擋實作）</td>
 </tr>
 <tr>
-<td>21</td>
-<td>遊戲化之二：透析小花園、送花、匿名彙總（1010）</td>
-<td>可以，先寫植物分析子文件與起始插畫</td>
-<td>無；開給病人前要長者實際看過（遊戲化分析 12.2）</td>
+<td>~~21~~</td>
+<td>~~遊戲化之二：透析小花園、送花、匿名彙總（1010）~~</td>
+<td><strong>已完成（1010）</strong>，腳本驗收與開發機截圖通過；長者在床上看插畫、兩台實體平板同時種同一格待做</td>
+<td>無；開給病人前要長者實際看過插畫（植物子文件第 11 節）；台灣百合收不收請護理部看</td>
 </tr>
 <tr>
 <td>22</td>
@@ -11643,7 +11727,7 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <p><strong>0930 更新</strong>：Q-32 已回覆——對外連線是常態、沒有限制，部署路線「連得出去」的前提成立。Q-27 的 Docker 版本（29.3.1、Compose v5.1.1）與連接埠（<code>13000</code>、<code>18080</code>、<code>18081</code>）也有答案。<strong>剩下擋第二次進院的是 Q-27 未答的題</strong>：斷電重開後誰登入、防毒排除，以及 0930 追加的 Docker Desktop 兩項設定（使用統計能不能關、市集自動更新能不能改手動）。</p>
 <p><strong>1005 更新</strong>：1001 第二次進院部分成功、卡在護理端登入（部署手冊第十五冊之三）。<strong>擋第三次進院的是 Q-27 第 12 題</strong>：使用者決定主機位址改用 IP，要資訊室把那個 IP 固定下來；其餘照 4.19。迭代 15～17 都不擋第三次進院。</p>
 <p><strong>1007 更新</strong>：Q-27 第 12 題已答——<strong>IP 是固定的</strong>，第三次進院照換。同日另答第 4 題（斷電後出現警示由護理長重新登入）、第 9 題（使用統計第三次進院關閉）、第 10 題（市集自動更新先不改）；Q-28 第 3 題（所有護理師都可以核准）與暫代相同，不必改程式。<strong>第三次進院已沒有待院方答覆的前提。</strong></p>
-<p><strong>1010 更新</strong>：Q-37（護理紀錄怎麼接上現有作業）院方已答：複製貼上、DART 或 SOAP（迭代 17.8）。迭代 18、19 本週做，遊戲化排在後面（4.0.5）；<strong>整張表沒有一個迭代被外部答覆擋住實作</strong>，擋住的只有對真實病人啟用。同日迭代 18 完成：Q-02、Q-03 沒有答覆，四項判斷輔助只對合成資料病人執行。同日迭代 19 完成：個人層級與獎勵計分兩個開關照預設關著，計分規則全是草稿，「獎勵制度」「對外報表」兩頁照預設關閉，等護理部確認指標、核准角色指定後再開。同日迭代 20 完成：「現有功能的小幅遊戲化」照預設開著，病友小撇步與護理師回貼圖照預設關著。</p>
+<p><strong>1010 更新</strong>：Q-37（護理紀錄怎麼接上現有作業）院方已答：複製貼上、DART 或 SOAP（迭代 17.8）。迭代 18、19 本週做，遊戲化排在後面（4.0.5）；<strong>整張表沒有一個迭代被外部答覆擋住實作</strong>，擋住的只有對真實病人啟用。同日迭代 18 完成：Q-02、Q-03 沒有答覆，四項判斷輔助只對合成資料病人執行。同日迭代 19 完成：個人層級與獎勵計分兩個開關照預設關著，計分規則全是草稿，「獎勵制度」「對外報表」兩頁照預設關閉，等護理部確認指標、核准角色指定後再開。同日迭代 20 完成：「現有功能的小幅遊戲化」照預設開著，病友小撇步與護理師回貼圖照預設關著。同日迭代 21 完成：透析小花園、送花、病人之間的互動三個開關照預設關著。</p>
 <h3 id="419-第三次進院1005-新增">4.19 第三次進院（1005 新增）<a class="headerlink" href="#419-第三次進院1005-新增" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：護理站的電腦登得進護理端——1001 卡在這裡（部署手冊<a href="../../deployment/15c-why-1001-failed/">第十五冊之三</a>）；同時把主機位址從名稱換成 IP，並探測一次院方 API。</p>
 <p><strong>1005 使用者決定：主機位址改用 IP。</strong> 換法照部署手冊<a href="../../deployment/15d-switch-host-to-ip/">第十五冊之四</a>。平板一台都還沒佈建，現在換代價最小；<strong>前提是資訊室把那個 IP 固定下來</strong>（Q-27 第 12 題），IP 會變就不要換。<strong>1007 答覆：IP 是固定的</strong>，前提成立。</p>
@@ -11858,6 +11942,115 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <li>遊戲化的每一句話照迭代 17.3 的用語把關（AI 起草的部分）與介面設計基準的措辭規定（不用「好棒棒」這類）</li>
 </ol>
 <h3 id="421-迭代-21遊戲化之二透析小花園送花匿名彙總1010-新增">4.21 迭代 21：遊戲化之二——透析小花園、送花、匿名彙總（1010 新增）<a class="headerlink" href="#421-迭代-21遊戲化之二透析小花園送花匿名彙總1010-新增" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-10 完成。</strong> 前置的植物分析子文件是《<a href="../../notes/dialysis-gamification-garden/">透析中的遊戲化之二：小花園的植物</a>》；手動測試在《<a href="../../testing/iteration-21/">迭代 21 分冊</a>》（<code>ae1</code>～<code>ae33</code>）。三個開關見 3.7。
+沒有外部依賴；三個開關照預設關著。開給病人之前要長者在病床上實際看過插畫（子文件第 11 節、遊戲化分析 12.2）。</p>
+</blockquote>
+<p><strong>1010 開發端的判斷</strong>（使用者要推翻時改右欄那一處即可）：</p>
+<table>
+<thead>
+<tr>
+<th>判斷</th>
+<th>理由</th>
+<th>寫在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>植物插畫與 24 張背景做成<strong>程式產生的向量圖</strong>：每種花的花瓣形狀、片數、排法寫成參數，只有 path、circle、ellipse、rect 四種圖形</td>
+<td>改一個參數就能整批調整；病人端花園與護理站花瓶同一份；安全白名單（沒有腳本、事件屬性、外部參照、文字、transform）驗得出來；不必另外清 SVG 檔</td>
+<td><code>@hd/shared</code> 的 <code>garden-art.ts</code>、兩端的 <code>GardenArt</code></td>
+</tr>
+<tr>
+<td>成長點數：每多一次療程 +2、澆水 +1、每一份養分 +1、<strong>每棵每次療程照顧最多 +2</strong>、8 點開花</td>
+<td>讓三條同時成立：照常做任務的人第三次療程開花（上手）、什麼都沒做第五次照樣開（不懲罰）、做再多也快不過上限（不能加速）</td>
+<td><code>GARDEN_*</code> 常數；子文件第 5 節</td>
+</tr>
+<tr>
+<td>長大看的是<strong>這位病人有幾次療程</strong>（取消的不算），由伺服器依療程算，不看點開花園幾次</td>
+<td>「下次來，花就開了」：沒點開也照樣長；缺席期間沒有療程就什麼都不變；不由平板傳，平板改不了</td>
+<td><code>GardenRepository.sessionOrdinal</code></td>
+</tr>
+<tr>
+<td>養分只看這一次療程<strong>有沒有</strong>送出透析前問卷、心情問卷、做過衛教（看完一篇或做過測驗），不讀任何答案；遊戲那一份等迭代 22、23</td>
+<td>驗收第 4 條；資料本來就在，不必另記一次「做完了」</td>
+<td><code>GardenRepository.nutrientsDone</code></td>
+</tr>
+<tr>
+<td>澆水與養分點一下就給整座花園，不是一棵一棵</td>
+<td>只能點一下、一次 1～2 分鐘（上層 7.5）；一棵一棵點會變成作業</td>
+<td><code>applyGardenAction</code></td>
+</tr>
+<tr>
+<td>種子開什麼花由<strong>植物自己的編號</strong>決定（平板產生）：第一次種開最熟的那一種，之後當季的權重 3、沒開過的權重 2</td>
+<td>斷線時種下去、連線後伺服器重算是同一種花；驚喜（第 7 角）與收得齊並存</td>
+<td><code>pickFlower</code>；子文件第 4 節</td>
+</tr>
+<tr>
+<td>平板與後端跑<strong>同一支計算</strong>；後端只收 <code>lastSeq + 1</code>，序號接不上就回「衝突」與伺服器那一份，平板丟掉沒送出的幾步；做不了的一步記成「沒有套用」、序號照樣用掉</td>
+<td>「序號不顛倒」（驗收第 2 條）；換平板時另一台還沒送出的幾步不會蓋過新的</td>
+<td><code>applyGardenAction</code>、<code>GardenService.submitEvents</code>、病人端 <code>garden-sync.ts</code></td>
+</tr>
+<tr>
+<td>送花與種到大家的花園<strong>要連線</strong>，斷線時那兩顆按鈕不出現；種、澆水、給養分斷線照樣能做</td>
+<td>「花已經放進護理站的花瓶了」要是真的；共同花園格子有限，要伺服器確認那一格還空著（遊戲化決定 3.6）</td>
+<td>病人端 <code>GardenGame</code></td>
+</tr>
+<tr>
+<td>不建 <code>garden_plants</code>：植物只在盤面快照裡</td>
+<td>規格書寫「若狀態評估或彙總要查就另存」；兩者都不查它。圖鑑另存 <code>garden_collection</code></td>
+<td>schema</td>
+</tr>
+<tr>
+<td>快照讀出來驗不過（格式版本不對、多了欄位）就回 422、<strong>停止寫入</strong>，不猜、不覆寫</td>
+<td>《資料庫使用規範》6.1 例外第 4 條；寫壞的存檔要人來看，不能被下一步默默蓋掉</td>
+<td><code>GardenService.readSave</code>、<code>persist</code></td>
+</tr>
+<tr>
+<td>共同花園的資料列<strong>第一朵種下時才建</strong>；那個月還沒人種時，照格數規則算給平板看、不建列；跨月後下一次讀寫時補做歸檔</td>
+<td>「沒人種的月份不歸檔」不必刪任何東西；排程與讀取時補做結果一樣</td>
+<td><code>GardenService.plantShared</code>、<code>archiveBefore</code></td>
+</tr>
+<tr>
+<td>平板若在請求裡送了班別：<strong>收下但不用</strong>，不擋成錯誤</td>
+<td>驗收第 12 條「前端送來的班別被忽略」；班別一律取當下療程</td>
+<td><code>PlantSharedDto.shift</code></td>
+</tr>
+<tr>
+<td>送花、種花<strong>不寫稽核軌跡</strong>：每一步都在 <code>game_events</code></td>
+<td>稽核軌跡寫「誰」會讓共同花園的種花人出現在另一個查得到的地方；<code>game_events</code> 本來就是正規的紀錄</td>
+<td><code>GardenService</code></td>
+</tr>
+<tr>
+<td>總覽螢幕的花瓶：花＋床號（沒有床號寫「病友」），最多畫 16 朵、更多寫「今天一共 N 朵」；<strong>有待處理的求助整塊不畫</strong>；病人送花時串流推 <code>FLOWER_GIFT</code> 立即重取，每分鐘保底一次（跨日清空也靠它）</td>
+<td>FR-N12 1010 補；護理站層級的數字可以有（遊戲化決定 3.2）</td>
+<td>護理端 <code>WallDisplayPage</code></td>
+</tr>
+<tr>
+<td>「病人詳細資訊」這一頁還沒有（迭代 22 才做），「今天送了一朵○○」先放在專業版病人趨勢最下面一格；送花只能回「謝謝你的花」</td>
+<td>病人趨勢是現在看單一病人的地方，迭代 20 的回覆也在那裡</td>
+<td>護理端 <code>FlowerGiftsCard</code>、<code>NURSE_REPLY_CODES_BY_SOURCE</code></td>
+</tr>
+<tr>
+<td>一座上限 24 是<strong>算得出來的上限</strong>：1280×800 內容區放得下 4 列（每格 106px）、800×1280 放得下 6 列（140px）；5 列在橫放只剩約 88px，不到 96</td>
+<td>遊戲化決定 3.6「24 是暫定，迭代 21 在目標平板截圖驗收時確認」；營運參數的上限因此就是 24</td>
+<td><code>SHARED_GARDEN_MAX_PER_BOARD</code>、<code>--plot-min</code></td>
+</tr>
+<tr>
+<td>遊戲被任務打斷：等這一步走完（送花等連線的那一下）才出現任務；<strong>做完</strong>任務問一次「回到剛剛的遊戲？」</td>
+<td>FR-P15 1010 補；每一步本來就存好了，回去就是原來的樣子</td>
+<td>病人端 <code>App</code>、<code>ResumeGameTask</code></td>
+</tr>
+<tr>
+<td>遊戲選單裡也放一份「我的衛教小本子」（「現有功能的小幅遊戲化」開著時）</td>
+<td>遊戲化決定 4.3；首頁仍然不放</td>
+<td>病人端 <code>GamesMenu</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Schema 變更（實作結果）</strong>：規格書列的表除了 <code>garden_plants</code> 都建了（<code>game_saves</code>、<code>game_events</code>、<code>garden_collection</code>、<code>flower_gifts</code>、<code>shared_gardens</code>、<code>shared_garden_plots</code>），<code>nurse_replies</code> 沿用（<code>source_kind</code> 多一種 <code>FLOWER_GIFT</code>，不是新欄位）。<code>game_events</code> 的數值欄位：自己花園的第幾格、種子、花、養分、共同花園哪一座第幾格；<code>applied</code> 記這一步有沒有套用。遷移 <code>20261012120000_iteration21_garden_gifts_shared</code>，只做加法，<code>check:migration</code> 無發現。後端路由 189 → 197 條（平板 6、護理端 2）。</p>
+<p><strong>驗收現況（1010）</strong>：<code>verify:iteration21</code>（新增，12 步，不需要後端；成長、快照、格數、插畫顏色實際跑一次）與 <code>verify:iteration21:api</code>（新增，10 步，十三條驗收標準逐條；上個月的共同花園、填滿用的格子以資料庫直接寫入、結束時拿掉）全部通過；<code>verify:acceptance</code>、<code>verify:iteration3</code>、<code>4</code>、<code>6</code>、<code>9</code>、<code>17:api</code>、<code>19:api</code>、<code>20:api</code> 對著開發機的後端通過，<code>verify:iteration8</code>、<code>11</code>、<code>12</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>～<code>17-8</code>、<code>18</code>、<code>18-1</code>、<code>19</code>、<code>20</code>、<code>check:all</code> 全綠，其中 <code>verify:iteration14</code>、<code>20</code>、<code>20:api</code> 依 1.1 第十四次改寫。以無頭 Chrome 在 1280×800 與 800×1280 走過一輪病人端（首頁的遊戲圖示、遊戲選單、花園、選種子、開好的花、種到大家的花園 24 格、圖鑑、我們的花園），沒有捲軸、求助區位置不變、花園一格最小 176px、共同花園一格最小 106px；護理端總覽螢幕的花瓶（1920×1080，有求助時讓位）與病人趨勢那一格（1366×768）看過。
+<strong>沒有驗的</strong>：三個開關全關時的截圖比對（驗收第 1 條；腳本逐一確認每個入口都掛在開關後面）；長者在床上看插畫（「像不像」「是不是給小孩玩的」）；兩台實體平板真的同時點同一格（腳本以兩個同時送出的請求驗）；真的跨過月底（以資料庫寫入上個月的花園模擬）；實機拔網路再接上；「一三六的病人週六種的花」（規則只看班別、不看星期幾，腳本以同一天的早班、午班驗）。</p>
 <p><strong>目標</strong>：遊戲化的骨幹。小花園把問卷、衛教與另外兩款串起來（養分），送花讓病人從被照顧的人變成給予的人。依據是遊戲化決定 5.1 的階段 2、3.2、3.3、3.5。</p>
 <p><strong>前置（開工第一件事）</strong>：照遊戲化決定 5.2 寫《透析中的遊戲化之二：小花園的植物》子文件（種哪些花、避開哪些花、成長階段、三種種子、第一年之後每一季加什麼、共同花園的 24 張月份背景），再依它由 AI 畫起始的植物插畫與背景（自帶 SVG、植物圖鑑畫風、照決定 5.4 的安全規則清過）。</p>
 <table>

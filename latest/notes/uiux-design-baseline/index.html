@@ -1384,6 +1384,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#27-透析小花園1010迭代-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 透析小花園（1010，迭代 21）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1483,6 +1494,17 @@
     <span class="md-ellipsis">
       
         3.8 遊戲化在護理端的入口（1010，迭代 20）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-送花在護理端1010迭代-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 送花在護理端（1010，迭代 21）
       
     </span>
   </a>
@@ -1926,6 +1948,34 @@
     
   
     之一：決定、開關與實作順序
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification-garden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：小花園的植物
   
 
     
@@ -3408,6 +3458,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 21 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4394,6 +4472,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#27-透析小花園1010迭代-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 透析小花園（1010，迭代 21）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4493,6 +4582,17 @@
     <span class="md-ellipsis">
       
         3.8 遊戲化在護理端的入口（1010，迭代 20）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-送花在護理端1010迭代-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 送花在護理端（1010，迭代 21）
       
     </span>
   </a>
@@ -5051,7 +5151,9 @@
 </table>
 <ul>
 <li><strong>自動出現只有一次。</strong> 病人按回首頁就回首頁，任務改成基本資訊區的一個圖示，點圖示接著做</li>
-<li>任務畫面閒置超過閒置門檻（FR-P09，預設 60 秒）自動回首頁——病人睡著了，平板不該一直停在第 3 題</li>
+<li>任務畫面閒置超過閒置門檻（FR-P09，預設 60 秒）自動回首頁——病人睡著了，平板不該一直停在第 3 題。
+  <strong>遊戲畫面另設一個門檻</strong>（1010 迭代 21，營運參數 <code>GAME_IDLE_THRESHOLD_SECONDS</code>，預設 3 分鐘）：想一下很正常，60 秒就被送回首頁很煩；每一步都已存好，回首頁不會失去東西</li>
+<li><strong>遊戲圖示</strong>（1010 迭代 21，FR-P14 補）：基本資訊區多一個 <code>gamepad-2</code>（一般色的框，與還沒做的任務的注意色分得開），<strong>至少一款遊戲的開關開著才出現</strong>；這是首頁唯一新增的入口，三區不變。直放時跟待完成的任務一起排到第二列</li>
 <li><strong>內容多到一頁放不下時分頁，不捲動</strong>（M-4）。衛教內文以欄分頁（<code>PagedText</code>），版面尺寸變了自動重算頁數</li>
 <li><strong>求助的類別也一樣</strong>（0929，迭代 14.2）：依畫面實際大小分頁，一個框放不完就接到下一頁，框照樣分開畫（M-2）；
   每一格同高，一頁放幾列才算得出來。只做到「不捲動」而不分頁，結果是放不下的類別被切掉、病人看不到</li>
@@ -5251,6 +5353,56 @@
 </table>
 <p>四個新畫面都包在 <code>TaskFrame</code> 裡：求助區照常在下面，閒置照常回首頁。新樣式只用 <code>--c-done</code>（完成記號）與 <code>--c-accent</code>（貼圖），<strong>沒有紅色、沒有動畫</strong>。
 用字限在自帶字型的子集裡（4.9）：「廔管」的「廔」不在子集，預設小撇步寫「血管通路」。</p>
+<h3 id="27-透析小花園1010迭代-21">2.7 透析小花園（1010，迭代 21）<a class="headerlink" href="#27-透析小花園1010迭代-21" title="Permanent link">&para;</a></h3>
+<p>遊戲化的骨幹（實作規格書 4.21；花的清單與畫法見《<a href="../dialysis-gamification-garden/">透析中的遊戲化之二：小花園的植物</a>》）。三個開關：透析小花園（帶著送花）、送花、病人之間的互動（共同花園）；<strong>三個全關時每一個畫面與迭代 17.7 一模一樣</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>畫面</th>
+<th>長什麼樣子</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>遊戲選單（<code>GamesMenu</code>）</td>
+<td>「想做什麼？」：透析小花園，「現有功能的小幅遊戲化」開著時還有我的衛教小本子</td>
+<td>只列開著的遊戲</td>
+</tr>
+<tr>
+<td>花園（<code>GardenGame</code>）</td>
+<td>橫放 4×3、直放 3×4 十二格；門口（橫放在右、直放在下）是「澆水」與做完的任務各一顆「養分」（那個任務的圖示＋「養分」）</td>
+<td>每一格至少 96×96px（<code>--plot-min</code>），跟著內容區長大，不捲動；開好的花是加粗的完成色外框；12 格都有植物時門口底下一句靜態文字，<strong>沒有紅點、數字或提醒</strong>；頂列右邊是圖鑑（<code>book-image</code>）與大家的花園（<code>trees</code>），靠在回首頁旁邊</td>
+</tr>
+<tr>
+<td>選種子</td>
+<td>三個種子包（插畫＋名稱）貼在下緣</td>
+<td>一次三個選項（遊戲化分析 4.5）</td>
+</tr>
+<tr>
+<td>一棵植物</td>
+<td>左邊大圖、右邊名字與一句說明；開好的花底下「送給照顧我的護理師們」（<code>gift</code>）「種到大家的花園」（<code>trees</code>）</td>
+<td>開花之前只寫階段（「發芽了」），不說是什麼花；<strong>斷線時那兩顆不出現</strong>，改寫一句「連上網路之後…」</td>
+</tr>
+<tr>
+<td>大家的花園</td>
+<td>頂列一行字「這個月○班的花園」；一座的格子疊在那個月的背景上；有好幾座時底列「上一座／下一座」</td>
+<td>橫放一列 6 格、直放一列 4 格，一座最多 24 格（1280×800 每格約 106px、800×1280 約 140px）；<strong>只看得到花</strong>：沒有人數、沒有誰種的；種的時候可以種的空地是一般色實線框，其餘只是圖</td>
+</tr>
+<tr>
+<td>圖鑑、我們的花園</td>
+<td>一頁六種花（花、名字、一句說明）；以前的花園一頁四個月份按鈕，點進去是那一座（只能看）</td>
+<td>放不下就翻頁，不捲動</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>沒有動畫、沒有聲音</strong>：點下去畫面直接換成下一個樣子（4.4）；樣式表那一段沒有 <code>animation</code>、<code>transition</code>、<code>@keyframes</code></li>
+<li><strong>沒有紅色</strong>：插畫的顏色在 <code>@hd/shared</code> 的 <code>garden-art.ts</code>（畫的一部分，不是介面語意色），驗收腳本檢查沒有任何一個落在紅色的色相；框與字照常只用語彙</li>
+<li>插畫一律用兩端的 <code>GardenArt</code> 元件畫，只認四種圖形與固定的幾個屬性，不經 innerHTML</li>
+<li>遊戲畫面一樣包在 <code>TaskFrame</code> 裡（頂列多一個可以放按鈕或一行字的位置 <code>tools</code>）；求助區照常在下面</li>
+<li>遊戲玩到一半任務時點到了：等這一步走完（送花、種到大家的花園等連線的那一下）就讓任務全螢幕出現，<strong>做完</strong>任務問一次「回到剛剛的遊戲？」（FR-P15 補）</li>
+</ul>
 <hr />
 <h2 id="3-族群二透析室護理師護理端">3. 族群二：透析室護理師（護理端）<a class="headerlink" href="#3-族群二透析室護理師護理端" title="Permanent link">&para;</a></h2>
 <h3 id="31-這群人的事實">3.1 這群人的事實<a class="headerlink" href="#31-這群人的事實" title="Permanent link">&para;</a></h3>
@@ -5813,6 +5965,29 @@
 </tr>
 </tbody>
 </table>
+<h3 id="39-送花在護理端1010迭代-21">3.9 送花在護理端（1010，迭代 21）<a class="headerlink" href="#39-送花在護理端1010迭代-21" title="Permanent link">&para;</a></h3>
+<p>護理端只多兩處，<strong>都掛在「送花」開關後面</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>在哪裡</th>
+<th>多了什麼</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>常駐總覽螢幕</td>
+<td>角落（右下）一塊「今天的花瓶」：每一朵是花的圖＋床號（沒有床號寫「病友」），最多 16 朵，更多寫「今天一共 N 朵」</td>
+<td><strong>有待處理的求助時整塊不畫</strong>（求助永遠優先）；新的一朵直接出現，<strong>不閃、不出聲、沒有進場動畫</strong>；沒有病人姓名、沒有收花的護理師；跨日清空</td>
+</tr>
+<tr>
+<td>病人趨勢（專業版）最下面</td>
+<td>「送給護理站的花」：送花時間、花（小圖＋「今天送了一朵○○」）、「謝謝你的花」一顆（護理師回貼圖開著才有，可以不回）</td>
+<td>不是待辦：沒有未讀數、沒有提醒色；只能回那一句，沒有自由文字</td>
+</tr>
+</tbody>
+</table>
 <h2 id="4-共用的設計系統">4. 共用的設計系統<a class="headerlink" href="#4-共用的設計系統" title="Permanent link">&para;</a></h2>
 <p>兩端各有各的版面，但底層的語彙要一致——同一個顏色在兩邊代表同一件事，否則維護的人會混亂。</p>
 <h3 id="41-顏色">4.1 顏色<a class="headerlink" href="#41-顏色" title="Permanent link">&para;</a></h3>
@@ -5923,6 +6098,7 @@
 </tr>
 </tbody>
 </table>
+<p><strong>花園的一格至少 96×96px</strong>（1010 迭代 21，<code>--plot-min</code>）：比觸控下限大，是為了讓植物插畫看得清楚（遊戲化決定 3.6）。共同花園一座最多 24 格就是從這裡算出來的：1280×800 的內容區放得下 4 列，第 5 列會讓每格掉到 96px 以下。</p>
 <h3 id="44-動態">4.4 動態<a class="headerlink" href="#44-動態" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>病人端不做任何會自己動的裝飾。</strong> ~~閒置輪播的換卡是功能~~ 1005 起<strong>跑馬燈是病人端唯一會自己動的東西</strong>，它是功能，不是裝飾（2.5）；除此之外不要有呼吸燈、不要有位移動畫。
@@ -5940,7 +6116,8 @@
   緊急的排在前面；收掉的裡面有緊急時，那一列用警示色並寫出「其中 N 則緊急」。別處（另一台護理站、簡易版）已經接起來的不再佔位置，
   但快照裡找不到的一律留著——寧可多留一則，也不能漏掉一則。<strong>不要改成限制高度加捲軸</strong>：黏在上緣的小框裡再捲一次，藏起來的等於看不到。
   這是「專業版不動」（FR-N14）的第二個例外，出自使用者 0929 的回報：大量求助湧入時，一則一條、沒有上限的橫幅疊得比畫面還高，
-  每一頁都被蓋住。<strong>真的需要它的時候，它反而讓整個畫面不能用。</strong></p>
+  每一頁都被蓋住。<strong>真的需要它的時候，它反而讓整個畫面不能用。</strong>
+- <strong>遊戲也沒有動畫</strong>（1010 迭代 21）：遊戲化決定第 6 節原本預備把「點擊後 0.3 秒的動畫」寫成不算「自己動」的例外；透析小花園用不到，點下去畫面直接換，這條例外<strong>沒有開</strong>。麻將連連看（迭代 22）若需要，到時候再在這裡補</p>
 <h3 id="45-暗色與夜間">4.5 暗色與夜間<a class="headerlink" href="#45-暗色與夜間" title="Permanent link">&para;</a></h3>
 <ul>
 <li>病人端已有夜間模式（晚班調暗），<strong>調暗不得改變版面與字級</strong>，只改亮度</li>
@@ -6023,7 +6200,9 @@
 <code>lightbulb</code> 說明（點開看更多），以及求助類別（下一段）。
 <strong>1010 迭代 20 補</strong>：<code>book-heart</code> 我的衛教小本子、<code>users</code> 病友小撇步（我也是這樣做的；護理端核准清單的病友小撇步也用它）；
 兩端共用的貼圖 <code>heart</code> 送你一顆愛心、<code>thumbs-up</code> 給你按個讚、<code>sun</code> 祝你今天好心情、<code>hand-heart</code> 我們都在這裡，<code>message-square-heart</code> 護理師回你的一句話（預設回覆）；
-護理端另有 <code>scroll-text</code> 跑馬燈的「你知道嗎」。</p>
+護理端另有 <code>scroll-text</code> 跑馬燈的「你知道嗎」。
+<strong>1010 迭代 21 補</strong>（病人端）：<code>gamepad-2</code> 遊戲（基本資訊區的遊戲圖示與遊戲選單）、<code>sprout</code> 透析小花園、<code>droplet</code> 澆水（<code>droplets</code> 已經是護理端的「生理食鹽水回填」，所以用單一顆的）、<code>book-image</code> 台灣花卉圖鑑、<code>trees</code> 大家的花園、<code>gift</code> 送花給護理站、<code>history</code> 以前的花園；護理端 <code>flower-2</code> 病人送給護理站的花。
+同日修好圖示產生器的一個舊問題：屬性名稱帶數字的（<code>&lt;line&gt;</code> 的 <code>x1</code>、<code>y2</code>）原本被漏掉，<code>line</code> 畫不出來；護理端的 <code>badge-alert</code>、<code>user-plus</code>、<code>unlink</code> 因此補回原本少掉的幾筆線。</p>
 <p><strong>求助類別的圖示要畫出症狀本身（1010，迭代 17.8）</strong>。院方反映緊急回報的圖示與文字不太相符（閃電代表抽筋、波浪代表想吐、大腦代表頭痛），希望即使不看文字也能知道是什麼症狀。Lucide 沒有畫症狀的圖示，所以這十三個<strong>由本專案自己畫</strong>（<code>scripts/icons-custom/</code>，照 Lucide 的規格：24×24、線寬 2、圓角、不填色），登記表第四欄寫 <code>custom</code>；<strong>仍然配字</strong>，字是正式的意思，圖是幫忙認。原本的 <code>rotate-3d</code>、<code>zap</code>、<code>waves</code>、<code>heart-pulse</code>、<code>brain</code>、<code>hand</code>、<code>thermometer</code>、<code>droplet</code>、<code>person-standing</code>、<code>glass-water</code> 拿掉，<code>monitor-dot</code>、<code>syringe</code>、<code>thermometer-sun</code> 病人端不再用（護理端的處理方式照用）。</p>
 <table>
 <thead>

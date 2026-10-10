@@ -1,0 +1,5020 @@
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="需求、進度、參考與測試文件">
+      
+      
+      
+        <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/notes/dialysis-gamification-garden/">
+      
+      
+        <link rel="prev" href="../dialysis-gamification-decisions/">
+      
+      
+        <link rel="next" href="../iteration-9-1-fixes/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>之二：小花園的植物 - 血液透析中心平板照護輔助系統</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    .ask-ai-fab {
+      position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 5;
+      display: flex; align-items: center; gap: .4rem;
+      padding: .6rem 1rem; border: 0; border-radius: 2rem; cursor: pointer;
+      font: inherit; font-size: .75rem; font-weight: 700;
+      color: var(--md-primary-bg-color); background: var(--md-primary-fg-color);
+      box-shadow: var(--md-shadow-z2);
+    }
+    .ask-ai-fab svg { width: 1.1rem; height: 1.1rem; fill: currentColor; }
+    .ask-ai-panel {
+      position: fixed; right: 1.2rem; bottom: 4.4rem; z-index: 5;
+      width: min(22rem, calc(100vw - 2.4rem)); padding: 1rem;
+      border-radius: .4rem; font-size: .7rem; line-height: 1.6;
+      color: var(--md-default-fg-color); background: var(--md-default-bg-color);
+      box-shadow: var(--md-shadow-z3);
+    }
+    .ask-ai-panel[hidden] { display: none; }
+    .ask-ai-panel h2 { margin: 0 0 .4rem; font-size: .8rem; font-weight: 700; }
+    .ask-ai-panel p { margin: 0 0 .6rem; color: var(--md-default-fg-color--light); }
+    .ask-ai-panel textarea {
+      box-sizing: border-box; width: 100%; min-height: 5rem; padding: .5rem;
+      border: 1px solid var(--md-default-fg-color--lighter); border-radius: .2rem;
+      font: inherit; color: inherit; background: transparent; resize: vertical;
+    }
+    .ask-ai-panel .ask-ai-warn { margin: .4rem 0 .6rem; color: var(--md-typeset-color, inherit); font-weight: 700; }
+    .ask-ai-actions { display: flex; gap: .5rem; }
+    .ask-ai-actions button {
+      flex: 1; padding: .5rem; border-radius: .2rem; cursor: pointer; font: inherit; font-weight: 700;
+      border: 1px solid var(--md-primary-fg-color);
+      color: var(--md-primary-fg-color); background: transparent;
+    }
+    .ask-ai-actions button:disabled { opacity: .4; cursor: not-allowed; }
+    @media print { .ask-ai-fab, .ask-ai-panel { display: none; } }
+  </style>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#透析中的遊戲化之二小花園的植物" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-header__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            血液透析中心平板照護輔助系統
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              之二：小花園的植物
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換為深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為淺色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換為淺色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-nav__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    血液透析中心平板照護輔助系統
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    每週紀錄
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-10-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1014 — 規則引擎、護理紀錄、管理儀表板完成，四條規則的門檻請醫師確認（迭代 17.8～19）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-10-07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1007 — 第二次進院部分成功，院方 API 取代手動輸入（迭代 15～17）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0930 — 部署改為容器、介面極簡重設計（迭代 11～14.5）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0923 — 部署前的迭代 7～10 完成，第一次進院失敗
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0916 — 迭代 3～6 完成，全程留在院內網路
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0909 — Iteration 1＋2 完成、核心流程可完整執行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/archive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    臨床端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    技術端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    需求文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    需求文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/fde-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDE 數位化評估報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/srs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/database-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料庫使用規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/implementation-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    實作規格書
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/deployment-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/open-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    尚待確認事項清冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/architecture-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架構圖
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    參考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    參考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data-dictionary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料字典
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tech-stack-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    這套系統是用什麼蓋的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kiosk-shell-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    病人端外殼 App 契約
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他文件總表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    一般文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    一般文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mdm-offline-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    平板管控：免 MDM 的全院內方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uiux-design-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介面設計基準
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-route-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署路線比較：離線安裝包與容器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../idh-reference-survey/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    同院 IDH 系統參考調查
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai-education-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    三種衛教的 AI 生成
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_2_7" id="__nav_6_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    透析中的遊戲化
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_2_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    透析中的遊戲化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    透析中的遊戲化
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：決定、開關與實作順序
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：小花園的植物
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：小花園的植物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-本文件的定位" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 本文件的定位
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-選花的五條準則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 選花的五條準則
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-要避開的花" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 要避開的花
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-起始的-12-種花" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 起始的 12 種花
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-三種種子" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 三種種子
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-成長階段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 成長階段
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-開花之後" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 開花之後
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-畫風與怎麼畫" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 畫風與怎麼畫
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-共同花園的-24-張月份背景" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 共同花園的 24 張月份背景
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-四個階段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 四個階段
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-第一年之後每一季加什麼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 第一年之後每一季加什麼
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-還沒決定要長者看過的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 還沒決定、要長者看過的
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    小迭代文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    小迭代文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-3-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.3 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-5-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.5 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-3-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.3 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-5-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.5 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-6-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-7-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-8-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-18-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手動測試
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    手動測試
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/manual-test-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整手動測試手冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 11 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 12 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 13 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.2 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 16 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 19 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 20 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 21 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署手冊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    部署手冊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    總覽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/01-dev-machine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第一冊 · 開發機準備與安裝包建置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/02-dry-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二冊 · 開發端的測試部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/03-tablet-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第三冊 · 平板與外殼 App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/04-onsite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第四冊 · 進院當天
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/05-carry-in-out/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第五冊 · 帶進去與帶出來
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/06-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第六冊 · 現場疑難排解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/07-git-clone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第七冊 · 院方要求直接 git clone
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/08-shutdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第八冊 · 把服務關乾淨
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/09-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第九冊 · 院方要求以 git clone ＋ Docker 部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/10-first-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十冊 · 第一次進院紀錄（0922，失敗）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/11-compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/12-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十二冊 · 外殼 App（主機上建 APK）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/13-ai-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十三冊 · AI 閘道（實驗室實測與院內設定）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14-from-zero/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊 · 從零開始的實際部署（新手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14a-env-hospital/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之一 · 實際部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14b-env-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之二 · 模擬部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14c-cleanup-first-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之三 · 收掉第一次部署留下的東西
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14d-second-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之四 · 第二次進院紀錄（1001，部分成功）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15-from-zero/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊 · 從零開始的實際部署（新手版第二版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15a-env-hospital/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之一 · 實際部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15b-env-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之二 · 模擬部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15c-why-1001-failed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之三 · 1001 為什麼登不進去、下一次怎麼做
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15d-switch-host-to-ip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之四 · 主機位址從名稱改成 IP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    維護流程
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    維護流程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/HOWTO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄維護流程（人用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/AGENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件維護作業指示（agent 用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-本文件的定位" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 本文件的定位
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-選花的五條準則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 選花的五條準則
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-要避開的花" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 要避開的花
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-起始的-12-種花" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 起始的 12 種花
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-三種種子" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 三種種子
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-成長階段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 成長階段
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-開花之後" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 開花之後
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-畫風與怎麼畫" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 畫風與怎麼畫
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-共同花園的-24-張月份背景" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 共同花園的 24 張月份背景
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-四個階段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 四個階段
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-第一年之後每一季加什麼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 第一年之後每一季加什麼
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-還沒決定要長者看過的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 還沒決定、要長者看過的
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="透析中的遊戲化之二小花園的植物">透析中的遊戲化之二：小花園的植物<a class="headerlink" href="#透析中的遊戲化之二小花園的植物" title="Permanent link">&para;</a></h1>
+<p>版本：v0.1　文件狀態：草案（2026-10-10 開立）　適用讀者：院方（護理部、社工）、FDE 工程團隊</p>
+<p>上層文件：《<a href="../dialysis-gamification-decisions/">透析中的遊戲化之一：決定、開關與實作順序</a>》第 5.2 節</p>
+<hr />
+<h2 id="0-本文件的定位">0. 本文件的定位<a class="headerlink" href="#0-本文件的定位" title="Permanent link">&para;</a></h2>
+<p>遊戲化決定 5.2 規定：小花園的植物插畫由 AI 畫，<strong>畫之前先寫一份分析子文件</strong>，判斷要種哪些花、避開哪些花、每種花畫幾個成長階段、三種種子怎麼配、第一年之後每一季加什麼，以及共同花園的 24 張月份背景。這一份就是那份子文件，也是實作規格書 4.21（迭代 21）「開工第一件事」。</p>
+<p><strong>這一份不是需求文件。</strong> 需求在 SRS FR-P16、FR-P19、FR-S17 與實作規格書 4.21；這裡只決定內容。程式裡的數字（成長門檻、花的清單）以 <code>@hd/shared</code> 的 <code>garden.ts</code> 為準，這一份改了要同步改那裡。</p>
+<hr />
+<h2 id="1-選花的五條準則">1. 選花的五條準則<a class="headerlink" href="#1-選花的五條準則" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>準則</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>台灣慣用名、長輩一看就認得</strong></td>
+<td>第一次種下去的花要是長輩最熟的（上層 5.2「發現」階段）；花名用台灣的叫法，不用學名或外來譯名</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>每一季都有當季的花</strong></td>
+<td>節令花讓「這個時候開這個花」對得上長輩的生活經驗（上層 4.9 好奇心、5.2「終局」）</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>不用紅色</strong></td>
+<td>病人端紅色只給求助按鈕（《介面設計基準》4.1、H-5）。粉紅、紫、黃、白、藍都可以；正紅、朱紅、大紅的花不收</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>沒有喪葬、不吉、病、毒的聯想</strong></td>
+<td>花會被送進護理站（FR-P19），送出一朵會被誤會的花，比不送更糟</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>畫得出來、分得出來</strong></td>
+<td>AI 直接畫的是向量圖（決定 5.2 末段）；每一種花要有一眼就分得出的輪廓（花瓣數、形狀、排法），不只靠顏色（《介面設計基準》P-4）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-要避開的花">2. 要避開的花<a class="headerlink" href="#2-要避開的花" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>花</th>
+<th>為什麼不收</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>菊花（白菊、黃菊）</td>
+<td>告別式最常見的花</td>
+<td>波斯菊是另一屬、在台灣是休耕田的花海，<strong>收</strong>（第 3 節）</td>
+</tr>
+<tr>
+<td>白色百合（含台灣百合）</td>
+<td>告別式常用；送進護理站容易被誤會</td>
+<td>台灣百合是原生種、上層 7.5 舉過例，<strong>起始先不收</strong>，等院方看過再決定能不能只收進圖鑑、不能送</td>
+</tr>
+<tr>
+<td>白色海芋</td>
+<td>喪禮花藝常用</td>
+<td>竹子湖海芋季很有名，可惜</td>
+</tr>
+<tr>
+<td>劍蘭（唐菖蒲）</td>
+<td>告別式花藝常用</td>
+<td></td>
+</tr>
+<tr>
+<td>白色康乃馨</td>
+<td>悼念母親的花</td>
+<td>粉紅康乃馨可以，起始不收，母親節那一季再看（第 10 節）</td>
+</tr>
+<tr>
+<td>石蒜（彼岸花）</td>
+<td>名字與死亡的聯想；全株有毒</td>
+<td></td>
+</tr>
+<tr>
+<td>曼陀羅、夾竹桃</td>
+<td>有毒</td>
+<td></td>
+</tr>
+<tr>
+<td>罌粟</td>
+<td>毒品聯想</td>
+<td></td>
+</tr>
+<tr>
+<td>曇花</td>
+<td>「曇花一現」是短暫、消逝的意思</td>
+<td>花本身很美，但對透析病人的寓意不好</td>
+</tr>
+<tr>
+<td>鳳凰花、扶桑、聖誕紅、紅玫瑰、仙丹花、木棉花</td>
+<td>紅色或朱紅（準則 3）</td>
+<td>若之後有黃色或粉色的品種、畫得出來，可以用那個顏色收</td>
+</tr>
+<tr>
+<td>蘭花裡的白色蝴蝶蘭</td>
+<td>告別式也用白色蝴蝶蘭</td>
+<td>粉紫色的蝴蝶蘭是開幕、過年送禮的花，<strong>收粉紫色</strong></td>
+</tr>
+</tbody>
+</table>
+<p>判斷「可能被誤會」的準則：<strong>送進護理站時，護理師第一個聯想是不是好事</strong>。拿不準的先不收，留到第 11 節請院方看。</p>
+<hr />
+<h2 id="3-起始的-12-種花">3. 起始的 12 種花<a class="headerlink" href="#3-起始的-12-種花" title="Permanent link">&para;</a></h2>
+<p>三種種子各 4 種，四季都有。「一句說明」是病人在圖鑑與開花那一頁看到的字，寫法比照介面設計基準：平實、短、不用驚嘆號。</p>
+<table>
+<thead>
+<tr>
+<th>代號</th>
+<th>花名</th>
+<th>種子</th>
+<th>花色</th>
+<th>應景月份</th>
+<th>一句說明（病人看到的）</th>
+<th>輪廓</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PLUM</code></td>
+<td>梅花</td>
+<td>樹上開的花</td>
+<td>淡粉、白</td>
+<td>12、1、2 月</td>
+<td>冬天開的花，越冷越開</td>
+<td>五片圓花瓣、細花蕊</td>
+</tr>
+<tr>
+<td><code>TUNG</code></td>
+<td>油桐花</td>
+<td>樹上開的花</td>
+<td>白，花心淡紫</td>
+<td>4、5 月</td>
+<td>四五月山上一片白，像下雪一樣</td>
+<td>五片長圓花瓣、花心有細紋</td>
+</tr>
+<tr>
+<td><code>AZALEA</code></td>
+<td>杜鵑花</td>
+<td>樹上開的花</td>
+<td>粉紫</td>
+<td>2、3、4 月</td>
+<td>春天校園和公園裡最常見的花</td>
+<td>五片寬花瓣、上面一片有斑點</td>
+</tr>
+<tr>
+<td><code>OSMANTHUS</code></td>
+<td>桂花</td>
+<td>樹上開的花</td>
+<td>金黃</td>
+<td>9、10 月</td>
+<td>中秋前後開，香味傳得很遠</td>
+<td>枝上一簇簇四瓣小花、深綠葉</td>
+</tr>
+<tr>
+<td><code>SUNFLOWER</code></td>
+<td>向日葵</td>
+<td>田裡開的花</td>
+<td>黃，花心棕</td>
+<td>6、7、8 月</td>
+<td>花朵跟著太陽，夏天開得最好</td>
+<td>一圈尖花瓣、大花心</td>
+</tr>
+<tr>
+<td><code>DAYLILY</code></td>
+<td>金針花</td>
+<td>田裡開的花</td>
+<td>金橘</td>
+<td>8、9 月</td>
+<td>八九月山上開成一片，也能煮湯</td>
+<td>六片尖花瓣的星形</td>
+</tr>
+<tr>
+<td><code>COSMOS</code></td>
+<td>波斯菊</td>
+<td>田裡開的花</td>
+<td>粉紫</td>
+<td>11、12、1 月</td>
+<td>冬天休耕的田裡開成花海</td>
+<td>八片寬花瓣、瓣尖有缺口</td>
+</tr>
+<tr>
+<td><code>RAPE</code></td>
+<td>油菜花</td>
+<td>田裡開的花</td>
+<td>黃</td>
+<td>12、1、2 月</td>
+<td>冬天田裡的黃花，開完當肥料</td>
+<td>一串四瓣小花</td>
+</tr>
+<tr>
+<td><code>PHALAENOPSIS</code></td>
+<td>蝴蝶蘭</td>
+<td>庭院與水邊的花</td>
+<td>粉紫</td>
+<td>1、2、3 月</td>
+<td>台灣的蘭花，花朵像蝴蝶</td>
+<td>三片萼、兩片大圓瓣、唇瓣</td>
+</tr>
+<tr>
+<td><code>LOTUS</code></td>
+<td>荷花</td>
+<td>庭院與水邊的花</td>
+<td>粉，瓣尖淡</td>
+<td>6、7、8 月</td>
+<td>夏天的池塘，花和葉子都很大</td>
+<td>層層尖花瓣、旁邊一片圓荷葉</td>
+</tr>
+<tr>
+<td><code>GINGER_LILY</code></td>
+<td>野薑花</td>
+<td>庭院與水邊的花</td>
+<td>白</td>
+<td>6～10 月</td>
+<td>長在水邊的白花，聞起來很香</td>
+<td>綠苞上幾朵像蝴蝶的白花</td>
+</tr>
+<tr>
+<td><code>HYDRANGEA</code></td>
+<td>繡球花</td>
+<td>庭院與水邊的花</td>
+<td>藍紫</td>
+<td>4、5、6 月</td>
+<td>一團一團的小花，梅雨季開</td>
+<td>一顆球、由四瓣小花組成</td>
+</tr>
+</tbody>
+</table>
+<p><strong>分類留得下以後新增的花</strong>：花以代號存，不以清單位置存；存檔只存花的代號，不存圖（決定 5.4 第 8 條的精神）。每一種花多一欄「加入的時間」，第 10 節每一季加的花照同一張表往下加。</p>
+<hr />
+<h2 id="4-三種種子">4. 三種種子<a class="headerlink" href="#4-三種種子" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>種子</th>
+<th>名稱（病人看到的）</th>
+<th>裡面的花</th>
+<th>第一次種開什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TREE</code></td>
+<td>樹上開的花</td>
+<td>梅花、油桐花、杜鵑花、桂花</td>
+<td><strong>梅花</strong></td>
+</tr>
+<tr>
+<td><code>FIELD</code></td>
+<td>田裡開的花</td>
+<td>向日葵、金針花、波斯菊、油菜花</td>
+<td><strong>向日葵</strong></td>
+</tr>
+<tr>
+<td><code>COURTYARD</code></td>
+<td>庭院與水邊的花</td>
+<td>蝴蝶蘭、荷花、野薑花、繡球花</td>
+<td><strong>蝴蝶蘭</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>種子開什麼花</strong>（第 7 角：不確定性與好奇心）：</p>
+<ol>
+<li><strong>這位病人第一次種</strong>：照上表最右欄，開長輩最熟的那一種（上層 5.2「發現」）</li>
+<li>之後：同一種子裡的花依權重抽，<strong>當季的花權重 3、還沒開過的花權重 2</strong>（兩者相乘），其他 1。所以當季、沒看過的花最容易開出來，但每一種都有機會</li>
+<li>抽籤用的是這一棵植物自己的編號（平板產生），平板與伺服器算出來的一樣——斷線時種下去，連線後伺服器重算也是同一種花</li>
+<li>開花之前看不到是什麼花：種子、芽、苗、花苞都只畫植物，開花那一刻才知道名字</li>
+</ol>
+<hr />
+<h2 id="5-成長階段">5. 成長階段<a class="headerlink" href="#5-成長階段" title="Permanent link">&para;</a></h2>
+<p>每種花畫<strong>五個階段</strong>：種子、芽、苗、花苞、開花。前三個階段三種種子共用一套圖（長輩分不出幼苗是什麼花，畫得一樣反而不會猜錯）；花苞與開花每種花各畫一張，花苞的顏色已經是那朵花的顏色。</p>
+<table>
+<thead>
+<tr>
+<th>階段</th>
+<th>成長點數</th>
+<th>圖</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>種子</td>
+<td>0</td>
+<td>一小堆土、一顆種子</td>
+</tr>
+<tr>
+<td>芽</td>
+<td>1～2</td>
+<td>兩片子葉</td>
+</tr>
+<tr>
+<td>苗</td>
+<td>3～5</td>
+<td>一根莖、四片葉</td>
+</tr>
+<tr>
+<td>花苞</td>
+<td>6～7</td>
+<td>莖、葉、一個那朵花顏色的花苞</td>
+</tr>
+<tr>
+<td>開花</td>
+<td>8</td>
+<td>那朵花</td>
+</tr>
+</tbody>
+</table>
+<p><strong>成長點數怎麼來</strong>（上層 7.5「照療程次數長大」；實作規格書 4.21「不會枯、不會倒退、不能加速」）：</p>
+<table>
+<thead>
+<tr>
+<th>來源</th>
+<th>點數</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每來透析一次</td>
+<td><strong>+2</strong></td>
+<td>種下之後每多一次療程，每一棵都加 2。<strong>看的是這位病人有幾次療程，不是有沒有點開花園</strong>：三次沒點開，第四次點開時照樣長了三次的份</td>
+</tr>
+<tr>
+<td>澆水</td>
+<td>+1</td>
+<td>每次療程花園門口一份水，點一下就澆整座花園</td>
+</tr>
+<tr>
+<td>養分</td>
+<td>每一份 +1</td>
+<td>透析前問卷、心情問卷、衛教做完各一份（每次療程每種最多一次，與答案無關）；遊戲的那一份等麻將連連看與記憶相簿（迭代 22、23）接上</td>
+</tr>
+<tr>
+<td>照顧的上限</td>
+<td><strong>每棵每次療程最多 +2</strong></td>
+<td>澆水加養分再多，同一次療程一棵最多多長 2 點——這就是「不能加速」</td>
+</tr>
+</tbody>
+</table>
+<p><strong>算起來</strong>：種下那一次有澆水 → 當場就發芽（點下去馬上看得到變化）；每次都有澆水、做一樣任務的人，<strong>第三次療程就開花</strong>（上層 5.2「上手：第一朵花在三次療程內開」）；什麼都沒做的人第五次療程開，<strong>照樣會開</strong>。</p>
+<p><strong>不會枯、不會倒退</strong>：點數只會加不會減；缺席兩週、住院一個月，回來時跟離開時一樣，只是補上這段期間有來的療程（沒來就沒有）。沒有任何「好久沒來」「花渴了」的字。</p>
+<hr />
+<h2 id="6-開花之後">6. 開花之後<a class="headerlink" href="#6-開花之後" title="Permanent link">&para;</a></h2>
+<p>照遊戲化決定 3.6：</p>
+<ul>
+<li>開好的花<strong>一直留在那一格</strong>，系統永遠不自動移走</li>
+<li>可以送給護理站（FR-P19），或種進這一班的共同花園（FR-S17）；送出或種下之後那一格變回空地</li>
+<li>第一次開出某一種花，收進「台灣花卉圖鑑」；送走、種走之後圖鑑照樣有</li>
+<li>12 格都有植物時，種子區旁安靜一句「花園滿了，可以把開好的花送出去或種到大家的花園，再種新的」，不提醒</li>
+</ul>
+<hr />
+<h2 id="7-畫風與怎麼畫">7. 畫風與怎麼畫<a class="headerlink" href="#7-畫風與怎麼畫" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>事情</th>
+<th>決定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>畫風</td>
+<td>植物圖鑑的線稿上色：輪廓清楚、顏色柔和、不加表情、不畫成卡通（上層 7.5「不能讓長輩覺得是給小孩玩的」）</td>
+</tr>
+<tr>
+<td>怎麼畫</td>
+<td>由 AI 寫成<strong>程式產生的向量圖</strong>：每一種花的花瓣形狀、片數、排法寫成幾個參數，程式算出路徑，存在 <code>@hd/shared</code> 的 <code>garden-art.ts</code>。比起一張一張手寫 SVG 檔，改一個參數就能整批調整，兩端（病人端花園、護理站的花瓶）用同一份</td>
+</tr>
+<tr>
+<td>安全</td>
+<td>只用 <code>path</code>、<code>circle</code>、<code>ellipse</code>、<code>rect</code> 四種圖形與填色、線色、線寬、透明度幾個屬性；<strong>沒有腳本、事件屬性、外部參照、文字、<code>transform</code></strong>（決定 5.4 第 6 條）。畫的時候由程式逐一對照白名單產生，驗收腳本再檢查一次</td>
+</tr>
+<tr>
+<td>顏色</td>
+<td>只在 <code>garden-art.ts</code> 裡（植物一張色票、背景每個月一組）；驗收腳本檢查<strong>沒有任何一個顏色落在紅色的色相</strong>（色相 345°～15° 且飽和度高）。綠色的葉子、棕色的土是植物本身的顏色，不是介面的語意色</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>花園一格至少 96×96px（決定 3.6）。圖本身是 100×100 的座標，縮放不失真</td>
+</tr>
+<tr>
+<td>動畫</td>
+<td>沒有。點下去之後畫面直接換成下一個樣子（《介面設計基準》4.4：病人端唯一會自己動的是跑馬燈）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>畫得出來的程度</strong>：向量圖做得到精緻的線稿上色，做不到照片級寫實。夠不夠用，照上層 12.2 由長者在病床上實際看過再判斷（第 11 節）。</p>
+<p>全部插畫的總覽（每種花五個階段與只有花的樣子、三個種子包、空地、24 張背景；由 <code>garden-art.ts</code> 畫出來截圖，1010）：</p>
+<p><img alt="小花園的全部插畫" src="../images/garden-art-sheet.png" /></p>
+<hr />
+<h2 id="8-共同花園的-24-張月份背景">8. 共同花園的 24 張月份背景<a class="headerlink" href="#8-共同花園的-24-張月份背景" title="Permanent link">&para;</a></h2>
+<p>照遊戲化決定 3.6：每個月一張、兩年一輪，同一個月份的兩張季節相同、畫面不同。<strong>偶數年用 A、奇數年用 B</strong>；歸檔的花園保留它那個月的背景。</p>
+<p>畫法：遠山、近景、天空三層加一種點景，顏色<strong>刻意淡</strong>（明度高、飽和度低），退在植物後面；不畫人、不畫建築招牌、不用紅色。</p>
+<table>
+<thead>
+<tr>
+<th>月</th>
+<th>A（偶數年）</th>
+<th>B（奇數年）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>冬日山稜與梅林，淡粉的花點</td>
+<td>休耕田的油菜花海，遠山淡藍</td>
+</tr>
+<tr>
+<td>2</td>
+<td>早春竹林與晨霧</td>
+<td>河堤與剛冒出的新草</td>
+</tr>
+<tr>
+<td>3</td>
+<td>山坡上的杜鵑叢，淡粉色塊</td>
+<td>春雨後的梯田，水面映著天</td>
+</tr>
+<tr>
+<td>4</td>
+<td>油桐花開的山，綠中一點一點的白</td>
+<td>茶園的梯田，一條一條的綠</td>
+</tr>
+<tr>
+<td>5</td>
+<td>溪谷裡落滿油桐花</td>
+<td>剛插秧的水田</td>
+</tr>
+<tr>
+<td>6</td>
+<td>夏天的荷花池</td>
+<td>海岸與淡藍的海</td>
+</tr>
+<tr>
+<td>7</td>
+<td>午後的積雲與綠色稻浪</td>
+<td>山中的溪流與綠蔭</td>
+</tr>
+<tr>
+<td>8</td>
+<td>開滿金針花的山坡</td>
+<td>傍晚淡紫色的天與遠山</td>
+</tr>
+<tr>
+<td>9</td>
+<td>中秋的淡月與桂樹</td>
+<td>稻穗轉黃的田</td>
+</tr>
+<tr>
+<td>10</td>
+<td>秋天的芒草山坡，銀白的芒花</td>
+<td>收割後的稻田與稻草堆</td>
+</tr>
+<tr>
+<td>11</td>
+<td>楓香轉黃的山林（不畫紅葉）</td>
+<td>休耕田的波斯菊花海</td>
+</tr>
+<tr>
+<td>12</td>
+<td>海邊的防風林與冬陽</td>
+<td>山上的雲海</td>
+</tr>
+</tbody>
+</table>
+<p>背景代號寫成 <code>M01-A</code>～<code>M12-B</code>，存在共同花園那一座的資料列上（<code>shared_gardens.background_code</code>），歸檔之後不跟著換。</p>
+<hr />
+<h2 id="9-四個階段">9. 四個階段<a class="headerlink" href="#9-四個階段" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>階段</th>
+<th>小花園怎麼顧到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>發現</td>
+<td>遊戲圖示在基本資訊區，護理師口頭介紹一句（決定第 2 節第 1 題）；第一次種的花是長輩最熟的（第 4 節）</td>
+</tr>
+<tr>
+<td>上手</td>
+<td>種下那一次澆水就發芽；照常做任務的人第三次療程開花（第 5 節）</td>
+</tr>
+<tr>
+<td>養成</td>
+<td>起始 12 種、四季都有當季的花；種子開什麼花不一定，當季的、沒看過的比較常出現（第 4 節）</td>
+</tr>
+<tr>
+<td><strong>終局</strong></td>
+<td><strong>圖鑑永遠收不完</strong>：每一季加新花與節令花（第 10 節）；共同花園每個月換背景、兩年一輪</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-第一年之後每一季加什麼">10. 第一年之後每一季加什麼<a class="headerlink" href="#10-第一年之後每一季加什麼" title="Permanent link">&para;</a></h2>
+<p>上層第 5 節說終局做不好，半年後就沒人玩了。起始的 12 種大約要一年才收得齊（每種花要「種下、照顧、開花」，還要抽中），所以<strong>從第二季起每一季加三到四種</strong>，每一次都過第 1、2 節的準則，畫好之後經院方看過再上。</p>
+<table>
+<thead>
+<tr>
+<th>季</th>
+<th>加什麼</th>
+<th>為什麼這幾種</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2027 年第 1 季（春節）</td>
+<td>水仙（黃心白瓣，過年的花）、報歲蘭、桃花（淡粉）</td>
+<td>過年擺水仙、報歲蘭是長輩熟悉的年節景象；桃花取淡粉的品種</td>
+</tr>
+<tr>
+<td>2027 年第 2 季（母親節、端午）</td>
+<td>粉紅康乃馨、玉蘭花、茉莉花</td>
+<td>母親節的花；玉蘭花是路口賣的香花、茉莉有民謠，長輩都有記憶</td>
+</tr>
+<tr>
+<td>2027 年第 3 季（中秋）</td>
+<td>九層塔的花（淡紫）、牽牛花（藍紫）、睡蓮（淡紫）</td>
+<td>夏秋常見；九層塔是家家戶戶種的香草，開花長輩一看就知道</td>
+</tr>
+<tr>
+<td>2027 年第 4 季（冬至、年底）</td>
+<td>九重葛（紫）、山茶花（淡粉品種）、炮仗花（金黃品種）</td>
+<td>年底圍牆上常見；顏色都避開紅</td>
+</tr>
+<tr>
+<td>之後每一季</td>
+<td>由院方或病友回饋提名，照同一套準則挑</td>
+<td>加一欄「誰提名的」不記名，只記「病友提名」「護理部提名」</td>
+</tr>
+</tbody>
+</table>
+<p><strong>節令的驚喜</strong>：當季的花在種子抽籤時權重本來就高（第 4 節）；新的一季加進來的花，第一季也算當季。</p>
+<hr />
+<h2 id="11-還沒決定要長者看過的">11. 還沒決定、要長者看過的<a class="headerlink" href="#11-還沒決定要長者看過的" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事情</th>
+<th>怎麼決定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>畫出來的花夠不夠像、會不會像給小孩玩的</td>
+<td>上層 12.2：請長者在病床上實際看圖鑑與花園，問「這是什麼花」「像不像給小孩玩的」</td>
+</tr>
+<tr>
+<td>2</td>
+<td>台灣百合能不能收（第 2 節）</td>
+<td>請護理部看一次：只收進圖鑑、不能送，或乾脆不收</td>
+</tr>
+<tr>
+<td>3</td>
+<td>背景會不會太搶</td>
+<td>共同花園種了幾朵之後實際看；太搶就把背景的明度再拉高</td>
+</tr>
+<tr>
+<td>4</td>
+<td>一句說明的用字</td>
+<td>請護理部看過；改字只改 <code>garden.ts</code> 那一張表</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>定版</th>
+<th>日期</th>
+<th>異動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><a href="../dialysis-gamification-decisions/">← 回上層文件</a>　<a href="../../">← 回進度首頁</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+  
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  <script>
+  (function () {
+    if (document.querySelector('.ask-ai-fab')) return; // 保險：萬一被重跑，不要疊出第二顆
+
+    // 各家的「帶問題開新對話」網址；問題放在 q 參數
+    var TARGETS = {
+      claude: 'https://claude.ai/new?q=',
+      chatgpt: 'https://chatgpt.com/?q='
+    };
+
+    // __md_scope 是 Material 在首次載入時算好的版本根目錄（例如 …/hd-docs/latest/）
+    function siteRoot() {
+      try { return new URL('.', __md_scope).href; } catch (e) { return new URL('.', location.href).href; }
+    }
+
+    // 目前這頁對應的 .md：…/requirements/srs/ → …/requirements/srs/index.md
+    function pageMarkdown() {
+      var path = location.pathname;
+      if (!/\.html?$/.test(path) && !path.endsWith('/')) path += '/';
+      path = path.endsWith('/') ? path + 'index.md' : path.replace(/\.html?$/, '.md');
+      return location.origin + path;
+    }
+
+    // ── 候選頁：用站內搜尋索引做字面比對 ──────────────────────────────
+    // Material 內建搜尋對中文整句幾乎查不到東西，只借它的索引，排序自己算：
+    // 問題切成兩字一組，每組依稀有程度加分，標題有命中再加五成，每頁只取分數最高的段落。
+    // 字面比對抓不到同義詞（問題寫「表單」、文件寫「問卷」），所以 prompt 裡只稱「候選」，
+    // 另外靠 llms.txt 的小標讓 AI 自己找。
+    var index = null;      // [{ page, pageTitle, title, text }]
+    var loading = null;
+
+    var STOP = /甚麼|什麼|怎麼|怎樣|為什麼|哪些|哪裡|如何|請問/g;
+    function plain(s) { return String(s || '').replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, ''); }
+    function squash(s) { return plain(s).replace(/[\s\p{P}\p{S}]/gu, ''); }
+    function grams(s) {
+      var t = squash(s), g = {};
+      for (var i = 0; i < t.length - 1; i++) g[t.slice(i, i + 2)] = true;
+      return Object.keys(g);
+    }
+
+    function loadIndex() {
+      if (index || loading) return;
+      loading = fetch(siteRoot() + 'search/search_index.json')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var titles = {};
+          data.docs.forEach(function (d) { if (d.location.indexOf('#') < 0) titles[d.location] = plain(d.title); });
+          index = data.docs.map(function (d) {
+            var page = d.location.split('#')[0];
+            return {
+              page: page, pageTitle: titles[page] || plain(d.title), section: plain(d.title).trim(),
+              title: squash(d.title), text: squash(d.title) + squash(d.text)
+            };
+          });
+        })
+        .catch(function () { loading = null; }); // 拿不到就不附候選，照樣能問
+    }
+
+    function candidates(question, k) {
+      if (!index) return [];
+      var qg = grams(question.replace(STOP, ' '));
+      if (!qg.length) return [];
+      var idf = {};
+      qg.forEach(function (g) {
+        var n = 0;
+        index.forEach(function (d) { if (d.text.indexOf(g) >= 0) n++; });
+        idf[g] = n ? Math.log(index.length / n) : 0;
+      });
+      var best = {};
+      index.forEach(function (d) {
+        var s = 0, titleHit = false;
+        qg.forEach(function (g) {
+          if (d.text.indexOf(g) >= 0) { s += idf[g]; if (d.title.indexOf(g) >= 0) titleHit = true; }
+        });
+        if (titleHit) s *= 1.5;
+        if (s > 0 && (!best[d.page] || s > best[d.page].score)) best[d.page] = { score: s, doc: d };
+      });
+      return Object.keys(best)
+        .map(function (p) { return best[p]; })
+        .sort(function (a, b) { return b.score - a.score; })
+        .slice(0, k)
+        .map(function (r) { return r.doc; });
+    }
+
+    function markdownOf(page) { return siteRoot() + page + 'index.md'; }
+
+    function buildPrompt(question) {
+      var title = document.title.split(' - ')[0];
+      var here = pageMarkdown();
+      var lines = [
+        '請閱讀以下公開文件後回答我的問題。',
+        '- 我正在看的頁面「' + title + '」：' + here
+      ];
+      var picks = candidates(question, 6).filter(function (d) { return markdownOf(d.page) !== here; });
+      if (picks.length) {
+        lines.push('- 站內字面比對最接近的幾頁（只是候選，未必有答案，請逐頁點開讀）：');
+        picks.forEach(function (d) {
+          var sec = d.title && squash(d.pageTitle) !== d.title ? '（段落：' + d.section.slice(0, 30) + '）' : '';
+          lines.push('  - ' + d.pageTitle + sec + '：' + markdownOf(d.page));
+        });
+      }
+      lines.push(
+        '- 全站目錄，每頁附小標：' + siteRoot() + 'llms.txt',
+        '  候選頁沒有答案時，從目錄的小標找相關頁面再讀；文件用詞可能和我的問題不同，請把同義說法也算進去。',
+        '',
+        '回答規則：用台灣繁體中文；只根據上述文件，文件沒寫的就直說沒寫；每個重點附上出處頁面網址。',
+        '',
+        '我的問題：' + question
+      );
+      return lines.join('\n');
+    }
+
+    var fab = document.createElement('button');
+    fab.type = 'button';
+    fab.className = 'ask-ai-fab';
+    fab.setAttribute('aria-expanded', 'false');
+    fab.setAttribute('aria-controls', 'ask-ai-panel');
+    fab.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.2 1.1 4.2 2.9 5.6L4 21l4.6-2.4c1.1.3 2.2.4 3.4.4 5.5 0 10-3.6 10-8s-4.5-8-10-8Z"/></svg>' +
+      '<span>問 AI</span>';
+
+    var panel = document.createElement('section');
+    panel.id = 'ask-ai-panel';
+    panel.className = 'ask-ai-panel';
+    panel.hidden = true;
+    panel.setAttribute('aria-label', '用 AI 問這份文件');
+    panel.innerHTML =
+      '<h2>用 AI 問這份文件</h2>' +
+      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集任何內容。</p>' +
+      '<textarea placeholder="例如：病人按了求助之後，護理師那邊會看到什麼？"></textarea>' +
+      '<div class="ask-ai-warn">請勿輸入病人姓名、病歷號等個人資料。</div>' +
+      '<div class="ask-ai-actions">' +
+        '<button type="button" data-target="claude" disabled>問 Claude</button>' +
+        '<button type="button" data-target="chatgpt" disabled>問 ChatGPT</button>' +
+      '</div>';
+
+    var input = panel.querySelector('textarea');
+    var sends = panel.querySelectorAll('[data-target]');
+
+    function toggle(open) {
+      panel.hidden = !open;
+      fab.setAttribute('aria-expanded', String(open));
+      if (open) { input.focus(); loadIndex(); }
+    }
+
+    fab.addEventListener('click', function () { toggle(panel.hidden); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) { toggle(false); fab.focus(); }
+    });
+    input.addEventListener('input', function () {
+      var empty = !input.value.trim();
+      sends.forEach(function (b) { b.disabled = empty; });
+    });
+    sends.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var q = input.value.trim();
+        if (!q) return;
+        var url = TARGETS[b.dataset.target] + encodeURIComponent(buildPrompt(q));
+        window.open(url, '_blank', 'noopener');
+      });
+    });
+
+    document.body.appendChild(panel);
+    document.body.appendChild(fab);
+  })();
+  </script>
+
+  </body>
+</html>

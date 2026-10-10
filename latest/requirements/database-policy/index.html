@@ -2038,6 +2038,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/dialysis-gamification-garden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：小花園的植物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3494,6 +3522,34 @@
     
   
     迭代 20 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 21 分冊
   
 
     
@@ -5158,6 +5214,7 @@
 <li>狀態評估、彙總、統計要用的資料（每一步的操作、完成了沒、開了什麼花、送了什麼花）<strong>一律另存正規欄位</strong>，不從快照裡取</li>
 <li><strong>例外只此一處。</strong> 其他資料想比照辦理，要由使用者決定後改寫本段，不得自行類推</li>
 </ol>
+<p><strong>1010 迭代 21 實作</strong>：<code>game_saves.snapshot</code>（<code>TEXT</code>），每位病人每款遊戲一列、帶 <code>format_version</code>；寫入前與讀出後都以 <code>@hd/shared</code> 的 <code>validateGardenSnapshot</code>（白名單欄位）驗、上限 16 KB，驗不過整筆擋下（後端回 422）、不猜不覆寫；舊版升級寫在 <code>upgradeGardenSnapshot</code>。每一步、圖鑑、送花、共同花園的格子都是正規的表（<code>game_events</code>、<code>garden_collection</code>、<code>flower_gifts</code>、<code>shared_garden_plots</code>）。程式裡沒有任何查 JSON 內容的函式（<code>verify:iteration21</code> 第 5 步搜一次）。逐欄說明見《<a href="../../reference/data-dictionary/">資料字典</a>》第二十四節。</p>
 <h3 id="62-sqlite-特有的型別注意事項">6.2 SQLite 特有的型別注意事項<a class="headerlink" href="#62-sqlite-特有的型別注意事項" title="Permanent link">&para;</a></h3>
 <p>SQLite 只有五種儲存類別（NULL、INTEGER、REAL、TEXT、BLOB），與 PostgreSQL 的差異必須知道：</p>
 <table>
