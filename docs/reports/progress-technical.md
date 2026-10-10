@@ -2,10 +2,10 @@
 
 **適用讀者**：接手或協作的工程師
 **報告日期**：2026-10-10
-**版本**：迭代 19 完成（master）
+**版本**：迭代 20 完成（master）
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
-> **1010 補記**：同一天完成**迭代 17.8**（護理紀錄移到主列、DART／SOAP 分段與複製貼上、緊急回報的圖示自畫）、**迭代 18**（規則引擎與三項高風險功能，加上適足性推估）與**迭代 18.1**（書面確認閘門從 `.env` 改放進系統管理、四條規則換成依文獻選的建議門檻），見第 6、7 節；同日再完成**迭代 19**（管理儀表板、獎勵制度與對外揭露：資料分級守衛、十張新表、23 條路由、對外展示環境），見第 6 節「迭代 19」；遊戲化寫成兩份其他文件並排成迭代 20～23。
+> **1010 補記**：同一天完成**迭代 17.8**（護理紀錄移到主列、DART／SOAP 分段與複製貼上、緊急回報的圖示自畫）、**迭代 18**（規則引擎與三項高風險功能，加上適足性推估）與**迭代 18.1**（書面確認閘門從 `.env` 改放進系統管理、四條規則換成依文獻選的建議門檻），見第 6、7 節；同日再完成**迭代 19**（管理儀表板、獎勵制度與對外揭露：資料分級守衛、十張新表、23 條路由、對外展示環境），見第 6 節「迭代 19」；遊戲化寫成兩份其他文件並排成迭代 20～23，同日完成**迭代 20**（遊戲化之一：平板現有功能的遊戲化——完成記號、我的衛教小本子、病友小撇步、跑馬燈的「你知道嗎」、被聽見的回覆；三個開關、三張新表、8 條路由），見第 6 節「迭代 20」。
 >
 > 本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
 > **1001 第二次進院 B 級部分成功**——容器在院內主機上起來，護理端登入 `Failed to fetch`（`CORS_ORIGINS` 不放行護理端的來源），見部署手冊第十四冊之四、第十五冊之三；
@@ -115,7 +115,7 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 
 ## 4. 資料模型
 
-共 77 張表，18 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
+共 80 張表，19 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
 
 | 分類 | 表 | 加入於 |
 |---|---|---|
@@ -149,10 +149,11 @@ compose 另有一個只在 `simulation` 設定檔才起來的 `hospital-api-sim`
 | 獎勵制度（沒有總分、沒有排名欄） | `reward_rules`、`reward_periods`、`reward_scores`、`score_disputes` | 迭代 19 |
 | 臨時調動候補的技能標記 | `nurse_skill_tags` | 迭代 19 |
 | 對外報表（只存聚合值） | `external_reports`、`external_report_metrics`、`external_report_items` | 迭代 19 |
+| 平板現有功能的遊戲化（預設小撇步、病人選的小撇步、護理師的回覆；沒有自由文字欄） | `peer_tip_presets`、`peer_tip_submissions`、`nurse_replies` | 迭代 20 |
 
 迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。
 迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`；
-迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 `nursing_records` 加 `record_format`，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）。全部只做加法。
+迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 `nursing_records` 加 `record_format`，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）；迭代 20 另在 `carousel_items` 加 `peer_tip_preset_id`（可為空），我的衛教小本子不另存、由作答紀錄算。全部只做加法。
 
 ### 值得注意的地方
 
@@ -859,6 +860,23 @@ Noto Sans TC 以 `scripts/subset-font.py` 做成約 1.6MB 的子集。新增相�
 | 開發機看畫面 | 照迭代 15 開模擬院方 API 與後端，配一台開著的病人端給進行中的模擬病人；跑馬燈要另外開開關、上架內容 |
 | 順手更正 | 營運參數的修改端點原本寫死 1～1000，0 存不進去（夜間 0 時、床號格式 0、開頭靜止 0 秒），上限 1800 的閒置門檻也到不了；改成只擋非負整數，範圍由服務依定義表檢查 |
 
+### 迭代 20：遊戲化之一——平板現有功能的遊戲化（1010）
+
+細節在實作規格書 4.20（含開發端的判斷）。工程上要知道的：
+
+| 要知道的 | 在哪裡 |
+|---|---|
+| 三個開關 | `GAMIFY_EXISTING`（**預設開**，現有功能的小幅遊戲化）、`PEER_TIPS`、`NURSE_REPLIES`，新分組 `GAMIFICATION`；遊戲化其餘六個隨迭代 21～23 才加（DEP-34）。`judge` 三個都是「隨時可以開」 |
+| 共用定義 | `@hd/shared` 的 `gamification.ts`：那一句（`GAMIFY_TASK_THANKS`，只依任務種類）、小本子的算式（`notebookLitTopics`，連對兩題亮起、亮了不熄）、預設小撇步、貼圖與預設回覆、署名與字數上限 |
+| 病人端怎麼知道開關 | `GET /device/home` 多一塊 `gamification`（`existing`、`peerTips`、這次透析開始之前寫的還沒看過的回覆）；快取的舊資料沒有這一塊就當全關。新畫面 `TaskComplete`、`NotebookTask`、`PeerTipTask`、`NurseReplyTask` 都包在 `TaskFrame`；測驗結果在開關開著時改成「一起看答案」（`EducationTask` 的 `gamify`） |
+| 後端 | `modules/gamification/`：平板四支（小本子、小撇步選單與送出、回覆看過了）、護理端四支（回覆的讀與寫、預設小撇步的讀與寫），**八支都掛 `@RequireFeatureFlag`**；`GamificationRepository`。首次啟動寫 12 則預設小撇步（表裡有任何一列就不寫） |
+| 跑馬燈的兩種新來源 | `item_kind` 加 `DID_YOU_KNOW`、`PEER_TIP`，`source` 加 `PATIENT_SELECTED`。「你知道嗎」走同一條背景工作（`didYouKnowPrompt` 只帶月份，經 AI 閘道）；病友小撇步由病人的選擇開一份待核准草稿，建立者是登入不了的系統帳號 `SYSTEM-PEER-TIP`（帳號清單看不到，與另外兩個系統帳號同列在 `PEOPLE_ONLY`）；同一則同時只有一份（`findOpenPeerTip`）。開關關著時那一類的草稿不出現、核准 404；首頁關掉「你知道嗎」就不送，病友小撇步不看開關 |
+| 回覆 | 只回得了寫了字的那一份心情問卷、一份只回一次、沒有自由文字；平板只收**這次透析開始之前**寫的；護理端**沒有未讀數或待回覆清單的端點**，畫面在病人趨勢（`ReplyCell`） |
+| 用字 | 新文字限在自帶字型的子集裡（Big5 常用字），「廔管」寫成「血管通路」；不想重跑 `subset-font.py` 就照這一條 |
+| Schema | 三張表＋`carousel_items.peer_tip_preset_id`（遷移 `20261012090000_iteration20_gamification_existing`，`ADD COLUMN`、不重建表） |
+| 改了的驗收 | 沒有改任何既有腳本（病人端 `App.tsx` 保留 `verify:iteration17-5` 認的那一行匯入） |
+| 驗收 | `verify:iteration20`（10 步，不需後端；小本子的算式實際跑一次）、`verify:iteration20:api`（8 步，七條驗收標準逐條） |
+
 ### 迭代 19：管理儀表板、獎勵制度與對外揭露（1010）
 
 細節在實作規格書 3.10 末段、4.17。工程上要知道的：
@@ -1375,7 +1393,8 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 | ~~18~~ | ~~規則引擎與三項高風險功能（原 7 → 11 → 15）~~ | **已完成（1010）**，合成資料驗收與開發機截圖通過；臨床端逐句讀輸出待做 | 對真實病人啟用：法務書面確認（Q-02）＋臨床端門檻值（Q-03） |
 | ~~18.1~~ | ~~書面確認閘門改放進系統管理、四條規則的建議門檻（1010）~~ | **已完成（1010）**，腳本驗收通過 | 四條規則的門檻請醫師確認（1014 週報、Q-03） |
 | ~~19~~ | ~~管理儀表板、獎勵、對外揭露（原 8 → 12 → 16）~~ | **已完成（1010）** | L3 啟用需護理部同意（Q-04）；指標定義（Q-20）與核准角色（Q-21） |
-| 20～23 | 遊戲化之一～之四（1010）：現有功能的遊戲化、透析小花園、麻將連連看、記憶相簿 | 可以；21、23 先寫分析子文件與起始的圖 | 無；開給病人前要長者實際玩過（Q-31 第 8 題） |
+| ~~20~~ | ~~遊戲化之一：平板現有功能的遊戲化（1010）~~ | **已完成（1010）**，腳本驗收與開發機截圖通過 | 無；長者在床上看過（Q-31 第 8 題）、預設小撇步與回覆的措辭請護理部看過 |
+| 21～23 | 遊戲化之二～之四（1010）：透析小花園、麻將連連看、記憶相簿 | 可以；21、23 先寫分析子文件與起始的圖 | 無；開給病人前要長者實際玩過（Q-31 第 8 題） |
 
 迭代 15 的第一項是院方 API 探測工具，要趕在第三次進院前完成（實作規格書 4.19）——**1005 已完成**，指令在部署手冊第十五冊 V-30a；迭代 16、17 都不擋第三次進院。三個迭代的實作位置見 6「迭代 15」～「迭代 17」。
 
@@ -1383,7 +1402,7 @@ npm run check:all           # 六支盤點腳本（不需後端），0926 起多
 ~~迭代 19 的成效指標會吃迭代 6 產生的 `carousel_view_events`（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，
 因此它只回答得了「哪一類內容有人看」這種問題。~~ 迭代 19 已於 1010 完成：九個成效指標讀的是求助、護理紀錄、衛教完成、症狀問卷的時間戳，**沒有用到播放紀錄**（它只回答得了「哪一類內容有人看」，不是成效）。
 
-**1010 的順序**（實作規格書 4.0.5）：17.8 → 18 → 19 → 20～23。**這一次沒有改號**：排在 18 前面的只有小迭代 17.8。
+**1010 的順序**（實作規格書 4.0.5）：17.8 → 18 → 19 → 20～23；**做到 20**，下一個是 21（先寫《透析中的遊戲化之二：小花園的植物》子文件與起始插畫）。**這一次沒有改號**：排在 18 前面的只有小迭代 17.8。
 17.8 的兩個技術重點：院內以 `http://<IP>` 開護理端，不是安全來源，**複製要退回 `document.execCommand('copy')`**；護理紀錄的預設版位改主列，但既有環境的版位存在資料表、不會被預設值覆蓋，要一次性的資料遷移。
 院方建議的血壓正常區間判斷不做（SRS FR-P11 補充說明），程式不動。
 
