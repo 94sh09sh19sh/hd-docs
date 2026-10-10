@@ -353,6 +353,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../weekly/2026-10-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1014 — 規則引擎與護理紀錄完成，四條規則的門檻請醫師確認（迭代 17.8～18.1）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../weekly/2026-10-07/" class="md-nav__link">
         
   
@@ -1867,6 +1895,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-18-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2769,6 +2825,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3641,10 +3725,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#110-判斷規則的書面確認閘門1010-新增" class="md-nav__link">
+  <a href="#110-判斷規則的書面確認閘門1010-新增同日迭代-181-拿掉" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.10 判斷規則的書面確認閘門（1010 新增）
+        1.10 判斷規則的書面確認閘門（1010 新增，同日迭代 18.1 拿掉）
       
     </span>
   </a>
@@ -4081,10 +4165,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#110-判斷規則的書面確認閘門1010-新增" class="md-nav__link">
+  <a href="#110-判斷規則的書面確認閘門1010-新增同日迭代-181-拿掉" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.10 判斷規則的書面確認閘門（1010 新增）
+        1.10 判斷規則的書面確認閘門（1010 新增，同日迭代 18.1 拿掉）
       
     </span>
   </a>
@@ -4544,25 +4628,10 @@
 <li><code>hospital-api-sim</code> 是模擬院方 API，跟 <code>api</code> 用同一個映像檔，<strong>只在 <code>--profile simulation</code> 時啟動</strong>（第十五冊 V-30a），不開埠，只有 <code>api</code> 連得到。病人全是虛構的</li>
 <li>compose 把後端固定成正式環境設定，模擬部署也一樣；<strong>沒有 <code>HD_SIMULATION_DEPLOYMENT=yes</code>，位址指向模擬時後端拒絕啟動</strong>——院內就是靠這一條擋住抄錯的設定，V-30a 最後會故意清空它驗一次</li>
 </ul>
-<h3 id="110-判斷規則的書面確認閘門1010-新增">1.10 判斷規則的書面確認閘門（1010 新增）<a class="headerlink" href="#110-判斷規則的書面確認閘門1010-新增" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>變數</th>
-<th>填什麼</th>
-<th>與實際部署不同</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>HIGH_RISK_WRITTEN_CONFIRMATION</code></td>
-<td><strong>（空白）</strong></td>
-<td>相同：兩邊都空白（院內要等書面確認，模擬部署永遠不填）</td>
-</tr>
-</tbody>
-</table>
+<h3 id="110-判斷規則的書面確認閘門1010-新增同日迭代-181-拿掉">1.10 判斷規則的書面確認閘門（1010 新增，同日迭代 18.1 拿掉）<a class="headerlink" href="#110-判斷規則的書面確認閘門1010-新增同日迭代-181-拿掉" title="Permanent link">&para;</a></h3>
+<p><strong><code>.env</code> 裡沒有這一項了</strong>（迭代 18 時是 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code>）。迭代 18.1 起書面確認由系統管理者在護理端系統管理「判斷規則」登記；<strong>模擬部署永遠不登記</strong>。照舊版範本填過的設定目錄，那一行刪掉即可（留著不生效，後端啟動時提醒一聲）。</p>
 <ul>
-<li>空白時判斷輔助只對合成資料病人執行。模擬院方 API 的病人病歷號是 99 開頭、沒有合成資料前綴，系統當真實病人看，<strong>模擬部署上比對不到它們是對的</strong>；要看判斷輔助的畫面，照《完整手動測試手冊》迭代 18 分冊 <code>ab12</code> 在開發機上看。</li>
+<li>沒登記時判斷輔助只對合成資料病人執行。模擬院方 API 的病人病歷號是 99 開頭、沒有合成資料前綴，系統當真實病人看，<strong>模擬部署上比對不到它們是對的</strong>；要看判斷輔助的畫面，照《完整手動測試手冊》迭代 18 分冊 <code>ab12</code> 在開發機上看。</li>
 </ul>
 <hr />
 <h2 id="2-填好的樣子">2. 填好的樣子<a class="headerlink" href="#2-填好的樣子" title="Permanent link">&para;</a></h2>
@@ -4604,8 +4673,6 @@ LLM_HEALTH_TIMEOUT_SECONDS=5
 HOSPITAL_API_BASE_URL=http://hospital-api-sim:8090/dialysislist.php
 HD_SIMULATION_DEPLOYMENT=yes
 
-HIGH_RISK_WRITTEN_CONFIRMATION=
-
 BINDING_MAX_HOURS=6
 BINDING_EXPIRY_SWEEP_SECONDS=60
 SYMPTOM_TREND_WINDOW_DAYS=30
@@ -4629,7 +4696,7 @@ REALTIME_HEARTBEAT_SECONDS=20
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong><code>HD_SHELL_SIGNING=dev</code></strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>LLM_PROVIDER=mock</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>HOSPITAL_API_BASE_URL</code> 指向 <code>hospital-api-sim</code>、<code>HD_SIMULATION_DEPLOYMENT=yes</code>（1005 新增）</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>HIGH_RISK_WRITTEN_CONFIRMATION</code> <strong>是空白</strong>（1010 新增）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>沒有</strong> <code>HIGH_RISK_WRITTEN_CONFIRMATION</code> 這一行（1010 迭代 18.1 起拿掉）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 整份沒有任何一個值加了引號</li>
 </ul>
 <hr />
@@ -4697,9 +4764,9 @@ REALTIME_HEARTBEAT_SECONDS=20
 <td><strong><code>yes</code></strong></td>
 </tr>
 <tr>
-<td><code>HIGH_RISK_WRITTEN_CONFIRMATION</code>（1010）</td>
-<td>空白；書面確認拿到後填文號</td>
-<td><strong>永遠空白</strong></td>
+<td>~~<code>HIGH_RISK_WRITTEN_CONFIRMATION</code>（1010）~~</td>
+<td>18.1 起不在設定檔：書面確認拿到後在系統管理登記</td>
+<td>18.1 起不在設定檔：<strong>永遠不登記</strong></td>
 </tr>
 <tr>
 <td><code>JWT_SECRET</code></td>

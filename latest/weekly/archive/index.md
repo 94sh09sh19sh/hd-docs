@@ -4,6 +4,7 @@
 
 | 週次                                                                             | 標題                                    |
 | -------------------------------------------------------------------------------- | --------------------------------------- |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-23/index.md) | 部署前的迭代 7～10 完成，第一次進院失敗 |
 | [0916](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-16/index.md) | 迭代 3～6 完成，全程留在院內網路        |
 | [0909](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-09/index.md) | Iteration 1＋2 完成、核心流程可完整執行 |
 

@@ -353,6 +353,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../weekly/2026-10-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1014 — 規則引擎與護理紀錄完成，四條規則的門檻請醫師確認（迭代 17.8～18.1）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../weekly/2026-10-07/" class="md-nav__link">
         
   
@@ -1575,6 +1603,17 @@
     <span class="md-ellipsis">
       
         4.16 迭代 18：規則引擎與三項高風險功能（原迭代 7 → 11 → 15，1005 再順延）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4161-迭代-181書面確認閘門改放進系統管理四條規則的建議門檻1010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.16.1 迭代 18.1：書面確認閘門改放進系統管理、四條規則的建議門檻（1010）
       
     </span>
   </a>
@@ -2854,6 +2893,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-18-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3743,6 +3810,34 @@
     
   
     迭代 18 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 分冊
   
 
     
@@ -5377,6 +5472,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#4161-迭代-181書面確認閘門改放進系統管理四條規則的建議門檻1010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.16.1 迭代 18.1：書面確認閘門改放進系統管理、四條規則的建議門檻（1010）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#417-迭代-19管理儀表板獎勵制度與對外揭露原迭代-8--12--161005-再順延" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6334,6 +6440,28 @@
 </tr>
 </tbody>
 </table>
+<p><strong>迭代 18.1 是第十二次</strong>（1010）：使用者指示書面確認閘門從主機設定檔改放進系統管理（4.16.1）。<code>verify:iteration18</code> 第 5 步找的正是「設定檔有這個變數、沒有任何端點能改它」，需求本身改了，不改就一定不通過：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration18</code> 第 5 步</td>
+<td>拿掉「閘門讀主機設定檔」「沒有端點能改」「三份範本有這一行」五項，只留「閘門沒開，真實病人整個不比對」</td>
+<td>拿掉的改由 <code>verify:iteration18-1</code> 驗反面（設定檔沒有、端點只有系統管理者、要文號與理由、寫稽核、紀錄只增不改）；<code>verify:iteration18-1:api</code> 實際登記、取消登記各一次，驗真實病人擋下與放行</td>
+</tr>
+<tr>
+<td><code>verify:iteration18:api</code> 步驟 1</td>
+<td>只改閘門登記著時的提示訊息（叫人去系統管理取消登記，不是去改 <code>.env</code>）</td>
+<td>「閘門沒開」照驗</td>
+</tr>
+</tbody>
+</table>
 <h3 id="12-本階段納入">1.2 本階段納入<a class="headerlink" href="#12-本階段納入" title="Permanent link">&para;</a></h3>
 <p>SRS 第 5 章全部 81 條需求（FR-P01～P19、FR-N01～N20、FR-M01～M12、FR-X01～X05、FR-S01～S17、FR-R01～R08），依第 4 章分二十一次迭代實作（迭代 3～23）。<strong>0919 由 60 條增為 63 條</strong>：新增 FR-S10（介面不得洩漏內部技術識別）、FR-S11（版位與功能可設定）、FR-S12（更新不得破壞既有資料）。<strong>0926 由 63 條增為 70 條</strong>：新增 FR-P14～P15（病人端首頁三區、任務依時點出現）、FR-N14～N16（簡易版與專業版、單一工作台、一步完成）、FR-S13（AI 閘道）、FR-S14（外殼 App 契約）。<strong>1005 由 70 條增為 73 條</strong>：新增 FR-N17（跑馬燈內容由 AI 生成、護理師核准）、FR-S15（院方 API 優先）、FR-S16（院方 API 介接與即時推送）。<strong>1010 由 73 條增為 81 條</strong>：新增 FR-P16～P19（遊戲、現有功能的小幅遊戲化、病友小撇步、送花）、FR-N18（護理紀錄交給院內的正式紀錄）、FR-N19～N20（被聽見的回覆、遊戲資料的狀態評估彙整）、FR-S17（病人之間只有匿名的彙總）。</p>
 <h3 id="13-明確排除本階段完全不碰">1.3 明確排除（本階段完全不碰）<a class="headerlink" href="#13-明確排除本階段完全不碰" title="Permanent link">&para;</a></h3>
@@ -6944,7 +7072,7 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 </tr>
 <tr>
 <td>書面確認閘門（FR-R08）</td>
-<td><strong>院內主機設定檔的 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code></strong> 填書面確認的文號才算開，空值就是沒開；畫面上只看得到狀態、改不了。沒開時真實病人整位不比對：立即比對回 403 並寫稽核，定時比對略過（同一位病人一天記一筆）</td>
+<td>~~<strong>院內主機設定檔的 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code></strong> 填書面確認的文號才算開，空值就是沒開；畫面上只看得到狀態、改不了。~~ <strong>1010 迭代 18.1（使用者指示）改放進系統管理「判斷規則」</strong>：系統管理者填文號與理由登記、填理由取消登記，每一次都是 <code>rule_gate_changes</code> 新的一列並寫稽核，最新一列就是現況；設定檔不再有這一項（4.16.1）。沒開時真實病人整位不比對：立即比對回 403 並寫稽核，定時比對略過（同一位病人一天記一筆）</td>
 </tr>
 <tr>
 <td>標為生效（FR-R02）</td>
@@ -6999,7 +7127,7 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <td>RISK-IDWG-01</td>
 <td>風險分層（FR-P03）</td>
 <td>本次透析前體重比上一次結束體重增加多少，占理想體重的百分比</td>
-<td>4.0%（示範值）</td>
+<td>4.0%、上一次結束體重往前找 3 天（18.1 依文獻；18 時是 7 天的示範值）</td>
 <td>未附</td>
 </tr>
 <tr>
@@ -7012,8 +7140,8 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <tr>
 <td>ALERT-SYM-01</td>
 <td>療程中預警（FR-P05）</td>
-<td>近 3 次療程有幾次在差不多同一個時間點按了同一種「身體不舒服」</td>
-<td>至少 2 次、中位數前後 30 分鐘（示範值）</td>
+<td>近 6 次療程有幾次在差不多同一個時間點按了同一種「身體不舒服」</td>
+<td>至少 2 次、中位數前後 30 分鐘（18.1 依文獻；18 時是近 3 次的示範值）</td>
 <td>未附</td>
 </tr>
 <tr>
@@ -7027,18 +7155,19 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <td>DOSE-HB-01</td>
 <td>劑量調整參考（FR-N06）</td>
 <td>最近一筆血紅素在上下限之外</td>
-<td>10.0～12.0 g/dL、60 天內（示範值）</td>
+<td>10.0～11.5 g/dL、35 天內（18.1 依文獻；18 時是 12.0、60 天的示範值）</td>
 <td>未附；條文是寫明「不是院方 protocol」的示範字</td>
 </tr>
 <tr>
 <td>ADEQ-KTV-01</td>
 <td>適足性推估（FR-N07）</td>
 <td>最近幾次 spKt/V 的直線趨勢推估下一次</td>
-<td>低於 1.20、至少 3 次（示範值）</td>
+<td>低於 1.20、至少 3 次、取最近 6 次（18.1 依文獻，數字沒變）</td>
 <td>未附</td>
 </tr>
 </tbody>
 </table>
+<p><strong>1010 迭代 18.1</strong>：沒有出處的四條換成開發端依文獻選的建議值（KDOQI、KDIGO、日本透析醫學會、Flythe 等；選法與出處見《<a href="../../notes/iteration-18-1-fixes/">迭代 18.1 修正紀錄</a>》第 3 節），寫在備註、<strong>不寫進書面依據出處</strong>——出處要的是臨床端的文件，開發端查的文獻不算，四條照樣標不了生效。1014 週報請醫師確認（Q-03）。已經寫入過預設規則的資料庫，啟動時補一個系統建立的草稿版本，舊版本不動；有生效中版本的規則不補。</p>
 <p>兩條收縮壓相關的附了出處、<strong>標得了生效</strong>；能不能拿另一套系統的程式當書面依據，由標為生效的人判斷（參考調查 9.2 第 2 項的建議是不能，開啟前請醫師簽一次）。其餘四條沒有出處，標不了生效，只能跑合成資料。</p>
 <h3 id="37-功能開關中心新增">3.7 功能開關中心（新增）<a class="headerlink" href="#37-功能開關中心新增" title="Permanent link">&para;</a></h3>
 <p>對應 FR-S08。以下每一項都要能獨立開關，切換寫入稽核軌跡並記錄核准依據：</p>
@@ -7054,7 +7183,7 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <tr>
 <td><code>RISK_STRATIFICATION</code>（FR-P03）</td>
 <td>關</td>
-<td>~~FR-R08 書面確認＋規則版本有依據~~ <strong>1010 迭代 18</strong>：這一項至少有一個規則版本。書面確認與書面依據<strong>改擋在每一次比對</strong>：缺一，真實病人一律擋下，只對合成資料病人執行（3.6）。若擋在開關上，「閘門沒開時只對合成資料執行」那一種狀態就不存在（4.16 驗收第 9 條驗不了）；兩件事的現況寫在開關的說明裡</td>
+<td>~~FR-R08 書面確認＋規則版本有依據~~ <strong>1010 迭代 18</strong>：這一項至少有一個規則版本。書面確認與書面依據<strong>改擋在每一次比對</strong>：缺一，真實病人一律擋下，只對合成資料病人執行（3.6；閘門 18.1 起在系統管理登記）。若擋在開關上，「閘門沒開時只對合成資料執行」那一種狀態就不存在（4.16 驗收第 9 條驗不了）；兩件事的現況寫在開關的說明裡</td>
 </tr>
 <tr>
 <td><code>INTRA_DIALYSIS_ALERT</code>（FR-P05）</td>
@@ -7853,6 +7982,11 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <td>使用者指定本週完成；與其他迭代沒有相依。外部答覆（Q-02、Q-03）仍不到，<strong>照 4.16 做到合成資料驗收</strong>。<strong>1010 完成</strong></td>
 </tr>
 <tr>
+<td><strong>18.1</strong></td>
+<td>書面確認閘門改放進系統管理、四條規則的建議門檻</td>
+<td>使用者 1010 看過迭代 18 之後指示；改的都是迭代 18 剛做好的東西，不是新的範圍（4.16.1）。<strong>1010 完成</strong></td>
+</tr>
+<tr>
 <td><strong>19</strong></td>
 <td>管理儀表板、獎勵制度與對外揭露（內容不變）</td>
 <td>使用者指定本週完成；吃迭代 5 起累積的求助、班表、跑馬燈播放紀錄（4.0 原則 4）</td>
@@ -7880,7 +8014,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 </tbody>
 </table>
 <p><strong>週三前的預期</strong>：17.8、18、19 做完；遊戲化做到哪裡就停在哪裡，<strong>每一個迭代各自完整驗收</strong>，不留半個迭代。做不完的照順序帶到下週。</p>
-<p><strong>測試手冊的分冊項次</strong>：17.8 沿用 <code>aa</code>，接 17.7 的 <code>aa147</code> 起；18 用 <code>ab</code>、19 用 <code>ac</code>、20 用 <code>ad</code>、21 用 <code>ae</code>、22 用 <code>af</code>、23 用 <code>ag</code>。</p>
+<p><strong>測試手冊的分冊項次</strong>：17.8 沿用 <code>aa</code>，接 17.7 的 <code>aa147</code> 起；18 用 <code>ab</code>（18.1 沿用，接 <code>ab27</code> 起）、19 用 <code>ac</code>、20 用 <code>ad</code>、21 用 <code>ae</code>、22 用 <code>af</code>、23 用 <code>ag</code>。</p>
 <h3 id="40-為什麼是這個順序">4.0 為什麼是這個順序<a class="headerlink" href="#40-為什麼是這個順序" title="Permanent link">&para;</a></h3>
 <p>排序不是照需求編號，也不是照「哪個看起來最重要」，而是照四條原則。順序若違反其中任一條，代價都是重工或永久性的損失：</p>
 <table>
@@ -10782,9 +10916,9 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 </thead>
 <tbody>
 <tr>
-<td>書面確認閘門放在院內主機的設定檔，不做成畫面上的開關</td>
-<td>FR-R08「以設定強制，而非僅寫在文件裡」；改它要動得到院內主機，不是任何一個登入得了的帳號按一下就算</td>
-<td>3.6；《部署手冊》第十五冊之一、之二</td>
+<td>~~書面確認閘門放在院內主機的設定檔，不做成畫面上的開關~~ <strong>1010 使用者推翻：改放進系統管理</strong>（4.16.1）</td>
+<td>~~FR-R08「以設定強制，而非僅寫在文件裡」；改它要動得到院內主機，不是任何一個登入得了的帳號按一下就算~~ 仍是系統強制（每一次比對擋下真實病人）；登記只有系統管理者、要文號與理由、每一次寫稽核</td>
+<td>3.6；《迭代 18.1 修正紀錄》</td>
 </tr>
 <tr>
 <td>開關只要求有規則版本，閘門與書面依據擋在每一次比對</td>
@@ -10802,7 +10936,7 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <td>3.6</td>
 </tr>
 <tr>
-<td>預設六條規則全部是草稿，四條的門檻是示範值</td>
+<td>預設六條規則全部是草稿，四條的門檻是示範值（<strong>18.1 換成依文獻選的建議值，仍不是書面依據</strong>）</td>
 <td>門檻值就是臨床判斷（Q-03），開發端訂的只能跑合成資料；示範值讓合成資料驗收有東西可比</td>
 <td>3.6</td>
 </tr>
@@ -10824,7 +10958,7 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 </tbody>
 </table>
 <p><strong>驗收現況（1010）</strong>：<code>verify:iteration18</code>（新增，6 步，不需要後端；評估器的邊界實際跑一次）與 <code>verify:iteration18:api</code>（新增，9 步，十條驗收標準逐條）全部通過；<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>14:api</code>、<code>17:api</code>、<code>17-8:api</code> 對著開發機的後端通過，<code>verify:iteration8</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>～<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>～<code>17-8</code>、<code>check:all</code> 全綠，其中 <code>verify:iteration3</code>、<code>6</code> 依 1.1 第十一次改寫。以無頭 Chrome 在 1366×768 看過即時總覽的待檢視、看依據、病人趨勢、系統管理「判斷規則」與建立新版本的表單。
-<strong>沒有驗的</strong>：臨床端逐句讀一次輸出文字（驗收第 3 條的人工那一半，<code>ab25</code>）；院內主機上填了文號的閘門（要等 Q-02）。</p>
+<strong>沒有驗的</strong>：臨床端逐句讀一次輸出文字（驗收第 3 條的人工那一半，<code>ab25</code>）；~~院內主機上填了文號的閘門（要等 Q-02）~~ 18.1 起閘門在系統管理登記，登記與取消登記開發機上驗過（<code>verify:iteration18-1:api</code>），真的文號要等 Q-02。</p>
 <p><strong>目標</strong>：完成本週任務二——三項原被禁止的高 SaMD 風險功能，並帶齊 FR-R01～R08 全部控制措施。</p>
 <blockquote>
 <p><strong>1010：本週做，排在迭代 17.8 之後</strong>（4.0.5）。內容與驗收標準不變；Q-02、Q-03 仍沒有答覆，照下方「這兩項不到齊」那一段做到合成資料驗收。低血壓那一組門檻 1005 已決定套用同院 IDH 系統的值（清冊 Q-03），規則版本的書面依據出處照那段寫。</p>
@@ -10926,6 +11060,72 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <li><strong>臨床端提供的規則門檻值與所依據的 protocol 條文</strong>（FR-R02）——沒有它，只能跑合成資料</li>
 </ul>
 <p><strong>這兩項不到齊，本迭代仍可 100% 完成實作與合成資料驗收</strong>，差別只在能不能對真實病人啟用。實作不應等待。</p>
+<h3 id="4161-迭代-181書面確認閘門改放進系統管理四條規則的建議門檻1010">4.16.1 迭代 18.1：書面確認閘門改放進系統管理、四條規則的建議門檻（1010）<a class="headerlink" href="#4161-迭代-181書面確認閘門改放進系統管理四條規則的建議門檻1010" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>2026-10-10 完成。</strong> 紀錄在《<a href="../../notes/iteration-18-1-fixes/">迭代 18.1 修正紀錄</a>》，手動測試在《<a href="../../testing/iteration-18-1/">迭代 18.1 分冊</a>》（<code>ab27</code>～<code>ab40</code>）。
+不是新的範圍：改的是迭代 18 剛做好的閘門放在哪裡、預設規則的數字。迭代 19 的內容一項都沒動。</p>
+</blockquote>
+<p>使用者 1010 看過迭代 18 之後指示：「開關改放進系統管理；四條規則的門檻你先去查最適合的值，下週放在週報去問醫生」。四項判斷輔助的功能開關本來就在系統管理，<strong>唯一不在的是書面確認閘門</strong>，所以「開關」指的是它。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>事項</th>
+<th>做法</th>
+<th>需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>閘門存進資料庫</td>
+<td>新表 <code>rule_gate_changes</code>（是否登記、文號、理由、誰、什麼時候），<strong>只增不改</strong>，最新一列就是現況；沒有任何一列＝沒登記</td>
+<td>FR-R08</td>
+</tr>
+<tr>
+<td>2</td>
+<td>登記與取消登記</td>
+<td><code>PUT /api/rules/gate</code>，只有系統管理者（與標為生效同一個權限）；登記要文號（200 字內）與理由、取消登記要理由；狀態沒變回 409；每一次寫稽核（<code>RULE_GATE_CHANGED</code>）</td>
+<td>FR-R08</td>
+</tr>
+<tr>
+<td>3</td>
+<td>系統管理「判斷規則」</td>
+<td>閘門卡多一顆「登記書面確認」／「取消登記」，展開文號與理由、按確認才生效；護理長只看得到狀態與最近一次的登記人、時間、理由</td>
+<td>FR-R08、FR-S11</td>
+</tr>
+<tr>
+<td>4</td>
+<td>設定檔拿掉</td>
+<td>後端不再讀 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code>；<code>.env.example</code>、<code>deploy/hospital.env.example</code>、<code>docker-compose.yml</code> 拿掉；設定檔還留著這一行時啟動提醒一聲。啟動時記下閘門狀態的稽核（<code>RULE_GATE_STATE_RECORDED</code>）不再產生</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5</td>
+<td>四條規則的建議門檻</td>
+<td>RISK-IDWG-01 往前找 3 天；ALERT-SYM-01 近 6 次；DOSE-HB-01 上限 11.5、35 天內；ADEQ-KTV-01 數字不變。備註寫依據，<strong>出處照樣空著</strong></td>
+<td>FR-R02</td>
+</tr>
+<tr>
+<td>6</td>
+<td>既有資料庫</td>
+<td>啟動時每一條預設規則若沒有一版的門檻與備註跟新的一樣，以系統的名義補一個草稿版本；有生效中版本的不補</td>
+<td>3.6 第 1 條</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Schema 變更（只做加法）</strong>：新增 <code>rule_gate_changes</code>，遷移 <code>20261011120000_iteration18_1_rule_gate</code>，<code>check:migration</code> 無發現。</p>
+<p><strong>驗收標準</strong>：</p>
+<ol>
+<li>閘門沒登記時，真實病人照樣整位擋下並記錄（迭代 18 驗收第 9 條不變）</li>
+<li>只有系統管理者登記得了；沒有文號、沒有理由都擋下；每一次登記與取消登記都查得到稽核</li>
+<li>登記之後，真實病人只用生效中的版本——規則只有草稿時一筆都不比對，並記下哪幾條沒有生效中的版本</li>
+<li>設定檔、範本、compose 都沒有這一項；設定檔留著也不會被當成閘門</li>
+<li>四條規則的建議值寫在備註、出處空著、標不了生效；兩條收縮壓的不動</li>
+<li>已有預設規則的資料庫，重新啟動後四條各多一版、再啟動不會再多</li>
+</ol>
+<p><strong>驗收現況（1010）</strong>：<code>verify:iteration18-1</code>（新增，5 步，不需要後端）與 <code>verify:iteration18-1:api</code>（新增，6 步）全部通過；<code>verify:iteration18</code> 依 1.1 第十二次改寫後通過，<code>verify:iteration18:api</code>、<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>7</code>、<code>9</code>、<code>14:api</code>、<code>17:api</code>、<code>17-8:api</code> 對著開發機的後端通過；<code>verify:iteration11</code>、<code>14</code>、<code>15</code>、<code>17</code>、<code>17-7</code>、<code>17-8</code>、<code>check:all</code> 全綠。以無頭 Chrome 在 1366×768 看過「判斷規則」的閘門卡與登記表單。
+<strong>沒有驗的</strong>：醫師確認四條規則的門檻（1014 週報）；真的文號（Q-02）。</p>
 <h3 id="417-迭代-19管理儀表板獎勵制度與對外揭露原迭代-8--12--161005-再順延">4.17 迭代 19：管理儀表板、獎勵制度與對外揭露（原迭代 8 → 12 → 16，1005 再順延）<a class="headerlink" href="#417-迭代-19管理儀表板獎勵制度與對外揭露原迭代-8--12--161005-再順延" title="Permanent link">&para;</a></h3>
 <p><strong>目標</strong>：完成新增任務一的呈現與計分部分，以及對外揭露。前面三個迭代累積的資料在這裡變成可看的東西。</p>
 <blockquote>

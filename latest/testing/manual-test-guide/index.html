@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/">
       
       
-        <link rel="prev" href="../../notes/iteration-17-8-fixes/">
+        <link rel="prev" href="../../notes/iteration-18-1-fixes/">
       
       
         <link rel="next" href="../iteration-3/">
@@ -345,6 +345,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-10-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1014 — 規則引擎與護理紀錄完成，四條規則的門檻請醫師確認（迭代 17.8～18.1）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1854,6 +1882,34 @@
     
   
     迭代 17.8 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/iteration-18-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 修正紀錄
   
 
     
@@ -3388,6 +3444,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-18-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4847,7 +4931,7 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 18 · 146 條 API 路由 · 120 種稽核動作。
+對應版本：迭代 18.1 · 158 條 API 路由 · 121 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
 <strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-18-分冊">§13 分冊索引</a>。</p>
 </blockquote>
@@ -6494,6 +6578,11 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>（迭代 14.2）重新開啟今天已下機或取消的排班，沿用同一筆</td>
 </tr>
 <tr>
+<td><code>POST /api/treatment-sessions/:id/complete</code></td>
+<td>binding:manage</td>
+<td>（迭代 15）確認下機：沒有綁定平板的療程（待確認下機）；簡易版與專業版共用。1010 才補進這張表</td>
+</tr>
+<tr>
 <td><code>GET /api/hospital-sync/status</code></td>
 <td>patient:monitor</td>
 <td>（迭代 15）院方資料最後一次更新、是否超過提示時間</td>
@@ -6569,6 +6658,11 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>（迭代 18）書面確認閘門的狀態、每一條判斷規則與它的版本。不跟著開關擋</td>
 </tr>
 <tr>
+<td><code>PUT /api/rules/gate</code></td>
+<td>system:configure</td>
+<td>（迭代 18.1）登記（文號＋理由）或取消登記（理由）書面確認閘門；狀態沒變回 409；寫稽核。迭代 18 時閘門在主機設定檔</td>
+</tr>
+<tr>
 <td><code>POST /api/rules/definitions/:id/versions</code></td>
 <td>system:configure</td>
 <td>（迭代 18）以舊版為底建立新版本（草稿）；範本有結論式的字、門檻超出範圍、劑量調整參考沒有條文都擋下</td>
@@ -6612,7 +6706,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 </table>
 <blockquote>
 <p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-18/">迭代 18</a> 各分冊（索引見 §13）。
-本表逐條對齊後端啟動時印出的路由清單（目前 146 條；1010 迭代 18 加九條、迭代 17.8 加兩條；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+本表逐條對齊後端啟動時印出的路由清單（目前 158 條；1010 迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>h1</code> <strong>［終端機］</strong> 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
@@ -6940,13 +7034,18 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 </tr>
 <tr>
 <td><a href="../iteration-18/">迭代 18 — 規則引擎與三項高風險功能</a></td>
-<td>風險分層提示、療程中預警、劑量調整參考、<strong>透析適足性趨勢推估</strong>由規則計算、<strong>不經 AI</strong>；即時總覽的「判斷輔助：待檢視」、病人趨勢的判斷輔助與立即比對、<strong>看依據</strong>、已檢視・採納／未採納；系統管理「<strong>判斷規則</strong>」：書面確認閘門（<strong>只能看</strong>）、沒有出處標不了生效、用過的版本改不了；<strong>閘門沒開時只對合成資料病人執行</strong>，真實病人擋下並記錄</td>
+<td>風險分層提示、療程中預警、劑量調整參考、<strong>透析適足性趨勢推估</strong>由規則計算、<strong>不經 AI</strong>；即時總覽的「判斷輔助：待檢視」、病人趨勢的判斷輔助與立即比對、<strong>看依據</strong>、已檢視・採納／未採納；系統管理「<strong>判斷規則</strong>」：書面確認閘門（18 時只能看，18.1 起在這裡登記）、沒有出處標不了生效、用過的版本改不了；<strong>閘門沒開時只對合成資料病人執行</strong>，真實病人擋下並記錄</td>
 <td><code>ab1</code>–<code>ab26</code></td>
+</tr>
+<tr>
+<td><a href="../iteration-18-1/">迭代 18.1 — 書面確認閘門改放進系統管理、四條規則的建議門檻</a></td>
+<td>系統管理者在「判斷規則」<strong>填文號與理由登記、填理由取消登記</strong>，護理長只看得到；每一次都寫稽核；設定檔不再有這一項；四條沒有出處的規則換成<strong>依文獻選的建議值</strong>（仍只對合成資料執行），既有資料庫啟動時補一個草稿版本</td>
+<td><code>ab27</code>–<code>ab40</code></td>
 </tr>
 </tbody>
 </table>
 <p>走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。</p>
-<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（二十九本分冊的「前置」都建立在這些上面）：</p>
+<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（三十本分冊的「前置」都建立在這些上面）：</p>
 <table>
 <thead>
 <tr>
