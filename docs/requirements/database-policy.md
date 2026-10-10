@@ -151,6 +151,8 @@ SQLite 沒有 Row Level Security，也沒有資料庫層級的使用者。這代
 5. 狀態評估、彙總、統計要用的資料（每一步的操作、完成了沒、開了什麼花、送了什麼花）**一律另存正規欄位**，不從快照裡取
 6. **例外只此一處。** 其他資料想比照辦理，要由使用者決定後改寫本段，不得自行類推
 
+**1010 迭代 21 實作**：`game_saves.snapshot`（`TEXT`），每位病人每款遊戲一列、帶 `format_version`；寫入前與讀出後都以 `@hd/shared` 的 `validateGardenSnapshot`（白名單欄位）驗、上限 16 KB，驗不過整筆擋下（後端回 422）、不猜不覆寫；舊版升級寫在 `upgradeGardenSnapshot`。每一步、圖鑑、送花、共同花園的格子都是正規的表（`game_events`、`garden_collection`、`flower_gifts`、`shared_garden_plots`）。程式裡沒有任何查 JSON 內容的函式（`verify:iteration21` 第 5 步搜一次）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》第二十四節。
+
 ### 6.2 SQLite 特有的型別注意事項
 
 SQLite 只有五種儲存類別（NULL、INTEGER、REAL、TEXT、BLOB），與 PostgreSQL 的差異必須知道：

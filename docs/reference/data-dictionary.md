@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 80 張表、775 個欄位、19 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 86 張表、822 個欄位、20 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -71,6 +71,8 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 二十、跑馬燈內容的 AI 草稿與核准（迭代 17） | 沒有新表（`carousel_items` 加七欄） | 跑馬燈的每一則是誰生成、從哪個主題或事由來、誰核准、什麼時候上架 |
 | 二十一、規則引擎與三項高風險功能（迭代 18） | `rule_definitions`、`rule_versions`、`rule_version_parameters`、`rule_evaluations`、`rule_evaluation_inputs`、`rule_evaluation_reviews`、`rule_gate_changes`（1010 迭代 18.1） | 判斷規則與它的每一版、每一次比對引用了什麼、誰檢視過、書面確認閘門的登記 |
 | 二十二、管理儀表板、獎勵制度與對外揭露（迭代 19） | `metric_definitions`、`metric_snapshots`、`reward_rules`、`reward_periods`、`reward_scores`、`score_disputes`、`nurse_skill_tags`、`external_reports`、`external_report_metrics`、`external_report_items` | 指標怎麼算、每天全單位與各班的值；計分規則、期間、結算的計分與更正；誰有哪些技能；哪些聚合數字經誰核准離開醫院。**沒有總分、沒有排名、沒有同時掛護理師與病人的表** |
+| 二十三、平板現有功能的遊戲化（迭代 20） | `peer_tip_presets`、`peer_tip_submissions`、`nurse_replies`（另有 `carousel_items.peer_tip_preset_id`） | 病人能選的預設小撇步、誰在哪一次透析選了哪一則、護理師回的貼圖與預設回覆與病人什麼時候看到。**沒有任何自由文字欄** |
+| 二十四、透析小花園、送花、共同花園（迭代 21） | `game_saves`、`game_events`、`garden_collection`、`flower_gifts`、`shared_gardens`、`shared_garden_plots` | 每位病人每款遊戲的盤面快照（**JSON 的唯一例外**）、每一步的操作紀錄、圖鑑、送給護理站的花、每一班每個月的共同花園與格子。**送花沒有收花的護理師、共同花園的格子沒有種花的人** |
 
 ### 每張表都有的三個欄位
 
@@ -403,7 +405,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）`MANUAL_PATIENT_CREATE`（1007 迭代 17.7，護理師自己新增病人，預設關閉）`TODAY_PANEL` `MARQUEE`（1005 迭代 16，「本次透析」面板與跑馬燈）`ADEQUACY_PREDICTION`（1010 迭代 18，透析適足性趨勢推估）`GAMIFY_EXISTING` `PEER_TIPS` `NURSE_REPLIES`（1010 迭代 20，現有功能的小幅遊戲化、病友小撇步、護理師回貼圖；遊戲化其餘六個隨迭代 21～23 加）。後端啟動時自動補齊缺少的列，套用各自的預設值（預設開啟的只有 `TODAY_PANEL` 與 `GAMIFY_EXISTING`；9.1～15 是輪播三層）。**`CAROUSEL_LAYER_1`～`3` 於 1005 停用**（`RETIRED_FEATURE_FLAG_KEYS`）：那三列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現 |
+| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）`MANUAL_PATIENT_CREATE`（1007 迭代 17.7，護理師自己新增病人，預設關閉）`TODAY_PANEL` `MARQUEE`（1005 迭代 16，「本次透析」面板與跑馬燈）`ADEQUACY_PREDICTION`（1010 迭代 18，透析適足性趨勢推估）`GAMIFY_EXISTING` `PEER_TIPS` `NURSE_REPLIES`（1010 迭代 20，現有功能的小幅遊戲化、病友小撇步、護理師回貼圖）`GARDEN` `FLOWER_GIFTS` `PEER_INTERACTION`（1010 迭代 21，透析小花園、送花、病人之間的互動；送花跟著小花園開關，連動的那一次切換照樣寫稽核；遊戲化其餘三個隨迭代 22、23 加）。後端啟動時自動補齊缺少的列，套用各自的預設值（預設開啟的只有 `TODAY_PANEL` 與 `GAMIFY_EXISTING`；9.1～15 是輪播三層）。**`CAROUSEL_LAYER_1`～`3` 於 1005 停用**（`RETIRED_FEATURE_FLAG_KEYS`）：那三列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現 |
 | `enabled` | `BOOL` | 目前是否開啟 | `DEFAULT false`。⛔ **不得直接改資料庫開啟**——開啟必須經 `FeatureFlagsService`：它會判定開啟條件（實作規格書 3.7）、要求核准依據、寫入稽核。後端以記憶體中的狀態為準，直接改資料庫在重新啟動前也不會生效 |
 | `last_reason` | `TEXT?` | 最後一次切換時登記的核准依據或理由 | 開與關都必填（FR-S08、FR-M11），長度 2～500 字 |
 | `changed_by_id` | `TEXT?` | 最後一次是誰切換的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未切換過時為 NULL |
@@ -847,7 +849,7 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
-| `setting_key` | `TEXT` UNIQUE | 這是哪一個參數 | 合法值見 `OperationalSettingKey`：`HELP_RECURRENCE_WINDOW_HOURS`（FR-N11 的再發判定期間，暫定 72 小時）、`LABOUR_MAX_SHIFT_HOURS`、`LABOUR_MIN_REST_HOURS`、`LABOUR_MAX_DAILY_HOURS`、`LABOUR_MAX_WEEKLY_HOURS`、`LABOUR_MAX_CONSECUTIVE_DAYS`（FR-M04，暫以勞動基準法基本條件為值）。迭代 6 另加六項輪播參數：`CAROUSEL_IDLE_THRESHOLD_SECONDS`（FR-P09，預設 60 秒；0926 起用在任務畫面閒置回首頁）、`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（FR-P10）、`CAROUSEL_NIGHT_MODE_START_HOUR`／`CAROUSEL_NIGHT_MODE_END_HOUR`（夜間模式）、`SYMPTOM_DUE_INTERVAL_MINUTES`（透析前問卷到期的判定）。**1005 迭代 16**：卡片停留與細節頁退回兩項停用（`RETIRED_OPERATIONAL_SETTING_KEYS`，列與修改紀錄保留），另加跑馬燈三項，見第十九節。**1010 迭代 17.8**：`NURSING_RECORD_FORMAT`（護理紀錄格式，1＝DART 預設、2＝SOAP；定義帶 `choices`，畫面顯示選項名稱、不顯示數字） |
+| `setting_key` | `TEXT` UNIQUE | 這是哪一個參數 | 合法值見 `OperationalSettingKey`：`HELP_RECURRENCE_WINDOW_HOURS`（FR-N11 的再發判定期間，暫定 72 小時）、`LABOUR_MAX_SHIFT_HOURS`、`LABOUR_MIN_REST_HOURS`、`LABOUR_MAX_DAILY_HOURS`、`LABOUR_MAX_WEEKLY_HOURS`、`LABOUR_MAX_CONSECUTIVE_DAYS`（FR-M04，暫以勞動基準法基本條件為值）。迭代 6 另加六項輪播參數：`CAROUSEL_IDLE_THRESHOLD_SECONDS`（FR-P09，預設 60 秒；0926 起用在任務畫面閒置回首頁）、`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（FR-P10）、`CAROUSEL_NIGHT_MODE_START_HOUR`／`CAROUSEL_NIGHT_MODE_END_HOUR`（夜間模式）、`SYMPTOM_DUE_INTERVAL_MINUTES`（透析前問卷到期的判定）。**1005 迭代 16**：卡片停留與細節頁退回兩項停用（`RETIRED_OPERATIONAL_SETTING_KEYS`，列與修改紀錄保留），另加跑馬燈三項，見第十九節。**1010 迭代 17.8**：`NURSING_RECORD_FORMAT`（護理紀錄格式，1＝DART 預設、2＝SOAP；定義帶 `choices`，畫面顯示選項名稱、不顯示數字）。**1010 迭代 21**：`GAME_IDLE_THRESHOLD_SECONDS`（遊戲畫面閒置回首頁，預設 180 秒）、`PEER_MIN_COUNT_DONE`／`PEER_MIN_COUNT_NOT_DONE`（人數句的最低人數門檻，預設 3、不得低於 3，迭代 22、23 用）、`SHARED_GARDEN_START_PLOTS`／`SHARED_GARDEN_MAX_PER_BOARD`／`SHARED_GARDEN_SHRINK_PERCENT`（共同花園起始 12 格、一座上限 24 格、縮減門檻 50％） |
 | `value` | `INT` | 目前的值 | 目前全部是整數（小時、日數）。日後若出現非整數參數，比照臨床數值改為「整數＋小數位數」，**不得改用浮點數** |
 | `last_reason` | `TEXT?` | 最後一次改動時填的理由 | 必填才改得動（後端驗證 2～500 字）。理由連同新舊值另寫入 `audit_logs` 的 `OPERATIONAL_SETTING_UPDATED` |
 | `updated_by_id` | `TEXT?` | 誰改的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
@@ -1651,7 +1653,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 遷移 `iteration20_gamification_existing`，只做加法：三張新表、`carousel_items` 多一欄可為空的 `peer_tip_preset_id`（以 `ADD COLUMN` 加，不重建表）。三張表一條級聯都不帶。
 這是遊戲化的第一批資料，照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**——病人不能打字分享，護理師的回覆也只有代號。
 
-> 遊戲盤面快照（規範 6.1 的 JSON 例外）**不在這一節**：迭代 20 沒有遊戲，快照隨迭代 21 的 `game_saves` 建立。
+> 遊戲盤面快照（規範 6.1 的 JSON 例外）**不在這一節**：迭代 20 沒有遊戲，快照在第二十四節的 `game_saves`（迭代 21）。
 
 ### `peer_tip_presets` — 預設小撇步（8 欄）
 
@@ -1690,9 +1692,9 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
 | `patient_id` | `TEXT` → `patients` | 回給哪一位病人 | `ON DELETE NO ACTION`。與 `seen_at` 有索引 |
-| `source_kind` | `TEXT` | 回的是哪一種東西 | 合法值 `FEEDBACK_COMMENT`（`NurseReplySource`）；迭代 21 起另有送花 |
-| `source_id` | `TEXT` | 回的是哪一筆 | `FEEDBACK_COMMENT` 時是 `feedback_responses.id`，**必須是這位病人寫了字的那一份**（服務層檢查，刻意不設外鍵：來源種類會變多）。同一筆只回一次（服務層，409） |
-| `reply_code` | `TEXT` | 回了什麼 | 合法值見 `NURSE_REPLY_PRESETS`：貼圖 `STICKER_HEART` / `STICKER_THUMBS_UP` / `STICKER_SUN` / `STICKER_HAND_HEART`、預設回覆 `TEXT_HEARD` / `TEXT_THANKS` / `TEXT_WILL_CARE`。**沒有自由文字欄** |
+| `source_kind` | `TEXT` | 回的是哪一種東西 | 合法值 `FEEDBACK_COMMENT`、`FLOWER_GIFT`（`NurseReplySource`；後者 1010 迭代 21 加，送花關著時回不了） |
+| `source_id` | `TEXT` | 回的是哪一筆 | `FEEDBACK_COMMENT` 時是 `feedback_responses.id`，**必須是這位病人寫了字的那一份**；`FLOWER_GIFT` 時是 `flower_gifts.id`，必須是這位病人送的（服務層檢查，刻意不設外鍵：來源種類會變多）。同一筆只回一次（服務層，409） |
+| `reply_code` | `TEXT` | 回了什麼 | 合法值見 `NURSE_REPLY_PRESETS`：貼圖 `STICKER_HEART` / `STICKER_THUMBS_UP` / `STICKER_SUN` / `STICKER_HAND_HEART`、預設回覆 `TEXT_HEARD` / `TEXT_THANKS` / `TEXT_WILL_CARE`；送花只能回 `TEXT_THANKS_FLOWER`（「謝謝你的花」，`NURSE_REPLY_CODES_BY_SOURCE`）。**沒有自由文字欄** |
 | `nurse_id` | `TEXT` → `nurses` | 哪位護理師回的 | `ON DELETE NO ACTION`。只給護理端看（誰回的），**平板拿不到**。這不是績效資料：不計分、不統計誰回了幾則 |
 | `created_at` | `TS` | 什麼時候回的 | 平板只收 `created_at` **早於這次透析開始**（`treatment_sessions.started_at`，沒有就是綁定時間）的——這次透析裡才寫的，等下一次 |
 | `seen_at` | `TS?` | 病人在平板上看到的時間 | 平板一出現就回報；只動這位病人自己的、還沒看過的。**護理端不據此做任何未讀數或提醒**（H-13） |
@@ -1704,6 +1706,108 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `peer_tip_preset_id` | `TEXT?` → `peer_tip_presets` | 病友小撇步出自哪一則預設小撇步 | `ON DELETE NO ACTION`。只有 `item_kind = PEER_TIP` 的有值。**同一則同時只有一份在等核准或在架上**（`findOpenPeerTip`）；護理端核准清單的「選過幾次」由它對到 `peer_tip_submissions` 算 |
+
+---
+
+## 二十四、透析小花園、送花、共同花園（迭代 21）
+
+**蒐集的意義**：小花園是遊戲化的骨幹（SRS FR-P16、FR-P19、FR-S17；實作規格書 4.21）。這一節記四件事：**每位病人的花園存到哪裡**（換平板、換床接得上）、**每一步做了什麼**（斷線補送的依據，也是將來狀態評估的資料）、**送給護理站的花**、**每一班每個月大家一起種的花園**。
+遷移 `iteration21_garden_gifts_shared`，只做加法：六張新表，既有的表一欄都不動（`nurse_replies.source_kind` 多一種值，不是新欄位）。六張表一條級聯都不帶。
+照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**。
+**植物沒有自己的表**（實作規格書 4.21 列的 `garden_plants` 沒有建）：狀態評估與彙總都不查它，只在盤面快照裡。
+
+### `game_saves` — 遊戲盤面快照（8 欄）
+
+**《資料庫使用規範》6.1 第 2 條的唯一例外**：每位病人每款遊戲一列，快照是一段 JSON 文字，只用來「接著玩」——整份讀出、整份寫回。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人的 | `ON DELETE NO ACTION`。與 `game_code` 唯一（每位病人每款一列）。**以病人為準，不以平板** |
+| `game_code` | `TEXT` | 哪一款遊戲 | 合法值 `GARDEN`（`GameCode`）；迭代 22、23 加麻將連連看與記憶相簿 |
+| `format_version` | `INT` | 快照的格式第幾版 | 目前 1。讀出時對不上就**擋下、不猜、不覆寫**（後端回 422）；舊版的升級寫在程式裡（`upgradeGardenSnapshot`），不動資料庫結構 |
+| `snapshot` | `TEXT` | 花園現在的樣子 | JSON：12 格（每格是空地或一棵植物：平板產生的植物編號、種子、花的代號、成長點數、這次療程的照顧點數）、算到第幾次療程、澆過水的療程、給過的養分、種過幾棵、開過哪幾種。**寫入前與讀出後都驗格式（白名單欄位）、上限 16 KB**；一份約 300～900 位元組。⛔ **沒有病人識別資料、臨床數值，也沒有任何其他資料表的編號**（「第幾次療程」是序數，不是療程的編號）；⛔ **資料庫裡不查它的內容**（程式裡沒有任何查 JSON 內容的函式），也沒有任何表參照它 |
+| `last_seq` | `INT` | 已經套用到第幾步 | 平板只送得進 `last_seq + 1`；接不上回「衝突」與這一份——每一步的序號因此不顛倒 |
+| `created_at` | `TS` | 第一次存檔的時間 | — |
+| `updated_at` | `TS` | 最後一次存檔的時間 | — |
+
+**誰寫這張表**：`GardenService`。第一次點開花園時不寫（空花園照算），第一步之後才有這一列；點開花園時若這段期間有新的療程，會把成長寫回去。
+
+### `game_events` — 每一步的操作紀錄（16 欄）
+
+統計、評估、彙總要用的東西**一律在這裡**，不從快照裡挖（規範 6.1 例外第 5 條）。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人 | `ON DELETE NO ACTION`。與 `game_code`、`seq` 唯一 |
+| `treatment_session_id` | `TEXT` → `treatment_sessions` | 哪一次療程 | `ON DELETE NO ACTION`。由後端依這台平板這次的綁定決定，**不由平板傳** |
+| `game_code` | `TEXT` | 哪一款遊戲 | 同上。與 `occurred_at` 有索引 |
+| `seq` | `INT` | 第幾步 | 這位病人這款遊戲從 1 起連續編號 |
+| `client_id` | `TEXT` UNIQUE | 平板產生的識別碼 | 重送同一步不會多一筆（斷線補送） |
+| `action` | `TEXT` | 做了什麼 | `PLANT` 種下、`WATER` 澆水、`NOURISH` 給養分、`GIFT` 送給護理站、`SHARE` 種到大家的花園；格式不對的記 `INVALID` |
+| `applied` | `BOOL` | 這一步有沒有套用 | 做不了的一步（重複澆水、沒做的任務給養分）記 0，**序號照樣用掉** |
+| `plot_index` | `INT?` | 自己花園的第幾格 | 0～11 |
+| `seed_kind` | `TEXT?` | 種下的是哪一種種子 | `TREE` / `FIELD` / `COURTYARD`（`SeedKind`） |
+| `flower_code` | `TEXT?` | 哪一種花 | 種下時抽到的花，或送出、種走的那一朵（`FlowerCode`） |
+| `nutrient_kind` | `TEXT?` | 哪一種養分 | `SYMPTOMS` / `FEEDBACK` / `EDUCATION`（`NutrientKind`）。**只看那個任務做了沒，不讀答案** |
+| `shared_garden_id` | `TEXT?` → `shared_gardens` | 種到大家的花園的哪一座 | `ON DELETE NO ACTION`。**誰種了共同花園的哪一格只記在這裡**，畫面上不出現 |
+| `shared_plot_index` | `INT?` | 那一座的第幾格 | — |
+| `occurred_at` | `TS` | 平板上發生的時間 | 平板時鐘偏差超過兩天就改用伺服器時間（只用來決定「當季的花」） |
+| `received_at` | `TS` | 後端收到的時間 | 斷線補送時與 `occurred_at` 不同 |
+
+**不寫稽核軌跡**：送花、種花都在這張表；稽核軌跡再寫一次「誰」，共同花園的種花人就多一個查得到的地方。
+
+### `garden_collection` — 台灣花卉圖鑑（4 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人 | `ON DELETE NO ACTION`。與 `flower_code` 唯一 |
+| `flower_code` | `TEXT` | 開過哪一種花 | `FlowerCode`；花的名字與一句說明在 `@hd/shared` 的 `FLOWER_CATALOG`（《透析中的遊戲化之二：小花園的植物》第 3 節） |
+| `first_bloomed_at` | `TS` | 第一次開出這種花的時間 | 之後再開不改。**送走、種走之後照樣在** |
+
+### `flower_gifts` — 送給護理站的花（5 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `patient_id` | `TEXT` → `patients` | 誰送的 | `ON DELETE NO ACTION`。只給專業版病人趨勢那一格看；**總覽螢幕的花瓶只有花與床號**（床號取那一次療程的平板或療程的床，不存在這張表） |
+| `treatment_session_id` | `TEXT` → `treatment_sessions` | 哪一次療程送的 | `ON DELETE NO ACTION` |
+| `flower_code` | `TEXT` | 哪一種花 | `FlowerCode` |
+| `given_at` | `TS` | 什麼時候送的 | 花瓶只列當地今天的（跨日清空）。有索引 |
+
+⛔ **沒有護理師欄位**：不記哪位護理師收到，也沒有任何以護理師為單位的查詢（《資料庫使用規範》11.2：那就是病人對特定護理師的評分）。護理師回的「謝謝你的花」在 `nurse_replies`（`source_kind = FLOWER_GIFT`）。
+
+### `shared_gardens` — 共同花園的一座（9 欄）
+
+一班（療程的班別：早、午、晚，不分星期）一個月一片，超過一座上限就平均分成幾座。**第一朵花種下時才建**：那個月沒人種就沒有列，也就不歸檔。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `shift` | `TEXT` | 哪一班 | `MORNING` / `AFTERNOON` / `EVENING`（`TreatmentShift`）。**種進哪一班一律取種花那一次療程的 `treatment_sessions.shift`**，不用病人平常的班別、不由平板傳 |
+| `year_month` | `TEXT` | 哪個月 | `YYYY-MM`，伺服器所在地時間。與 `shift`、`board_index` 唯一 |
+| `board_index` | `INT` | 第幾座 | 從 0 起 |
+| `plot_count` | `INT` | 這一座幾格 | 6 的倍數、最多 24（營運參數）。依上個月：全部種滿 ×1.5、種下的不到一半就是種下格數 ×1.5（不少於起始格數）、其他不變（`nextSharedGardenTotal`、`splitSharedGarden`） |
+| `background_code` | `TEXT` | 背景是哪一張 | `M01-A`～`M12-B`，兩年一輪（偶數年 A、奇數年 B）。**歸檔後不換** |
+| `status` | `TEXT` | 開放中或已歸檔 | `OPEN` / `ARCHIVED`。跨月後下一次讀寫時補做歸檔（排程或讀取時補做結果一樣） |
+| `archived_at` | `TS?` | 歸檔的時間 | — |
+| `created_at` | `TS` | 建立的時間 | — |
+
+**歸檔不刪**，留存比照平板其他資料（規範第 19 條）。圖鑑「我們的花園」只列這位病人那個月透析過的班別的歸檔（由 `treatment_sessions` 算，不另存）。
+
+### `shared_garden_plots` — 共同花園的一格（5 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `shared_garden_id` | `TEXT` → `shared_gardens` | 哪一座 | `ON DELETE NO ACTION`。與 `plot_index` 唯一：**同一格同時被種，後到的那一個撞到唯一鍵退回**（「這一格剛剛有人種了，換一格吧」） |
+| `plot_index` | `INT` | 第幾格 | — |
+| `flower_code` | `TEXT` | 什麼花 | `FlowerCode` |
+| `planted_at` | `TS` | 種下的時間 | — |
+
+⛔ **沒有病人欄位**：只看得到花。誰種的只在 `game_events`；共同花園的回應也沒有人數。
 
 ---
 
@@ -1724,6 +1828,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 症狀問卷的題目文字 | 題目是程式版本的一部分，放在 `@hd/shared`，紀錄只存版本號。迭代 4 的衛教主題、測驗題庫、回饋題目、事件範本同樣如此 |
 | 知識點狀態、心理社會的趨勢比對結果 | 查詢時由原始作答與分數即時計算，不寫入資料表；比對結果只給護理師看，不自動觸發任何動作 |
 | 我的衛教小本子（1010 迭代 20） | 由作答紀錄即時算，不另存；病人端只拿得到已經亮起的主題，錯題與錯題數不出後端 |
+| 花園裡每一棵植物的正規紀錄（1010 迭代 21） | 只在盤面快照裡（`game_saves`）：狀態評估與彙總都不查它；開了什麼花另存在 `garden_collection`，每一步在 `game_events` |
+| 收花的護理師；共同花園每一格是誰種的 | `flower_gifts` 沒有護理師欄位（不做以護理師為單位的統計，規範 11.2）；`shared_garden_plots` 沒有病人欄位（誰種的只在 `game_events`，畫面上不出現） |
 | 病人自己寫的小撇步、護理師自由寫的回覆 | 迭代 20 刻意不開放：病人只能從預設小撇步選，護理師只能點貼圖與預設回覆。錯誤的醫療資訊不會因此上架，病人看到的一定是看得懂的話 |
 | 對病人或護理師的任何評分、排名 | 測驗的答對題數是病人自己的作答結果，不是評分；「是否採納 AI 初稿」是治理證據，不是績效指標 |
 | SOP 查詢的模型回答全文 | 只存在對應的 `ai_invocations` 列（12 個月留存）；`sop_queries` 只存去識別化的問題、結果與引用段落 |
