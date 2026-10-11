@@ -4047,6 +4047,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 23 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6734,6 +6762,38 @@
 </tr>
 </tbody>
 </table>
+<p><strong>迭代 23 是第十六次</strong>（1011，23.3）：第 9 個遊戲化開關「老台灣記憶相簿」隨功能加進來（3.7），遊戲選單多一款、小花園「遊戲的養分」多一個來源。五支腳本寫死「相簿還沒有開關」「遊戲化的開關正好 8 個」「遊戲圖示只看兩款」「養分只看麻將」，需求本身改了，不改就一定不通過：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration20</code> 第 2 步</td>
+<td>「相簿還沒有開關」改成「相簿的開關隨迭代 23 的功能一起出現」</td>
+<td>迭代 20 三個開關照驗；相簿的開關、預設值、開啟條件由 <code>verify:iteration23</code> 第 2 步驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration20:api</code> 步驟 1</td>
+<td>「有這三個、沒有相簿」改成「有這三個、九個到齊」</td>
+<td>三個全關時的驗法不變</td>
+</tr>
+<tr>
+<td><code>verify:iteration21</code> 第 2 步</td>
+<td>「記憶相簿還沒有開關」改成「記憶相簿的開關隨迭代 23 出現」</td>
+<td>三個開關的預設值、連動照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration22</code> 第 2、3、10 步</td>
+<td>「遊戲化的開關 8 個」改成 9 個；「相簿還沒有開關」改成「有」；遊戲圖示的條件多 <code>albumOn</code>；綁定失效時麻將與相簿都先補送再清佇列；養分的條件改成 <code>games + album &gt; 0</code></td>
+<td>麻將那一半的每一條照驗；相簿的那一半由 <code>verify:iteration23</code> 第 3、10 步驗</td>
+</tr>
+</tbody>
+</table>
 <h3 id="12-本階段納入">1.2 本階段納入<a class="headerlink" href="#12-本階段納入" title="Permanent link">&para;</a></h3>
 <p>SRS 第 5 章全部 81 條需求（FR-P01～P19、FR-N01～N20、FR-M01～M12、FR-X01～X05、FR-S01～S17、FR-R01～R08），依第 4 章分二十一次迭代實作（迭代 3～23）。<strong>0919 由 60 條增為 63 條</strong>：新增 FR-S10（介面不得洩漏內部技術識別）、FR-S11（版位與功能可設定）、FR-S12（更新不得破壞既有資料）。<strong>0926 由 63 條增為 70 條</strong>：新增 FR-P14～P15（病人端首頁三區、任務依時點出現）、FR-N14～N16（簡易版與專業版、單一工作台、一步完成）、FR-S13（AI 閘道）、FR-S14（外殼 App 契約）。<strong>1005 由 70 條增為 73 條</strong>：新增 FR-N17（跑馬燈內容由 AI 生成、護理師核准）、FR-S15（院方 API 優先）、FR-S16（院方 API 介接與即時推送）。<strong>1010 由 73 條增為 81 條</strong>：新增 FR-P16～P19（遊戲、現有功能的小幅遊戲化、病友小撇步、送花）、FR-N18（護理紀錄交給院內的正式紀錄）、FR-N19～N20（被聽見的回覆、遊戲資料的狀態評估彙整）、FR-S17（病人之間只有匿名的彙總）。</p>
 <h3 id="13-明確排除本階段完全不碰">1.3 明確排除（本階段完全不碰）<a class="headerlink" href="#13-明確排除本階段完全不碰" title="Permanent link">&para;</a></h3>
@@ -7597,7 +7657,7 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <tr>
 <td><strong>老台灣記憶相簿</strong>（FR-P16）</td>
 <td>關</td>
-<td>起始的圖卡已就緒（4.23）</td>
+<td>起始的圖卡已就緒（4.23）。<strong>1011 迭代 23.3</strong>：<code>ALBUM</code>；<strong>上架中的圖卡至少 60 張、六個主題都有</strong>才開得起來（數的是資料表裡上架中的，不是程式裡的預設圖卡；不足時開關中心寫出「只有 N 張」或哪個主題沒有）；共同記憶的人數句另要「病人之間的互動」開著（端點要兩個都開）。<strong>下架隨時可以</strong>，就算因此不到 60 張開關也照開著，只是關掉之後要補到 60 張才開得回來</td>
 <td>23</td>
 </tr>
 </tbody>
@@ -7607,7 +7667,8 @@ API 判定開始之前就配的，開始時間之後改成 API 的那一刻；�
 <strong>九個遊戲化開關全關時，病人端、護理端、總覽螢幕都要與迭代 17.7 一模一樣</strong>——這一條是迭代 20～23 每一個的驗收標準。
 <strong>1010 迭代 20 實作</strong>：開關中心只建這次做的三個（新的分組「病人平板的遊戲化」），其餘六個隨迭代 21～23 的功能一起加——功能還沒做，連開關都不出現（DEP-34）。
 <strong>1010 迭代 21 實作</strong>：同一個分組多三個（透析小花園、送花、病人之間的互動），共六個；麻將連連看、狀態評估彙整、記憶相簿隨迭代 22、23 加。
-<strong>1011 迭代 22 實作</strong>：同一個分組多兩個（麻將連連看、狀態評估彙整），共八個；記憶相簿隨迭代 23 加。護理端的「病人詳細資訊」一頁要透析小花園、麻將連連看、狀態評估彙整<strong>至少一個</strong>開著才存在（導覽定義的 <code>anyFeatureFlags</code>）：都關著時連結、路由、系統管理的版位清單都沒有，端點回 404——九個全關時護理端與迭代 17.7 一樣。</p>
+<strong>1011 迭代 22 實作</strong>：同一個分組多兩個（麻將連連看、狀態評估彙整），共八個；記憶相簿隨迭代 23 加。
+<strong>1011 迭代 23.3 實作</strong>：同一個分組多第九個（老台灣記憶相簿），<strong>九個到齊</strong>。病人詳細資訊的 <code>anyFeatureFlags</code> 多記憶相簿（只開相簿時這一頁也存在，裡面只有「最近幾次有沒有玩」與「可以聊的話題」）；系統管理「內容與選項」的「記憶相簿的圖卡」分頁跟著這個開關，關著時不出現、端點 404。護理端的「病人詳細資訊」一頁要透析小花園、麻將連連看、狀態評估彙整<strong>至少一個</strong>開著才存在（導覽定義的 <code>anyFeatureFlags</code>）：都關著時連結、路由、系統管理的版位清單都沒有，端點回 404——九個全關時護理端與迭代 17.7 一樣。</p>
 <p><strong>0919 新增的一條硬性規則</strong>：開關關閉時，<strong>尚未實作的功能連「停用的入口」都不得出現</strong>（DEP-34）。已實作但關閉的功能同樣不出現入口，但它的後端端點回傳的是「功能未啟用」而不是 404——兩者在稽核軌跡上要分得出來。</p>
 <p><strong>開關的顯示名稱</strong>：功能開關清單在護理端是給人看的，<strong>不得印出上表左欄那些識別字</strong>（FR-S10）。識別字留在後端與稽核紀錄裡。</p>
 <p><strong>硬性規則</strong>：開關為關閉時，相關介面元素<strong>完全不出現</strong>，而不是顯示為停用。後端端點也要一併擋下，不能只靠前端隱藏。
@@ -8316,7 +8377,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td><strong>23</strong></td>
 <td>遊戲化之四：老台灣記憶相簿</td>
-<td>階段 4。<strong>前置</strong>：主題篩選子文件與起始的圖卡（決定 5.2），內容量最大，排最後。<strong>1011 切成三次子迭代</strong>（23.1 子文件與第一批圖、23.2 第二批圖、23.3 程式，見 4.23）；<strong>23.1、23.2 1011 完成</strong></td>
+<td>階段 4。<strong>前置</strong>：主題篩選子文件與起始的圖卡（決定 5.2），內容量最大，排最後。<strong>1011 切成三次子迭代</strong>（23.1 子文件與第一批圖、23.2 第二批圖、23.3 程式，見 4.23）；<strong>1011 三次都完成</strong></td>
 </tr>
 </tbody>
 </table>
@@ -12432,12 +12493,110 @@ Q-02、Q-03 仍沒有答覆：書面確認沒登記、四條規則沒有出處�
 <tr>
 <td>23.3</td>
 <td>資料表、開關 8、病人端相簿、護理端回應主題與圖卡管理、共同記憶、遊戲的養分；<code>verify:iteration23</code>、<code>:api</code>；手動測試分冊 <code>ag</code></td>
-<td>下一次</td>
+<td><strong>1011 完成</strong></td>
 </tr>
 </tbody>
 </table>
 <p><strong>23.1 開發端的判斷</strong>（詳見子文件與切分文件第 2 節）：選項是大字按鈕、<strong>不配圖</strong>（下表工作第 1 列的「三個圖文選項」改讀成「一張大圖配三個字的選項」——配圖就變成看圖配對）；起始先上 60 張（開開關的門檻），遊戲化決定 5.2 的「約 200 張」改成開開關後每季一包、第二年過 200；飲食主題只畫器具、不畫食物（透析病人的鉀、磷與水分限制）；圖是程式產生的向量圖，白名單比小花園多 <code>polygon</code>、<code>polyline</code>、<code>line</code> 與同檔的漸層。</p>
+<p><strong>2026-10-11 迭代 23 完成（23.3）。</strong> 手動測試在《<a href="../../testing/iteration-23/">迭代 23 分冊</a>》（<code>ag1</code>～<code>ag30</code>）。開關見 3.7。
+沒有外部依賴；開關照預設關著。開給病人之前要社工看主題與避開的題材、護理部看一句說明、長者在病床上看圖認不認得（子文件第 10 節）。</p>
 </blockquote>
+<p><strong>1011 23.3 開發端的判斷</strong>（使用者要推翻時改右欄那一處即可）：</p>
+<table>
+<thead>
+<tr>
+<th>判斷</th>
+<th>理由</th>
+<th>寫在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>圖卡是<strong>四張表</strong>：<code>album_cards</code>、每一版 <code>album_card_versions</code>、選項 <code>album_card_options</code>、作答 <code>album_responses</code>（規格書列兩張）</td>
+<td>3.14 第 3 條要「改動即產生新版本、每一份作答記它當時的版本」，版本要還原得出當時的字才有用；選項不能用 JSON 欄位（《資料庫使用規範》6.1 第 2 條）。題庫、問卷也是同一種拆法</td>
+<td>schema、資料字典第二十六節</td>
+</tr>
+<tr>
+<td><strong>版本是一張一張的</strong>，不是整份題庫一個版本</td>
+<td>圖卡彼此獨立；改一張的說明不該讓另外 59 張也跳一版</td>
+<td><code>AlbumService.updateCard</code></td>
+</tr>
+<tr>
+<td>預設圖卡<strong>只補資料表裡還沒有的代號</strong>，已經有的一律不碰</td>
+<td>3.14 第 5 條「首次啟動寫入、之後以資料表為準」；每一季新加的圖卡照同一份常數往下加，下一次啟動自動補進來，護理端改過的字、下架的不會被蓋回去</td>
+<td><code>AlbumService.onApplicationBootstrap</code></td>
+</tr>
+<tr>
+<td>平板拿著<strong>舊版</strong>送來：照收，記下它看的是第幾版（題庫是擋下）</td>
+<td>選項代號建立後不改、改的只有字，答案用代號比對，拿舊版的字解讀不會對錯；擋下等於把病人剛剛的回憶丟掉。對錯（<code>correct</code>）照收到時的那一版算，只進紀錄不顯示</td>
+<td><code>AlbumService.submitEvents</code></td>
+</tr>
+<tr>
+<td><strong>下架隨時可以</strong>，就算因此不到 60 張；開關照開著</td>
+<td>社工覺得會讓人難過的圖卡要能馬上拿掉，不能被門檻卡住；關掉之後要補到 60 張才開得回來（開關中心寫出原因）</td>
+<td><code>updateCard</code>、開關的開啟條件</td>
+</tr>
+<tr>
+<td>出卡<strong>沒有亂數</strong>：同一份紀錄、同一份圖卡排出來一樣</td>
+<td>平板斷線時自己排、連線時伺服器排，兩邊要一樣；同一班今天看的是同幾張，「共同記憶」的人數句才湊得起來</td>
+<td><code>@hd/shared</code> 的 <code>pickAlbumRound</code></td>
+</tr>
+<tr>
+<td>每看完一張是一步，<strong>這一次的幾張隨每一步一起送</strong>；第一張的那一步開這一次</td>
+<td>換一台平板也接得起來（存檔裡有這一次、看到第幾張）；看到一半的那一張不算一步，下次從那一張接著看</td>
+<td><code>applyAlbumStep</code>、<code>AlbumStep</code></td>
+</tr>
+<tr>
+<td>這一次還沒看完的幾張，<strong>下架了也照樣給平板</strong></td>
+<td>病人已經翻開的那一次要看得完，不能看到一半那一張不見了</td>
+<td><code>DeviceAlbumState.roundCards</code></td>
+</tr>
+<tr>
+<td>相簿的序號與 clientId 在 <code>album_responses</code>，<strong>不寫 <code>game_events</code></strong></td>
+<td>每一步就是一張的作答，另寫一份是兩份同樣的紀錄；存檔照樣用 <code>game_saves</code>（<code>game_code = ALBUM</code>）</td>
+<td>schema</td>
+</tr>
+<tr>
+<td>共同記憶的分母是<strong>這一班今天看過這一張（沒跳過）的其他病人</strong>，人數也只數其他病人</td>
+<td>跳過的人沒有回答，不算「沒說有」；問的人自己還沒送出（翻開時就問），算進去反而會因為送出的先後而變</td>
+<td><code>AlbumRepository.peerCounts</code></td>
+</tr>
+<tr>
+<td>人數句在<strong>翻開答案之後</strong>才問、才出現</td>
+<td>先看到「5 個人家裡也有」會影響自己的回答</td>
+<td>病人端 <code>AlbumGame</code></td>
+</tr>
+<tr>
+<td>翻開之後答案那一個用<strong>一般色的粗框</strong>，不打勾、不寫「答對」；「你家以前有沒有？」翻開後不列選項</td>
+<td>子文件第 5 節「答錯時」；沒有對錯的題目框起病人選的那一個，看起來會像「這個才對」</td>
+<td>病人端 <code>AlbumGame</code>、介面設計基準 2.9</td>
+</tr>
+<tr>
+<td>護理端「可以聊的話題」一張表：主題、看過幾張、說過家裡有的、用過的、想起某個人的；<strong>沒有答對率</strong></td>
+<td>「當聊天話題用，不是作業」；對錯只進紀錄</td>
+<td>護理端 <code>PatientDetailPage</code></td>
+</tr>
+<tr>
+<td>圖卡管理只有<strong>看與改</strong>，不能新增</td>
+<td>新的圖卡要有圖，圖由開發端畫好隨版本更新加進來（子文件第 9 節）</td>
+<td>護理端 <code>SystemContentPanel</code></td>
+</tr>
+<tr>
+<td>AI 起草說明<strong>這次不做</strong></td>
+<td>切分文件第 4.2 節「可以先不做」；起始 60 張由開發端寫好</td>
+<td>—</td>
+</tr>
+<tr>
+<td>字型子集重做時<strong>不掃用語把關的簡體字對照表</strong></td>
+<td>那份表有約 5,900 個簡體字，掃進來字檔多五百多 KB；那些字不會畫在畫面上</td>
+<td><code>scripts/subset-font.py</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Schema 變更（實作結果）</strong>：四張新表（<code>album_cards</code>、<code>album_card_versions</code>、<code>album_card_options</code>、<code>album_responses</code>），不動任何既有的表；相簿的存檔沿用 <code>game_saves</code>（<code>game_code</code> 多 <code>ALBUM</code>）。<code>album_responses</code> 的三個貼紙、跳過、看的是第幾版、第幾次第幾張、看完一次、選了哪一個、有沒有選到答案都是正規欄位；<strong>沒有任何護理師欄位</strong>。遷移 <code>20261014090000_iteration23_memory_album</code>，只做加法，<code>check:migration</code> 無發現。後端路由 203 → 209 條（平板 3、圖卡管理 2、病人詳細資訊 1）。</p>
+<p><strong>驗收現況（1011）</strong>：<code>verify:iteration23</code>（新增，12 步，不需要後端；出卡順序實際跑 12 次與跳過、想起某個人的邊界，快照的格式與大小、門檻的六種組合）與 <code>verify:iteration23:api</code>（新增，8 步）全部通過，<code>:api</code> 連跑兩次都過（改過的圖卡結束時以資料庫改回）；<code>verify:iteration23-1</code>、<code>23-2</code> 照樣通過。<code>verify:acceptance</code>、<code>verify:iteration3</code>、<code>4</code>、<code>6</code>、<code>9</code>、<code>17:api</code>、<code>19:api</code>、<code>20:api</code>、<code>21:api</code>、<code>22:api</code> 對著後端通過，<code>verify:iteration8</code>、<code>11</code>、<code>12</code>、<code>14</code>、<code>14-1</code>～<code>14-5</code>、<code>15</code>、<code>16</code>、<code>17</code>、<code>17-1</code>、<code>17-2</code>、<code>17-4</code>～<code>17-8</code>、<code>18</code>、<code>18-1</code>、<code>19</code>、<code>20</code>、<code>21</code>、<code>22</code>、<code>check:all</code> 全綠，其中 <code>verify:iteration20</code>、<code>20:api</code>、<code>21</code>、<code>22</code> 依 1.1 第十六次改寫。兩端的正式建置照樣通過。以無頭 Chrome 在 1280×800 與 800×1280 走過一輪病人端（遊戲選單、相簿封面、題目、翻開、點貼紙、跳過、看完回封面），沒有捲軸、求助區位置不變、可點的最小 64px；護理端以護理長帳號看過病人詳細資訊與「記憶相簿的圖卡」（1366×768）。
+<strong>後端回歸的環境</strong>：與迭代 22 同一個做法——開發機原本那支後端（佔著開發用資料庫）沒有停，回歸是對著另一支以新程式啟動的後端（3023 埠）與開發用資料庫的副本（<code>hd-dev-i23.db</code>，已套迭代 22、23 兩份遷移）跑的。<strong>開發用資料庫本身還沒有套迭代 22、23 的遷移</strong>，下一次重新啟動開發機的後端前要先 <code>npm run prisma:deploy -w @hd/api</code>。
+<strong>沒有驗的</strong>：開關全關時的截圖比對（驗收第 1 條；腳本逐一確認入口都掛在開關後面、端點與導覽都擋下）；社工看主題與避開的題材、護理部看一句說明、長者在床上看圖「認不認得」「像不像給小孩玩的」（子文件第 10 節；驗收第 4 條的「逐張檢查」是開發端做的那一次）；真的在兩台實體平板上同一班看同一張；實機拔網路再接上。</p>
 <p><strong>目標</strong>：心理支援最強的一款，讓長輩當「懂的人」。依據是遊戲化決定 5.1 的階段 4、5.2。</p>
 <p><strong>前置（開工第一件事）</strong>：照遊戲化決定 5.2 寫《透析中的遊戲化之三：記憶相簿的主題》子文件（主題分類、每類畫哪些物件、要避開的題材與「可能讓人難過」的判斷準則、選項與說明文字的寫法、第一年之後每一季加什麼），再依它由 AI 畫起始的圖卡（寫實不幼稚、不畫真人、只畫物件不畫商標）。</p>
 <table>

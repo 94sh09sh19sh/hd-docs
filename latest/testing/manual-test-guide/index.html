@@ -2686,10 +2686,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#13--迭代-3-22-分冊" class="md-nav__link">
+  <a href="#13--迭代-3-23-分冊" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13 · 迭代 3-22 分冊
+        13 · 迭代 3-23 分冊
       
     </span>
   </a>
@@ -3655,6 +3655,34 @@
     
   
     迭代 22 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 23 分冊
   
 
     
@@ -5086,10 +5114,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#13--迭代-3-22-分冊" class="md-nav__link">
+  <a href="#13--迭代-3-23-分冊" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13 · 迭代 3-22 分冊
+        13 · 迭代 3-23 分冊
       
     </span>
   </a>
@@ -5127,9 +5155,9 @@
 <h1 id="血液透析平板照護輔助系統--完整手動測試手冊">血液透析平板照護輔助系統 — 完整手動測試手冊<a class="headerlink" href="#血液透析平板照護輔助系統--完整手動測試手冊" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>從 <code>git clone</code> 一路走到每一個細節功能。每一項都寫明「怎麼做」與「應該看到什麼」。
-對應版本：迭代 22 · 203 條 API 路由 · 147 種稽核動作。
+對應版本：迭代 23 · 209 條 API 路由 · 150 種稽核動作。
 資料庫已於 2026-09-10 改為本機 SQLite，建置步驟已隨之更新。
-<strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-22-分冊">§13 分冊索引</a>。</p>
+<strong>本頁是主手冊</strong>：環境建置、兩條主線、離線韌性、迭代 1／2 的細節功能、收工與附錄。迭代 3 之後每個迭代各有一本分冊，見 <a href="#13--迭代-3-23-分冊">§13 分冊索引</a>。</p>
 </blockquote>
 <p>本頁的核取方塊在 GitHub 上可直接勾選，用來記錄你走到哪裡；文件站上的是唯讀的，勾不動。</p>
 <h2 id="操作端色籤">操作端色籤<a class="headerlink" href="#操作端色籤" title="Permanent link">&para;</a></h2>
@@ -6058,7 +6086,7 @@ taskkill<span class="w"> </span>//PID<span class="w"> </span><span class="m">332
 <p>改了後端程式碼時，<code>npm run dev</code> 用的是 <code>nest start --watch</code>，會<strong>自動重新編譯並重新啟動</strong>，不必手動關。此時護理端的即時總覽會短暫顯示「串流中斷，改為定時更新」，後端起來後自動變回「即時連線中」。</p>
 </blockquote>
 <h2 id="09--api-附錄">09 · API 附錄<a class="headerlink" href="#09--api-附錄" title="Permanent link">&para;</a></h2>
-<p>後端啟動時會印出完整路由清單，目前共 <strong>203 條</strong>，下表逐條列出（迭代 16 拿掉的兩條、迭代 17.1 拿掉的一條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
+<p>後端啟動時會印出完整路由清單，目前共 <strong>209 條</strong>，下表逐條列出（迭代 16 拿掉的兩條、迭代 17.1 拿掉的一條留著刪除線，對帳用）。UI 沒有暴露的功能（取消排班、指定日期查總覽、跨裝置 Token 測試）都要從這裡打。</p>
 <h3 id="怎麼帶憑證">怎麼帶憑證<a class="headerlink" href="#怎麼帶憑證" title="Permanent link">&para;</a></h3>
 <p>護理端用 <strong>JWT</strong>；病人端平板用<strong>三個標頭</strong>（序號＋金鑰，寫入資料時再加 Session Token）。</p>
 <p><em>取得護理端權杖並呼叫（bash）</em></p>
@@ -7123,11 +7151,41 @@ curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3000/api/
 <td>patient-detail:read</td>
 <td>（迭代 22）狀態評估彙整（讀的時候由固定算式算）；<strong>每一次調閱寫稽核</strong>（<code>GAME_TREND_VIEWED</code>）；「狀態評估彙整」關著時 404</td>
 </tr>
+<tr>
+<td><code>GET /api/patient-detail/patients/:patientId/album</code></td>
+<td>patient-detail:read</td>
+<td>（迭代 23）記憶相簿的回應主題（「可以聊的話題」：說過家裡有的、用過的、想起某個人的；沒有答對率）；<strong>每一次調閱寫稽核</strong>（<code>ALBUM_TOPICS_VIEWED</code>）；「老台灣記憶相簿」關著時 404</td>
+</tr>
+<tr>
+<td><code>GET /api/device/games/album</code></td>
+<td>平板（Session Token）</td>
+<td>（迭代 23）相簿的存檔（還沒看完的那一次、序號）、上架中的圖卡、這一次的幾張（下架了也給）、伺服器排好的下一次；「老台灣記憶相簿」關著時 404；存檔格式不對 422</td>
+</tr>
+<tr>
+<td><code>POST /api/device/games/album/events</code></td>
+<td>平板（Session Token）</td>
+<td>（迭代 23）看完一張（作答、貼紙、跳過；一次最多 50 張）：照序號套用、<code>clientId</code> 去重；序號接不上回 <code>conflict</code>；每一張寫 <code>album_responses</code></td>
+</tr>
+<tr>
+<td><code>GET /api/device/games/album/peers?card=</code></td>
+<td>平板（Session Token）</td>
+<td>（迭代 23）共同記憶的人數句：同一班說「有」或點「我家也有」的其他病人，照最低人數門檻，湊不到改這星期，再湊不到回 <code>null</code>；「想起某個人」不算；要「老台灣記憶相簿」與「病人之間的互動」都開著</td>
+</tr>
+<tr>
+<td><code>GET /api/content/album-cards</code></td>
+<td>content:manage</td>
+<td>（迭代 23）記憶相簿的全部圖卡（目前的版本、上架狀態、看過幾次）；「老台灣記憶相簿」關著時 404</td>
+</tr>
+<tr>
+<td><code>PATCH /api/content/album-cards/:code</code></td>
+<td>content:manage</td>
+<td>（迭代 23）改名稱、說明、選項的字、答案（改了就是新的一版）或上架／下架；<strong>要理由、寫稽核</strong>（<code>ALBUM_CARD_UPDATED</code>）；代號不能改、沒有刪除</td>
+</tr>
 </tbody>
 </table>
 <blockquote>
-<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-22/">迭代 22</a> 各分冊（索引見 §13）。
-本表逐條對齊後端啟動時印出的路由清單（目前 203 條；1011 迭代 22 加 6 條、照清單重數過（<code>Mapped {</code> 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（<code>Mapped {</code> 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-23/">迭代 23</a> 各分冊（索引見 §13）。
+本表逐條對齊後端啟動時印出的路由清單（目前 209 條；1011 迭代 23 加 6 條、照清單重數過（<code>Mapped {</code> 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（<code>Mapped {</code> 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（<code>Mapped {</code> 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>h1</code> <strong>［終端機］</strong> 用 curl 測「取消排班」，先建立一筆有綁定的排班再取消。
@@ -7302,7 +7360,7 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <p>服務執行中直接複製 <code>.db</code> 可能拿到不一致的狀態，而且 WAL 模式的 <code>-wal</code>／<code>-shm</code> 與主檔是一組，只拿主檔會漏資料。備份一律用上面的線上備份（<code>VACUUM INTO</code>），備份檔也不得放到雲端硬碟或個人隨身碟（《資料庫使用規範》8.1）。</p>
 </blockquote>
 <hr />
-<h2 id="13--迭代-3-22-分冊">13 · 迭代 3-22 分冊<a class="headerlink" href="#13--迭代-3-22-分冊" title="Permanent link">&para;</a></h2>
+<h2 id="13--迭代-3-23-分冊">13 · 迭代 3-23 分冊<a class="headerlink" href="#13--迭代-3-23-分冊" title="Permanent link">&para;</a></h2>
 <p>迭代 3 之後的功能各自成冊。全部併進本頁會超過兩千行，翻起來反而找不到東西；分開之後每一冊都能單獨走完，前置條件寫在各冊開頭。</p>
 <table>
 <thead>
@@ -7483,10 +7541,15 @@ npm<span class="w"> </span>run<span class="w"> </span>dev
 <td>兩個開關，全關時跟迭代 17.7 一樣（「病人詳細資訊」那一頁也不出現）；<strong>麻將連連看</strong>：只鋪一層、每張至少 80×104px、點兩張一樣的就消、熟練之後要最多轉兩個彎的連線、提示無限次、卡住時自動重排、<strong>沒有計時、沒有級數、完成只有「完成了」</strong>、紅色改深棕；存檔跟著病人走、斷線照樣能玩；<strong>今日牌局</strong>同一班當天同一桌、完成人數照最低人數門檻；<strong>病人詳細資訊</strong>「最近幾次有沒有玩」與<strong>狀態評估彙整</strong>（前 10 桌不說、只陳述比自己過去的中位數多／少多少）；<strong>社工、醫師</strong>只看得到這一頁、寫入一律 403、每一次調閱寫稽核</td>
 <td><code>af1</code>–<code>af30</code></td>
 </tr>
+<tr>
+<td><a href="../iteration-23/">迭代 23 — 遊戲化之四：老台灣記憶相簿</a></td>
+<td>開關全關時跟迭代 17.7 一樣，上架中不到 60 張開不了；<strong>一次 5 張</strong>，一張大圖配三個大字選項或有／沒有／不記得，<strong>不論對錯都翻出答案</strong>（答案溫和地框起來、沒有任何「錯」）、三個回憶小貼紙、每張都跳得過；出卡順序（沒看過的、熟悉的先出，一次不超過 2 張同主題，跳過兩次不再出）、存檔跟著病人走、斷線照樣能看、看完一次給養分；<strong>共同記憶</strong>照最低人數門檻、「想起某個人」不算；護理端「可以聊的話題」與<strong>圖卡管理</strong>（改字就是新的一版、下架隨時可以）；圖卡逐張檢查與長者試看</td>
+<td><code>ag1</code>–<code>ag30</code></td>
+</tr>
 </tbody>
 </table>
 <p>走的順序建議照迭代編號：後面的分冊會用到前面建立起來的東西（例如迭代 4 要先照迭代 3 分冊開啟 AI 總開關，迭代 6 的第三層要先有迭代 3 的臨床數值）。</p>
-<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（三十四本分冊的「前置」都建立在這些上面）：</p>
+<p><strong>開始任何一本分冊之前，先把這四樣東西準備好</strong>（三十五本分冊的「前置」都建立在這些上面）：</p>
 <table>
 <thead>
 <tr>
