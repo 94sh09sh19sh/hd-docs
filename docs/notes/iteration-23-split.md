@@ -166,5 +166,6 @@ Start-Process -Wait -FilePath 'C:\Program Files\Google\Chrome\Application\chrome
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1014 | 2026-10-14 | 首次定版。迭代 23 切成三次子迭代（23.1 子文件與第一批圖、23.2 第二批圖、23.3 程式）的開工、驗收與交接，三次都 1011 完成 |
 
 [← 回其他文件總表](index.md)　[← 回進度首頁](../index.md)
