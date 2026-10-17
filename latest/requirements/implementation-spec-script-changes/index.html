@@ -4966,6 +4966,38 @@
 </tr>
 </tbody>
 </table>
+<p><strong>迭代 24 是第十七次</strong>（1017，24.1 起）：花從 12 種加到 36 種、多了 24 種小訪客（4.24），兩種新花的名字有 Big5 常用字以外的字。迭代 21 的驗收寫死「圖共 12 × 6 + 3 + 1 + 24 張」「病人看到的字都在 Big5 常用字裡」，內容本身改了，不改就一定不通過：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>改了什麼</th>
+<th>為什麼不算放寬</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify:iteration21</code> 第 7 步</td>
+<td>圖的張數由寫死的 12 種花改成照花與訪客的清單算</td>
+<td>每一張的圖形、屬性、顏色照驗；36 種、24 種這兩個數由 <code>verify:iteration24-1</code> 驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration21</code> 第 11 步</td>
+<td>「病人看到的字都在 Big5 常用字」多認得已知的「欒」「蕎」兩個字</td>
+<td>這兩個字 24.1 重跑 <code>subset-font.py</code> 放進了字型子集，<code>verify:iteration24-1</code> 直接讀字型檔確認；其他字照驗</td>
+</tr>
+<tr>
+<td><code>verify:iteration23-1</code>、<code>verify:iteration23-2</code> 第 1、4、7 步（24.2）</td>
+<td>「一共 60 張」「每個主題 10 張」改成只看起始的六個主題；「圖檔正好 60 張」改成「起始 60 張都有、每一個圖檔都對得到一張圖卡」；合計大小的上限照張數算</td>
+<td>起始 60 張的內容、題型、兩批的分法、白名單、顏色、逐字比對照驗；新的三個主題由 <code>verify:iteration24-2</code> 逐張對子文件的表</td>
+</tr>
+<tr>
+<td><code>verify:iteration23</code> 第 4 步（24.2）</td>
+<td>出卡順序的模擬（四週不重複、熟悉度大的排後面、全部看過從最久沒看的重來）改拿起始的 60 張跑</td>
+<td>排卡的程式與規則一條都沒改，只是模擬的圖卡從「全部」改成「起始的 60 張」，數字才對得上四週；120 張的「八週不重複」由 <code>verify:iteration24-3</code> 驗</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>
