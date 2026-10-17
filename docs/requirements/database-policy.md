@@ -154,6 +154,7 @@ SQLite 沒有 Row Level Security，也沒有資料庫層級的使用者。這代
 **1010 迭代 21 實作**：`game_saves.snapshot`（`TEXT`），每位病人每款遊戲一列、帶 `format_version`；寫入前與讀出後都以 `@hd/shared` 的 `validateGardenSnapshot`（白名單欄位）驗、上限 16 KB，驗不過整筆擋下（後端回 422）、不猜不覆寫；舊版升級寫在 `upgradeGardenSnapshot`。每一步、圖鑑、送花、共同花園的格子都是正規的表（`game_events`、`garden_collection`、`flower_gifts`、`shared_garden_plots`）。程式裡沒有任何查 JSON 內容的函式（`verify:iteration21` 第 5 步搜一次）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》第二十四節。
 **1011 迭代 22**：麻將連連看的存檔是同一張表的第二款（`game_code = MAHJONG`，`validateMahjongSnapshot` 驗、同樣上限 16 KB）；快照只存牌碼不存圖。狀態評估要用的每一步（第幾桌、找到一對的時間、提示、點錯、點的位置）照第 5 條另存在 `game_events` 的正規欄位，資料字典第二十五節。
 **1011 迭代 23**：老台灣記憶相簿的存檔是同一張表的第三款（`game_code = ALBUM`，`validateAlbumSnapshot` 驗、同樣上限 16 KB）；快照只有這一次看到第幾張與每一張的四個數字（看過幾次、跳過幾次、最後一次是第幾次、點過「想起某個人」沒有），存圖卡代號不存圖。每看完一張的作答照第 5 條另存在 `album_responses` 的正規欄位（三個貼紙、跳過、看的是第幾版各一欄，**不用 JSON**），圖卡與每一版的字、選項是 `album_cards`、`album_card_versions`、`album_card_options`，資料字典第二十六節。
+**1018 迭代 24.4**：花園的快照升到第 2 版，多種子袋（這次療程種了幾顆）、花園編號（小訪客照它算，伺服器給的亂數，不是任何資料表的編號）、在等的訪客與判斷的紀錄、看過哪幾種；第 1 版由 `upgradeGardenSnapshot` 升級、不動資料庫結構，仍守 16 KB 上限（最大的一份約 2.3 KB）。看過哪些訪客另存正規表 `garden_visitors`，每一步的訪客是 `game_events.visitor_code`；相簿圖鑑讀的時候從 `album_responses` 算，不另存。資料字典第二十七節。
 
 ### 6.2 SQLite 特有的型別注意事項
 

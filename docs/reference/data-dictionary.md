@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 90 張表、877 個欄位、22 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 91 張表、882 個欄位、23 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -75,6 +75,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 二十四、透析小花園、送花、共同花園（迭代 21） | `game_saves`、`game_events`、`garden_collection`、`flower_gifts`、`shared_gardens`、`shared_garden_plots` | 每位病人每款遊戲的盤面快照（**JSON 的唯一例外**）、每一步的操作紀錄、圖鑑、送給護理站的花、每一班每個月的共同花園與格子。**送花沒有收花的護理師、共同花園的格子沒有種花的人** |
 | 二十五、麻將連連看與狀態評估彙整（迭代 22） | 沒有新表（`game_events` 加十二欄；`game_saves` 多一款 `MAHJONG`） | 麻將的每一步：第幾桌、哪兩張、找到一對花了多久、點的位置離牌心多遠、是不是提示的那一對、這一步完成了整桌。**狀態評估彙整讀的時候才算，不存陳述** |
 | 二十六、老台灣記憶相簿（迭代 23） | `album_cards`、`album_card_versions`、`album_card_options`、`album_responses`（`game_saves` 多一款 `ALBUM`） | 圖卡與每一版的字、選項；每看完一張選了什麼、點了哪些貼紙、有沒有跳過、看的是第幾版。**「想起某個人」不進任何彙總；沒有護理師欄位** |
+| 二十七、種子袋、小訪客與兩個圖鑑（迭代 24.4） | `garden_visitors`（另有 `game_events.visitor_code`；花園快照第 2 版） | 這一次療程種了幾顆、在等的小訪客、第一次點開某一種訪客的時間。**相簿圖鑑從作答算，不另存** |
 
 ### 每張表都有的三個欄位
 
@@ -1727,15 +1728,15 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
 | `patient_id` | `TEXT` → `patients` | 哪一位病人的 | `ON DELETE NO ACTION`。與 `game_code` 唯一（每位病人每款一列）。**以病人為準，不以平板** |
 | `game_code` | `TEXT` | 哪一款遊戲 | 合法值 `GARDEN`、`MAHJONG`（1011 迭代 22，快照格式見第二十五節）、`ALBUM`（1011 迭代 23，快照格式見第二十六節）（`GameCode`） |
-| `format_version` | `INT` | 快照的格式第幾版 | 目前 1。讀出時對不上就**擋下、不猜、不覆寫**（後端回 422）；舊版的升級寫在程式裡（`upgradeGardenSnapshot`），不動資料庫結構 |
-| `snapshot` | `TEXT` | 花園現在的樣子 | JSON：12 格（每格是空地或一棵植物：平板產生的植物編號、種子、花的代號、成長點數、這次療程的照顧點數）、算到第幾次療程、澆過水的療程、給過的養分、種過幾棵、開過哪幾種。**寫入前與讀出後都驗格式（白名單欄位）、上限 16 KB**；一份約 300～900 位元組。⛔ **沒有病人識別資料、臨床數值，也沒有任何其他資料表的編號**（「第幾次療程」是序數，不是療程的編號）；⛔ **資料庫裡不查它的內容**（程式裡沒有任何查 JSON 內容的函式），也沒有任何表參照它 |
+| `format_version` | `INT` | 快照的格式第幾版 | 花園 1018 起第 2 版（迭代 24.4，見第二十七節），麻將、相簿第 1 版。讀出時認不得就**擋下、不猜、不覆寫**（後端回 422）；舊版的升級寫在程式裡（`upgradeGardenSnapshot` 把第 1 版轉成第 2 版），不動資料庫結構 |
+| `snapshot` | `TEXT` | 花園現在的樣子 | JSON：12 格（每格是空地或一棵植物：平板產生的植物編號、種子、花的代號、成長點數、這次療程的照顧點數）、算到第幾次療程、澆過水的療程、給過的養分、種過幾棵、開過哪幾種；第 2 版（迭代 24.4）多花園編號、這次療程種了幾顆、在等的訪客與判斷的紀錄、看過哪幾種訪客（第二十七節）。**寫入前與讀出後都驗格式（白名單欄位）、上限 16 KB**；一份約 300～900 位元組。⛔ **沒有病人識別資料、臨床數值，也沒有任何其他資料表的編號**（「第幾次療程」是序數，不是療程的編號）；⛔ **資料庫裡不查它的內容**（程式裡沒有任何查 JSON 內容的函式），也沒有任何表參照它 |
 | `last_seq` | `INT` | 已經套用到第幾步 | 平板只送得進 `last_seq + 1`；接不上回「衝突」與這一份——每一步的序號因此不顛倒 |
 | `created_at` | `TS` | 第一次存檔的時間 | — |
 | `updated_at` | `TS` | 最後一次存檔的時間 | — |
 
-**誰寫這張表**：`GardenService`。第一次點開花園時不寫（空花園照算），第一步之後才有這一列；點開花園時若這段期間有新的療程，會把成長寫回去。
+**誰寫這張表**：`GardenService`。~~第一次點開花園時不寫（空花園照算），第一步之後才有這一列~~ **1018 起（迭代 24.4）第一次點開花園就寫下空花園**：花園編號（小訪客照它算）從那時起固定；點開花園時若這段期間有新的療程，會把成長寫回去。
 
-### `game_events` — 每一步的操作紀錄（16 欄；迭代 22 再加 12 欄，見第二十五節）
+### `game_events` — 每一步的操作紀錄（16 欄；迭代 22 再加 12 欄，見第二十五節；迭代 24.4 再加 1 欄，見第二十七節）
 
 統計、評估、彙總要用的東西**一律在這裡**，不從快照裡挖（規範 6.1 例外第 5 條）。
 
@@ -1747,8 +1748,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `game_code` | `TEXT` | 哪一款遊戲 | 同上。與 `occurred_at` 有索引 |
 | `seq` | `INT` | 第幾步 | 這位病人這款遊戲從 1 起連續編號 |
 | `client_id` | `TEXT` UNIQUE | 平板產生的識別碼 | 重送同一步不會多一筆（斷線補送） |
-| `action` | `TEXT` | 做了什麼 | `PLANT` 種下、`WATER` 澆水、`NOURISH` 給養分、`GIFT` 送給護理站、`SHARE` 種到大家的花園；麻將（迭代 22）見第二十五節；格式不對的記 `INVALID` |
-| `applied` | `BOOL` | 這一步有沒有套用 | 做不了的一步（重複澆水、沒做的任務給養分）記 0，**序號照樣用掉** |
+| `action` | `TEXT` | 做了什麼 | `PLANT` 種下、`WATER` 澆水、`NOURISH` 給養分、`GIFT` 送給護理站、`SHARE` 種到大家的花園；1018 迭代 24.4 起多 `LOOK`（點開花園時判斷一次小訪客要不要來）、`VISITOR`（點開門口的訪客）；麻將（迭代 22）見第二十五節；格式不對的記 `INVALID` |
+| `applied` | `BOOL` | 這一步有沒有套用 | 做不了的一步（重複澆水、沒做的任務給養分；迭代 24.4 起還有這次療程的 3 顆種完了的第 4 顆、同一次療程第二次判斷、沒有訪客時點訪客）記 0，**序號照樣用掉** |
 | `plot_index` | `INT?` | 自己花園的第幾格 | 0～11 |
 | `seed_kind` | `TEXT?` | 種下的是哪一種種子 | `TREE` / `FIELD` / `COURTYARD`（`SeedKind`） |
 | `flower_code` | `TEXT?` | 哪一種花 | 種下時抽到的花，或送出、種走的那一朵（`FlowerCode`） |
@@ -1760,7 +1761,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 **不寫稽核軌跡**：送花、種花都在這張表；稽核軌跡再寫一次「誰」，共同花園的種花人就多一個查得到的地方。
 
-### `garden_collection` — 台灣花卉圖鑑（4 欄）
+### `garden_collection` — 花園圖鑑的花（4 欄；1018 起畫面上叫「圖鑑」，照種子分頁）
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1934,6 +1935,42 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 - **共同記憶**（FR-S17）：「今天這一班有 N 個人家裡也有電鍋」。N＝這一班今天看過這一張（沒跳過）、答「有」或點「我家也有」的**其他**病人；沒說有的＝看過但沒說有的其他病人。照最低人數門檻（`PEER_MIN_COUNT_DONE`／`_NOT_DONE`，預設 3、不得低於 3）：說有的 ≥ 門檻、沒說有的是 0 或 ≥ 門檻才說；當天湊不到改這星期，再湊不到不說。**只有人數**，沒有床號與名字；不另存
 - **可以聊的話題**（病人詳細資訊）：這位病人每一張的作答整理成「說過家裡有的、用過的、想起某個人的」，依主題分列，有回應的主題在前；**不含答案對不對**。不另存
+- **我的相簿**（1018 迭代 24.4，病人端的相簿圖鑑）：這位病人套用了、沒跳過的每一列（翻開過答案的每一張，不管選了什麼、點了哪個貼紙），照主題與 `album_cards.sort_order` 排，只看上架中的圖卡；每一張是目前那一版的名稱與說明、最後一列的三個貼紙。還沒收到的格子回 `null`、連代號都不給。**不讀 `choice_code`、`correct`**；不另存
+
+## 二十七、種子袋、小訪客與兩個圖鑑（迭代 24.4）
+
+**蒐集的意義**：使用者 1015 的六個決定（實作規格書 4.24；子文件《[透析中的遊戲化之四：花園與相簿的擴充](../notes/dialysis-gamification-expansion.md)》）裡，要存東西的只有三件：**這次療程種了幾顆**（種子袋每次療程補到 3 顆）、**在門口等著的小訪客**、**看過哪幾種訪客**（圖鑑「花園的訪客」）。
+遷移 `iteration24_seed_bag_visitors`，只做加法：一張新表、`game_events` 一個可為空的欄位，不動任何既有的表與欄位。照《資料庫使用規範》第 19 條比照平板其他資料；**沒有任何自由文字欄**。相簿圖鑑從 `album_responses` 算（第二十六節），不另開資料表。
+
+**花園快照第 2 版**（`game_saves`，`game_code = 'GARDEN'`、`format_version = 2`）多六個欄位，全部只用來「接著玩」，統計不查它們：
+
+| 欄位 | 內容 | 說明 |
+|---|---|---|
+| `key` | 花園自己的編號（8～40 個英數字） | 小訪客來不來、來哪一隻照它與第幾次療程算，平板與伺服器算出同一隻。新花園由伺服器給亂數；第 1 版升級時由舊內容的雜湊算出。⛔ 不是病人、療程或任何資料表的編號 |
+| `sown` | 第幾次療程種了幾顆（0～3） | 袋子裡還有幾顆由它算：不是這次療程就是 3 顆。**不存「袋子裡有幾顆」**，所以不可能累積 |
+| `looked` | 最後一次判斷訪客是第幾次療程 | 一次療程只判斷一次；有一隻在等時也記下判斷過了（不判斷） |
+| `visitor` | 在門口等著的那一隻（`VisitorCode`）或沒有 | 不會離開、不會被換掉，點開才走 |
+| `misses` | 連續幾次判斷都沒來（0～2） | 到 2 次的下一次一定來（保底） |
+| `met` | 點開看過哪幾種 | 抽的時候「還沒看過的 ×2」用；圖鑑以 `garden_visitors` 為準 |
+
+第 1 版讀進來時這六欄當作：這次療程種了 0 顆、沒有訪客、沒判斷過、沒看過。一份種滿 12 格、看過 24 種訪客、開過 36 種花的快照約 2.3 KB（上限 16 KB）。
+
+### `game_events` — 迭代 24.4 加的 1 欄
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `visitor_code` | `TEXT?` | 哪一隻小訪客 | `VisitorCode`。`LOOK` 那一列是判斷之後來的那一隻（沒來是空的）、`VISITOR` 那一列是點開的那一隻；其他動作都是空的。訪客的名字與一句說明在 `@hd/shared` 的 `VISITOR_CATALOG`（《之四》第 4.4 節） |
+
+### `garden_visitors` — 花園圖鑑「花園的訪客」（4 欄）
+
+比照 `garden_collection`：第一次點開某一種訪客才有一列，之後同一種再來、再點開都不動。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人 | `ON DELETE NO ACTION`。與 `visitor_code` 唯一 |
+| `visitor_code` | `TEXT` | 看過哪一種訪客 | `VisitorCode`（24 種，三群各 8 種） |
+| `first_seen_at` | `TS` | 第一次點開的時間 | 之後再點開不改。**點開不給任何東西**（不給水、養分、點數），這張表只是圖鑑 |
 
 ---
 
