@@ -74,7 +74,7 @@
 | [軟體需求規格書（SRS）](requirements/srs.md) | 功能需求來源（FR 編號出處） | 1014 · 修訂中 |
 | [資料庫使用規範](requirements/database-policy.md) | 資料治理強制規則，優先權等同實作規格書 | 1014 · 修訂中 |
 | [實作規格書](requirements/implementation-spec.md) | 範圍與技術選型，**衝突時以此為準** | 1014 · 修訂中 |
-| [部署規範](requirements/deployment-spec.md) | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1007 |
+| [部署規範](requirements/deployment-spec.md) | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1007 · 修訂中 |
 | [尚待確認事項清冊](requirements/open-questions.md) | 卡住進度的問題總表，其餘文件不再各自維護 | 1014 · 修訂中 |
 
 每份文件末尾都有「版本歷程」，記錄歷次定版與異動摘要；要回頭對帳哪一版談定了什麼，從那裡找。
