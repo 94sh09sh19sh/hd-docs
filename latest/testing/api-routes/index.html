@@ -360,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    1021 — 花園與相簿的擴充、緊急通報的床邊前速覽完成（迭代 24、25），儀表板更新、固定橫放排成迭代 26～27
+    1021 — 花園與相簿的擴充、緊急通報的床邊前速覽、儀表板與獎勵制度的更新完成（迭代 24～26），固定橫放排成迭代 27
   
 
     
@@ -3693,6 +3693,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 26 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4599,8 +4627,8 @@
 </blockquote>
 <hr />
 <blockquote>
-<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-25/">迭代 25</a> 各分冊（索引見<a href="../manual-test-guide/#13--迭代-3-25-分冊">主手冊 §13</a>）。
-本表逐條對齊後端啟動時印出的路由清單（目前 214 條；1018 迭代 25 加 4 條、照清單重數過（<code>Mapped {</code> 214 行），與表一致；1018 迭代 24.4 加 1 條、照清單重數過（<code>Mapped {</code> 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（<code>Mapped {</code> 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（<code>Mapped {</code> 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（<code>Mapped {</code> 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-26/">迭代 26</a> 各分冊（索引見<a href="../manual-test-guide/#13--迭代-3-26-分冊">主手冊 §13</a>）。
+本表逐條對齊後端啟動時印出的路由清單（目前 221 條；1018 迭代 26.3 加 6 條（<code>/handlers</code>）、26.2 加 1 條（可列印版），照清單重數過（<code>Mapped {</code> 221 行），與表一致；1018 迭代 25 加 4 條、照清單重數過（<code>Mapped {</code> 214 行），與表一致；1018 迭代 24.4 加 1 條、照清單重數過（<code>Mapped {</code> 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（<code>Mapped {</code> 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（<code>Mapped {</code> 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（<code>Mapped {</code> 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <table>
 <thead>
@@ -4799,12 +4827,12 @@
 <tr>
 <td><code>POST /api/help-requests/:id/acknowledge</code></td>
 <td>help-request:handle</td>
-<td>接手。1018 迭代 25.2 起簡易版只在床邊前速覽的「我接手」呼叫（點紅框只開速覽）</td>
+<td>接手。1018 迭代 25.2 起簡易版只在床邊前速覽的「我接手」呼叫（點紅框只開速覽）。迭代 26.3 起可帶 <code>handlerNurseId</code>（「獎勵制度」開著時按名字就是接手；關著時帶了回 409、指名的人不在名單上回 400）</td>
 </tr>
 <tr>
 <td><code>POST /api/help-requests/:id/resolve</code></td>
 <td>help-request:handle</td>
-<td>處理完成。1018 迭代 25.3 起臨床組（結果不是「病人自行取消」）在同一個交易裡建立「求助處置」護理紀錄草稿，建不起來時整筆不成立（409）</td>
+<td>處理完成。1018 迭代 25.3 起臨床組（結果不是「病人自行取消」）在同一個交易裡建立「求助處置」護理紀錄草稿，建不起來時整筆不成立（409）。迭代 26.3 起可帶 <code>handlerNurseId</code>（接手時沒指名的在結案補選）</td>
 </tr>
 <tr>
 <td><code>POST /api/help-requests/:id/cancel</code></td>
@@ -4924,12 +4952,12 @@
 <tr>
 <td><code>POST /api/education/contents/:id/approve</code></td>
 <td>education:manage</td>
-<td>（迭代 4）核可，病人端可見</td>
+<td>（迭代 4）核可，病人端可見。迭代 26.3 起可帶 <code>handlerNurseId</code>（審閱的人）</td>
 </tr>
 <tr>
 <td><code>POST /api/education/contents/:id/reject</code></td>
 <td>education:manage</td>
-<td>（迭代 4）退回（需 note）</td>
+<td>（迭代 4）退回（需 note）。迭代 26.3 起可帶 <code>handlerNurseId</code></td>
 </tr>
 <tr>
 <td><code>GET /api/device/education</code></td>
@@ -5004,7 +5032,7 @@
 <tr>
 <td><code>POST /api/nursing-records/:id/sign</code></td>
 <td>nursing-record:write</td>
-<td>（迭代 4）簽核，之後不可修改。迭代 17.8 起有格式的記錄送 <code>sections</code>（只送 <code>finalText</code> 時照段名拆回）</td>
+<td>（迭代 4）簽核，之後不可修改。迭代 17.8 起有格式的記錄送 <code>sections</code>（只送 <code>finalText</code> 時照段名拆回）。迭代 26.3 起可帶 <code>handlerNurseId</code>：求助處置紀錄指的是那一次求助的處理者，其他紀錄是簽核的人</td>
 </tr>
 <tr>
 <td><code>POST /api/nursing-records/:id/post-vitals</code></td>
@@ -5039,7 +5067,7 @@
 <tr>
 <td><code>POST /api/help-requests/follow-ups/:followUpId/close</code></td>
 <td>help-request:handle</td>
-<td>（迭代 5）結束追蹤事項（完成或取消）</td>
+<td>（迭代 5）結束追蹤事項（完成或取消）。迭代 26.3 起完成時可帶 <code>handlerNurseId</code></td>
 </tr>
 <tr>
 <td><code>GET /api/help-resolution-options</code></td>
@@ -5349,12 +5377,12 @@
 <tr>
 <td><code>POST /api/carousel/items/:id/approve</code></td>
 <td>carousel-content:manage</td>
-<td>（迭代 17）核准即上架，可帶修改與播放床位；超過標題 12 字、內容 60 字擋下</td>
+<td>（迭代 17）核准即上架，可帶修改與播放床位；超過標題 12 字、內容 60 字擋下。迭代 26.3 起可帶 <code>handlerNurseId</code>（審閱的人）</td>
 </tr>
 <tr>
 <td><code>POST /api/carousel/items/:id/reject</code></td>
 <td>carousel-content:manage</td>
-<td>（迭代 17）退回（產生中的也能取消）</td>
+<td>（迭代 17）退回（產生中的也能取消）。迭代 26.3 起可帶 <code>handlerNurseId</code>（產生中的取消不記）</td>
 </tr>
 <tr>
 <td><code>POST /api/carousel/items/:id/reopen</code></td>
@@ -5444,7 +5472,7 @@
 <tr>
 <td><code>GET /api/rewards</code></td>
 <td>reward:self</td>
-<td>（迭代 19）計分規則（含已停用）、計分期間、兩個績效開關的狀態</td>
+<td>（迭代 19）計分規則（含已停用）、計分期間、兩個績效開關的狀態。<strong>迭代 26.3 起整組 <code>/rewards</code> 跟著「獎勵制度」開關</strong>（關著時 404）；回應改帶開關開啟的那一天、建不建得出計分期與原因，每一期多事件數與未指名的比例</td>
 </tr>
 <tr>
 <td><code>POST /api/rewards/rules</code></td>
@@ -5464,12 +5492,12 @@
 <tr>
 <td><code>POST /api/rewards/periods</code></td>
 <td>reward:manage</td>
-<td>（迭代 19）開始觀察期或計分期；計分期要「獎勵計分」開著；與進行中的期間重疊回 409</td>
+<td>（迭代 19）開始觀察期或計分期；與進行中的期間重疊回 409。迭代 26.3 起起日早於「獎勵制度」開啟的那一天回 400；計分期要至少結算過一個觀察期、至少一條已公告的規則（否則 409）</td>
 </tr>
 <tr>
 <td><code>POST /api/rewards/periods/:id/close</code></td>
 <td>reward:manage</td>
-<td>（迭代 19）結算；過了訖日才能結算；計分期而且「獎勵計分」開著才寫計分</td>
+<td>（迭代 19）結算；過了訖日才能結算。迭代 26.3 起計分期一律寫計分，只計有帳號的人（名冊身分照記、不計分），事件讀處理者指名</td>
 </tr>
 <tr>
 <td><code>GET /api/rewards/me?periodId=</code></td>
@@ -5479,7 +5507,7 @@
 <tr>
 <td><code>POST /api/rewards/disputes</code></td>
 <td>reward:self</td>
-<td>（迭代 19）更正申請：這一筆不該算（只能指自己的事件）、少算了一筆</td>
+<td>（迭代 19）更正申請：這一筆不該算（只能指自己的事件）、少算了一筆。迭代 26.3 起「少算了一筆」可帶一筆沒有指名的事件（認領）；指到有指名的回 400</td>
 </tr>
 <tr>
 <td><code>GET /api/rewards/disputes</code></td>
@@ -5530,6 +5558,11 @@
 <td><code>GET /api/external-reports/:id/export</code></td>
 <td>external-report:generate 或 approve</td>
 <td>（迭代 19）取出 CSV；未核准回 409 並寫稽核</td>
+</tr>
+<tr>
+<td><code>GET /api/external-reports/:id/printable</code></td>
+<td>external-report:generate 或 approve</td>
+<td>（迭代 26.2）可列印版：與 CSV 同一道門（未核准回 409 並寫稽核）；只有核准的那幾格、不呈現的分組與原因、指標定義，不寫產生者與核准者</td>
 </tr>
 <tr>
 <td><code>GET /api/device/education/notebook</code></td>
@@ -5690,6 +5723,36 @@
 <td><code>POST /api/nursing-records/help-responses</code></td>
 <td>nursing-record:write</td>
 <td>（迭代 25.3）依一則已結案的求助建立求助處置記錄（規則同結案時自動建立的）；已經有一筆回 409、沒結案的回 400</td>
+</tr>
+<tr>
+<td><code>GET /api/handlers/candidates</code></td>
+<td>patient:monitor</td>
+<td>（迭代 26.3）名字名單：最近 12 小時被指名過的人（最多 6 位）與全部，都依姓名筆畫；不讀班表。<strong>整組 <code>/handlers</code> 跟著「獎勵制度」開關</strong>（關著時 404）</td>
+</tr>
+<tr>
+<td><code>POST /api/handlers/declarations</code></td>
+<td>patient:monitor</td>
+<td>（迭代 26.3）事後補選或更正處理者（原本已經有人的記成更正）；寫稽核</td>
+</tr>
+<tr>
+<td><code>POST /api/handlers/self-report</code></td>
+<td>patient:monitor</td>
+<td>（迭代 26.3）「我不在名單上」：姓名＋工作 ID；已經有帳號或名冊身分的直接指名那一位，沒有的建一筆待確認的名冊身分</td>
+</tr>
+<tr>
+<td><code>GET /api/handlers/roster</code></td>
+<td>nurse:approve</td>
+<td>（迭代 26.3）名冊身分與待確認的名冊身分（誰加的、被指名過幾筆）</td>
+</tr>
+<tr>
+<td><code>POST /api/handlers/roster</code></td>
+<td>nurse:approve</td>
+<td>（迭代 26.3）新增名冊身分（沒有密碼、登不進去）；工作 ID 已經有人回 409</td>
+</tr>
+<tr>
+<td><code>POST /api/handlers/roster/:id/decide</code></td>
+<td>nurse:approve</td>
+<td>（迭代 26.3）確認或不確認「我不在名單上」送來的；不能確認自己</td>
 </tr>
 <tr>
 <td><code>POST /api/nursing-records/:id/template</code></td>
