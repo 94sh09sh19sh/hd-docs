@@ -103,7 +103,7 @@ ______________________________________________________________________
 ```
 npm run demo:patient                                   # 啟動後一直開著，Ctrl+C 結束
 npm run demo:patient -- --screenshot <檔名.png>          # 截一張 1280×800 的圖後自動結束
-npm run demo:patient -- --screenshot <檔名.png> --portrait # 直式 800×1280
+npm run demo:patient -- --screenshot <檔名.png> --portrait # 直式 800×1280（迭代 27 拿掉，只剩 1280×800）
 ```
 
 一次啟動模擬院方 API（8091）、後端（3100）、病人端（5184）與護理端（5183），**都與平常開發用的埠錯開**，兩邊可以同時開著。
