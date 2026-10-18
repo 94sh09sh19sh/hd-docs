@@ -117,7 +117,7 @@ ______________________________________________________________________
 
 ## 4. 資料模型
 
-共 86 張表，20 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
+共 97 張表，26 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
 
 | 分類                                                                                                 | 表                                                                                                                                      | 加入於    |
 | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- |
@@ -155,8 +155,12 @@ ______________________________________________________________________
 | 透析小花園、送花、共同花園（盤面快照是 JSON 的唯一例外；送花沒有護理師欄、共同花園的格子沒有病人欄） | `game_saves`、`game_events`、`garden_collection`、`flower_gifts`、`shared_gardens`、`shared_garden_plots`                               | 迭代 21   |
 | 麻將連連看（沒有新表：`game_events` 加十二欄；狀態評估陳述讀的時候才算，不存）                       | `game_saves`、`game_events`                                                                                                             | 迭代 22   |
 | 老台灣記憶相簿（圖卡是資料、改字就是新的一版；「想起某個人」不彙總、沒有護理師欄位）                 | `album_cards`、`album_card_versions`、`album_card_options`、`album_responses`、`game_saves`                                             | 迭代 23   |
+| 花園的小訪客（圖鑑只記第一次點開；種子袋不另存，`game_events` 加 `visitor_code`）                    | `garden_visitors`、`game_events`                                                                                                        | 迭代 24   |
+| 這次透析的設定（院方 API 一次透析一個值的那幾欄；值變了才覆蓋，不是歷程）                            | `dialysis_session_settings`                                                                                                             | 迭代 25   |
+| 平板斷線的一段、指標的變更紀錄、對外報表沒有呈現的那一格與當下抄的基準                               | `device_connection_gaps`、`metric_definition_changes`、`external_report_suppressions`、`external_report_baselines`                      | 迭代 26   |
+| 一件事的處理者（指名、改指名都寫稽核）                                                               | `handler_declarations`                                                                                                                  | 迭代 26   |
 
-迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。 迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`； 迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 `nursing_records` 加 `record_format`，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）；迭代 20 另在 `carousel_items` 加 `peer_tip_preset_id`（可為空），我的衛教小本子不另存、由作答紀錄算。全部只做加法。
+迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。 迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`； 迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 `nursing_records` 加 `record_format`，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）；迭代 20 另在 `carousel_items` 加 `peer_tip_preset_id`（可為空），我的衛教小本子不另存、由作答紀錄算；迭代 25 在 `dialysis_vital_records` 加四欄（血流量、透析液流量與溫度、靜脈壓）、`nursing_records` 加 `source_help_request_id`；迭代 26 在 `external_reports` 加兩欄（附基準、互減拿掉的格數）、`nurses` 加 `roster_added_by_id`；迭代 27 沒有動 schema。全部只做加法。
 
 ### 值得注意的地方
 
@@ -540,6 +544,8 @@ ______________________________________________________________________
 **迭代 17.1～18.1 合起來多 22 條路由、9 張表、12 種稽核動作**：17.1～17.7 多的是平板與內容指定的端點、`carousel_item_device_targets`； 17.8 加兩條（帶入處置後數值、記下複製）與 `nursing_record_sections`、一個營運參數（護理紀錄格式）；18 加九條與六張表、一個開關（`ADEQUACY_PREDICTION`）；18.1 加一條（`PUT /rules/gate`）與 `rule_gate_changes`。 17.7 另加開關 `MANUAL_PATIENT_CREATE`。路由數照後端啟動時印出的清單與路由裝飾器兩種計法對過（1010 都是 158）；測試手冊附錄之前寫的 146 是少算，18.1 收尾時更正。
 
 **迭代 19 多 23 條路由、10 張表、20 種稽核動作、7 個權限碼**，功能開關與營運參數沒有增加（績效兩個開關迭代 3 就建好了，這次把「尚未實作」換成實際的開啟條件）。路由照後端啟動時印出的清單重數：181，與測試手冊附錄逐條對齊。
+
+**迭代 24～26 合起來多 12 條路由、7 張表、7 種稽核動作**，權限碼、角色、功能開關與營運參數都沒有增加： 迭代 24 加一條、一張表（`garden_visitors`），沒有新的稽核動作（種子袋與小訪客的每一步在 `game_events`）；迭代 25 加四條、一張表（`dialysis_session_settings`）、一種稽核動作； 迭代 26 加七條（26.2 可列印版一條、26.3 處理者指名六條）、五張表、六種稽核動作，功能開關的數字沒變是因為「獎勵制度」取代了「獎勵計分」（一減一加）。 路由每一次都照後端啟動時印出的清單重數（210、214、221），與測試手冊的路由表逐條對齊；迭代 27 一樣都沒有增減，所以規模表沒有它那一欄。
 
 ### 共用常數的角色
 
