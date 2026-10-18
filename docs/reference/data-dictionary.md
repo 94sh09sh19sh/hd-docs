@@ -1,7 +1,7 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 92 張表、901 個欄位、24 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`）
-**來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`
+**範圍**：目前資料庫實際蒐集的全部資料 — 97 張表、950 個欄位、26 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`）
+**來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`、`packages/shared/src/performance.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
 ---
@@ -77,6 +77,8 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 二十六、老台灣記憶相簿（迭代 23） | `album_cards`、`album_card_versions`、`album_card_options`、`album_responses`（`game_saves` 多一款 `ALBUM`） | 圖卡與每一版的字、選項；每看完一張選了什麼、點了哪些貼紙、有沒有跳過、看的是第幾版。**「想起某個人」不進任何彙總；沒有護理師欄位** |
 | 二十七、種子袋、小訪客與兩個圖鑑（迭代 24.4） | `garden_visitors`（另有 `game_events.visitor_code`；花園快照第 2 版） | 這一次療程種了幾顆、在等的小訪客、第一次點開某一種訪客的時間。**相簿圖鑑從作答算，不另存** |
 | 二十八、床邊前速覽與求助處置記錄（迭代 25） | `dialysis_session_settings`（另有 `dialysis_vital_records` 加四欄、`nursing_records.source_help_request_id`） | 護理師去床邊之前要看的透析設定與機器量測；結案那一下建好的護理紀錄草稿來自哪一則求助。**只給護理端看，不上病人平板** |
+| 二十九、儀表板的資料補齊與對外報表的修正（迭代 26.1） | `device_connection_gaps`、`metric_definition_changes`、`external_report_suppressions`、`external_report_baselines`（另有 `external_reports` 加兩欄） | 平板斷線的起訖、指標從哪一天起開始記或改了意思、對外報表沒有呈現的那幾格與原因、產生當下抄的一份基準 |
+| 三十、處理者指名與名冊身分（迭代 26.3） | `handler_declarations`（另有 `nurses.roster_added_by_id`、`nurses.status` 兩個新值） | 接手、結案、簽核、審閱、完成追蹤的那一件事是哪一位護理師做的（不是誰的帳號開著）；沒有帳號的支援人力 |
 
 ### 每張表都有的三個欄位
 
@@ -92,7 +94,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ## 一、帳號與登入憑證
 
-### `nurses` — 護理端使用者（13 欄）
+### `nurses` — 護理端使用者（13 欄；迭代 26.3 加 1 欄，見第三十節）
 
 **蒐集的意義**：本系統的所有寫入操作都必須追溯到一個具名的護理人員（SRS 4.1）。這張表就是「具名」的來源 — 沒有這張表，稽核軌跡上的每一筆都會變成匿名操作，整個資料治理設計就失效了。
 
@@ -113,7 +115,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `display_name` | `TEXT` | 顯示名稱，護理站主控台上看到的名字 | 僅供顯示。測試環境為 faker 合成資料 |
 | `password_hash` | `TEXT` | 密碼的雜湊值。**系統不儲存密碼明文** | bcrypt 雜湊。⛔ **禁止**改用任何第三方託管身分服務（《資料庫使用規範》第 3 條）。⛔ 禁止出現在任何 API 回應或 log 中 |
 | `role` | `TEXT` | 角色，決定這個人能做什麼：最高權限、護理站管理者、護理長、一般護理師，以及兩個唯讀角色——醫院管理層、稽核 | 合法值 `SUPER_ADMIN` / `NURSE_MANAGER` / `NURSE_LEAD` / `NURSE` / `HOSPITAL_VIEWER` / `AUDITOR`，1011 迭代 22 起多 `SOCIAL_WORKER`（社工）/ `PHYSICIAN`（醫師）兩個唯讀角色（只看得到病人詳細資訊與狀態評估彙整，每一次調閱寫稽核），定義於 `@hd/shared` 的 `NurseRole`。⛔ 權限判斷寫在後端守衛與 service 層（第 4 條）。唯讀角色由全域守衛**預設全擋**，只放行標示 `@AllowReadOnlyRoles()` 的端點。有索引 |
-| `status` | `TEXT` | 帳號狀態。新註冊的人是「待審核」，要由有權限的人核准才能用；也可以被駁回或停權 | 合法值 `PENDING` / `ACTIVE` / `REJECTED` / `SUSPENDED`，見 `NurseStatus`。**只有 `ACTIVE` 能通過 `NurseAuthGuard`**。有索引 |
+| `status` | `TEXT` | 帳號狀態。新註冊的人是「待審核」，要由有權限的人核准才能用；也可以被駁回或停權。1018 起另有「名冊身分」與「待確認的名冊身分」（見第三十節） | 合法值 `PENDING` / `ACTIVE` / `REJECTED` / `SUSPENDED` / `ROSTER` / `ROSTER_PENDING`（後兩個迭代 26.3），見 `NurseStatus`。**只有 `ACTIVE` 能通過 `NurseAuthGuard`**。有索引 |
 | `can_approve_nurses` | `BOOL` | 是否被單獨授予「審核他人註冊」的權限。這是為了讓最高權限帳號能把審核工作分出去，而不必把整個管理權限一起給出去 | `DEFAULT false`。與 `role` **正交** — 一個 `NURSE` 也可以有這個權限。唯讀角色一律為 `false`，後端拒絕授予。授予／收回都要寫 `NURSE_PERMISSION_GRANTED` / `_REVOKED` 稽核 |
 | `password_change_required` | `BOOL` | 是否強制下次登入要改密碼。用於初始帳號與管理員重設密碼後 | `DEFAULT false`。為 `true` 時前端只顯示改密碼畫面 |
 | `approved_by_id` | `TEXT?` | **是誰核准這個帳號的**。蒐集它是因為「授權可追溯到哪一位護理師核准」是 SRS 4.1 的明文要求 | 自關聯外鍵 → `nurses.id`，`ON DELETE NO ACTION`。`PENDING` 狀態時為 NULL |
@@ -409,7 +411,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
-| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `PERF_INDIVIDUAL_L3` `REWARD_SCORING` `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）`MANUAL_PATIENT_CREATE`（1007 迭代 17.7，護理師自己新增病人，預設關閉）`TODAY_PANEL` `MARQUEE`（1005 迭代 16，「本次透析」面板與跑馬燈）`ADEQUACY_PREDICTION`（1010 迭代 18，透析適足性趨勢推估）`GAMIFY_EXISTING` `PEER_TIPS` `NURSE_REPLIES`（1010 迭代 20，現有功能的小幅遊戲化、病友小撇步、護理師回貼圖）`GARDEN` `FLOWER_GIFTS` `PEER_INTERACTION`（1010 迭代 21，透析小花園、送花、病人之間的互動；送花跟著小花園開關，連動的那一次切換照樣寫稽核）`MAHJONG` `GAME_TREND`（1011 迭代 22，麻將連連看、狀態評估彙整的護理端顯示；彙整關著時操作紀錄照樣寫）`ALBUM`（1011 迭代 23，老台灣記憶相簿；上架中的圖卡至少 60 張、六個主題都有才開得起來，見第二十六節）。後端啟動時自動補齊缺少的列，套用各自的預設值（預設開啟的只有 `TODAY_PANEL` 與 `GAMIFY_EXISTING`；9.1～15 是輪播三層）。**`CAROUSEL_LAYER_1`～`3` 於 1005 停用**（`RETIRED_FEATURE_FLAG_KEYS`）：那三列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現 |
+| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `PERF_INDIVIDUAL_L3` `REWARD_PROGRAM`（1018 迭代 26.3，獎勵制度含處理者指名，取代 `REWARD_SCORING`） `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）`MANUAL_PATIENT_CREATE`（1007 迭代 17.7，護理師自己新增病人，預設關閉）`TODAY_PANEL` `MARQUEE`（1005 迭代 16，「本次透析」面板與跑馬燈）`ADEQUACY_PREDICTION`（1010 迭代 18，透析適足性趨勢推估）`GAMIFY_EXISTING` `PEER_TIPS` `NURSE_REPLIES`（1010 迭代 20，現有功能的小幅遊戲化、病友小撇步、護理師回貼圖）`GARDEN` `FLOWER_GIFTS` `PEER_INTERACTION`（1010 迭代 21，透析小花園、送花、病人之間的互動；送花跟著小花園開關，連動的那一次切換照樣寫稽核）`MAHJONG` `GAME_TREND`（1011 迭代 22，麻將連連看、狀態評估彙整的護理端顯示；彙整關著時操作紀錄照樣寫）`ALBUM`（1011 迭代 23，老台灣記憶相簿；上架中的圖卡至少 60 張、六個主題都有才開得起來，見第二十六節）。後端啟動時自動補齊缺少的列，套用各自的預設值（預設開啟的只有 `TODAY_PANEL` 與 `GAMIFY_EXISTING`；9.1～15 是輪播三層）。**`CAROUSEL_LAYER_1`～`3` 於 1005 停用、`REWARD_SCORING` 於 1018 停用**（`RETIRED_FEATURE_FLAG_KEYS`）：那幾列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現 |
 | `enabled` | `BOOL` | 目前是否開啟 | `DEFAULT false`。⛔ **不得直接改資料庫開啟**——開啟必須經 `FeatureFlagsService`：它會判定開啟條件（實作規格書 3.7）、要求核准依據、寫入稽核。後端以記憶體中的狀態為準，直接改資料庫在重新啟動前也不會生效 |
 | `last_reason` | `TEXT?` | 最後一次切換時登記的核准依據或理由 | 開與關都必填（FR-S08、FR-M11），長度 2～500 字 |
 | `changed_by_id` | `TEXT?` | 最後一次是誰切換的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未切換過時為 NULL |
@@ -1546,8 +1548,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `event_source` | `TEXT` | 算哪一種事 | 合法值（`RewardEventSource`，**只有流程面**）：`HELP_RESOLVED_COMPLETE`（結案且處理方式與結果都有填，歸結案者）、`NURSING_RECORD_SIGNED`（歸簽核者）、`EDUCATION_REVIEWED`（衛教核可或退回，歸審閱者）、`FOLLOW_UP_CLOSED`（追蹤事項完成，歸完成者）。⛔ 不得加回應速度、不得加任何病人的臨床結果 |
 | `title` | `TEXT` | 名稱 | — |
 | `description` | `TEXT` | 說明 | — |
-| `points_per_event` | `INT` | 每件幾點 | 0～100。預設四條都是 1（只表示「這件事算」），權重待護理部確認（Q-20） |
-| `status` | `TEXT` | 草稿、已公告、已停用 | 合法值 `DRAFT` / `PUBLISHED` / `RETIRED`，有索引。第一次啟動寫入的四條是 `DRAFT`；草稿不計分 |
+| `points_per_event` | `INT` | 每件幾點 | 0～100。預設的都是 1（只表示「這件事算」；1018 起五條），權重待護理部確認（Q-20） |
+| `status` | `TEXT` | 草稿、已公告、已停用 | 合法值 `DRAFT` / `PUBLISHED` / `RETIRED`，有索引。第一次啟動寫入的預設規則是 `DRAFT`（1018 起五條；已存在的環境只改系統寫的、還是草稿的那幾條，見第三十節）；草稿不計分 |
 | `created_by_id` | `TEXT?` → `nurses` | 誰建立的 | `ON DELETE NO ACTION`。預設規則為空 |
 | `created_at` | `TS` | 建立時間 | — |
 | `published_by_id` | `TEXT?` → `nurses` | 誰公告的 | `ON DELETE NO ACTION`。只有護理長（`reward:manage`） |
@@ -1610,7 +1612,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `assigned_by_id` | `TEXT` → `nurses` | 誰標的 | `ON DELETE NO ACTION` |
 | `assigned_at` | `TS` | — | — |
 
-### `external_reports` — 對外報表（15 欄）
+### `external_reports` — 對外報表（15 欄；迭代 26.1 加 2 欄，見第二十九節）
 
 **產生階段就排除**：只存聚合值，樣本少於 5 的分組**不寫進資料庫**（只記拿掉了幾組）；姓名、病歷號、床號、工作 ID、精確時間戳在計算時就不取，期間只到「日」（《資料庫使用規範》12.2）。
 
@@ -2026,6 +2028,124 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 待追蹤 | 這位病人還沒結束的 `help_request_follow_ups` |
 
 讀速覽**不寫稽核、不改求助的狀態**——看不等於接；確認通報照舊是「我接手」那一支。
+
+---
+
+## 二十九、儀表板的資料補齊與對外報表的修正（迭代 26.1）
+
+**蒐集的意義**：迭代 19 的儀表板只有九條指標，之後做了遊戲化、緊急通報的速覽與求助處置紀錄，儀表板沒跟上（《[管理儀表板、獎勵制度與對外揭露的更新與修正](../notes/management-rewards-disclosure-update.md)》第 2 節）。補的指標大多是**讀既有的表、讀的時候才算**；要新存的只有三件：平板什麼時候斷線（原本只有「最後一次連線」，斷過幾次、多久都留不下來）、哪一條指標從哪一天起才開始記或改了意思（不然期間跨過那一天，前後比起來像是變好或變差）、對外報表**沒有呈現的那幾格**與當時附的基準（核准之後要說得出為什麼少了一組、基準是哪一份）。
+遷移 `iteration26_1_dashboard_data`，只做加法：四張新表、`external_reports` 兩欄。
+
+### `device_connection_gaps` — 平板斷線的一段（6 欄）
+
+平板每一次輪詢綁定或前景回報都會更新「最後一次連線」；距離上一次超過 `DEVICE_ONLINE_THRESHOLD_SECONDS` 才算斷過，**在重新連上的那一個請求補記一段**（斷線期間不寫）。以「把最後一次連線從舊值改掉」的那一個請求為準，兩個請求同時進來不會記兩次。還沒連回來的那一段不寫進表，畫面上由最後一次連線即時算。**超過 365 天的刪掉**（寫一筆稽核 `DEVICE_CONNECTION_GAPS_PRUNED`，每日快照照留）。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `device_id` | `TEXT` → `devices` | 哪一台平板 | `ON DELETE NO ACTION`；與 `disconnected_at` 組成複合索引 |
+| `disconnected_at` | `TS` | 斷線起：最後一次連線的時間 | 有索引 |
+| `reconnected_at` | `TS` | 斷線訖：重新連上的時間 | — |
+| `treatment_session_id` | `TEXT?` → `treatment_sessions` | 斷線那一刻這台平板配著的療程；沒配著為空 | `ON DELETE NO ACTION`，有索引。**不記病人**——療程本身就是分母，病人用不到 |
+| `created_at` | `TS` | 補記的時間 | 見共通欄位 |
+
+### `metric_definition_changes` — 指標從哪一天起開始記、改了意思（6 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `metric_code` | `TEXT` | 哪一條指標 | 合法值見 `METRIC_DEFINITIONS` |
+| `kind` | `TEXT` | 改了意思，或從這一天起才開始記 | `DEFINITION` / `RECORDING_START`（`MetricChangeKind`）。與 `metric_code`、`effective_date` 組成**唯一** |
+| `effective_date` | `TS` | 生效日 | 台北日期當日 00:00 UTC，與 `metric_snapshots.period_date` 同一套 |
+| `description` | `TEXT` | 一句話說明 | 畫面上原樣寫 |
+| `created_at` | `TS` | 寫入的時間 | 見共通欄位 |
+
+**誰寫**：後端第一次啟動時——平板連線三條「開始記」＝那一天；求助處置紀錄三條「開始記」＝最早一筆求助處置紀錄那一天；接手的「改了意思」＝同一天（那一天以前從來沒有人接手過求助的環境不寫）。期間整段在「開始記」之前寫「還沒開始記」、不寫 0；每日快照不往前補。
+
+### `external_report_suppressions` — 對外報表沒有呈現的那一格（6 欄）
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `report_id` | `TEXT` → `external_reports` | 哪一份報表 | **`ON DELETE CASCADE`**（報表自己的明細），有索引 |
+| `sort_order` | `INT` | 在報表裡的順序 | 與呈現的那幾格交錯排，畫圖時照順序淡斜線 |
+| `metric_code` | `TEXT` | 哪一條指標 | — |
+| `group_label` | `TEXT` | 哪一組（早班、2026 年 10 月…） | 不含病人、床號 |
+| `reason` | `TEXT` | 為什麼沒有呈現：樣本太少，或為了讓樣本少的那一組算不回來一起拿掉 | `SMALL_SAMPLE` / `SECONDARY`（`ExternalReportSuppressionReason`）。**沒有值、沒有樣本數**——存了就等於沒拿掉 |
+
+### `external_report_baselines` — 產生報表當下抄的一份基準（16 欄）
+
+勾「附基準」時，產生那一刻從 `baseline_measurements` 抄一份，之後基準改了也不影響已經核准的報表。方法與背書人照樣過禁止欄位的檢查。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `report_id` | `TEXT` → `external_reports` | 哪一份報表 | **`ON DELETE CASCADE`**，有索引 |
+| `sort_order` | `INT` | 順序 | — |
+| `metric_code` | `TEXT` | 對照哪一條指標 | — |
+| `baseline_label` | `TEXT` | 基準的名稱 | — |
+| `value_text` | `TEXT` | 基準值（文字） | 照報表格式寫好的字串，不是浮點數 |
+| `unit` | `TEXT` | 單位 | — |
+| `sample_size` | `INT` | 樣本數 | — |
+| `source_label` | `TEXT` | 來源（實測、估算） | — |
+| `measured_from` | `TS` | 量測期間起 | — |
+| `measured_to` | `TS` | 量測期間訖 | — |
+| `method` | `TEXT` | 怎麼量的 | 過 `findForbiddenExternalText` |
+| `endorsed_by` | `TEXT` | 誰背書 | 同上 |
+| `estimated` | `BOOL` | 是不是估算的 | — |
+| `comparable` | `BOOL` | 量的是不是同一件事 | 不是的只並列、不算差多少、圖上不畫基準線 |
+| `note` | `TEXT?` | 備註 | 同上 |
+
+### `external_reports` 多兩欄
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `include_baseline` | `BOOL` | 產生時有沒有勾「附基準」 | `DEFAULT false` |
+| `secondary_suppressed_count` | `INT` | 為了讓樣本少的那一組算不回來，一起拿掉了幾組 | `DEFAULT 0`；樣本少本身拿掉幾組照舊在 `suppressed_group_count` |
+
+**跨報表比對不另存**：產生新報表之前讀同一段期間、已核准的報表（呈現的格子與沒有呈現的格子），互減得回被拿掉的那一組就整份不產生、寫稽核「對外報表產生遭拒」，資料庫裡沒有那一份。
+
+---
+
+## 三十、處理者指名與名冊身分（迭代 26.3）
+
+**蒐集的意義**：迭代 19 的計分「歸給做那件事的人」實作成**當時登入的帳號**。護理站一人登入大家用，那是誰的帳號開著，不是誰做的（《[管理儀表板、獎勵制度與對外揭露的更新與修正](../notes/management-rewards-disclosure-update.md)》第 4 節）。所以多記一件事：**那一件事是哪一位護理師做的**，由接手、結案、簽核、審閱、完成追蹤的人在同一個畫面按名字。沒有帳號的支援人力也要選得到，所以護理師多兩種狀態。
+遷移 `iteration26_3_handler_declarations`，只做加法：一張新表、`nurses` 一欄（以 `ADD COLUMN … REFERENCES` 加上，不重建資料表），另把「獎勵制度」頁的版位從沒人改過的關閉搬成選單。
+
+**整組跟著「獎勵制度」開關**（`REWARD_PROGRAM`）：關著時不記、畫面上沒有任何名字按鈕；已記下的保留。**不讀班表、不從登入帳號推**。
+
+### `handler_declarations` — 一件事的處理者（12 欄）
+
+一件事一列：改指名時更新那一列，每一次指名或改指名都寫稽核 `HANDLER_DECLARED`（當時登入的帳號、指名誰、哪一件、在哪一步）。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `subject_type` | `TEXT` | 哪一種事：求助、護理紀錄簽核、衛教審閱、跑馬燈內容審閱、追蹤事項完成 | `HELP_REQUEST` / `NURSING_RECORD_SIGN` / `EDUCATION_REVIEW` / `CAROUSEL_REVIEW` / `FOLLOW_UP_CLOSE`（`HandlerSubject`） |
+| `help_request_id` | `TEXT?` → `help_requests` | 那一則求助 | **唯一**、`ON DELETE NO ACTION`。下面五個外鍵只有一個有值，與 `subject_type` 對應 |
+| `nursing_record_id` | `TEXT?` → `nursing_records` | 那一份護理紀錄（求助處置紀錄以外） | 唯一。**求助處置紀錄簽核時指名的是那一次求助的處理者**，寫在 `help_request_id` 那一列 |
+| `education_content_id` | `TEXT?` → `education_contents` | 那一份衛教 | 唯一 |
+| `carousel_item_id` | `TEXT?` → `carousel_items` | 那一則跑馬燈內容 | 唯一。產生中的取消不是審閱，不寫 |
+| `follow_up_id` | `TEXT?` → `help_request_follow_ups` | 那一項追蹤事項 | 唯一 |
+| `nurse_id` | `TEXT` → `nurses` | 指名的護理師（可以是名冊身分） | `ON DELETE NO ACTION`；與 `declared_at` 組成複合索引（名字名單讀最近 12 小時） |
+| `step` | `TEXT` | 最後一次指名在哪一步：接手、結案、簽核、審閱、完成、事後補選、更正 | `ACKNOWLEDGE` / `RESOLVE` / `SIGN` / `REVIEW` / `COMPLETE` / `BACKFILL` / `CORRECTION`（`HandlerStep`）；事後補選時原本已經有人的寫成 `CORRECTION` |
+| `declared_by_id` | `TEXT` → `nurses` | 指名當時登入的帳號 | **不一定是處理者本人**——這一欄只供稽核 |
+| `declared_at` | `TS` | 最後一次指名的時間 | 有索引 |
+| `updated_at` | `TS` | 最後一次更新 | 見共通欄位 |
+
+**分級**：處理者指名屬 L3（對應得到特定護理師），只在獎勵制度與個人層級的端點彙整；接手後的床格與卡片寫「○○ 接手」是給同班的人當場看出誰去了（選錯的話同事看得出來），不是數字。「未指名的比例」是全單位一個比例，屬 L2。
+
+### `nurses` 多一欄、兩個狀態
+
+| 欄位／值 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|
+| `roster_added_by_id` `TEXT?` → `nurses` | 名冊身分是誰加的（或誰確認的） | `ON DELETE NO ACTION`。「我不在名單上」送來、還沒確認的是空的 |
+| `status = 'ROSTER'` | 名冊身分：護理長在帳號審核頁加的，只有姓名與工作 ID | **登不進去**（密碼是沒有人知道的雜湊，登入照舊只放行 `ACTIVE`）；指名時選得到；事件照記、**結算時不計分** |
+| `status = 'ROSTER_PENDING'` | 護理師按「我不在名單上」自己登記的，等護理長確認 | 登不進去；指名到這一位的事**算未指名**，確認之後才算；不確認的改成 `REJECTED`，那幾筆仍算未指名、可以由本人認領 |
+
+**升級成帳號**：以同一個工作 ID 申請帳號時，同一列改成 `PENDING`（姓名與密碼換成申請的；稽核 `ROSTER_IDENTITY_UPGRADED`），核准後之前的指名都在這個帳號底下，**還沒結算的期間照常計分**、已結算的不回頭重算。護理長加過的名冊身分申請被駁回時回到 `ROSTER`。
+
+**計分讀什麼**：`reward_scores` 的來源改成**處理者指名**，`help_requests.resolved_by_id`、`nursing_records.signed_by_id`、`education_contents.reviewed_by_id`、`help_request_follow_ups.closed_by_id` 四個帳號欄位照記、只供稽核。沒有指名的事件不計分；本人認領（`score_disputes` 的「少算了一筆」帶著那一筆的 `event_source` 與 `event_id`）經護理長核准後才算。預設計分規則 1018 起五條（多 `RW-CAR-01`，`RW-HELP-01` 改讀求助處置紀錄），仍全是草稿。
 
 ---
 
