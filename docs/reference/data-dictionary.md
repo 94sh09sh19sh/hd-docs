@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 91 張表、882 個欄位、23 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 92 張表、901 個欄位、24 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`）
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
@@ -76,6 +76,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 二十五、麻將連連看與狀態評估彙整（迭代 22） | 沒有新表（`game_events` 加十二欄；`game_saves` 多一款 `MAHJONG`） | 麻將的每一步：第幾桌、哪兩張、找到一對花了多久、點的位置離牌心多遠、是不是提示的那一對、這一步完成了整桌。**狀態評估彙整讀的時候才算，不存陳述** |
 | 二十六、老台灣記憶相簿（迭代 23） | `album_cards`、`album_card_versions`、`album_card_options`、`album_responses`（`game_saves` 多一款 `ALBUM`） | 圖卡與每一版的字、選項；每看完一張選了什麼、點了哪些貼紙、有沒有跳過、看的是第幾版。**「想起某個人」不進任何彙總；沒有護理師欄位** |
 | 二十七、種子袋、小訪客與兩個圖鑑（迭代 24.4） | `garden_visitors`（另有 `game_events.visitor_code`；花園快照第 2 版） | 這一次療程種了幾顆、在等的小訪客、第一次點開某一種訪客的時間。**相簿圖鑑從作答算，不另存** |
+| 二十八、床邊前速覽與求助處置記錄（迭代 25） | `dialysis_session_settings`（另有 `dialysis_vital_records` 加四欄、`nursing_records.source_help_request_id`） | 護理師去床邊之前要看的透析設定與機器量測；結案那一下建好的護理紀錄草稿來自哪一則求助。**只給護理端看，不上病人平板** |
 
 ### 每張表都有的三個欄位
 
@@ -668,7 +669,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 
 ## 十、護理記錄與計算（迭代 4）
 
-### `nursing_records` — 護理記錄（21 欄；1010 迭代 17.8 加一欄）
+### `nursing_records` — 護理記錄（22 欄；1010 迭代 17.8 加一欄、1018 迭代 25 加一欄）
 
 **蒐集的意義**：FR-N04 事件記錄快速範本、FR-N05 依病人自報預填。每筆記錄一建立就有一份「預填文字」（依勾選內容或病人自述組出，不經模型）；AI 初稿是另一個起點；**護理師簽核的定稿才是正式記錄**。記下「是否採納 AI 初稿」是《資料庫使用規範》第 14 條要求永久保留的治理證據。
 
@@ -677,7 +678,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `id` | `TEXT` | 內部識別碼 | 主鍵 |
 | `patient_id` | `TEXT` | 哪位病人 | 外鍵 → `patients.id`，`ON DELETE NO ACTION`。與 `created_at` 組成複合索引 |
 | `treatment_session_id` | `TEXT` | 哪一次療程 | 外鍵 → `treatment_sessions.id`，`ON DELETE NO ACTION`，有索引。已取消的療程不能建立記錄 |
-| `record_type` | `TEXT` | 事件記錄，或依病人自報預填 | 合法值 `EVENT` / `SELF_REPORT_PREFILL`（`NursingRecordType`） |
+| `record_type` | `TEXT` | 事件記錄、依病人自報預填，或求助處置 | 合法值 `EVENT` / `SELF_REPORT_PREFILL` / `HELP_RESPONSE`（`NursingRecordType`）。**1018 迭代 25 加 `HELP_RESPONSE`**（「求助處置」）：求助結案時系統建立的草稿，見第二十八節 |
 | `template_code` | `TEXT?` | 用了哪一個事件範本 | 合法值見 `NURSING_EVENT_TEMPLATES`：`DISCOMFORT` `ACCESS_BLEEDING` `MACHINE_ALARM` `FALL` `OTHER`（待 Q-25）。自報預填為 NULL |
 | `template_version` | `TEXT?` | 範本版本 | 現值 `EVENT-TEMPLATES-v2`（1005 新增「透析中低血壓處置」；之前的記錄是 v1）。範本改版後舊記錄仍能對回當時的欄位 |
 | `occurred_at` | `TS?` | 事件發生時間 | 事件記錄必填，不得晚於現在（容許 5 分鐘時鐘誤差） |
@@ -689,6 +690,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `ai_invocation_id` | `TEXT?` | 產生初稿的那一次模型呼叫 | 外鍵 → `ai_invocations.id`，`ON DELETE NO ACTION` |
 | `status` | `TEXT` | 草稿或已簽核 | 合法值 `DRAFT` / `SIGNED`（`NursingRecordStatus`）。⛔ **簽核後不得再修改**：所有寫入都帶 `status=DRAFT` 條件，第二次簽核與簽核後的草擬一律回 409 |
 | `final_text` | `TEXT?` | 簽核的定稿 | 上限 4000 字。迭代 17.8 起有格式的記錄由各段的定稿組出（同 `prefill_text` 的樣子），護理師「整份複製」貼進院內正式紀錄的就是這一段 |
+| `source_help_request_id` | `TEXT?` | 這一筆求助處置記錄來自哪一則求助 | **1018 迭代 25 加**。外鍵 → `help_requests.id`，`ON DELETE NO ACTION`，**唯一**（一則求助最多一筆）。其他記錄類型為 NULL。卡片上的「來自 HH:MM 的求助」照它找那一則按下的時間 |
 | `ai_draft_disposition` | `TEXT?` | 是否採納 AI 初稿 | 合法值 `ADOPTED_AS_IS` / `EDITED` / `NOT_USED`（`AiDraftDisposition`），簽核時依起點與內容判定：從 AI 初稿改起且一字未改＝原樣採用；從 AI 初稿改起有修改＝修改後採用；從預填文字或自行撰寫＝未採用。簽核時沒有 AI 初稿為 NULL |
 | `created_by_id` | `TEXT` | 誰建立的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
 | `signed_by_id` | `TEXT?` | 誰簽核的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
@@ -696,7 +698,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `created_at` | `TS` | 建立時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 
-**索引**：`(patient_id, created_at)`、`treatment_session_id`
+**索引**：`(patient_id, created_at)`、`treatment_session_id`；唯一：`source_help_request_id`（1018）
 
 ---
 
@@ -1285,7 +1287,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 **稽核只寫狀態變了的那一次**：開始失敗（`HOSPITAL_API_FETCH_FAILED`）、恢復（`HOSPITAL_API_FETCH_RECOVERED`）、拒收（`HOSPITAL_API_FETCH_REFUSED`）；
 每 3 分鐘一筆的成功不寫稽核，這張表本身就是紀錄。⚠️ 一天約 480 列，留存期限待 Q-05；定案前不刪。
 
-### `dialysis_vital_records` — 院方的生命徵象紀錄（13 欄）
+### `dialysis_vital_records` — 院方的生命徵象紀錄（17 欄；1018 迭代 25 加四欄）
 
 **只收這次療程有綁定平板的病人**（SRS FR-S16、規範第 13 條 1005 補充「最小蒐集」）：病人端「本次透析」面板只需要他們的，其餘病人的紀錄留在院方。
 剛配平板的病人不會少掉前面幾點——下一次抓取本來就回傳當天全部。
@@ -1305,6 +1307,10 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `weight_pre_g` | `INT?` | 透析前體重（公克） | 第 13 欄，透析層級的值，每一列重複；乘 1000 存公克 |
 | `uf_set_ml` | `INT?` | 設定脫水量（毫升） | 第 19 欄。面板脫水量圖的參考線用它，**不用目標脫水量**（實作規格書 0.5：與機器累計同基準） |
 | `created_at` | `TS` | 寫入時間 | 見共通欄位 |
+| `blood_flow_ml_min` | `INT?` | 血流速（ml/min） | **1018 迭代 25 加**，第 40 欄。只給護理端的床邊前速覽看，不上病人平板。認不出的值當沒有（不擋整次透析）；0 照實存，顯示時才擋 |
+| `dialysate_flow_ml_min` | `INT?` | 透析液流速（ml/min） | 同上，第 41 欄 |
+| `venous_pressure_mmhg` | `INT?` | 靜脈壓（mmHg） | 同上，第 42 欄。速覽的血壓圖畫它 |
+| `dialysate_temp_x10` | `INT?` | 透析液溫度（℃ 乘 10） | 同上，第 47 欄。36.5 ℃ 存 365（規範 6.2，不用浮點數） |
 
 **唯一約束**：`(patient_id, dialysis_started_at, recorded_at)`——資料表層的最後一道防線，同步本身先查過已寫的紀錄時間才寫。
 **寫入時**推一則「有新紀錄」給那一台平板（`GET /device/stream`，事件不帶數值），並寫一筆 `HOSPITAL_VITALS_RECORDED` 稽核（一次抓取一筆，寫幾筆、幾位病人）。
@@ -1971,6 +1977,55 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `patient_id` | `TEXT` → `patients` | 哪一位病人 | `ON DELETE NO ACTION`。與 `visitor_code` 唯一 |
 | `visitor_code` | `TEXT` | 看過哪一種訪客 | `VisitorCode`（24 種，三群各 8 種） |
 | `first_seen_at` | `TS` | 第一次點開的時間 | 之後再點開不改。**點開不給任何東西**（不給水、養分、點數），這張表只是圖鑑 |
+
+## 二十八、床邊前速覽與求助處置記錄（迭代 25）
+
+**蒐集的意義**：使用者 1015 操作護理端之後指出，護理師手上沒有裝置（Q-30），**離開護理站之前是唯一能看資料的時間**，回來才能登記（《[緊急通報的處理流程與護理紀錄連動](../notes/emergency-handling-redesign.md)》）。所以兩件事要存東西：去床邊之前要看的**透析設定與機器量測**（院方 API 多收的欄位，SRS FR-N03 1015 補充說明），以及結案那一下建好的**護理紀錄草稿來自哪一則求助**（SRS FR-N10 1015）。
+遷移 `iteration25_emergency_quick_view`，只做加法：一張新表、`dialysis_vital_records` 四個可為空的欄位（第十八節）、`nursing_records` 一個可為空的欄位（第十節），外鍵欄以 `ADD COLUMN … REFERENCES` 加上，不重建資料表。
+
+**最小蒐集照舊**（《資料庫使用規範》第 13 章 1015）：只收這次療程有配平板的病人——會發出求助的本來就只有他們；**只給護理端的床邊前速覽看，不上病人平板**（`GET /device/home` 不帶這些欄位，`verify:iteration16:api` 驗）。參考畫面上有、本系統不收的院方欄位（呼吸、ESA、凝血情況、膜上壓、透析次數等）照舊不收。
+
+**求助處置記錄沒有另開資料表**：它就是 `nursing_records` 的一筆（`record_type = 'HELP_RESPONSE'`），段落存在 `nursing_record_sections`，規矩與一般護理紀錄相同（要簽核才算數、簽核後不能改、留存同病歷）。與結案寫在**同一個交易**裡；結果事後補改時，還沒簽核、沒改套範本的那一筆跟著重組。段落裡不寫姓名、病歷號、病名，事件時間是病人按下求助的時間。
+
+### `dialysis_session_settings` — 這次透析的設定（14 欄）
+
+院方 API 每次透析一個值的那幾欄。一次療程一列；同步每 3 分鐘一次，**值沒變不寫、變了才覆蓋**並記下是哪一次抓取（院方資料是當下的設定，不是歷程）。全部空白時不建立。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
+|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 |
+| `treatment_session_id` | `TEXT` → `treatment_sessions` | 哪一次療程 | `ON DELETE NO ACTION`，**唯一** |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人 | `ON DELETE NO ACTION`，有索引 |
+| `fetch_run_id` | `TEXT` → `hospital_api_fetch_runs` | 最後一次寫入這一列的那次抓取 | 來源可追溯（規範第 13 條），有索引 |
+| `temperature_x10` | `INT?` | 體溫（℃ 乘 10） | 第 11 欄。「發冷、發抖、覺得發燒」的求助特別需要 |
+| `infusion_ml` | `INT?` | 輸液量（毫升） | 第 16 欄，當公升讀、乘 1000。速覽寫成設定脫水量的組成之一 |
+| `food_g` | `INT?` | 食物重量（公克） | 第 17 欄，當公斤讀、乘 1000。同上 |
+| `dialyzer` | `TEXT?` | 透析器 | 第 27 欄，院方的文字照原樣，截到 64 字 |
+| `dialysate_ca_x100` | `INT?` | 透析液 Ca（mEq/L 乘 100） | 第 30 欄。院方可能寫到小數兩位（2.75），所以乘 100 |
+| `conductivity_x10` | `INT?` | 傳導度（mS/cm 乘 10） | 第 31 欄。參考系統寫死 13.9，本系統用院方的真值 |
+| `vascular_access` | `TEXT?` | 血管通路 | 第 32 欄，照原樣、截到 64 字。對「打針的地方流血、腫、痛」的求助直接有關 |
+| `heparin` | `TEXT?` | Heparin | 第 33 欄，照原樣、截到 64 字 |
+| `created_at` | `TS` | 第一次寫入的時間 | 見共通欄位 |
+| `updated_at` | `TS` | 最後一次覆蓋的時間 | 見共通欄位 |
+
+**單位**：容量與重量當公升、公斤讀，與其他容量欄相同；第三次進院以探測工具印出的數值大小分布確認（實作規格書 4.19、Q-09 第 9 題）。**認不出的值當沒有、不擋整次透析**（這幾欄只給護理端看一眼，不該讓一位病人的血壓與下機判斷停住）；空白存空值、0 照實存，顯示時才擋。
+
+### 床邊前速覽讀什麼
+
+`GET /api/help-requests/:id/bedside` 讀的時候才組，**不另存**：
+
+| 速覽上的東西 | 從哪裡來 |
+|---|---|
+| 這一次求助、床號 | `help_requests`；床號看即時狀態（平板所在的床），沒有時是療程的 `bed_no` |
+| 最新一筆血壓、脈搏、流速、透析液溫度；兩張折線圖 | 這次療程的 `dialysis_vital_records`（讀到 0 的欄改成空、全是 0 的那一筆不送） |
+| 透析前體重、設定脫水量 | 同上，最後一筆有值的 |
+| 理想體重、目標脫水量 | `clinical_values` 的 `DRY_WEIGHT`、`UF_TARGET`（目標脫水量只認這一次透析當天的） |
+| 體溫、輸液、食物、Ca、傳導度、透析器、血管通路、Heparin | `dialysis_session_settings` |
+| 透析前問卷 | 這次療程的 `symptom_reports`（只列答「有」的題目） |
+| 近期求助 | 這次與前 3 次療程（不算取消的）的 `help_requests` 與 `help_request_methods` |
+| 待追蹤 | 這位病人還沒結束的 `help_request_follow_ups` |
+
+讀速覽**不寫稽核、不改求助的狀態**——看不等於接；確認通報照舊是「我接手」那一支。
 
 ---
 

@@ -9,8 +9,8 @@
 
 ---
 
-> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)～[迭代 24](iteration-24.md) 各分冊（索引見[主手冊 §13](manual-test-guide.md#13--迭代-3-24-分冊)）。
-> 本表逐條對齊後端啟動時印出的路由清單（目前 210 條；1018 迭代 24.4 加 1 條、照清單重數過（`Mapped {` 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（`Mapped {` 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（`Mapped {` 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（`Mapped {` 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；**1010 迭代 18.1 收尾時照清單重數一次**：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。
+> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)～[迭代 25](iteration-25.md) 各分冊（索引見[主手冊 §13](manual-test-guide.md#13--迭代-3-25-分冊)）。
+> 本表逐條對齊後端啟動時印出的路由清單（目前 214 條；1018 迭代 25 加 4 條、照清單重數過（`Mapped {` 214 行），與表一致；1018 迭代 24.4 加 1 條、照清單重數過（`Mapped {` 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（`Mapped {` 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（`Mapped {` 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（`Mapped {` 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；**1010 迭代 18.1 收尾時照清單重數一次**：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。
 
 | 方法／路徑 | 需要的權限 | 說明 |
 |---|---|---|
@@ -51,8 +51,8 @@
 | `GET /api/symptom-reports/trend/:patientId` | patient:monitor | 症狀趨勢摘要 |
 | `GET /api/help-requests?status=` | patient:monitor | 通報清單（含趨勢摘要） |
 | `GET /api/help-requests/:id` | patient:monitor | 單筆通報 |
-| `POST /api/help-requests/:id/acknowledge` | help-request:handle | 接手 |
-| `POST /api/help-requests/:id/resolve` | help-request:handle | 處理完成 |
+| `POST /api/help-requests/:id/acknowledge` | help-request:handle | 接手。1018 迭代 25.2 起簡易版只在床邊前速覽的「我接手」呼叫（點紅框只開速覽） |
+| `POST /api/help-requests/:id/resolve` | help-request:handle | 處理完成。1018 迭代 25.3 起臨床組（結果不是「病人自行取消」）在同一個交易裡建立「求助處置」護理紀錄草稿，建不起來時整筆不成立（409） |
 | `POST /api/help-requests/:id/cancel` | help-request:handle | 取消 |
 | `GET /api/overview?date=` | patient:monitor | 多病人即時總覽 |
 | `GET /api/realtime/stream` | patient:monitor | 即時串流（SSE，不是一般的 JSON 回應） |
@@ -148,7 +148,7 @@
 | `PUT /api/beds` | operational-setting:manage | （迭代 14）調整床位清單；有病人正在治療的床拿不掉 |
 | `POST /api/devices/:id/bed` | device:manage | （迭代 14）平板換床（簡易版拖曳） |
 | `PUT /api/carousel/items/:id/targets` | carousel-content:manage | （迭代 14）指定在哪幾床播 |
-| `POST /api/help-requests/:id/outcome` | help-request:handle | （迭代 14）結案後補改處理結果 |
+| `POST /api/help-requests/:id/outcome` | help-request:handle | （迭代 14）結案後補改處理結果。1018 迭代 25.3 起還沒簽核、沒改套範本的求助處置草稿跟著重組 |
 | `POST /api/treatment-sessions/:id/reopen` | schedule:manage | （迭代 14.2）重新開啟今天已下機或取消的排班，沿用同一筆 |
 | `POST /api/treatment-sessions/:id/complete` | binding:manage | （迭代 15）確認下機：沒有綁定平板的療程（待確認下機）；簡易版與專業版共用。1010 才補進這張表 |
 | `GET /api/hospital-sync/status` | patient:monitor | （迭代 15）院方資料最後一次更新、是否超過提示時間 |
@@ -227,6 +227,10 @@
 | `GET /api/device/games/album/collection` | 平板（Session Token） | （迭代 24.4）相簿圖鑑「我的相簿」：照主題、照圖卡的固定順序，翻開過答案的每一張（目前那一版的名稱、說明、最後一次點的貼紙；「想起某個人」照收），**還沒收到的格子是 `null`、連代號都不給**；只算上架中的；沒有選了什麼與對錯。「老台灣記憶相簿」關著時 404 |
 | `GET /api/content/album-cards` | content:manage | （迭代 23）記憶相簿的全部圖卡（目前的版本、上架狀態、看過幾次）；「老台灣記憶相簿」關著時 404 |
 | `PATCH /api/content/album-cards/:code` | content:manage | （迭代 23）改名稱、說明、選項的字、答案（改了就是新的一版）或上架／下架；**要理由、寫稽核**（`ALBUM_CARD_UPDATED`）；代號不能改、沒有刪除 |
+| `GET /api/help-requests/:id/bedside` | patient:monitor | （迭代 25.2）床邊前速覽：這一次求助、本次透析每一筆院方量測（讀到 0 的欄改成 null、全 0 的那一筆不送）、透析前與理想體重、目標與設定脫水量、每次透析一個值的設定、透析前問卷、本次與前 3 次療程的求助、待追蹤事項；**只讀，不算確認通報**；沒有預測、分級、正常範圍 |
+| `GET /api/nursing-records/help-candidates?treatmentSessionId=` | patient:monitor | （迭代 25.3）「依求助建立」：這次療程已結案、還沒有記錄的求助 |
+| `POST /api/nursing-records/help-responses` | nursing-record:write | （迭代 25.3）依一則已結案的求助建立求助處置記錄（規則同結案時自動建立的）；已經有一筆回 409、沒結案的回 400 |
+| `POST /api/nursing-records/:id/template` | nursing-record:write | （迭代 25.3）求助處置草稿改套既有範本：事件時間與量測不動，D／S 段最前面留病人按下求助的那一句；寫稽核（`NURSING_RECORD_TEMPLATE_APPLIED`）；已簽核的回 409 |
 
 ---
 
