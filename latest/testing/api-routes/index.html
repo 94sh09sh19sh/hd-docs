@@ -360,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    1021 — 花園與相簿的擴充完成（迭代 24），緊急通報、儀表板更新、固定橫放排成迭代 25～27
+    1021 — 花園與相簿的擴充、緊急通報的床邊前速覽完成（迭代 24、25），儀表板更新、固定橫放排成迭代 26～27
   
 
     
@@ -3665,6 +3665,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 25 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4571,8 +4599,8 @@
 </blockquote>
 <hr />
 <blockquote>
-<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-24/">迭代 24</a> 各分冊（索引見<a href="../manual-test-guide/#13--迭代-3-24-分冊">主手冊 §13</a>）。
-本表逐條對齊後端啟動時印出的路由清單（目前 210 條；1018 迭代 24.4 加 1 條、照清單重數過（<code>Mapped {</code> 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（<code>Mapped {</code> 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（<code>Mapped {</code> 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（<code>Mapped {</code> 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
+<p>表中各迭代的操作步驟分別在<a href="../iteration-3/">迭代 3</a>～<a href="../iteration-25/">迭代 25</a> 各分冊（索引見<a href="../manual-test-guide/#13--迭代-3-25-分冊">主手冊 §13</a>）。
+本表逐條對齊後端啟動時印出的路由清單（目前 214 條；1018 迭代 25 加 4 條、照清單重數過（<code>Mapped {</code> 214 行），與表一致；1018 迭代 24.4 加 1 條、照清單重數過（<code>Mapped {</code> 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（<code>Mapped {</code> 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（<code>Mapped {</code> 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（<code>Mapped {</code> 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；<strong>1010 迭代 18.1 收尾時照清單重數一次</strong>：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。</p>
 </blockquote>
 <table>
 <thead>
@@ -4771,12 +4799,12 @@
 <tr>
 <td><code>POST /api/help-requests/:id/acknowledge</code></td>
 <td>help-request:handle</td>
-<td>接手</td>
+<td>接手。1018 迭代 25.2 起簡易版只在床邊前速覽的「我接手」呼叫（點紅框只開速覽）</td>
 </tr>
 <tr>
 <td><code>POST /api/help-requests/:id/resolve</code></td>
 <td>help-request:handle</td>
-<td>處理完成</td>
+<td>處理完成。1018 迭代 25.3 起臨床組（結果不是「病人自行取消」）在同一個交易裡建立「求助處置」護理紀錄草稿，建不起來時整筆不成立（409）</td>
 </tr>
 <tr>
 <td><code>POST /api/help-requests/:id/cancel</code></td>
@@ -5256,7 +5284,7 @@
 <tr>
 <td><code>POST /api/help-requests/:id/outcome</code></td>
 <td>help-request:handle</td>
-<td>（迭代 14）結案後補改處理結果</td>
+<td>（迭代 14）結案後補改處理結果。1018 迭代 25.3 起還沒簽核、沒改套範本的求助處置草稿跟著重組</td>
 </tr>
 <tr>
 <td><code>POST /api/treatment-sessions/:id/reopen</code></td>
@@ -5647,6 +5675,26 @@
 <td><code>PATCH /api/content/album-cards/:code</code></td>
 <td>content:manage</td>
 <td>（迭代 23）改名稱、說明、選項的字、答案（改了就是新的一版）或上架／下架；<strong>要理由、寫稽核</strong>（<code>ALBUM_CARD_UPDATED</code>）；代號不能改、沒有刪除</td>
+</tr>
+<tr>
+<td><code>GET /api/help-requests/:id/bedside</code></td>
+<td>patient:monitor</td>
+<td>（迭代 25.2）床邊前速覽：這一次求助、本次透析每一筆院方量測（讀到 0 的欄改成 null、全 0 的那一筆不送）、透析前與理想體重、目標與設定脫水量、每次透析一個值的設定、透析前問卷、本次與前 3 次療程的求助、待追蹤事項；<strong>只讀，不算確認通報</strong>；沒有預測、分級、正常範圍</td>
+</tr>
+<tr>
+<td><code>GET /api/nursing-records/help-candidates?treatmentSessionId=</code></td>
+<td>patient:monitor</td>
+<td>（迭代 25.3）「依求助建立」：這次療程已結案、還沒有記錄的求助</td>
+</tr>
+<tr>
+<td><code>POST /api/nursing-records/help-responses</code></td>
+<td>nursing-record:write</td>
+<td>（迭代 25.3）依一則已結案的求助建立求助處置記錄（規則同結案時自動建立的）；已經有一筆回 409、沒結案的回 400</td>
+</tr>
+<tr>
+<td><code>POST /api/nursing-records/:id/template</code></td>
+<td>nursing-record:write</td>
+<td>（迭代 25.3）求助處置草稿改套既有範本：事件時間與量測不動，D／S 段最前面留病人按下求助的那一句；寫稽核（<code>NURSING_RECORD_TEMPLATE_APPLIED</code>）；已簽核的回 409</td>
 </tr>
 </tbody>
 </table>

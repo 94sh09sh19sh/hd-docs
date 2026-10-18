@@ -360,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    1021 — 花園與相簿的擴充完成（迭代 24），緊急通報、儀表板更新、固定橫放排成迭代 25～27
+    1021 — 花園與相簿的擴充、緊急通報的床邊前速覽完成（迭代 24、25），儀表板更新、固定橫放排成迭代 26～27
   
 
     
@@ -4170,6 +4170,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 25 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6675,6 +6703,7 @@
 <li><strong>不上色、不畫門檻</strong>：流速不分高中低、體重不畫輕重長條、血壓不塗低於門檻的底色、沒有正常範圍；讀到 0 不顯示。沒有預測機率、風險分層、AI 摘要（判斷輔助照 3.6 只在專業版）</li>
 <li>兩張折線圖（本次透析的血壓與脈搏、累積脫水量）自己畫 SVG，<strong>線與線用線型與線尾文字區分</strong>，按下求助的時間畫一條直的虛線</li>
 <li>專業版緊急通報頁每一筆的「病人簡介」開的是同一個元件</li>
+<li><strong>1018 實作（迭代 25.2）</strong>：元件 <code>bedside-brief.tsx</code>（兩版共用）。簡易版蓋在平板區那一格（<code>.wb-brief-layer</code>：最後一列、左欄），平板區與右邊兩框因此寫明自己的格子（<code>.wb &gt; .wb-map</code>、<code>.wb &gt; .wb-rail</code>）——不寫的話自動排版會把它們擠走；專業版蓋在頁面中間（<code>.brief-pro-layer</code>）。左欄一列一件事，沒有值的那一列不出現；近期求助最多 6 列、待追蹤最多 3 列，其餘寫「還有 N 則」，所以 1366×768 不捲動。折線圖四條線<strong>同一種顏色</strong>（<code>--c-ink</code>）、四種線型（實線、虛線、點線、點虛線）與線尾的名稱和數值，脈搏用右邊的軸；求助時間與設定脫水量的虛線用 <code>--c-line</code>；軸上只標最大與最小。速覽的樣式裡沒有任何語意色</li>
 <li><strong>1017 起（迭代 26.3）</strong>：「獎勵制度」開關開著時，「我接手」換成一排名字（《<a href="../management-rewards-disclosure-update/">管理儀表板、獎勵制度與對外揭露的更新與修正</a>》 4.3、4.4）——<strong>名字本身就是我接手</strong>，按一下同時接手與記下處理者，仍是兩次點選；名單最多 6 位、依姓名筆畫、位置不跳動；後面是「其他人…」與「先接手」（不選人也接得起來）。<strong>不預選、不從登入帳號推</strong>。接手後床格與卡片寫「○○ 接手」。專業版卡片上的「我接手」同一排，是「專業版不動」的第五個例外，只在開關開著時出現</li>
 </ul>
 <hr />
@@ -7038,7 +7067,7 @@
   但快照裡找不到的一律留著——寧可多留一則，也不能漏掉一則。<strong>不要改成限制高度加捲軸</strong>：黏在上緣的小框裡再捲一次，藏起來的等於看不到。
   這是「專業版不動」（FR-N14）的第二個例外，出自使用者 0929 的回報：大量求助湧入時，一則一條、沒有上限的橫幅疊得比畫面還高，
   每一頁都被蓋住。<strong>真的需要它的時候，它反而讓整個畫面不能用。</strong>
-  <strong>1015 補（迭代 25.1）</strong>：「快照裡找不到的一律留著」漏了一種——結案或取消的求助也會從快照消失，橫幅因此冒回來。改成<strong>伺服器在這則求助送到之後產生的狀態裡找不到它，就拿掉</strong>；比它舊的快照找不到照舊留著。修剪放在 <code>realtime-context.tsx</code>，是「專業版不動」的第四個例外（第三個是迭代 17.6 的專業版四件事），使用者 1015 同意
+  <strong>1015 補（迭代 25.1）</strong>：「快照裡找不到的一律留著」漏了一種——結案或取消的求助也會從快照消失，橫幅因此冒回來。改成<strong>伺服器在這則求助送到之後產生的狀態裡找不到它，就拿掉</strong>；比它舊的快照找不到照舊留著。修剪放在 <code>realtime-context.tsx</code>，是「專業版不動」的第四個例外（第三個是迭代 17.6 的專業版四件事），使用者 1015 同意。<strong>1018 實作</strong>：只看這份狀態涵蓋的療程（推送只涵蓋它自己那一次）；求助送到後 5 秒內的狀態不拿來修剪（後端寫進資料庫到快取更新之間的寬限，<code>PRUNE_GRACE_MS</code>）
 - <strong>遊戲也沒有動畫</strong>（1010 迭代 21）：遊戲化決定第 6 節原本預備把「點擊後 0.3 秒的動畫」寫成不算「自己動」的例外；透析小花園用不到，點下去畫面直接換，這條例外<strong>沒有開</strong>。麻將連連看（迭代 22）若需要，到時候再在這裡補
 - <strong>遊戲的點擊後動畫</strong>（1011 迭代 22，<strong>例外開了</strong>）：麻將連連看消掉的那一對 0.3 秒淡出、有連線規則時畫一條線停留 0.3 秒（遊戲化分析 7.2）。<strong>它不算「自己動」</strong>：只在病人點了之後、只做一次、0.3 秒就停。界線：只用 <code>transition</code>（不用 <code>@keyframes</code>），只用在麻將那一段樣式；<strong>開了「減少動態效果」時元件不畫淡出也不畫線，全域規則也把 <code>transition</code> 拿掉</strong>。其他畫面不要拿這條例外加動畫</p>
 <h3 id="45-暗色與夜間">4.5 暗色與夜間<a class="headerlink" href="#45-暗色與夜間" title="Permanent link">&para;</a></h3>
@@ -7126,7 +7155,7 @@
 護理端另有 <code>scroll-text</code> 跑馬燈的「你知道嗎」。
 <strong>1011 迭代 22 補</strong>（病人端）：<code>grid-2x2</code> 麻將連連看（遊戲選單、開一桌）、<code>scan-search</code> 麻將的提示（框出一對可以消的牌）、<code>calendar-check</code> 今日牌局。<code>lightbulb</code> 已經是「說明（點開看更多）」、<code>layout-grid</code> 已經是護理端的「全部床位」，所以不用它們。</p>
 <p><strong>1011 迭代 23 補</strong>（病人端）：<code>album</code> 老台灣記憶相簿（遊戲選單、翻開相簿）、<code>skip-forward</code> 跳過這張、三個回憶小貼紙 <code>hand</code> 我用過、<code>house-heart</code> 我家也有、<code>user-round</code> 想起某個人。<code>house</code> 已經是「回首頁」、<code>users</code> 已經是「病友小撇步」、<code>book-image</code> 已經是「台灣花卉圖鑑」，所以不用它們。<strong>1018 迭代 24.4</strong>：<code>book-image</code> 改叫「圖鑑」，相簿的「我的相簿」也用它（同一個意思：自己收集的東西），沒有新的圖示。</p>
-<p><strong>1015 迭代 25 補</strong>（護理端）：<code>id-card</code> 床邊前速覽（簡易版已接手的格子上重開、專業版緊急通報頁的「病人簡介」）。<code>clipboard-list</code> 已經是「透析前問卷」、<code>user-check</code> 已經是「護理師已接手」，所以不用它們。</p>
+<p><strong>1015 迭代 25 補</strong>（護理端，1018 登記進 <code>sync-icons.mjs</code>）：<code>id-card</code> 床邊前速覽（簡易版已接手的格子上重開、專業版緊急通報頁的「病人簡介」）。<code>clipboard-list</code> 已經是「透析前問卷」、<code>user-check</code> 已經是「護理師已接手」，所以不用它們。</p>
 <p><strong>1010 迭代 21 補</strong>（病人端）：<code>gamepad-2</code> 遊戲（基本資訊區的遊戲圖示與遊戲選單）、<code>sprout</code> 透析小花園、<code>droplet</code> 澆水（<code>droplets</code> 已經是護理端的「生理食鹽水回填」，所以用單一顆的）、<code>book-image</code> 台灣花卉圖鑑、<code>trees</code> 大家的花園、<code>gift</code> 送花給護理站、<code>history</code> 以前的花園；護理端 <code>flower-2</code> 病人送給護理站的花。
 同日修好圖示產生器的一個舊問題：屬性名稱帶數字的（<code>&lt;line&gt;</code> 的 <code>x1</code>、<code>y2</code>）原本被漏掉，<code>line</code> 畫不出來；護理端的 <code>badge-alert</code>、<code>user-plus</code>、<code>unlink</code> 因此補回原本少掉的幾筆線。</p>
 <p><strong>求助類別的圖示要畫出症狀本身（1010，迭代 17.8）</strong>。院方反映緊急回報的圖示與文字不太相符（閃電代表抽筋、波浪代表想吐、大腦代表頭痛），希望即使不看文字也能知道是什麼症狀。Lucide 沒有畫症狀的圖示，所以這十三個<strong>由本專案自己畫</strong>（<code>scripts/icons-custom/</code>，照 Lucide 的規格：24×24、線寬 2、圓角、不填色），登記表第四欄寫 <code>custom</code>；<strong>仍然配字</strong>，字是正式的意思，圖是幫忙認。原本的 <code>rotate-3d</code>、<code>zap</code>、<code>waves</code>、<code>heart-pulse</code>、<code>brain</code>、<code>hand</code>、<code>thermometer</code>、<code>droplet</code>、<code>person-standing</code>、<code>glass-water</code> 拿掉，<code>monitor-dot</code>、<code>syringe</code>、<code>thermometer-sun</code> 病人端不再用（護理端的處理方式照用）。</p>
@@ -7466,8 +7495,9 @@
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 18）判斷輔助只在專業版</strong>：四項開關全關時即時總覽與病人趨勢都沒有那一塊；每一則旁邊都有「僅供參考，非診斷結果。」；沒有紅色；已檢視・採納／未採納不跳確認；系統管理的書面確認閘門只有系統管理者看得到「登記書面確認」，要填文號與理由才按得下去（18.1）</p>
 </li>
 <li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 19）成效、獎勵、對外報表只在專業版</strong>：成效的「差多少」只在有基準時寫，其他寫原因；沒有排名與總分；「個人層級」與「找候補」只在總開關開著時出現、先選用途；稽核軌跡先選用途；對外報表的產生者看不到核准鈕；簡報模式列印時只印那一頁</p>
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1018 迭代 25）接緊急通報</strong>：點紅框或還沒人接的求助只開床邊前速覽、狀態不變；速覽裡的「我接手」才確認；已接手的格子有 <code>id-card</code>；速覽 1366×768 與 1920×1080 都不捲動、不蓋紅框列與右邊兩框；沒有高中低圖示、塗色、正常範圍、預測機率、AI 摘要，線只用線型與線尾文字區分；專業版「病人簡介」開同一份；頂端求助橫幅結案或取消之後不再出現</p>
 </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1010 迭代 19）成效、獎勵、對外報表只在專業版</strong>：成效的「差多少」只在有基準時寫，其他寫原因；沒有排名與總分；「個人層級」與「找候補」只在總開關開著時出現、先選用途；稽核軌跡先選用途；對外報表的產生者看不到核准鈕；簡報模式列印時只印那一頁</li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1017 迭代 26）成效、工作量、對外報表的圖</strong>：每張圖有「看表格」；線與柱都直接標字、灰階分得出；樣本少的點空心不連線；不呈現的分組不是 0；圖不用語意色；獎勵制度沒有圖；「獎勵制度」開關關著時沒有任何名字按鈕，開著時名字列不預選、有「先接手」</p>
 </li>
@@ -7572,6 +7602,11 @@
 <td>3.3、3.5.3 新增病人回到開關後面、平板管理、內容拖到平板、開發床號（1007 迭代 17.7）</td>
 <td><code>packages/shared/src/platform.ts</code> 的 <code>MANUAL_PATIENT_CREATE</code>、<code>beds.ts</code> 的 <code>DEFAULT_BED_NOS</code>；護理端 <code>pages/ConsolePage.tsx</code>、<code>SystemPage.tsx</code>、<code>SystemTabletsCard.tsx</code>；<code>simple/model.ts</code> 的 <code>tabletTakesContent</code>、<code>actions.tsx</code> 的 <code>pushContent</code>／<code>approveDraft</code></td>
 <td><code>verify:iteration17-7</code>：兩個版本看同一個開關、預設關閉；分頁改名；床號格式（實際讀共用套件）；<code>tabletTakesContent</code> 拿假資料跑五種情形</td>
+</tr>
+<tr>
+<td>3.5.4、4.4 接緊急通報先開床邊前速覽、頂端求助橫幅的修剪（1018 迭代 25）</td>
+<td>護理端 <code>bedside-brief.tsx</code>（速覽與折線圖，兩版共用）、<code>simple/Workbench.tsx</code> 的 <code>briefId</code> 與 <code>.wb-brief-layer</code>、<code>simple/TabletCell.tsx</code> 的 <code>onOpenBrief</code> 與 <code>.bed-brief</code>、<code>pages/HelpRequestsPage.tsx</code> 的「病人簡介」、<code>realtime-context.tsx</code> 的 <code>pruneAlerts</code>；後端 <code>help-bedside.service.ts</code></td>
+<td><code>verify:iteration25</code>：修剪實際跑七種情形、紅框與格子只開速覽、整個簡易版只有速覽呼叫確認、速覽的格子位置與不捲動、樣式沒有語意色、用字沒有判讀；<code>verify:iteration25:api</code>：速覽的數值與模擬院方資料逐欄一致</td>
 </tr>
 <tr>
 <td>4.6 圖示（0926）</td>
