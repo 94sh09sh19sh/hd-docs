@@ -5138,11 +5138,11 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w"
 <tr>
 <td>編輯某一行時被支語 hook 擋下，但那行看起來沒問題</td>
 <td>詞庫收了一些在醫學與公文語境屬正常用法的詞，整行寫入就會被擋；兩個詞相連時也會跨詞湊出一個詞庫裡的詞</td>
-<td>縮小編輯範圍，只改那個片段；或把該行從 <code>~/.claude/hooks/zhiyu-words.txt</code> 註解掉</td>
+<td>縮小編輯範圍，只改那個片段；或在專案特例檔 <code>lab_project/.claude/zhiyu-allow.txt</code> 加一行 <code>!詞組</code> 窄放行（全域詞庫 <code>~/.claude/zhiyu-check/zhiyu-words.txt</code> 不改）</td>
 </tr>
 <tr>
 <td>改系統的支語詞庫（<code>packages/shared/zh-tw/words.txt</code>）時被 hook 擋下</td>
-<td>那份詞庫本來就寫滿支語，hook 只認得自己的目錄（<code>~/.claude/hooks/</code>）是例外（2026-10-07，迭代 17.3）</td>
+<td>那份詞庫本來就寫滿支語，hook 只放過自己的檔案（<code>~/.claude/zhiyu-check/</code> 底下、檔名 <code>zhiyu-</code> 開頭）（2026-10-07，迭代 17.3）</td>
 <td>詞庫不是文件，不必繞：要放行的詞<strong>以行號註解</strong>（<code>sed -i '&lt;行號&gt;s/^/# 放行：/'</code>），要補的詞若含 hook 詞庫裡的詞就先不補、告訴使用者。改完一定 <code>npm run zh-tw:data</code>，<code>verify:iteration17-3</code> 步驟 1 會抓忘了產生的</td>
 </tr>
 <tr>

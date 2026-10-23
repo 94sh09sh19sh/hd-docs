@@ -66,7 +66,7 @@ ______________________________________________________________________
 
 ## md 格式（省 token 規則，2026-10-23 起）
 
-全域規則寫在 `~/.claude/CLAUDE.md`「文件格式」，由 PreToolUse hook `~/.claude/hooks/md-lint.js` 在寫入 `.md` 前把關三項：
+全域規則寫在 `~/.claude/CLAUDE.md`「文件格式」，由 PreToolUse hook `~/.claude/md-lint/md-lint.js` 在寫入 `.md` 前把關三項：
 
 - **一段一行，不手動斷行**。各自獨立的條目改成條列，真的要分開就空一行；檔頭的 `**期間**：`、`**對應 commit**：` 這類欄位一行一個、中間空一行
 - **表格不補空白對齊**，分隔列寫 `|---|`
@@ -530,7 +530,7 @@ cd docs && for f in $(find . -name '*.md'); do d=$(dirname "$f"); \
 md 格式是否合規（每一份都當成整份寫入丟給 md-lint hook，印出來的就是違規；`docs/index.md` 缺摘要是刻意的例外）：
 
 ```
-for f in $(find docs docs-site -name '*.md'); do node -e 'const fs=require("fs"),p=require("path");process.stdout.write(JSON.stringify({tool_input:{file_path:p.resolve(process.argv[1]),content:fs.readFileSync(process.argv[1],"utf8")}}))' "$f" | node ~/.claude/hooks/md-lint.js | grep -q . && echo "LINT $f"; done
+for f in $(find docs docs-site -name '*.md'); do node -e 'const fs=require("fs"),p=require("path");process.stdout.write(JSON.stringify({tool_input:{file_path:p.resolve(process.argv[1]),content:fs.readFileSync(process.argv[1],"utf8")}}))' "$f" | node ~/.claude/md-lint/md-lint.js | grep -q . && echo "LINT $f"; done
 ```
 
 ______________________________________________________________________
