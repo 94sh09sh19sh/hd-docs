@@ -2890,6 +2890,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4718,6 +4729,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4846,13 +4868,9 @@
 
 <h1 id="迭代-11-手動測試--部署改為-docker--git-clone">迭代 11 手動測試 — 部署改為 Docker ＋ git clone<a class="headerlink" href="#迭代-11-手動測試--部署改為-docker--git-clone" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.9 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 11 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.9 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 11 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
 </blockquote>
-<p><strong>這一冊驗的是「院內那一套指令真的走得完」。</strong> 迭代 10 要一台乾淨的機器，是因為安裝包要證明它不依賴開發機；
-容器本身就是那個乾淨環境（《部署規範》第 9 章最後一段），所以本冊<strong>全部在開發機上做得完</strong>，
-但 §11.3 起<strong>只准用 Git 與 Docker</strong>，指令照抄《<a href="../../deployment/">部署手冊</a>》第十一冊。</p>
+<p><strong>這一冊驗的是「院內那一套指令真的走得完」。</strong> 迭代 10 要一台乾淨的機器，是因為安裝包要證明它不依賴開發機；容器本身就是那個乾淨環境（《部署規範》第 9 章最後一段），所以本冊<strong>全部在開發機上做得完</strong>，但 §11.3 起<strong>只准用 Git 與 Docker</strong>，指令照抄《<a href="../../deployment/">部署手冊</a>》第十一冊。</p>
 <table>
 <thead>
 <tr>
@@ -4871,6 +4889,14 @@
 </tr>
 </tbody>
 </table>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>項次 <code>u1</code>～<code>u43</code>，對應實作規格書 4.9；自動化另跑 <code>npm run verify:iteration11</code></li>
+<li>驗「院內那一套指令真的走得完」：全部在開發機做，§11.3 起只准用 Git 與 Docker，指令照抄部署手冊第十一冊</li>
+<li>repo 裡已經沒有安裝包、容器設定盤點與零院外連線的新範圍</li>
+<li>從零部署、正式環境設定拒絕 <code>lab</code>、<code>down -v</code> 刪不掉資料庫</li>
+<li>更新與回退演練</li>
+</ul>
 <h2 id="這一冊有什麼">這一冊有什麼<a class="headerlink" href="#這一冊有什麼" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -4970,118 +4996,71 @@
 <hr />
 <h2 id="111--repo-裡已經沒有安裝包部署規範-35">11.1 · repo 裡已經沒有安裝包（部署規範 3.5）🖥<a class="headerlink" href="#111--repo-裡已經沒有安裝包部署規範-35" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u1</code> <strong>［終端機］</strong> <code>npm run</code> 列出所有指令。
-  → 沒有 <code>package:build</code>、<code>package:verify</code>；有 <code>check:container</code> 與 <code>verify:iteration11</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u2</code> <strong>［終端機］</strong> 看 <code>scripts/</code> 目錄。
-  → 沒有 <code>build-offline-package.mjs</code>、<code>verify-package.mjs</code>、<code>package-templates/</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u3</code> <strong>［終端機］</strong> 在 <code>apps/</code>、<code>scripts/</code>、<code>deploy/</code> 與根目錄設定檔裡搜尋 <code>PRISMA_ENGINES_DIR</code>。
-  → 只剩 <code>scripts/verify-iteration11.mjs</code>（它要列出這個名字才能檢查）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u4</code> <strong>［終端機］</strong> 開 <code>.env.example</code>。
-  → 沒有安裝包那兩段（包內引擎、靜態資源連接埠）；容器那一段換成一句話，指向 <code>deploy/hospital.env.example</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u5</code> <strong>［護理端］</strong> 系統管理 → 執行環境。
-  → 不再有「資料庫引擎：由安裝包自帶」那一列。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u1</code> <strong>［終端機］</strong> <code>npm run</code> 列出所有指令。 → 沒有 <code>package:build</code>、<code>package:verify</code>；有 <code>check:container</code> 與 <code>verify:iteration11</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u2</code> <strong>［終端機］</strong> 看 <code>scripts/</code> 目錄。 → 沒有 <code>build-offline-package.mjs</code>、<code>verify-package.mjs</code>、<code>package-templates/</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u3</code> <strong>［終端機］</strong> 在 <code>apps/</code>、<code>scripts/</code>、<code>deploy/</code> 與根目錄設定檔裡搜尋 <code>PRISMA_ENGINES_DIR</code>。 → 只剩 <code>scripts/verify-iteration11.mjs</code>（它要列出這個名字才能檢查）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u4</code> <strong>［終端機］</strong> 開 <code>.env.example</code>。 → 沒有安裝包那兩段（包內引擎、靜態資源連接埠）；容器那一段換成一句話，指向 <code>deploy/hospital.env.example</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u5</code> <strong>［護理端］</strong> 系統管理 → 執行環境。 → 不再有「資料庫引擎：由安裝包自帶」那一列。</li>
 </ul>
 <h2 id="112--容器設定盤點與零院外連線的新範圍dep-14dep-37">11.2 · 容器設定盤點與零院外連線的新範圍（DEP-14、DEP-37）🖥<a class="headerlink" href="#112--容器設定盤點與零院外連線的新範圍dep-14dep-37" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u6</code> <strong>［終端機］</strong> <code>npm run check:container</code>
-  → 全部 ✓：專案名稱固定、兩個資料卷 external、繫結掛載只有備份與設定、沒有 privileged／host 網路／Docker socket、
-  沒有 <code>env_file</code>、資料卷只掛給 <code>api</code>、每個服務都寫 <code>TZ</code>、標籤帶 <code>HD_IMAGE_TAG</code>、<code>pull_policy: never</code>、五個服務齊全。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u7</code> ⚠ <strong>［終端機］</strong> 在 <code>docker-compose.yml</code> 的 <code>nurse-web</code> 底下暫時加一行 <code>volumes: ["C:/:/host"]</code>，再跑 <code>u6</code>。
-  → <strong>「有不允許的繫結掛載」變紅</strong>，並寫出是哪個服務、哪個來源。改回去再跑一次確認恢復。
-  <em>0922 的 <code>-v /c:/app</code> 就是這一行。每個檢查都要有人看過它失敗的樣子。</em></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u8</code> ⚠ <strong>［終端機］</strong> 把 <code>api</code> 的 <code>LLM_PROVIDER</code> 預設值暫時改成 <code>${LLM_PROVIDER:-lab}</code>，再跑 <code>u6</code>。
-  → 「compose 的 LLM_PROVIDER 預設為 lab」變紅。改回去。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u9</code> <strong>［終端機］</strong> <code>npm run check:egress</code>
-  → 「映像檔內容」「AI 閘道」兩列出現，都是 0 筆；已沒有「安裝包」那一列。
-  AI 閘道那列會附註「尚無程式碼（迭代 13）」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u10</code> ⚠ <strong>［終端機］</strong> 在 <code>Dockerfile</code> 執行階段最後暫時加一行 <code>COPY --from=builder /build/docs ./docs</code>，再跑 <code>u9</code>。
-  → 「映像檔內容」變紅：<code>/build/docs</code> 不在任何一節的掃描範圍內。改回去。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u11</code> <strong>［終端機］</strong> <code>npm run check:offline</code>
-  → 標題是「執行期不下載、遷移只前滾」，沒有「引擎檔已就位」「建置產物」「Node 版本」這幾項，沒有阻擋項。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u6</code> <strong>［終端機］</strong> <code>npm run check:container</code> → 全部 ✓：專案名稱固定、兩個資料卷 external、繫結掛載只有備份與設定、沒有 privileged／host 網路／Docker socket、沒有 <code>env_file</code>、資料卷只掛給 <code>api</code>、每個服務都寫 <code>TZ</code>、標籤帶 <code>HD_IMAGE_TAG</code>、<code>pull_policy: never</code>、五個服務齊全。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u7</code> ⚠ <strong>［終端機］</strong> 在 <code>docker-compose.yml</code> 的 <code>nurse-web</code> 底下暫時加一行 <code>volumes: ["C:/:/host"]</code>，再跑 <code>u6</code>。 → <strong>「有不允許的繫結掛載」變紅</strong>，並寫出是哪個服務、哪個來源。改回去再跑一次確認恢復。 <em>0922 的 <code>-v /c:/app</code> 就是這一行。每個檢查都要有人看過它失敗的樣子。</em></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u8</code> ⚠ <strong>［終端機］</strong> 把 <code>api</code> 的 <code>LLM_PROVIDER</code> 預設值暫時改成 <code>${LLM_PROVIDER:-lab}</code>，再跑 <code>u6</code>。 → 「compose 的 LLM_PROVIDER 預設為 lab」變紅。改回去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u9</code> <strong>［終端機］</strong> <code>npm run check:egress</code> → 「映像檔內容」「AI 閘道」兩列出現，都是 0 筆；已沒有「安裝包」那一列。 AI 閘道那列會附註「尚無程式碼（迭代 13）」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u10</code> ⚠ <strong>［終端機］</strong> 在 <code>Dockerfile</code> 執行階段最後暫時加一行 <code>COPY --from=builder /build/docs ./docs</code>，再跑 <code>u9</code>。 → 「映像檔內容」變紅：<code>/build/docs</code> 不在任何一節的掃描範圍內。改回去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u11</code> <strong>［終端機］</strong> <code>npm run check:offline</code> → 標題是「執行期不下載、遷移只前滾」，沒有「引擎檔已就位」「建置產物」「Node 版本」這幾項，沒有阻擋項。</li>
 </ul>
 <h2 id="113--從零部署dep-22">11.3 · 從零部署（DEP-22）🐳<a class="headerlink" href="#113--從零部署dep-22" title="Permanent link">&para;</a></h2>
 <p>照第十一冊走，<strong>每一步的輸出存檔</strong>。以下只列要看的結果。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u12</code> <strong>［終端機］</strong> 從 GitHub <strong>重新 clone</strong> 到暫存目錄（不是平常的工作目錄），<code>git checkout &lt;tag&gt;</code>，<code>git describe --tags</code>。
-  → 印出的正是要驗的 tag。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u13</code> <strong>［終端機］</strong> 複製 <code>deploy\hospital.env.example</code> 到暫存的 <code>config\.env</code> 並填好；<code>$cfg</code> 指向它；<code>docker compose --env-file $cfg config --quiet</code>。
-  → 沒有輸出。故意把 <code>HD_API_PORT</code> 清空再跑一次：錯誤訊息寫著「請設定 HD_API_PORT（向資訊室登記過的埠）」。填回去。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u14</code> <strong>［終端機］</strong> <code>docker volume create hd-tablet-care-data</code>、<code>docker volume create hd-tablet-care-keys</code>
-  → 兩個名字出現在 <code>docker volume ls</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u15</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg build</code>
-  → <code>Image hd-tablet-care:&lt;tag&gt; Built</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u16</code> <strong>［終端機］</strong> W-14 那一行套用遷移。
-  → <code>All migrations have been successfully applied.</code>，輸出裡<strong>沒有任何</strong> <code>binaries.prisma.sh</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u17</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg up -d</code>，再 <code>ps</code>。
-  → <code>api</code>、<code>nurse-web</code>、<code>patient-web</code> 三個 <code>Up</code>；<strong>沒有</strong> <code>ai-gateway</code>、<code>shell-builder</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u18</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg logs api --tail 40</code>
-  → <code>synchronous=FULL</code>；<code>版本標記：…（正式環境設定）</code>；<code>伺服器時區：Asia/Taipei</code>；
-  <strong>沒有</strong>「時區來自環境變數 TZ…主機時區仍要…確認」那一行警告（容器裡的 TZ 就是它該看的時區）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u19</code> <strong>［護理端］</strong> 瀏覽器開 <code>http://localhost:&lt;護理端埠&gt;</code>，用 <code>SUPER_ADMIN_*</code> 登入。
-  → 被要求改密碼；改完進得去。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u20</code> <strong>［護理端］</strong> 系統管理 → 執行環境。
-  → 伺服器時區 Asia/Taipei（由環境變數指定）、執行環境「正式」、監聽連接埠 3000（主機設定檔指定）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u21</code> <strong>［病人端］</strong> 瀏覽器開 <code>http://localhost:&lt;病人端埠&gt;</code>。
-  → 出現病人端畫面；開發者工具的網路分頁裡，API 請求打的是 <code>HD_PUBLIC_API_URL</code>，不是 <code>localhost:3000</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u22</code> <strong>［護理端］</strong> 系統管理 → 立即備份，記下檔名與 SHA-256。
-  → 暫存的 <code>backups\</code> 目錄裡出現那個檔，旁邊還有同名的 <code>.sha256</code>，內容與畫面上的雜湊相同。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u23</code> <strong>［終端機］</strong> 照 W-17 還原到 <code>/data/restore-check.db</code> 並刪掉。
-  → SHA-256 相符、完整性檢查 ok；<code>rm</code> 成功。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u24</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile ai --profile shell config --format json</code>，看每個服務的 <code>volumes</code>。
-  → <code>type: bind</code> 的只有兩種來源：暫存的 <code>backups</code>（掛到 <code>/backups</code>）與 <code>config</code>（掛到 <code>/config</code>）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u12</code> <strong>［終端機］</strong> 從 GitHub <strong>重新 clone</strong> 到暫存目錄（不是平常的工作目錄），<code>git checkout &lt;tag&gt;</code>，<code>git describe --tags</code>。 → 印出的正是要驗的 tag。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u13</code> <strong>［終端機］</strong> 複製 <code>deploy\hospital.env.example</code> 到暫存的 <code>config\.env</code> 並填好；<code>$cfg</code> 指向它；<code>docker compose --env-file $cfg config --quiet</code>。 → 沒有輸出。故意把 <code>HD_API_PORT</code> 清空再跑一次：錯誤訊息寫著「請設定 HD_API_PORT（向資訊室登記過的埠）」。填回去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u14</code> <strong>［終端機］</strong> <code>docker volume create hd-tablet-care-data</code>、<code>docker volume create hd-tablet-care-keys</code> → 兩個名字出現在 <code>docker volume ls</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u15</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg build</code> → <code>Image hd-tablet-care:&lt;tag&gt; Built</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u16</code> <strong>［終端機］</strong> W-14 那一行套用遷移。 → <code>All migrations have been successfully applied.</code>，輸出裡<strong>沒有任何</strong> <code>binaries.prisma.sh</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u17</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg up -d</code>，再 <code>ps</code>。 → <code>api</code>、<code>nurse-web</code>、<code>patient-web</code> 三個 <code>Up</code>；<strong>沒有</strong> <code>ai-gateway</code>、<code>shell-builder</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u18</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg logs api --tail 40</code> → <code>synchronous=FULL</code>；<code>版本標記：…（正式環境設定）</code>；<code>伺服器時區：Asia/Taipei</code>； <strong>沒有</strong>「時區來自環境變數 TZ…主機時區仍要…確認」那一行警告（容器裡的 TZ 就是它該看的時區）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u19</code> <strong>［護理端］</strong> 瀏覽器開 <code>http://localhost:&lt;護理端埠&gt;</code>，用 <code>SUPER_ADMIN_*</code> 登入。 → 被要求改密碼；改完進得去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u20</code> <strong>［護理端］</strong> 系統管理 → 執行環境。 → 伺服器時區 Asia/Taipei（由環境變數指定）、執行環境「正式」、監聽連接埠 3000（主機設定檔指定）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u21</code> <strong>［病人端］</strong> 瀏覽器開 <code>http://localhost:&lt;病人端埠&gt;</code>。 → 出現病人端畫面；開發者工具的網路分頁裡，API 請求打的是 <code>HD_PUBLIC_API_URL</code>，不是 <code>localhost:3000</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u22</code> <strong>［護理端］</strong> 系統管理 → 立即備份，記下檔名與 SHA-256。 → 暫存的 <code>backups\</code> 目錄裡出現那個檔，旁邊還有同名的 <code>.sha256</code>，內容與畫面上的雜湊相同。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u23</code> <strong>［終端機］</strong> 照 W-17 還原到 <code>/data/restore-check.db</code> 並刪掉。 → SHA-256 相符、完整性檢查 ok；<code>rm</code> 成功。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u24</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile ai --profile shell config --format json</code>，看每個服務的 <code>volumes</code>。 → <code>type: bind</code> 的只有兩種來源：暫存的 <code>backups</code>（掛到 <code>/backups</code>）與 <code>config</code>（掛到 <code>/config</code>）。</li>
 </ul>
 <h2 id="114--正式環境設定拒絕-labdep-40--">11.4 · 正式環境設定拒絕 <code>lab</code>（DEP-40）🐳 ＋ 🖥<a class="headerlink" href="#114--正式環境設定拒絕-labdep-40--" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u25</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg run --rm --no-deps -e LLM_PROVIDER=lab api</code>
-  → 後端<strong>起不來</strong>，結束狀態非 0；錯誤訊息寫著「正式環境設定下不得使用 LLM_PROVIDER=lab…（《部署規範》DEP-40）」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u26</code> 🖥 <strong>［終端機］</strong> 開發機上 <code>.env</code> 暫時設 <code>DEPLOYMENT_ENV=production</code>、<code>LLM_PROVIDER=lab</code>，<code>npm run dev:api</code>。
-  → 拒絕啟動，訊息指向 DEP-40。若先被別的正式環境檢查擋下（連接埠、時區），照訊息補齊再試。<strong>做完兩個值都改回去。</strong></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u27</code> 🖥 <strong>［終端機］</strong> 只設 <code>LLM_PROVIDER=lab</code>、<code>DEPLOYMENT_ENV</code> 留空，<code>npm run dev:api</code>。
-  → 正常啟動。開發環境接實驗室是允許的（DEP-01 由合成資料檢查另外擋），改回 <code>mock</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u25</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg run --rm --no-deps -e LLM_PROVIDER=lab api</code> → 後端<strong>起不來</strong>，結束狀態非 0；錯誤訊息寫著「正式環境設定下不得使用 LLM_PROVIDER=lab…（《部署規範》DEP-40）」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u26</code> 🖥 <strong>［終端機］</strong> 開發機上 <code>.env</code> 暫時設 <code>DEPLOYMENT_ENV=production</code>、<code>LLM_PROVIDER=lab</code>，<code>npm run dev:api</code>。 → 拒絕啟動，訊息指向 DEP-40。若先被別的正式環境檢查擋下（連接埠、時區），照訊息補齊再試。<strong>做完兩個值都改回去。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u27</code> 🖥 <strong>［終端機］</strong> 只設 <code>LLM_PROVIDER=lab</code>、<code>DEPLOYMENT_ENV</code> 留空，<code>npm run dev:api</code>。 → 正常啟動。開發環境接實驗室是允許的（DEP-01 由合成資料檢查另外擋），改回 <code>mock</code>。</li>
 </ul>
 <h2 id="115--down--v-刪不掉資料庫部署規範-33">11.5 · <code>down -v</code> 刪不掉資料庫（部署規範 3.3）🐳<a class="headerlink" href="#115--down--v-刪不掉資料庫部署規範-33" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u28</code> <strong>［護理端］</strong> 裝置管理新增一台測試平板，序號寫 <code>U28-BEFORE</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u29</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg down -v</code>，再 <code>docker volume ls</code>，再 <code>up -d</code>。
-  → <code>down -v</code> 之後兩個資料卷<strong>都還在</strong>；重新啟動後登入，<code>U28-BEFORE</code> 還在。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u29</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg down -v</code>，再 <code>docker volume ls</code>，再 <code>up -d</code>。 → <code>down -v</code> 之後兩個資料卷<strong>都還在</strong>；重新啟動後登入，<code>U28-BEFORE</code> 還在。</li>
 </ul>
 <h2 id="116--更新演練dep-19dep-44">11.6 · 更新演練（DEP-19、DEP-44）🐳<a class="headerlink" href="#116--更新演練dep-19dep-44" title="Permanent link">&para;</a></h2>
-<p>在暫存的 clone 裡做一個測試用的新版：改 <code>apps/api/package.json</code> 的 <code>version</code>（例如加 <code>-drill</code>），
-另加一個只建一張空表的遷移，commit 後打一個本機 tag。<strong>這個 tag 只存在暫存 clone，不要推。</strong></p>
+<p>在暫存的 clone 裡做一個測試用的新版：改 <code>apps/api/package.json</code> 的 <code>version</code>（例如加 <code>-drill</code>），另加一個只建一張空表的遷移，commit 後打一個本機 tag。<strong>這個 tag 只存在暫存 clone，不要推。</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u30</code> <strong>［終端機］</strong> <code>git checkout &lt;測試 tag&gt;</code>，<code>.env</code> 的 <code>HD_IMAGE_TAG</code> 改成它，<code>build</code>。
-  → <code>docker images hd-tablet-care</code> 同時看得到舊、新兩個標籤。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u31</code> ⚠ <strong>［終端機］</strong> <strong>先不要停 <code>api</code></strong>，直接跑 W-19 的 <code>db-update.mjs</code> 那一行。
-  → <strong>更新中止：後端服務還在執行</strong>。資料庫沒被動到。
-  <em>這一條在迭代 11 實測前是壞的：一次性容器問的是自己的 <code>127.0.0.1</code>，永遠以為服務已停。</em></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u32</code> <strong>［終端機］</strong> <code>stop api</code>，再跑一次 <code>db-update.mjs</code>。
-  → 依序：服務已停 → 更新前備份（印出檔名與 SHA-256，<strong>抄下來</strong>；備份旁邊的同名 <code>.sha256</code> 也有一份）→ 驗證還原 ok → 套用了 1 個遷移 → 寫入更新紀錄 → 更新完成。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u33</code> <strong>［終端機］</strong> <code>up -d</code>
-  → 三個服務的映像檔都是新標籤。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u34</code> <strong>［護理端］</strong> 系統管理。
-  → 版本標記是新版本；版本更新紀錄多一筆；<code>U28-BEFORE</code> 還在。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u30</code> <strong>［終端機］</strong> <code>git checkout &lt;測試 tag&gt;</code>，<code>.env</code> 的 <code>HD_IMAGE_TAG</code> 改成它，<code>build</code>。 → <code>docker images hd-tablet-care</code> 同時看得到舊、新兩個標籤。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u31</code> ⚠ <strong>［終端機］</strong> <strong>先不要停 <code>api</code></strong>，直接跑 W-19 的 <code>db-update.mjs</code> 那一行。 → <strong>更新中止：後端服務還在執行</strong>。資料庫沒被動到。 <em>這一條在迭代 11 實測前是壞的：一次性容器問的是自己的 <code>127.0.0.1</code>，永遠以為服務已停。</em></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u32</code> <strong>［終端機］</strong> <code>stop api</code>，再跑一次 <code>db-update.mjs</code>。 → 依序：服務已停 → 更新前備份（印出檔名與 SHA-256，<strong>抄下來</strong>；備份旁邊的同名 <code>.sha256</code> 也有一份）→ 驗證還原 ok → 套用了 1 個遷移 → 寫入更新紀錄 → 更新完成。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u33</code> <strong>［終端機］</strong> <code>up -d</code> → 三個服務的映像檔都是新標籤。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u34</code> <strong>［護理端］</strong> 系統管理。 → 版本標記是新版本；版本更新紀錄多一筆；<code>U28-BEFORE</code> 還在。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u35</code> <strong>［護理端］</strong> 裝置管理新增一台 <code>U35-AFTER</code>。（§11.7 會用它證明回退的代價）</li>
 </ul>
 <h2 id="117--回退演練dep-19規範-183">11.7 · 回退演練（DEP-19、規範 18.3）🐳<a class="headerlink" href="#117--回退演練dep-19規範-183" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u36</code> <strong>［終端機］</strong> <code>git checkout &lt;原 tag&gt;</code>，<code>HD_IMAGE_TAG</code> 改回，<strong>不要 build</strong>。
-  → <code>config --quiet</code> 沒有輸出；舊映像檔還在，不需要重建。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u37</code> <strong>［終端機］</strong> 照 W-20：<code>stop api</code> → 把 <code>hd.db</code> 移到 <code>/data/before-rollback/</code> → 還原 <code>u32</code> 抄下的那份備份到 <code>/data/hd.db</code>。
-  → SHA-256 相符、完整性 ok、「還原的就是 DATABASE_URL 指向的正本」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u38</code> <strong>［終端機］</strong> <code>up -d</code>，再 <code>ps</code>。
-  → 三個服務的映像檔都是原標籤。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u39</code> <strong>［護理端］</strong> 系統管理與裝置管理。
-  → 版本標記回到原版本；<code>U28-BEFORE</code> 在，<strong><code>U35-AFTER</code> 不在</strong>。
-  <em>這是預期的：資料庫不能把遷移倒回去，回退等於「舊程式＋更新前那份備份」。所以回退要在累積新資料之前決定。</em></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u36</code> <strong>［終端機］</strong> <code>git checkout &lt;原 tag&gt;</code>，<code>HD_IMAGE_TAG</code> 改回，<strong>不要 build</strong>。 → <code>config --quiet</code> 沒有輸出；舊映像檔還在，不需要重建。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u37</code> <strong>［終端機］</strong> 照 W-20：<code>stop api</code> → 把 <code>hd.db</code> 移到 <code>/data/before-rollback/</code> → 還原 <code>u32</code> 抄下的那份備份到 <code>/data/hd.db</code>。 → SHA-256 相符、完整性 ok、「還原的就是 DATABASE_URL 指向的正本」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u38</code> <strong>［終端機］</strong> <code>up -d</code>，再 <code>ps</code>。 → 三個服務的映像檔都是原標籤。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u39</code> <strong>［護理端］</strong> 系統管理與裝置管理。 → 版本標記回到原版本；<code>U28-BEFORE</code> 在，<strong><code>U35-AFTER</code> 不在</strong>。 <em>這是預期的：資料庫不能把遷移倒回去，回退等於「舊程式＋更新前那份備份」。所以回退要在累積新資料之前決定。</em></li>
 </ul>
 <h2 id="118--自動化驗收-">11.8 · 自動化驗收 🖥<a class="headerlink" href="#118--自動化驗收-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u40</code> <strong>［終端機］</strong> <code>npm run verify:iteration11</code>
-  → 靜態部分全部 ✓；最後列出要看演練紀錄的幾項。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u41</code> <strong>［終端機］</strong> <code>npm run verify:iteration11 -- --live --env-file &lt;暫存的 config\.env&gt;</code>
-  → 加上 Docker 上的四項也全部 ✓：<code>compose config</code> 解析後只有兩個繫結掛載、<code>lab</code> 被拒、<code>down -v</code> 後資料卷與 <code>hd.db</code> 都在、重新起來後 health 正常。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u42</code> <strong>［終端機］</strong> <code>npm run check:all</code>
-  → 六支全綠（多了「容器設定」）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u40</code> <strong>［終端機］</strong> <code>npm run verify:iteration11</code> → 靜態部分全部 ✓；最後列出要看演練紀錄的幾項。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u41</code> <strong>［終端機］</strong> <code>npm run verify:iteration11 -- --live --env-file &lt;暫存的 config\.env&gt;</code> → 加上 Docker 上的四項也全部 ✓：<code>compose config</code> 解析後只有兩個繫結掛載、<code>lab</code> 被拒、<code>down -v</code> 後資料卷與 <code>hd.db</code> 都在、重新起來後 health 正常。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u42</code> <strong>［終端機］</strong> <code>npm run check:all</code> → 六支全綠（多了「容器設定」）。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>u43</code> 收尾：照第十一冊第 8 節撤除這次實測的容器、資料卷與映像檔，<strong>確認刪的是暫存那一套</strong>（專案名稱一律是 <code>hd-tablet-care</code>，開發機上若另有正在用的同名專案，先停下來想清楚）。</li>
 </ul>
 <hr />

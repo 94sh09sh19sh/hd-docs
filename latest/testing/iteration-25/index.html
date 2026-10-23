@@ -3674,6 +3674,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4707,6 +4718,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4824,17 +4846,17 @@
 
 <h1 id="迭代-25-手動測試--緊急通報頂端橫幅床邊前速覽護理紀錄連動">迭代 25 手動測試 — 緊急通報：頂端橫幅、床邊前速覽、護理紀錄連動<a class="headerlink" href="#迭代-25-手動測試--緊急通報頂端橫幅床邊前速覽護理紀錄連動" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.25 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 25 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
-項次用 <code>ai</code>（實作規格書 4.25：手動測試分冊 <code>ai</code>），從 <code>ai1</code> 起。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.25 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 25 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。項次用 <code>ai</code>（實作規格書 4.25：手動測試分冊 <code>ai</code>），從 <code>ai1</code> 起。</p>
 </blockquote>
-<p><strong>這一冊驗四件事</strong>：
-專業版頂端的求助橫幅接手後藏起來、<strong>結案或取消之後不再冒回來</strong>，斷線期間的求助照樣出現；
-簡易版點紅框或還沒人接的求助<strong>只開床邊前速覽、不確認</strong>，速覽裡的「我接手」才確認；
-速覽上的數值與院方資料一致、<strong>不上色、不判讀、讀到 0 不顯示</strong>，1366×768 不捲動、不蓋紅框列；
-臨床組求助結案時<strong>同時建好「求助處置」護理紀錄草稿</strong>，事件時間是按下求助的時間，結果補改時草稿跟著改、簽核後不動。
-分析與七題答覆在《<a href="../../notes/emergency-handling-redesign/">緊急通報的處理流程與護理紀錄連動</a>》。</p>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<p>這一冊驗四件事（項次 <code>ai1</code>～<code>ai34</code>，自動化另跑 <code>npm run verify:iteration25</code>）：</p>
+<ul>
+<li>專業版頂端的求助橫幅接手後藏起來、<strong>結案或取消之後不再冒回來</strong>，斷線期間的求助照樣出現</li>
+<li>簡易版點紅框或還沒人接的求助<strong>只開床邊前速覽、不確認</strong>，速覽裡的「我接手」才確認</li>
+<li>速覽上的數值與院方資料一致、<strong>不上色、不判讀、讀到 0 不顯示</strong>，1366×768 不捲動、不蓋紅框列</li>
+<li>臨床組求助結案時<strong>同時建好「求助處置」護理紀錄草稿</strong>，事件時間是按下求助的時間，結果補改時草稿跟著改、簽核後不動</li>
+<li>分析與七題答覆在《<a href="../../notes/emergency-handling-redesign/">緊急通報的處理流程與護理紀錄連動</a>》</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -4912,100 +4934,65 @@
 </tr>
 </tbody>
 </table>
-<p><strong>前置</strong>：模擬院方 API 在跑（「進行中」那一組有幾位正在透析的模擬病人）、兩台已佈建的平板（或瀏覽器開病人端，<code>/?serial=&amp;key=</code> 佈建）、護理長帳號。
-<strong>AI 總開關</strong>與<strong>需要手持裝置的功能</strong>照預設關著（§25.4 要驗沒有 AI、沒有到達時間時整條走得完）。</p>
+<p><strong>前置</strong>：模擬院方 API 在跑（「進行中」那一組有幾位正在透析的模擬病人）、兩台已佈建的平板（或瀏覽器開病人端，<code>/?serial=&amp;key=</code> 佈建）、護理長帳號。 <strong>AI 總開關</strong>與<strong>需要手持裝置的功能</strong>照預設關著（§25.4 要驗沒有 AI、沒有到達時間時整條走得完）。</p>
 <hr />
 <h2 id="251-頂端求助橫幅">§25.1 頂端求助橫幅<a class="headerlink" href="#251-頂端求助橫幅" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai1</code> <strong>［護理端］</strong> 🖥 一個視窗開專業版（任何一頁），另一個開簡易版；把兩位正在透析的模擬病人各配一台平板。<strong>［病人端］</strong> 其中一台按「我需要協助」→「頭暈、冒冷汗、快昏倒」→「非常緊急」。
-  → 專業版頂端出現那一則求助橫幅；簡易版上面一條紅框出現那一床。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai2</code> <strong>［護理端］</strong> 簡易版點紅框，在速覽裡按「我接手」。
-  → 專業版的橫幅<strong>消失</strong>（已接手的不佔位置，迭代 14.4 的規則）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai3</code> <strong>［護理端］</strong> 簡易版點那一格的求助、點一個處理方式（等 8 秒送出）。
-  → 專業版的橫幅<strong>不再出現</strong>（1015 以前結案之後會冒回來，見規畫文件第 2.2 節）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai4</code> <strong>［病人端］</strong> 再按一次求助。<strong>［護理端］</strong> 專業版緊急通報頁那一筆按「取消」。
-  → 橫幅出現後，取消之後<strong>不再出現</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai5</code> <strong>［護理端］</strong> 專業版拔掉網路線（或瀏覽器開發者工具設離線）約 30 秒，期間**［病人端］**按一次求助；接回網路。
-  → 先出現斷線示警；接回來之後那一則照樣出現在頂端（比求助舊的快照找不到不拿掉）。之後照 <code>ai2</code>、<code>ai3</code> 收掉。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai6</code> <strong>［終端機］</strong> <code>npm run verify:iteration14-4</code>。
-  → 照樣全部通過（橫幅元件本身沒動）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai1</code> <strong>［護理端］</strong> 🖥 一個視窗開專業版（任何一頁），另一個開簡易版；把兩位正在透析的模擬病人各配一台平板。<strong>［病人端］</strong> 其中一台按「我需要協助」→「頭暈、冒冷汗、快昏倒」→「非常緊急」。 → 專業版頂端出現那一則求助橫幅；簡易版上面一條紅框出現那一床。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai2</code> <strong>［護理端］</strong> 簡易版點紅框，在速覽裡按「我接手」。 → 專業版的橫幅<strong>消失</strong>（已接手的不佔位置，迭代 14.4 的規則）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai3</code> <strong>［護理端］</strong> 簡易版點那一格的求助、點一個處理方式（等 8 秒送出）。 → 專業版的橫幅<strong>不再出現</strong>（1015 以前結案之後會冒回來，見規畫文件第 2.2 節）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai4</code> <strong>［病人端］</strong> 再按一次求助。<strong>［護理端］</strong> 專業版緊急通報頁那一筆按「取消」。 → 橫幅出現後，取消之後<strong>不再出現</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai5</code> <strong>［護理端］</strong> 專業版拔掉網路線（或瀏覽器開發者工具設離線）約 30 秒，期間<strong>［病人端］</strong>按一次求助；接回網路。 → 先出現斷線示警；接回來之後那一則照樣出現在頂端（比求助舊的快照找不到不拿掉）。之後照 <code>ai2</code>、<code>ai3</code> 收掉。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai6</code> <strong>［終端機］</strong> <code>npm run verify:iteration14-4</code>。 → 照樣全部通過（橫幅元件本身沒動）。</li>
 </ul>
 <blockquote>
 <p>規則寫在 <code>realtime-context.tsx</code> 的 <code>pruneAlerts</code>：伺服器在求助送到<strong>之後</strong>產生的狀態裡找不到它才拿掉；送到後 5 秒內的狀態不算（後端寫進資料庫到快取更新之間的寬限）。所以在 5 秒內就取消的那一則，最晚在下一次輪詢（15 秒）拿掉。</p>
 </blockquote>
 <h2 id="252-看是看接是接">§25.2 看是看、接是接<a class="headerlink" href="#252-看是看接是接" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai7</code> <strong>［病人端］</strong> 按一次緊急求助。<strong>［護理端］</strong> 📐 簡易版點紅框。
-  → 中間的平板區被一張「床邊前速覽」蓋住；<strong>上面的紅框列與右邊兩框照舊看得到</strong>，紅框照閃。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai8</code> <strong>［護理端］</strong> 按 Esc 關掉速覽，再點同一個紅框、按 ×；再開一次、點速覽外面。
-  → 三種都關得掉；那一則<strong>仍是待處理</strong>（紅框還在、格子上還是沒人接的樣子）。<strong>［終端機］</strong> <code>GET /api/help-requests/:id</code> 的 <code>status</code> 是 <code>PENDING</code>，稽核軌跡沒有「接收通報」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai9</code> <strong>［護理端］</strong> 點格子上那一則求助（不是紅框）。
-  → 一樣只開速覽，<strong>不會展開處理方式</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai10</code> <strong>［護理端］</strong> 速覽裡按「我接手」，記下按的時間。
-  → 速覽關掉；格子變成已接手的樣子，右邊多一顆 <code>id-card</code> 小圖示。<strong>［終端機］</strong> 那一則的 <code>acknowledgedAt</code> 是按下那一刻；稽核軌跡多一筆「接收通報」，時間相同。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai11</code> <strong>［護理端］</strong> 點格子的 <code>id-card</code>。
-  → 同一份速覽重新開啟；上面沒有「我接手」，改寫「○○ 已接手」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai12</code> <strong>［護理端］</strong> 點已接手的那一格求助。
-  → 照舊展開處理方式的圖示列（結案的操作沒變）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai13</code> <strong>［護理端］</strong> 專業版緊急通報頁，每一筆多一顆「病人簡介」；點它。
-  → 開出來的與簡易版<strong>同一份內容</strong>（同一個元件）；卡片上原本的「我接手」照舊在，速覽裡的「我接手」也能用。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai7</code> <strong>［病人端］</strong> 按一次緊急求助。<strong>［護理端］</strong> 📐 簡易版點紅框。 → 中間的平板區被一張「床邊前速覽」蓋住；<strong>上面的紅框列與右邊兩框照舊看得到</strong>，紅框照閃。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai8</code> <strong>［護理端］</strong> 按 Esc 關掉速覽，再點同一個紅框、按 ×；再開一次、點速覽外面。 → 三種都關得掉；那一則<strong>仍是待處理</strong>（紅框還在、格子上還是沒人接的樣子）。<strong>［終端機］</strong> <code>GET /api/help-requests/:id</code> 的 <code>status</code> 是 <code>PENDING</code>，稽核軌跡沒有「接收通報」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai9</code> <strong>［護理端］</strong> 點格子上那一則求助（不是紅框）。 → 一樣只開速覽，<strong>不會展開處理方式</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai10</code> <strong>［護理端］</strong> 速覽裡按「我接手」，記下按的時間。 → 速覽關掉；格子變成已接手的樣子，右邊多一顆 <code>id-card</code> 小圖示。<strong>［終端機］</strong> 那一則的 <code>acknowledgedAt</code> 是按下那一刻；稽核軌跡多一筆「接收通報」，時間相同。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai11</code> <strong>［護理端］</strong> 點格子的 <code>id-card</code>。 → 同一份速覽重新開啟；上面沒有「我接手」，改寫「○○ 已接手」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai12</code> <strong>［護理端］</strong> 點已接手的那一格求助。 → 照舊展開處理方式的圖示列（結案的操作沒變）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai13</code> <strong>［護理端］</strong> 專業版緊急通報頁，每一筆多一顆「病人簡介」；點它。 → 開出來的與簡易版<strong>同一份內容</strong>（同一個元件）；卡片上原本的「我接手」照舊在，速覽裡的「我接手」也能用。</li>
 </ul>
 <h2 id="253-速覽的內容與版面">§25.3 速覽的內容與版面<a class="headerlink" href="#253-速覽的內容與版面" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai14</code> <strong>［護理端］</strong> 📐 1366×768 開速覽，對照模擬院方 API 那一位病人的資料（<strong>［終端機］</strong> <code>curl http://localhost:8090/dialysislist.php</code>）。
-  → 左欄：最新一筆的血壓與脈搏（附時間）、體溫、透析前與理想體重與兩者的差（「多 2.4 kg」這樣的文字）、設定脫水量與它的組成（目標＋輸液＋食物）、血流速與透析液流速、透析液溫度、Ca、傳導度、Heparin、透析器、血管通路、透析前問卷、院方資料最後一筆的時間——<strong>逐欄與院方資料一致</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai15</code> <strong>［護理端］</strong> 看兩張折線圖。
-  → 血壓那一張有收縮壓、舒張壓、靜脈壓、脈搏四條線，<strong>線型都不一樣、線尾寫名稱與數值</strong>；脫水量那一張有累積脫水量與一條橫的虛線「設定 N L」；兩張都有一條直的虛線「求助 HH:MM」，位置在按下求助的時間；點數與本次透析的紀錄筆數一致（全是 0 的那一筆不算）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai16</code> <strong>［護理端］</strong> 看整份速覽有沒有判讀。
-  → <strong>沒有</strong>預測機率、風險分層、高中低圖示、輕重長條、低於門檻的塗色、正常範圍、AI 摘要；數字與線都是同一種顏色。院方回 0 的欄位（例如模擬丙的體溫）<strong>整列不出現</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai17</code> <strong>［護理端］</strong> 看下面的近期求助與待追蹤。
-  → 近期求助只列本次與前 3 次療程（每一列：日期時間、類別、處理方式／結果，同一類別的標「同類別」）；超過 6 則寫「還有 N 則」。待追蹤列這位病人還沒結束的追蹤事項。沒有的時候各寫一句（「本次與前 3 次療程沒有其他求助」「沒有待追蹤事項」「這次還沒填透析前問卷」「這次療程沒有院方資料」），不留空白區塊。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai18</code> <strong>［護理端］</strong> 📐 1366×768 與 1920×1080 各開一次速覽，近期求助塞滿（同一位病人前幾次療程多按幾次求助）。
-  → <strong>整頁不捲動、速覽本身也不捲動</strong>；紅框列與右邊兩框都沒被蓋住。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai14</code> <strong>［護理端］</strong> 📐 1366×768 開速覽，對照模擬院方 API 那一位病人的資料（<strong>［終端機］</strong> <code>curl http://localhost:8090/dialysislist.php</code>）。 → 左欄：最新一筆的血壓與脈搏（附時間）、體溫、透析前與理想體重與兩者的差（「多 2.4 kg」這樣的文字）、設定脫水量與它的組成（目標＋輸液＋食物）、血流速與透析液流速、透析液溫度、Ca、傳導度、Heparin、透析器、血管通路、透析前問卷、院方資料最後一筆的時間——<strong>逐欄與院方資料一致</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai15</code> <strong>［護理端］</strong> 看兩張折線圖。 → 血壓那一張有收縮壓、舒張壓、靜脈壓、脈搏四條線，<strong>線型都不一樣、線尾寫名稱與數值</strong>；脫水量那一張有累積脫水量與一條橫的虛線「設定 N L」；兩張都有一條直的虛線「求助 HH:MM」，位置在按下求助的時間；點數與本次透析的紀錄筆數一致（全是 0 的那一筆不算）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai16</code> <strong>［護理端］</strong> 看整份速覽有沒有判讀。 → <strong>沒有</strong>預測機率、風險分層、高中低圖示、輕重長條、低於門檻的塗色、正常範圍、AI 摘要；數字與線都是同一種顏色。院方回 0 的欄位（例如模擬丙的體溫）<strong>整列不出現</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai17</code> <strong>［護理端］</strong> 看下面的近期求助與待追蹤。 → 近期求助只列本次與前 3 次療程（每一列：日期時間、類別、處理方式／結果，同一類別的標「同類別」）；超過 6 則寫「還有 N 則」。待追蹤列這位病人還沒結束的追蹤事項。沒有的時候各寫一句（「本次與前 3 次療程沒有其他求助」「沒有待追蹤事項」「這次還沒填透析前問卷」「這次療程沒有院方資料」），不留空白區塊。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai18</code> <strong>［護理端］</strong> 📐 1366×768 與 1920×1080 各開一次速覽，近期求助塞滿（同一位病人前幾次療程多按幾次求助）。 → <strong>整頁不捲動、速覽本身也不捲動</strong>；紅框列與右邊兩框都沒被蓋住。</li>
 </ul>
 <h2 id="254-結案時建好求助處置草稿">§25.4 結案時建好求助處置草稿<a class="headerlink" href="#254-結案時建好求助處置草稿" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai19</code> <strong>［病人端］</strong> 按「頭暈、冒冷汗、快昏倒」，附註寫幾個字。<strong>［護理端］</strong> 接手，等院方資料多一筆量測之後，結案：點「調整姿勢」（簡易版）或專業版結案登記選兩個處理方式、勾追蹤事項「需加強衛教」。
-  → <strong>［護理端］</strong> 護理紀錄頁選那一次療程：多一筆「求助處置」草稿，卡片寫「來自 HH:MM 的求助」，事件時間是<strong>病人按下求助的時間</strong>（不是結案、不是現在）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai20</code> <strong>［護理端］</strong> 看那一筆的四段（DART）。
-  → D：「HH:MM 病人以平板求助：頭暈、冒冷汗、快昏倒，附註：「…」」、透析前問卷有症狀的題目（標明病人自述）、<strong>按下求助前</strong>最近一筆量測；A：「HH:MM 按下求助、HH:MM 接手；處理方式：…」（依點選順序）；R：「處理結果：…」與<strong>按下之後</strong>的量測；T：「已列追蹤事項：需加強衛教」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai21</code> <strong>［護理端］</strong> 看整份文字。
-  → 沒有姓名、病歷號、病名；<strong>沒有任何「到達」字樣</strong>（到達床邊的開關關著，也不拿接手時間頂替）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai22</code> <strong>［護理端］</strong> 系統管理把護理紀錄格式改成 SOAP，再跑一次 <code>ai19</code>（換一個臨床組類別）。
-  → 草稿是 S／O／A／P；<strong>A（評估）段是空的</strong>；S 是病人自述、O 是量測與問卷、P 是時間線、處理方式與結果。做完把格式改回 DART。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai23</code> <strong>［病人端］</strong> 分別按「口渴」（非臨床組）、「頭痛」後護理師結案時結果選「病人自行取消」、「皮膚癢」後護理師直接「取消」。
-  → 這三則<strong>都沒有</strong>草稿。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai19</code> <strong>［病人端］</strong> 按「頭暈、冒冷汗、快昏倒」，附註寫幾個字。<strong>［護理端］</strong> 接手，等院方資料多一筆量測之後，結案：點「調整姿勢」（簡易版）或專業版結案登記選兩個處理方式、勾追蹤事項「需加強衛教」。 → <strong>［護理端］</strong> 護理紀錄頁選那一次療程：多一筆「求助處置」草稿，卡片寫「來自 HH:MM 的求助」，事件時間是<strong>病人按下求助的時間</strong>（不是結案、不是現在）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai20</code> <strong>［護理端］</strong> 看那一筆的四段（DART）。 → D：「HH:MM 病人以平板求助：頭暈、冒冷汗、快昏倒，附註：「…」」、透析前問卷有症狀的題目（標明病人自述）、<strong>按下求助前</strong>最近一筆量測；A：「HH:MM 按下求助、HH:MM 接手；處理方式：…」（依點選順序）；R：「處理結果：…」與<strong>按下之後</strong>的量測；T：「已列追蹤事項：需加強衛教」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai21</code> <strong>［護理端］</strong> 看整份文字。 → 沒有姓名、病歷號、病名；<strong>沒有任何「到達」字樣</strong>（到達床邊的開關關著，也不拿接手時間頂替）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai22</code> <strong>［護理端］</strong> 系統管理把護理紀錄格式改成 SOAP，再跑一次 <code>ai19</code>（換一個臨床組類別）。 → 草稿是 S／O／A／P；<strong>A（評估）段是空的</strong>；S 是病人自述、O 是量測與問卷、P 是時間線、處理方式與結果。做完把格式改回 DART。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai23</code> <strong>［病人端］</strong> 分別按「口渴」（非臨床組）、「頭痛」後護理師結案時結果選「病人自行取消」、「皮膚癢」後護理師直接「取消」。 → 這三則<strong>都沒有</strong>草稿。</li>
 </ul>
 <h2 id="255-一則一筆補改簽核後不動">§25.5 一則一筆、補改、簽核後不動<a class="headerlink" href="#255-一則一筆補改簽核後不動" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai24</code> <strong>［護理端］</strong> <code>ai19</code> 那一則結案後 60 分鐘內，簡易版點格子上的「已結案」標記補改結果（或 <strong>［終端機］</strong> <code>POST /api/help-requests/:id/outcome</code>）。
-  → 護理紀錄頁那一筆草稿的 R 段跟著改；事件時間不變；稽核「補改處理結果」寫明草稿已跟著重組。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai25</code> <strong>［護理端］</strong> 把那一筆簽核，再補改一次結果。
-  → 已簽核的記錄<strong>一個字都沒變</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai26</code> <strong>［資料庫］</strong> <code>SELECT source_help_request_id, COUNT(*) FROM nursing_records WHERE source_help_request_id IS NOT NULL GROUP BY 1 HAVING COUNT(*) &gt; 1</code>。
-  → 沒有任何一列（一則求助最多一筆，唯一鍵擋著）。「草稿建不起來時結案也不成立」由 <code>verify:iteration25:api</code> 步驟 6 驗（先放一筆佔位再結案，回 409、求助仍是已接手）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai24</code> <strong>［護理端］</strong> <code>ai19</code> 那一則結案後 60 分鐘內，簡易版點格子上的「已結案」標記補改結果（或 <strong>［終端機］</strong> <code>POST /api/help-requests/:id/outcome</code>）。 → 護理紀錄頁那一筆草稿的 R 段跟著改；事件時間不變；稽核「補改處理結果」寫明草稿已跟著重組。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai25</code> <strong>［護理端］</strong> 把那一筆簽核，再補改一次結果。 → 已簽核的記錄<strong>一個字都沒變</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai26</code> <strong>［資料庫］</strong> <code>SELECT source_help_request_id, COUNT(*) FROM nursing_records WHERE source_help_request_id IS NOT NULL GROUP BY 1 HAVING COUNT(*) &gt; 1</code>。 → 沒有任何一列（一則求助最多一筆，唯一鍵擋著）。「草稿建不起來時結案也不成立」由 <code>verify:iteration25:api</code> 步驟 6 驗（先放一筆佔位再結案，回 409、求助仍是已接手）。</li>
 </ul>
 <h2 id="256-護理紀錄頁來源依求助建立改套範本">§25.6 護理紀錄頁：來源、依求助建立、改套範本<a class="headerlink" href="#256-護理紀錄頁來源依求助建立改套範本" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai27</code> <strong>［護理端］</strong> 護理紀錄頁點「來自 HH:MM 的求助」。
-  → 開出那一則的床邊前速覽（唯讀，沒有「我接手」）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai28</code> <strong>［護理端］</strong> 右上「依求助建立」。
-  → 列出這次療程<strong>已結案但沒有記錄</strong>的求助（<code>ai23</code> 的口渴與病人自行取消的頭痛）；點「建立求助處置記錄」，多一筆草稿、事件時間是按下求助的時間，那一列從清單消失。取消的「皮膚癢」不在清單裡。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai29</code> <strong>［護理端］</strong> 一筆求助處置草稿按「改套範本」，選「透析中低血壓處置」補勾，按「套用範本」。
-  → 段落改由範本的勾選組出，D（或 S）段最前面仍是病人按下求助的那一句；<strong>事件時間不變</strong>、量測照事件時間前後帶；稽核多一筆「求助處置記錄改套範本」。之後補改結果不再重組這一筆。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai30</code> <strong>［護理端］</strong> 左邊「新增事件記錄」的事件時間欄。
-  → 欄位底下寫「請改成發生的時間」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai31</code> <strong>［護理端］</strong> 系統管理開啟 AI 總開關（模擬模型即可），在一筆求助處置草稿按「AI 潤飾」。
-  → 初稿照四段回來，<strong>沒有新增勾選與求助以外的事實、數值或判斷</strong>（提示照迭代 17.8 的規則）；關掉 AI 總開關之後整條照樣走得完。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai27</code> <strong>［護理端］</strong> 護理紀錄頁點「來自 HH:MM 的求助」。 → 開出那一則的床邊前速覽（唯讀，沒有「我接手」）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai28</code> <strong>［護理端］</strong> 右上「依求助建立」。 → 列出這次療程<strong>已結案但沒有記錄</strong>的求助（<code>ai23</code> 的口渴與病人自行取消的頭痛）；點「建立求助處置記錄」，多一筆草稿、事件時間是按下求助的時間，那一列從清單消失。取消的「皮膚癢」不在清單裡。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai29</code> <strong>［護理端］</strong> 一筆求助處置草稿按「改套範本」，選「透析中低血壓處置」補勾，按「套用範本」。 → 段落改由範本的勾選組出，D（或 S）段最前面仍是病人按下求助的那一句；<strong>事件時間不變</strong>、量測照事件時間前後帶；稽核多一筆「求助處置記錄改套範本」。之後補改結果不再重組這一筆。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai30</code> <strong>［護理端］</strong> 左邊「新增事件記錄」的事件時間欄。 → 欄位底下寫「請改成發生的時間」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai31</code> <strong>［護理端］</strong> 系統管理開啟 AI 總開關（模擬模型即可），在一筆求助處置草稿按「AI 潤飾」。 → 初稿照四段回來，<strong>沒有新增勾選與求助以外的事實、數值或判斷</strong>（提示照迭代 17.8 的規則）；關掉 AI 總開關之後整條照樣走得完。</li>
 </ul>
 <h2 id="257-自動化驗收">§25.7 自動化驗收<a class="headerlink" href="#257-自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai32</code> <strong>［終端機］</strong> <code>npm run verify:iteration25</code>（不需要後端）。
-  → 全部通過（實際跑橫幅修剪、院方欄位解析、求助處置的段落組法，再檢查簡易版與專業版的接法、速覽的版面與用字、遷移只做加法，與 14、14.4、17.2、17.8 的回歸、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai33</code> <strong>［終端機］</strong> 🛠 模擬院方 API 與後端照檔頭說明啟動、AI 總開關與手持裝置的功能關著：<code>npm run verify:iteration25:api</code>。
-  → 八個步驟全部通過；結束時模擬服務切回依時間產生、平板解除綁定並停用、床位清單與護理紀錄格式還原。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai34</code> <strong>［終端機］</strong> <code>npm run verify:iteration15:api</code>、<code>npm run verify:iteration16:api</code>、<code>npm run verify:iteration17-8:api</code>。
-  → 照樣通過（多收的欄位不上病人平板，迭代 16 那一支的「不顯示的欄位一個都找不到」照樣成立）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai32</code> <strong>［終端機］</strong> <code>npm run verify:iteration25</code>（不需要後端）。 → 全部通過（實際跑橫幅修剪、院方欄位解析、求助處置的段落組法，再檢查簡易版與專業版的接法、速覽的版面與用字、遷移只做加法，與 14、14.4、17.2、17.8 的回歸、<code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai33</code> <strong>［終端機］</strong> 🛠 模擬院方 API 與後端照檔頭說明啟動、AI 總開關與手持裝置的功能關著：<code>npm run verify:iteration25:api</code>。 → 八個步驟全部通過；結束時模擬服務切回依時間產生、平板解除綁定並停用、床位清單與護理紀錄格式還原。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ai34</code> <strong>［終端機］</strong> <code>npm run verify:iteration15:api</code>、<code>npm run verify:iteration16:api</code>、<code>npm run verify:iteration17-8:api</code>。 → 照樣通過（多收的欄位不上病人平板，迭代 16 那一支的「不顯示的欄位一個都找不到」照樣成立）。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
@@ -5019,9 +5006,9 @@
 </thead>
 <tbody>
 <tr>
-<td></td>
-<td></td>
-<td></td>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>首次定版。緊急通報：頂端求助橫幅、床邊前速覽與「我接手」、求助處置護理紀錄草稿（<code>ai1</code>～<code>ai34</code>）</td>
 </tr>
 </tbody>
 </table>

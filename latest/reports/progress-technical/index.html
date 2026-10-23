@@ -853,6 +853,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-專案脈絡" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5219,6 +5230,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-專案脈絡" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5845,10 +5867,21 @@
 
 
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
-<p><strong>適用讀者</strong>：接手或協作的工程師
-<strong>報告日期</strong>：2026-10-18
-<strong>版本</strong>：迭代 27 完成（master；病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
-<strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
+<p><strong>適用讀者</strong>：接手或協作的工程師</p>
+<p><strong>報告日期</strong>：2026-10-18</p>
+<p><strong>版本</strong>：迭代 27 完成（master；病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）</p>
+<p><strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>報告日期 1018，對應迭代 27 完成（master）；寫給接手或協作的工程師</li>
+<li>需求來源六份，衝突時以實作規格書為準（資料庫使用規範、部署規範優先權等同），動工前至少讀前三份（第 1 節）</li>
+<li>七條不可違反的約束：前端不碰資料庫、身分驗證自建、存取控制在後端、業務邏輯不嵌資料庫語法、測試資料虛構、零院外連線、模型呼叫一律經 <code>AiGatewayService</code>（第 3 節）</li>
+<li>迭代 26 完成時的規模：221 條路由、97 張表、157 種稽核動作、31 個權限碼、8 種角色、23 個功能開關、41 個營運參數（第 6 節「規模」）</li>
+<li>已完成範圍：迭代 24～27 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》</li>
+<li>第 7 節高風險三項：1010 迭代 18 完成實作，對真實病人開啟仍要 Q-02、Q-03</li>
+<li>第 9 節已知粗糙處八項（例如重複病歷號回 500），授權判斷本身沒有問題</li>
+<li>第 12 節下一階段（第三次進院前的待辦）、第 13 節每次動工前的自我檢查</li>
+</ul>
 <blockquote>
 <p><strong>1010 補記</strong>：同一天完成<strong>迭代 17.8</strong>（護理紀錄移到主列、DART／SOAP 分段與複製貼上、緊急回報的圖示自畫）、<strong>迭代 18</strong>（規則引擎與三項高風險功能，加上適足性推估）與<strong>迭代 18.1</strong>（書面確認閘門從 <code>.env</code> 改放進系統管理、四條規則換成依文獻選的建議門檻），見第 6、7 節；同日再完成<strong>迭代 19</strong>（管理儀表板、獎勵制度與對外揭露：資料分級守衛、十張新表、23 條路由、對外展示環境），見第 6 節「迭代 19」；遊戲化寫成兩份其他文件並排成迭代 20～23，同日完成<strong>迭代 20</strong>（遊戲化之一：平板現有功能的遊戲化——完成記號、我的衛教小本子、病友小撇步、跑馬燈的「你知道嗎」、被聽見的回覆；三個開關、三張新表、8 條路由），見第 6 節「迭代 20」；同日再完成<strong>迭代 21</strong>（遊戲化之二：透析小花園、送花、共同花園——平板與後端跑同一支計算、斷線照序號補送、JSON 盤面快照的唯一例外、程式產生的植物插畫；三個開關、六張新表、8 條路由），見第 6 節「迭代 21」。</p>
 <p><strong>1011 補記</strong>：完成<strong>迭代 22</strong>（遊戲化之三：麻將連連看——保證有解的發牌、最多轉兩個彎的連線、卡住自動重排、CC0 牌面清過 SVG 並改深棕；今日牌局與人數門檻；狀態評估彙整讀的時候才算；社工、醫師兩個唯讀角色與「病人詳細資訊」一頁；兩個開關、<code>game_events</code> 加十二欄、6 條路由），見第 6 節「迭代 22」。</p>
@@ -5859,13 +5892,8 @@
 <p><strong>1018 補記（迭代 25）</strong>：緊急通報三次子迭代同一天做完（實作規格書 4.25）。25.1 <code>realtime-context.tsx</code> 的 <code>pruneAlerts</code>；25.2 院方 API 多收十二欄（<code>dialysis_vital_records</code> 加四欄、新表 <code>dialysis_session_settings</code>）、<code>GET /help-requests/:id/bedside</code>、兩版共用的 <code>bedside-brief.tsx</code>；25.3 <code>nursing_records.source_help_request_id</code> 與記錄類型 <code>HELP_RESPONSE</code>、結案同一個交易建草稿、三支護理紀錄端點。路由 210 → 214、92 張表、151 種稽核動作</p>
 <p><strong>1018 補記（迭代 26）</strong>：管理儀表板、獎勵制度與對外揭露的更新三次子迭代同一天做完（實作規格書 4.26）。26.1 指標 9 → 52 條（<code>METRIC_DEFINITIONS</code> 多 <code>section</code>、<code>countLike</code>、<code>shiftScoped</code>、<code>requiresAnyFlag</code>）、三張新表（<code>metric_definition_changes</code>、<code>device_connection_gaps</code>、<code>external_report_suppressions</code>）與 <code>external_report_baselines</code>、對外報表的次要遮蔽與跨報表比對；26.2 <code>dashboard-charts.tsx</code>（自己畫 SVG、不加套件）、可列印版；26.3 <code>REWARD_PROGRAM</code> 取代 <code>REWARD_SCORING</code>、<code>handler_declarations</code>、名冊身分、<code>/handlers</code> 六條、計分事件改讀指名。路由 214 → 221、97 張表、157 種稽核動作</p>
 <p><strong>1018 補記（迭代 27）</strong>：病人平板固定橫放（實作規格書 4.27）。外殼的 <code>sensorLandscape</code> <strong>迭代 10 起就在</strong>，核對釘住的 v0.3.0 之後不改版、<code>shell.pin</code> 不動；病人端 <code>@media (orientation: portrait)</code> 七段拿掉；<code>MAHJONG_LEVELS</code> 在五級之後加 4×10、4×12（<code>MAHJONG_MAX_COLS</code> 8 → 12）；發牌原本 40 次放不下就落到「左右相鄰」的保險（4×8 有 35%、4×12 有 81%），改成先多試 40 次「深的先放」——原本放得下的牌面不變。新增 <code>verify:iteration27</code>；16、17-4、22 三支隨需求改（實作規格書之一第二十一次）。</p>
-<p>本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化：
-<strong>1001 第二次進院 B 級部分成功</strong>——容器在院內主機上起來，護理端登入 <code>Failed to fetch</code>（<code>CORS_ORIGINS</code> 不放行護理端的來源），見部署手冊第十四冊之四、第十五冊之三；
-<strong>1005 新版需求</strong>：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成<strong>迭代 15～17，同日完成</strong>（實作規格書 0.5、4.13～4.15）。
-三個迭代都在模擬院方 API 上驗收；院方 API 的實際長相要第三次進院以探測工具看一次（實作規格書 4.19）。</p>
-<p>0909 之後的完整脈絡：需求於 0910 改為 v2.0（SaMD 三項改為有條件納入、資料庫改 SQLite、封閉網路）；迭代 3～6 完成資料層遷移、AI 輔助內容、求助處理與班表、閒置輪播與檔案匯入；
-迭代 7～10 是第一次進院前的缺陷修正、介面重做、內容資料化與安裝包；<strong>0922 第一次進院失敗之後</strong>，迭代 11～14 把交付方式換成 Docker ＋ <code>git clone</code>、外殼 App 搬到獨立 repo、新增 Python 的 AI 閘道、介面極簡重設計，14.1～14.5 是實際操作後的修正。
-迭代編號在 0919、0926、1005 各重排一次：原「規則引擎」與「管理儀表板」現在是<strong>迭代 18、19</strong>，對照表見實作規格書 4.0.1、4.0.3、4.0.4。1010 沒有改號，新的事排成 17.8 與 20～23（4.0.5）。</p>
+<p>本版由 0930 定版（迭代 14.5 時點）改寫。0930 之後的主要變化： <strong>1001 第二次進院 B 級部分成功</strong>——容器在院內主機上起來，護理端登入 <code>Failed to fetch</code>（<code>CORS_ORIGINS</code> 不放行護理端的來源），見部署手冊第十四冊之四、第十五冊之三； <strong>1005 新版需求</strong>：院方透析清單 API 全面取代手動輸入、輪播換成「本次透析」面板與跑馬燈、跑馬燈內容 AI 生成護理師核准，排成<strong>迭代 15～17，同日完成</strong>（實作規格書 0.5、4.13～4.15）。三個迭代都在模擬院方 API 上驗收；院方 API 的實際長相要第三次進院以探測工具看一次（實作規格書 4.19）。</p>
+<p>0909 之後的完整脈絡：需求於 0910 改為 v2.0（SaMD 三項改為有條件納入、資料庫改 SQLite、封閉網路）；迭代 3～6 完成資料層遷移、AI 輔助內容、求助處理與班表、閒置輪播與檔案匯入；迭代 7～10 是第一次進院前的缺陷修正、介面重做、內容資料化與安裝包；<strong>0922 第一次進院失敗之後</strong>，迭代 11～14 把交付方式換成 Docker ＋ <code>git clone</code>、外殼 App 搬到獨立 repo、新增 Python 的 AI 閘道、介面極簡重設計，14.1～14.5 是實際操作後的修正。迭代編號在 0919、0926、1005 各重排一次：原「規則引擎」與「管理儀表板」現在是<strong>迭代 18、19</strong>，對照表見實作規格書 4.0.1、4.0.3、4.0.4。1010 沒有改號，新的事排成 17.8 與 20～23（4.0.5）。</p>
 </blockquote>
 <hr />
 <h2 id="1-專案脈絡">1. 專案脈絡<a class="headerlink" href="#1-專案脈絡" title="Permanent link">&para;</a></h2>
@@ -5934,11 +5962,9 @@
 ├── scripts/            盤點腳本（check:*）、圖示與字型產生、文件站同步
 └── docs/               需求、報告、參考、測試與部署文件
 </code></pre></div>
-<p>npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript（版控內全部 <code>.ts</code>／<code>.tsx</code>，含驗收腳本與產生的圖示資料；用同樣的計數方式，0930 時約 50,800 行、0923 時約 44,600 行）＋約 900 行 Python（AI 閘道）。
-compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>hospital-api-sim</code>（模擬院方 API，與 <code>api</code> 同一個映像檔，不開埠）。
-外殼 App（Kotlin）在另一個私人 repo <code>hd-kiosk-shell</code>，本 repo 以 <code>services/shell-builder/shell.pin</code> 釘住它的 tag（目前 <code>v0.3.0</code>）。</p>
-<p><strong>技術棧</strong>：NestJS 11 · Prisma 6 · SQLite（測試與正式皆同）· React 19 · Vite 6 · TypeScript 5.7 · dnd-kit（簡易版拖曳）· Lucide 圖示與 Noto Sans TC 子集（自帶，不經 CDN）
-<strong>部署與周邊</strong>：Docker ＋ compose（專案名稱固定 <code>hd-tablet-care</code>，資料與金鑰兩個 external 資料卷）· AI 閘道 Python ＋ FastAPI ＋ LangChain · 外殼 App Android（Kotlin）</p>
+<p>npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript（版控內全部 <code>.ts</code>／<code>.tsx</code>，含驗收腳本與產生的圖示資料；用同樣的計數方式，0930 時約 50,800 行、0923 時約 44,600 行）＋約 900 行 Python（AI 閘道）。 compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>hospital-api-sim</code>（模擬院方 API，與 <code>api</code> 同一個映像檔，不開埠）。外殼 App（Kotlin）在另一個私人 repo <code>hd-kiosk-shell</code>，本 repo 以 <code>services/shell-builder/shell.pin</code> 釘住它的 tag（目前 <code>v0.3.0</code>）。</p>
+<p><strong>技術棧</strong>：NestJS 11 · Prisma 6 · SQLite（測試與正式皆同）· React 19 · Vite 6 · TypeScript 5.7 · dnd-kit（簡易版拖曳）· Lucide 圖示與 Noto Sans TC 子集（自帶，不經 CDN）</p>
+<p><strong>部署與周邊</strong>：Docker ＋ compose（專案名稱固定 <code>hd-tablet-care</code>，資料與金鑰兩個 external 資料卷）· AI 閘道 Python ＋ FastAPI ＋ LangChain · 外殼 App Android（Kotlin）</p>
 <h3 id="資料流">資料流<a class="headerlink" href="#資料流" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>病人端 PWA ─┐                   ┌─→ Repository 層 ─→ Prisma ─→ SQLite 檔案（專案目錄外）
             ├─→ 後端 API ───────┤
@@ -5947,10 +5973,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
                                 └─← HospitalSyncService ←─ 院方透析清單 API（每 3 分鐘、唯讀）
                                                          └ 開發與模擬部署：hospital-api-sim
 </code></pre></div>
-<p><strong>前端一律不直接碰資料庫，也不直接碰模型。</strong> 兩個 PWA 都沒有資料庫或模型相關套件；後端是唯一開啟資料庫檔案的常駐寫入行程，也是唯一呼叫模型的地方。
-<strong>0927 起後端也不直接連推論端點</strong>（DEP-41）：<code>lab</code>／<code>onprem</code> 一律打 AI 閘道，模型名稱只寫在閘道的 <code>config.yaml</code>。
-病人端的正式建置與後端同一個來源：<code>patient-web</code> 以伺服器憑證提供 HTTPS，並把 <code>/api/</code> 轉送給 <code>api</code>（迭代 12），外殼只需信任一張院內 CA。
-<strong>1005 迭代 15 起院方 API 由後端拉取</strong>（本系統不回寫院方任何資料）；同步寫入的每一筆都走與護理師操作相同的服務，見 5.21。平板除了原本每 3 秒的輪詢，另訂閱 <code>GET /device/stream</code>（SSE，事件只通知「有新資料」、不帶數值）。</p>
+<p><strong>前端一律不直接碰資料庫，也不直接碰模型。</strong> 兩個 PWA 都沒有資料庫或模型相關套件；後端是唯一開啟資料庫檔案的常駐寫入行程，也是唯一呼叫模型的地方。 <strong>0927 起後端也不直接連推論端點</strong>（DEP-41）：<code>lab</code>／<code>onprem</code> 一律打 AI 閘道，模型名稱只寫在閘道的 <code>config.yaml</code>。病人端的正式建置與後端同一個來源：<code>patient-web</code> 以伺服器憑證提供 HTTPS，並把 <code>/api/</code> 轉送給 <code>api</code>（迭代 12），外殼只需信任一張院內 CA。 <strong>1005 迭代 15 起院方 API 由後端拉取</strong>（本系統不回寫院方任何資料）；同步寫入的每一筆都走與護理師操作相同的服務，見 5.21。平板除了原本每 3 秒的輪詢，另訂閱 <code>GET /device/stream</code>（SSE，事件只通知「有新資料」、不帶數值）。</p>
 <hr />
 <h2 id="3-七條不可違反的約束">3. 七條不可違反的約束<a class="headerlink" href="#3-七條不可違反的約束" title="Permanent link">&para;</a></h2>
 <p>前五條出自《資料庫使用規範》，後兩條出自 SRS v2.0 的 FR-S07 與 FR-S03／S06。動任何一處之前先確認不會踩到：</p>
@@ -6222,9 +6245,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 </tr>
 </tbody>
 </table>
-<p>迭代 10、12 沒有新表，只在 <code>devices</code> 加欄位：前景回報三欄（迭代 10）、<code>shell_version</code> 與 <code>shell_contract_version</code>（迭代 12）；迭代 14 另加 <code>devices.bed_no</code>。
-迭代 15 除了兩張新表，另加 <code>patients.preferred_device_id</code>（配給病人的平板）、<code>treatment_sessions</code> 五欄（<code>source</code>、<code>bed_no</code>、<code>expected_end_at</code>、<code>nurse_modified_at</code>、<code>bed_nurse_modified_at</code>）與 <code>beds.source</code>；
-迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 <code>carousel_view_events</code>）；迭代 17 在 <code>carousel_items</code> 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 <code>nursing_records</code> 加 <code>record_format</code>，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）；迭代 20 另在 <code>carousel_items</code> 加 <code>peer_tip_preset_id</code>（可為空），我的衛教小本子不另存、由作答紀錄算；迭代 25 在 <code>dialysis_vital_records</code> 加四欄（血流量、透析液流量與溫度、靜脈壓）、<code>nursing_records</code> 加 <code>source_help_request_id</code>；迭代 26 在 <code>external_reports</code> 加兩欄（附基準、互減拿掉的格數）、<code>nurses</code> 加 <code>roster_added_by_id</code>；迭代 27 沒有動 schema。全部只做加法。</p>
+<p>迭代 10、12 沒有新表，只在 <code>devices</code> 加欄位：前景回報三欄（迭代 10）、<code>shell_version</code> 與 <code>shell_contract_version</code>（迭代 12）；迭代 14 另加 <code>devices.bed_no</code>。迭代 15 除了兩張新表，另加 <code>patients.preferred_device_id</code>（配給病人的平板）、<code>treatment_sessions</code> 五欄（<code>source</code>、<code>bed_no</code>、<code>expected_end_at</code>、<code>nurse_modified_at</code>、<code>bed_nurse_modified_at</code>）與 <code>beds.source</code>；迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 <code>carousel_view_events</code>）；迭代 17 在 <code>carousel_items</code> 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 <code>nursing_records</code> 加 <code>record_format</code>，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）；迭代 20 另在 <code>carousel_items</code> 加 <code>peer_tip_preset_id</code>（可為空），我的衛教小本子不另存、由作答紀錄算；迭代 25 在 <code>dialysis_vital_records</code> 加四欄（血流量、透析液流量與溫度、靜脈壓）、<code>nursing_records</code> 加 <code>source_help_request_id</code>；迭代 26 在 <code>external_reports</code> 加兩欄（附基準、互減拿掉的格數）、<code>nurses</code> 加 <code>roster_added_by_id</code>；迭代 27 沒有動 schema。全部只做加法。</p>
 <h3 id="值得注意的地方">值得注意的地方<a class="headerlink" href="#值得注意的地方" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -6381,16 +6402,10 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <p>綁定失效時：盡力補傳 → 清空佇列（平板是共用裝置，前一位病人的資料不得殘留）。</p>
 <h3 id="56-裝置管控介面層0919-起不走-mdm">5.6 裝置管控介面層（0919 起不走 MDM）<a class="headerlink" href="#56-裝置管控介面層0919-起不走-mdm" title="Permanent link">&para;</a></h3>
 <p><code>MdmProviderPort</code> 抽象介面 ＋ <code>MockMdmProvider</code>。所有呼叫一律經介面，業務邏輯不碰實作細節。</p>
-<p><strong>0919 起這一層的語意變了，介面沒變。</strong> 平板管控改走免 MDM 路線（自包 WebView 外殼＋Android 內建螢幕固定），
-因此 <code>MockMdmProvider</code> <strong>不再是「等著被真 MDM 換掉的模擬品」，它就是這項功能的正式實作</strong>：
-裝置佈建狀態的紀錄與稽核（FR-S01）。稽核說明欄的 <code>[mock]</code> 前綴要移除——它已經不是模擬品，
-而且那個前綴會出現在護理師看得到的畫面上（FR-S10）。</p>
-<p>原因：Android Enterprise 有三處必須連往院外（首次佈建連 Google、後端設定政策要呼叫
-<code>googleapis.com</code>、遠端鎖定命令靠 FCM 送達），與封閉網路前提直接衝突。
-完整選型見《<a href="../../notes/mdm-offline-plan/">平板管控：免 MDM 的全院內方案</a>》。</p>
+<p><strong>0919 起這一層的語意變了，介面沒變。</strong> 平板管控改走免 MDM 路線（自包 WebView 外殼＋Android 內建螢幕固定），因此 <code>MockMdmProvider</code> <strong>不再是「等著被真 MDM 換掉的模擬品」，它就是這項功能的正式實作</strong>：裝置佈建狀態的紀錄與稽核（FR-S01）。稽核說明欄的 <code>[mock]</code> 前綴要移除——它已經不是模擬品，而且那個前綴會出現在護理師看得到的畫面上（FR-S10）。</p>
+<p>原因：Android Enterprise 有三處必須連往院外（首次佈建連 Google、後端設定政策要呼叫 <code>googleapis.com</code>、遠端鎖定命令靠 FCM 送達），與封閉網路前提直接衝突。完整選型見《<a href="../../notes/mdm-offline-plan/">平板管控：免 MDM 的全院內方案</a>》。</p>
 <p>取得 Android Enterprise 權限（Q-11）後，新增一個實作同介面的 provider 並替換 <code>MdmModule</code> 的注入即可，<strong>其餘商業邏輯與稽核軌跡不需更動</strong>。</p>
-<p><strong>迭代 12 起外殼 App 另有契約</strong>（見 6「迭代 12」）：前景回報多帶外殼版本、契約版本與是否釘選，護理端裝置管理據此標出「版本正常／外殼過舊／版本不相容／未回報版本」。
-<strong>迭代 14.1 補了兩件模擬 MDM 的事</strong>：<code>MdmProviderPort</code> 新增 <code>simulated</code> 與選用的 <code>restoreDevice</code>，後端啟動時把資料庫的納管狀態交回模擬 MDM（不分環境；否則重新啟動後已納管的平板鎖不了、解不開）；開發環境另外自動納管 seed 的平板，照樣經介面、照樣寫稽核，<strong>正式環境不做</strong>。</p>
+<p><strong>迭代 12 起外殼 App 另有契約</strong>（見 6「迭代 12」）：前景回報多帶外殼版本、契約版本與是否釘選，護理端裝置管理據此標出「版本正常／外殼過舊／版本不相容／未回報版本」。 <strong>迭代 14.1 補了兩件模擬 MDM 的事</strong>：<code>MdmProviderPort</code> 新增 <code>simulated</code> 與選用的 <code>restoreDevice</code>，後端啟動時把資料庫的納管狀態交回模擬 MDM（不分環境；否則重新啟動後已納管的平板鎖不了、解不開）；開發環境另外自動納管 seed 的平板，照樣經介面、照樣寫稽核，<strong>正式環境不做</strong>。</p>
 <h3 id="57-sqlite-連線與唯讀通道迭代-3">5.7 SQLite 連線與唯讀通道（迭代 3）<a class="headerlink" href="#57-sqlite-連線與唯讀通道迭代-3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>連線時套用並回讀四項必開設定（<code>journal_mode=WAL</code>、<code>foreign_keys=ON</code>、<code>busy_timeout=5000</code>、<code>synchronous=FULL</code>），缺一項就拒絕啟動</li>
@@ -6402,8 +6417,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <h3 id="58-功能開關中心fr-s08迭代-3">5.8 功能開關中心（FR-S08，迭代 3）<a class="headerlink" href="#58-功能開關中心fr-s08迭代-3" title="Permanent link">&para;</a></h3>
 <p><code>modules/feature-flags/</code>，定義在 <code>shared/platform.ts</code>。</p>
 <ul>
-<li>迭代 3 的十個開關：高風險三項（<code>RISK_STRATIFICATION</code>、<code>INTRA_DIALYSIS_ALERT</code>、<code>DOSE_REFERENCE</code>）、AI 兩項（<code>AI_FEATURES</code>、<code>REAL_PATIENT_DATA_TO_AI</code>）、輪播三層、績效兩項（<code>PERF_INDIVIDUAL_L3</code>、<code>REWARD_SCORING</code>；<strong>1018 迭代 26.3 起 <code>REWARD_SCORING</code> 停用，換成 <code>REWARD_PROGRAM</code>「獎勵制度（含處理者身分）」</strong>，開啟條件只說明不擋）。<strong>全部預設關閉</strong>。之後又加三個：迭代 9 的 <code>HANDHELD_FEATURES</code>，迭代 14.2 的 <code>HELP_NON_CLINICAL_GROUP</code>（求助畫面顯示「其他」那一框，預設關閉），1005 的 <code>LAB_VALUE_FEATURES</code>（需要抽血數值的功能：透析適足性，預設關閉；院方透析清單 API 沒有抽血數值），1007 迭代 17.7 的 <code>MANUAL_PATIENT_CREATE</code>（護理師自己新增病人，預設關閉；兩個版本同一個開關，<strong>新增病人的端點不跟著擋</strong>，見實作規格書 3.7）。
-  <strong>1005 迭代 16</strong>：輪播三層停用（<code>RETIRED_FEATURE_FLAG_KEYS</code>，資料表的列與切換紀錄保留、後端載入時略過），換成 <code>TODAY_PANEL</code>（「本次透析」面板，<strong>預設開啟</strong>——9.1 起「預設全關」的唯一例外由它承接）與 <code>MARQUEE</code>（跑馬燈，預設關閉，速度要先經長者看過）</li>
+<li>迭代 3 的十個開關：高風險三項（<code>RISK_STRATIFICATION</code>、<code>INTRA_DIALYSIS_ALERT</code>、<code>DOSE_REFERENCE</code>）、AI 兩項（<code>AI_FEATURES</code>、<code>REAL_PATIENT_DATA_TO_AI</code>）、輪播三層、績效兩項（<code>PERF_INDIVIDUAL_L3</code>、<code>REWARD_SCORING</code>；<strong>1018 迭代 26.3 起 <code>REWARD_SCORING</code> 停用，換成 <code>REWARD_PROGRAM</code>「獎勵制度（含處理者身分）」</strong>，開啟條件只說明不擋）。<strong>全部預設關閉</strong>。之後又加三個：迭代 9 的 <code>HANDHELD_FEATURES</code>，迭代 14.2 的 <code>HELP_NON_CLINICAL_GROUP</code>（求助畫面顯示「其他」那一框，預設關閉），1005 的 <code>LAB_VALUE_FEATURES</code>（需要抽血數值的功能：透析適足性，預設關閉；院方透析清單 API 沒有抽血數值），1007 迭代 17.7 的 <code>MANUAL_PATIENT_CREATE</code>（護理師自己新增病人，預設關閉；兩個版本同一個開關，<strong>新增病人的端點不跟著擋</strong>，見實作規格書 3.7）。 <strong>1005 迭代 16</strong>：輪播三層停用（<code>RETIRED_FEATURE_FLAG_KEYS</code>，資料表的列與切換紀錄保留、後端載入時略過），換成 <code>TODAY_PANEL</code>（「本次透析」面板，<strong>預設開啟</strong>——9.1 起「預設全關」的唯一例外由它承接）與 <code>MARQUEE</code>（跑馬燈，預設關閉，速度要先經長者看過）</li>
 <li><strong><code>HELP_NON_CLINICAL_GROUP</code> 是唯一不擋後端的開關</strong>：它只決定平板上有幾顆按鈕。平板停在舊畫面時病人按下去的求助照樣要送到，擋掉就是把求助丟掉</li>
 <li>開啟條件由後端逐項判定，不靠人記得。例如 <code>REAL_PATIENT_DATA_TO_AI</code> 只在 <code>LLM_PROVIDER=onprem</code> 時可開；高風險三項（1010 迭代 18 起加上 <code>ADEQUACY_PREDICTION</code>，共四項）只要求那一項有規則版本——<strong>書面確認閘門（18.1 起在系統管理登記，存 <code>rule_gate_changes</code>；18 時是 <code>.env</code> 的 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code>）與書面依據擋在每一次比對</strong>，缺一則真實病人一律擋下、只對合成資料執行（見第 7 節）</li>
 <li>開關關閉時，<code>feature-flag.guard.ts</code> 讓相關端點回 404，前端相關元素<strong>完全不渲染</strong>（不是 disabled）</li>
@@ -6419,8 +6433,7 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <li><strong>迭代 17.3 起閘道多一道用語把關</strong>：系統提示最後附上 <code>ZH_TW_SYSTEM_RULE</code>；輸出經 <code>@hd/shared</code> 的 <code>findZhTwIssues</code> 查到簡體字、中國大陸用語或台灣不這樣寫的字形，就記一列 <code>FAILURE</code>（留 <code>outputText</code>，<code>errorMessage</code> 開頭「輸出含簡體字或中國大陸用語」）、把 <code>zhTwRetryNote</code> 附進提示重送；背景用途最多 3 次、<code>SOP_ANSWER</code> 2 次，最後一次仍不合格也記成 <code>SUCCESS</code> 照樣交出（後端日誌留一行 <code>WARN</code>）。<strong>前端不留痕跡</strong>：退回的那幾列與對應的稽核在資料庫照記，<code>AiInvocationRepository.query</code>、<code>AuditLogRepository.query</code> 套 <code>common/zh-tw-retry.ts</code> 的條件濾掉；<code>toAiInvocationEntry</code> 以 <code>withoutZhTwRetryNote</code> 截掉提示後面的重寫附註</li>
 </ul>
 <h3 id="510-臨床資料來源介面層fr-s05迭代-3">5.10 臨床資料來源介面層（FR-S05，迭代 3）<a class="headerlink" href="#510-臨床資料來源介面層fr-s05迭代-3" title="Permanent link">&para;</a></h3>
-<p><code>modules/clinical-data/</code>：<code>ClinicalDataSourcePort</code> ＋ <code>ManualEntryAdapter</code> ＋ <code>FileImportAdapter</code>（迭代 6）＋ <strong><code>HospitalApiAdapter</code>（迭代 15，在 <code>modules/hospital-sync/</code>）</strong>，三者共用 <code>clinical_value_imports</code>／<code>clinical_values</code>。
-1005 起院方 API 是唯一的日常來源，人工輸入與檔案匯入只留在專業版當備援（FR-S05）；院方 API 那一支的同步機制見 5.21。</p>
+<p><code>modules/clinical-data/</code>：<code>ClinicalDataSourcePort</code> ＋ <code>ManualEntryAdapter</code> ＋ <code>FileImportAdapter</code>（迭代 6）＋ <strong><code>HospitalApiAdapter</code>（迭代 15，在 <code>modules/hospital-sync/</code>）</strong>，三者共用 <code>clinical_value_imports</code>／<code>clinical_values</code>。 1005 起院方 API 是唯一的日常來源，人工輸入與檔案匯入只留在專業版當備援（FR-S05）；院方 API 那一支的同步機制見 5.21。</p>
 <ul>
 <li>一批<strong>全有或全無</strong>：任何一筆驗證失敗就整批不寫入，記 <code>CLINICAL_VALUES_IMPORT_REJECTED</code>。臨床數值只對一半比完全沒有更危險</li>
 <li>每筆帶資料時間；同一數值覆蓋時保留前一版</li>
@@ -6492,31 +6505,20 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <p>數值以「整數＋小數位數」記錄（規範 6.2），小數位數超過指標定義時視為格式錯誤、<strong>不四捨五入</strong>。同一指標同一班次再次建檔時舊版標記 <code>superseded</code> 保留，不覆寫。</p>
 <h3 id="519-閒置輪播fr-p09p11fr-p13迭代-6">5.19 閒置輪播（FR-P09～P11、FR-P13，迭代 6）<a class="headerlink" href="#519-閒置輪播fr-p09p11fr-p13迭代-6" title="Permanent link">&para;</a></h3>
 <blockquote>
-<p><strong>1005 迭代 16 拿掉輪播</strong>，下面是迭代 6～15 的做法，留著對帳用。現行的病人端首頁見本節末「迭代 16 起：本次透析面板與跑馬燈」；
-「卡片在後端組好」「開關關閉時後端不送」「<code>muted</code> 與 <code>helpButtonAlwaysVisible</code> 寫進契約」三個決定原樣沿用。</p>
+<p><strong>1005 迭代 16 拿掉輪播</strong>，下面是迭代 6～15 的做法，留著對帳用。現行的病人端首頁見本節末「迭代 16 起：本次透析面板與跑馬燈」；「卡片在後端組好」「開關關閉時後端不送」「<code>muted</code> 與 <code>helpButtonAlwaysVisible</code> 寫進契約」三個決定原樣沿用。</p>
 </blockquote>
-<p><code>modules/carousel/</code> ＋ <code>patient-pwa/CarouselScreen.tsx</code>。三層內容、一個端點：
-<code>GET /device/carousel</code> 回傳行為參數、開著的層、組好的卡片，以及 <code>questionnaireDue</code>。</p>
+<p><code>modules/carousel/</code> ＋ <code>patient-pwa/CarouselScreen.tsx</code>。三層內容、一個端點： <code>GET /device/carousel</code> 回傳行為參數、開著的層、組好的卡片，以及 <code>questionnaireDue</code>。</p>
 <p>三個決定值得知道：</p>
 <ul>
-<li><strong>卡片在後端組好</strong>。FR-P11 要求輪播畫面不得出現姓名與病歷號，把這條規則放在後端就只在一處判定；
-  放在前端，就得寄望每一個畫面元件都記得它。驗收腳本因此能直接掃描回應內容來驗這一條。</li>
+<li><strong>卡片在後端組好</strong>。FR-P11 要求輪播畫面不得出現姓名與病歷號，把這條規則放在後端就只在一處判定；放在前端，就得寄望每一個畫面元件都記得它。驗收腳本因此能直接掃描回應內容來驗這一條。</li>
 <li><strong>開關關閉時後端不送該層的卡片</strong>，不是前端不顯示。<code>enabledLayers</code> 與 <code>cards</code> 同時為空。</li>
-<li><strong><code>muted</code> 與 <code>helpButtonAlwaysVisible</code> 是回應的一部分</strong>，值固定為 <code>true</code>。
-  它們不是設定，是把 FR-P13 的兩條 P0 要求寫進契約——契約裡有，驗收腳本就驗得到。</li>
+<li><strong><code>muted</code> 與 <code>helpButtonAlwaysVisible</code> 是回應的一部分</strong>，值固定為 <code>true</code>。它們不是設定，是把 FR-P13 的兩條 P0 要求寫進契約——契約裡有，驗收腳本就驗得到。</li>
 </ul>
-<p>行為參數（閒置門檻 60 秒、卡片間隔、細節頁逾時、夜間模式起訖、問卷到期間隔）全部走迭代 5 的
-<code>operational_settings</code>，不另立設定表。夜間模式的起始晚於結束時代表跨過午夜，
-這是「18 時到隔天 7 時」最自然的寫法。</p>
-<p>病人端的閒置偵測在 <code>App.tsx</code>：<code>pointerdown</code>／<code>keydown</code>／<code>touchstart</code> 三種事件在<strong>捕捉階段</strong>重設計時器；
-輪播畫面本身也在捕捉階段收下 <code>pointerdown</code>，點在卡片以外的任何地方立即退出，<strong>沒有確認對話框</strong>。
-求助按鈕不在輪播元件裡——它留在主畫面原處，輪播進行中只是把 <code>z-index</code> 抬到遮罩之上，
-因此位置與尺寸完全不變。</p>
-<p><strong>迭代 16 起：本次透析面板與跑馬燈</strong>（SRS FR-P09～P11 的 1005 改寫）。<code>modules/patient-home/</code> ＋ <code>patient-pwa/TodayPanel.tsx</code>、<code>LineChart.tsx</code>、<code>Marquee.tsx</code>。
-<code>GET /device/home</code> 回傳行為參數、面板、跑馬燈與 <code>questionnaireDue</code>：</p>
+<p>行為參數（閒置門檻 60 秒、卡片間隔、細節頁逾時、夜間模式起訖、問卷到期間隔）全部走迭代 5 的 <code>operational_settings</code>，不另立設定表。夜間模式的起始晚於結束時代表跨過午夜，這是「18 時到隔天 7 時」最自然的寫法。</p>
+<p>病人端的閒置偵測在 <code>App.tsx</code>：<code>pointerdown</code>／<code>keydown</code>／<code>touchstart</code> 三種事件在<strong>捕捉階段</strong>重設計時器；輪播畫面本身也在捕捉階段收下 <code>pointerdown</code>，點在卡片以外的任何地方立即退出，<strong>沒有確認對話框</strong>。求助按鈕不在輪播元件裡——它留在主畫面原處，輪播進行中只是把 <code>z-index</code> 抬到遮罩之上，因此位置與尺寸完全不變。</p>
+<p><strong>迭代 16 起：本次透析面板與跑馬燈</strong>（SRS FR-P09～P11 的 1005 改寫）。<code>modules/patient-home/</code> ＋ <code>patient-pwa/TodayPanel.tsx</code>、<code>LineChart.tsx</code>、<code>Marquee.tsx</code>。 <code>GET /device/home</code> 回傳行為參數、面板、跑馬燈與 <code>questionnaireDue</code>：</p>
 <ul>
-<li><strong>面板只有畫面要用的欄位</strong>：開始與預計結束時間、血壓與累積脫水量的點（只有時間與值）、設定脫水量、五個數字（各帶資料時間）。
-  取捨表標「不顯示」的東西沒有欄位可以放，後端也不讀。讀到 0 的一律不送。資料是這次療程的 <code>dialysis_vital_records</code>（迭代 15）與 <code>clinical_values</code></li>
+<li><strong>面板只有畫面要用的欄位</strong>：開始與預計結束時間、血壓與累積脫水量的點（只有時間與值）、設定脫水量、五個數字（各帶資料時間）。取捨表標「不顯示」的東西沒有欄位可以放，後端也不讀。讀到 0 的一律不送。資料是這次療程的 <code>dialysis_vital_records</code>（迭代 15）與 <code>clinical_values</code></li>
 <li><strong>跑馬燈</strong>：在架上、指定給這一床或全部床位的衛教與公告，一則「標題：內容」；<strong>夜間一則都不送</strong>。速度、開頭靜止、兩則間隔是營運參數（<code>MARQUEE_*</code>）</li>
 <li><strong>圖自己用 SVG 畫</strong>，字是疊在上面的 HTML、以像素定位（不用 <code>viewBox</code> 縮放）；<strong>沒有刻度、格線、警戒線、正常範圍</strong>，線的顏色是 <code>--c-chart-line</code> 不是語意色（<code>check:ui:design</code> 擋）</li>
 <li><strong>跑馬燈用 Web Animations</strong>：先靜止、再以「每秒幾字 × 字級」等速左移到整則離開、空白、下一則；不能點（<code>pointer-events: none</code>）；沒有內容、夜間、減少動態效果時整條不出現</li>
@@ -6526,19 +6528,14 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <h3 id="520-檔案匯入與可設定的欄位對應fr-s05迭代-6">5.20 檔案匯入與可設定的欄位對應（FR-S05，迭代 6）<a class="headerlink" href="#520-檔案匯入與可設定的欄位對應fr-s05迭代-6" title="Permanent link">&para;</a></h3>
 <p><code>FileImportAdapter</code> 收的是寬表：一列一位病人在某個資料時間的多項數值。</p>
 <ul>
-<li><strong>欄位名稱不寫死</strong>：<code>import_field_mappings</code> 一列一個目標欄位，比對時忽略大小寫與全形半形空白。
-  院方把「理想體重」改成「理想體重(kg)」那天，改的是一列設定</li>
-<li><strong>Excel 用 <code>exceljs</code>，CSV 自己解析</strong>（約二十行，支援引號與欄內逗號）。
-  「欄位裡有逗號就靜默切錯」這種錯誤不會有任何錯誤訊息，值得用那二十行換掉</li>
-<li><strong>Excel 日期儲存格</strong>在 exceljs 會以 UTC 解讀，但檔案上寫的是現場的時刻，
-  因此把 UTC 的年月日時分當成當地時間重組一次，與班表匯入的處理一致</li>
-<li><strong>全有或全無</strong>與重複匯入偵測沿用迭代 3 的 <code>ClinicalDataImportService</code>，一行都沒改：
-  adapter 只負責「把來源轉成標準化數值並逐列指出格式問題」</li>
+<li><strong>欄位名稱不寫死</strong>：<code>import_field_mappings</code> 一列一個目標欄位，比對時忽略大小寫與全形半形空白。院方把「理想體重」改成「理想體重(kg)」那天，改的是一列設定</li>
+<li><strong>Excel 用 <code>exceljs</code>，CSV 自己解析</strong>（約二十行，支援引號與欄內逗號）。「欄位裡有逗號就靜默切錯」這種錯誤不會有任何錯誤訊息，值得用那二十行換掉</li>
+<li><strong>Excel 日期儲存格</strong>在 exceljs 會以 UTC 解讀，但檔案上寫的是現場的時刻，因此把 UTC 的年月日時分當成當地時間重組一次，與班表匯入的處理一致</li>
+<li><strong>全有或全無</strong>與重複匯入偵測沿用迭代 3 的 <code>ClinicalDataImportService</code>，一行都沒改： adapter 只負責「把來源轉成標準化數值並逐列指出格式問題」</li>
 <li>檔案以 base64 夾在 JSON 裡送上來，不走 multipart。上限 2 MB，少一種請求形式就少一套解析與錯誤處理</li>
 </ul>
 <h3 id="521-院方資料同步fr-s15s16迭代-15">5.21 院方資料同步（FR-S15／S16，迭代 15）<a class="headerlink" href="#521-院方資料同步fr-s15s16迭代-15" title="Permanent link">&para;</a></h3>
-<p>判準只有一句：<strong>院方 API 判斷得出來的事，就不要求護理師操作。</strong> <code>modules/hospital-sync/</code> 依營運參數的頻率（預設 3 分鐘）向院方透析清單 API 拉一次，
-把病人主檔、床位、病人在哪一床、療程開始與下機、四種數值一律由 API 判斷；護理師只做三件事：每位病人配一次平板、更正、以及 API 判斷不了時的處理。</p>
+<p>判準只有一句：<strong>院方 API 判斷得出來的事，就不要求護理師操作。</strong> <code>modules/hospital-sync/</code> 依營運參數的頻率（預設 3 分鐘）向院方透析清單 API 拉一次，把病人主檔、床位、病人在哪一床、療程開始與下機、四種數值一律由 API 判斷；護理師只做三件事：每位病人配一次平板、更正、以及 API 判斷不了時的處理。</p>
 <ul>
 <li><strong>格式是讀同院 IDH 系統的程式推出來的</strong>，不是院方文件：陣列沒有欄位名稱，只能靠位置認欄位（<code>@hd/shared</code> 的 <code>hospital-api.ts</code>，51 欄）。少欄或多欄的列不認，<strong>那一次透析整個不寫入</strong>——臨床數值只對一半比沒有更危險</li>
 <li><strong>同步不另開寫入路徑</strong>：建排班、綁定、換床、寫數值都呼叫護理師拖曳時用的那幾支服務，操作者是登入不了的系統帳號 <code>SYSTEM-HOSPITAL-SYNC</code>，稽核記成「院方資料同步」。簡易版與專業版因此看到的是同一套資料、同一種稽核</li>
@@ -6552,10 +6549,8 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <hr />
 <h2 id="6-已完成範圍">6. 已完成範圍<a class="headerlink" href="#6-已完成範圍" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><strong>迭代 1～23 收在子文件</strong>：《<a href="../progress-technical-iterations-1-23/">技術端進度報告之一：迭代 1～23 的完成範圍</a>》，各迭代的小節標題照舊；
-本報告其他地方寫的「見第 6 節「迭代 19」」，到子文件找同名的小節。</p>
-<p><strong>收入方式：一次性收入</strong>（1015）。<strong>迭代 24 起做完的迭代照舊寫在本節</strong>、排在「規模」之前，不再搬進子文件；子文件不再追加，只在更正時改。
-下方「規模」與「共用常數的角色」是跨迭代的總表，留在本節，照舊每個迭代補一欄。</p>
+<p><strong>迭代 1～23 收在子文件</strong>：《<a href="../progress-technical-iterations-1-23/">技術端進度報告之一：迭代 1～23 的完成範圍</a>》，各迭代的小節標題照舊；本報告其他地方寫的「見第 6 節「迭代 19」」，到子文件找同名的小節。</p>
+<p><strong>收入方式：一次性收入</strong>（1015）。<strong>迭代 24 起做完的迭代照舊寫在本節</strong>、排在「規模」之前，不再搬進子文件；子文件不再追加，只在更正時改。下方「規模」與「共用常數的角色」是跨迭代的總表，留在本節，照舊每個迭代補一欄。</p>
 </blockquote>
 <h3 id="迭代-2410171018遊戲化之五花園與相簿的擴充">迭代 24（1017～1018）：遊戲化之五——花園與相簿的擴充<a class="headerlink" href="#迭代-2410171018遊戲化之五花園與相簿的擴充" title="Permanent link">&para;</a></h3>
 <p>使用者 1015 看過迭代 21～23 之後的六個決定（《<a href="../../notes/dialysis-gamification-expansion/">透析中的遊戲化之四</a>》），實作規格書 4.24。畫圖的量大，照迭代 23 的做法切成四次子迭代：</p>
@@ -6867,45 +6862,20 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 </tbody>
 </table>
 <p>（迭代 21 那一欄含迭代 20：遊戲化兩個迭代合起來多 16 條路由、9 張表、4 種稽核動作（迭代 21 的送花與種花刻意不寫稽核，每一步在 <code>game_events</code>）、6 個功能開關、6 個營運參數。迭代 22 沒有新表，<code>game_events</code> 加十二欄。迭代 23 四張表、3 種稽核動作、1 個功能開關，沒有新的營運參數（共同記憶沿用迭代 21 的兩個門檻）。）</p>
-<p>（迭代 6 沒有新增功能開關：輪播三層的開關在迭代 3 就已建好並預設關閉，這次做的是把它們的
-「開啟條件」從「功能尚未實作」換成實際判定。迭代 7 只多一張 <code>update_runs</code> 與兩個維運端點，
-新增的六種稽核動作全是更新流程與遷移防呆留下的軌跡。DEP-37 的三處補做沒有動到任何一張表，
-改的是啟動時的判定與兩個維運端點多回傳的幾個欄位。<strong>迭代 8 一張表都沒動、一個端點都沒加</strong>，
-因此表上沒有它那一欄。）</p>
-<p><strong>迭代 9 一次多了 14 張表</strong>，但它們幾乎都是同一個形狀：三組「版本表加題目表加選項表」。
-新增的 8 個營運參數也是同一類東西——<strong>「其他」的提醒門檻、每月加問的間隔、趨勢偏離的三個門檻、
-抽題規則的三個上限</strong>，全部是護理長會想調、而工程師不該替他決定的數字。</p>
-<p><strong>迭代 10 幾乎沒有動資料模型</strong>：<code>devices</code> 多三個欄位、一個平板端端點、兩種稽核動作，
-就這樣。它的工作量全在 repo 之外——<strong>把已經做好的東西變成一份帶得進院內的檔案</strong>，
-以及把「帶進去之後會發生什麼」實際試一次。</p>
-<p><strong>迭代 11～14.5 合起來只多 7 條路由、2 張表、6 種稽核動作</strong>，而且全部是加法：
-迭代 11、13 一條都沒加（它們的工作量在 compose、映像檔與 <code>services/</code>）；迭代 12 加一條外殼契約端點；
-迭代 14 加四條（床位、平板換床、輪播播放範圍、結案後補改處理結果），14.2 加一條重新開啟療程；兩張表是 <code>beds</code> 與 <code>carousel_item_targets</code>。
-新增的兩個營運參數是病人端任務的時點（心情、衛教），新增的開關是求助畫面的「其他」那一框。
-<strong>簡易版整個工作台沒有新增任何一條「專業版做得到、只是換個端點」的路由</strong>——那是刻意的，見 6「迭代 14」。</p>
-<p><strong>迭代 15～17 合起來多 12 條路由（淨增）、2 張表、19 種稽核動作</strong>：
-迭代 15 加六條（院方資料同步的狀態、紀錄、手動再抓一次，配平板，帶入最近一筆血壓，平板的推送串流）與兩張表；
-迭代 16 加兩條（<code>GET /device/home</code>、<code>POST /device/marquee/plays</code>）、拿掉兩條（<code>GET /device/carousel</code>、<code>POST /device/carousel/view-events</code>），<strong>一張表都沒加</strong>；
-迭代 17 加六條（草稿主題、要一份草稿、核准、退回、撤回、上下架時間），在 <code>carousel_items</code> 加七欄。
-功能開關的數字沒變，是因為輪播三層的開關停用、換成面板與跑馬燈，再加上 1005 的「需要抽血數值的功能」（三減三加）；
-營運參數淨增五個：院方 API 四個（抓取頻率、多久沒更新要提示、待確認下機的時間、床號格式），跑馬燈三個（速度、開頭靜止、兩則間隔），輪播的卡片停留與細節頁退回兩個停用。
-（路由數 0930 以前沿用各迭代新增的端點累加；迭代 17 那一欄改以控制器實際的路由裝飾器計數，兩種計法在 14.5 時點一致。）</p>
-<p><strong>迭代 17.1～18.1 合起來多 22 條路由、9 張表、12 種稽核動作</strong>：17.1～17.7 多的是平板與內容指定的端點、<code>carousel_item_device_targets</code>；
-17.8 加兩條（帶入處置後數值、記下複製）與 <code>nursing_record_sections</code>、一個營運參數（護理紀錄格式）；18 加九條與六張表、一個開關（<code>ADEQUACY_PREDICTION</code>）；18.1 加一條（<code>PUT /rules/gate</code>）與 <code>rule_gate_changes</code>。
-17.7 另加開關 <code>MANUAL_PATIENT_CREATE</code>。路由數照後端啟動時印出的清單與路由裝飾器兩種計法對過（1010 都是 158）；測試手冊附錄之前寫的 146 是少算，18.1 收尾時更正。</p>
+<p>（迭代 6 沒有新增功能開關：輪播三層的開關在迭代 3 就已建好並預設關閉，這次做的是把它們的「開啟條件」從「功能尚未實作」換成實際判定。迭代 7 只多一張 <code>update_runs</code> 與兩個維運端點，新增的六種稽核動作全是更新流程與遷移防呆留下的軌跡。DEP-37 的三處補做沒有動到任何一張表，改的是啟動時的判定與兩個維運端點多回傳的幾個欄位。<strong>迭代 8 一張表都沒動、一個端點都沒加</strong>，因此表上沒有它那一欄。）</p>
+<p><strong>迭代 9 一次多了 14 張表</strong>，但它們幾乎都是同一個形狀：三組「版本表加題目表加選項表」。新增的 8 個營運參數也是同一類東西——<strong>「其他」的提醒門檻、每月加問的間隔、趨勢偏離的三個門檻、抽題規則的三個上限</strong>，全部是護理長會想調、而工程師不該替他決定的數字。</p>
+<p><strong>迭代 10 幾乎沒有動資料模型</strong>：<code>devices</code> 多三個欄位、一個平板端端點、兩種稽核動作，就這樣。它的工作量全在 repo 之外——<strong>把已經做好的東西變成一份帶得進院內的檔案</strong>，以及把「帶進去之後會發生什麼」實際試一次。</p>
+<p><strong>迭代 11～14.5 合起來只多 7 條路由、2 張表、6 種稽核動作</strong>，而且全部是加法：迭代 11、13 一條都沒加（它們的工作量在 compose、映像檔與 <code>services/</code>）；迭代 12 加一條外殼契約端點；迭代 14 加四條（床位、平板換床、輪播播放範圍、結案後補改處理結果），14.2 加一條重新開啟療程；兩張表是 <code>beds</code> 與 <code>carousel_item_targets</code>。新增的兩個營運參數是病人端任務的時點（心情、衛教），新增的開關是求助畫面的「其他」那一框。 <strong>簡易版整個工作台沒有新增任何一條「專業版做得到、只是換個端點」的路由</strong>——那是刻意的，見 6「迭代 14」。</p>
+<p><strong>迭代 15～17 合起來多 12 條路由（淨增）、2 張表、19 種稽核動作</strong>：迭代 15 加六條（院方資料同步的狀態、紀錄、手動再抓一次，配平板，帶入最近一筆血壓，平板的推送串流）與兩張表；迭代 16 加兩條（<code>GET /device/home</code>、<code>POST /device/marquee/plays</code>）、拿掉兩條（<code>GET /device/carousel</code>、<code>POST /device/carousel/view-events</code>），<strong>一張表都沒加</strong>；迭代 17 加六條（草稿主題、要一份草稿、核准、退回、撤回、上下架時間），在 <code>carousel_items</code> 加七欄。功能開關的數字沒變，是因為輪播三層的開關停用、換成面板與跑馬燈，再加上 1005 的「需要抽血數值的功能」（三減三加）；營運參數淨增五個：院方 API 四個（抓取頻率、多久沒更新要提示、待確認下機的時間、床號格式），跑馬燈三個（速度、開頭靜止、兩則間隔），輪播的卡片停留與細節頁退回兩個停用。（路由數 0930 以前沿用各迭代新增的端點累加；迭代 17 那一欄改以控制器實際的路由裝飾器計數，兩種計法在 14.5 時點一致。）</p>
+<p><strong>迭代 17.1～18.1 合起來多 22 條路由、9 張表、12 種稽核動作</strong>：17.1～17.7 多的是平板與內容指定的端點、<code>carousel_item_device_targets</code>； 17.8 加兩條（帶入處置後數值、記下複製）與 <code>nursing_record_sections</code>、一個營運參數（護理紀錄格式）；18 加九條與六張表、一個開關（<code>ADEQUACY_PREDICTION</code>）；18.1 加一條（<code>PUT /rules/gate</code>）與 <code>rule_gate_changes</code>。 17.7 另加開關 <code>MANUAL_PATIENT_CREATE</code>。路由數照後端啟動時印出的清單與路由裝飾器兩種計法對過（1010 都是 158）；測試手冊附錄之前寫的 146 是少算，18.1 收尾時更正。</p>
 <p><strong>迭代 19 多 23 條路由、10 張表、20 種稽核動作、7 個權限碼</strong>，功能開關與營運參數沒有增加（績效兩個開關迭代 3 就建好了，這次把「尚未實作」換成實際的開啟條件）。路由照後端啟動時印出的清單重數：181，與測試手冊附錄逐條對齊。</p>
-<p><strong>迭代 24～26 合起來多 12 條路由、7 張表、7 種稽核動作</strong>，權限碼、角色、功能開關與營運參數都沒有增加：
-迭代 24 加一條、一張表（<code>garden_visitors</code>），沒有新的稽核動作（種子袋與小訪客的每一步在 <code>game_events</code>）；迭代 25 加四條、一張表（<code>dialysis_session_settings</code>）、一種稽核動作；
-迭代 26 加七條（26.2 可列印版一條、26.3 處理者指名六條）、五張表、六種稽核動作，功能開關的數字沒變是因為「獎勵制度」取代了「獎勵計分」（一減一加）。
-路由每一次都照後端啟動時印出的清單重數（210、214、221），與測試手冊的路由表逐條對齊；迭代 27 一樣都沒有增減，所以規模表沒有它那一欄。</p>
+<p><strong>迭代 24～26 合起來多 12 條路由、7 張表、7 種稽核動作</strong>，權限碼、角色、功能開關與營運參數都沒有增加：迭代 24 加一條、一張表（<code>garden_visitors</code>），沒有新的稽核動作（種子袋與小訪客的每一步在 <code>game_events</code>）；迭代 25 加四條、一張表（<code>dialysis_session_settings</code>）、一種稽核動作；迭代 26 加七條（26.2 可列印版一條、26.3 處理者指名六條）、五張表、六種稽核動作，功能開關的數字沒變是因為「獎勵制度」取代了「獎勵計分」（一減一加）。路由每一次都照後端啟動時印出的清單重數（210、214、221），與測試手冊的路由表逐條對齊；迭代 27 一樣都沒有增減，所以規模表沒有它那一欄。</p>
 <h3 id="共用常數的角色">共用常數的角色<a class="headerlink" href="#共用常數的角色" title="Permanent link">&para;</a></h3>
 <p><code>packages/shared</code> 不只是型別。以下<strong>業務規則</strong>放在這裡，前後端共用同一份定義：</p>
 <ul>
 <li><code>navigation.ts</code> — 迭代 9：17 項功能的<strong>預設版位</strong>與主列上限。只在第一次啟動時寫進資料表</li>
-<li><code>content.ts</code> — 迭代 9：SRS 附錄 C 的全部預設內容（求助類別、處理方式與結果、問卷題目、
-  衛教題庫 35 題、回饋題目）。<strong>這是「第一次啟動時寫進資料表的預設值」，不是執行期的資料來源</strong></li>
-<li><code>routeHelpRequest()</code> — 求助分派規則。前端顯示的分派結果與後端計算結果保證一致。
-  迭代 9 起輸入從「類別」換成「組別」，組別存在資料表裡</li>
+<li><code>content.ts</code> — 迭代 9：SRS 附錄 C 的全部預設內容（求助類別、處理方式與結果、問卷題目、衛教題庫 35 題、回饋題目）。<strong>這是「第一次啟動時寫進資料表的預設值」，不是執行期的資料來源</strong></li>
+<li><code>routeHelpRequest()</code> — 求助分派規則。前端顯示的分派結果與後端計算結果保證一致。迭代 9 起輸入從「類別」換成「組別」，組別存在資料表裡</li>
 <li><code>AuditAction</code> / <code>Permission</code> / <code>NurseRole</code> — 動作識別字、權限碼與角色</li>
 <li><code>SYMPTOM_TREND_DISCLAIMER</code> — 非診斷結果提示文字</li>
 <li><code>platform.ts</code> — 功能開關定義與開啟條件、模型與臨床資料介面層的共用型別</li>
@@ -6918,13 +6888,8 @@ compose 另有一個只在 <code>simulation</code> 設定檔才起來的 <code>h
 <li><code>kiosk-shell.ts</code> — 迭代 12：外殼契約版本、JS 介面型別、由外殼版本推算「版本正常／外殼過舊／版本不相容／未回報」。<strong>契約的程式真本</strong>，文件真本是《病人端外殼 App 契約》，兩者與 <code>shell.pin</code> 要一起改</li>
 <li><code>beds.ts</code> — 迭代 14：預設床位（15 床，<code>01</code>～<code>15</code>）。一樣只是「資料表空的時候寫入的預設值」；1005 起床號照醫院編號、不設上限（原本的 40 床上限已拿掉）</li>
 </ul>
-<p><strong>迭代 4 的暫定內容原本全部在這裡並標版本字串</strong>，改內容要改常數並升版。
-<strong>迭代 9 把這件事整個翻過來</strong>：內容搬進資料表，護理長在畫面上改、立刻生效，不必重新部署。</p>
-<p><code>PRE_DIALYSIS_SYMPTOM_QUESTIONS</code>、<code>QUIZ_QUESTIONS</code>、<code>FEEDBACK_ITEMS</code>、<code>EDUCATION_TOPICS</code>、
-<code>HELP_REQUEST_CATEGORY_LABELS</code> 這幾份<strong>還在檔案裡，但只剩一個用途</strong>：
-把迭代 9 之前那一版補寫成第 1 版，讓既有作答還原得出當時的題目。
-執行期沒有任何一行程式讀它們——依 3.14 第 5 條，<strong>不得留下「程式讀常數、介面讀資料表」的雙軌</strong>。
-依《資料庫使用規範》18.2「一次更新只做加法」，它們在下一版才移除。</p>
+<p><strong>迭代 4 的暫定內容原本全部在這裡並標版本字串</strong>，改內容要改常數並升版。 <strong>迭代 9 把這件事整個翻過來</strong>：內容搬進資料表，護理長在畫面上改、立刻生效，不必重新部署。</p>
+<p><code>PRE_DIALYSIS_SYMPTOM_QUESTIONS</code>、<code>QUIZ_QUESTIONS</code>、<code>FEEDBACK_ITEMS</code>、<code>EDUCATION_TOPICS</code>、 <code>HELP_REQUEST_CATEGORY_LABELS</code> 這幾份<strong>還在檔案裡，但只剩一個用途</strong>：把迭代 9 之前那一版補寫成第 1 版，讓既有作答還原得出當時的題目。執行期沒有任何一行程式讀它們——依 3.14 第 5 條，<strong>不得留下「程式讀常數、介面讀資料表」的雙軌</strong>。依《資料庫使用規範》18.2「一次更新只做加法」，它們在下一版才移除。</p>
 <p><strong>改動 <code>packages/shared</code> 後必須重跑 <code>npm run build:shared</code></strong>（<code>npm run dev</code> 會自動先跑一次）。</p>
 <hr />
 <h2 id="7--高風險三項有條件納入1010-迭代-18-完成實作原迭代-7--11--15">7. 🔒 高風險三項：有條件納入，1010 迭代 18 完成實作（原迭代 7 → 11 → 15）<a class="headerlink" href="#7--高風險三項有條件納入1010-迭代-18-完成實作原迭代-7--11--15" title="Permanent link">&para;</a></h2>
@@ -7071,21 +7036,12 @@ npm<span class="w"> </span>run<span class="w"> </span>dev<span class="w">       
 </code></pre></div>
 <p><strong>必填環境變數</strong>：<code>DATABASE_URL</code>（<code>file:</code> 加絕對路徑）、<code>JWT_SECRET</code>、<code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>。</p>
 <p><strong>常用選填</strong>：<code>BACKUP_DIR</code>（備份輸出）、<code>LLM_PROVIDER</code>（<code>mock</code>／<code>lab</code>／<code>onprem</code>，預設 <code>mock</code>）與 <code>LLM_ENDPOINT</code>／<code>LLM_API_KEY</code>／<code>LLM_MODEL_ID</code>、<code>LLM_MOCK_LATENCY_MS</code>（預設 1200）、<code>JWT_EXPIRES_IN</code>（預設 8 小時）、<code>BINDING_MAX_HOURS</code>（預設 6）。</p>
-<p><strong>迭代 8、9 都沒有新增任何環境變數。</strong> 迭代 8 一個端點都沒加；
-迭代 9 加了不少端點，但它新增的每一個數字都是<strong>營運參數</strong>——
-「其他」的提醒門檻、每月加問的間隔、趨勢偏離的三個門檻、抽題規則的三個上限，
-一律存在 <code>operational_settings</code>，在護理端改，不在 <code>.env</code> 改。
-<strong>會被護理長調整的東西不該放在只有工程師動得到的地方。</strong></p>
+<p><strong>迭代 8、9 都沒有新增任何環境變數。</strong> 迭代 8 一個端點都沒加；迭代 9 加了不少端點，但它新增的每一個數字都是<strong>營運參數</strong>——「其他」的提醒門檻、每月加問的間隔、趨勢偏離的三個門檻、抽題規則的三個上限，一律存在 <code>operational_settings</code>，在護理端改，不在 <code>.env</code> 改。 <strong>會被護理長調整的東西不該放在只有工程師動得到的地方。</strong></p>
 <p><strong>迭代 7 新增的五個（只有正式環境會用到）</strong>：<code>DEPLOYMENT_ENV=production</code> 把這台機器標成正式環境（時區不符即拒絕啟動、開發用的遷移指令被擋下、<code>API_PORT</code> 沒填即拒絕啟動）、<code>REQUIRED_TIME_ZONE</code>（預設 <code>Asia/Taipei</code>）、<code>PRISMA_ENGINES_DIR</code>（指向安裝包內的 Prisma 引擎，DEP-30；<strong>迭代 11 隨安裝包撤除</strong>）、<code>LLM_HEALTH_TIMEOUT_SECONDS</code>（健康檢查逾時，預設 5 秒，與單次生成的 <code>LLM_TIMEOUT_SECONDS</code> 分開）、<code>DB_DISK_MIN_FREE_MB</code>（資料庫磁碟保留空間下限，預設 1024，DEP-37）。</p>
 <p>既有的 <code>API_PORT</code> 在正式環境的行為也變了：<strong>開發機留空照舊用 3000，正式環境留空即拒絕啟動</strong>（DEP-37 第 2 項）。</p>
-<p><strong>迭代 11 起院內部署另有一份範本</strong> <code>deploy/hospital.env.example</code>，只列 compose 要代換的變數（<code>HD_IMAGE_TAG</code>、<code>HD_BACKUP_DIR</code>、<code>HD_CONFIG_DIR</code>、三個 <code>HD_*_PORT</code>、<code>HD_PUBLIC_API_URL</code>、<code>MDM_KIOSK_BASE_URL</code>、<code>HD_SHELL_SRC_DIR</code>、<code>HD_SHELL_SIGNING</code> 等），逐項填法見部署手冊第十五冊之一（1001 起取代第十四冊之一）；迭代 15 多了 <code>HOSPITAL_API_BASE_URL</code> 與 <code>HD_SIMULATION_DEPLOYMENT</code> 兩個。<strong>compose 不整份倒進容器</strong>（DEP-13），容器要什麼在 <code>docker-compose.yml</code> 明寫；<code>UPDATE_PROBE_URL</code> 由 compose 直接給 <code>db:update</code>。
-迭代 12 新增 <code>KIOSK_SHELL_MIN_VERSION</code>（最低可用外殼版本，留空用程式預設）；<code>MDM_KIOSK_BASE_URL</code> 在正式環境<strong>必須是 <code>https://</code></strong>（迭代 14.1 的佈建 QR code 就是它）。
-迭代 13 起 <code>LLM_ENDPOINT</code> 指向 AI 閘道、<code>LLM_MODEL_ID</code> 留空，<code>LLM_TIMEOUT_SECONDS</code> 要比閘道 <code>config.yaml</code> 的逾時大。
-迭代 15 新增 <code>HOSPITAL_API_BASE_URL</code>（院方 API 的端點，<strong>空白就是不抓</strong>，簡易版照人工流程；院內的值不進 repo、不寫進任何文件）與 <code>SIMULATION_DEPLOYMENT</code>（compose 由 <code>HD_SIMULATION_DEPLOYMENT</code> 帶入，模擬部署填 <code>yes</code> 才准位址指向模擬院方 API）。抓取頻率是營運參數，不在 <code>.env</code>。
-迭代 16、17 沒有新增環境變數：跑馬燈的速度與間隔都是營運參數。</p>
+<p><strong>迭代 11 起院內部署另有一份範本</strong> <code>deploy/hospital.env.example</code>，只列 compose 要代換的變數（<code>HD_IMAGE_TAG</code>、<code>HD_BACKUP_DIR</code>、<code>HD_CONFIG_DIR</code>、三個 <code>HD_*_PORT</code>、<code>HD_PUBLIC_API_URL</code>、<code>MDM_KIOSK_BASE_URL</code>、<code>HD_SHELL_SRC_DIR</code>、<code>HD_SHELL_SIGNING</code> 等），逐項填法見部署手冊第十五冊之一（1001 起取代第十四冊之一）；迭代 15 多了 <code>HOSPITAL_API_BASE_URL</code> 與 <code>HD_SIMULATION_DEPLOYMENT</code> 兩個。<strong>compose 不整份倒進容器</strong>（DEP-13），容器要什麼在 <code>docker-compose.yml</code> 明寫；<code>UPDATE_PROBE_URL</code> 由 compose 直接給 <code>db:update</code>。迭代 12 新增 <code>KIOSK_SHELL_MIN_VERSION</code>（最低可用外殼版本，留空用程式預設）；<code>MDM_KIOSK_BASE_URL</code> 在正式環境<strong>必須是 <code>https://</code></strong>（迭代 14.1 的佈建 QR code 就是它）。迭代 13 起 <code>LLM_ENDPOINT</code> 指向 AI 閘道、<code>LLM_MODEL_ID</code> 留空，<code>LLM_TIMEOUT_SECONDS</code> 要比閘道 <code>config.yaml</code> 的逾時大。迭代 15 新增 <code>HOSPITAL_API_BASE_URL</code>（院方 API 的端點，<strong>空白就是不抓</strong>，簡易版照人工流程；院內的值不進 repo、不寫進任何文件）與 <code>SIMULATION_DEPLOYMENT</code>（compose 由 <code>HD_SIMULATION_DEPLOYMENT</code> 帶入，模擬部署填 <code>yes</code> 才准位址指向模擬院方 API）。抓取頻率是營運參數，不在 <code>.env</code>。迭代 16、17 沒有新增環境變數：跑馬燈的速度與間隔都是營運參數。</p>
 <blockquote>
-<p>資料庫檔案與 <code>BACKUP_DIR</code> 必須在<strong>專案目錄外的本機磁碟</strong>。相對路徑、專案目錄內、網路路徑、雲端同步資料夾，後端與 seed 一律拒絕啟動。
-後端是唯一的寫入者：跑 <code>prisma:migrate</code>、<code>db:seed</code>、<code>db:restore</code> 或任何資料修補腳本前，<strong>先停掉後端</strong>。</p>
+<p>資料庫檔案與 <code>BACKUP_DIR</code> 必須在<strong>專案目錄外的本機磁碟</strong>。相對路徑、專案目錄內、網路路徑、雲端同步資料夾，後端與 seed 一律拒絕啟動。後端是唯一的寫入者：跑 <code>prisma:migrate</code>、<code>db:seed</code>、<code>db:restore</code> 或任何資料修補腳本前，<strong>先停掉後端</strong>。</p>
 </blockquote>
 <h3 id="驗收">驗收<a class="headerlink" href="#驗收" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>verify:acceptance<span class="w">   </span><span class="c1"># 迭代 1 — 13 步驟</span>
@@ -7122,21 +7078,11 @@ npm<span class="w"> </span>run<span class="w"> </span>demo:patient<span class="w
 npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w">           </span><span class="c1"># 六支盤點腳本（不需後端），0926 起多了 check:container</span>
 </code></pre></div>
 <p>腳本都會建立少量標記過的合成資料並逐項斷言，涵蓋主線流程、錯誤路徑、權限隔離、冪等去重、稽核事件。<strong>改動後請全部跑過。</strong></p>
-<p>最近一次執行（2026-10-05，迭代 17 完成時）：迭代 15～17 各自的腳本與 <code>:api</code> 全綠；既有腳本回歸（<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>12</code>、<code>14</code> 系列與各自的 <code>:api</code>、<code>check:all</code> 六支）全綠，依實作規格書 1.1 改寫的幾支一併重跑。
-<strong>例外是 <code>verify:iteration13</code></strong>：它的第 2 步在 <code>apps/</code> 底下找 Ollama 字樣，找到的是迭代 13 自己那支驗收程式，與迭代 15～17 無關，見第 9 節第 8 項；<code>verify:iteration13:api</code> 要 Docker Desktop，這次沒跑（迭代 15～17 沒有動 AI 閘道）。結果記在實作規格書 4.13～4.15 各節的「驗收現況」。
-0930 那一次（迭代 14.5）：<code>build</code>、<code>check:all</code> 六支、<code>verify:iteration8</code>、<code>verify:iteration14</code>、<code>14-1</code>～<code>14-5</code> 全綠。第 9 節第 7 項的環境相依迭代 16 已解除。</p>
+<p>最近一次執行（2026-10-05，迭代 17 完成時）：迭代 15～17 各自的腳本與 <code>:api</code> 全綠；既有腳本回歸（<code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>12</code>、<code>14</code> 系列與各自的 <code>:api</code>、<code>check:all</code> 六支）全綠，依實作規格書 1.1 改寫的幾支一併重跑。 <strong>例外是 <code>verify:iteration13</code></strong>：它的第 2 步在 <code>apps/</code> 底下找 Ollama 字樣，找到的是迭代 13 自己那支驗收程式，與迭代 15～17 無關，見第 9 節第 8 項；<code>verify:iteration13:api</code> 要 Docker Desktop，這次沒跑（迭代 15～17 沒有動 AI 閘道）。結果記在實作規格書 4.13～4.15 各節的「驗收現況」。 0930 那一次（迭代 14.5）：<code>build</code>、<code>check:all</code> 六支、<code>verify:iteration8</code>、<code>verify:iteration14</code>、<code>14-1</code>～<code>14-5</code> 全綠。第 9 節第 7 項的環境相依迭代 16 已解除。</p>
 <p>0919 的紀錄仍然成立：九支皆全數通過（<code>verify:iteration8</code> 不需要後端在跑，它驗的東西全部在前端原始碼與樣式表裡）；<strong>盤點腳本全綠</strong>——介面技術識別從 22 筆降到 0，遷移安全改成只掃上一次部署之後新增的那幾份（已經套用出去的遷移改不動，把它們掃出來只會得到一份改不動的清單，而<strong>一支永遠是紅的檢查跟沒有那支檢查一樣：沒有人會再看它一眼</strong>）。</p>
-<p><strong>迭代 9 動了六支既有的驗收腳本，而且是非動不可的。</strong> 題目與選項改成資料之後，
-那幾支腳本原本照共用常數湊一份答案出來，送出去會被後端以「版本不符」擋下——<strong>而擋下是對的</strong>。
-改法是加一支共用的填答器（<code>scripts/lib/questionnaire.ts</code>）：先問後端「現在生效的是哪一版、有哪幾題」，
-再照那一份填。<strong>斷言一條都沒有放寬</strong>，改的只是「答案從哪裡來」。
-另外 <code>verify:iteration4</code>、<code>verify:iteration5</code> 各多了一段：
-離院衛教與班表、成效基準首波是關閉的，因此先確認關著時真的擋得住，再暫時提供、驗完關回去——
-<strong>驗收腳本不該因為預設是關的就跳過那一段，也不該把它留在開著的狀態。</strong></p>
+<p><strong>迭代 9 動了六支既有的驗收腳本，而且是非動不可的。</strong> 題目與選項改成資料之後，那幾支腳本原本照共用常數湊一份答案出來，送出去會被後端以「版本不符」擋下——<strong>而擋下是對的</strong>。改法是加一支共用的填答器（<code>scripts/lib/questionnaire.ts</code>）：先問後端「現在生效的是哪一版、有哪幾題」，再照那一份填。<strong>斷言一條都沒有放寬</strong>，改的只是「答案從哪裡來」。另外 <code>verify:iteration4</code>、<code>verify:iteration5</code> 各多了一段：離院衛教與班表、成效基準首波是關閉的，因此先確認關著時真的擋得住，再暫時提供、驗完關回去—— <strong>驗收腳本不該因為預設是關的就跳過那一段，也不該把它留在開著的狀態。</strong></p>
 <p>其中 <code>verify:iteration2</code> 改了一處，而且只有這一處：FR-N10 讓「只填自由文字即可結案」不再成立，那一段跟著改成新的結案方式。<strong>迭代 2 原本要驗的行為一條都沒有放寬</strong>——狀態轉換、留下處理者、總覽不再顯示待處理，斷言全部保留。這是目前唯一一次刻意改動既有驗收腳本，理由記在《實作規格書》1.1 節；其餘情況一律不得以「配合新功能」為由修改既有腳本。迭代 6 與迭代 7 都沒有再動過任何一支——迭代 7 的解除綁定回應只多了兩個欄位，既有欄位一個都沒有動，因此既有斷言原封不動仍然成立。</p>
-<p>完整的手動測試步驟另有<a href="../../testing/manual-test-guide/">測試手冊</a>：主手冊加迭代 3～17 二十一本分冊，<strong>共 1051 個可勾選的測試項</strong>（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項；0930 定版時 894 項）。迭代 17 起項次改用兩個字母（<code>aa</code>）。
-0919 以前那幾冊要人眼與實機的部分仍然成立（迭代 3 的總覽螢幕連續 4 小時與拔網路、迭代 6 輪播的四節手指確認、迭代 8 標 ⚠️ 的十一項、迭代 9 的三條畫面護欄），
-0926 之後的幾冊，<strong>腳本驗不到、還沒走的</strong>集中在這幾處：</p>
+<p>完整的手動測試步驟另有<a href="../../testing/manual-test-guide/">測試手冊</a>：主手冊加迭代 3～17 二十一本分冊，<strong>共 1051 個可勾選的測試項</strong>（主手冊 156 項，分冊從迭代 3 的 66 項到迭代 14.5 的 11 項；0930 定版時 894 項）。迭代 17 起項次改用兩個字母（<code>aa</code>）。 0919 以前那幾冊要人眼與實機的部分仍然成立（迭代 3 的總覽螢幕連續 4 小時與拔網路、迭代 6 輪播的四節手指確認、迭代 8 標 ⚠️ 的十一項、迭代 9 的三條畫面護欄）， 0926 之後的幾冊，<strong>腳本驗不到、還沒走的</strong>集中在這幾處：</p>
 <ul>
 <li><strong><a href="../../testing/iteration-11/">迭代 11 分冊</a></strong> 的 43 項，對應的實測已在開發機走過一輪（演練紀錄第 8 節）；<strong>斷電重開後服務自己回來</strong>只能在院內那台主機驗（Q-27）</li>
 <li><strong><a href="../../testing/iteration-12/">迭代 12 分冊</a></strong> 的 48 項：開發手機從下載頁安裝、釘住後退不出去、契約版本不合時平板上的提示列（§12.5～§12.7）——<strong>要一支真的手機</strong></li>
@@ -7315,15 +7261,9 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 </tbody>
 </table>
 <p>迭代 15 的第一項是院方 API 探測工具，要趕在第三次進院前完成（實作規格書 4.19）——<strong>1005 已完成</strong>，指令在部署手冊第十五冊 V-30a；迭代 16、17 都不擋第三次進院。三個迭代的實作位置見 6「迭代 15」～「迭代 17」。</p>
-<p>~~迭代 18 與其他迭代沒有相依，外部答覆若提早到齊可隨時往前插隊。~~ 迭代 18 與 18.1 已於 1010 完成，對真實病人啟用仍等 Q-02、Q-03。
-~~迭代 19 的成效指標會吃迭代 6 產生的 <code>carousel_view_events</code>（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，
-因此它只回答得了「哪一類內容有人看」這種問題。~~ 迭代 19 已於 1010 完成：九個成效指標讀的是求助、護理紀錄、衛教完成、症狀問卷的時間戳，<strong>沒有用到播放紀錄</strong>（它只回答得了「哪一類內容有人看」，不是成效）。</p>
-<p><strong>1010 的順序</strong>（實作規格書 4.0.5）：17.8 → 18 → 19 → 20～23；~~<strong>做到 21</strong>，下一個是 22（麻將連連看：牌面先用 FluffyStuff 的 CC0 牌面，「萬」字與紅中改深棕）。~~ <strong>1011 全部做完</strong>。<strong>這一次沒有改號</strong>：排在 18 前面的只有小迭代 17.8。
-17.8 的兩個技術重點：院內以 <code>http://&lt;IP&gt;</code> 開護理端，不是安全來源，<strong>複製要退回 <code>document.execCommand('copy')</code></strong>；護理紀錄的預設版位改主列，但既有環境的版位存在資料表、不會被預設值覆蓋，要一次性的資料遷移。
-院方建議的血壓正常區間判斷不做（SRS FR-P11 補充說明），程式不動。</p>
-<p><strong>接手時最容易搞混的一件事</strong>：迭代編號重排過三次（0919、0926、1005）。
-0916 以前的紀錄裡「迭代 7」、0923 以前的「迭代 11」、1005 以前的「迭代 15」指的都是規則引擎；0923 週報寫的「迭代 11、12 依原排程開始」也是既成紀錄。
-<strong>那些舊紀錄不回頭改寫</strong>，對帳時看實作規格書 4.0.1、4.0.3、4.0.4 的對照表。</p>
+<p>~~迭代 18 與其他迭代沒有相依，外部答覆若提早到齊可隨時往前插隊。~~ 迭代 18 與 18.1 已於 1010 完成，對真實病人啟用仍等 Q-02、Q-03。 ~~迭代 19 的成效指標會吃迭代 6 產生的 <code>carousel_view_events</code>（迭代 16 起改記跑馬燈每一則的播放），但那張表刻意不含個人層級資料，因此它只回答得了「哪一類內容有人看」這種問題。~~ 迭代 19 已於 1010 完成：九個成效指標讀的是求助、護理紀錄、衛教完成、症狀問卷的時間戳，<strong>沒有用到播放紀錄</strong>（它只回答得了「哪一類內容有人看」，不是成效）。</p>
+<p><strong>1010 的順序</strong>（實作規格書 4.0.5）：17.8 → 18 → 19 → 20～23；~~<strong>做到 21</strong>，下一個是 22（麻將連連看：牌面先用 FluffyStuff 的 CC0 牌面，「萬」字與紅中改深棕）。~~ <strong>1011 全部做完</strong>。<strong>這一次沒有改號</strong>：排在 18 前面的只有小迭代 17.8。 17.8 的兩個技術重點：院內以 <code>http://&lt;IP&gt;</code> 開護理端，不是安全來源，<strong>複製要退回 <code>document.execCommand('copy')</code></strong>；護理紀錄的預設版位改主列，但既有環境的版位存在資料表、不會被預設值覆蓋，要一次性的資料遷移。院方建議的血壓正常區間判斷不做（SRS FR-P11 補充說明），程式不動。</p>
+<p><strong>接手時最容易搞混的一件事</strong>：迭代編號重排過三次（0919、0926、1005）。 0916 以前的紀錄裡「迭代 7」、0923 以前的「迭代 11」、1005 以前的「迭代 15」指的都是規則引擎；0923 週報寫的「迭代 11、12 依原排程開始」也是既成紀錄。 <strong>那些舊紀錄不回頭改寫</strong>，對帳時看實作規格書 4.0.1、4.0.3、4.0.4 的對照表。</p>
 <h3 id="迭代-242710151017-排定1018-四個都完成">迭代 24～27（1015、1017 排定；1018 四個都完成）<a class="headerlink" href="#迭代-242710151017-排定1018-四個都完成" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7401,6 +7341,11 @@ npm<span class="w"> </span>run<span class="w"> </span>check:all<span class="w"> 
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>對到迭代 27：迭代 24～27 的完成範圍與規模（221 條路由、97 張表）；第 6 節迭代 1～23 收進子文件之一；第 4 節表數與遷移清單照實際重數</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/reports/progress-technical/">1014</a></td>
 <td>2026-10-14</td>

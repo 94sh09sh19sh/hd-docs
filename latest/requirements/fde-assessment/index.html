@@ -6097,7 +6097,7 @@
 </tr>
 </tbody>
 </table>
-<p>因此**「額外資料蒐集」的實際增量很小**，符合前提四。真正要新增的只有三項：</p>
+<p>因此<strong>「額外資料蒐集」的實際增量很小</strong>，符合前提四。真正要新增的只有三項：</p>
 <ol>
 <li><strong>成效基準（Baseline）</strong> — 見 5.2，這是唯一有時效性的一項</li>
 <li><strong>求助處理方式與結果</strong>（新增任務四）— 把 <code>help_requests</code> 已有的自由文字結案備註升級成結構化欄位</li>
@@ -6445,11 +6445,7 @@
 </ul>
 <h3 id="73-過渡期實驗室-api">7.3 過渡期：實驗室 API<a class="headerlink" href="#73-過渡期實驗室-api" title="Permanent link">&para;</a></h3>
 <blockquote>
-<p><strong>0926 更新：實驗室 GPU 伺服器的使用規範已取得</strong>，本節以下的形態描述與規範相符。規範另外規定兩件事，改變了串接方式：
-<strong>以 LangChain 呼叫模型</strong>（<code>langchain-ollama</code> 或 OpenAI 相容介面兩種方法），以及<strong>建議以設定檔集中管理模型與參數</strong>。
-本系統後端是 Node.js，因此多做一個照規範寫的 Python <strong>AI 閘道</strong>：後端只跟閘道說話，閘道依 <code>config.yaml</code> 呼叫推論端點。
-實驗室與院內共用同一個閘道，<strong>換成正式 GPU API 只換 <code>config.yaml</code></strong>——這比 0910 設想的「兩個 provider 共用一份 HTTP 實作」又少了一層要改的東西。
-串接時照規範流程做（個人資料夾、個人容器、只呼叫不管理模型），唯一差異是以 Terminal 的 SSH 取代 VS Code 遠端視窗（部署規範 DEP-42）。</p>
+<p><strong>0926 更新：實驗室 GPU 伺服器的使用規範已取得</strong>，本節以下的形態描述與規範相符。規範另外規定兩件事，改變了串接方式： <strong>以 LangChain 呼叫模型</strong>（<code>langchain-ollama</code> 或 OpenAI 相容介面兩種方法），以及<strong>建議以設定檔集中管理模型與參數</strong>。本系統後端是 Node.js，因此多做一個照規範寫的 Python <strong>AI 閘道</strong>：後端只跟閘道說話，閘道依 <code>config.yaml</code> 呼叫推論端點。實驗室與院內共用同一個閘道，<strong>換成正式 GPU API 只換 <code>config.yaml</code></strong>——這比 0910 設想的「兩個 provider 共用一份 HTTP 實作」又少了一層要改的東西。串接時照規範流程做（個人資料夾、個人容器、只呼叫不管理模型），唯一差異是以 Terminal 的 SSH 取代 VS Code 遠端視窗（部署規範 DEP-42）。</p>
 </blockquote>
 <p>~~實驗室 API 尚未取得。~~已知的實驗室資源形態如下（見 Q-08）：單張 RTX 3090（24GB 顯示記憶體）、以 SSH 遠端開發、<strong>規定所有工作都在個人容器內進行</strong>、推論服務為 Ollama 並提供相容於 chat completions 的端點。</p>
 <p><strong>這件事有一個直接的好處</strong>：實驗室給的是相容端點，院內推論服務大多也是同一組相容介面，因此 <code>LabApiProvider</code> 與 <code>OnPremiseProvider</code> 可以共用同一份 HTTP 實作，切換真的只是改設定。<strong>也有一個要注意的地方</strong>：3090 的 24GB 只跑得動 7B～14B 量化模型，而正式環境載得下大得多的模型——<strong>過渡期跑得順，不代表正式環境跑得快；反過來也一樣</strong>。提示詞與輸出格式的驗收要在兩邊都跑過。</p>

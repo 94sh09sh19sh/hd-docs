@@ -2,7 +2,7 @@
 
 版本：v0.1　文件狀態：草案（0926 新增，迭代 11）　編號：`W-xx`　**這一冊要印出來帶進去**
 
-> **0926 起這是唯一的部署路線。** 院方的條件是：以容器部署、程式以 `git clone` 取得、 院內網路連得出去但外面連不進來、**不准用隨身碟**、Administrator 不設密碼（《部署規範》v3.0 第 0.1 節）。 離線安裝包那條路因此**撤除**，不是降為備案。
+> **0926 起這是唯一的部署路線。** 院方的條件是：以容器部署、程式以 `git clone` 取得、院內網路連得出去但外面連不進來、**不准用隨身碟**、Administrator 不設密碼（《部署規範》v3.0 第 0.1 節）。離線安裝包那條路因此**撤除**，不是降為備案。
 >
 > 規則的真本是《[部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)》v3.0；這一冊只寫手指要按什麼、每一步會怎麼壞。
 >
@@ -40,7 +40,7 @@ ______________________________________________________________________
 
 ### 0.3 開發機實測結果（0926）
 
-本冊的每一條指令都在開發機上照順序跑過一次：**從 GitHub 全新 clone、全新資料卷、只用 Git 與 Docker**， 接著走完一次更新（新 tag、備份並驗證還原、套用一個新遷移）與一次回退（舊 tag、舊映像檔、還原備份）。 每一步的結果在《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 8 節。
+本冊的每一條指令都在開發機上照順序跑過一次：**從 GitHub 全新 clone、全新資料卷、只用 Git 與 Docker**，接著走完一次更新（新 tag、備份並驗證還原、套用一個新遷移）與一次回退（舊 tag、舊映像檔、還原備份）。每一步的結果在《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 8 節。
 
 實測抓到兩件事，都已處理：
 
@@ -49,7 +49,7 @@ ______________________________________________________________________
 | `db:update` 以一次性容器執行時，「服務是不是還開著」問的是它自己 | 服務沒停也照樣更新——**備份與遷移之間的寫入會補不回來** | compose 給它 `UPDATE_PROBE_URL=http://api:3000/api/health`，改問正在跑的 `api`；實測服務開著時確實拒絕 |
 | 還原腳本在映像檔裡跑不起來                                       | 回退時沒有工具可以把備份放回資料卷                     | 映像檔一併帶入還原腳本需要的原始碼與設定                                                               |
 
-**開發機驗不到、要在院內那台驗的**：主機的 Docker 版本與資料位置、登記過的連接埠、 斷電重開後 Docker Desktop 會不會自己起來（DEP-21 第 4 項）、防毒排除（Q-27）。
+**開發機驗不到、要在院內那台驗的**：主機的 Docker 版本與資料位置、登記過的連接埠、斷電重開後 Docker Desktop 會不會自己起來（DEP-21 第 4 項）、防毒排除（Q-27）。
 
 ### 0.4 兩個前提，先接受
 
@@ -239,7 +239,7 @@ Get-Content $HOME\.ssh\hd-tablet-care.pub
 
 第一行是先建好 `.ssh` 資料夾：新帳號沒有這個資料夾，`ssh-keygen` 不會自己建；資料夾已經在的話，這一行不會動任何東西。
 
-把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 **Settings → Deploy keys**，**不要勾 Allow write access**。 外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在[第十二冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/12-shell/index.md) Y-02。
+把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 **Settings → Deploy keys**，**不要勾 Allow write access**。外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在[第十二冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/12-shell/index.md) Y-02。
 
 再在 `$HOME\.ssh\config` 加一段，讓這把金鑰只用在這個 repo：
 
@@ -527,7 +527,7 @@ ______________________________________________________________________
 | 5   | 開發手機裝外殼、釘住、護理端看得到（迭代 12 起）                                                                                    | [第十二冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/12-shell/index.md)第 7 節 |
 | 6   | AI 經 SSH 通道接實驗室閘道跑一次（迭代 13 起）                                                                                      | —                                                                                             |
 
-**在 Git Bash 裡照抄會壞的一件事**：Git Bash 會把 `/backups/…`、`/data/…` 這種參數自動轉成 Windows 路徑， 還原腳本就會回報找不到備份檔。**本冊一律用 PowerShell**；非用 Git Bash 不可時，先 `export MSYS_NO_PATHCONV=1`， `--env-file` 也要寫成 `C:/…` 的形式。
+**在 Git Bash 裡照抄會壞的一件事**：Git Bash 會把 `/backups/…`、`/data/…` 這種參數自動轉成 Windows 路徑，還原腳本就會回報找不到備份檔。**本冊一律用 PowerShell**；非用 Git Bash 不可時，先 `export MSYS_NO_PATHCONV=1`， `--env-file` 也要寫成 `C:/…` 的形式。
 
 ______________________________________________________________________
 

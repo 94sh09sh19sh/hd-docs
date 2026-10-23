@@ -3422,6 +3422,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4707,6 +4718,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4824,13 +4846,16 @@
 
 <h1 id="迭代-178-手動測試--護理紀錄補上線前的缺口緊急回報的圖示">迭代 17.8 手動測試 — 護理紀錄補上線前的缺口、緊急回報的圖示<a class="headerlink" href="#迭代-178-手動測試--護理紀錄補上線前的缺口緊急回報的圖示" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.15.8 節與《<a href="../../notes/iteration-17-8-fixes/">迭代 17.8 修正紀錄</a>》。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 17.8 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
-項次接著迭代 17.7 分冊編（<code>aa147</code> 起；17.7 用到 <code>aa146</code>），小版沿用那個迭代的字母。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.15.8 節與《<a href="../../notes/iteration-17-8-fixes/">迭代 17.8 修正紀錄</a>》。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 17.8 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。項次接著迭代 17.7 分冊編（<code>aa147</code> 起；17.7 用到 <code>aa146</code>），小版沿用那個迭代的字母。</p>
 </blockquote>
-<p><strong>這一冊驗三件事</strong>：護理紀錄移到專業版主列；護理紀錄依系統管理選的格式（DART 預設、SOAP）分段，事件時間與院方量測寫在段落裡，簽核後整份或逐段複製、貼進院內的正式紀錄，AI 沒開照樣走得完；緊急回報的圖示改成畫出症狀本身。
-院方建議的「血壓圖加正常區間」<strong>判斷不合理、沒有做</strong>，理由在 SRS FR-P11 補充說明，這一冊不驗。</p>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<p>這一冊驗三件事（項次 <code>aa147</code>～<code>aa168</code>，自動化另跑 <code>npm run verify:iteration17-8</code>）：</p>
+<ul>
+<li>護理紀錄移到專業版主列</li>
+<li>護理紀錄依系統管理選的格式（DART 預設、SOAP）分段，事件時間與院方量測寫在段落裡，簽核後整份或逐段複製、貼進院內的正式紀錄，AI 沒開照樣走得完</li>
+<li>緊急回報的圖示改成畫出症狀本身</li>
+<li>院方建議的「血壓圖加正常區間」<strong>判斷不合理、沒有做</strong>，理由在 SRS FR-P11 補充說明，這一冊不驗</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -4908,75 +4933,50 @@
 </tr>
 </tbody>
 </table>
-<p><strong>前置</strong>：同迭代 17.1 分冊——<code>.env</code> 有 <code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>；一位護理長帳號（改營運參數要系統設定權限）。
-院方量測要有資料：接了院方資料（迭代 15 分冊的模擬院方 API）的療程才會有血壓；只想看排版，可以跑一次 <code>npm run verify:iteration17-8:api</code>，它會建一位合成病人與三筆記錄（量測在腳本結束時刪掉，記錄留著）。</p>
+<p><strong>前置</strong>：同迭代 17.1 分冊——<code>.env</code> 有 <code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>；一位護理長帳號（改營運參數要系統設定權限）。院方量測要有資料：接了院方資料（迭代 15 分冊的模擬院方 API）的療程才會有血壓；只想看排版，可以跑一次 <code>npm run verify:iteration17-8:api</code>，它會建一位合成病人與三筆記錄（量測在腳本結束時刪掉，記錄留著）。</p>
 <hr />
 <h2 id="1781-護理紀錄在主列">§17.8.1 護理紀錄在主列<a class="headerlink" href="#1781-護理紀錄在主列" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa147</code> <strong>［護理端］</strong> 📐 專業版，看上方主列。
-  → 七項：即時總覽、緊急通報、排班與指派、新增裝置、公告與院內衛教、總覽螢幕模式、<strong>護理紀錄</strong>；「更多」裡沒有護理紀錄。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa148</code> <strong>［護理端］</strong> 系統管理 → 導覽版位，看護理紀錄那一列。
-  → 版位「主列」。既有環境更新上來的，理由寫「版本更新：1010 院方要求護理紀錄移到常用（主列）」；全新環境沒有理由（本來就是預設）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa149</code> <strong>［資料庫］</strong> （只在要驗「護理長改過的不動」時做）更新前先在導覽版位把護理紀錄改成「關閉」並填理由，再套用新遷移。
-  → 更新後照樣是關閉：遷移只動從沒被改過的那一列。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa147</code> <strong>［護理端］</strong> 📐 專業版，看上方主列。 → 七項：即時總覽、緊急通報、排班與指派、新增裝置、公告與院內衛教、總覽螢幕模式、<strong>護理紀錄</strong>；「更多」裡沒有護理紀錄。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa148</code> <strong>［護理端］</strong> 系統管理 → 導覽版位，看護理紀錄那一列。 → 版位「主列」。既有環境更新上來的，理由寫「版本更新：1010 院方要求護理紀錄移到常用（主列）」；全新環境沒有理由（本來就是預設）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa149</code> <strong>［資料庫］</strong> （只在要驗「護理長改過的不動」時做）更新前先在導覽版位把護理紀錄改成「關閉」並填理由，再套用新遷移。 → 更新後照樣是關閉：遷移只動從沒被改過的那一列。</li>
 </ul>
 <h2 id="1782-dart分段時間與量測寫在段落裡">§17.8.2 DART：分段、時間與量測寫在段落裡<a class="headerlink" href="#1782-dart分段時間與量測寫在段落裡" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa150</code> <strong>［護理端］</strong> 系統管理 → 營運參數，看「護理紀錄格式」。
-  → 顯示「DART（資料、處置、反應、衛教）」，不是數字 1；編輯時是下拉選單。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa151</code> <strong>［護理端］</strong> 護理紀錄 → 選一位有院方量測的病人 → 快速範本「透析中低血壓處置」，勾有症狀、頭低腳高、部分緩解，事件時間選最近一筆量測之後幾分鐘 → 建立。
-  → 記錄卡是 <strong>D、A、R、T 四格</strong>，編輯框一出現就是預填文字。
-  → <strong>D</strong> 有事件時間（時:分）、「有無症狀：有症狀」、<strong>事件時間前最近一筆量測</strong>：「時:分 量測：血壓 …/… mmHg、脈搏 … 次/分、累積脫水量 … 公斤（設定 … 公斤）」。
-  → <strong>A</strong> 是「時:分 頭低腳高」；<strong>R</strong> 是「部分緩解」；<strong>T</strong> 空著。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa152</code> <strong>［護理端］</strong> 看四格的文字。
-  → 沒有病人姓名、沒有病歷號；院方資料讀到 0 的那一筆不出現（模擬院方 API 的 0 值列）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa150</code> <strong>［護理端］</strong> 系統管理 → 營運參數，看「護理紀錄格式」。 → 顯示「DART（資料、處置、反應、衛教）」，不是數字 1；編輯時是下拉選單。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa151</code> <strong>［護理端］</strong> 護理紀錄 → 選一位有院方量測的病人 → 快速範本「透析中低血壓處置」，勾有症狀、頭低腳高、部分緩解，事件時間選最近一筆量測之後幾分鐘 → 建立。 → 記錄卡是 <strong>D、A、R、T 四格</strong>，編輯框一出現就是預填文字。 → <strong>D</strong> 有事件時間（時:分）、「有無症狀：有症狀」、<strong>事件時間前最近一筆量測</strong>：「時:分 量測：血壓 …/… mmHg、脈搏 … 次/分、累積脫水量 … 公斤（設定 … 公斤）」。 → <strong>A</strong> 是「時:分 頭低腳高」；<strong>R</strong> 是「部分緩解」；<strong>T</strong> 空著。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa152</code> <strong>［護理端］</strong> 看四格的文字。 → 沒有病人姓名、沒有病歷號；院方資料讀到 0 的那一筆不出現（模擬院方 API 的 0 值列）。</li>
 </ul>
 <h2 id="1783-帶入處置後數值簽核複製">§17.8.3 帶入處置後數值、簽核、複製<a class="headerlink" href="#1783-帶入處置後數值簽核複製" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa153</code> <strong>［護理端］</strong> 事件時間之後還沒有新量測時，按「帶入處置後數值」。
-  → 畫面就地說「事件時間之後還沒有新的院方量測」，R 格不變。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa154</code> <strong>［護理端］</strong> 等院方資料多一筆量測（模擬院方 API 每 3 分鐘），再按一次。
-  → R 格後面多一句「處置後 時:分 量測：…」；再按一次不會重複。在 R 格裡先改過字也一樣，新的一句接在後面。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa155</code> <strong>［護理端］</strong> 在 T 格寫「說明緩慢起身、有頭暈即按呼叫鈴」，按「整份複製（尚未簽核）」，貼到記事本。
-  → 每段一行，以「D：」「A：」「R：」「T：」開頭；按鈕就地顯示「已複製」兩秒，沒有跳出任何對話框。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa156</code> <strong>［護理端］</strong> 簽核送出。
-  → 記錄卡變成四列，每一列右邊「複製這段」；底下「整份複製」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa157</code> <strong>［護理端］</strong> 🏥 用 <code>http://&lt;IP&gt;</code> 開護理端，按「複製這段」（R），貼到記事本。
-  → 只有 R 那一段的文字，<strong>沒有</strong>「R：」；複製成功。（用 <code>localhost</code> 時兩種做法都會成功，這一項一定要用 IP 開）</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa158</code> <strong>［護理端］</strong> 稽核軌跡，篩「複製護理記錄（貼進院內紀錄）」。
-  → 看得到整份、R（反應）段、未簽核那一次；說明裡沒有任何段落內容。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa153</code> <strong>［護理端］</strong> 事件時間之後還沒有新量測時，按「帶入處置後數值」。 → 畫面就地說「事件時間之後還沒有新的院方量測」，R 格不變。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa154</code> <strong>［護理端］</strong> 等院方資料多一筆量測（模擬院方 API 每 3 分鐘），再按一次。 → R 格後面多一句「處置後 時:分 量測：…」；再按一次不會重複。在 R 格裡先改過字也一樣，新的一句接在後面。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa155</code> <strong>［護理端］</strong> 在 T 格寫「說明緩慢起身、有頭暈即按呼叫鈴」，按「整份複製（尚未簽核）」，貼到記事本。 → 每段一行，以「D：」「A：」「R：」「T：」開頭；按鈕就地顯示「已複製」兩秒，沒有跳出任何對話框。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa156</code> <strong>［護理端］</strong> 簽核送出。 → 記錄卡變成四列，每一列右邊「複製這段」；底下「整份複製」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa157</code> <strong>［護理端］</strong> 🏥 用 <code>http://&lt;IP&gt;</code> 開護理端，按「複製這段」（R），貼到記事本。 → 只有 R 那一段的文字，<strong>沒有</strong>「R：」；複製成功。（用 <code>localhost</code> 時兩種做法都會成功，這一項一定要用 IP 開）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa158</code> <strong>［護理端］</strong> 稽核軌跡，篩「複製護理記錄（貼進院內紀錄）」。 → 看得到整份、R（反應）段、未簽核那一次；說明裡沒有任何段落內容。</li>
 </ul>
 <h2 id="1784-切到-soap">§17.8.4 切到 SOAP<a class="headerlink" href="#1784-切到-soap" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa159</code> <strong>［護理端］</strong> 營運參數把護理紀錄格式改成 SOAP，理由「試 SOAP」。
-  → 稽核寫「由 DART（…）改為 SOAP（…）」，不是 1 改 2。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa160</code> <strong>［護理端］</strong> 以「病人不適處置」建一筆（勾頭暈、冒冷汗；調整姿勢、測量生命徵象；已緩解；補充「病人說起身時頭暈」）。
-  → <strong>S</strong> 是時:分加病人表現；<strong>O</strong> 是事件前的量測與「補充：…」；<strong>A</strong> 只有「病人不適處置」（系統不寫任何評估）；<strong>P</strong> 是時:分加處置、已緩解。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa161</code> <strong>［護理端］</strong> 看 §17.8.2 那一筆。
-  → 仍是 D、A、R、T，複製出來也是 DART。做完把格式改回 DART。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa159</code> <strong>［護理端］</strong> 營運參數把護理紀錄格式改成 SOAP，理由「試 SOAP」。 → 稽核寫「由 DART（…）改為 SOAP（…）」，不是 1 改 2。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa160</code> <strong>［護理端］</strong> 以「病人不適處置」建一筆（勾頭暈、冒冷汗；調整姿勢、測量生命徵象；已緩解；補充「病人說起身時頭暈」）。 → <strong>S</strong> 是時:分加病人表現；<strong>O</strong> 是事件前的量測與「補充：…」；<strong>A</strong> 只有「病人不適處置」（系統不寫任何評估）；<strong>P</strong> 是時:分加處置、已緩解。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa161</code> <strong>［護理端］</strong> 看 §17.8.2 那一筆。 → 仍是 D、A、R、T，複製出來也是 DART。做完把格式改回 DART。</li>
 </ul>
 <h2 id="1785-ai-沒開也走得完">§17.8.5 AI 沒開也走得完<a class="headerlink" href="#1785-ai-沒開也走得完" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa162</code> <strong>［護理端］</strong> AI 總開關關著，從建立、改字、簽核到複製走一次（§17.8.2、§17.8.3 就是在 AI 關著時做的）。
-  → 畫面上沒有任何 AI 的按鈕、沒有空白的區塊、沒有錯誤。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa163</code> <strong>［護理端］</strong> （可略）照迭代 3 分冊開 AI 總開關（模擬供應者），在一筆草稿按「AI 潤飾」。
-  → 每一格底下出現「AI 初稿：…」；按「以 AI 初稿開始」各格換成 AI 的版本，簽核後記錄寫「原樣採用 AI 初稿」或「修改 AI 初稿後採用」。做完關回去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa162</code> <strong>［護理端］</strong> AI 總開關關著，從建立、改字、簽核到複製走一次（§17.8.2、§17.8.3 就是在 AI 關著時做的）。 → 畫面上沒有任何 AI 的按鈕、沒有空白的區塊、沒有錯誤。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa163</code> <strong>［護理端］</strong> （可略）照迭代 3 分冊開 AI 總開關（模擬供應者），在一筆草稿按「AI 潤飾」。 → 每一格底下出現「AI 初稿：…」；按「以 AI 初稿開始」各格換成 AI 的版本，簽核後記錄寫「原樣採用 AI 初稿」或「修改 AI 初稿後採用」。做完關回去。</li>
 </ul>
 <h2 id="1786-緊急回報的圖示">§17.8.6 緊急回報的圖示<a class="headerlink" href="#1786-緊急回報的圖示" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa164</code> <strong>［病人端］</strong> 📐 1280×800 開求助畫面，看類別格。
-  → 每一格的圖示畫的是症狀本身：轉圈加汗的臉（頭暈）、小腿裡的閃電（抽筋）、瞇眼波浪嘴（想吐）、胸口的心（胸悶）、頭頂裂開（頭痛）、手臂上抓的痕跡（癢）、發抖的人與溫度計（發冷）、手臂上的針與血滴（打針的地方）、傷口與血滴（流血）、人與問號（其他地方）、機器與聲波（機器一直叫）、蓋被子與太陽雪花（冷熱）、杯子與飯碗（口渴肚子餓）；字照舊在圖示下方。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa165</code> <strong>［病人端］</strong> 找一位沒看過對照的人，用紙把字遮住，請他看圖說出是什麼症狀。
-  → 十五格至少說對十二格（實作規格書 4.15.8 驗收第 9 條）；說錯的記下是哪幾格、被說成什麼，回報開發端。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa166</code> <strong>［病人端］</strong> 800×1280 再看一次。（<strong>1014 起不必驗</strong>：正式版固定橫放；<strong>迭代 27 起不適用</strong>：直放的排法已拿掉）
-  → 圖示沒有被切掉；畫面上紅色仍只在求助區。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa164</code> <strong>［病人端］</strong> 📐 1280×800 開求助畫面，看類別格。 → 每一格的圖示畫的是症狀本身：轉圈加汗的臉（頭暈）、小腿裡的閃電（抽筋）、瞇眼波浪嘴（想吐）、胸口的心（胸悶）、頭頂裂開（頭痛）、手臂上抓的痕跡（癢）、發抖的人與溫度計（發冷）、手臂上的針與血滴（打針的地方）、傷口與血滴（流血）、人與問號（其他地方）、機器與聲波（機器一直叫）、蓋被子與太陽雪花（冷熱）、杯子與飯碗（口渴肚子餓）；字照舊在圖示下方。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa165</code> <strong>［病人端］</strong> 找一位沒看過對照的人，用紙把字遮住，請他看圖說出是什麼症狀。 → 十五格至少說對十二格（實作規格書 4.15.8 驗收第 9 條）；說錯的記下是哪幾格、被說成什麼，回報開發端。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa166</code> <strong>［病人端］</strong> 800×1280 再看一次。（<strong>1014 起不必驗</strong>：正式版固定橫放；<strong>迭代 27 起不適用</strong>：直放的排法已拿掉） → 圖示沒有被切掉；畫面上紅色仍只在求助區。</li>
 </ul>
 <h2 id="1787-自動化驗收">§17.8.7 自動化驗收<a class="headerlink" href="#1787-自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa167</code> <strong>［終端機］</strong> <code>npm run verify:iteration17-8</code>（不需要後端）。
-  → 全部通過（它會再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>、<code>verify:iteration14</code>、<code>16</code>、<code>17-6</code>、<code>17-7</code>）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa168</code> <strong>［終端機］</strong> 開發用的後端開著、AI 總開關關著，跑 <code>npm run verify:iteration17-8:api</code>、<code>npm run verify:iteration4</code>、<code>npm run verify:iteration9</code>。
-  → 三支都通過（迭代 4 只送整份文字的簽核，照段名拆回各段）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa167</code> <strong>［終端機］</strong> <code>npm run verify:iteration17-8</code>（不需要後端）。 → 全部通過（它會再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>、<code>verify:iteration14</code>、<code>16</code>、<code>17-6</code>、<code>17-7</code>）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa168</code> <strong>［終端機］</strong> 開發用的後端開著、AI 總開關關著，跑 <code>npm run verify:iteration17-8:api</code>、<code>npm run verify:iteration4</code>、<code>npm run verify:iteration9</code>。 → 三支都通過（迭代 4 只送整份文字的簽核，照段名拆回各段）。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
@@ -4989,6 +4989,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>直放的步驟改註「迭代 27 起不適用」</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-17-8/">1014</a></td>
 <td>2026-10-14</td>

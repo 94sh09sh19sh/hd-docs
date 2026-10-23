@@ -5337,22 +5337,15 @@
 <h1 id="第十四冊之四--第二次進院紀錄1001部分成功">第十四冊之四 · 第二次進院紀錄（1001，部分成功）<a class="headerlink" href="#第十四冊之四--第二次進院紀錄1001部分成功" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：紀錄（1001 進院當天的現場資料整理而成）　編號：<code>M-xx</code></p>
 <blockquote>
-<p><a href="../14-from-zero/">第十四冊</a>與子手冊寫的是<strong>應該怎麼做</strong>，這一冊記的是 <strong>1001 第二次進院照第十四冊實際走了什麼</strong>。
-結果是<a href="../#2-三種結果先想清楚哪一種算數">總覽第 2 節</a>的 <strong>B 級：部分成功</strong>——
-服務在院內主機上起來了、外殼 APK 建好、金鑰備份核對通過，但<strong>護理端登不進去</strong>，備份還原、重新開機測試與平板佈建都還沒做。</p>
-<p>這一冊把當天帶回來的資料（現場紀錄檔、兩張螢幕照片、當天在現場向開發端提問的內容、當天推上去的四筆手冊修正、回來後的補述）
-整理成下一次進院能直接用的形狀：每一步做到哪裡、主機長什麼樣、遇到什麼、還缺什麼、手冊改了哪裡。
-依這次帶回的資料改寫的新手版是<a href="../15-from-zero/">第十五冊</a>，下一次進院照第十五冊走。</p>
-<p><strong>編號 <code>M-xx</code> 是這一冊的發現與待辦</strong>，寫進訊息或下一次的準備清單時用它指稱。
-文中的 <code>N-xx</code> 是第十四冊的步驟、<code>L-xx</code> 是<a href="../14c-cleanup-first-visit/">第十四冊之三</a>的步驟。</p>
-<p><strong>公開範圍</strong>：文件站是公開的。主機名稱、帳號、<code>.env</code> 裡的值、同機另一個專案的容器與映像檔名稱、原始照片<strong>一律不寫進這一冊</strong>，
-留在開發端本機的現場資料夾（不進 repo）。這一冊只寫判斷所需的結論。<strong>這一條與<a href="../10-first-visit/">第十冊</a>相同。</strong></p>
+<p><a href="../14-from-zero/">第十四冊</a>與子手冊寫的是<strong>應該怎麼做</strong>，這一冊記的是 <strong>1001 第二次進院照第十四冊實際走了什麼</strong>。結果是<a href="../#2-三種結果先想清楚哪一種算數">總覽第 2 節</a>的 <strong>B 級：部分成功</strong>——服務在院內主機上起來了、外殼 APK 建好、金鑰備份核對通過，但<strong>護理端登不進去</strong>，備份還原、重新開機測試與平板佈建都還沒做。</p>
+<p>這一冊把當天帶回來的資料（現場紀錄檔、兩張螢幕照片、當天在現場向開發端提問的內容、當天推上去的四筆手冊修正、回來後的補述）整理成下一次進院能直接用的形狀：每一步做到哪裡、主機長什麼樣、遇到什麼、還缺什麼、手冊改了哪裡。依這次帶回的資料改寫的新手版是<a href="../15-from-zero/">第十五冊</a>，下一次進院照第十五冊走。</p>
+<p><strong>編號 <code>M-xx</code> 是這一冊的發現與待辦</strong>，寫進訊息或下一次的準備清單時用它指稱。文中的 <code>N-xx</code> 是第十四冊的步驟、<code>L-xx</code> 是<a href="../14c-cleanup-first-visit/">第十四冊之三</a>的步驟。</p>
+<p><strong>公開範圍</strong>：文件站是公開的。主機名稱、帳號、<code>.env</code> 裡的值、同機另一個專案的容器與映像檔名稱、原始照片<strong>一律不寫進這一冊</strong>，留在開發端本機的現場資料夾（不進 repo）。這一冊只寫判斷所需的結論。<strong>這一條與<a href="../10-first-visit/">第十冊</a>相同。</strong></p>
 </blockquote>
 <hr />
 <h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
 <h3 id="01-一句話">0.1 一句話<a class="headerlink" href="#01-一句話" title="Permanent link">&para;</a></h3>
-<p><strong>這一次在主機的 PowerShell 裡照第十四冊從 N-04 一路做到 N-23，三個服務起來了、外殼 APK 與金鑰都在主機上，
-卡在 N-16 的最後一格：護理端的登入頁開得起來，按下登入出現 <code>Failed to fetch</code>，離院前沒有查出原因。</strong></p>
+<p><strong>這一次在主機的 PowerShell 裡照第十四冊從 N-04 一路做到 N-23，三個服務起來了、外殼 APK 與金鑰都在主機上，卡在 N-16 的最後一格：護理端的登入頁開得起來，按下登入出現 <code>Failed to fetch</code>，離院前沒有查出原因。</strong></p>
 <p>和 0922 比，這次做對了最重要的一件事：<strong>沒有自己開任何容器</strong>，所有容器都由 <code>docker compose</code> 產生（第十冊 F-01～F-03 沒有重演）。</p>
 <h3 id="02-這一次的發現由重到輕">0.2 這一次的發現，由重到輕<a class="headerlink" href="#02-這一次的發現由重到輕" title="Permanent link">&para;</a></h3>
 <table>
@@ -5505,13 +5498,10 @@
 </tbody>
 </table>
 <blockquote>
-<p>⚠️ <strong>這次違反了 N-03 的一條</strong>：<code>v0.3.0</code> 是出發前才打的，<strong>沒有先在開發機模擬部署過</strong>。
-演練紀錄第 8～10 節的開發機實測做的是更早的 tag。這次在院內遇到的問題都不是 <code>v0.3.0</code> 本身的程式問題，
-但「沒模擬部署過的 tag 不准拿去院內」這一條，下一次要守住（<a href="#m-15-開發端要先做完的事">M-15</a>）。</p>
+<p>⚠️ <strong>這次違反了 N-03 的一條</strong>：<code>v0.3.0</code> 是出發前才打的，<strong>沒有先在開發機模擬部署過</strong>。演練紀錄第 8～10 節的開發機實測做的是更早的 tag。這次在院內遇到的問題都不是 <code>v0.3.0</code> 本身的程式問題，但「沒模擬部署過的 tag 不准拿去院內」這一條，下一次要守住（<a href="#m-15-開發端要先做完的事">M-15</a>）。</p>
 </blockquote>
 <h3 id="12-時間線">1.2 時間線<a class="headerlink" href="#12-時間線" title="Permanent link">&para;</a></h3>
-<p>下表的時間大多是<strong>當天在現場向開發端提問的時間</strong>，不是那一步開始或完成的時間；只有標 ★ 的兩列是檔案本身記下的時間。
-它只能用來看大致的順序與段落，<strong>不能拿來估每一步的耗時</strong>。</p>
+<p>下表的時間大多是<strong>當天在現場向開發端提問的時間</strong>，不是那一步開始或完成的時間；只有標 ★ 的兩列是檔案本身記下的時間。它只能用來看大致的順序與段落，<strong>不能拿來估每一步的耗時</strong>。</p>
 <table>
 <thead>
 <tr>
@@ -5638,8 +5628,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>還是沒有記到的</strong>（第十冊第 3 節列過的）：記憶體、<code>wsl --status</code>、Docker Desktop 設定第 1 項「登入時自動啟動」、
-磁碟剩餘空間。這一次也沒記 Docker Desktop 的四項設定（N-05）。</p>
+<p><strong>還是沒有記到的</strong>（第十冊第 3 節列過的）：記憶體、<code>wsl --status</code>、Docker Desktop 設定第 1 項「登入時自動啟動」、磁碟剩餘空間。這一次也沒記 Docker Desktop 的四項設定（N-05）。</p>
 <hr />
 <h2 id="3-遇到的問題">3. 遇到的問題<a class="headerlink" href="#3-遇到的問題" title="Permanent link">&para;</a></h2>
 <h3 id="m-01-護理端登入出現-failed-to-fetch">M-01 護理端登入出現 <code>Failed to fetch</code><a class="headerlink" href="#m-01-護理端登入出現-failed-to-fetch" title="Permanent link">&para;</a></h3>
@@ -5675,11 +5664,9 @@
 <blockquote>
 <p>17:58 在現場曾回報第三條「印出 <code>…rol-Allow-Origin</code>」；回來後確認，<strong>第三條的結果是空的</strong>，以紀錄檔為準。</p>
 </blockquote>
-<p><strong>這三條合起來的意思</strong>：後端活著、<code>&lt;主機&gt;:&lt;後端埠&gt;</code> 連得到（第二條），但後端的 CORS 名單裡<strong>沒有</strong> <code>http://&lt;主機&gt;:&lt;護理端埠&gt;</code> 這個來源（第三條）。
-光這一點就足以讓登入出現 <code>Failed to fetch</code>。照附錄，原因只有兩種：</p>
+<p><strong>這三條合起來的意思</strong>：後端活著、<code>&lt;主機&gt;:&lt;後端埠&gt;</code> 連得到（第二條），但後端的 CORS 名單裡<strong>沒有</strong> <code>http://&lt;主機&gt;:&lt;護理端埠&gt;</code> 這個來源（第三條）。光這一點就足以讓登入出現 <code>Failed to fetch</code>。照附錄，原因只有兩種：</p>
 <ol>
-<li><strong><code>.env</code> 的 <code>CORS_ORIGINS</code> 寫的不是 <code>http://&lt;主機&gt;:&lt;護理端埠&gt;</code></strong>——例如仍是範例的 <code>hd-server</code>、寫成 <code>localhost</code>、名稱與 IP 的寫法和第三條用的不同、埠不對。
-   17:47 問過「<code>hd-server</code> 要照寫還是寫主機名稱」，照抄過範例的可能性不低。</li>
+<li><strong><code>.env</code> 的 <code>CORS_ORIGINS</code> 寫的不是 <code>http://&lt;主機&gt;:&lt;護理端埠&gt;</code></strong>——例如仍是範例的 <code>hd-server</code>、寫成 <code>localhost</code>、名稱與 IP 的寫法和第三條用的不同、埠不對。 17:47 問過「<code>hd-server</code> 要照寫還是寫主機名稱」，照抄過範例的可能性不低。</li>
 <li><strong><code>.env</code> 是對的，但改完之後沒有 <code>up -d</code></strong>：<code>.env</code> 只在容器建立時讀一次，執行中的後端還在用改之前的 <code>CORS_ORIGINS</code>。</li>
 </ol>
 <p>第一條沒帶回來，所以分不出是哪一種。<strong>兩種的處置都是改好 <code>.env</code> 之後 <code>docker compose --env-file $cfg up -d</code>，再打一次第三條，要印出 <code>Access-Control-Allow-Origin: http://&lt;主機&gt;:&lt;護理端埠&gt;</code>。</strong></p>
@@ -5693,15 +5680,14 @@
 <p><strong>發生了什麼</strong>：N-04 的 <code>git --version</code> 說找不到。現場從 <code>git-scm.com</code> 下載 <strong>x64 Setup</strong>（不是 Portable、不是 ARM64）裝上，版本 <code>2.56.0.windows.1</code>。</p>
 <p><strong>為什麼要記</strong>：</p>
 <ul>
-<li>第十四冊 N-04 寫的是「實際部署：<strong>問資訊室，不要自己裝</strong>，那是院方的變更流程」。**這次是誰裝的、資訊室有沒有同意，紀錄裡沒有寫。**下一次要補問，並寫進交接文件。</li>
+<li>第十四冊 N-04 寫的是「實際部署：<strong>問資訊室，不要自己裝</strong>，那是院方的變更流程」。<strong>這次是誰裝的、資訊室有沒有同意，紀錄裡沒有寫。</strong>下一次要補問，並寫進交接文件。</li>
 <li>這一題<strong>一直沒人問過</strong>：第九冊 D-03 第 8 題原本有「主機上有沒有 Git、沒有的話誰裝」，0922 沒記到（第十冊 3.5 節），0926 改寫 Q-27 與第十一冊 W-03 時這一題沒有搬過去。所以這次是到了現場才發現。</li>
 </ul>
 <p><strong>手冊怎麼改</strong>：Q-27 補第 11 題、W-03 補一列（<a href="#m-12-手冊要改的地方">M-12</a>）；第十五冊 V-04 寫進 Git 該選哪一個安裝檔、裝完要重開 PowerShell。</p>
 <h3 id="m-03-根目錄改放-c-槽">M-03 根目錄改放 C 槽<a class="headerlink" href="#m-03-根目錄改放-c-槽" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>：本系統放在 <code>C:\hd\hd-tablet-care</code>，第十四冊 N-08 寫的是 <code>D:\hd-tablet-care</code>。</p>
 <p><strong>為什麼會這樣</strong>：紀錄沒有寫理由。0922 帶回來的資料裡，D 槽只剩約 4.6%（<a href="../10-first-visit/#32-磁碟">第十冊 3.2 節</a>），C 槽空間充足、Docker 的虛擬磁碟也在 C 槽，放 C 槽是合理的選擇。</p>
-<p><strong>影響</strong>：<code>.env</code> 的 <code>HD_BACKUP_DIR</code>、<code>HD_CONFIG_DIR</code>、<code>HD_SHELL_SRC_DIR</code> 都在 <code>C:\hd\hd-tablet-care</code> 底下；開工三行的 <code>$root</code> 也要用這個路徑。
-這是<strong>資訊室要知道的位置</strong>（備份目錄由院方送往另一台機器），Q-27 第 5 題「備份目錄與設定目錄放哪一顆磁碟」還沒有書面答覆，下一次要確認院方同意這個位置。</p>
+<p><strong>影響</strong>：<code>.env</code> 的 <code>HD_BACKUP_DIR</code>、<code>HD_CONFIG_DIR</code>、<code>HD_SHELL_SRC_DIR</code> 都在 <code>C:\hd\hd-tablet-care</code> 底下；開工三行的 <code>$root</code> 也要用這個路徑。這是<strong>資訊室要知道的位置</strong>（備份目錄由院方送往另一台機器），Q-27 第 5 題「備份目錄與設定目錄放哪一顆磁碟」還沒有書面答覆，下一次要確認院方同意這個位置。</p>
 <p><strong>手冊怎麼改</strong>：第十五冊與第十五冊之一的根目錄改成 <code>C:\hd\hd-tablet-care</code>。</p>
 <h3 id="m-04-主機位址要填什麼">M-04 主機位址要填什麼<a class="headerlink" href="#m-04-主機位址要填什麼" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>：填 <code>.env</code> 的 <code>HD_PUBLIC_API_URL</code>、<code>CORS_ORIGINS</code>、<code>MDM_KIOSK_BASE_URL</code> 時，現場問了兩次：「<code>&lt;主機&gt;</code> 要怎麼查？」「<code>hd-server</code> 要照寫，還是寫我的主機名稱？」</p>
@@ -5710,8 +5696,8 @@
 <li>第十四冊之一的範例一律寫 <code>hd-server</code>，0.3 節雖然寫了「這些只是範例」，但範例本身長得像一個真的名字。</li>
 <li>第十四冊之一 0.3 節說這一題「在 N-02 的問題清單裡」，<strong>實際上不在</strong>：第十一冊 W-03 那張表沒有「護理站、平板用哪個名稱或 IP 連主機」這一題，所以進院前沒問到，只能在現場自己決定。</li>
 </ul>
-<p><strong>最後填了什麼</strong>：紀錄沒有寫（照規定 <code>.env</code> 的值本來就不寫進文件，但「用的是主機名稱還是 IP」這一句應該記下來）。這一題與 M-01 直接相關。
-<strong>1005 補記</strong>：用的是<strong>主機名稱</strong>（<code>hostname</code> 印出的那一個；有沒有帶 DNS 尾碼未記）。日後要改用 IP，照<a href="../15d-switch-host-to-ip/">第十五冊之四</a>。</p>
+<p><strong>最後填了什麼</strong>：紀錄沒有寫（照規定 <code>.env</code> 的值本來就不寫進文件，但「用的是主機名稱還是 IP」這一句應該記下來）。這一題與 M-01 直接相關。</p>
+<p><strong>1005 補記</strong>：用的是<strong>主機名稱</strong>（<code>hostname</code> 印出的那一個；有沒有帶 DNS 尾碼未記）。日後要改用 IP，照<a href="../15d-switch-host-to-ip/">第十五冊之四</a>。</p>
 <p><strong>手冊怎麼改</strong>：W-03 補一列；第十五冊新增 V-08「決定主機位址」，放在填 <code>.env</code> 之前；第十五冊之一的範例改寫成 <code>&lt;主機&gt;</code>，不再用一個像真名的範例。</p>
 <h3 id="m-05-防毒排除清單是空的">M-05 防毒排除清單是空的<a class="headerlink" href="#m-05-防毒排除清單是空的" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>：照第十四冊<a href="../14-from-zero/#附錄查防毒軟體與排除清單只看不改">附錄：查防毒軟體與排除清單</a>（這一段就是當天在現場寫進去的）查到：</p>
@@ -5733,14 +5719,11 @@
 </tr>
 </tbody>
 </table>
-<p><strong>意思</strong>：Docker Desktop 的虛擬磁碟（資料庫就在裡面）正被 Defender 即時掃描。這正是<a href="../#6-什麼情況下當場停手">總覽第 6 節</a>「防毒排除當天加不了，有人說先跑跑看」那一條：
-SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</strong>的。</p>
-<p><strong>這一次沒有停手</strong>：服務已經起來了。這不違反「停手」那一條的字面（沒有人提議「先跑跑看」），但效果相同。
-<strong>在排除加上之前，這台主機不得輸入真實病人資料</strong>——反正登入還沒通（M-01），目前也不會有人輸入。</p>
+<p><strong>意思</strong>：Docker Desktop 的虛擬磁碟（資料庫就在裡面）正被 Defender 即時掃描。這正是<a href="../#6-什麼情況下當場停手">總覽第 6 節</a>「防毒排除當天加不了，有人說先跑跑看」那一條： SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</strong>的。</p>
+<p><strong>這一次沒有停手</strong>：服務已經起來了。這不違反「停手」那一條的字面（沒有人提議「先跑跑看」），但效果相同。 <strong>在排除加上之前，這台主機不得輸入真實病人資料</strong>——反正登入還沒通（M-01），目前也不會有人輸入。</p>
 <p><strong>下一次怎麼做</strong>：請資訊室把 N-05 第 4 項的 Disk image location 加入 Defender 的排除清單，加完用同一條 <code>Get-MpPreference</code> 看得到它。</p>
 <blockquote>
-<p>紀錄寫的是「空」。<code>Get-MpPreference</code> 不是用系統管理員身分執行時，會印出一行 <code>N/A: Must be an administrator to view exclusions</code>，
-而不是什麼都不印。所以「空」可以視為真的沒有排除路徑；下一次用系統管理員身分再看一次確認。</p>
+<p>紀錄寫的是「空」。<code>Get-MpPreference</code> 不是用系統管理員身分執行時，會印出一行 <code>N/A: Must be an administrator to view exclusions</code>，而不是什麼都不印。所以「空」可以視為真的沒有排除路徑；下一次用系統管理員身分再看一次確認。</p>
 </blockquote>
 <h3 id="m-06-docker-查不到-docker-hub-的網域">M-06 Docker 查不到 Docker Hub 的網域<a class="headerlink" href="#m-06-docker-查不到-docker-hub-的網域" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>：Docker 從 Docker Hub 下載映像檔時，<strong>三次</strong>查不到 Docker Hub 的網域（DNS）：</p>
@@ -5779,8 +5762,7 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 <ul>
 <li>第 1、2 次查不到的是<strong>不同的網域</strong>（下載站、認證站），第 3 次又回到下載站，而第 3 次重跑就過——<strong>時好時壞，不是被擋掉</strong>。</li>
 <li>中間 N-13 的建置也要從 Docker Hub 下載 <code>node:20-bookworm-slim</code>，那一次成功了。</li>
-<li>N-06 的連線實測這次沒有記到結果；而且 <code>Test-NetConnection</code> 是 Windows 去查名稱，<code>docker pull</code> 是 Docker Desktop 自己去查，<strong>兩條路不一定同時通</strong>。
-  原本的 N-06 只測前者，也沒有列 <code>production.cloudfront.docker.com</code> 這個下載站。</li>
+<li>N-06 的連線實測這次沒有記到結果；而且 <code>Test-NetConnection</code> 是 Windows 去查名稱，<code>docker pull</code> 是 Docker Desktop 自己去查，<strong>兩條路不一定同時通</strong>。原本的 N-06 只測前者，也沒有列 <code>production.cloudfront.docker.com</code> 這個下載站。</li>
 <li>原因在院內 DNS 還是 Docker Desktop，這次沒有查到（沒有在出錯當下打 <code>Resolve-DnsName</code>）。</li>
 </ul>
 <p>N-20 這一步含出錯與重來，總共花了 27～33 分鐘。</p>
@@ -5791,8 +5773,7 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 <li>Q-27 補一題問院內 DNS 對這些網域穩不穩（<a href="#m-12-手冊要改的地方">M-12</a>）。</li>
 </ul>
 <h3 id="m-07-產生-jwt_secret-的-docker-run-下載失敗">M-07 產生 <code>JWT_SECRET</code> 的 <code>docker run</code> 下載失敗<a class="headerlink" href="#m-07-產生-jwt_secret-的-docker-run-下載失敗" title="Permanent link">&para;</a></h3>
-<p><strong>發生了什麼</strong>：第十四冊之一 1.6 節的 <code>docker run --rm node:20-bookworm-slim node -e …</code> 先印出 <code>Unable to find image 'node:20-bookworm-slim' locally</code>
-（這一行本身不是錯誤，Docker 接著會自己下載），然後<strong>下載失敗</strong>；再打一次，換成另一個網域查不到（M-06 第 1、2 次）。</p>
+<p><strong>發生了什麼</strong>：第十四冊之一 1.6 節的 <code>docker run --rm node:20-bookworm-slim node -e …</code> 先印出 <code>Unable to find image 'node:20-bookworm-slim' locally</code> （這一行本身不是錯誤，Docker 接著會自己下載），然後<strong>下載失敗</strong>；再打一次，換成另一個網域查不到（M-06 第 1、2 次）。</p>
 <p>當時在現場只回報了第一行，開發端的回答是「這一行不是錯誤，等它下載」；<strong>帶回來的照片才看出後面其實是下載失敗</strong>。這也是第十冊就寫過的教訓：錯誤要抄原文，而且要抄到最後一行。</p>
 <p><strong>手冊怎麼改</strong>：已改（1001 現場，<code>05ebb61</code>）。改用 Windows 內建的 PowerShell 產生，輸出格式相同（64 個字元、只有英數字與 <code>-</code>、<code>_</code>），不必下載任何映像檔，也就不受 M-06 影響。</p>
 <h3 id="m-08-三處以為出錯其實正常的輸出">M-08 三處以為出錯、其實正常的輸出<a class="headerlink" href="#m-08-三處以為出錯其實正常的輸出" title="Permanent link">&para;</a></h3>
@@ -5826,8 +5807,7 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 </tr>
 </tbody>
 </table>
-<p>N-23 那張照片同時是 N-22 的證據：<code>keys-verify</code> 印出 <code>ca/ca.key</code>、<code>ca/ca.crt</code>、<code>signing/shell-signing.p12</code>、<code>signing/keystore.pass</code> 四項，
-「備份裡的簽章金鑰以備份裡的密碼打得開」「備份裡的 CA 私鑰完整」，最後「<code>hd-keys-20261001-173347.tar.gz</code> 還原得回來」，<strong>全部 ✓</strong>。</p>
+<p>N-23 那張照片同時是 N-22 的證據：<code>keys-verify</code> 印出 <code>ca/ca.key</code>、<code>ca/ca.crt</code>、<code>signing/shell-signing.p12</code>、<code>signing/keystore.pass</code> 四項，「備份裡的簽章金鑰以備份裡的密碼打得開」「備份裡的 CA 私鑰完整」，最後「<code>hd-keys-20261001-173347.tar.gz</code> 還原得回來」，<strong>全部 ✓</strong>。</p>
 <hr />
 <h2 id="4-第十四冊逐步對照">4. 第十四冊逐步對照<a class="headerlink" href="#4-第十四冊逐步對照" title="Permanent link">&para;</a></h2>
 <table>
@@ -5974,8 +5954,7 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 <hr />
 <h2 id="5-帶回來之後才看清楚的幾件事">5. 帶回來之後才看清楚的幾件事<a class="headerlink" href="#5-帶回來之後才看清楚的幾件事" title="Permanent link">&para;</a></h2>
 <h3 id="m-09-服務在主機上跑著但還不能用">M-09 服務在主機上跑著，但還不能用<a class="headerlink" href="#m-09-服務在主機上跑著但還不能用" title="Permanent link">&para;</a></h3>
-<p>這次離院時，三個服務仍在主機上跑（N-15 之後沒有人停掉）。這與總覽第 6 節「<strong>半成品留在現場比沒有東西更糟</strong>」相衝突的地方只有一個：
-護理師會不會開始用它。<strong>登入不通（M-01），所以目前沒有人能用</strong>，這一點反而讓留著它跑的風險很低。</p>
+<p>這次離院時，三個服務仍在主機上跑（N-15 之後沒有人停掉）。這與總覽第 6 節「<strong>半成品留在現場比沒有東西更糟</strong>」相衝突的地方只有一個：護理師會不會開始用它。<strong>登入不通（M-01），所以目前沒有人能用</strong>，這一點反而讓留著它跑的風險很低。</p>
 <p>但下面兩件事讓它<strong>不能就這樣放著到下一次</strong>：</p>
 <ul>
 <li>防毒排除沒加（M-05），Defender 一直在掃資料庫所在的虛擬磁碟。</li>
@@ -6058,8 +6037,7 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 </tr>
 </tbody>
 </table>
-<p>另外確定了<strong>這條路線在這台主機上走得通</strong>：clone、建置、遷移、啟動、<code>shell-builder</code> 產生金鑰並建 APK、HTTPS，全部在院內主機上跑成功了。
-剩下的問題都在「設定與現場確認」，不在「這條路線能不能用」。</p>
+<p>另外確定了<strong>這條路線在這台主機上走得通</strong>：clone、建置、遷移、啟動、<code>shell-builder</code> 產生金鑰並建 APK、HTTPS，全部在院內主機上跑成功了。剩下的問題都在「設定與現場確認」，不在「這條路線能不能用」。</p>
 <hr />
 <h2 id="6-手冊要改的地方">6. 手冊要改的地方<a class="headerlink" href="#6-手冊要改的地方" title="Permanent link">&para;</a></h2>
 <h3 id="m-12-手冊要改的地方">M-12 手冊要改的地方<a class="headerlink" href="#m-12-手冊要改的地方" title="Permanent link">&para;</a></h3>
@@ -6233,13 +6211,11 @@ SQLite 被即時掃描鎖住的錯誤是<strong>間歇性、不固定重現</str
 <p>照順序，<strong>全部做完才往下</strong>。步驟編號是第十五冊的：</p>
 <ol>
 <li><strong>看服務是不是還是 1001 離開時的樣子</strong>：開工三行（根目錄 <code>C:\hd\hd-tablet-care</code>）→ <code>docker compose --env-file $cfg ps</code> → health。第十五冊 0.5 節有完整的檢查表。</li>
-<li><strong>先解 M-01</strong>：照第十五冊 V-17 第二段——先看 <code>CORS_ORIGINS</code> 寫了什麼，改對後 <code>up -d</code>，直到「放不放行」那一條印出 <code>Access-Control-Allow-Origin</code>；
-   再對網頁裡寫死的後端位址、瀏覽器網址列。<strong>登入通了才往下</strong>。</li>
+<li><strong>先解 M-01</strong>：照第十五冊 V-17 第二段——先看 <code>CORS_ORIGINS</code> 寫了什麼，改對後 <code>up -d</code>，直到「放不放行」那一條印出 <code>Access-Control-Allow-Origin</code>；再對網頁裡寫死的後端位址、瀏覽器網址列。<strong>登入通了才往下</strong>。</li>
 <li>確認 0922 的殘留：第十四冊之三的 L-01 與 L-07 兩步（只看）。</li>
 <li>補記 M-10 那幾格。</li>
 <li>把 M-13 的答案逐列核對一次。</li>
-<li>然後從第十五冊 V-18（備份與還原）接著做：V-18、V-19（重新開機）、V-25～V-28（平板）、V-29、V-30（AI 閘道，若 1001 沒做）、第 10.1 節的冒煙測試與交接。
-   中間有空檔時，補做 V-06 的兩條 <code>docker pull</code>，看 Docker 這一次查不查得到 Docker Hub（M-06）。</li>
+<li>然後從第十五冊 V-18（備份與還原）接著做：V-18、V-19（重新開機）、V-25～V-28（平板）、V-29、V-30（AI 閘道，若 1001 沒做）、第 10.1 節的冒煙測試與交接。中間有空檔時，補做 V-06 的兩條 <code>docker pull</code>，看 Docker 這一次查不查得到 Docker Hub（M-06）。</li>
 </ol>
 <h3 id="m-15-開發端要先做完的事">M-15 開發端要先做完的事<a class="headerlink" href="#m-15-開發端要先做完的事" title="Permanent link">&para;</a></h3>
 <table>

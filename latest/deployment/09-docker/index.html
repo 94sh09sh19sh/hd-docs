@@ -5781,11 +5781,8 @@
 <h1 id="第九冊--院方要求以-git-clone--docker-部署">第九冊 · 院方要求以 <code>git clone</code> ＋ Docker 部署<a class="headerlink" href="#第九冊--院方要求以-git-clone--docker-部署" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案　編號：<code>D-xx</code>　<strong>這一冊要印出來帶進去</strong></p>
 <blockquote>
-<p>前八冊走的都是隨身碟帶離線安裝包進去、以排程工作常駐的路線（DEP-07）。
-這一冊處理院方<strong>指定</strong>另一條路：<strong>在主機上 <code>git clone</code>，再用 Docker 建置並執行。</strong></p>
-<p>它和<a href="../07-git-clone/">第七冊</a>不一樣。第七冊是「clone 意外成功了，接下來怎麼辦」，終點仍然是安裝包；
-這一冊是「院方明說要容器」，那正是《部署規範》<a href="../../requirements/deployment-spec/#33-容器備案的啟用條件">3.3</a>
-列的第一種啟用條件——<strong>容器備案正式啟用</strong>。</p>
+<p>前八冊走的都是隨身碟帶離線安裝包進去、以排程工作常駐的路線（DEP-07）。這一冊處理院方<strong>指定</strong>另一條路：<strong>在主機上 <code>git clone</code>，再用 Docker 建置並執行。</strong></p>
+<p>它和<a href="../07-git-clone/">第七冊</a>不一樣。第七冊是「clone 意外成功了，接下來怎麼辦」，終點仍然是安裝包；這一冊是「院方明說要容器」，那正是《部署規範》<a href="../../requirements/deployment-spec/#33-容器備案的啟用條件">3.3</a> 列的第一種啟用條件——<strong>容器備案正式啟用</strong>。</p>
 </blockquote>
 <hr />
 <h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
@@ -5842,10 +5839,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>為什麼 DEP-23 最重要。</strong> 《部署規範》<a href="../../requirements/deployment-spec/#31-為什麼改掉容器">3.1</a>
-改掉容器的理由就是它：Docker 在 Windows 上跑在 WSL2 裡，把資料庫放在「Windows 目錄的繫結掛載」上，
-SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在某一天兩個寫入撞在一起時毀掉資料庫。</strong>
-所以這條路線唯一不准商量的，就是資料庫的位置。</p>
+<p><strong>為什麼 DEP-23 最重要。</strong> 《部署規範》<a href="../../requirements/deployment-spec/#31-為什麼改掉容器">3.1</a> 改掉容器的理由就是它：Docker 在 Windows 上跑在 WSL2 裡，把資料庫放在「Windows 目錄的繫結掛載」上， SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在某一天兩個寫入撞在一起時毀掉資料庫。</strong> 所以這條路線唯一不准商量的，就是資料庫的位置。</p>
 </blockquote>
 <h3 id="02-東西放在哪裡">0.2 東西放在哪裡<a class="headerlink" href="#02-東西放在哪裡" title="Permanent link">&para;</a></h3>
 <table>
@@ -5895,8 +5889,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </tbody>
 </table>
 <h3 id="03-開發端演練結果0921">0.3 開發端演練結果（0921）<a class="headerlink" href="#03-開發端演練結果0921" title="Permanent link">&para;</a></h3>
-<p>這一冊的每一條指令，都在開發機上以「clone → 建置 → 遷移 → 啟動 → 備份 → 更新 → 還原」的順序實際跑過一次。
-<strong>演練抓到三個會讓這條路線在院內直接倒下的問題，已在 0921 修掉</strong>：</p>
+<p>這一冊的每一條指令，都在開發機上以「clone → 建置 → 遷移 → 啟動 → 備份 → 更新 → 還原」的順序實際跑過一次。 <strong>演練抓到三個會讓這條路線在院內直接倒下的問題，已在 0921 修掉</strong>：</p>
 <table>
 <thead>
 <tr>
@@ -5931,8 +5924,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <li>連線關閉之後重新啟動仍然正常（<a href="#d-24-關閉對外連線並當場確認">D-24</a>）</li>
 </ul>
 <blockquote>
-<p><strong>這三條修正必須已經在 GitHub 上。</strong> 院方 clone 到的是遠端那一版，不是你開發機上的那一版。
-<a href="#d-01-確認要被-clone-的那一版">D-01</a> 就是在確認這件事。</p>
+<p><strong>這三條修正必須已經在 GitHub 上。</strong> 院方 clone 到的是遠端那一版，不是你開發機上的那一版。 <a href="#d-01-確認要被-clone-的那一版">D-01</a> 就是在確認這件事。</p>
 </blockquote>
 <hr />
 <h2 id="1-進院前在開發端做完">1. 進院前（在開發端做完）<a class="headerlink" href="#1-進院前在開發端做完" title="Permanent link">&para;</a></h2>
@@ -5976,8 +5968,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <hr />
 <h3 id="d-02-在開發端完整演練一次">D-02 在開發端完整演練一次<a class="headerlink" href="#d-02-在開發端完整演練一次" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
-<p>找一台<strong>乾淨的</strong> Windows 機器（與<a href="../02-dry-run/">第二冊</a> R-01 同一個標準），裝好 Docker Desktop，
-從 <a href="#d-11-clone-到固定目錄">D-11</a> 一路做到 <a href="#d-23-備份並驗證還原得起來">D-23</a>。<strong>全程計時。</strong></p>
+<p>找一台<strong>乾淨的</strong> Windows 機器（與<a href="../02-dry-run/">第二冊</a> R-01 同一個標準），裝好 Docker Desktop，從 <a href="#d-11-clone-到固定目錄">D-11</a> 一路做到 <a href="#d-23-備份並驗證還原得起來">D-23</a>。<strong>全程計時。</strong></p>
 <p><strong>怎麼知道成功了</strong></p>
 <ul>
 <li>三個容器都是 <code>Up</code>，存活檢查 HTTP 200</li>
@@ -6068,8 +6059,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <p>有書面回覆。<strong>第 2、3 題沒有答案，這條路線就不能開始輸入真實病人資料。</strong></p>
 <hr />
 <h3 id="d-04-準備一把唯讀會過期的存取憑證">D-04 準備一把唯讀、會過期的存取憑證<a class="headerlink" href="#d-04-準備一把唯讀會過期的存取憑證" title="Permanent link">&para;</a></h3>
-<p>這個 repo 是<strong>私有的</strong>，院方 clone 一定要有憑證。<a href="../07-git-clone/#g-03-查出是誰的憑證">第七冊 G-03</a> 講過用錯憑證的後果。
-<strong>這一次你可以事先準備對的那一把。</strong></p>
+<p>這個 repo 是<strong>私有的</strong>，院方 clone 一定要有憑證。<a href="../07-git-clone/#g-03-查出是誰的憑證">第七冊 G-03</a> 講過用錯憑證的後果。 <strong>這一次你可以事先準備對的那一把。</strong></p>
 <p><strong>做什麼</strong></p>
 <p>在 GitHub 上建一把 <strong>fine-grained personal access token</strong>：</p>
 <table>
@@ -6122,8 +6112,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </table>
 <hr />
 <h2 id="2-進院當天先確認-docker-這一層">2. 進院當天：先確認 Docker 這一層<a class="headerlink" href="#2-進院當天先確認-docker-這一層" title="Permanent link">&para;</a></h2>
-<p>前面照<a href="../04-onsite/">第四冊</a> H-01～H-07 走（報到、找人、問問題、確認機器、盤點）。
-<strong>H-08 到 H-13 由這一冊的 D-05～D-23 取代。</strong> H-14 起回到第四冊，差異寫在 <a href="#d-27-回到第四冊哪些照做哪些要換">D-27</a>。</p>
+<p>前面照<a href="../04-onsite/">第四冊</a> H-01～H-07 走（報到、找人、問問題、確認機器、盤點）。 <strong>H-08 到 H-13 由這一冊的 D-05～D-23 取代。</strong> H-14 起回到第四冊，差異寫在 <a href="#d-27-回到第四冊哪些照做哪些要換">D-27</a>。</p>
 <h3 id="d-05-開場時說清楚這條路線的代價">D-05 開場時說清楚這條路線的代價<a class="headerlink" href="#d-05-開場時說清楚這條路線的代價" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
 <p>對資訊室講三句話：</p>
@@ -6186,8 +6175,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </tbody>
 </table>
 <blockquote>
-<p>回去之後，容器備案啟用與這幾條例外要寫進《<a href="../../requirements/deployment-spec/">部署規範</a>》。
-<strong>手冊不能替規範開例外</strong>，它只記錄現場發生了什麼（與第七冊 G-09 同一條）。</p>
+<p>回去之後，容器備案啟用與這幾條例外要寫進《<a href="../../requirements/deployment-spec/">部署規範</a>》。 <strong>手冊不能替規範開例外</strong>，它只記錄現場發生了什麼（與第七冊 G-09 同一條）。</p>
 </blockquote>
 <hr />
 <h3 id="d-07-確認-docker-可以用">D-07 確認 Docker 可以用<a class="headerlink" href="#d-07-確認-docker-可以用" title="Permanent link">&para;</a></h3>
@@ -6302,8 +6290,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </tr>
 </tbody>
 </table>
-<p>第 4 項若要搬，<strong>要在建資料卷之前搬</strong>；Docker Desktop 會把現有的虛擬磁碟一起搬過去，要花幾分鐘。
-<strong>同機有別的專案在用 Docker 時，第 4 項不要動</strong>，記下現況，回去再談。</p>
+<p>第 4 項若要搬，<strong>要在建資料卷之前搬</strong>；Docker Desktop 會把現有的虛擬磁碟一起搬過去，要花幾分鐘。 <strong>同機有別的專案在用 Docker 時，第 4 項不要動</strong>，記下現況，回去再談。</p>
 <p>然後請資訊室把<strong>虛擬磁碟所在的目錄</strong>加入防毒排除清單（<a href="../04-onsite/#h-14-windows-五件事需要資訊室">H-14 ①</a> 的容器版）。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <p>四項都是上表的值，截圖或抄下來；防毒排除清單裡看得到那個目錄。</p>
@@ -6328,8 +6315,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </table>
 <hr />
 <h3 id="d-09-確認誰能下-docker-指令">D-09 確認誰能下 docker 指令<a class="headerlink" href="#d-09-確認誰能下-docker-指令" title="Permanent link">&para;</a></h3>
-<p><strong>這是容器路線上最容易被忽略的一條</strong>（DEP-12、DEP-37 第 4 項）。容器裡的後端雖然以低權限的 <code>node</code> 身分執行，
-但<strong>任何能下 docker 指令的人，都能掛上資料卷、把資料庫整個讀出來</strong>，不需要知道任何密碼。</p>
+<p><strong>這是容器路線上最容易被忽略的一條</strong>（DEP-12、DEP-37 第 4 項）。容器裡的後端雖然以低權限的 <code>node</code> 身分執行，但<strong>任何能下 docker 指令的人，都能掛上資料卷、把資料庫整個讀出來</strong>，不需要知道任何密碼。</p>
 <p><strong>做什麼</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">"docker-users"</span>
 </code></pre></div>
@@ -6429,8 +6415,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">hd</span>
 <span class="n">git</span> <span class="n">-c</span> <span class="n">credential</span><span class="p">.</span><span class="n">helper</span><span class="p">=</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/&lt;</span><span class="n">帳號</span><span class="p">&gt;/&lt;</span><span class="n">repo</span><span class="p">&gt;.</span><span class="n">git</span> <span class="n">hd-tablet-care</span>
 </code></pre></div>
-<p>跳出帳號密碼時：帳號填你的 GitHub 帳號，<strong>密碼貼 D-04 那把權杖</strong>。
-<code>-c credential.helper=</code> 是<strong>這一次不要把憑證存進 Windows</strong>。</p>
+<p>跳出帳號密碼時：帳號填你的 GitHub 帳號，<strong>密碼貼 D-04 那把權杖</strong>。 <code>-c credential.helper=</code> 是<strong>這一次不要把憑證存進 Windows</strong>。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <p><code>C:\hd\hd-tablet-care\</code> 存在，裡面看得到 <code>Dockerfile</code> 與 <code>docker-compose.yml</code>。</p>
 <p><strong>可能怎麼壞、怎麼處理</strong></p>
@@ -6531,8 +6516,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <p><strong>怎麼知道成功了</strong></p>
 <p>四個值抄在筆記本上；上面那行指令什麼都沒印。</p>
 <blockquote>
-<p><strong>主機位址與後端埠會在下一步被寫死進映像檔</strong>，之後改不了，只能重建。
-這是為什麼它要先定下來，而且要是別台電腦看得到的那一個。</p>
+<p><strong>主機位址與後端埠會在下一步被寫死進映像檔</strong>，之後改不了，只能重建。這是為什麼它要先定下來，而且要是別台電腦看得到的那一個。</p>
 </blockquote>
 <hr />
 <h3 id="d-14-建置">D-14 建置<a class="headerlink" href="#d-14-建置" title="Permanent link">&para;</a></h3>
@@ -6672,8 +6656,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-entrypoint</span> <span class="n">node</span> <span class="n">hd-tablet-care</span><span class="p">:&lt;</span><span class="n">標籤</span><span class="p">&gt;</span> <span class="n">-e</span> <span class="s2">"console.log(require('crypto').randomBytes(48).toString('base64url'))"</span>
 </code></pre></div>
 <blockquote>
-<p><strong>compose 只拿 <code>.env</code> 做變數代換，不會把整份倒進容器</strong>。所以範本裡的 <code>DATABASE_URL</code>、<code>API_PORT</code>、<code>BACKUP_DIR</code>
-這些安裝包用的變數，在這條路線上<strong>填了也沒有作用</strong>，留空即可。容器實際拿到什麼，寫在 <code>docker-compose.yml</code> 裡。</p>
+<p><strong>compose 只拿 <code>.env</code> 做變數代換，不會把整份倒進容器</strong>。所以範本裡的 <code>DATABASE_URL</code>、<code>API_PORT</code>、<code>BACKUP_DIR</code> 這些安裝包用的變數，在這條路線上<strong>填了也沒有作用</strong>，留空即可。容器實際拿到什麼，寫在 <code>docker-compose.yml</code> 裡。</p>
 </blockquote>
 <p><strong>怎麼知道成功了</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="n">config</span> <span class="p">-</span><span class="n">-quiet</span>
@@ -6735,8 +6718,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </tbody>
 </table>
 <blockquote>
-<p><strong>資料卷標成 external，是刻意的。</strong> compose 不會替你建它，也<strong>不會</strong>在有人打了 <code>docker compose down -v</code> 時把它刪掉。
-整個透析中心的照護紀錄在裡面，刪不刪不該取決於有沒有人多打了兩個字元。</p>
+<p><strong>資料卷標成 external，是刻意的。</strong> compose 不會替你建它，也<strong>不會</strong>在有人打了 <code>docker compose down -v</code> 時把它刪掉。整個透析中心的照護紀錄在裡面，刪不刪不該取決於有沒有人多打了兩個字元。</p>
 </blockquote>
 <hr />
 <h3 id="d-18-套用既有遷移dep-31">D-18 套用既有遷移（DEP-31）<a class="headerlink" href="#d-18-套用既有遷移dep-31" title="Permanent link">&para;</a></h3>
@@ -6745,8 +6727,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </code></pre></div>
 <p><strong>要在啟動服務之前做</strong>：第一次部署時資料庫是空的。</p>
 <p><strong>怎麼知道成功了</strong></p>
-<p>列出一串遷移目錄，最後一行是 <code>All migrations have been successfully applied.</code>
-再跑一次同一行，應該是 <code>No pending migrations to apply.</code></p>
+<p>列出一串遷移目錄，最後一行是 <code>All migrations have been successfully applied.</code> 再跑一次同一行，應該是 <code>No pending migrations to apply.</code></p>
 <p><strong>可能怎麼壞、怎麼處理</strong></p>
 <table>
 <thead>
@@ -6811,8 +6792,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </tr>
 </tbody>
 </table>
-<p>紀錄檔裡會有一行黃色的 <code>時區來自環境變數 TZ（Asia/Taipei）……</code> 警告，<strong>這在容器裡是正常的</strong>：
-容器沒有「主機時區設定」可以看，時區就是 compose 給的那個 <code>TZ</code>。</p>
+<p>紀錄檔裡會有一行黃色的 <code>時區來自環境變數 TZ（Asia/Taipei）……</code> 警告，<strong>這在容器裡是正常的</strong>：容器沒有「主機時區設定」可以看，時區就是 compose 給的那個 <code>TZ</code>。</p>
 <p><strong>可能怎麼壞、怎麼處理</strong></p>
 <table>
 <thead>
@@ -6903,8 +6883,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <hr />
 <h3 id="d-21-從護理站連進來">D-21 從護理站連進來<a class="headerlink" href="#d-21-從護理站連進來" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
-<p>照<a href="../04-onsite/#h-15-防火牆與從護理站連進來">第四冊 H-15</a>，請資訊室開三個埠的輸入規則，
-然後<strong>到護理站那台電腦上</strong>開 <code>http://&lt;主機位址&gt;:&lt;HD_NURSE_PORT&gt;</code>，登入。</p>
+<p>照<a href="../04-onsite/#h-15-防火牆與從護理站連進來">第四冊 H-15</a>，請資訊室開三個埠的輸入規則，然後<strong>到護理站那台電腦上</strong>開 <code>http://&lt;主機位址&gt;:&lt;HD_NURSE_PORT&gt;</code>，登入。</p>
 <p>接著照 <a href="../04-onsite/#h-16-冒煙測試">H-16</a> 走一次主線。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <p>在護理站的電腦上登得進去，主線走得完。</p>
@@ -6950,8 +6929,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <hr />
 <h3 id="d-23-備份並驗證還原得起來">D-23 備份並驗證還原得起來<a class="headerlink" href="#d-23-備份並驗證還原得起來" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
-<p>用正式環境的更新腳本做一次「備份 → 還原驗證」。它會先備份、還原到另一個檔案做完整性檢查與筆數核對，
-沒有待套用的遷移時就只留下一筆紀錄：</p>
+<p>用正式環境的更新腳本做一次「備份 → 還原驗證」。它會先備份、還原到另一個檔案做完整性檢查與筆數核對，沒有待套用的遷移時就只留下一筆紀錄：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="n">stop</span> <span class="n">api</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="n">db-update</span><span class="p">.</span><span class="n">mjs</span> <span class="p">-</span><span class="n">-note</span> <span class="s2">"首次部署備份驗證"</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="nb">start </span><span class="n">api</span>
@@ -7032,10 +7010,8 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <span class="n">git</span> <span class="n">config</span> <span class="p">-</span><span class="n">-show-origin</span> <span class="p">-</span><span class="n">-get-regexp</span> <span class="s2">"credential"</span>
 <span class="n">cmdkey</span> <span class="p">/</span><span class="n">list</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">"git"</span>
 </code></pre></div>
-<p>有列出東西就照<a href="../07-git-clone/#g-08-清掉-clone-與憑證">第七冊 G-08</a> 刪掉。
-<strong>clone 目錄不要刪</strong>：更新時要在這裡 <code>git fetch</code> 與重建，<code>.env</code> 與 <code>docker-compose.yml</code> 也在這裡。</p>
-<p>回到院外之後，<strong>當天</strong>到 GitHub 把 D-04 那把權杖作廢（Settings → Developer settings → Personal access tokens → Delete），
-不要等它自己過期。</p>
+<p>有列出東西就照<a href="../07-git-clone/#g-08-清掉-clone-與憑證">第七冊 G-08</a> 刪掉。 <strong>clone 目錄不要刪</strong>：更新時要在這裡 <code>git fetch</code> 與重建，<code>.env</code> 與 <code>docker-compose.yml</code> 也在這裡。</p>
+<p>回到院外之後，<strong>當天</strong>到 GitHub 把 D-04 那把權杖作廢（Settings → Developer settings → Personal access tokens → Delete），不要等它自己過期。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <ul>
 <li><code>git remote -v</code> 的網址裡沒有權杖</li>
@@ -7165,8 +7141,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </tbody>
 </table>
 <blockquote>
-<p><strong>注意和安裝包路線反過來的地方</strong>：安裝包的「暫停」在重新開機後會自己回來，這裡不會。
-所以這裡的暫停已經是停用的效果，<strong>做完事一定要記得 <code>start</code></strong>，並確認三個都是 <code>Up</code>。</p>
+<p><strong>注意和安裝包路線反過來的地方</strong>：安裝包的「暫停」在重新開機後會自己回來，這裡不會。所以這裡的暫停已經是停用的效果，<strong>做完事一定要記得 <code>start</code></strong>，並確認三個都是 <code>Up</code>。</p>
 </blockquote>
 <p>S-04 四條判準的容器版：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="nb">ps </span><span class="n">-a</span>
@@ -7197,15 +7172,13 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 </table>
 <p><strong>撤除時的兩條硬規則：</strong></p>
 <ul>
-<li><strong>不要</strong>下 <code>docker volume rm hd-tablet-care-data</code>、<code>docker compose down -v</code>、<code>docker system prune --volumes</code>。
-  資料卷就是資料庫，依 S-09 由院方決定去向</li>
+<li><strong>不要</strong>下 <code>docker volume rm hd-tablet-care-data</code>、<code>docker compose down -v</code>、<code>docker system prune --volumes</code>。資料卷就是資料庫，依 S-09 由院方決定去向</li>
 <li>要把資料交給院方，先照 D-23 或護理端的立即備份做一份到 <code>D:\hd-backup</code>，交出那一份</li>
 </ul>
 <hr />
 <h2 id="10-之後的更新回退與還原">10. 之後的更新、回退與還原<a class="headerlink" href="#10-之後的更新回退與還原" title="Permanent link">&para;</a></h2>
 <h3 id="更新">更新<a class="headerlink" href="#更新" title="Permanent link">&para;</a></h3>
-<p>每一次都是<strong>開連線 → 建新映像檔 → 關連線 → 備份與遷移 → 換版</strong>，省不了哪一步。
-排在非透析時段，更新後第一個班次要有人在（DEP-32）。</p>
+<p>每一次都是<strong>開連線 → 建新映像檔 → 關連線 → 備份與遷移 → 換版</strong>，省不了哪一步。排在非透析時段，更新後第一個班次要有人在（DEP-32）。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">hd</span><span class="p">\</span><span class="n">hd-tablet-care</span>
 <span class="n">git</span> <span class="n">-c</span> <span class="n">credential</span><span class="p">.</span><span class="n">helper</span><span class="p">=</span> <span class="n">fetch</span> <span class="n">origin</span>
 <span class="n">git</span> <span class="n">checkout</span> <span class="p">&lt;</span><span class="n">新版</span> <span class="n">commit</span><span class="p">&gt;</span>
@@ -7216,14 +7189,12 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <span class="n">docker</span> <span class="n">compose</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="n">db-update</span><span class="p">.</span><span class="n">mjs</span> <span class="p">-</span><span class="n">-note</span> <span class="s2">"&lt;這次更新的說明&gt;"</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="n">up</span> <span class="n">-d</span>
 </code></pre></div>
-<p><code>db-update.mjs</code> 會先備份並驗證還原，<strong>沒過就停在那裡、不遷移</strong>。
-<strong>舊版映像檔不要刪</strong>，新版穩定之前那是唯一能退回去的東西。</p>
+<p><code>db-update.mjs</code> 會先備份並驗證還原，<strong>沒過就停在那裡、不遷移</strong>。 <strong>舊版映像檔不要刪</strong>，新版穩定之前那是唯一能退回去的東西。</p>
 <h3 id="回退">回退<a class="headerlink" href="#回退" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">notepad</span> <span class="p">.</span><span class="n">env</span>                        <span class="c"># HD_IMAGE_TAG 改回舊版標籤</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="n">up</span> <span class="n">-d</span>
 </code></pre></div>
-<p><strong>這一版動過資料庫結構時</strong>，要先還原 <code>db-update.mjs</code> 印出的那一份 <code>hd-before-update-*.db</code>，再換回舊版。
-<strong>程式可以退版，資料庫不能退版</strong>，不要試圖把遷移倒回去（規範 18.3）。</p>
+<p><strong>這一版動過資料庫結構時</strong>，要先還原 <code>db-update.mjs</code> 印出的那一份 <code>hd-before-update-*.db</code>，再換回舊版。 <strong>程式可以退版，資料庫不能退版</strong>，不要試圖把遷移倒回去（規範 18.3）。</p>
 <h3 id="還原一份備份到資料卷">還原一份備份到資料卷<a class="headerlink" href="#還原一份備份到資料卷" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="n">down</span>
 <span class="n">docker</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-entrypoint</span> <span class="n">sh</span> <span class="n">-v</span> <span class="n">hd-tablet-care-data</span><span class="p">:/</span><span class="n">data</span> <span class="n">-v</span> <span class="n">D</span><span class="p">:/</span><span class="n">hd-backup</span><span class="p">:/</span><span class="n">backups</span><span class="p">:</span><span class="n">ro</span> <span class="n">hd-tablet-care</span><span class="p">:&lt;</span><span class="n">標籤</span><span class="p">&gt;</span> <span class="n">-c</span> <span class="s2">"mkdir -p /data/before-restore &amp;&amp; mv /data/hd.db* /data/before-restore/ &amp;&amp; cp /backups/&lt;備份檔名&gt; /data/hd.db &amp;&amp; ls -la /data"</span>
@@ -7303,8 +7274,7 @@ SQLite 的檔案鎖不可靠。<strong>這種壞法平常看不出來，會在�
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 重新開機測試做了，結果寫進紀錄；沒做的話，<strong>誰在什麼時候代看</strong>（D-26）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 交接文件寫明：資料在資料卷 <code>hd-tablet-care-data</code>、<strong>不得執行的三個指令</strong>（第九節）、備份在哪個目錄</li>
 </ul>
-<p>紀錄寫進《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》，「交付形態」寫「git clone ＋ Docker」，
-每一步的耗時照記，<strong>D-14 的建置時間尤其要記</strong>——它決定下一次更新要留多長的時段。</p>
+<p>紀錄寫進《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》，「交付形態」寫「git clone ＋ Docker」，每一步的耗時照記，<strong>D-14 的建置時間尤其要記</strong>——它決定下一次更新要留多長的時段。</p>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>

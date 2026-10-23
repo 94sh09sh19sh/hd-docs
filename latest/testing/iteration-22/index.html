@@ -3590,6 +3590,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4718,6 +4729,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4846,19 +4868,19 @@
 
 <h1 id="迭代-22-手動測試--遊戲化之三麻將連連看狀態評估彙整社工與醫師">迭代 22 手動測試 — 遊戲化之三：麻將連連看、狀態評估彙整、社工與醫師<a class="headerlink" href="#迭代-22-手動測試--遊戲化之三麻將連連看狀態評估彙整社工與醫師" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.22 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 22 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
-項次用 <code>af</code>（實作規格書 4.0.5：22 用 <code>af</code>），從 <code>af1</code> 起。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.22 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 22 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。項次用 <code>af</code>（實作規格書 4.0.5：22 用 <code>af</code>），從 <code>af1</code> 起。</p>
 </blockquote>
-<p><strong>這一冊驗六件事</strong>：
-兩個開關全關時一切跟迭代 17.7 一樣；
-麻將連連看怎麼玩（只鋪一層、點兩張一樣的就消、連線規則、提示、卡住時自動重排、沒有計時與級數）；
-存檔跟著病人走、斷線照樣能玩；
-今日牌局（同一班當天同一桌、完成人數照最低人數門檻）；
-狀態評估彙整（前 10 桌不說、只陳述事實）；
-社工與醫師只看得到病人詳細資訊、每一次調閱都在稽核軌跡。
-牌面的來源與授權在病人端 <code>src/assets/mahjong-tiles/SOURCE.md</code>。</p>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<p>這一冊驗六件事（項次 <code>af1</code>～<code>af30</code>，自動化另跑 <code>npm run verify:iteration22</code>）：</p>
+<ul>
+<li>兩個開關全關時一切跟迭代 17.7 一樣</li>
+<li>麻將連連看怎麼玩（只鋪一層、點兩張一樣的就消、連線規則、提示、卡住時自動重排、沒有計時與級數）</li>
+<li>存檔跟著病人走、斷線照樣能玩</li>
+<li>今日牌局（同一班當天同一桌、完成人數照最低人數門檻）</li>
+<li>狀態評估彙整（前 10 桌不說、只陳述事實）</li>
+<li>社工與醫師只看得到病人詳細資訊、每一次調閱都在稽核軌跡</li>
+<li>牌面的來源與授權在病人端 <code>src/assets/mahjong-tiles/SOURCE.md</code></li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -4946,84 +4968,54 @@
 </tr>
 </tbody>
 </table>
-<p><strong>前置</strong>：一台已佈建的平板（或瀏覽器開病人端）、一位合成病人；一般護理師與護理長帳號；另外註冊兩個帳號，由最高權限帳號在帳號審核把角色改成「社工（唯讀）」與「醫師（唯讀）」。
-兩個開關在系統管理 → 功能開關的「病人平板的遊戲化」那一組。</p>
+<p><strong>前置</strong>：一台已佈建的平板（或瀏覽器開病人端）、一位合成病人；一般護理師與護理長帳號；另外註冊兩個帳號，由最高權限帳號在帳號審核把角色改成「社工（唯讀）」與「醫師（唯讀）」。兩個開關在系統管理 → 功能開關的「病人平板的遊戲化」那一組。</p>
 <hr />
 <h2 id="221-兩個開關">§22.1 兩個開關<a class="headerlink" href="#221-兩個開關" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af1</code> <strong>［護理端］</strong> 系統管理 → 功能開關。
-  → 「病人平板的遊戲化」那一組<strong>八列</strong>：迭代 20、21 的六列，加上麻將連連看、狀態評估彙整（護理端顯示）（兩個都是關）。畫面上沒有英文識別字。記憶相簿<strong>還沒有開關</strong>。<strong>1011 迭代 23 起</strong>這一組多「老台灣記憶相簿」一列（共九列，見迭代 23 分冊 <code>ag1</code>）；迭代 22 剛做好時是八列。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af2</code> <strong>［病人端］</strong> 📐 八個遊戲化開關裡，除了「現有功能的小幅遊戲化」都關著：看首頁。<strong>［護理端］</strong> 看「更多」選單與系統管理 → 導覽版位。
-  → 跟迭代 17.7 一樣：首頁沒有遊戲圖示；「更多」選單<strong>沒有「病人詳細資訊」</strong>，導覽版位的清單裡也沒有這一列。<strong>［終端機］</strong> 打 <code>GET /api/patient-detail/patients</code> 回 404。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af3</code> <strong>［護理端］</strong> 開「麻將連連看」（寫理由）。
-  → 開關中心那一列的說明寫「牌面 34 種已放進病人端」。「更多」選單多一項「病人詳細資訊」（放在「病人趨勢」後面）。<strong>主列不變</strong>，仍是 7 項。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af1</code> <strong>［護理端］</strong> 系統管理 → 功能開關。 → 「病人平板的遊戲化」那一組<strong>八列</strong>：迭代 20、21 的六列，加上麻將連連看、狀態評估彙整（護理端顯示）（兩個都是關）。畫面上沒有英文識別字。記憶相簿<strong>還沒有開關</strong>。<strong>1011 迭代 23 起</strong>這一組多「老台灣記憶相簿」一列（共九列，見迭代 23 分冊 <code>ag1</code>）；迭代 22 剛做好時是八列。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af2</code> <strong>［病人端］</strong> 📐 八個遊戲化開關裡，除了「現有功能的小幅遊戲化」都關著：看首頁。<strong>［護理端］</strong> 看「更多」選單與系統管理 → 導覽版位。 → 跟迭代 17.7 一樣：首頁沒有遊戲圖示；「更多」選單<strong>沒有「病人詳細資訊」</strong>，導覽版位的清單裡也沒有這一列。<strong>［終端機］</strong> 打 <code>GET /api/patient-detail/patients</code> 回 404。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af3</code> <strong>［護理端］</strong> 開「麻將連連看」（寫理由）。 → 開關中心那一列的說明寫「牌面 34 種已放進病人端」。「更多」選單多一項「病人詳細資訊」（放在「病人趨勢」後面）。<strong>主列不變</strong>，仍是 7 項。</li>
 </ul>
 <h2 id="222-玩一桌">§22.2 玩一桌<a class="headerlink" href="#222-玩一桌" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af4</code> <strong>［病人端］</strong> 📐 點基本資訊區的遊戲圖示。
-  → 遊戲選單多「麻將連連看」（田字格圖示）。點它：標題、一句「點兩張一樣的牌，就會消掉」、下面兩顆大按鈕「開一桌」「今日牌局」。<strong>整頁不捲動、求助區在原位</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af5</code> <strong>［病人端］</strong> 點「開一桌」。
-  → 4×4 一桌、<strong>只鋪一層</strong>。每張牌至少 80×104px；畫面上<strong>沒有計時、沒有第幾級、沒有分數</strong>。「萬」字與紅中是<strong>深棕</strong>，整個畫面除了求助按鈕<strong>沒有紅色</strong>（筒子、一條上原本的紅點也是深棕）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af6</code> <strong>［病人端］</strong> 點一張牌，再點同一張。
-  → 第一下外框變粗（深綠）；再點一下取消選取。沒有聲音、沒有震動。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af7</code> <strong>［病人端］</strong> 點一張，再點一張<strong>不一樣</strong>的。
-  → 第一張取消選取，第二張也不會被選起來。<strong>不扣分、不晃動、沒有任何「錯」的字</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af8</code> <strong>［病人端］</strong> 點兩張一樣的。
-  → 兩張 0.3 秒淡出、消失，位置留空（旁邊的牌不移動）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af9</code> <strong>［病人端］</strong> 按頂列的「提示」，連按幾次。
-  → 一對可以消的牌被<strong>虛線</strong>框起來（跟選起來的實線不一樣）。按幾次都可以，沒有次數上限、沒有「用了幾次」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af10</code> <strong>［病人端］</strong> 把這一桌消完。
-  → 只顯示「完成了」與一個完成記號，<strong>不顯示花了多久</strong>；下面「開一桌」（與今天還沒做過時的「今日牌局」）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af11</code> <strong>［病人端］</strong> 再開幾桌，每桌都不按提示。
-  → 第三桌起（連續兩桌順利之後）牌變多，或開始要用連線規則：兩張一樣、而且能用<strong>最多轉兩個彎</strong>的線連起來才消；消的時候畫一條線，0.3 秒後拿掉。畫面上<strong>從頭到尾沒有出現「升級」「第幾級」</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af12</code> <strong>［病人端］</strong> 作業系統開「減少動態效果」（Android：協助工具 → 移除動畫；Windows：設定 → 協助工具 → 視覺效果 → 動畫效果關），再消一對。
-  → 兩張直接消失，<strong>沒有淡出、沒有線</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af13</code> <strong>［病人端］</strong> 📐 牌最多的一桌（4×8）分別在 1280×800 與 800×1280 看。（<strong>1014 起只看 1280×800</strong>：正式版固定橫放。<strong>迭代 27 起最大的一桌是 4×12</strong>，見<a href="../iteration-27/">迭代 27 分冊</a> <code>ak10</code>）
-  → 兩種方向都放得下、不捲動；直放時一張剛好 80×104px。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af14</code> <strong>［病人端］</strong> 有連線規則的一桌，一直消到牌剩下不多。
-  → 若剩下的牌一對都連不起來，<strong>自動重新排列</strong>，頂列寫「牌重新排過了，可以接著找」——永遠不會卡住。（不一定碰得到；腳本以刻意卡住的牌面驗過兩百次，見 <code>af30</code>）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af4</code> <strong>［病人端］</strong> 📐 點基本資訊區的遊戲圖示。 → 遊戲選單多「麻將連連看」（田字格圖示）。點它：標題、一句「點兩張一樣的牌，就會消掉」、下面兩顆大按鈕「開一桌」「今日牌局」。<strong>整頁不捲動、求助區在原位</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af5</code> <strong>［病人端］</strong> 點「開一桌」。 → 4×4 一桌、<strong>只鋪一層</strong>。每張牌至少 80×104px；畫面上<strong>沒有計時、沒有第幾級、沒有分數</strong>。「萬」字與紅中是<strong>深棕</strong>，整個畫面除了求助按鈕<strong>沒有紅色</strong>（筒子、一條上原本的紅點也是深棕）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af6</code> <strong>［病人端］</strong> 點一張牌，再點同一張。 → 第一下外框變粗（深綠）；再點一下取消選取。沒有聲音、沒有震動。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af7</code> <strong>［病人端］</strong> 點一張，再點一張<strong>不一樣</strong>的。 → 第一張取消選取，第二張也不會被選起來。<strong>不扣分、不晃動、沒有任何「錯」的字</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af8</code> <strong>［病人端］</strong> 點兩張一樣的。 → 兩張 0.3 秒淡出、消失，位置留空（旁邊的牌不移動）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af9</code> <strong>［病人端］</strong> 按頂列的「提示」，連按幾次。 → 一對可以消的牌被<strong>虛線</strong>框起來（跟選起來的實線不一樣）。按幾次都可以，沒有次數上限、沒有「用了幾次」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af10</code> <strong>［病人端］</strong> 把這一桌消完。 → 只顯示「完成了」與一個完成記號，<strong>不顯示花了多久</strong>；下面「開一桌」（與今天還沒做過時的「今日牌局」）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af11</code> <strong>［病人端］</strong> 再開幾桌，每桌都不按提示。 → 第三桌起（連續兩桌順利之後）牌變多，或開始要用連線規則：兩張一樣、而且能用<strong>最多轉兩個彎</strong>的線連起來才消；消的時候畫一條線，0.3 秒後拿掉。畫面上<strong>從頭到尾沒有出現「升級」「第幾級」</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af12</code> <strong>［病人端］</strong> 作業系統開「減少動態效果」（Android：協助工具 → 移除動畫；Windows：設定 → 協助工具 → 視覺效果 → 動畫效果關），再消一對。 → 兩張直接消失，<strong>沒有淡出、沒有線</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af13</code> <strong>［病人端］</strong> 📐 牌最多的一桌（4×8）分別在 1280×800 與 800×1280 看。（<strong>1014 起只看 1280×800</strong>：正式版固定橫放。<strong>迭代 27 起最大的一桌是 4×12</strong>，見<a href="../iteration-27/">迭代 27 分冊</a> <code>ak10</code>） → 兩種方向都放得下、不捲動；直放時一張剛好 80×104px。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af14</code> <strong>［病人端］</strong> 有連線規則的一桌，一直消到牌剩下不多。 → 若剩下的牌一對都連不起來，<strong>自動重新排列</strong>，頂列寫「牌重新排過了，可以接著找」——永遠不會卡住。（不一定碰得到；腳本以刻意卡住的牌面驗過兩百次，見 <code>af30</code>）</li>
 </ul>
 <h2 id="223-存檔跟著病人走與斷線">§22.3 存檔跟著病人走與斷線<a class="headerlink" href="#223-存檔跟著病人走與斷線" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af15</code> <strong>［病人端］</strong> 開一桌、消兩對，按回首頁；<strong>［護理端］</strong> 解除綁定，把這位病人配到<strong>另一台平板</strong>、另一班，點開麻將連連看。
-  → 直接回到剛剛那一桌，牌與位置一模一樣。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af16</code> <strong>［病人端］</strong> 斷網（關 Wi-Fi 或開發者工具設離線），消幾對、按提示；再接回網路。
-  → 斷網時照樣能玩；接回之後**［資料庫］** <code>game_events</code> 多出這幾步（<code>game_code = 'MAHJONG'</code>），序號接續、沒有重複。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af17</code> <strong>［病人端］</strong> 玩到一半時，讓心情問卷的時點到（營運參數「心情問卷在透析開始後幾分鐘」暫改 0）。
-  → 這一步走完之後問卷出現；做完問一次「回到剛剛的遊戲？」，按「回到麻將連連看」就是原來那一桌。做完把參數改回。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af15</code> <strong>［病人端］</strong> 開一桌、消兩對，按回首頁；<strong>［護理端］</strong> 解除綁定，把這位病人配到<strong>另一台平板</strong>、另一班，點開麻將連連看。 → 直接回到剛剛那一桌，牌與位置一模一樣。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af16</code> <strong>［病人端］</strong> 斷網（關 Wi-Fi 或開發者工具設離線），消幾對、按提示；再接回網路。 → 斷網時照樣能玩；接回之後<strong>［資料庫］</strong> <code>game_events</code> 多出這幾步（<code>game_code = 'MAHJONG'</code>），序號接續、沒有重複。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af17</code> <strong>［病人端］</strong> 玩到一半時，讓心情問卷的時點到（營運參數「心情問卷在透析開始後幾分鐘」暫改 0）。 → 這一步走完之後問卷出現；做完問一次「回到剛剛的遊戲？」，按「回到麻將連連看」就是原來那一桌。做完把參數改回。</li>
 </ul>
 <h2 id="224-今日牌局">§22.4 今日牌局<a class="headerlink" href="#224-今日牌局" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af18</code> <strong>［護理端］</strong> 開「病人之間的互動」。<strong>［病人端］</strong> 📱📱📱 三台平板（同一班）各點「今日牌局」。
-  → 三台拿到<strong>同一桌</strong>（牌與位置一樣）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af19</code> <strong>［病人端］</strong> 三台都把今日牌局做完。
-  → 完成畫面在「完成了」底下多一句「今天這一班有 3 個人完成了今日牌局」——<strong>只有人數</strong>，沒有床號、沒有誰快誰慢。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af20</code> <strong>［病人端］</strong> 第四台（同一班）開今日牌局但不做完；回到第一台，再開今日牌局。
-  → 第一台：今天這一班的那一桌做過了，選單<strong>沒有「今日牌局」</strong>。再讓第五台做完今日牌局：完成畫面<strong>不說人數</strong>（4 人完成、1 人開了沒做完——那一位會被凸顯，這星期也湊不到）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af21</code> <strong>［病人端］</strong> 開著「透析小花園」，做完一桌之後點開花園。
-  → 門口多一份「遊戲的養分」（手把圖示）；同一次療程再完成一桌，<strong>不會再多一份</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af18</code> <strong>［護理端］</strong> 開「病人之間的互動」。<strong>［病人端］</strong> 📱📱📱 三台平板（同一班）各點「今日牌局」。 → 三台拿到<strong>同一桌</strong>（牌與位置一樣）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af19</code> <strong>［病人端］</strong> 三台都把今日牌局做完。 → 完成畫面在「完成了」底下多一句「今天這一班有 3 個人完成了今日牌局」——<strong>只有人數</strong>，沒有床號、沒有誰快誰慢。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af20</code> <strong>［病人端］</strong> 第四台（同一班）開今日牌局但不做完；回到第一台，再開今日牌局。 → 第一台：今天這一班的那一桌做過了，選單<strong>沒有「今日牌局」</strong>。再讓第五台做完今日牌局：完成畫面<strong>不說人數</strong>（4 人完成、1 人開了沒做完——那一位會被凸顯，這星期也湊不到）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af21</code> <strong>［病人端］</strong> 開著「透析小花園」，做完一桌之後點開花園。 → 門口多一份「遊戲的養分」（手把圖示）；同一次療程再完成一桌，<strong>不會再多一份</strong>。</li>
 </ul>
 <h2 id="225-病人詳細資訊與狀態評估彙整">§22.5 病人詳細資訊與狀態評估彙整<a class="headerlink" href="#225-病人詳細資訊與狀態評估彙整" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af22</code> <strong>［護理端］</strong> 📐 一般護理師：更多 → 病人詳細資訊。
-  → 一開始<strong>沒有帶任何病人</strong>（寫「選一位病人。每一次調閱都會記在稽核軌跡」）。選一位：姓名、病歷號、今天的班別與床號；下面「最近幾次有沒有玩」——最近 10 次療程，透析小花園「有／沒有」、麻將連連看「開了幾桌、完成幾桌」。<strong>沒有成績、沒有排名</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af23</code> <strong>［護理端］</strong> 狀態評估彙整還關著：看同一頁。
-  → <strong>沒有</strong>「狀態評估彙整」那一塊。開「狀態評估彙整」，重新選病人：多一塊，完成不到 11 桌的病人寫「前 10 桌只當練習，不列入比較，也不產生任何陳述」，<strong>沒有任何一句陳述</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af24</code> <strong>［護理端］</strong> 選一位玩過很多桌的病人。
-  → 四句，每一句都是「近 14 天完成的 N 桌，……中位數是……，比自己過去 M 桌的中位數（……）多／少……」或「和……一樣」。<strong>逐句看</strong>：沒有「退化」「疑似」「注意力」「情緒」「建議」這類結論字眼。差距達設定幅度的那一句，句尾只多一行灰字「（差距達設定幅度）」，<strong>不是紅色</strong>。最下面固定一句「不是評估工具，也不會通知任何人」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af25</code> <strong>［護理端］</strong> 系統管理 → 營運參數。
-  → 有七個「狀態評估：……」的參數（前幾桌只當練習、近期幾天、門檻……）。「前幾桌只當練習」不能調到 10 以下。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af26</code> <strong>［護理端］</strong> 關「狀態評估彙整」，在平板上再玩一桌。<strong>［資料庫］</strong> 看 <code>game_events</code>。
-  → 病人詳細資訊沒有彙整那一塊；但這一桌的每一步<strong>照樣寫進</strong> <code>game_events</code>（<code>elapsed_ms</code>、<code>tap_offset_a</code> 都有值）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af22</code> <strong>［護理端］</strong> 📐 一般護理師：更多 → 病人詳細資訊。 → 一開始<strong>沒有帶任何病人</strong>（寫「選一位病人。每一次調閱都會記在稽核軌跡」）。選一位：姓名、病歷號、今天的班別與床號；下面「最近幾次有沒有玩」——最近 10 次療程，透析小花園「有／沒有」、麻將連連看「開了幾桌、完成幾桌」。<strong>沒有成績、沒有排名</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af23</code> <strong>［護理端］</strong> 狀態評估彙整還關著：看同一頁。 → <strong>沒有</strong>「狀態評估彙整」那一塊。開「狀態評估彙整」，重新選病人：多一塊，完成不到 11 桌的病人寫「前 10 桌只當練習，不列入比較，也不產生任何陳述」，<strong>沒有任何一句陳述</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af24</code> <strong>［護理端］</strong> 選一位玩過很多桌的病人。 → 四句，每一句都是「近 14 天完成的 N 桌，……中位數是……，比自己過去 M 桌的中位數（……）多／少……」或「和……一樣」。<strong>逐句看</strong>：沒有「退化」「疑似」「注意力」「情緒」「建議」這類結論字眼。差距達設定幅度的那一句，句尾只多一行灰字「（差距達設定幅度）」，<strong>不是紅色</strong>。最下面固定一句「不是評估工具，也不會通知任何人」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af25</code> <strong>［護理端］</strong> 系統管理 → 營運參數。 → 有七個「狀態評估：……」的參數（前幾桌只當練習、近期幾天、門檻……）。「前幾桌只當練習」不能調到 10 以下。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af26</code> <strong>［護理端］</strong> 關「狀態評估彙整」，在平板上再玩一桌。<strong>［資料庫］</strong> 看 <code>game_events</code>。 → 病人詳細資訊沒有彙整那一塊；但這一桌的每一步<strong>照樣寫進</strong> <code>game_events</code>（<code>elapsed_ms</code>、<code>tap_offset_a</code> 都有值）。</li>
 </ul>
 <h2 id="226-社工與醫師">§22.6 社工與醫師<a class="headerlink" href="#226-社工與醫師" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af27</code> <strong>［護理端］</strong> 以「社工」帳號登入。
-  → <strong>不進簡易版</strong>，直接到「病人詳細資訊」；「更多」選單<strong>只有這一項</strong>，沒有系統管理。選一位病人看得到詳細資訊與狀態評估彙整，<strong>畫面上沒有任何會改資料的按鈕</strong>。以「醫師」帳號重做一次，一樣。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af28</code> <strong>［終端機］</strong> 用社工的權杖打幾支寫入端點（例如 <code>POST /api/patients</code>、<code>PUT /api/feature-flags/MAHJONG</code>）與其他頁（<code>GET /api/patients</code>、<code>GET /api/audit-logs</code>）。
-  → 全部 403「此帳號為唯讀角色，無權使用此功能」。以醫院管理層、稽核角色帳號打 <code>GET /api/patient-detail/patients/&lt;病人 id&gt;</code> 也是 403。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af29</code> <strong>［護理端］</strong> 以有稽核權限的帳號看稽核軌跡，動作選「調閱病人詳細資訊」「調閱狀態評估彙整（遊戲資料）」。
-  → 社工、醫師、護理師每一次選病人都各有一筆：誰、哪一位病人；彙整那一筆寫算式版本與幾句陳述。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af27</code> <strong>［護理端］</strong> 以「社工」帳號登入。 → <strong>不進簡易版</strong>，直接到「病人詳細資訊」；「更多」選單<strong>只有這一項</strong>，沒有系統管理。選一位病人看得到詳細資訊與狀態評估彙整，<strong>畫面上沒有任何會改資料的按鈕</strong>。以「醫師」帳號重做一次，一樣。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af28</code> <strong>［終端機］</strong> 用社工的權杖打幾支寫入端點（例如 <code>POST /api/patients</code>、<code>PUT /api/feature-flags/MAHJONG</code>）與其他頁（<code>GET /api/patients</code>、<code>GET /api/audit-logs</code>）。 → 全部 403「此帳號為唯讀角色，無權使用此功能」。以醫院管理層、稽核角色帳號打 <code>GET /api/patient-detail/patients/&lt;病人 id&gt;</code> 也是 403。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af29</code> <strong>［護理端］</strong> 以有稽核權限的帳號看稽核軌跡，動作選「調閱病人詳細資訊」「調閱狀態評估彙整（遊戲資料）」。 → 社工、醫師、護理師每一次選病人都各有一筆：誰、哪一位病人；彙整那一筆寫算式版本與幾句陳述。</li>
 </ul>
 <h2 id="227-牌面的來源與長者試看">§22.7 牌面的來源與長者試看<a class="headerlink" href="#227-牌面的來源與長者試看" title="Permanent link">&para;</a></h2>
 <ul>
@@ -5032,8 +5024,7 @@
 </ul>
 <h2 id="228-自動化驗收">§22.8 自動化驗收<a class="headerlink" href="#228-自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af30</code> <strong>［終端機］</strong> <code>npm run verify:iteration22</code>（不需要後端）；後端開著，再跑 <code>npm run verify:iteration22:api</code>。
-  → 兩支都全部通過（前一支每一級各發一千次牌加窮舉、亂玩一千桌、刻意卡住的牌面重排兩百次，再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>；後一支結束時五個開關改回原狀，直接寫進資料庫的合成操作紀錄刪掉。驗收用的平板、病人、帳號留著、療程取消，與其他驗收腳本相同）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>af30</code> <strong>［終端機］</strong> <code>npm run verify:iteration22</code>（不需要後端）；後端開著，再跑 <code>npm run verify:iteration22:api</code>。 → 兩支都全部通過（前一支每一級各發一千次牌加窮舉、亂玩一千桌、刻意卡住的牌面重排兩百次，再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>；後一支結束時五個開關改回原狀，直接寫進資料庫的合成操作紀錄刪掉。驗收用的平板、病人、帳號留著、療程取消，與其他驗收腳本相同）。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
@@ -5046,6 +5037,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>註明迭代 27 起最大的一桌是 4×12（<code>ak10</code>）</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-22/">1014</a></td>
 <td>2026-10-14</td>

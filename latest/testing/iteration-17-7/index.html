@@ -4780,13 +4780,9 @@
 
 <h1 id="迭代-177-手動測試--新增病人回到開關後面平板管理醫院格式的床號衛教拖到平板">迭代 17.7 手動測試 — 新增病人回到開關後面、平板管理、醫院格式的床號、衛教拖到平板<a class="headerlink" href="#迭代-177-手動測試--新增病人回到開關後面平板管理醫院格式的床號衛教拖到平板" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.15.7 節與《<a href="../../notes/iteration-17-7-fixes/">迭代 17.7 修正紀錄</a>》。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 17.7 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
-項次接著迭代 17.6 分冊編（<code>aa131</code> 起；17.6 用到 <code>aa130</code>），小版沿用那個迭代的字母。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.15.7 節與《<a href="../../notes/iteration-17-7-fixes/">迭代 17.7 修正紀錄</a>》。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 17.7 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。項次接著迭代 17.6 分冊編（<code>aa131</code> 起；17.6 用到 <code>aa130</code>），小版沿用那個迭代的字母。</p>
 </blockquote>
-<p><strong>這一冊驗四件事</strong>：「護理師自己新增病人」開關（預設關閉）同時管專業版排班與指派的新增病人、簡易版病人框的「＋」；
-系統管理的「平板停用」改叫「平板管理」；開發環境的床號是醫院的寫法；公告與院內衛教拖到有病人配著、沒有床號的平板也播得到。</p>
+<p><strong>這一冊驗四件事</strong>：「護理師自己新增病人」開關（預設關閉）同時管專業版排班與指派的新增病人、簡易版病人框的「＋」；系統管理的「平板停用」改叫「平板管理」；開發環境的床號是醫院的寫法；公告與院內衛教拖到有病人配著、沒有床號的平板也播得到。</p>
 <table>
 <thead>
 <tr>
@@ -4852,59 +4848,40 @@
 </tr>
 </tbody>
 </table>
-<p><strong>前置</strong>：同迭代 17.1 分冊——本機裝了 Chrome；<code>.env</code> 有 <code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>。
-切換功能開關要最高權限帳號（或有功能開關管理權限的帳號）。
-<strong>午夜前後兩小時不要做 🎬 的部分</strong>：模擬資料以當天為單位，<code>npm run demo:patient</code> 在那段時間自己拒跑。</p>
+<p><strong>前置</strong>：同迭代 17.1 分冊——本機裝了 Chrome；<code>.env</code> 有 <code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>。切換功能開關要最高權限帳號（或有功能開關管理權限的帳號）。</p>
+<p><strong>午夜前後兩小時不要做 🎬 的部分</strong>：模擬資料以當天為單位，<code>npm run demo:patient</code> 在那段時間自己拒跑。</p>
 <hr />
 <h2 id="1771--新增病人開關關著兩邊都沒有開著兩邊都有--">17.7.1 · 新增病人：開關關著兩邊都沒有、開著兩邊都有 🎬 📐<a class="headerlink" href="#1771--新增病人開關關著兩邊都沒有開著兩邊都有--" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa131</code> <strong>［護理端］</strong> 開 <code>http://localhost:5183</code>，專業版右上角「系統管理」→「功能開關」，捲到最下面。
-  → 最後一組叫「院方資料以外的人工輸入」，裡面一項「護理師自己新增病人（專業版排班與指派、簡易版病人框）」，狀態「關閉」，「目前是否符合」是 ✓。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa132</code> <strong>［護理端］</strong> 開關關著，看專業版「排班與指派」與簡易版病人框。
-  → 排班與指派「建立排班」底下<strong>沒有</strong>新增病人那一列；簡易版病人框<strong>沒有</strong>「＋」（人形加號那一格）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa133</code> <strong>［護理端］</strong> 回功能開關，把「護理師自己新增病人」開啟（理由隨便寫），等一分鐘內或切一下視窗。
-  → 專業版排班與指派「建立排班」的下一列出現「院方資料裡沒有的病人」、病歷號、姓名、「新增病人」；滑鼠停在那幾個字上看得到「以院方資料為準」的說明。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa134</code> <strong>［護理端］</strong> 病歷號填 <code>HD-TEST-1771</code>、姓名填「人工新增甲」，按「新增病人」。
-  → 綠色提示「已新增病人 人工新增甲，已在病人選單選好」；上一列的病人選單已經選著他，接著按「建立排班」就排好了。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa135</code> <strong>［護理端］</strong> 切到簡易版看病人框。
-  → 病人框多了「＋」（展示環境接了模擬院方資料照樣有）。把「＋」拖到一台空著的平板（或點「＋」再點平板），填姓名與病歷號、按建立。
-  → 那台平板配上這位病人，復原列寫「新增 … → 平板 …」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa136</code> <strong>［護理端］</strong> 回功能開關把它關掉。
-  → 專業版那一列與簡易版的「＋」都不見了（不是變灰）。剛才建的兩位病人照樣在病人選單與病人框裡。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa131</code> <strong>［護理端］</strong> 開 <code>http://localhost:5183</code>，專業版右上角「系統管理」→「功能開關」，捲到最下面。 → 最後一組叫「院方資料以外的人工輸入」，裡面一項「護理師自己新增病人（專業版排班與指派、簡易版病人框）」，狀態「關閉」，「目前是否符合」是 ✓。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa132</code> <strong>［護理端］</strong> 開關關著，看專業版「排班與指派」與簡易版病人框。 → 排班與指派「建立排班」底下<strong>沒有</strong>新增病人那一列；簡易版病人框<strong>沒有</strong>「＋」（人形加號那一格）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa133</code> <strong>［護理端］</strong> 回功能開關，把「護理師自己新增病人」開啟（理由隨便寫），等一分鐘內或切一下視窗。 → 專業版排班與指派「建立排班」的下一列出現「院方資料裡沒有的病人」、病歷號、姓名、「新增病人」；滑鼠停在那幾個字上看得到「以院方資料為準」的說明。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa134</code> <strong>［護理端］</strong> 病歷號填 <code>HD-TEST-1771</code>、姓名填「人工新增甲」，按「新增病人」。 → 綠色提示「已新增病人 人工新增甲，已在病人選單選好」；上一列的病人選單已經選著他，接著按「建立排班」就排好了。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa135</code> <strong>［護理端］</strong> 切到簡易版看病人框。 → 病人框多了「＋」（展示環境接了模擬院方資料照樣有）。把「＋」拖到一台空著的平板（或點「＋」再點平板），填姓名與病歷號、按建立。 → 那台平板配上這位病人，復原列寫「新增 … → 平板 …」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa136</code> <strong>［護理端］</strong> 回功能開關把它關掉。 → 專業版那一列與簡易版的「＋」都不見了（不是變灰）。剛才建的兩位病人照樣在病人選單與病人框裡。</li>
 </ul>
 <h2 id="1772--系統管理的平板管理-">17.7.2 · 系統管理的平板管理 🎬<a class="headerlink" href="#1772--系統管理的平板管理-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa137</code> <strong>［護理端］</strong> 專業版右上角「系統管理」，看上面那一排分頁。
-  → 分頁叫「<strong>平板管理</strong>」，沒有「平板停用」；點進去，卡片標題也是「平板管理」，停用、解除停用、解除佈建、登記佈建都在這張表（與 17.6 相同）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa138</code> <strong>［護理端］</strong> 「新增裝置」那一頁看底下的說明；「排班與指派」在沒有可指派平板時看清單下方的提示。
-  → 提到的都是系統管理的「平板管理」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa137</code> <strong>［護理端］</strong> 專業版右上角「系統管理」，看上面那一排分頁。 → 分頁叫「<strong>平板管理</strong>」，沒有「平板停用」；點進去，卡片標題也是「平板管理」，停用、解除停用、解除佈建、登記佈建都在這張表（與 17.6 相同）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa138</code> <strong>［護理端］</strong> 「新增裝置」那一頁看底下的說明；「排班與指派」在沒有可指派平板時看清單下方的提示。 → 提到的都是系統管理的「平板管理」。</li>
 </ul>
 <h2 id="1773--簡易版手選床位的床號--">17.7.3 · 簡易版手選床位的床號 🛠 📐<a class="headerlink" href="#1773--簡易版手選床位的床號--" title="Permanent link">&para;</a></h2>
-<p>這一節要<strong>全新的開發資料庫</strong>：已經在用的開發資料庫是改動之前 seed 的，床號仍是 01～15（改動只在 seed，不會自己換）。
-不想重建的話，可以到專業版系統管理的床位清單把床號換成 <code>A1 A2 A3 A5 A6 A7 A8 A9 B1 B2 B3 B5 B6 B7 B8</code>，效果相同。</p>
+<p>這一節要<strong>全新的開發資料庫</strong>：已經在用的開發資料庫是改動之前 seed 的，床號仍是 01～15（改動只在 seed，不會自己換）。不想重建的話，可以到專業版系統管理的床位清單把床號換成 <code>A1 A2 A3 A5 A6 A7 A8 A9 B1 B2 B3 B5 B6 B7 B8</code>，效果相同。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa139</code> <strong>［終端機］</strong> 照主手冊 §01 的步驟建一個空的開發資料庫，跑 <code>npm run db:seed</code>。
-  → 輸出有一行「已建立開發用的 15 床（A1～B8）」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa140</code> <strong>［護理端］</strong> <code>npm run dev</code> 開起來（沒接院方資料），簡易版點任何一台平板右上角的床號（還沒設的是一個床的圖示）。
-  → 列出來的是 A1、A2、A3、A5、A6、A7、A8、A9、B1、B2、B3、B5、B6、B7、B8：<strong>區碼＋數字、沒有 4 號床</strong>，不是 01～15。選一床，平板右上角就是那個床號。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa139</code> <strong>［終端機］</strong> 照主手冊 §01 的步驟建一個空的開發資料庫，跑 <code>npm run db:seed</code>。 → 輸出有一行「已建立開發用的 15 床（A1～B8）」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa140</code> <strong>［護理端］</strong> <code>npm run dev</code> 開起來（沒接院方資料），簡易版點任何一台平板右上角的床號（還沒設的是一個床的圖示）。 → 列出來的是 A1、A2、A3、A5、A6、A7、A8、A9、B1、B2、B3、B5、B6、B7、B8：<strong>區碼＋數字、沒有 4 號床</strong>，不是 01～15。選一床，平板右上角就是那個床號。</li>
 </ul>
 <h2 id="1774--公告與院內衛教拖到平板--">17.7.4 · 公告與院內衛教拖到平板 🎬 📐<a class="headerlink" href="#1774--公告與院內衛教拖到平板--" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa141</code> <strong>［終端機］</strong> 讓 DEMO-01（配著模擬戊）暫時沒有床號：用最高權限帳號登入取得權杖後，<code>POST http://localhost:3100/api/devices/&lt;DEMO-01 的 id&gt;/bed</code>，內容 <code>{"bedNo": null}</code>。
-  → 簡易版 DEMO-01 那一格右上角的床號不見了，病人照樣在格子上。（模擬院方資料每 3 分鐘同步一次會把它放回原本的床，這一節要在那之前做完；放回去了就再拿下來一次。）</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa142</code> <strong>［護理端］</strong> 簡易版公告與院內衛教框，點一則已核准的內容（例如「每天量體重」），再點 DEMO-01 那一格。
-  → <strong>放得上</strong>（17.6 以前沒有床號的平板不亮、點了沒反應）。復原列寫「「每天量體重」→ 平板 DEMO-01」；DEMO-01 格子左下角的喇叭數字加一，滑鼠停上去是「只在這台平板播的內容 N 則」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa143</code> <strong>［病人端］</strong> 開 DEMO-01 的平板畫面（<code>demo:patient</code> 啟動時印出來的網址），等跑馬燈跑一輪。
-  → 跑馬燈有「每天量體重」。回護理端點同一則再點「全部」，它回到全部床位；DEMO-02（空著、沒有床號）點了<strong>不會亮</strong>、放不上。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa144</code> <strong>［護理端］</strong> 把一張草稿卡拖到 DEMO-01（或點草稿卡、再點 DEMO-01）。
-  → 核准的就是那一則，只在 DEMO-01 播；專業版「公告與院內衛教」頁上它的播放範圍寫「平板 DEMO-01」，稽核軌跡裡寫的也是「平板 DEMO-01」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa141</code> <strong>［終端機］</strong> 讓 DEMO-01（配著模擬戊）暫時沒有床號：用最高權限帳號登入取得權杖後，<code>POST http://localhost:3100/api/devices/&lt;DEMO-01 的 id&gt;/bed</code>，內容 <code>{"bedNo": null}</code>。 → 簡易版 DEMO-01 那一格右上角的床號不見了，病人照樣在格子上。（模擬院方資料每 3 分鐘同步一次會把它放回原本的床，這一節要在那之前做完；放回去了就再拿下來一次。）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa142</code> <strong>［護理端］</strong> 簡易版公告與院內衛教框，點一則已核准的內容（例如「每天量體重」），再點 DEMO-01 那一格。 → <strong>放得上</strong>（17.6 以前沒有床號的平板不亮、點了沒反應）。復原列寫「「每天量體重」→ 平板 DEMO-01」；DEMO-01 格子左下角的喇叭數字加一，滑鼠停上去是「只在這台平板播的內容 N 則」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa143</code> <strong>［病人端］</strong> 開 DEMO-01 的平板畫面（<code>demo:patient</code> 啟動時印出來的網址），等跑馬燈跑一輪。 → 跑馬燈有「每天量體重」。回護理端點同一則再點「全部」，它回到全部床位；DEMO-02（空著、沒有床號）點了<strong>不會亮</strong>、放不上。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa144</code> <strong>［護理端］</strong> 把一張草稿卡拖到 DEMO-01（或點草稿卡、再點 DEMO-01）。 → 核准的就是那一則，只在 DEMO-01 播；專業版「公告與院內衛教」頁上它的播放範圍寫「平板 DEMO-01」，稽核軌跡裡寫的也是「平板 DEMO-01」。</li>
 </ul>
 <h2 id="1775--自動化驗收-">17.7.5 · 自動化驗收 🖥<a class="headerlink" href="#1775--自動化驗收-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa145</code> <strong>［終端機］</strong> <code>npm run build:shared</code> 之後跑 <code>npm run verify:iteration17-7</code>（不需後端、不需資料庫）。
-  → 5 個步驟全部 ✓。步驟 5 會順便跑 <code>verify:iteration14</code>、<code>14-2</code>、<code>15</code>、<code>17</code>、<code>17-1</code>、<code>17-6</code>，也都要通過。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa146</code> <strong>［終端機］</strong> 開發用的後端開著（<code>npm run dev:api</code>，資料庫先套用新遷移），跑 <code>npm run verify:iteration14:api</code> 與 <code>npm run verify:iteration17:api</code>。
-  → 兩支都通過（只帶床號的舊請求照樣可用）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa145</code> <strong>［終端機］</strong> <code>npm run build:shared</code> 之後跑 <code>npm run verify:iteration17-7</code>（不需後端、不需資料庫）。 → 5 個步驟全部 ✓。步驟 5 會順便跑 <code>verify:iteration14</code>、<code>14-2</code>、<code>15</code>、<code>17</code>、<code>17-1</code>、<code>17-6</code>，也都要通過。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa146</code> <strong>［終端機］</strong> 開發用的後端開著（<code>npm run dev:api</code>，資料庫先套用新遷移），跑 <code>npm run verify:iteration14:api</code> 與 <code>npm run verify:iteration17:api</code>。 → 兩支都通過（只帶床號的舊請求照樣可用）。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>

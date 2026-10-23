@@ -1248,6 +1248,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#全端架構含裝置綁定流程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4674,6 +4685,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#全端架構含裝置綁定流程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4757,24 +4779,20 @@
 
 
 <h1 id="架構圖">架構圖<a class="headerlink" href="#架構圖" title="Permanent link">&para;</a></h1>
-<p>兩張圖是系統實體與邏輯架構的視覺依據，與 <a href="../implementation-spec/">實作規格書</a> 搭配閱讀。
-圖一畫軟體元件之間怎麼互相呼叫，圖二畫這些東西實際擺在哪裡、哪條線跨出醫院；
-圖一的整層後端，就是圖二機房裡那一台應用伺服器。</p>
-<p><strong>2026-09-29 更新，依 0926 改版重繪，對應迭代 14.3 完成時的系統。</strong> 這是第二次動到圖二的線（第一次是 0919）。
-<strong>1005 迭代 16 只改圖一的三處文字</strong>：照護業務模組裡的「閒置輪播・三層內容」改成「本次透析面板・跑馬燈」，虛線框的規則引擎與對外報表服務標成迭代 18、19。
-<strong>1005 再補迭代 15，兩張圖都只改標籤</strong>：圖一的「臨床資料匯入」改稱<strong>院方資料同步</strong>（病人・床位・療程・數值），Session Token 那條綠色虛線補上「新數值以 SSE 通知」；
-圖二的 HIS／EMR 改標「透析清單・院方唯讀 API」、它的連線改標「每 3 分鐘唯讀抓取・不寫回」，平板的連線補上 SSE 通知。<strong>分區與連線一條未動</strong>，現在對應迭代 17 完成時的系統（迭代 17 的跑馬燈草稿走既有的 AI 閘道，圖上不必改）。
-<strong>1010 迭代 18 只改圖一的一格</strong>：規則引擎做完了，從虛線框（規劃中）改成實線，副標改成「判斷輔助・不經 AI」；~~對外報表服務仍是虛線（迭代 19）~~。規則引擎是後端裡的一個模組，寫同一個 SQLite 檔案、讀歷史資料走唯讀連線，<strong>不呼叫 AI 閘道</strong>，所以<strong>分區與連線一條未動</strong>，圖二不必改。
-<strong>1010 迭代 19 再改圖一的一格</strong>：對外報表服務做完了，從虛線改成實線，副標改成「只出聚合值・核准後取出」；圖上已經沒有「規劃中」的元件，圖例那一格拿掉。它也是後端裡的一個模組、寫同一個 SQLite 檔案，取出的檔案由護理站電腦下載，<strong>分區與連線一條未動</strong>，圖二不必改。管理儀表板與獎勵制度是營運與排班那一格的延伸（讀既有紀錄算數字、不回寫臨床資料表），格子不變。
-<strong>1010 迭代 20 兩張圖都不必改</strong>：遊戲化之一（完成記號、我的衛教小本子、病友小撇步、跑馬燈的「你知道嗎」、護理師的回覆）是病人端與後端既有模組裡的功能，寫同一個 SQLite 檔案；「你知道嗎」由 AI 生成，走原本那條經 AI 閘道的線。<strong>沒有新元件、沒有新連線</strong>。
-<strong>1010 迭代 21 兩張圖也都不必改</strong>：透析小花園、送花、共同花園是後端裡多一個模組（<code>modules/garden</code>）、寫同一個 SQLite 檔案；平板斷線時先存本機再補送，用的是症狀回報原本那一套本機佇列；送花推給總覽螢幕的花瓶，走原本那條院內 SSE；植物插畫是程式產生的向量圖、隨程式一起進離線快取，<strong>不從任何地方下載</strong>。沒有新元件、沒有新連線。
-<strong>1011 迭代 22 兩張圖也都不必改</strong>：麻將連連看是後端裡多一個模組（<code>modules/mahjong</code>）、病人詳細資訊是另一個（<code>modules/patient-detail</code>），寫同一個 SQLite 檔案；平板斷線時用同一套本機佇列；牌面是放進病人端的圖檔、隨程式一起進離線快取，<strong>執行期不從任何地方下載</strong>；狀態評估彙整是後端的固定算式，不經 AI 閘道。社工、醫師是護理端的兩種帳號，不是新元件。沒有新元件、沒有新連線。現在對應迭代 22 完成時的系統。
-<strong>1011 迭代 23 兩張圖也都不必改</strong>：記憶相簿是後端裡多一個模組（<code>modules/album</code>），寫同一個 SQLite 檔案；圖卡是病人端自帶的向量圖（建置時進離線快取，執行期不連外），平板斷線時用同一套本機佇列；沒有新的對外連線、新的行程或新的資料流向。現在對應迭代 23 完成時的系統。</p>
+<p>兩張圖是系統實體與邏輯架構的視覺依據，與 <a href="../implementation-spec/">實作規格書</a> 搭配閱讀。圖一畫軟體元件之間怎麼互相呼叫，圖二畫這些東西實際擺在哪裡、哪條線跨出醫院；圖一的整層後端，就是圖二機房裡那一台應用伺服器。</p>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>圖一畫軟體元件之間怎麼互相呼叫，圖二畫東西實際擺在哪裡、哪條線跨出醫院；圖一的整層後端就是圖二機房裡那一台應用伺服器</li>
+<li>最後一次重繪是 0929（依 0926 改版：容器＋<code>git clone</code>、經本系統的 AI 閘道、實驗室只在開發環境、建置期才連出）</li>
+<li>之後只改標籤或虛實線：迭代 15、16 改標籤，迭代 18 規則引擎改成實線，迭代 19 改圖一一格；迭代 20～27 兩張圖都不必改，現在對應迭代 27 完成時的系統</li>
+<li>四句必背：資料流恆為前端 → 後端 API → SQLite；身分靠綁定不靠登入；執行時院內零對外連線、只在部署與更新時連出；病人與護理師的資料分表、互不回寫</li>
+<li>改圖只改 <code>architecture-diagrams.src.html</code>，PNG 照文末的指令重新產生，不要單獨修圖</li>
+</ul>
+<p><strong>2026-09-29 更新，依 0926 改版重繪，對應迭代 14.3 完成時的系統。</strong> 這是第二次動到圖二的線（第一次是 0919）。 <strong>1005 迭代 16 只改圖一的三處文字</strong>：照護業務模組裡的「閒置輪播・三層內容」改成「本次透析面板・跑馬燈」，虛線框的規則引擎與對外報表服務標成迭代 18、19。 <strong>1005 再補迭代 15，兩張圖都只改標籤</strong>：圖一的「臨床資料匯入」改稱<strong>院方資料同步</strong>（病人・床位・療程・數值），Session Token 那條綠色虛線補上「新數值以 SSE 通知」；圖二的 HIS／EMR 改標「透析清單・院方唯讀 API」、它的連線改標「每 3 分鐘唯讀抓取・不寫回」，平板的連線補上 SSE 通知。<strong>分區與連線一條未動</strong>，現在對應迭代 17 完成時的系統（迭代 17 的跑馬燈草稿走既有的 AI 閘道，圖上不必改）。 <strong>1010 迭代 18 只改圖一的一格</strong>：規則引擎做完了，從虛線框（規劃中）改成實線，副標改成「判斷輔助・不經 AI」；~~對外報表服務仍是虛線（迭代 19）~~。規則引擎是後端裡的一個模組，寫同一個 SQLite 檔案、讀歷史資料走唯讀連線，<strong>不呼叫 AI 閘道</strong>，所以<strong>分區與連線一條未動</strong>，圖二不必改。 <strong>1010 迭代 19 再改圖一的一格</strong>：對外報表服務做完了，從虛線改成實線，副標改成「只出聚合值・核准後取出」；圖上已經沒有「規劃中」的元件，圖例那一格拿掉。它也是後端裡的一個模組、寫同一個 SQLite 檔案，取出的檔案由護理站電腦下載，<strong>分區與連線一條未動</strong>，圖二不必改。管理儀表板與獎勵制度是營運與排班那一格的延伸（讀既有紀錄算數字、不回寫臨床資料表），格子不變。 <strong>1010 迭代 20 兩張圖都不必改</strong>：遊戲化之一（完成記號、我的衛教小本子、病友小撇步、跑馬燈的「你知道嗎」、護理師的回覆）是病人端與後端既有模組裡的功能，寫同一個 SQLite 檔案；「你知道嗎」由 AI 生成，走原本那條經 AI 閘道的線。<strong>沒有新元件、沒有新連線</strong>。 <strong>1010 迭代 21 兩張圖也都不必改</strong>：透析小花園、送花、共同花園是後端裡多一個模組（<code>modules/garden</code>）、寫同一個 SQLite 檔案；平板斷線時先存本機再補送，用的是症狀回報原本那一套本機佇列；送花推給總覽螢幕的花瓶，走原本那條院內 SSE；植物插畫是程式產生的向量圖、隨程式一起進離線快取，<strong>不從任何地方下載</strong>。沒有新元件、沒有新連線。 <strong>1011 迭代 22 兩張圖也都不必改</strong>：麻將連連看是後端裡多一個模組（<code>modules/mahjong</code>）、病人詳細資訊是另一個（<code>modules/patient-detail</code>），寫同一個 SQLite 檔案；平板斷線時用同一套本機佇列；牌面是放進病人端的圖檔、隨程式一起進離線快取，<strong>執行期不從任何地方下載</strong>；狀態評估彙整是後端的固定算式，不經 AI 閘道。社工、醫師是護理端的兩種帳號，不是新元件。沒有新元件、沒有新連線。現在對應迭代 22 完成時的系統。 <strong>1011 迭代 23 兩張圖也都不必改</strong>：記憶相簿是後端裡多一個模組（<code>modules/album</code>），寫同一個 SQLite 檔案；圖卡是病人端自帶的向量圖（建置時進離線快取，執行期不連外），平板斷線時用同一套本機佇列；沒有新的對外連線、新的行程或新的資料流向。現在對應迭代 23 完成時的系統。</p>
 <p><strong>1018 迭代 24 兩張圖也都不必改</strong>：種子袋、小訪客、兩個圖鑑都在既有的 <code>modules/garden</code>、<code>modules/album</code> 裡，多一張表、一支端點，寫同一個 SQLite 檔案；新的花、訪客與圖卡照樣是病人端自帶的向量圖。沒有新的元件、對外連線或資料流向。現在對應迭代 24 完成時的系統。</p>
 <p><strong>1018 迭代 25 兩張圖也都不必改</strong>：床邊前速覽是既有 <code>modules/help-requests</code> 多一支讀取端點、求助處置草稿是同一個模組在結案的交易裡多寫一筆 <code>nursing_records</code>；院方 API 多讀的欄位走原本那一條同步（同一支抓取、同一個 SQLite 檔案，多一張表），<strong>只給護理端看</strong>；頂端橫幅的修正在護理端前端。沒有新的元件、對外連線或資料流向。現在對應迭代 25 完成時的系統。</p>
 <p><strong>1018 迭代 26 兩張圖也都不必改</strong>：儀表板的資料補齊、圖、對外報表的修正與可列印版都在既有的成效與對外報表模組裡（圖是護理端自己畫的 SVG，沒有加套件）；平板連線紀錄是既有輪詢更新最後連線時間時順手多寫一張表；處理者指名是後端多一個模組（<code>modules/handlers</code>），寫同一個 SQLite 檔案。可列印版由瀏覽器另存 PDF，伺服器不產生檔案。沒有新的元件、對外連線或資料流向。現在對應迭代 26 完成時的系統。</p>
-<p><strong>1018 迭代 27 兩張圖也都不必改</strong>：外殼原本就鎖橫向、這一次沒有改（外殼仍是 v0.3.0）；病人端只是拿掉直放的樣式；麻將多兩級是共用定義裡的資料，沒有新的元件、連線或資料表。
-依據見《<a href="../deployment-spec/">部署規範</a>》v3.0 第 1、3、5 章。</p>
+<p><strong>1018 迭代 27 兩張圖也都不必改</strong>：外殼原本就鎖橫向、這一次沒有改（外殼仍是 v0.3.0）；病人端只是拿掉直放的樣式；麻將多兩級是共用定義裡的資料，沒有新的元件、連線或資料表。依據見《<a href="../deployment-spec/">部署規範</a>》v3.0 第 1、3、5 章。</p>
 <p>這次動的四處：</p>
 <table>
 <thead>
@@ -4802,15 +4820,13 @@
 </tr>
 </tbody>
 </table>
-<p><strong>圖二因此第一次做到「服務執行時一條跨出醫院的線都沒有」</strong>：0919 版還有一條從應用伺服器連到實驗室的鏽色線，現在它只存在於開發環境。
-建置期那條線是新的，但它只在有人下 <code>git clone</code>、<code>docker compose build</code> 的那段時間存在。0930 確認主機對外連線是常態、沒有限制（Q-32）。</p>
+<p><strong>圖二因此第一次做到「服務執行時一條跨出醫院的線都沒有」</strong>：0919 版還有一條從應用伺服器連到實驗室的鏽色線，現在它只存在於開發環境。建置期那條線是新的，但它只在有人下 <code>git clone</code>、<code>docker compose build</code> 的那段時間存在。0930 確認主機對外連線是常態、沒有限制（Q-32）。</p>
 <p>0919 那次重繪的四處（應用主機改為共用 Windows 工作站、AI 推論退成另一台機器、MDM 整格拿掉、臨床數值走院方唯讀 API）仍然成立，見文末。</p>
 <p><strong>兩張圖的「醫院院內網路」是同一個框</strong>：病人端平板、護理端裝置與常駐總覽螢幕都在框內。</p>
 <hr />
 <h2 id="全端架構含裝置綁定流程">全端架構（含裝置綁定流程）<a class="headerlink" href="#全端架構含裝置綁定流程" title="Permanent link">&para;</a></h2>
 <p><img alt="全端架構圖" src="../images/fullstack-architecture-binding.png" /></p>
-<p>護理師指派平板 → 系統核發 Session Token（綁定「病人＋平板＋本次療程」）→ 平板在輪詢時領到 Token，在有效期間只能存取本次綁定的資料。
-細節見 <a href="../srs/">SRS 4.3／4.4</a> 與<a href="../../reports/progress-technical/">技術進度報告 §5.2</a>。</p>
+<p>護理師指派平板 → 系統核發 Session Token（綁定「病人＋平板＋本次療程」）→ 平板在輪詢時領到 Token，在有效期間只能存取本次綁定的資料。細節見 <a href="../srs/">SRS 4.3／4.4</a> 與<a href="../../reports/progress-technical/">技術進度報告 §5.2</a>。</p>
 <p><strong>讀圖五個重點</strong></p>
 <ul>
 <li>三個前端的實線箭頭都只指向 API Gateway，沒有任何一條線直達資料庫——這是<a href="../database-policy/">資料庫使用規範</a> 第 2 條的圖像化。裝置綁定、照護業務、營運與排班、臨床資料匯入寫的是同一個 SQLite 檔案，寫入連線只有一條。</li>
@@ -4825,8 +4841,7 @@
 <hr />
 <h2 id="系統實體架構與網路分區">系統實體架構與網路分區<a class="headerlink" href="#系統實體架構與網路分區" title="Permanent link">&para;</a></h2>
 <p><img alt="系統實體架構與網路分區" src="../images/system-architecture-network-zones.png" /></p>
-<p>資料流一律為 <strong>前端 → 後端 API → SQLite 檔案</strong>；前端不含任何資料庫套件，
-存取全數收斂在後端 Repository 層。約束見 <a href="../database-policy/">資料庫使用規範</a>。</p>
+<p>資料流一律為 <strong>前端 → 後端 API → SQLite 檔案</strong>；前端不含任何資料庫套件，存取全數收斂在後端 Repository 層。約束見 <a href="../database-policy/">資料庫使用規範</a>。</p>
 <p><strong>讀圖五個重點</strong></p>
 <ul>
 <li>虛線框是網段，不是資料夾；沒畫出來的線和畫出來的一樣重要——平板、護理端裝置、總覽螢幕、資料庫都沒有任何一條往外打的線。</li>
@@ -4990,18 +5005,12 @@
 </tbody>
 </table>
 <hr />
-<p>兩張圖的原始碼在 <a href="../architecture-diagrams.src.html"><code>architecture-diagrams.src.html</code></a>。
-改圖請改這份，再用它重新產生 <code>images/</code> 底下的 PNG（本機 Chrome 無頭模式、淺色主題、2 倍解析度），不要單獨修圖片。
-那份 HTML 本身就是可縮放、深淺主題自動切換的版本，用瀏覽器直接開即可，文件站上也點得開。</p>
+<p>兩張圖的原始碼在 <a href="../architecture-diagrams.src.html"><code>architecture-diagrams.src.html</code></a>。改圖請改這份，再用它重新產生 <code>images/</code> 底下的 PNG（本機 Chrome 無頭模式、淺色主題、2 倍解析度），不要單獨修圖片。那份 HTML 本身就是可縮放、深淺主題自動切換的版本，用瀏覽器直接開即可，文件站上也點得開。</p>
 <p><strong>PNG 換掉之後就沒有別的事了</strong>：文件站上的圖走的就是 repo 裡的這兩個檔案，同步過去即是新圖。</p>
 <blockquote>
-<p>2026-09-17 文件站由 HackMD 換成 GitHub Pages 之後，圖片改走 repo 相對路徑。
-原本「圖改了要另外上傳、換掉對應表裡的網址，否則鏡像還是舊圖」那一步已經不存在。</p>
+<p>2026-09-17 文件站由 HackMD 換成 GitHub Pages 之後，圖片改走 repo 相對路徑。原本「圖改了要另外上傳、換掉對應表裡的網址，否則鏡像還是舊圖」那一步已經不存在。</p>
 </blockquote>
-<p><strong>重新產生 PNG 的實際指令</strong>（Windows，Chrome 已安裝）：把 <code>architecture-diagrams.src.html</code> 裡的
-單一 <code>&lt;svg&gt;</code> 連同 <code>&lt;style&gt;</code> 包成一頁，在 <code>&lt;html&gt;</code> 上加 <code>data-theme="light"</code>（否則跟著系統偏好
-變成深色），再以無頭模式截圖。視窗尺寸取該圖 <code>viewBox</code> 的寬高，<code>--force-device-scale-factor=2</code>
-產出的就是既有 PNG 的尺寸（圖一 2800×2120、圖二 2480×2000）：</p>
+<p><strong>重新產生 PNG 的實際指令</strong>（Windows，Chrome 已安裝）：把 <code>architecture-diagrams.src.html</code> 裡的單一 <code>&lt;svg&gt;</code> 連同 <code>&lt;style&gt;</code> 包成一頁，在 <code>&lt;html&gt;</code> 上加 <code>data-theme="light"</code>（否則跟著系統偏好變成深色），再以無頭模式截圖。視窗尺寸取該圖 <code>viewBox</code> 的寬高，<code>--force-device-scale-factor=2</code> 產出的就是既有 PNG 的尺寸（圖一 2800×2120、圖二 2480×2000）：</p>
 <div class="highlight"><pre><span></span><code>chrome --headless=new --disable-gpu --hide-scrollbars \
   --user-data-dir=&lt;另開一個暫存目錄&gt; --force-device-scale-factor=2 \
   --virtual-time-budget=20000 --window-size=1400,1060 \
@@ -5030,6 +5039,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>迭代 24～27 兩張圖都不必改，逐一寫明理由；現在對應迭代 27 完成時的系統</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/requirements/architecture-diagrams/">1014</a></td>
 <td>2026-10-14</td>

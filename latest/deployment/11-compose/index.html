@@ -5503,13 +5503,9 @@
 <h1 id="第十一冊--容器部署git-clone--docker-compose現行路線">第十一冊 · 容器部署：<code>git clone</code> ＋ <code>docker compose</code>（現行路線）<a class="headerlink" href="#第十一冊--容器部署git-clone--docker-compose現行路線" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案（0926 新增，迭代 11）　編號：<code>W-xx</code>　<strong>這一冊要印出來帶進去</strong></p>
 <blockquote>
-<p><strong>0926 起這是唯一的部署路線。</strong> 院方的條件是：以容器部署、程式以 <code>git clone</code> 取得、
-院內網路連得出去但外面連不進來、<strong>不准用隨身碟</strong>、Administrator 不設密碼（《部署規範》v3.0 第 0.1 節）。
-離線安裝包那條路因此<strong>撤除</strong>，不是降為備案。</p>
+<p><strong>0926 起這是唯一的部署路線。</strong> 院方的條件是：以容器部署、程式以 <code>git clone</code> 取得、院內網路連得出去但外面連不進來、<strong>不准用隨身碟</strong>、Administrator 不設密碼（《部署規範》v3.0 第 0.1 節）。離線安裝包那條路因此<strong>撤除</strong>，不是降為備案。</p>
 <p>規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》v3.0；這一冊只寫手指要按什麼、每一步會怎麼壞。</p>
-<p>⚠️ <strong>本冊所有指令都在主機的 PowerShell 下。不要自己先開任何容器，也不要自己下 <code>docker run -v</code>、<code>-p</code>。</strong>
-容器一律由 <code>docker compose</code> 依 repo 裡的 <code>docker-compose.yml</code> 產生。
-0922 就是在一個手動開的容器裡照步驟做，還把整顆 C 槽掛了進去（<a href="../10-first-visit/">第十冊</a> F-01、F-02）。</p>
+<p>⚠️ <strong>本冊所有指令都在主機的 PowerShell 下。不要自己先開任何容器，也不要自己下 <code>docker run -v</code>、<code>-p</code>。</strong> 容器一律由 <code>docker compose</code> 依 repo 裡的 <code>docker-compose.yml</code> 產生。 0922 就是在一個手動開的容器裡照步驟做，還把整顆 C 槽掛了進去（<a href="../10-first-visit/">第十冊</a> F-01、F-02）。</p>
 </blockquote>
 <hr />
 <h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
@@ -5594,9 +5590,7 @@
 </table>
 <p><strong>繫結掛載只有 <code>config</code> 與 <code>backups</code> 兩個</strong>（DEP-37 第 3 項），<code>npm run check:container</code> 會在開發端擋住任何第三個。</p>
 <h3 id="03-開發機實測結果0926">0.3 開發機實測結果（0926）<a class="headerlink" href="#03-開發機實測結果0926" title="Permanent link">&para;</a></h3>
-<p>本冊的每一條指令都在開發機上照順序跑過一次：<strong>從 GitHub 全新 clone、全新資料卷、只用 Git 與 Docker</strong>，
-接著走完一次更新（新 tag、備份並驗證還原、套用一個新遷移）與一次回退（舊 tag、舊映像檔、還原備份）。
-每一步的結果在《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 8 節。</p>
+<p>本冊的每一條指令都在開發機上照順序跑過一次：<strong>從 GitHub 全新 clone、全新資料卷、只用 Git 與 Docker</strong>，接著走完一次更新（新 tag、備份並驗證還原、套用一個新遷移）與一次回退（舊 tag、舊映像檔、還原備份）。每一步的結果在《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 8 節。</p>
 <p>實測抓到兩件事，都已處理：</p>
 <table>
 <thead>
@@ -5619,8 +5613,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>開發機驗不到、要在院內那台驗的</strong>：主機的 Docker 版本與資料位置、登記過的連接埠、
-斷電重開後 Docker Desktop 會不會自己起來（DEP-21 第 4 項）、防毒排除（Q-27）。</p>
+<p><strong>開發機驗不到、要在院內那台驗的</strong>：主機的 Docker 版本與資料位置、登記過的連接埠、斷電重開後 Docker Desktop 會不會自己起來（DEP-21 第 4 項）、防毒排除（Q-27）。</p>
 <h3 id="04-兩個前提先接受">0.4 兩個前提，先接受<a class="headerlink" href="#04-兩個前提先接受" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5913,8 +5906,7 @@
 </code></pre></div>
 <p>把資訊室給的三個埠（後端、護理端、病人端）也照這樣查一次。</p>
 <p><strong>怎麼知道成功了</strong>：要用的三個埠查不到任何結果。</p>
-<p><strong>可能怎麼壞</strong>：查到了——那個埠有人在用（0922 的 3000 就是）。換一個，<strong>並回報資訊室登記</strong>。
-<strong>不要自己下 <code>-p</code> 把埠對到別的地方</strong>（<a href="../10-first-visit/">F-03</a>、<a href="../10-first-visit/">F-17</a>），埠只寫在 <code>.env</code> 裡（W-11）。</p>
+<p><strong>可能怎麼壞</strong>：查到了——那個埠有人在用（0922 的 3000 就是）。換一個，<strong>並回報資訊室登記</strong>。 <strong>不要自己下 <code>-p</code> 把埠對到別的地方</strong>（<a href="../10-first-visit/">F-03</a>、<a href="../10-first-visit/">F-17</a>），埠只寫在 <code>.env</code> 裡（W-11）。</p>
 <hr />
 <h2 id="3-取得程式碼">3. 取得程式碼<a class="headerlink" href="#3-取得程式碼" title="Permanent link">&para;</a></h2>
 <h3 id="w-08-建立兩個目錄">W-08 建立兩個目錄<a class="headerlink" href="#w-08-建立兩個目錄" title="Permanent link">&para;</a></h3>
@@ -5931,8 +5923,7 @@
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-tablet-care</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
 <p>第一行是先建好 <code>.ssh</code> 資料夾：新帳號沒有這個資料夾，<code>ssh-keygen</code> 不會自己建；資料夾已經在的話，這一行不會動任何東西。</p>
-<p>把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。
-外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在<a href="../12-shell/">第十二冊</a> Y-02。</p>
+<p>把印出來的那一行交給 repo 管理者，登記到 GitHub repo 的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。外殼 App 的 repo 另產生一把（一把部署金鑰只能對應一個 repo），做法在<a href="../12-shell/">第十二冊</a> Y-02。</p>
 <p>再在 <code>$HOME\.ssh\config</code> 加一段，讓這把金鑰只用在這個 repo：</p>
 <div class="highlight"><pre><span></span><code>Host github-hd-tablet-care
     HostName github.com
@@ -6327,9 +6318,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>在 Git Bash 裡照抄會壞的一件事</strong>：Git Bash 會把 <code>/backups/…</code>、<code>/data/…</code> 這種參數自動轉成 Windows 路徑，
-還原腳本就會回報找不到備份檔。<strong>本冊一律用 PowerShell</strong>；非用 Git Bash 不可時，先 <code>export MSYS_NO_PATHCONV=1</code>，
-<code>--env-file</code> 也要寫成 <code>C:/…</code> 的形式。</p>
+<p><strong>在 Git Bash 裡照抄會壞的一件事</strong>：Git Bash 會把 <code>/backups/…</code>、<code>/data/…</code> 這種參數自動轉成 Windows 路徑，還原腳本就會回報找不到備份檔。<strong>本冊一律用 PowerShell</strong>；非用 Git Bash 不可時，先 <code>export MSYS_NO_PATHCONV=1</code>， <code>--env-file</code> 也要寫成 <code>C:/…</code> 的形式。</p>
 <hr />
 <h2 id="8-關服務">8. 關服務<a class="headerlink" href="#8-關服務" title="Permanent link">&para;</a></h2>
 <p>原則與三種深度見<a href="../08-shutdown/">第八冊</a>，容器版的指令：</p>

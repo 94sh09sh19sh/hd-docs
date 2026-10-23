@@ -2,13 +2,20 @@
 
 版本：v0.1　文件狀態：草案（0929 新增）
 
-> **1001 起由[第十五冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15b-env-simulation/index.md)取代。** 第十五冊之二把護理端的位址從 `localhost` 改成開發機的區網 IP， 理由在那一冊開頭（1001 院內卡在的登入問題，用 `localhost` 模擬部署永遠練不到）。這一冊保留為紀錄、不再改寫。
+> **1001 起由[第十五冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15b-env-simulation/index.md)取代。** 第十五冊之二把護理端的位址從 `localhost` 改成開發機的區網 IP，理由在那一冊開頭（1001 院內卡在的登入問題，用 `localhost` 模擬部署永遠練不到）。這一冊保留為紀錄、不再改寫。
 >
-> 這一冊只做一件事：**模擬部署時，開發機上那一份 `.env`，每一行要填什麼**。 它接在[第十四冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14-from-zero/index.md) N-11。實際部署的填法看[第十四冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14a-env-hospital/index.md)。
+> 這一冊只做一件事：**模擬部署時，開發機上那一份 `.env`，每一行要填什麼**。它接在[第十四冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14-from-zero/index.md) N-11。實際部署的填法看[第十四冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14a-env-hospital/index.md)。
 >
-> 模擬部署的意思是：在自己的開發機上，用與院內**一字不差的指令**從零部署一次（《部署規範》DEP-22，第十一冊第 7 節）。 所以 `.env` 用的是**同一份範本、同一批變數**，只是值換成開發機的。 本冊與 repo 裡的 `deploy\hospital.env.example` 不一致時，以範本為準。
+> 模擬部署的意思是：在自己的開發機上，用與院內**一字不差的指令**從零部署一次（《部署規範》DEP-22，第十一冊第 7 節）。所以 `.env` 用的是**同一份範本、同一批變數**，只是值換成開發機的。本冊與 repo 裡的 `deploy\hospital.env.example` 不一致時，以範本為準。
 
 ______________________________________________________________________
+
+## 摘要
+
+- **1001 起由第十五冊之二取代**：新版把護理端位址從 `localhost` 改成開發機的區網 IP；這一冊保留為紀錄、不再改寫
+- 只做一件事：模擬部署時開發機那一份 `.env` 每一行要填什麼，接在第十四冊 N-11
+- 模擬部署是用與院內一字不差的指令從零部署一次（DEP-22）：同一份範本、同一批變數，只是值換成開發機的
+- 第 1～3 節逐項填、填好的樣子、填完核對；第 4 節開發機的 IP 變了；第 5 節與實際部署的差異總表
 
 ## 0. 開始之前
 
@@ -29,7 +36,7 @@ notepad $cfg
 
 ### 0.2 寫法的四條規矩
 
-與實際部署相同：**等號前後不要空格、值不要加引號、密碼不要含 `$` `#` 空白與引號、`#` 開頭的說明行不要刪**。 理由見[第十四冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14a-env-hospital/index.md) 0.2 節。
+與實際部署相同：**等號前後不要空格、值不要加引號、密碼不要含 `$` `#` 空白與引號、`#` 開頭的說明行不要刪**。理由見[第十四冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14a-env-hospital/index.md) 0.2 節。
 
 ### 0.3 要先查好的兩件事
 
@@ -91,7 +98,7 @@ ______________________________________________________________________
 
 - 護理端只在開發機自己的瀏覽器開，所以用 `localhost`。
 - **`MDM_KIOSK_BASE_URL` 不能用 `localhost`**：手機上的 `localhost` 是手機自己。這一條與實際部署一樣要 **`https://`**。
-- 想從**另一台電腦**開護理端時，`HD_PUBLIC_API_URL` 與 `CORS_ORIGINS` 也要改成區網 IP， 而且 `HD_PUBLIC_API_URL` 改了要重新 `build`（它寫在網頁檔案裡）。一般模擬部署不需要。
+- 想從**另一台電腦**開護理端時，`HD_PUBLIC_API_URL` 與 `CORS_ORIGINS` 也要改成區網 IP，而且 `HD_PUBLIC_API_URL` 改了要重新 `build`（它寫在網頁檔案裡）。一般模擬部署不需要。
 
 ### 1.4 外殼 App
 
@@ -101,7 +108,7 @@ ______________________________________________________________________
 | `HD_SHELL_SIGNING`        | **`dev`**                  | ✓ **實際部署是 `hospital`**。範本預設是 `hospital`，**這一項一定要改** |
 | `KIOSK_SHELL_MIN_VERSION` | 留空                       |                                                                        |
 
-- `HD_SHELL_SIGNING=dev` 讓 `shell-builder` 產生「開發用」的簽章金鑰，N-21 會印出「APK 簽章金鑰（開發用）」。 這把金鑰簽出來的 APK 與院內版**不能互相覆蓋安裝**，這正是要的效果：開發用的東西不會混進院內。
+- `HD_SHELL_SIGNING=dev` 讓 `shell-builder` 產生「開發用」的簽章金鑰，N-21 會印出「APK 簽章金鑰（開發用）」。這把金鑰簽出來的 APK 與院內版**不能互相覆蓋安裝**，這正是要的效果：開發用的東西不會混進院內。
 - 忘了改、留著 `hospital` 跑下去的話，資料卷會記成院內用。撤除重來即可（第十四冊 N-31），**不要事後才改成 `dev`**——`shell-builder` 會拒絕。
 
 ### 1.5 身分驗證
@@ -249,7 +256,7 @@ ______________________________________________________________________
 | `SUPER_ADMIN_*`                                      | 護理長給的工號與名字、臨時密碼               | `sim-admin` 之類的虛構值        |
 | 其他                                                 | 相同                                         | 相同                            |
 
-> ⚠️ **不要把模擬部署的 `.env` 複製到院內再改。** 從院內主機上的範本重新複製、照[第十四冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14a-env-hospital/index.md)一項一項填。 抄過去最常漏改的是 `HD_SHELL_SIGNING`，而它一旦讓院內主機產生了開發用金鑰，就要撤掉資料卷重來。
+> ⚠️ **不要把模擬部署的 `.env` 複製到院內再改。** 從院內主機上的範本重新複製、照[第十四冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14a-env-hospital/index.md)一項一項填。抄過去最常漏改的是 `HD_SHELL_SIGNING`，而它一旦讓院內主機產生了開發用金鑰，就要撤掉資料卷重來。
 
 ______________________________________________________________________
 

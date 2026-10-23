@@ -5381,14 +5381,9 @@
 <h1 id="第十三冊--ai-閘道實驗室實測與院內設定">第十三冊 · AI 閘道：實驗室實測與院內設定<a class="headerlink" href="#第十三冊--ai-閘道實驗室實測與院內設定" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案（0927 新增，迭代 13）　編號：<code>Z-xx</code></p>
 <blockquote>
-<p><strong>這一冊分兩半</strong>：第 1～4 節是<strong>過渡期</strong>——在實驗室的 GPU 伺服器上起 AI 閘道、開發機經 SSH 接過去，
-讓 AI 功能以真的模型跑一次（只准合成資料）；第 5 節是<strong>院內</strong>——compose 裡的 <code>ai-gateway</code> 服務，
-接在第十一冊之後，等正式 GPU API（Q-07）有答案才真的接上。</p>
-<p>規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》第 5 章（DEP-16、DEP-17、DEP-40～DEP-42）；
-閘道本身的說明在 repo 的 <code>services/ai-gateway/README.md</code>。這一冊只寫手指要按什麼、每一步會怎麼壞。</p>
-<p>⚠️ <strong>實驗室的位址、SSH 埠、帳號與密碼，一律不寫進 repo、不寫進這本手冊、不寫進週報</strong>（DEP-42）。
-本冊用 <code>&lt;角括號&gt;</code> 標出要換成實際值的地方；實際值只存在你自己電腦上、專案目錄以外的那一份筆記（Z-01）。
-文件站是公開的。</p>
+<p><strong>這一冊分兩半</strong>：第 1～4 節是<strong>過渡期</strong>——在實驗室的 GPU 伺服器上起 AI 閘道、開發機經 SSH 接過去，讓 AI 功能以真的模型跑一次（只准合成資料）；第 5 節是<strong>院內</strong>——compose 裡的 <code>ai-gateway</code> 服務，接在第十一冊之後，等正式 GPU API（Q-07）有答案才真的接上。</p>
+<p>規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》第 5 章（DEP-16、DEP-17、DEP-40～DEP-42）；閘道本身的說明在 repo 的 <code>services/ai-gateway/README.md</code>。這一冊只寫手指要按什麼、每一步會怎麼壞。</p>
+<p>⚠️ <strong>實驗室的位址、SSH 埠、帳號與密碼，一律不寫進 repo、不寫進這本手冊、不寫進週報</strong>（DEP-42）。本冊用 <code>&lt;角括號&gt;</code> 標出要換成實際值的地方；實際值只存在你自己電腦上、專案目錄以外的那一份筆記（Z-01）。文件站是公開的。</p>
 </blockquote>
 <hr />
 <h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
@@ -5501,9 +5496,7 @@
 </tbody>
 </table>
 <h3 id="03-開發機上的本機實測0927">0.3 開發機上的本機實測（0927）<a class="headerlink" href="#03-開發機上的本機實測0927" title="Permanent link">&para;</a></h3>
-<p>實驗室之前，整條路徑先在開發機上以<strong>假的推論端點</strong>走過一次：閘道映像檔、LangChain 兩種方法、
-改 <code>config.yaml</code> 換模型、閘道停掉時主線照常，全部通過。結果見《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 10 節。
-<strong>實驗室這一半（本冊第 1～4 節）尚待連線後實測</strong>，走完回填同一節。</p>
+<p>實驗室之前，整條路徑先在開發機上以<strong>假的推論端點</strong>走過一次：閘道映像檔、LangChain 兩種方法、改 <code>config.yaml</code> 換模型、閘道停掉時主線照常，全部通過。結果見《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 10 節。 <strong>實驗室這一半（本冊第 1～4 節）尚待連線後實測</strong>，走完回填同一節。</p>
 <hr />
 <h2 id="1-開發機這一層">1. 開發機這一層<a class="headerlink" href="#1-開發機這一層" title="Permanent link">&para;</a></h2>
 <h3 id="z-01-在專案目錄外記下連線資訊">Z-01 在專案目錄外記下連線資訊<a class="headerlink" href="#z-01-在專案目錄外記下連線資訊" title="Permanent link">&para;</a></h3>
@@ -5515,8 +5508,7 @@ LAB_JUMP_HOST=&lt;若要先登入另一台再轉連，那一台的位址；沒�
 LAB_GATEWAY_PORT=&lt;閘道在實驗室伺服器上要綁的埠，挑一個沒人用的&gt;
 </code></pre></div>
 <p><strong>密碼不寫進這份檔</strong>，每次連線手打。這份檔同時是驗收 6 的比對來源（Z-15）。</p>
-<p>再在 <code>%USERPROFILE%\.ssh\config</code>（<strong>開發機自己的</strong>，不是實驗室的）加一段，之後所有指令都用 <code>hd-lab</code> 這個別名，
-實際位址不必再出現在任何指令裡：</p>
+<p>再在 <code>%USERPROFILE%\.ssh\config</code>（<strong>開發機自己的</strong>，不是實驗室的）加一段，之後所有指令都用 <code>hd-lab</code> 這個別名，實際位址不必再出現在任何指令裡：</p>
 <div class="highlight"><pre><span></span><code>Host hd-lab
     HostName &lt;實驗室伺服器的位址&gt;
     Port &lt;SSH 埠&gt;
@@ -5592,8 +5584,7 @@ ls<span class="w"> </span>-ld<span class="w"> </span>&lt;個人資料夾&gt;<spa
 <h3 id="z-04-查可用模型實驗室容器外">Z-04 查可用模型（實驗室，<strong>容器外</strong>）<a class="headerlink" href="#z-04-查可用模型實驗室容器外" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>ollama<span class="w"> </span>list
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：列出模型名稱與大小。挑一個<strong>繁體中文能力可能較好、大小與目前使用狀況相符</strong>的，
-名稱<strong>一字不差</strong>抄到開發機那份筆記（含冒號後面的標籤）。另挑一個備用，Z-12 換模型時用。</p>
+<p><strong>怎麼知道成功了</strong>：列出模型名稱與大小。挑一個<strong>繁體中文能力可能較好、大小與目前使用狀況相符</strong>的，名稱<strong>一字不差</strong>抄到開發機那份筆記（含冒號後面的標籤）。另挑一個備用，Z-12 換模型時用。</p>
 <table>
 <thead>
 <tr>
@@ -5639,8 +5630,7 @@ ls<span class="w"> </span>-ld<span class="w"> </span>&lt;個人資料夾&gt;<spa
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>&lt;個人前綴&gt;-hd-ai-gateway:i13<span class="w"> </span>.
 </code></pre></div>
 <p><code>&lt;個人前綴&gt;</code> 用你自己的代號，讓別人一眼看得出這是誰的映像檔與容器。</p>
-<p><strong>怎麼知道成功了</strong>：建置過程最後有一段自我測試，結尾印出 <code>全部通過</code>，接著 <code>naming to …&lt;個人前綴&gt;-hd-ai-gateway:i13</code>。
-<strong>這一步同時確認了 LangChain 等套件裝在映像檔裡、兩種方法都能用</strong>，還沒碰到真的模型。</p>
+<p><strong>怎麼知道成功了</strong>：建置過程最後有一段自我測試，結尾印出 <code>全部通過</code>，接著 <code>naming to …&lt;個人前綴&gt;-hd-ai-gateway:i13</code>。 <strong>這一步同時確認了 LangChain 等套件裝在映像檔裡、兩種方法都能用</strong>，還沒碰到真的模型。</p>
 <table>
 <thead>
 <tr>
@@ -5839,13 +5829,10 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">claude_code_space</span><span class="p">\</span><span class="n">lab_project</span><span class="p">\</span><span class="n">v0</span>
 <span class="n">npm</span> <span class="n">run</span> <span class="n">verify</span><span class="p">:</span><span class="n">iteration13</span><span class="p">:</span><span class="n">api</span> <span class="p">--</span> <span class="p">-</span><span class="n">-gateway</span> <span class="n">http</span><span class="p">://</span><span class="n">127</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">:</span><span class="n">18000</span><span class="p">/</span><span class="n">v1</span> <span class="p">-</span><span class="n">-report</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">hd-lab</span><span class="p">\</span><span class="n">ai-lab-trial</span><span class="p">-&lt;</span><span class="n">日期</span><span class="p">&gt;.</span><span class="nb">md</span>
 </code></pre></div>
-<p>腳本自己建一個暫存資料庫、另起一個 <code>LLM_PROVIDER=lab</code> 的後端（不碰開發用的資料庫），依序驗：
-AI 總開關開得起來（健康檢查經閘道通過）、合成病人的衛教產生成功且 <code>ai_invocations</code> 記下實驗室上的實際模型、
-「看似真實」的病人被擋下且完全沒有送出；再把四項 AI 功能各跑一次，輸出與耗時寫進報告。</p>
+<p>腳本自己建一個暫存資料庫、另起一個 <code>LLM_PROVIDER=lab</code> 的後端（不碰開發用的資料庫），依序驗： AI 總開關開得起來（健康檢查經閘道通過）、合成病人的衛教產生成功且 <code>ai_invocations</code> 記下實驗室上的實際模型、「看似真實」的病人被擋下且完全沒有送出；再把四項 AI 功能各跑一次，輸出與耗時寫進報告。</p>
 <p><strong>第一次會很慢</strong>：模型要載入，可能一兩分鐘（規範第 7 項），腳本的逾時已放寬到五分鐘以上。</p>
 <p><strong>怎麼知道成功了</strong>：結尾 <code>全部通過</code>（驗收 3、4、5 那幾行是 <code>·</code>，表示在別處驗）；報告檔裡四項都有輸出。</p>
-<p>報告要人讀：每一項的「品質」欄照這四點判讀後填——<strong>繁體中文是否通順、有沒有簡體字或中國大陸用語、
-有沒有捏造提示裡沒有的事、格式是否照提示</strong>。結論與耗時抄進演練紀錄第 10 節；<strong>報告檔本身留在專案目錄外</strong>。</p>
+<p>報告要人讀：每一項的「品質」欄照這四點判讀後填——<strong>繁體中文是否通順、有沒有簡體字或中國大陸用語、有沒有捏造提示裡沒有的事、格式是否照提示</strong>。結論與耗時抄進演練紀錄第 10 節；<strong>報告檔本身留在專案目錄外</strong>。</p>
 <table>
 <thead>
 <tr>
@@ -5878,8 +5865,7 @@ AI 總開關開得起來（健康檢查經閘道通過）、合成病人的衛�
 <span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:11434/v1</span><span class="w">     </span><span class="c1"># 結尾多一段 /v1</span>
 </code></pre></div>
 <p>存檔，再跑一次（不帶 <code>--expect-model</code> 也可以）。</p>
-<p><strong>怎麼知道成功了</strong>：兩次都 <code>全部通過</code>；第一次的「呼叫紀錄的模型」是備用模型。<strong>全程沒有重建映像檔、沒有重新啟動閘道、
-後端每次都是腳本新起的同一份程式</strong>——換的只有 <code>config.yaml</code>。</p>
+<p><strong>怎麼知道成功了</strong>：兩次都 <code>全部通過</code>；第一次的「呼叫紀錄的模型」是備用模型。<strong>全程沒有重建映像檔、沒有重新啟動閘道、後端每次都是腳本新起的同一份程式</strong>——換的只有 <code>config.yaml</code>。</p>
 <hr />
 <h3 id="z-13-用畫面看一次開發機選做">Z-13 用畫面看一次（開發機，選做）<a class="headerlink" href="#z-13-用畫面看一次開發機選做" title="Permanent link">&para;</a></h3>
 <p>開發機的 <code>.env</code>：</p>
@@ -5888,8 +5874,7 @@ LLM_ENDPOINT=http://127.0.0.1:18000/v1
 LLM_MODEL_ID=
 LLM_TIMEOUT_SECONDS=300
 </code></pre></div>
-<p><code>npm run dev</code>，護理端「系統管理」：供應者「實驗室 API」、資料離開院內標成「院外：僅得送合成資料」、模型識別字是 <code>config.yaml</code> 那一個、健康檢查通過。
-開 AI 總開關，替一位病歷號 <code>HD-TEST-</code> 開頭的病人產生衛教。<strong>看完把 <code>.env</code> 改回 <code>LLM_PROVIDER=mock</code>。</strong></p>
+<p><code>npm run dev</code>，護理端「系統管理」：供應者「實驗室 API」、資料離開院內標成「院外：僅得送合成資料」、模型識別字是 <code>config.yaml</code> 那一個、健康檢查通過。開 AI 總開關，替一位病歷號 <code>HD-TEST-</code> 開頭的病人產生衛教。<strong>看完把 <code>.env</code> 改回 <code>LLM_PROVIDER=mock</code>。</strong></p>
 <hr />
 <h2 id="4-收尾驗收-67">4. 收尾（驗收 6、7）<a class="headerlink" href="#4-收尾驗收-67" title="Permanent link">&para;</a></h2>
 <h3 id="z-14-實驗室上不留東西">Z-14 實驗室上不留東西<a class="headerlink" href="#z-14-實驗室上不留東西" title="Permanent link">&para;</a></h3>
@@ -5907,8 +5892,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>~<span class="w">          
 <h3 id="z-15-repo-裡沒有實驗室的連線資訊開發機">Z-15 repo 裡沒有實驗室的連線資訊（開發機）<a class="headerlink" href="#z-15-repo-裡沒有實驗室的連線資訊開發機" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">npm</span> <span class="n">run</span> <span class="n">verify</span><span class="p">:</span><span class="n">iteration13</span> <span class="p">--</span> <span class="p">-</span><span class="n">-secrets</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">hd-lab</span><span class="p">\</span><span class="n">lab</span><span class="p">.</span><span class="n">env</span>
 </code></pre></div>
-<p>腳本逐字比對 <code>lab.env</code> 裡每一個值：工作目錄的每個檔案、git 歷史的每一次改動、每一則提交訊息。<strong>值不會印出來</strong>。
-要連密碼一起驗，暫時在 <code>lab.env</code> 加一行 <code>LAB_PASSWORD=…</code>，跑完刪掉。</p>
+<p>腳本逐字比對 <code>lab.env</code> 裡每一個值：工作目錄的每個檔案、git 歷史的每一次改動、每一則提交訊息。<strong>值不會印出來</strong>。要連密碼一起驗，暫時在 <code>lab.env</code> 加一行 <code>LAB_PASSWORD=…</code>，跑完刪掉。</p>
 <p><strong>怎麼知道成功了</strong>：每一個名稱都是 <code>✓ …檔案、歷史、提交訊息都找不到</code>。</p>
 <table>
 <thead>
@@ -5926,8 +5910,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>~<span class="w">          
 </table>
 <hr />
 <h2 id="5-院內主機">5. 院內主機<a class="headerlink" href="#5-院內主機" title="Permanent link">&para;</a></h2>
-<p>首波 AI 功能預設關閉（DEP-29），閘道可以根本不起。下面 Z-20～Z-22 在第十一冊 W-18 之後做一次，
-讓閘道就位、確認它明確回報「設定尚未填好」；Z-23 等 Q-07（正式 GPU API）有答案才做。</p>
+<p>首波 AI 功能預設關閉（DEP-29），閘道可以根本不起。下面 Z-20～Z-22 在第十一冊 W-18 之後做一次，讓閘道就位、確認它明確回報「設定尚未填好」；Z-23 等 Q-07（正式 GPU API）有答案才做。</p>
 <blockquote>
 <p>⚠️ 指令都在主機的 PowerShell、<code>D:\hd-tablet-care\repo</code> 底下下；<code>$cfg</code> 是第十一冊 W-11 設的 <code>D:\hd-tablet-care\config\.env</code>。</p>
 </blockquote>
@@ -5941,9 +5924,8 @@ ls<span class="w"> </span>-la<span class="w"> </span>~<span class="w">          
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">ai</span> <span class="n">up</span> <span class="n">-d</span> <span class="n">ai-gateway</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">api</span> <span class="n">node</span> <span class="n">-e</span> <span class="s2">"fetch('http://ai-gateway:8000/health').then(async r=&gt;console.log(r.status, await r.text()))"</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：建置最後印出 <code>全部通過</code>；最後一行是
-<code>503 {"status":"error","config":"error","detail":"base_url 尚未填寫（推論端點的位址）"}</code>——
-<strong>這就是正確的狀態</strong>：閘道在、<code>api</code> 經私有網路連得到它、它清楚說出還缺什麼。</p>
+<p><strong>怎麼知道成功了</strong>：建置最後印出 <code>全部通過</code>；最後一行是 <code>503 {"status":"error","config":"error","detail":"base_url 尚未填寫（推論端點的位址）"}</code>——</p>
+<p><strong>這就是正確的狀態</strong>：閘道在、<code>api</code> 經私有網路連得到它、它清楚說出還缺什麼。</p>
 <table>
 <thead>
 <tr>
@@ -5967,8 +5949,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>~<span class="w">          
 </tbody>
 </table>
 <h3 id="z-22-之後每一次-up-都帶---profile-ai">Z-22 之後每一次 <code>up</code> 都帶 <code>--profile ai</code><a class="headerlink" href="#z-22-之後每一次-up-都帶---profile-ai" title="Permanent link">&para;</a></h3>
-<p>閘道起過之後，更新時（第十一冊的更新流程）<code>build</code> 與 <code>up -d</code> 都要加 <code>--profile ai</code>，閘道才會跟著換成新版映像檔。
-沒帶的話，閘道停在舊版，但<strong>主線不受影響</strong>（DEP-24）。</p>
+<p>閘道起過之後，更新時（第十一冊的更新流程）<code>build</code> 與 <code>up -d</code> 都要加 <code>--profile ai</code>，閘道才會跟著換成新版映像檔。沒帶的話，閘道停在舊版，但<strong>主線不受影響</strong>（DEP-24）。</p>
 <h3 id="z-23-接上正式-gpu-apiq-07-有答案之後">Z-23 接上正式 GPU API（Q-07 有答案之後）<a class="headerlink" href="#z-23-接上正式-gpu-apiq-07-有答案之後" title="Permanent link">&para;</a></h3>
 <ol>
 <li><code>D:\hd-tablet-care\config\ai-gateway\config.yaml</code>：填 <code>provider</code>、<code>base_url</code>、<code>model</code>（要金鑰時填 <code>api_key</code>）。存檔即生效。</li>
@@ -5982,8 +5963,7 @@ LLM_TIMEOUT_SECONDS=150
 </code></pre></div>
 <ol>
 <li><code>docker compose --env-file $cfg up -d api</code>（只換環境變數，<strong>不重建映像檔</strong>）。</li>
-<li>護理端「系統管理」：供應者「院內地端推論」、健康檢查通過，才照 DEP-29 的條件開 AI 總開關。
-   「允許真實病人資料」是另一個開關，另有條件，<strong>不在這一步開</strong>。</li>
+<li>護理端「系統管理」：供應者「院內地端推論」、健康檢查通過，才照 DEP-29 的條件開 AI 總開關。「允許真實病人資料」是另一個開關，另有條件，<strong>不在這一步開</strong>。</li>
 </ol>
 <p><strong>這就是 FR-S13 的驗收</strong>：由實驗室換成正式 GPU API，改的只有 <code>config.yaml</code> 與 <code>.env</code> 的 <code>LLM_PROVIDER</code>，程式一行未動。</p>
 <h3 id="z-24-把-ai-整個關掉">Z-24 把 AI 整個關掉<a class="headerlink" href="#z-24-把-ai-整個關掉" title="Permanent link">&para;</a></h3>

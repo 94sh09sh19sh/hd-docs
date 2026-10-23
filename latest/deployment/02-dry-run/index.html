@@ -3868,6 +3868,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#0-為什麼這一步不能省" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5035,6 +5046,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#0-為什麼這一步不能省" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5481,10 +5503,17 @@
 <h1 id="第二冊--開發端的測試部署">第二冊 · 開發端的測試部署<a class="headerlink" href="#第二冊--開發端的測試部署" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案　編號：<code>R-xx</code>　建議時點：<strong>D-2</strong></p>
 <blockquote>
-<p>這一冊做的是<strong>彩排</strong>：在一台什麼都沒有的機器上，把院內那一整套從頭到尾走一次。
-終點是——你已經做過一次，所以進院那天不是第一次。</p>
+<p>這一冊做的是<strong>彩排</strong>：在一台什麼都沒有的機器上，把院內那一整套從頭到尾走一次。終點是——你已經做過一次，所以進院那天不是第一次。</p>
 </blockquote>
 <hr />
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>0926 起是歷史紀錄</strong>：安裝包路線已撤除；現行的模擬部署照第十五冊的「🧪 模擬部署」方框與第十一冊第 7 節</li>
+<li>原本做的是彩排：在一台乾淨機器上把院內那一套從頭走一次（D-2），編號 <code>R-xx</code></li>
+<li>第 0 節為什麼不能省：迭代 10 的安裝包在開發機上全綠，真的跑起來當場出現兩個缺陷</li>
+<li>第 1～4 節找乾淨機器、送包與驗收、模擬院內主機的設定、安裝與啟動</li>
+<li>第 5～6 節功能冒煙測試、更新與回退各做一次；第 8 節是完成條件</li>
+</ul>
 <h2 id="0-為什麼這一步不能省">0. 為什麼這一步不能省<a class="headerlink" href="#0-為什麼這一步不能省" title="Permanent link">&para;</a></h2>
 <p>迭代 10 在開發機上建好安裝包、所有靜態檢查全綠之後，<strong>把它真的跑起來，當場出現兩個缺陷</strong>：</p>
 <table>
@@ -5510,8 +5539,7 @@
 </table>
 <p><strong>兩個都不是設定寫錯，是「開發機的版面與安裝包的版面不一樣」</strong>——而所有靜態檢查都只看得到前者。</p>
 <p>這就是 DEP-22 的意思：<strong>在開發機上解壓來測，測到的是開發機，不是安裝包。</strong></p>
-<p>預計耗時：<strong>半天</strong>。第一次做會更久，而那正是它的價值——這些時間你遲早要花，
-在自己家裡花比在醫院裡花便宜得多。</p>
+<p>預計耗時：<strong>半天</strong>。第一次做會更久，而那正是它的價值——這些時間你遲早要花，在自己家裡花比在醫院裡花便宜得多。</p>
 <hr />
 <h2 id="1-先找一台乾淨的機器">1. 先找一台「乾淨」的機器<a class="headerlink" href="#1-先找一台乾淨的機器" title="Permanent link">&para;</a></h2>
 <p>「乾淨」的定義：<strong>沒有開發環境、沒有全域安裝的 Node.js、沒有這個專案的任何殘留。</strong></p>
@@ -5548,8 +5576,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>建議做法</strong>：開一台 Windows VM，裝完系統之後<strong>先拍一個快照</strong>。
-每練一次就還原快照，你可以練很多次，而每一次都是真正的「第一次安裝」。</p>
+<p><strong>建議做法</strong>：開一台 Windows VM，裝完系統之後<strong>先拍一個快照</strong>。每練一次就還原快照，你可以練很多次，而每一次都是真正的「第一次安裝」。</p>
 </blockquote>
 <hr />
 <h3 id="r-01-確認這台機器真的是乾淨的">R-01 確認這台機器真的是乾淨的<a class="headerlink" href="#r-01-確認這台機器真的是乾淨的" title="Permanent link">&para;</a></h3>
@@ -5582,8 +5609,7 @@
 <hr />
 <h3 id="r-02-斷網">R-02 斷網<a class="headerlink" href="#r-02-斷網" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
-<p>實體機：<strong>把網路線拔掉，Wi-Fi 關掉</strong>。
-VM：設定裡把網路介面卡改成「未連線」。</p>
+<p>實體機：<strong>把網路線拔掉，Wi-Fi 關掉</strong>。 VM：設定裡把網路介面卡改成「未連線」。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <p><div class="highlight"><pre><span></span><code><span class="n">ping</span> <span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span>
 </code></pre></div>
@@ -5920,15 +5946,10 @@ VM：設定裡把網路介面卡改成「未連線」。</p>
 </table>
 <blockquote>
 <h3 id="-位址必須在建置安裝包之前就知道">⚠ 位址必須在建置安裝包之前就知道<a class="headerlink" href="#-位址必須在建置安裝包之前就知道" title="Permanent link">&para;</a></h3>
-<p><strong>兩個 PWA 呼叫後端的位址是在建置時寫進產物裡的</strong>（<code>VITE_API_BASE_URL</code>），
-不是啟動時才讀的。預設值是 <code>http://localhost:3000</code>——
-在護理站那台電腦上開啟護理端時，<code>localhost</code> 指的是<strong>那台電腦自己</strong>，不是主機。</p>
-<p>也就是說：<strong>院內主機的位址必須在 <a href="../01-dev-machine/#p-04-建置三個產物">P-04</a> 建置之前就決定</strong>，
-建置前把 <code>VITE_API_BASE_URL=http://&lt;院內主機&gt;:&lt;API_PORT&gt;</code> 填進開發機的 <code>.env</code> 再 <code>npm run build</code>。</p>
+<p><strong>兩個 PWA 呼叫後端的位址是在建置時寫進產物裡的</strong>（<code>VITE_API_BASE_URL</code>），不是啟動時才讀的。預設值是 <code>http://localhost:3000</code>——在護理站那台電腦上開啟護理端時，<code>localhost</code> 指的是<strong>那台電腦自己</strong>，不是主機。</p>
+<p>也就是說：<strong>院內主機的位址必須在 <a href="../01-dev-machine/#p-04-建置三個產物">P-04</a> 建置之前就決定</strong>，建置前把 <code>VITE_API_BASE_URL=http://&lt;院內主機&gt;:&lt;API_PORT&gt;</code> 填進開發機的 <code>.env</code> 再 <code>npm run build</code>。</p>
 <p>這件事與憑證的主體別名是同一個位址（<a href="../03-tablet-shell/">第三冊</a> K-01），<strong>兩邊必須一致</strong>。</p>
-<p><strong>R-13 就是專門用來抓這個問題的</strong>：一定要從另一台機器連進來測，不要只在主機本機上開。
-位址到現場才知道的話，唯一的補救是帶著開發機進院重新產生安裝包——
-那要先確認院方允許外來筆記型電腦接上院內網路（Q-29）。</p>
+<p><strong>R-13 就是專門用來抓這個問題的</strong>：一定要從另一台機器連進來測，不要只在主機本機上開。位址到現場才知道的話，唯一的補救是帶著開發機進院重新產生安裝包——那要先確認院方允許外來筆記型電腦接上院內網路（Q-29）。</p>
 </blockquote>
 <hr />
 <h3 id="r-09-確認時區">R-09 確認時區<a class="headerlink" href="#r-09-確認時區" title="Permanent link">&para;</a></h3>
@@ -6229,8 +6250,7 @@ VM：設定裡把網路介面卡改成「未連線」。</p>
 <h2 id="5-功能面的冒煙測試">5. 功能面的冒煙測試<a class="headerlink" href="#5-功能面的冒煙測試" title="Permanent link">&para;</a></h2>
 <h3 id="r-17-走一次主線">R-17 走一次主線<a class="headerlink" href="#r-17-走一次主線" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
-<p>照《<a href="../../testing/manual-test-guide/">完整手動測試手冊</a>》§02 冒煙測試與 §03 主線 A：
-登入 → 改密碼 → 建病人 → 建排班 → 指派平板 → 病人端顯示 → 解除綁定 → 稽核查得到。</p>
+<p>照《<a href="../../testing/manual-test-guide/">完整手動測試手冊</a>》§02 冒煙測試與 §03 主線 A：登入 → 改密碼 → 建病人 → 建排班 → 指派平板 → 病人端顯示 → 解除綁定 → 稽核查得到。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <p>每一步都如手冊所述。<strong>這一段走不完，就不要進醫院。</strong></p>
 <p><strong>可能怎麼壞、怎麼處理</strong></p>
@@ -6375,8 +6395,7 @@ VM：設定裡把網路介面卡改成「未連線」。</p>
 <p><strong>怎麼知道成功了</strong></p>
 <p>雜湊相符、完整性檢查 ok、筆數與更新前一致；還原出來的那份<strong>沒有</strong>這次遷移新增的欄位。</p>
 <blockquote>
-<p><strong>程式可以退版，資料庫不行退版。</strong> 動過 schema 的版本要回退，是<strong>還原備份再換回舊版程式</strong>，
-不是把遷移倒回去。</p>
+<p><strong>程式可以退版，資料庫不行退版。</strong> 動過 schema 的版本要回退，是<strong>還原備份再換回舊版程式</strong>，不是把遷移倒回去。</p>
 </blockquote>
 <hr />
 <h2 id="7-收尾">7. 收尾<a class="headerlink" href="#7-收尾" title="Permanent link">&para;</a></h2>

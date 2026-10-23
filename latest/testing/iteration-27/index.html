@@ -3730,6 +3730,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4685,6 +4696,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4780,17 +4802,16 @@
 
 <h1 id="迭代-27-手動測試--病人平板固定橫放外殼鎖橫向拿掉直放排法麻將放寬">迭代 27 手動測試 — 病人平板固定橫放：外殼鎖橫向、拿掉直放排法、麻將放寬<a class="headerlink" href="#迭代-27-手動測試--病人平板固定橫放外殼鎖橫向拿掉直放排法麻將放寬" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.27 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 27 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
-項次用 <code>ak</code>（實作規格書 4.0.5：27 用 <code>ak</code>），從 <code>ak1</code> 起。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.27 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 27 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。項次用 <code>ak</code>（實作規格書 4.0.5：27 用 <code>ak</code>），從 <code>ak1</code> 起。</p>
 </blockquote>
-<p><strong>這一冊驗三件事</strong>：
-平板轉成直的，畫面不跟著轉、倒過來架會轉正（外殼）；
-病人端只剩橫放一種排法，1280×800 的每一頁與改之前一樣；
-麻將連連看在原本五級之後多 4×10、4×12 兩級，放得下、不捲動，舊存檔照樣玩得完。</p>
-<p><strong>外殼這一次沒有改版</strong>：動手前讀外殼 repo，病人端與佈建兩個畫面從迭代 10 的第一版起就是感應式橫向（<code>sensorLandscape</code>），
-釘住的 v0.3.0 也是（實作規格書 4.27「實作結果」第一條）。所以 §27.1 驗的是<strong>已經裝著的外殼</strong>，不必重建 APK。</p>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<p>這一冊驗三件事（項次 <code>ak1</code>～<code>ak18</code>，自動化另跑 <code>npm run verify:iteration27</code>）：</p>
+<ul>
+<li>平板轉成直的，畫面不跟著轉、倒過來架會轉正（外殼）</li>
+<li>病人端只剩橫放一種排法，1280×800 的每一頁與改之前一樣</li>
+<li>麻將連連看在原本五級之後多 4×10、4×12 兩級，放得下、不捲動，舊存檔照樣玩得完</li>
+</ul>
+<p><strong>外殼這一次沒有改版</strong>：動手前讀外殼 repo，病人端與佈建兩個畫面從迭代 10 的第一版起就是感應式橫向（<code>sensorLandscape</code>），釘住的 v0.3.0 也是（實作規格書 4.27「實作結果」第一條）。所以 §27.1 驗的是<strong>已經裝著的外殼</strong>，不必重建 APK。</p>
 <table>
 <thead>
 <tr>
@@ -4865,42 +4886,28 @@
 <h2 id="271-外殼轉直不跟著轉">§27.1 外殼：轉直不跟著轉<a class="headerlink" href="#271-外殼轉直不跟著轉" title="Permanent link">&para;</a></h2>
 <p><strong>開發手機的版面不算數</strong>：手機鎖橫向之後短邊只有三百多 px，字會縮到下限、可能要捲。這一節在手機上只看<strong>轉不轉</strong>，版面只以 1280×800 驗（§27.2）。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak1</code> <strong>［病人端］</strong> 📱 平板（或開發手機）的系統設定<strong>開著自動旋轉</strong>，病人端開著首頁，平板橫著拿。把平板轉成直的。
-  → 畫面<strong>不跟著轉</strong>：還是橫的排法（側著看），沒有閃一下、沒有重新載入。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak2</code> <strong>［病人端］</strong> 📱 再轉回橫的，接著整個倒過來拿（另一個橫向）。
-  → 畫面<strong>轉正</strong>（兩個橫向都可以）；轉的那一下不會跳回首頁、不會掉出螢幕固定。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak3</code> <strong>［病人端］</strong> 📱 回到設定畫面（佈建），平板轉直；按「掃描 QR code」，掃描畫面開著時也轉直一次。
-  → 佈建畫面不跟著轉；掃描畫面停在開啟時的方向（橫的）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak4</code> <strong>［護理端］</strong> 📱 轉過幾次之後，看裝置管理那一台。
-  → 前景回報照常（那一台沒有變成「已跳出」）、外殼版本仍是 0.3.0、沒有「版本不相容」的標記。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak1</code> <strong>［病人端］</strong> 📱 平板（或開發手機）的系統設定<strong>開著自動旋轉</strong>，病人端開著首頁，平板橫著拿。把平板轉成直的。 → 畫面<strong>不跟著轉</strong>：還是橫的排法（側著看），沒有閃一下、沒有重新載入。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak2</code> <strong>［病人端］</strong> 📱 再轉回橫的，接著整個倒過來拿（另一個橫向）。 → 畫面<strong>轉正</strong>（兩個橫向都可以）；轉的那一下不會跳回首頁、不會掉出螢幕固定。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak3</code> <strong>［病人端］</strong> 📱 回到設定畫面（佈建），平板轉直；按「掃描 QR code」，掃描畫面開著時也轉直一次。 → 佈建畫面不跟著轉；掃描畫面停在開啟時的方向（橫的）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak4</code> <strong>［護理端］</strong> 📱 轉過幾次之後，看裝置管理那一台。 → 前景回報照常（那一台沒有變成「已跳出」）、外殼版本仍是 0.3.0、沒有「版本不相容」的標記。</li>
 </ul>
 <h2 id="272-病人端只有橫放">§27.2 病人端只有橫放<a class="headerlink" href="#272-病人端只有橫放" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak5</code> <strong>［終端機］</strong> 在專案根目錄搜尋病人端的樣式：<code>grep -rn "orientation" apps/patient-pwa/src</code>。
-  → <strong>沒有任何結果</strong>（<code>verify:iteration27</code> 第 2 步也擋）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak6</code> <strong>［病人端］</strong> 📐 1280×800，依序看首頁、按「我需要協助」、遊戲選單、透析小花園、點一格空地（選種子）、相簿封面、翻開相簿的一張、麻將開一桌。
-  → 每一頁<strong>都不捲動</strong>；求助區在最下面、位置每一頁都一樣；可點的都至少 64px。跟迭代 26 的截圖比（或 1021 週報的附錄），<strong>除了牌桌的大小，排法一模一樣</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak7</code> <strong>［病人端］</strong> 📐 瀏覽器切成 800×1280 看首頁。（<strong>只是確認，不算驗收</strong>：正式版不會出現這個尺寸）
-  → 畫面是橫放的那一種排法擠在直的視窗裡（字照短邊縮小、可能要捲）——<strong>這是預期的</strong>，直放的排法已經拿掉。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak8</code> <strong>［終端機］</strong> <code>npm run demo:patient -- --screenshot demo.png --portrait</code>。
-  → <code>--portrait</code> 沒有作用，截出來的是 1280×800（迭代 27 拿掉直式）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak5</code> <strong>［終端機］</strong> 在專案根目錄搜尋病人端的樣式：<code>grep -rn "orientation" apps/patient-pwa/src</code>。 → <strong>沒有任何結果</strong>（<code>verify:iteration27</code> 第 2 步也擋）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak6</code> <strong>［病人端］</strong> 📐 1280×800，依序看首頁、按「我需要協助」、遊戲選單、透析小花園、點一格空地（選種子）、相簿封面、翻開相簿的一張、麻將開一桌。 → 每一頁<strong>都不捲動</strong>；求助區在最下面、位置每一頁都一樣；可點的都至少 64px。跟迭代 26 的截圖比（或 1021 週報的附錄），<strong>除了牌桌的大小，排法一模一樣</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak7</code> <strong>［病人端］</strong> 📐 瀏覽器切成 800×1280 看首頁。（<strong>只是確認，不算驗收</strong>：正式版不會出現這個尺寸） → 畫面是橫放的那一種排法擠在直的視窗裡（字照短邊縮小、可能要捲）——<strong>這是預期的</strong>，直放的排法已經拿掉。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak8</code> <strong>［終端機］</strong> <code>npm run demo:patient -- --screenshot demo.png --portrait</code>。 → <code>--portrait</code> 沒有作用，截出來的是 1280×800（迭代 27 拿掉直式）。</li>
 </ul>
 <h2 id="273-麻將的新級數">§27.3 麻將的新級數<a class="headerlink" href="#273-麻將的新級數" title="Permanent link">&para;</a></h2>
 <p>難度是悄悄調的（連續兩桌沒按提示就加一級、連續兩桌各按兩次以上提示就退一級），畫面上沒有級數。要直接看到新的兩級，<strong>把那位病人的級數改掉</strong>（只在開發機或 <code>demo:patient</code> 的資料庫做）：</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak9</code> <strong>［資料庫］</strong> 🛠 找到那位病人的麻將存檔：<code>SELECT id, snapshot FROM game_saves WHERE game_code = 'MAHJONG';</code>。把 <code>snapshot</code> 裡的 <code>"level"</code> 改成 <code>6</code>、<code>"current"</code> 改成 <code>null</code>（JSON 其他欄位不動）。病人端的瀏覽器先清掉站台資料裡的 IndexedDB（或換一個無痕視窗重新佈建）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak10</code> <strong>［病人端］</strong> 📐 1280×800，遊戲 → 麻將連連看 → 開一桌。
-  → 一桌 <strong>4 列 × 12 行</strong>、48 張；每張約 88×115px（開發者工具量，至少 80×104）；<strong>整頁不捲動</strong>、求助區照舊在最下面；牌桌左右只留一點邊。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak11</code> <strong>［病人端］</strong> 看這一桌的排法。
-  → 一樣的兩張<strong>大多不在隔壁</strong>（不是每一對都左右排在一起——那是放不下時的保險，迭代 27 起不會再在發牌時出現）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak12</code> <strong>［病人端］</strong> 玩完這一桌（可以按提示）。
-  → 每一對都消得掉、不會卡死；完成只說「完成了」，<strong>沒有「升級」「第幾級」</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak13</code> <strong>［資料庫］</strong> 🛠 照 <code>ak9</code> 把級數改成 <code>5</code>，再開一桌。
-  → 4 列 × 10 行、40 張；每張約 95×123px；不捲動。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak14</code> <strong>［資料庫］</strong> 🛠 照 <code>ak9</code> 把級數改成 <code>4</code>、<code>"smooth"</code> 改成 <code>1</code>，開一桌 4×8，<strong>不按提示</strong>玩完，再開一桌。
-  → 那一桌 4×8 照舊玩得完；下一桌變成 4×10（舊的進度接著算，連續第二桌順利就加一級）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak15</code> <strong>［病人端］</strong> 有今日牌局時（療程中、這一班的那一桌還沒做），在級數 <code>6</code> 的病人開「今日牌局」。
-  → 今日牌局<strong>照舊是 4×6</strong>，不跟著變大。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak10</code> <strong>［病人端］</strong> 📐 1280×800，遊戲 → 麻將連連看 → 開一桌。 → 一桌 <strong>4 列 × 12 行</strong>、48 張；每張約 88×115px（開發者工具量，至少 80×104）；<strong>整頁不捲動</strong>、求助區照舊在最下面；牌桌左右只留一點邊。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak11</code> <strong>［病人端］</strong> 看這一桌的排法。 → 一樣的兩張<strong>大多不在隔壁</strong>（不是每一對都左右排在一起——那是放不下時的保險，迭代 27 起不會再在發牌時出現）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak12</code> <strong>［病人端］</strong> 玩完這一桌（可以按提示）。 → 每一對都消得掉、不會卡死；完成只說「完成了」，<strong>沒有「升級」「第幾級」</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak13</code> <strong>［資料庫］</strong> 🛠 照 <code>ak9</code> 把級數改成 <code>5</code>，再開一桌。 → 4 列 × 10 行、40 張；每張約 95×123px；不捲動。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak14</code> <strong>［資料庫］</strong> 🛠 照 <code>ak9</code> 把級數改成 <code>4</code>、<code>"smooth"</code> 改成 <code>1</code>，開一桌 4×8，<strong>不按提示</strong>玩完，再開一桌。 → 那一桌 4×8 照舊玩得完；下一桌變成 4×10（舊的進度接著算，連續第二桌順利就加一級）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak15</code> <strong>［病人端］</strong> 有今日牌局時（療程中、這一班的那一桌還沒做），在級數 <code>6</code> 的病人開「今日牌局」。 → 今日牌局<strong>照舊是 4×6</strong>，不跟著變大。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak16</code> <strong>［資料庫］</strong> 🛠 做完把那位病人的級數改回原本的值（或在 <code>demo:patient</code> 做，結束就丟掉）。</li>
 </ul>
 <h2 id="274-長者看-412-的牌">§27.4 長者看 4×12 的牌<a class="headerlink" href="#274-長者看-412-的牌" title="Permanent link">&para;</a></h2>
@@ -4909,10 +4916,8 @@
 </ul>
 <h2 id="275-自動化驗收">§27.5 自動化驗收<a class="headerlink" href="#275-自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak17</code> <strong>［終端機］</strong> <code>npm run verify:iteration27</code>（不需要後端，要先 <code>npm run build:shared</code>；外殼 repo 放在本系統旁邊的 <code>hd-kiosk-shell</code>，或設 <code>HD_SHELL_SRC_DIR</code>）。
-  → 七步全部通過（釘住的外殼 tag 鎖橫向、病人端沒有直放的樣式、新的兩級放得進 1280×800、每一級一千次發牌都可解而且不落到保險、舊存檔照樣玩得完、升降一級一級走、基準兩份沒有直放的寫法，再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code> 與迭代 8、14.5、16、17.4、22 的回歸）。找不到外殼 repo 時第 1 步只驗契約版本、其餘略過。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak18</code> <strong>［終端機］</strong> <code>npm run verify:iteration16</code>、<code>npm run verify:iteration17-4</code>、<code>npm run verify:iteration22</code>。
-  → 都通過（這三支的直放與 4×8 檢查隨需求改了，實作規格書之一第二十一次）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak17</code> <strong>［終端機］</strong> <code>npm run verify:iteration27</code>（不需要後端，要先 <code>npm run build:shared</code>；外殼 repo 放在本系統旁邊的 <code>hd-kiosk-shell</code>，或設 <code>HD_SHELL_SRC_DIR</code>）。 → 七步全部通過（釘住的外殼 tag 鎖橫向、病人端沒有直放的樣式、新的兩級放得進 1280×800、每一級一千次發牌都可解而且不落到保險、舊存檔照樣玩得完、升降一級一級走、基準兩份沒有直放的寫法，再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code> 與迭代 8、14.5、16、17.4、22 的回歸）。找不到外殼 repo 時第 1 步只驗契約版本、其餘略過。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ak18</code> <strong>［終端機］</strong> <code>npm run verify:iteration16</code>、<code>npm run verify:iteration17-4</code>、<code>npm run verify:iteration22</code>。 → 都通過（這三支的直放與 4×8 檢查隨需求改了，實作規格書之一第二十一次）。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
@@ -4926,9 +4931,9 @@
 </thead>
 <tbody>
 <tr>
-<td></td>
-<td></td>
-<td></td>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>首次定版。病人平板固定橫放：外殼轉直不跟著轉、病人端只剩橫放、麻將多 4×10 與 4×12（<code>ak1</code>～<code>ak18</code>）</td>
 </tr>
 </tbody>
 </table>

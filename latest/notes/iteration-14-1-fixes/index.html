@@ -4906,17 +4906,14 @@
 <p>版本：v0.1　文件狀態：已完成（2026-09-28 開立）　適用讀者：FDE 工程團隊</p>
 <hr />
 <h2 id="0-本文件的定位">0. 本文件的定位<a class="headerlink" href="#0-本文件的定位" title="Permanent link">&para;</a></h2>
-<p>本文件不是需求文件，是一份<strong>修正紀錄</strong>：2026-09-28 凌晨使用者在開發機上操作迭代 14 的簡易版時，
-發現「簡易版佈建不了平板」「專業版即時總覽、排班與指派、裝置管理跟簡易版對不上」，
-並要求平板佈建不要每次都手動。本文件記錄查出來的原因、決定怎麼改，以及改了之後影響到哪些既有規則。</p>
+<p>本文件不是需求文件，是一份<strong>修正紀錄</strong>：2026-09-28 凌晨使用者在開發機上操作迭代 14 的簡易版時，發現「簡易版佈建不了平板」「專業版即時總覽、排班與指派、裝置管理跟簡易版對不上」，並要求平板佈建不要每次都手動。本文件記錄查出來的原因、決定怎麼改，以及改了之後影響到哪些既有規則。</p>
 <ul>
 <li>功能需求來源仍是《<a href="../../requirements/srs/">軟體需求規格書</a>》，本文件不新增任何功能需求</li>
 <li>範圍與技術選型仍以《<a href="../../requirements/implementation-spec/">實作規格書</a>》為準（4.12.1 節是本文件的摘要）</li>
 <li>外殼 App 的介面仍以《<a href="../../reference/kiosk-shell-contract/">外殼契約</a>》為準；本次在第 2 節增補「佈建 QR code」</li>
 <li>與需求文件衝突時，以需求文件為準</li>
 </ul>
-<p><strong>為什麼叫 14.1 而不是迭代 15。</strong> 第 1 項是迭代 1 就埋下、迭代 14 的簡易版才讓它浮出來的缺陷；
-第 2～4 項是迭代 10、12 已交付的佈建流程的補強；第 5 項是迭代 14 簡易版的平板標籤漏了一種狀態。沒有一項是新的範圍，迭代 15（規則引擎）的內容一項都沒動。</p>
+<p><strong>為什麼叫 14.1 而不是迭代 15。</strong> 第 1 項是迭代 1 就埋下、迭代 14 的簡易版才讓它浮出來的缺陷；第 2～4 項是迭代 10、12 已交付的佈建流程的補強；第 5 項是迭代 14 簡易版的平板標籤漏了一種狀態。沒有一項是新的範圍，迭代 15（規則引擎）的內容一項都沒動。</p>
 <hr />
 <h2 id="1-五項一覽">1. 五項一覽<a class="headerlink" href="#1-五項一覽" title="Permanent link">&para;</a></h2>
 <table>
@@ -4964,10 +4961,8 @@
 <hr />
 <h2 id="2-逐項說明">2. 逐項說明<a class="headerlink" href="#2-逐項說明" title="Permanent link">&para;</a></h2>
 <h3 id="21-後端的今天是-utc-日期第-1-項">2.1 後端的「今天」是 UTC 日期（第 1 項）<a class="headerlink" href="#21-後端的今天是-utc-日期第-1-項" title="Permanent link">&para;</a></h3>
-<p><strong>症狀</strong>：台北時間 09-28 01:17，專業版「即時總覽」標題寫 <strong>2026-09-27</strong>，列出的是前一天晚班的兩位病人；
-「排班與指派」「裝置管理」卻看得到 09-28 早班、TB-01／TB-02 兩筆有效綁定。簡易版床位圖一片空，病人全部還在右側清單裡。</p>
-<p><strong>查到的原因</strong>：<code>apps/api/src/common/date.util.ts</code> 的 <code>todayScheduledDate()</code> 以 <code>new Date().toISOString().slice(0, 10)</code> 取日期——
-那是 <strong>UTC</strong> 的日期。台北 00:00～08:00 之間 UTC 還是前一天，所以：</p>
+<p><strong>症狀</strong>：台北時間 09-28 01:17，專業版「即時總覽」標題寫 <strong>2026-09-27</strong>，列出的是前一天晚班的兩位病人；「排班與指派」「裝置管理」卻看得到 09-28 早班、TB-01／TB-02 兩筆有效綁定。簡易版床位圖一片空，病人全部還在右側清單裡。</p>
+<p><strong>查到的原因</strong>：<code>apps/api/src/common/date.util.ts</code> 的 <code>todayScheduledDate()</code> 以 <code>new Date().toISOString().slice(0, 10)</code> 取日期——那是 <strong>UTC</strong> 的日期。台北 00:00～08:00 之間 UTC 還是前一天，所以：</p>
 <table>
 <thead>
 <tr>
@@ -4989,43 +4984,30 @@
 </tr>
 </tbody>
 </table>
-<p><strong>「簡易版佈建不了」其實是佈建成功了、畫面看不到</strong>。稽核軌跡顯示：01:08 把宋昊焱拖到 02 床，
-「建立療程」「裝置綁定」都成功；床位圖讀的是 09-27 的快照，床看起來還是空的，約 5 秒後被「復原」
-（手動解除＋取消療程）。沈子騫、邱偉澤各重複一次——這就是排班頁那三筆「已取消」的來源。</p>
+<p><strong>「簡易版佈建不了」其實是佈建成功了、畫面看不到</strong>。稽核軌跡顯示：01:08 把宋昊焱拖到 02 床，「建立療程」「裝置綁定」都成功；床位圖讀的是 09-27 的快照，床看起來還是空的，約 5 秒後被「復原」（手動解除＋取消療程）。沈子騫、邱偉澤各重複一次——這就是排班頁那三筆「已取消」的來源。</p>
 <p><strong>影響範圍</strong>：不只半夜測試。<strong>每天 00:00～08:00 都會發生</strong>，透析室的早班通常 6、7 點就開始，正好落在這段時間。</p>
-<p><strong>怎麼改</strong>：<code>todayScheduledDate()</code> 改以主機時區的年、月、日組出日期，與護理端 <code>today()</code> 相同。
-正式主機的時區在啟動時已檢查為 Asia/Taipei（DEP-15），後端的備份排程等其他「今天」本來就是這樣算的，
-只有這一支例外。排班日期仍正規化為該日 00:00 UTC，<code>treatment_sessions</code> 的唯一鍵比對不受影響。</p>
-<p><strong>有沒有第二處</strong>：全面搜尋後端 <code>new Date().toISOString().slice(0, 10)</code>，只有這一處；
-<code>verify:iteration14-1</code> 會擋下日後再有人這樣寫。護理端、共用套件的日期都已經是本機時區。</p>
+<p><strong>怎麼改</strong>：<code>todayScheduledDate()</code> 改以主機時區的年、月、日組出日期，與護理端 <code>today()</code> 相同。正式主機的時區在啟動時已檢查為 Asia/Taipei（DEP-15），後端的備份排程等其他「今天」本來就是這樣算的，只有這一支例外。排班日期仍正規化為該日 00:00 UTC，<code>treatment_sessions</code> 的唯一鍵比對不受影響。</p>
+<p><strong>有沒有第二處</strong>：全面搜尋後端 <code>new Date().toISOString().slice(0, 10)</code>，只有這一處； <code>verify:iteration14-1</code> 會擋下日後再有人這樣寫。護理端、共用套件的日期都已經是本機時區。</p>
 <h3 id="22-開發環境自動納管第-2-項">2.2 開發環境自動納管（第 2 項）<a class="headerlink" href="#22-開發環境自動納管第-2-項" title="Permanent link">&para;</a></h3>
-<p><strong>症狀</strong>：<code>npm run db:seed</code> 建出的 15 台平板刻意不納管（seed 的註解寫著「需於裝置管理執行 MDM 註冊後才能指派」），
-開發時每台都要先到專業版按一次，否則病人拖不上那一床。</p>
-<p><strong>怎麼改</strong>：<code>DevicesService</code> 在後端啟動時，<strong>若 MDM 是模擬的、而且不是正式環境</strong>（<code>NODE_ENV</code>／<code>DEPLOYMENT_ENV</code> 不是 <code>production</code>），
-把尚未納管的平板一律經由 <code>MdmProviderPort</code> 納管，並設定固定畫面網址。每一台照樣寫一筆「平板 MDM 註冊」稽核，身分是系統。
-後端啟動紀錄會列出自動納管了哪幾台。</p>
+<p><strong>症狀</strong>：<code>npm run db:seed</code> 建出的 15 台平板刻意不納管（seed 的註解寫著「需於裝置管理執行 MDM 註冊後才能指派」），開發時每台都要先到專業版按一次，否則病人拖不上那一床。</p>
+<p><strong>怎麼改</strong>：<code>DevicesService</code> 在後端啟動時，<strong>若 MDM 是模擬的、而且不是正式環境</strong>（<code>NODE_ENV</code>／<code>DEPLOYMENT_ENV</code> 不是 <code>production</code>），把尚未納管的平板一律經由 <code>MdmProviderPort</code> 納管，並設定固定畫面網址。每一台照樣寫一筆「平板 MDM 註冊」稽核，身分是系統。後端啟動紀錄會列出自動納管了哪幾台。</p>
 <p><strong>刻意不做的</strong>：</p>
 <ul>
 <li><strong>seed 不直接把資料庫標成已納管</strong>。納管要經過 MDM 介面，資料庫與 MDM 兩邊才會一致；直接改資料庫就是第 3 項那種不一致</li>
-<li><strong>正式環境即使仍用模擬 MDM 也不自動納管</strong>。那裡「已納管」代表有人真的把這一台設定好了（裝了外殼、輸入了身分），
-  自動標成已納管會讓一台還沒設定的平板出現在可指派清單裡</li>
+<li><strong>正式環境即使仍用模擬 MDM 也不自動納管</strong>。那裡「已納管」代表有人真的把這一台設定好了（裝了外殼、輸入了身分），自動標成已納管會讓一台還沒設定的平板出現在可指派清單裡</li>
 </ul>
 <p><strong>副作用</strong>：開發時在專業版「解除註冊」某一台，下次後端重新啟動就會被自動納管回來。這是開發環境，可以接受。</p>
 <h3 id="23-模擬-mdm-重新啟動後遺失狀態第-3-項">2.3 模擬 MDM 重新啟動後遺失狀態（第 3 項）<a class="headerlink" href="#23-模擬-mdm-重新啟動後遺失狀態第-3-項" title="Permanent link">&para;</a></h3>
-<p><strong>症狀</strong>：沒有人回報，是查第 2 項時看到的。<code>MockMdmProvider</code> 把納管狀態存在記憶體的 <code>Map</code> 裡，
-<code>npm run dev</code> 的後端每改一個檔案就重新啟動一次。重新啟動之後資料庫說「TB-02 已納管」，模擬 MDM 卻不認得它：</p>
+<p><strong>症狀</strong>：沒有人回報，是查第 2 項時看到的。<code>MockMdmProvider</code> 把納管狀態存在記憶體的 <code>Map</code> 裡， <code>npm run dev</code> 的後端每改一個檔案就重新啟動一次。重新啟動之後資料庫說「TB-02 已納管」，模擬 MDM 卻不認得它：</p>
 <ul>
 <li>鎖定、解除鎖定、解除註冊都回「找不到」</li>
 <li>重新註冊又被「此平板已在 MDM 納管中」擋下</li>
 <li>簡易版把平板拖到停用區、再拖回床上，走的正是鎖定與解除鎖定，所以也壞</li>
 </ul>
 <p><strong>正式環境也會發生</strong>：目前沒有真正的 MDM，院內主機跑的也是模擬實作，主機或容器一重新啟動就會這樣。</p>
-<p><strong>怎麼改</strong>：<code>MdmProviderPort</code> 新增兩個成員——<code>simulated</code>（是不是模擬的）與選用的 <code>restoreDevice</code>（只有模擬實作需要）。
-<code>DevicesService</code> 啟動時把資料庫裡已納管的平板逐一交回給模擬 MDM。<strong>這一步不分環境</strong>。
-日後接上真正的 MDM（Android Enterprise），狀態存在廠商那邊，不實作 <code>restoreDevice</code>，啟動時什麼都不做。</p>
+<p><strong>怎麼改</strong>：<code>MdmProviderPort</code> 新增兩個成員——<code>simulated</code>（是不是模擬的）與選用的 <code>restoreDevice</code>（只有模擬實作需要）。 <code>DevicesService</code> 啟動時把資料庫裡已納管的平板逐一交回給模擬 MDM。<strong>這一步不分環境</strong>。日後接上真正的 MDM（Android Enterprise），狀態存在廠商那邊，不實作 <code>restoreDevice</code>，啟動時什麼都不做。</p>
 <h3 id="24-佈建-qr-code-與外殼-030第-4-項">2.4 佈建 QR code 與外殼 0.3.0（第 4 項）<a class="headerlink" href="#24-佈建-qr-code-與外殼-030第-4-項" title="Permanent link">&para;</a></h3>
-<p><strong>症狀</strong>：外殼 App 首次啟動要護理師在平板上輸入三欄：主機位址、序號、一串 43 字元的金鑰（部署手冊 Y-12）。
-金鑰打錯一個字就是「裝置尚未佈建」，15 台打下來很容易錯。</p>
+<p><strong>症狀</strong>：外殼 App 首次啟動要護理師在平板上輸入三欄：主機位址、序號、一串 43 字元的金鑰（部署手冊 Y-12）。金鑰打錯一個字就是「裝置尚未佈建」，15 台打下來很容易錯。</p>
 <p><strong>考慮過的三條路</strong>：</p>
 <table>
 <thead>
@@ -5059,12 +5041,8 @@
 </table>
 <p><strong>怎麼改</strong>：</p>
 <ol>
-<li><strong>護理端</strong>：「裝置管理」註冊成功時，除了文字網址，也把同一個網址畫成 QR code
-   （<code>apps/nurse-pwa/src/qr-code.tsx</code>，以 <code>qrcode-generator</code> 在瀏覽器裡編碼、自己畫成 SVG，不經任何院外服務）。
-   一律白底黑點，暗色模式也不反色——有些掃描器讀不出反色，而這張只出現一次</li>
-<li><strong>外殼 0.3.0</strong>：佈建畫面多一顆「掃描 QR code」。掃到之後<strong>只填進三欄、不直接儲存</strong>，
-   護理師核對序號與平板標籤一致後才按「儲存並啟動」——把 TB-03 的身分裝進 TB-04 就是兩台一起錯。
-   <code>http://</code> 的 QR code 擋下（契約第 6 節只准 HTTPS），開發機畫出來的 QR code 外殼會拒收，這是正確的</li>
+<li><strong>護理端</strong>：「裝置管理」註冊成功時，除了文字網址，也把同一個網址畫成 QR code （<code>apps/nurse-pwa/src/qr-code.tsx</code>，以 <code>qrcode-generator</code> 在瀏覽器裡編碼、自己畫成 SVG，不經任何院外服務）。一律白底黑點，暗色模式也不反色——有些掃描器讀不出反色，而這張只出現一次</li>
+<li><strong>外殼 0.3.0</strong>：佈建畫面多一顆「掃描 QR code」。掃到之後<strong>只填進三欄、不直接儲存</strong>，護理師核對序號與平板標籤一致後才按「儲存並啟動」——把 TB-03 的身分裝進 TB-04 就是兩台一起錯。 <code>http://</code> 的 QR code 擋下（契約第 6 節只准 HTTPS），開發機畫出來的 QR code 外殼會拒收，這是正確的</li>
 <li><strong>掃描套件</strong>：<code>zxing-android-embedded</code> 4.3.0，在平板上離線解碼。不用 Google 的條碼掃描模組，那個要在第一次使用時從 Play 服務下載</li>
 </ol>
 <p><strong>外殼從此有相機權限</strong>——外殼 README 原本寫著「刻意沒有相機權限」，這是使用者 0928 決定推翻的一條。範圍收窄如下：</p>
@@ -5073,15 +5051,9 @@
 <li>病人端網頁拿不到相機：外殼的 <code>MainActivity</code> 沒有設定 <code>WebChromeClient</code>，WebView 對網頁的相機要求一律拒絕</li>
 <li>宣告 <code>android.hardware.camera.any</code> 為非必要，沒有相機的平板照樣裝得上，改用手動輸入</li>
 </ul>
-<p><strong>契約不加版號</strong>：QR code 的內容就是契約第 2 節既有的載入網址，沒有新格式、新端點或新的 JavaScript 介面。
-舊外殼（0.2.0）照樣手動輸入，新外殼接舊系統也照樣手動輸入，兩個方向都不會壞。
-照契約第 9 節加版號的話，部署新系統之後所有 0.2.0 外殼都會被標成「版本不相容」，但它們完全能用——那是假警報。
-<strong>最低可用版本也不調高</strong>，理由相同。QR code 的內容日後若要改成網址以外的格式，就要照第 9 節加版號。</p>
+<p><strong>契約不加版號</strong>：QR code 的內容就是契約第 2 節既有的載入網址，沒有新格式、新端點或新的 JavaScript 介面。舊外殼（0.2.0）照樣手動輸入，新外殼接舊系統也照樣手動輸入，兩個方向都不會壞。照契約第 9 節加版號的話，部署新系統之後所有 0.2.0 外殼都會被標成「版本不相容」，但它們完全能用——那是假警報。 <strong>最低可用版本也不調高</strong>，理由相同。QR code 的內容日後若要改成網址以外的格式，就要照第 9 節加版號。</p>
 <h3 id="25-簡易版的尚未佈建圖示第-5-項">2.5 簡易版的「尚未佈建」圖示（第 5 項）<a class="headerlink" href="#25-簡易版的尚未佈建圖示第-5-項" title="Permanent link">&para;</a></h3>
-<p><strong>症狀</strong>：尚未佈建的平板不能指派病人（後端 <code>assignable</code> 為否），簡易版因此不讓病人放上那一床——
-但平板標籤上只畫離線、跳出固定、版本過舊三種警示，尚未佈建的平板看起來與正常的一模一樣。
-第 2 項讓開發環境的症狀消失，正式環境與「解除佈建」之後仍會遇到。
-原本列在第 4 節「沒有在這一次處理的」，使用者 0928 決定補上圖示。</p>
+<p><strong>症狀</strong>：尚未佈建的平板不能指派病人（後端 <code>assignable</code> 為否），簡易版因此不讓病人放上那一床——但平板標籤上只畫離線、跳出固定、版本過舊三種警示，尚未佈建的平板看起來與正常的一模一樣。第 2 項讓開發環境的症狀消失，正式環境與「解除佈建」之後仍會遇到。原本列在第 4 節「沒有在這一次處理的」，使用者 0928 決定補上圖示。</p>
 <p><strong>怎麼改</strong>（照《介面設計基準》4.6 加圖示的三個步驟）：</p>
 <ol>
 <li>基準 4.6 登記 <code>wrench</code>「平板尚未佈建」，4.7 的狀態表補一列：注意色、扳手形——與斜線 Wi-Fi、盾牌、向上箭頭、徽章形都不同，灰階下分得出來</li>

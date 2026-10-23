@@ -4758,13 +4758,9 @@
 
 <h1 id="迭代-174-手動測試--病人平板加回姓名與現在時間">迭代 17.4 手動測試 — 病人平板加回姓名與現在時間<a class="headerlink" href="#迭代-174-手動測試--病人平板加回姓名與現在時間" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.15.4 節與《<a href="../../notes/iteration-17-4-fixes/">迭代 17.4 修正紀錄</a>》。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 17.4 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
-項次接著迭代 17.3 分冊編（<code>aa97</code> 起；17.3 用到 <code>aa96</code>），小版沿用那個迭代的字母。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.15.4 節與《<a href="../../notes/iteration-17-4-fixes/">迭代 17.4 修正紀錄</a>》。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 17.4 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。項次接著迭代 17.3 分冊編（<code>aa97</code> 起；17.3 用到 <code>aa96</code>），小版沿用那個迭代的字母。</p>
 </blockquote>
-<p><strong>這一冊驗一件事</strong>：病人平板首頁的基本資訊區，床號旁邊有<strong>病人姓名</strong>、最右邊有<strong>現在時間</strong>；
-病歷號仍不上首頁，面板與跑馬燈上仍沒有姓名。</p>
+<p><strong>這一冊驗一件事</strong>：病人平板首頁的基本資訊區，床號旁邊有<strong>病人姓名</strong>、最右邊有<strong>現在時間</strong>；病歷號仍不上首頁，面板與跑馬燈上仍沒有姓名。</p>
 <table>
 <thead>
 <tr>
@@ -4824,38 +4820,30 @@
 </tr>
 </tbody>
 </table>
-<p><strong>前置</strong>：同迭代 17.1 分冊——本機裝了 Chrome；<code>.env</code> 有 <code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>。
-<strong>午夜前後兩小時不要做</strong>：模擬資料以當天為單位，<code>npm run demo:patient</code> 在那段時間自己拒跑。</p>
+<p><strong>前置</strong>：同迭代 17.1 分冊——本機裝了 Chrome；<code>.env</code> 有 <code>SUPER_ADMIN_WORK_ID</code>、<code>SUPER_ADMIN_INITIAL_PASSWORD</code>。</p>
+<p><strong>午夜前後兩小時不要做</strong>：模擬資料以當天為單位，<code>npm run demo:patient</code> 在那段時間自己拒跑。</p>
 <hr />
 <h2 id="1741--基本資訊區的床號姓名現在時間--">17.4.1 · 基本資訊區的床號、姓名、現在時間 🎬 📐<a class="headerlink" href="#1741--基本資訊區的床號姓名現在時間--" title="Permanent link">&para;</a></h2>
 <p><code>npm run demo:patient</code> 開著，用它印出來的網址開病人端（DEMO-01，配給「模擬戊」）。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa97</code> <strong>［病人端］</strong> 1280×800 看首頁最上面那一框。
-  → 由左到右：床的圖示與 <strong>B1</strong>、<strong>模擬戊</strong>（深色粗體，比床號小一級）、療程進度條（左邊是時鐘圖示）、最右邊<strong>現在時間</strong>（例如 <code>10:42</code>，24 小時制，<strong>沒有圖示</strong>），與電腦右下角的時鐘相同。整框只有一列。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa98</code> <strong>［病人端］</strong> 切到 800×1280。（<strong>1014 起不必驗</strong>：正式版固定橫放；<strong>迭代 27 起不適用</strong>：直放的排法已拿掉）
-  → 第一列是 <strong>B1、模擬戊、現在時間</strong>（時間靠右），第二列是時鐘圖示與進度條。<strong>時間沒有單獨掉到下一列</strong>；整頁不捲動，求助按鈕的位置與大小不變。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa99</code> <strong>［病人端］</strong> 開著不要碰，等到電腦時鐘換到下一分鐘。
-  → 半分鐘內平板上的時間跟著換，不必碰螢幕。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa97</code> <strong>［病人端］</strong> 1280×800 看首頁最上面那一框。 → 由左到右：床的圖示與 <strong>B1</strong>、<strong>模擬戊</strong>（深色粗體，比床號小一級）、療程進度條（左邊是時鐘圖示）、最右邊<strong>現在時間</strong>（例如 <code>10:42</code>，24 小時制，<strong>沒有圖示</strong>），與電腦右下角的時鐘相同。整框只有一列。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa98</code> <strong>［病人端］</strong> 切到 800×1280。（<strong>1014 起不必驗</strong>：正式版固定橫放；<strong>迭代 27 起不適用</strong>：直放的排法已拿掉） → 第一列是 <strong>B1、模擬戊、現在時間</strong>（時間靠右），第二列是時鐘圖示與進度條。<strong>時間沒有單獨掉到下一列</strong>；整頁不捲動，求助按鈕的位置與大小不變。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa99</code> <strong>［病人端］</strong> 開著不要碰，等到電腦時鐘換到下一分鐘。 → 半分鐘內平板上的時間跟著換，不必碰螢幕。</li>
 </ul>
 <h2 id="1742--姓名只在基本資訊區-">17.4.2 · 姓名只在基本資訊區 🎬<a class="headerlink" href="#1742--姓名只在基本資訊區-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa100</code> <strong>［病人端］</strong> 在首頁找「模擬戊」與他的病歷號（99 開頭的八位數，在護理端專業版的病人頁看得到）。
-  → 姓名<strong>只在最上面那一框出現一次</strong>；血壓與脫水量的圖、五個數字、跑馬燈都沒有姓名；<strong>整個畫面找不到病歷號</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa101</code> <strong>［病人端］</strong> 點基本資訊區的任務圖示（沒有就略過），或等心情問卷自動出現。
-  → 任務畫面（問卷、衛教）的頂列只有任務圖示、圓點與回首頁，<strong>沒有姓名</strong>。按回首頁，姓名回到床號旁邊。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa102</code> <strong>［護理端］</strong> 護理端開 <code>http://localhost:5183</code>，專業版 → 排班與指派，把 DEMO-01 那一列「手動解除」。
-  → 病人端幾秒內回到等待配對的畫面，<strong>看不到「模擬戊」</strong>，也看不到任何病人資訊。做完用簡易版把「模擬戊」再拖回 DEMO-01（或重開 <code>demo:patient</code>）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa100</code> <strong>［病人端］</strong> 在首頁找「模擬戊」與他的病歷號（99 開頭的八位數，在護理端專業版的病人頁看得到）。 → 姓名<strong>只在最上面那一框出現一次</strong>；血壓與脫水量的圖、五個數字、跑馬燈都沒有姓名；<strong>整個畫面找不到病歷號</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa101</code> <strong>［病人端］</strong> 點基本資訊區的任務圖示（沒有就略過），或等心情問卷自動出現。 → 任務畫面（問卷、衛教）的頂列只有任務圖示、圓點與回首頁，<strong>沒有姓名</strong>。按回首頁，姓名回到床號旁邊。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa102</code> <strong>［護理端］</strong> 護理端開 <code>http://localhost:5183</code>，專業版 → 排班與指派，把 DEMO-01 那一列「手動解除」。 → 病人端幾秒內回到等待配對的畫面，<strong>看不到「模擬戊」</strong>，也看不到任何病人資訊。做完用簡易版把「模擬戊」再拖回 DEMO-01（或重開 <code>demo:patient</code>）。</li>
 </ul>
 <h2 id="1743--從病床的距離看-">17.4.3 · 從病床的距離看 🛏<a class="headerlink" href="#1743--從病床的距離看-" title="Permanent link">&para;</a></h2>
 <p><strong>要等目標平板（Q-33）</strong>。開發機的螢幕不能代替這一項。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa103</code> <strong>［病人端］</strong> 平板架在床邊支架上，請一位同事躺在病床上看首頁，橫放、直放各一次。（<strong>1014 起只看橫放</strong>：正式版固定橫放；迭代 27 起沒有直放的排法）
-  → 床號、姓名、時間都看得清楚；時間不會被誤認成療程的開始或結束時間。看不清或會誤認的，記下是哪一個、在什麼距離，回填修正紀錄第 5 節。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa103</code> <strong>［病人端］</strong> 平板架在床邊支架上，請一位同事躺在病床上看首頁，橫放、直放各一次。（<strong>1014 起只看橫放</strong>：正式版固定橫放；迭代 27 起沒有直放的排法） → 床號、姓名、時間都看得清楚；時間不會被誤認成療程的開始或結束時間。看不清或會誤認的，記下是哪一個、在什麼距離，回填修正紀錄第 5 節。</li>
 </ul>
 <h2 id="1744--自動化驗收-">17.4.4 · 自動化驗收 🖥<a class="headerlink" href="#1744--自動化驗收-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa104</code> <strong>［終端機］</strong> <code>npm run verify:iteration17-4</code>（不需後端、不需資料庫）。
-  → 5 個步驟全部 ✓。步驟 5 會順便跑 <code>verify:iteration8</code>、<code>14</code>、<code>14-5</code>、<code>16</code>，也都要通過。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>aa104</code> <strong>［終端機］</strong> <code>npm run verify:iteration17-4</code>（不需後端、不需資料庫）。 → 5 個步驟全部 ✓。步驟 5 會順便跑 <code>verify:iteration8</code>、<code>14</code>、<code>14-5</code>、<code>16</code>，也都要通過。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
@@ -4868,6 +4856,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>直放的步驟改註「迭代 27 起不適用」</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-17-4/">1014</a></td>
 <td>2026-10-14</td>

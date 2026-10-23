@@ -2778,6 +2778,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4751,6 +4762,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4912,17 +4934,22 @@
 
 <h1 id="迭代-7-手動測試--擋住上線的缺陷與資料安全">迭代 7 手動測試 — 擋住上線的缺陷與資料安全<a class="headerlink" href="#迭代-7-手動測試--擋住上線的缺陷與資料安全" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.5 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 7 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.5 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 7 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
 </blockquote>
 <p><strong>FR-S12 版本更新不得破壞既有資料、DEP-15 時區、DEP-24 AI 端點可關、DEP-30 引擎隨包攜帶、DEP-31 遷移指令分離，以及《實作規格書》3.15 的解除綁定缺陷。</strong></p>
 <p><strong>這一冊沒有新功能。</strong> 它驗的是三件「不修就不能部署」的事：解除綁定找不到入口、離線建置失敗、更新會弄壞資料庫。前兩件在畫面與終端機上看得出來，第三件只有在真的走過一次更新流程時才看得出來——<strong>§7.6 是本冊最重要的一節，請不要跳過</strong>。</p>
 <blockquote>
-<p><strong>0919 補記</strong>：正式主機由「本專案專用」更正為「與其他專案共用」之後，§7.10 是新加的一節（DEP-37）。
-共用主機上最常見的失敗不是效能不夠，而是別的專案把磁碟寫滿、或先佔走了本系統要用的連接埠——
-<strong>這兩種情形在測試階段一次都不會出現</strong>，只能靠設定上先擋住。</p>
+<p><strong>0919 補記</strong>：正式主機由「本專案專用」更正為「與其他專案共用」之後，§7.10 是新加的一節（DEP-37）。共用主機上最常見的失敗不是效能不夠，而是別的專案把磁碟寫滿、或先佔走了本系統要用的連接埠—— <strong>這兩種情形在測試階段一次都不會出現</strong>，只能靠設定上先擋住。</p>
 </blockquote>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>項次 <code>q1</code>～<code>q59</code>，對應實作規格書 4.5；自動化另跑 <code>npm run verify:iteration7</code></li>
+<li>沒有新功能，驗三件「不修就不能部署」的事：解除綁定找不到入口、離線建置失敗、更新會弄壞資料庫</li>
+<li>解除綁定（3.15）：不依日期的有效綁定清單、跨日提示、指派選單說得出原因、解除是冪等的</li>
+<li>時區與服務執行帳號（DEP-15）、開發用遷移指令防呆（DEP-31）、引擎隨包攜帶（DEP-30）、AI 端點不通時四條主線照常（DEP-24）</li>
+<li><strong>§7.6 更新流程（備份、驗證還原、前滾、紀錄）是本冊最重要的一節</strong>，不要跳過</li>
+<li>§7.10 共用主機上的隔離（連接埠、目錄、磁碟空間，DEP-37）是 0919 補的</li>
+</ul>
 <h2 id="這一冊有什麼">這一冊有什麼<a class="headerlink" href="#這一冊有什麼" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5028,66 +5055,47 @@
 <p>缺陷的原貌：<strong>解除綁定的唯一入口掛在「當日排班」清單的每一列上，而那份清單依排班日期篩選（預設今天）。</strong> 綁定所屬的排班日期不是畫面上選的那一天，那一列根本不會出現，自然沒有按鈕可按。</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q1</code> <strong>［護理端］</strong> 主控台把日期切到<strong>昨天</strong>，建立一筆排班，指派平板給它。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q2</code> <strong>［護理端］</strong> 日期切回<strong>今天</strong>（或重新整理，預設就是今天）。
-  → 剛才那筆排班<strong>不在畫面上</strong>。這是正常的，那份清單本來就依日期篩選——缺陷不在這裡，在於它是唯一的入口。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q3</code> <strong>［護理端］</strong> 進「裝置管理」，看新的「目前有效綁定」清單。
-  → 昨天那筆<strong>在裡面</strong>，而且標示著它屬於哪一天（後面跟著「（不是今天）」）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q4</code> <strong>［護理端］</strong> 直接在這一列按「手動解除」。
-  → 解除成功，訊息寫出是哪位病人、哪一台平板。<strong>全程沒有改過任何日期</strong>——這就是驗收標準第 1 條。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q5</code> <strong>［護理端］</strong> 解除後重新整理。
-  → 那一列從「目前有效綁定」消失（它只列有效的），平板的「綁定狀態」回到「未綁定」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q2</code> <strong>［護理端］</strong> 日期切回<strong>今天</strong>（或重新整理，預設就是今天）。 → 剛才那筆排班<strong>不在畫面上</strong>。這是正常的，那份清單本來就依日期篩選——缺陷不在這裡，在於它是唯一的入口。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q3</code> <strong>［護理端］</strong> 進「裝置管理」，看新的「目前有效綁定」清單。 → 昨天那筆<strong>在裡面</strong>，而且標示著它屬於哪一天（後面跟著「（不是今天）」）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q4</code> <strong>［護理端］</strong> 直接在這一列按「手動解除」。 → 解除成功，訊息寫出是哪位病人、哪一台平板。<strong>全程沒有改過任何日期</strong>——這就是驗收標準第 1 條。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q5</code> <strong>［護理端］</strong> 解除後重新整理。 → 那一列從「目前有效綁定」消失（它只列有效的），平板的「綁定狀態」回到「未綁定」。</li>
 </ul>
 <h2 id="72--跨日提示與跳過去的連結315-修法-2">7.2 · 跨日提示與跳過去的連結（3.15 修法 2）<a class="headerlink" href="#72--跨日提示與跳過去的連結315-修法-2" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q6</code> <strong>［護理端］</strong> 再建一筆昨天的排班並指派平板，然後回到主控台、日期停在今天。
-  → 畫面上方出現一則提示：<strong>另有 N 筆有效綁定不在今天</strong>，列出病人、平板與它所屬的日期。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q7</code> <strong>［護理端］</strong> 讀那段文字。
-  → 它說得出<strong>為什麼</strong>會這樣（大夜班跨過午夜之後，綁定的排班日期是前一天），不是只說「有東西在別的日期」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q8</code> <strong>［護理端］</strong> 按提示裡的日期連結。
-  → 日期切到那一天，那筆排班出現，列上的解除按鈕可以按。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q9</code> <strong>［護理端］</strong> 把該日期的綁定解除，回到今天。
-  → 提示消失。<strong>沒有有效的跨日綁定就不該有這段提示</strong>，它不是常駐說明。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q6</code> <strong>［護理端］</strong> 再建一筆昨天的排班並指派平板，然後回到主控台、日期停在今天。 → 畫面上方出現一則提示：<strong>另有 N 筆有效綁定不在今天</strong>，列出病人、平板與它所屬的日期。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q7</code> <strong>［護理端］</strong> 讀那段文字。 → 它說得出<strong>為什麼</strong>會這樣（大夜班跨過午夜之後，綁定的排班日期是前一天），不是只說「有東西在別的日期」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q8</code> <strong>［護理端］</strong> 按提示裡的日期連結。 → 日期切到那一天，那筆排班出現，列上的解除按鈕可以按。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q9</code> <strong>［護理端］</strong> 把該日期的綁定解除，回到今天。 → 提示消失。<strong>沒有有效的跨日綁定就不該有這段提示</strong>，它不是常駐說明。</li>
 </ul>
 <h2 id="73--指派下拉選單說得出濾掉的原因315-修法-3">7.3 · 指派下拉選單說得出濾掉的原因（3.15 修法 3）<a class="headerlink" href="#73--指派下拉選單說得出濾掉的原因315-修法-3" title="Permanent link">&para;</a></h2>
 <p>連帶的第二個症狀：那台平板因為還綁著，在指派清單裡被濾掉，於是變成「這台平板不見了」，而畫面上不會說明為什麼。</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q10</code> <strong>［護理端］</strong> 讓 A 平板綁著某位病人，把 B 平板解除註冊（裝置管理 → 解除註冊）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q11</code> <strong>［護理端］</strong> 在主控台展開任一筆未指派排班的平板下拉選單。
-  → A 與 B <strong>都看得到</strong>，只是選不下去（灰的），而且各自寫著原因：A 是「這台正綁給 ○○○（病歷號），要先解除綁定」，B 是「這台尚未完成佈建納管」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q12</code> 確認這兩句<strong>不一樣</strong>。
-  → 「這台正綁給某位病人」與「這台還沒佈建」是兩件不同的事，要做的處置也不同。都變成「不見了」就是這個缺陷的本體。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q13</code> <strong>［護理端］</strong> 裝置管理的平板清單看「可否指派」欄。
-  → 同一句原因也在這裡，可以一眼掃過整批平板。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q14</code> <strong>［護理端］</strong> 把 B 平板重新納管。
-  → 兩邊都變回「可指派」，下拉選單裡它可以選了。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q11</code> <strong>［護理端］</strong> 在主控台展開任一筆未指派排班的平板下拉選單。 → A 與 B <strong>都看得到</strong>，只是選不下去（灰的），而且各自寫著原因：A 是「這台正綁給 ○○○（病歷號），要先解除綁定」，B 是「這台尚未完成佈建納管」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q12</code> 確認這兩句<strong>不一樣</strong>。 → 「這台正綁給某位病人」與「這台還沒佈建」是兩件不同的事，要做的處置也不同。都變成「不見了」就是這個缺陷的本體。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q13</code> <strong>［護理端］</strong> 裝置管理的平板清單看「可否指派」欄。 → 同一句原因也在這裡，可以一眼掃過整批平板。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q14</code> <strong>［護理端］</strong> 把 B 平板重新納管。 → 兩邊都變回「可指派」，下拉選單裡它可以選了。</li>
 </ul>
 <h2 id="74--解除是冪等的315-次要原因-1">7.4 · 解除是冪等的（3.15 次要原因 1）<a class="headerlink" href="#74--解除是冪等的315-次要原因-1" title="Permanent link">&para;</a></h2>
 <p>護理師按下解除的那一瞬間，逾時掃描可能剛好先一步把它結束掉。那是<strong>目標狀態已經達成</strong>，不是失敗。</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q15</code> <strong>［護理端］</strong> 任意指派一台平板，然後<strong>開兩個分頁</strong>都停在能按到解除的畫面。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q16</code> <strong>［護理端］</strong> 在第一個分頁按「手動解除」，成功後到第二個分頁按同一筆的解除（不要重新整理）。
-  → <strong>回報成功</strong>，訊息寫「這筆綁定已於 ○時○分 由 ○○○ 因『護理師手動提前解除』結束，不需要再解除一次。」
-  → <strong>不是</strong>紅色錯誤，也不是「此綁定狀態為 RELEASED」這種讓人以為壞掉的字。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q17</code> <strong>［護理端］</strong> 到稽核軌跡查這一刻。
-  → 有一筆「解除綁定：目標狀態已達成」。冪等不等於什麼都沒發生——<strong>誰在什麼時候按了那一下，仍然要留下來</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q16</code> <strong>［護理端］</strong> 在第一個分頁按「手動解除」，成功後到第二個分頁按同一筆的解除（不要重新整理）。 → <strong>回報成功</strong>，訊息寫「這筆綁定已於 ○時○分 由 ○○○ 因『護理師手動提前解除』結束，不需要再解除一次。」 → <strong>不是</strong>紅色錯誤，也不是「此綁定狀態為 RELEASED」這種讓人以為壞掉的字。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q17</code> <strong>［護理端］</strong> 到稽核軌跡查這一刻。 → 有一筆「解除綁定：目標狀態已達成」。冪等不等於什麼都沒發生——<strong>誰在什麼時候按了那一下，仍然要留下來</strong>。</li>
 </ul>
 <h2 id="75--執行環境時區與服務執行帳號dep-15">7.5 · 執行環境：時區與服務執行帳號（DEP-15）<a class="headerlink" href="#75--執行環境時區與服務執行帳號dep-15" title="Permanent link">&para;</a></h2>
 <p>時區錯八小時，班表會整張錯開一格，而且錯得很像「排班排錯了」，不像系統設定錯誤——<strong>這種錯誤不會有人回報成程式問題</strong>。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q18</code> <strong>［終端機］</strong> 看後端啟動時的那幾行。
-  → 有一行寫著「伺服器時區：Asia/Taipei（現在 ⋯⋯）｜執行身分：帳號@主機名稱」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q19</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份，最上面的「執行環境」。
-  → 時區、現在時間、服務執行身分、執行環境（正式／開發）、監聽連接埠、版本標記、資料庫引擎七項都看得到，時區那一格是勾的。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q18</code> <strong>［終端機］</strong> 看後端啟動時的那幾行。 → 有一行寫著「伺服器時區：Asia/Taipei（現在 ⋯⋯）｜執行身分：帳號@主機名稱」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q19</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份，最上面的「執行環境」。 → 時區、現在時間、服務執行身分、執行環境（正式／開發）、監聽連接埠、版本標記、資料庫引擎七項都看得到，時區那一格是勾的。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q20</code> <strong>［終端機］</strong> 用不符的時區啟動一次（<strong>這一項會讓服務起不來，是預期的</strong>）：
   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/api
 <span class="c1"># PowerShell：$env:DEPLOYMENT_ENV='production'; $env:TZ='UTC'; node dist/main.js</span>
 <span class="nv">DEPLOYMENT_ENV</span><span class="o">=</span>production<span class="w"> </span><span class="nv">TZ</span><span class="o">=</span>UTC<span class="w"> </span>node<span class="w"> </span>dist/main.js
 </code></pre></div>
   → <strong>拒絕啟動</strong>，訊息寫出目前是什麼時區、要求的是什麼、為什麼要管（班表會整張錯開一格），最後附上剛才是用哪個帳號在檢查。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q21</code> 把 <code>TZ</code> 與 <code>DEPLOYMENT_ENV</code> 都拿掉，照平常啟動。
-  → 正常起來。<strong>開發機的時區不同不會擋啟動</strong>，只會在日誌上提醒一行。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q22</code> ⚠️ <strong>部署當天才做得到的一項</strong>：在正式主機上，用<strong>服務實際執行的那個帳號</strong>（不是管理員的互動式工作階段）看一次 <code>q19</code> 的畫面。
-  → 主機時區正確不代表服務執行帳號取得的時區正確，這兩件事要分開確認。這一項同時是部署前置檢查清單第 2 條。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q21</code> 把 <code>TZ</code> 與 <code>DEPLOYMENT_ENV</code> 都拿掉，照平常啟動。 → 正常起來。<strong>開發機的時區不同不會擋啟動</strong>，只會在日誌上提醒一行。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q22</code> ⚠️ <strong>部署當天才做得到的一項</strong>：在正式主機上，用<strong>服務實際執行的那個帳號</strong>（不是管理員的互動式工作階段）看一次 <code>q19</code> 的畫面。 → 主機時區正確不代表服務執行帳號取得的時區正確，這兩件事要分開確認。這一項同時是部署前置檢查清單第 2 條。</li>
 </ul>
 <h2 id="76--更新流程備份驗證還原前滾紀錄規範第-18-條">7.6 · 更新流程：備份、驗證還原、前滾、紀錄（規範第 18 條）<a class="headerlink" href="#76--更新流程備份驗證還原前滾紀錄規範第-18-條" title="Permanent link">&para;</a></h2>
 <p><strong>第一次正式部署之後，每一次更新面對的都是真實病人資料，而那份資料只有一個檔案。</strong></p>
@@ -5099,30 +5107,19 @@
   <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>db:update
 </code></pre></div>
   → 停在第 1 步，說「後端服務還在執行⋯⋯請先停止服務再執行」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q24</code> <strong>［終端機］</strong> 停掉後端，再執行一次。逐步看它做了什麼：
-  → <code>[3]</code> 產生一份更新前備份（檔名 <code>hd-before-update-⋯</code>），印出大小與 SHA-256。
-  → <code>[4]</code> <strong>把那份備份實際複製到另一個路徑、開起來、跑完整性檢查</strong>，並印出各資料表的筆數。「有備份」和「備份能用」是兩件事。
-  → <code>[5]</code> 以「套用既有遷移」的方式前滾（沒有待套用的遷移時它就直說沒有）。
-  → <code>[6]</code> 寫入更新紀錄，最後印出三件人要做的事。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q25</code> <strong>［終端機］</strong> 檢查備份目錄。
-  → 多了一個 <code>hd-before-update-⋯.db</code>；<strong>驗證用的那份暫存檔不會留下</strong>（它只是用來證明還原得起來）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q26</code> <strong>［護理端］</strong> 啟動後端，進系統管理 → 資料庫與備份 → 最下面的「版本更新紀錄」。
-  → 剛才那次在列表上：結果「完成」、版本、更新前備份的檔名、備份驗證「已還原驗證」加各資料表筆數、套用的遷移、執行者（作業系統帳號@主機名稱）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q27</code> <strong>［護理端］</strong> 同一頁往上看「備份歷程」。
-  → 剛才那份備份也在，方式寫「更新前強制備份」，與手動、排程分得出來。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q28</code> <strong>［護理端］</strong> 稽核軌跡查這一段時間。
-  → 至少四筆：版本更新開始、更新前備份已驗證還原、資料庫線上備份、版本更新完成。<strong>沒有這份紀錄，半年後發現資料對不上時，沒有人答得出是哪一次更新帶進來的。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q24</code> <strong>［終端機］</strong> 停掉後端，再執行一次。逐步看它做了什麼： → <code>[3]</code> 產生一份更新前備份（檔名 <code>hd-before-update-⋯</code>），印出大小與 SHA-256。 → <code>[4]</code> <strong>把那份備份實際複製到另一個路徑、開起來、跑完整性檢查</strong>，並印出各資料表的筆數。「有備份」和「備份能用」是兩件事。 → <code>[5]</code> 以「套用既有遷移」的方式前滾（沒有待套用的遷移時它就直說沒有）。 → <code>[6]</code> 寫入更新紀錄，最後印出三件人要做的事。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q25</code> <strong>［終端機］</strong> 檢查備份目錄。 → 多了一個 <code>hd-before-update-⋯.db</code>；<strong>驗證用的那份暫存檔不會留下</strong>（它只是用來證明還原得起來）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q26</code> <strong>［護理端］</strong> 啟動後端，進系統管理 → 資料庫與備份 → 最下面的「版本更新紀錄」。 → 剛才那次在列表上：結果「完成」、版本、更新前備份的檔名、備份驗證「已還原驗證」加各資料表筆數、套用的遷移、執行者（作業系統帳號@主機名稱）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q27</code> <strong>［護理端］</strong> 同一頁往上看「備份歷程」。 → 剛才那份備份也在，方式寫「更新前強制備份」，與手動、排程分得出來。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q28</code> <strong>［護理端］</strong> 稽核軌跡查這一段時間。 → 至少四筆：版本更新開始、更新前備份已驗證還原、資料庫線上備份、版本更新完成。<strong>沒有這份紀錄，半年後發現資料對不上時，沒有人答得出是哪一次更新帶進來的。</strong></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q29</code> <strong>［終端機］</strong> 現在驗最重要的那一條——<strong>備份做不成就不准往下走</strong>。停掉後端，把備份目的地指到一個不存在的磁碟：
   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/api
 <span class="c1"># PowerShell：$env:BACKUP_DIR='Z:/no-such-place'; node scripts/db-update.mjs</span>
 <span class="nv">BACKUP_DIR</span><span class="o">=</span>Z:/no-such-place<span class="w"> </span>node<span class="w"> </span>scripts/db-update.mjs
 </code></pre></div>
-  → 停在 <code>[3]</code>，訊息寫「備份沒有成功完成，更新到此為止⋯⋯沒有備份的遷移，出事時沒有任何東西可以退回去」，最後一行是「資料庫沒有被改動」。
-  → <strong>不會</strong>印出 <code>[5] 套用既有遷移</code>。這一條的重點不是它失敗了，是<strong>它失敗在遷移之前</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q30</code> <strong>［護理端］</strong> 啟動後端再看一次「版本更新紀錄」。
-  → 那次中止也留了一列，結果「中止」、備份欄寫「（沒有做成）」、備份驗證「未通過」、套用的遷移「無」。失敗的更新一樣要留下紀錄。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q31</code> <strong>［終端機］</strong> 把 <code>BACKUP_DIR</code> 設回正常值，確認 <code>q24</code> 還能再跑一次。
-  → 可以。更新流程可重複執行，每一次都會產生新的備份與新的一列紀錄。</li>
+  → 停在 <code>[3]</code>，訊息寫「備份沒有成功完成，更新到此為止⋯⋯沒有備份的遷移，出事時沒有任何東西可以退回去」，最後一行是「資料庫沒有被改動」。 → <strong>不會</strong>印出 <code>[5] 套用既有遷移</code>。這一條的重點不是它失敗了，是<strong>它失敗在遷移之前</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q30</code> <strong>［護理端］</strong> 啟動後端再看一次「版本更新紀錄」。 → 那次中止也留了一列，結果「中止」、備份欄寫「（沒有做成）」、備份驗證「未通過」、套用的遷移「無」。失敗的更新一樣要留下紀錄。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q31</code> <strong>［終端機］</strong> 把 <code>BACKUP_DIR</code> 設回正常值，確認 <code>q24</code> 還能再跑一次。 → 可以。更新流程可重複執行，每一次都會產生新的備份與新的一列紀錄。</li>
 </ul>
 <h2 id="77--開發用遷移指令的防呆dep-31">7.7 · 開發用遷移指令的防呆（DEP-31）<a class="headerlink" href="#77--開發用遷移指令的防呆dep-31" title="Permanent link">&para;</a></h2>
 <p>開發用的 <code>prisma migrate dev</code> 在偵測到「資料庫與遷移歷史對不上」時，會提議或直接<strong>重建整個資料庫</strong>。在開發機上那是方便，在正式主機上那是把整個透析中心的紀錄刪掉。</p>
@@ -5132,17 +5129,13 @@
 <span class="c1"># PowerShell：$env:DEPLOYMENT_ENV='production'; npm run prisma:migrate</span>
 <span class="nv">DEPLOYMENT_ENV</span><span class="o">=</span>production<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>prisma:migrate
 </code></pre></div>
-  → <strong>被擋下</strong>。訊息說得出依據（<code>DEPLOYMENT_ENV=production</code>）、為什麼擋（那支指令會重建整個資料庫）、以及該用哪一支（<code>npm run db:update</code>）。
-  → 擋下的是<strong>指令本身</strong>，Prisma 根本沒有被執行。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q33</code> <strong>［護理端］</strong> 稽核軌跡查剛才那一刻。
-  → 有一筆「遷移指令遭擋下：正式環境不得執行開發用指令」。有人在正式主機上試過開發指令，是值得事後知道的一件事。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q34</code> <strong>［終端機］</strong> 不帶 <code>DEPLOYMENT_ENV</code> 再跑一次同一支指令。
-  → 照常執行（沒有 schema 變更時它會說沒有變更）。<strong>開發機上不受影響。</strong></li>
+  → <strong>被擋下</strong>。訊息說得出依據（<code>DEPLOYMENT_ENV=production</code>）、為什麼擋（那支指令會重建整個資料庫）、以及該用哪一支（<code>npm run db:update</code>）。 → 擋下的是<strong>指令本身</strong>，Prisma 根本沒有被執行。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q33</code> <strong>［護理端］</strong> 稽核軌跡查剛才那一刻。 → 有一筆「遷移指令遭擋下：正式環境不得執行開發用指令」。有人在正式主機上試過開發指令，是值得事後知道的一件事。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q34</code> <strong>［終端機］</strong> 不帶 <code>DEPLOYMENT_ENV</code> 再跑一次同一支指令。 → 照常執行（沒有 schema 變更時它會說沒有變更）。<strong>開發機上不受影響。</strong></li>
 </ul>
 <h2 id="78--離線可部署性引擎自帶版本鎖死dep-30">7.8 · 離線可部署性：引擎自帶、版本鎖死（DEP-30）<a class="headerlink" href="#78--離線可部署性引擎自帶版本鎖死dep-30" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q35</code> <strong>［終端機］</strong> <code>npm run check:offline</code>
-  → 沒有阻擋項。逐項看過：引擎檔已就位（兩個檔、各約 20MB）、Prisma 三者版本一致且<strong>鎖成確定版本</strong>（不是 <code>^6.x</code>）、「套用既有遷移」的指令存在、開發用的那支已加上防呆、更新流程有入口、三個建置產物都在。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q35</code> <strong>［終端機］</strong> <code>npm run check:offline</code> → 沒有阻擋項。逐項看過：引擎檔已就位（兩個檔、各約 20MB）、Prisma 三者版本一致且<strong>鎖成確定版本</strong>（不是 <code>^6.x</code>）、「套用既有遷移」的指令存在、開發用的那支已加上防呆、更新流程有入口、三個建置產物都在。</li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q35a</code> <strong>［終端機］（0920 補）</strong> 在開發機上假裝斷網，跑一次遷移：
   <div class="highlight"><pre><span></span><code><span class="c1"># 把 CLI 自己那份引擎與快取清掉，模擬「剛解開的 node_modules」</span>
@@ -5151,18 +5144,13 @@ rm<span class="w"> </span>-rf<span class="w"> </span>apps/api/node_modules/.cach
 <span class="c1"># 把下載位址指到一個解析不出來的主機，等同於院內的網路狀況</span>
 <span class="nv">PRISMA_ENGINES_MIRROR</span><span class="o">=</span>http://offline.invalid<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>prisma:migrate
 </code></pre></div>
-  → 正常跑完，最後的 <code>Running generate...</code> 也要成功。<strong>這一步就是迭代 9 末倒下的那一步</strong>：
-  遷移本身全數套用完成，倒在它順手跑的 <code>generate</code> 上，給的錯誤是 <code>getaddrinfo ENOTFOUND binaries.prisma.sh</code>。
-  若又出現那個錯誤，是 <code>apps/api/scripts/prisma-cli.mjs</code> 沒被用到（檢查 <code>package.json</code> 的 prisma 指令）。</p>
+  → 正常跑完，最後的 <code>Running generate...</code> 也要成功。<strong>這一步就是迭代 9 末倒下的那一步</strong>：遷移本身全數套用完成，倒在它順手跑的 <code>generate</code> 上，給的錯誤是 <code>getaddrinfo ENOTFOUND binaries.prisma.sh</code>。若又出現那個錯誤，是 <code>apps/api/scripts/prisma-cli.mjs</code> 沒被用到（檢查 <code>package.json</code> 的 prisma 指令）。</p>
 </li>
 <li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q36</code> <strong>［終端機］</strong> 開啟 <code>apps/api/package.json</code>，確認 <code>prisma</code> 與 <code>@prisma/client</code> 兩個版本號<strong>沒有 <code>^</code> 或 <code>~</code></strong>。
-  → 引擎與 CLI 的版本必須一致；浮動的版本範圍會在某次重新安裝時悄悄換掉其中一邊，而症狀會是一個看起來毫不相干的錯誤。</p>
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q36</code> <strong>［終端機］</strong> 開啟 <code>apps/api/package.json</code>，確認 <code>prisma</code> 與 <code>@prisma/client</code> 兩個版本號<strong>沒有 <code>^</code> 或 <code>~</code></strong>。 → 引擎與 CLI 的版本必須一致；浮動的版本範圍會在某次重新安裝時悄悄換掉其中一邊，而症狀會是一個看起來毫不相干的錯誤。</p>
 </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q37</code> <strong>［終端機］</strong> <code>npm run check:egress</code>
-  → 仍為 0 筆。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q38</code> ⚠️ <strong>迭代 10 才做得完的一項</strong>：在一台<strong>乾淨的 Windows 機器</strong>上、<strong>全程離線</strong>，從解開安裝包到服務起來、套用遷移、正常運作。
-  → <code>q35</code> 只驗「這台機器上的東西夠不夠」；在開發機上解壓來測，測到的是開發機，不是安裝包。這一條排在迭代 10（DEP-22）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q37</code> <strong>［終端機］</strong> <code>npm run check:egress</code> → 仍為 0 筆。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q38</code> ⚠️ <strong>迭代 10 才做得完的一項</strong>：在一台<strong>乾淨的 Windows 機器</strong>上、<strong>全程離線</strong>，從解開安裝包到服務起來、套用遷移、正常運作。 → <code>q35</code> 只驗「這台機器上的東西夠不夠」；在開發機上解壓來測，測到的是開發機，不是安裝包。這一條排在迭代 10（DEP-22）。</li>
 </ul>
 <h2 id="79--ai-端點完全不通時的四條主線dep-24">7.9 · AI 端點完全不通時的四條主線（DEP-24）<a class="headerlink" href="#79--ai-端點完全不通時的四條主線dep-24" title="Permanent link">&para;</a></h2>
 <p>第一次部署時 AI 功能預設為關，<strong>這一條在上線第一天就會被實際驗到</strong>。</p>
@@ -5177,17 +5165,12 @@ rm<span class="w"> </span>-rf<span class="w"> </span>apps/api/node_modules/.cach
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q41</code> <strong>［病人端］</strong> 送出一次症狀問卷。→ 可用（主線二）。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q42</code> <strong>［病人端］</strong> 按求助按鈕。→ 可用（主線三）。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q43</code> <strong>［護理端］</strong> 開總覽。→ 看得到那位病人與剛才那筆求助（主線四）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q44</code> <strong>［護理端］</strong> 進「系統管理 → 功能開關」，<strong>掐時間</strong>。
-  → 畫面<strong>幾秒內</strong>畫得出來，不是卡著等一分鐘。健康檢查的逾時與單次生成分開，而且結果會短暫快取。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q45</code> <strong>［護理端］</strong> 看需要 AI 的那幾個開關。
-  → 開啟條件寫著端點連不上，開關開不了。<strong>能不能開</strong>與<strong>主線能不能用</strong>是兩件事。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q46</code> 把環境變數改回 <code>LLM_PROVIDER=mock</code> 並重新啟動。
-  → 回到平常的狀態。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q44</code> <strong>［護理端］</strong> 進「系統管理 → 功能開關」，<strong>掐時間</strong>。 → 畫面<strong>幾秒內</strong>畫得出來，不是卡著等一分鐘。健康檢查的逾時與單次生成分開，而且結果會短暫快取。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q45</code> <strong>［護理端］</strong> 看需要 AI 的那幾個開關。 → 開啟條件寫著端點連不上，開關開不了。<strong>能不能開</strong>與<strong>主線能不能用</strong>是兩件事。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q46</code> 把環境變數改回 <code>LLM_PROVIDER=mock</code> 並重新啟動。 → 回到平常的狀態。</li>
 </ul>
 <h2 id="710--共用主機上的隔離連接埠目錄磁碟空間dep-37">7.10 · 共用主機上的隔離：連接埠、目錄、磁碟空間（DEP-37）<a class="headerlink" href="#710--共用主機上的隔離連接埠目錄磁碟空間dep-37" title="Permanent link">&para;</a></h2>
-<p>正式主機與其他專案共用，院方確保本系統的資源額度足夠。<strong>但「資源足夠」是一句承諾，不是一個設定</strong>——
-隔離要自己在安裝包層級做到：自帶執行期、埠登記後固定、目錄是自己的、權限只給服務帳號。
-這一節驗得到前三項的設定面；第四項（目錄權限）只有部署當天以實際帳號才確認得了。</p>
+<p>正式主機與其他專案共用，院方確保本系統的資源額度足夠。<strong>但「資源足夠」是一句承諾，不是一個設定</strong>——隔離要自己在安裝包層級做到：自帶執行期、埠登記後固定、目錄是自己的、權限只給服務帳號。這一節驗得到前三項的設定面；第四項（目錄權限）只有部署當天以實際帳號才確認得了。</p>
 <p><strong>連接埠（DEP-37 第 2 項）</strong></p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q50</code> <strong>［終端機］</strong> 正式環境設定下、不給埠啟動一次（<strong>這一項會讓服務起不來，是預期的</strong>）：
@@ -5195,40 +5178,26 @@ rm<span class="w"> </span>-rf<span class="w"> </span>apps/api/node_modules/.cach
 <span class="c1"># PowerShell：$env:DEPLOYMENT_ENV='production'; $env:API_PORT=''; node dist/main.js</span>
 <span class="nv">DEPLOYMENT_ENV</span><span class="o">=</span>production<span class="w"> </span><span class="nv">API_PORT</span><span class="o">=</span><span class="w"> </span>node<span class="w"> </span>dist/main.js
 </code></pre></div>
-  → <strong>拒絕啟動</strong>，訊息說的是「要先向資訊室登記、再寫進主機的 .env 固定下來」，不是只說缺變數。
-  沒寫等於賭沒有人先佔走 3000，而那多半在某次重新開機、兩個服務的啟動順序對調時才發作。</li>
+  → <strong>拒絕啟動</strong>，訊息說的是「要先向資訊室登記、再寫進主機的 .env 固定下來」，不是只說缺變數。沒寫等於賭沒有人先佔走 3000，而那多半在某次重新開機、兩個服務的啟動順序對調時才發作。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q51</code> 把 <code>API_PORT</code> 填回去，照平常啟動。→ 正常起來。<strong>開發機不填照舊用 3000</strong>，只有正式環境設定會擋。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q52</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份 → 執行環境的「監聽連接埠」。
-  → 看得到埠號，以及它是「主機設定檔指定」還是「程式預設值」。正式主機上必須是前者。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q52</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份 → 執行環境的「監聽連接埠」。 → 看得到埠號，以及它是「主機設定檔指定」還是「程式預設值」。正式主機上必須是前者。</li>
 </ul>
 <p><strong>目錄（DEP-37 第 3 項）</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q53</code> <strong>［終端機］</strong> 把 <code>.env</code> 的 <code>BACKUP_DIR</code> 暫時改成 <code>C:/Temp/hd-backups</code> 後啟動。
-  → <strong>拒絕啟動</strong>，訊息說它位於共用目錄底下：那些位置別的專案的清理腳本掃得到、一般登入者也讀得到。
-  把 <code>DATABASE_URL</code> 改到 <code>C:/Users/Public/…</code> 也是同樣的結果。改回原值後恢復正常。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q54</code> ⚠️ <strong>部署當天才做得到的一項</strong>：在正式主機上，用<strong>另一個一般登入帳號</strong>去開資料庫目錄與備份目錄。
-  → <strong>連讀都不行</strong>。共用主機上別的專案的維運人員也登得進這台機器，預設權限等於把病人資料攤開。
-  這一項同時是部署前置檢查清單 9.1 第 9 條。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q53</code> <strong>［終端機］</strong> 把 <code>.env</code> 的 <code>BACKUP_DIR</code> 暫時改成 <code>C:/Temp/hd-backups</code> 後啟動。 → <strong>拒絕啟動</strong>，訊息說它位於共用目錄底下：那些位置別的專案的清理腳本掃得到、一般登入者也讀得到。把 <code>DATABASE_URL</code> 改到 <code>C:/Users/Public/…</code> 也是同樣的結果。改回原值後恢復正常。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q54</code> ⚠️ <strong>部署當天才做得到的一項</strong>：在正式主機上，用<strong>另一個一般登入帳號</strong>去開資料庫目錄與備份目錄。 → <strong>連讀都不行</strong>。共用主機上別的專案的維運人員也登得進這台機器，預設權限等於把病人資料攤開。這一項同時是部署前置檢查清單 9.1 第 9 條。</li>
 </ul>
 <p><strong>磁碟空間（DEP-37）</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q55</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份 → 「資料庫磁碟可用空間」。
-  → 看得到目前可用空間與下限（預設 1GB，由 <code>DB_DISK_MIN_FREE_MB</code> 設定）。
-  下限的實際數字待資訊室議定（Q-27）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q56</code> <strong>［終端機］</strong> 把 <code>DB_DISK_MIN_FREE_MB</code> 暫時設成一個大於目前可用空間的值（例如 <code>99999999</code>），
-  重新整理 <code>q55</code> 的畫面，再執行一次 <code>npm run db:update</code>。
-  → 畫面上那一格變成 ✗；更新流程在備份<strong>之前</strong>就停下，訊息算得出這次需要多少（備份與驗證複本各一份＋保留下限），
-  並提醒主機是共用的，先確認是誰把空間佔掉了。<strong>資料庫沒有被改動。</strong> 改回原值後恢復正常。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q55</code> <strong>［護理端］</strong> 系統管理 → 資料庫與備份 → 「資料庫磁碟可用空間」。 → 看得到目前可用空間與下限（預設 1GB，由 <code>DB_DISK_MIN_FREE_MB</code> 設定）。下限的實際數字待資訊室議定（Q-27）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q56</code> <strong>［終端機］</strong> 把 <code>DB_DISK_MIN_FREE_MB</code> 暫時設成一個大於目前可用空間的值（例如 <code>99999999</code>），重新整理 <code>q55</code> 的畫面，再執行一次 <code>npm run db:update</code>。 → 畫面上那一格變成 ✗；更新流程在備份<strong>之前</strong>就停下，訊息算得出這次需要多少（備份與驗證複本各一份＋保留下限），並提醒主機是共用的，先確認是誰把空間佔掉了。<strong>資料庫沒有被改動。</strong> 改回原值後恢復正常。</li>
 </ul>
 <hr />
 <h2 id="711--自動化驗收">7.11 · 自動化驗收<a class="headerlink" href="#711--自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q57</code> <strong>［終端機］</strong> 後端開著，執行 <code>npm run verify:iteration7</code>
-  → 11 個步驟全部 ✓，最後顯示「驗收結果：全部通過」。它會自己建立一顆隔離的資料庫複本來跑更新流程，不會動到你的開發資料庫。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q58</code> <strong>［終端機］</strong> 依序重跑 <code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>iteration6</code>。
-  → 六支全綠。<strong>迭代 7 沒有改動任何既有行為</strong>：解除綁定的回應多了兩個欄位，既有欄位一個都沒有動。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q59</code> <strong>［終端機］</strong> <code>npm run check:all</code>
-  → 四支盤點腳本一起跑。零院外連線 0 筆、離線可部署性 0 項阻擋、遷移安全只剩舊迭代的既有紀錄（這次新增的那一份是純加法）、介面技術識別的既有項次未增加（那一批排在迭代 9）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q57</code> <strong>［終端機］</strong> 後端開著，執行 <code>npm run verify:iteration7</code> → 11 個步驟全部 ✓，最後顯示「驗收結果：全部通過」。它會自己建立一顆隔離的資料庫複本來跑更新流程，不會動到你的開發資料庫。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q58</code> <strong>［終端機］</strong> 依序重跑 <code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>iteration6</code>。 → 六支全綠。<strong>迭代 7 沒有改動任何既有行為</strong>：解除綁定的回應多了兩個欄位，既有欄位一個都沒有動。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>q59</code> <strong>［終端機］</strong> <code>npm run check:all</code> → 四支盤點腳本一起跑。零院外連線 0 筆、離線可部署性 0 項阻擋、遷移安全只剩舊迭代的既有紀錄（這次新增的那一份是純加法）、介面技術識別的既有項次未增加（那一批排在迭代 9）。</li>
 </ul>
 <hr />
 <p><a href="../manual-test-guide/">← 回完整手動測試手冊</a></p>
@@ -5243,6 +5212,11 @@ rm<span class="w"> </span>-rf<span class="w"> </span>apps/api/node_modules/.cach
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>前置的 §13 連結改指分冊索引的新標題（迭代 3-27 分冊）</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-7/">1014</a></td>
 <td>2026-10-14</td>

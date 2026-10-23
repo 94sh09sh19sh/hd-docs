@@ -3896,6 +3896,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#0-現況盤點" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4901,6 +4912,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#0-現況盤點" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5213,14 +5235,17 @@
 <h1 id="第三冊--平板與外殼-app">第三冊 · 平板與外殼 App<a class="headerlink" href="#第三冊--平板與外殼-app" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案　編號：<code>K-xx</code>　建議時點：<strong>D-10 ～ D-7</strong>（平板到貨後另一段）</p>
 <blockquote>
-<p><strong>0927 起憑證、keystore、APK 與側載由<a href="../12-shell/">第十二冊</a>取代</strong>：外殼搬到另一個私人 repo，
-APK 由 <code>shell-builder</code> 在院內主機上建置與簽章，平板從病人端的院內下載頁安裝，開發機上不再編 APK。
-本冊的 K-05、K-06 與側載步驟保留為歷史紀錄；平板採購、型號盤點與每日重新釘選的部分照舊。</p>
-<p><strong>平板還沒買、外殼 App 還沒編譯過。</strong> 這一冊因此分成兩半：
-<strong>上半是現在就做得完的</strong>（做完，下次進院只剩側載那幾分鐘）；
-<strong>下半是平板到貨才做得了的</strong>。</p>
+<p><strong>0927 起憑證、keystore、APK 與側載由<a href="../12-shell/">第十二冊</a>取代</strong>：外殼搬到另一個私人 repo， APK 由 <code>shell-builder</code> 在院內主機上建置與簽章，平板從病人端的院內下載頁安裝，開發機上不再編 APK。本冊的 K-05、K-06 與側載步驟保留為歷史紀錄；平板採購、型號盤點與每日重新釘選的部分照舊。</p>
+<p><strong>平板還沒買、外殼 App 還沒編譯過。</strong> 這一冊因此分成兩半： <strong>上半是現在就做得完的</strong>（做完，下次進院只剩側載那幾分鐘）； <strong>下半是平板到貨才做得了的</strong>。</p>
 </blockquote>
 <hr />
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>0927 起憑證、keystore、APK 與側載由第十二冊取代</strong>（K-05、K-06 與側載步驟保留為紀錄）；平板採購、型號盤點與每日重新釘選照舊</li>
+<li>編號 <code>K-xx</code>；分兩半：現在就做得完的（第 1 節）、平板到貨之後每台做一次的（第 2 節）</li>
+<li>第 3 節進院時平板還沒到怎麼辦，第 4 節交給護理師的每日一頁</li>
+<li>第 5 節守不住什麼，要先講清楚；第 6 節是完成條件</li>
+</ul>
 <h2 id="0-現況盤點">0. 現況盤點<a class="headerlink" href="#0-現況盤點" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5265,12 +5290,8 @@ APK 由 <code>shell-builder</code> 在院內主機上建置與簽章，平板從
 </table>
 <blockquote>
 <h3 id="-一個必須先解決的缺口病人端要離線就必須是-https">⚠ 一個必須先解決的缺口：病人端要離線，就必須是 HTTPS<a class="headerlink" href="#-一個必須先解決的缺口病人端要離線就必須是-https" title="Permanent link">&para;</a></h3>
-<p>Service Worker（病人端離線能力的全部依靠）<strong>只在安全來源底下才會註冊</strong>。
-<code>http://localhost</code> 算安全來源，<code>http://&lt;院內主機 IP&gt;:&lt;埠&gt;</code> <strong>不算</strong>——
-平板連的正是後者，於是 <code>navigator.serviceWorker</code> 根本不存在，註冊會<strong>靜悄悄地跳過</strong>，
-不出錯、不提示，直到有一天網路斷了才發現畫面是空白的。</p>
-<p>而目前<strong>安裝包裡沒有任何東西在做 TLS</strong>：後端與兩個靜態站都是純 HTTP。
-自簽 CA 產生的 <code>server.crt</code>／<code>server.key</code> 現在<strong>沒有地方可以掛</strong>。</p>
+<p>Service Worker（病人端離線能力的全部依靠）<strong>只在安全來源底下才會註冊</strong>。 <code>http://localhost</code> 算安全來源，<code>http://&lt;院內主機 IP&gt;:&lt;埠&gt;</code> <strong>不算</strong>——平板連的正是後者，於是 <code>navigator.serviceWorker</code> 根本不存在，註冊會<strong>靜悄悄地跳過</strong>，不出錯、不提示，直到有一天網路斷了才發現畫面是空白的。</p>
+<p>而目前<strong>安裝包裡沒有任何東西在做 TLS</strong>：後端與兩個靜態站都是純 HTTP。自簽 CA 產生的 <code>server.crt</code>／<code>server.key</code> 現在<strong>沒有地方可以掛</strong>。</p>
 <p>三條路，建議第一條：</p>
 <table>
 <thead>
@@ -5523,8 +5544,7 @@ APK 由 <code>shell-builder</code> 在院內主機上建置與簽章，平板從
 <li>開啟 <code>app/src/main/res/xml/network_security_config.xml</code>，確認 <code>&lt;domain&gt;</code> 是 K-01 那個位址</li>
 </ol>
 <p><strong>怎麼知道成功了</strong></p>
-<p><code>res/raw/</code> 底下有 <code>hospital_ca.pem</code>（目前那裡只有一個 <code>README.md</code>），
-<code>network_security_config.xml</code> 裡的網域與 K-01 一致。</p>
+<p><code>res/raw/</code> 底下有 <code>hospital_ca.pem</code>（目前那裡只有一個 <code>README.md</code>）， <code>network_security_config.xml</code> 裡的網域與 K-01 一致。</p>
 <p><strong>可能怎麼壞、怎麼處理</strong></p>
 <table>
 <thead>
@@ -5674,8 +5694,7 @@ APK 由 <code>shell-builder</code> 在院內主機上建置與簽章，平板從
 </tbody>
 </table>
 <blockquote>
-<p><strong>模擬器驗不到的只有三件事</strong>：螢幕固定、開機自動啟動的實機行為、實體 Wi-Fi 的穩定度。
-其餘全部可以在平板到貨前驗完——<strong>這就是「下次去只做最少工作」的實際做法</strong>。</p>
+<p><strong>模擬器驗不到的只有三件事</strong>：螢幕固定、開機自動啟動的實機行為、實體 Wi-Fi 的穩定度。其餘全部可以在平板到貨前驗完——<strong>這就是「下次去只做最少工作」的實際做法</strong>。</p>
 </blockquote>
 <hr />
 <h3 id="k-08-決定平板採購規格">K-08 決定平板採購規格<a class="headerlink" href="#k-08-決定平板採購規格" title="Permanent link">&para;</a></h3>
@@ -5785,8 +5804,7 @@ APK 由 <code>shell-builder</code> 在院內主機上建置與簽章，平板從
 <hr />
 <h2 id="2-平板到貨之後每台一次">2. 平板到貨之後（每台一次）<a class="headerlink" href="#2-平板到貨之後每台一次" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><strong>首波只佈建實際會用到的兩三台</strong>（DEP-36）。跑完一個完整班次沒問題，再做其餘。
-15 台一次做完，等於把佈建的錯誤一次放大 15 倍。</p>
+<p><strong>首波只佈建實際會用到的兩三台</strong>（DEP-36）。跑完一個完整班次沒問題，再做其餘。 15 台一次做完，等於把佈建的錯誤一次放大 15 倍。</p>
 </blockquote>
 <h3 id="k-10-護理端先註冊這台裝置">K-10 護理端先註冊這台裝置<a class="headerlink" href="#k-10-護理端先註冊這台裝置" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
@@ -5945,8 +5963,7 @@ APK 由 <code>shell-builder</code> 在院內主機上建置與簽章，平板從
 <p><strong>怎麼知道成功了</strong></p>
 <p>15 秒內變成<strong>固定中</strong>。把平板切走，30 秒內變成<strong>已跳出</strong>；關機等 90 秒，變成<strong>失去回報</strong>。</p>
 <blockquote>
-<p><strong>三種狀態要分得開</strong>：尚未回報＝還沒裝 App；已跳出＝平板自己說它離開前景了；
-失去回報＝它不說話了（多半是關機或斷網）。護理師要做的處置完全不同。</p>
+<p><strong>三種狀態要分得開</strong>：尚未回報＝還沒裝 App；已跳出＝平板自己說它離開前景了；失去回報＝它不說話了（多半是關機或斷網）。護理師要做的處置完全不同。</p>
 </blockquote>
 <hr />
 <h3 id="k-16-記錄對應關係">K-16 記錄對應關係<a class="headerlink" href="#k-16-記錄對應關係" title="Permanent link">&para;</a></h3>

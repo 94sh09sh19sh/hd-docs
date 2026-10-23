@@ -2918,6 +2918,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4729,6 +4740,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4868,13 +4890,9 @@
 
 <h1 id="迭代-12-手動測試--外殼-app-獨立-repo-與整合">迭代 12 手動測試 — 外殼 App 獨立 repo 與整合<a class="headerlink" href="#迭代-12-手動測試--外殼-app-獨立-repo-與整合" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.10 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 12 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00；本冊另加 <strong>［手機］</strong>。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.10 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 12 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00；本冊另加 <strong>［手機］</strong>。</p>
 </blockquote>
-<p><strong>這一冊驗的是「外殼與系統只靠一份契約對得起來」。</strong> 外殼的原始碼搬到另一個私人 repo（<code>hd-kiosk-shell</code>），
-APK 由 <code>shell-builder</code> 在主機上建置與簽章，開發手機從病人端的院內下載頁安裝。
-契約本身見《<a href="../../reference/kiosk-shell-contract/">病人端外殼 App 契約</a>》，步驟見《<a href="../../deployment/">部署手冊</a>》第十二冊。</p>
+<p><strong>這一冊驗的是「外殼與系統只靠一份契約對得起來」。</strong> 外殼的原始碼搬到另一個私人 repo（<code>hd-kiosk-shell</code>）， APK 由 <code>shell-builder</code> 在主機上建置與簽章，開發手機從病人端的院內下載頁安裝。契約本身見《<a href="../../reference/kiosk-shell-contract/">病人端外殼 App 契約</a>》，步驟見《<a href="../../deployment/">部署手冊</a>》第十二冊。</p>
 <table>
 <thead>
 <tr>
@@ -4897,6 +4915,15 @@ APK 由 <code>shell-builder</code> 在主機上建置與簽章，開發手機從
 </tr>
 </tbody>
 </table>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>項次 <code>v1</code>～<code>v48</code>，對應實作規格書 4.10；自動化另跑 <code>npm run verify:iteration12</code></li>
+<li>驗「外殼與系統只靠一份契約對得起來」：外殼在私人 repo <code>hd-kiosk-shell</code>，APK 由 <code>shell-builder</code> 在主機上建置與簽章</li>
+<li>外殼只在一個地方、版本握手與護理端的「外殼版本」欄</li>
+<li><code>shell-builder</code> 建 APK 且第二次不重新產生金鑰、病人端 HTTPS 與下載頁</li>
+<li>開發手機從下載頁安裝、釘住與跳出時護理端看得到、調高最低版本與契約不相容</li>
+<li>金鑰備份與核對（DEP-35）</li>
+</ul>
 <h2 id="這一冊有什麼">這一冊有什麼<a class="headerlink" href="#這一冊有什麼" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5007,131 +5034,80 @@ APK 由 <code>shell-builder</code> 在主機上建置與簽章，開發手機從
 <hr />
 <h2 id="121--外殼只在一個地方dep-45">12.1 · 外殼只在一個地方（DEP-45）🖥<a class="headerlink" href="#121--外殼只在一個地方dep-45" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v1</code> <strong>［終端機］</strong> 看 <code>apps/</code> 目錄。
-  → 只有 <code>api</code>、<code>nurse-pwa</code>、<code>patient-pwa</code>；<strong>沒有 <code>kiosk-shell</code></strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v2</code> <strong>［終端機］</strong> <code>npm run</code> 列出所有指令。
-  → 沒有 <code>cert:hospital-ca</code>；有 <code>verify:iteration12</code> 與 <code>verify:iteration12:api</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v3</code> <strong>［終端機］</strong> 開外殼 repo 的 <code>README.md</code>。
-  → 開頭就指向本 repo 的 <code>docs/reference/kiosk-shell-contract.md</code>，而且寫明「真本在那裡，這裡不另寫一份」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v4</code> <strong>［終端機］</strong> 在外殼 repo 執行 <code>git log --oneline</code>。
-  → 最早的一筆是 0921 的「迭代 10——打包、平板佈建與部署演練」：<strong>歷史是搬過來的，不是重新開始</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v1</code> <strong>［終端機］</strong> 看 <code>apps/</code> 目錄。 → 只有 <code>api</code>、<code>nurse-pwa</code>、<code>patient-pwa</code>；<strong>沒有 <code>kiosk-shell</code></strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v2</code> <strong>［終端機］</strong> <code>npm run</code> 列出所有指令。 → 沒有 <code>cert:hospital-ca</code>；有 <code>verify:iteration12</code> 與 <code>verify:iteration12:api</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v3</code> <strong>［終端機］</strong> 開外殼 repo 的 <code>README.md</code>。 → 開頭就指向本 repo 的 <code>docs/reference/kiosk-shell-contract.md</code>，而且寫明「真本在那裡，這裡不另寫一份」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v4</code> <strong>［終端機］</strong> 在外殼 repo 執行 <code>git log --oneline</code>。 → 最早的一筆是 0921 的「迭代 10——打包、平板佈建與部署演練」：<strong>歷史是搬過來的，不是重新開始</strong>。</li>
 </ul>
 <h2 id="122--契約在後端與護理端的那一半fr-s14">12.2 · 契約在後端與護理端的那一半（FR-S14）🖥<a class="headerlink" href="#122--契約在後端與護理端的那一半fr-s14" title="Permanent link">&para;</a></h2>
 <p>先 <code>npm run dev</code>。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v5</code> <strong>［終端機］</strong> <code>curl.exe -s http://localhost:3000/api/device/shell-contract</code>
-  → <code>{"contractVersion":1,"minShellVersion":"0.2.0"}</code>。<strong>不需要登入、不需要序號與金鑰</strong>，也只有這兩個欄位。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v6</code> <strong>［終端機］</strong> <code>npm run verify:iteration12:api</code>
-  → 全部 ✓：未回報版本、版本正常、外殼過舊、版本不相容四種狀態都出現過；只帶一半的回報回 400。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v7</code> <strong>［護理端］</strong> 裝置管理 → 平板清單。
-  → 多了「外殼版本」欄；<code>v6</code> 建的那台 <code>V12-TAB-…</code> 標著<strong>版本正常</strong>，下面一行小字 <code>0.2.0</code>；其餘平板是<strong>未回報版本</strong>（灰）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v8</code> <strong>［護理端］</strong> 稽核軌跡，動作選「平板程式版本變更」。
-  → <code>V12-TAB-…</code> 有四筆，每一筆寫著「由……變為……」（未回報 → 0.2.0 → 0.1.999 → 契約第 2 版 → 契約第 1 版）；
-  <strong>同一個版本重複回報的那幾次沒有多出紀錄</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v9</code> <strong>［病人端］</strong> 在一般瀏覽器開病人端，照常佈建一台平板。
-  → 畫面與以前一樣；護理端那一台的「外殼版本」維持<strong>未回報版本</strong>（瀏覽器沒有外殼）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v5</code> <strong>［終端機］</strong> <code>curl.exe -s http://localhost:3000/api/device/shell-contract</code> → <code>{"contractVersion":1,"minShellVersion":"0.2.0"}</code>。<strong>不需要登入、不需要序號與金鑰</strong>，也只有這兩個欄位。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v6</code> <strong>［終端機］</strong> <code>npm run verify:iteration12:api</code> → 全部 ✓：未回報版本、版本正常、外殼過舊、版本不相容四種狀態都出現過；只帶一半的回報回 400。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v7</code> <strong>［護理端］</strong> 裝置管理 → 平板清單。 → 多了「外殼版本」欄；<code>v6</code> 建的那台 <code>V12-TAB-…</code> 標著<strong>版本正常</strong>，下面一行小字 <code>0.2.0</code>；其餘平板是<strong>未回報版本</strong>（灰）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v8</code> <strong>［護理端］</strong> 稽核軌跡，動作選「平板程式版本變更」。 → <code>V12-TAB-…</code> 有四筆，每一筆寫著「由……變為……」（未回報 → 0.2.0 → 0.1.999 → 契約第 2 版 → 契約第 1 版）； <strong>同一個版本重複回報的那幾次沒有多出紀錄</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v9</code> <strong>［病人端］</strong> 在一般瀏覽器開病人端，照常佈建一台平板。 → 畫面與以前一樣；護理端那一台的「外殼版本」維持<strong>未回報版本</strong>（瀏覽器沒有外殼）。</li>
 </ul>
 <h2 id="123--shell-builder-建出-apk第二次不重新產生金鑰驗收-2">12.3 · <code>shell-builder</code> 建出 APK，第二次不重新產生金鑰（驗收 2）🐳<a class="headerlink" href="#123--shell-builder-建出-apk第二次不重新產生金鑰驗收-2" title="Permanent link">&para;</a></h2>
 <p>以下 <code>$cfg</code> 是暫存的 <code>config\.env</code>，指令在 repo 根目錄執行。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v10</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell build shell-builder</code>
-  → 第一次要下載 Android SDK、Gradle 與相依，視網速十幾分鐘到半小時。最後一段印出
-  「✓ 外殼 v0.2.0（…，契約第 1 版）已準備好，相依已下載」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v11</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm shell-builder</code>
-  → 印出「這一次新產生：院內 CA 伺服器憑證（<IP>） APK 簽章金鑰（開發用）」，以及 APK 檔名與三個 SHA-256。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v12</code> <strong>［終端機］</strong> 同一個指令再跑一次。
-  → 「<strong>金鑰全部沿用，這一次沒有產生任何新的金鑰</strong>」；三行「· 沿用既有的……」；APK 的簽章憑證 SHA-256 與 <code>v11</code> 相同。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v13</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm shell-builder keys-info</code>，跑兩次。
-  → 兩次輸出一模一樣：用途 <code>dev</code>、院內 CA 指紋與十年後的到期日、伺服器憑證 <code>IP Address:&lt;IP&gt;</code>、簽章金鑰指紋。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v14</code> ⚠ <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm -e SHELL_SIGNING_PROFILE=hospital shell-builder</code>
-  → <strong>拒絕執行</strong>：「這個金鑰資料卷是『dev』用的，設定卻是『hospital』。開發機的金鑰不得拿到院內用……」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v15</code> ⚠ <strong>［終端機］</strong> 把 <code>shell.pin</code> 的 <code>SHELL_TAG</code> 暫時改成 <code>v9.9.9</code>，重跑 <code>v10</code>。
-  → 映像檔建置失敗：「外殼 repo 的 clone 裡沒有 tag v9.9.9。在主機上到外殼 repo 的目錄執行 git fetch --tags 之後重建。」
-  <strong>改回 <code>v0.2.0</code></strong>，再跑一次 <code>v10</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v16</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm --entrypoint sh shell-builder -c "ls -la /keys /keys/tls /keys/public; getent hosts github.com || echo 無網路"</code>
-  → <code>ca/</code>、<code>signing/</code> 是 <code>drwx------</code>；<code>tls/server.key</code> 的擁有者是 <code>1000</code>；<code>public/</code> 有 APK、<code>index.html</code>、<code>shell.json</code>；最後一行是「無網路」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v10</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell build shell-builder</code> → 第一次要下載 Android SDK、Gradle 與相依，視網速十幾分鐘到半小時。最後一段印出「✓ 外殼 v0.2.0（…，契約第 1 版）已準備好，相依已下載」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v11</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm shell-builder</code> → 印出「這一次新產生：院內 CA 伺服器憑證（<IP>） APK 簽章金鑰（開發用）」，以及 APK 檔名與三個 SHA-256。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v12</code> <strong>［終端機］</strong> 同一個指令再跑一次。 → 「<strong>金鑰全部沿用，這一次沒有產生任何新的金鑰</strong>」；三行「· 沿用既有的……」；APK 的簽章憑證 SHA-256 與 <code>v11</code> 相同。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v13</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm shell-builder keys-info</code>，跑兩次。 → 兩次輸出一模一樣：用途 <code>dev</code>、院內 CA 指紋與十年後的到期日、伺服器憑證 <code>IP Address:&lt;IP&gt;</code>、簽章金鑰指紋。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v14</code> ⚠ <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm -e SHELL_SIGNING_PROFILE=hospital shell-builder</code> → <strong>拒絕執行</strong>：「這個金鑰資料卷是『dev』用的，設定卻是『hospital』。開發機的金鑰不得拿到院內用……」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v15</code> ⚠ <strong>［終端機］</strong> 把 <code>shell.pin</code> 的 <code>SHELL_TAG</code> 暫時改成 <code>v9.9.9</code>，重跑 <code>v10</code>。 → 映像檔建置失敗：「外殼 repo 的 clone 裡沒有 tag v9.9.9。在主機上到外殼 repo 的目錄執行 git fetch --tags 之後重建。」 <strong>改回 <code>v0.2.0</code></strong>，再跑一次 <code>v10</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v16</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm --entrypoint sh shell-builder -c "ls -la /keys /keys/tls /keys/public; getent hosts github.com || echo 無網路"</code> → <code>ca/</code>、<code>signing/</code> 是 <code>drwx------</code>；<code>tls/server.key</code> 的擁有者是 <code>1000</code>；<code>public/</code> 有 APK、<code>index.html</code>、<code>shell.json</code>；最後一行是「無網路」。</li>
 </ul>
 <h2 id="124--https同一個來源與下載頁契約第-6-節">12.4 · HTTPS、同一個來源與下載頁（契約第 6 節）🐳<a class="headerlink" href="#124--https同一個來源與下載頁契約第-6-節" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v17</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg restart patient-web</code>，再 <code>docker compose --env-file $cfg logs patient-web --tail 5</code>
-  → 「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」「/api/ 轉送至 http://api:3000」「/shell/ 外殼下載頁取自 /keys/public」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v18</code> <strong>［病人端］</strong> 開發機的瀏覽器開 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;/shell/</code>
-  → 下載頁：一顆「下載 App（版本 0.2.0）」、安裝步驟、主機位址 <code>https://&lt;IP&gt;:&lt;病人端埠&gt;</code>、<strong>開發用簽章的黃色警示</strong>、三個 SHA-256。沒有任何憑證警告。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v19</code> <strong>［病人端］</strong> 開 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;/</code>
-  → 被轉到 <code>https://…</code>，瀏覽器跳出「連線不是私人連線」——<strong>這是對的</strong>：開發機的瀏覽器不信任院內 CA，平板上的外殼才信任。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v20</code> <strong>［終端機］</strong> 先取出院內 CA：
-  <code>docker compose --env-file $cfg --profile shell run --rm --entrypoint cat shell-builder /keys/ca/ca.crt &gt; ca.crt</code>，
-  再 <code>curl.exe -s --cacert ca.crt https://&lt;IP&gt;:&lt;病人端埠&gt;/api/device/shell-contract</code>
-  → 回契約版本。<strong>只信任院內 CA 就通</strong>，而且 <code>/api/</code> 是從病人端的埠轉過去的。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v21</code> <strong>［終端機］</strong> 同上但不帶 <code>--cacert</code>。
-  → <code>curl: (60) SSL certificate problem</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v17</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg restart patient-web</code>，再 <code>docker compose --env-file $cfg logs patient-web --tail 5</code> → 「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」「/api/ 轉送至 http://api:3000」「/shell/ 外殼下載頁取自 /keys/public」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v18</code> <strong>［病人端］</strong> 開發機的瀏覽器開 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;/shell/</code> → 下載頁：一顆「下載 App（版本 0.2.0）」、安裝步驟、主機位址 <code>https://&lt;IP&gt;:&lt;病人端埠&gt;</code>、<strong>開發用簽章的黃色警示</strong>、三個 SHA-256。沒有任何憑證警告。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v19</code> <strong>［病人端］</strong> 開 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;/</code> → 被轉到 <code>https://…</code>，瀏覽器跳出「連線不是私人連線」——<strong>這是對的</strong>：開發機的瀏覽器不信任院內 CA，平板上的外殼才信任。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v20</code> <strong>［終端機］</strong> 先取出院內 CA： <code>docker compose --env-file $cfg --profile shell run --rm --entrypoint cat shell-builder /keys/ca/ca.crt &gt; ca.crt</code>，再 <code>curl.exe -s --cacert ca.crt https://&lt;IP&gt;:&lt;病人端埠&gt;/api/device/shell-contract</code> → 回契約版本。<strong>只信任院內 CA 就通</strong>，而且 <code>/api/</code> 是從病人端的埠轉過去的。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v21</code> <strong>［終端機］</strong> 同上但不帶 <code>--cacert</code>。 → <code>curl: (60) SSL certificate problem</code>。</li>
 </ul>
 <h2 id="125--開發手機從下載頁安裝並載入病人端驗收-3">12.5 · 開發手機從下載頁安裝並載入病人端（驗收 3）📱<a class="headerlink" href="#125--開發手機從下載頁安裝並載入病人端驗收-3" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v22</code> <strong>［護理端］</strong> 裝置管理 → 註冊新平板 <code>DEV-PHONE-01</code>。
-  → 金鑰只顯示一次，抄下來。顯示的網址以 <code>https://&lt;IP&gt;:&lt;病人端埠&gt;/</code> 開頭。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v22</code> <strong>［護理端］</strong> 裝置管理 → 註冊新平板 <code>DEV-PHONE-01</code>。 → 金鑰只顯示一次，抄下來。顯示的網址以 <code>https://&lt;IP&gt;:&lt;病人端埠&gt;/</code> 開頭。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v23</code> <strong>［手機］</strong> 設定 → 安全性：開啟螢幕固定，勾選「解除固定前要求 PIN」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v24</code> <strong>［手機］</strong> Chrome 開 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;/shell/</code>，按「下載 App」，安裝。
-  → 可能要允許 Chrome 安裝不明來源的應用程式；安裝完成，桌面出現「透析照護平板」（深綠圓底白十字）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v25</code> ⚠ <strong>［手機］</strong> 開啟 App，主機位址故意填 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;</code>。
-  → 跳出「主機位址要以 https:// 開頭」，不儲存。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v26</code> <strong>［手機］</strong> 改填 <code>https://&lt;IP&gt;:&lt;病人端埠&gt;</code>、序號 <code>DEV-PHONE-01</code>、<code>v22</code> 的金鑰，按「儲存並啟動」。
-  → 系統跳出「要固定這個應用程式嗎」——<strong>先按「取消」</strong>（§12.6 再釘）。畫面載入病人端的等待畫面，<strong>沒有任何憑證警告</strong>；看不到金鑰。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v27</code> <strong>［護理端］</strong> 裝置管理，等 15 秒。
-  → <code>DEV-PHONE-01</code>：固定狀態「<strong>已跳出</strong>」（還沒釘）、外殼版本「<strong>版本正常</strong>」<code>0.2.0</code>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v28</code> <strong>［護理端］</strong> 把一位病人指派到 <code>DEV-PHONE-01</code>。
-  → 手機出現病人畫面；送出一次透析前問卷與一次求助，護理端即時看到。<strong>這證明 <code>/api/</code> 經病人端的埠轉送是通的。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v24</code> <strong>［手機］</strong> Chrome 開 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;/shell/</code>，按「下載 App」，安裝。 → 可能要允許 Chrome 安裝不明來源的應用程式；安裝完成，桌面出現「透析照護平板」（深綠圓底白十字）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v25</code> ⚠ <strong>［手機］</strong> 開啟 App，主機位址故意填 <code>http://&lt;IP&gt;:&lt;病人端埠&gt;</code>。 → 跳出「主機位址要以 https:// 開頭」，不儲存。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v26</code> <strong>［手機］</strong> 改填 <code>https://&lt;IP&gt;:&lt;病人端埠&gt;</code>、序號 <code>DEV-PHONE-01</code>、<code>v22</code> 的金鑰，按「儲存並啟動」。 → 系統跳出「要固定這個應用程式嗎」——<strong>先按「取消」</strong>（§12.6 再釘）。畫面載入病人端的等待畫面，<strong>沒有任何憑證警告</strong>；看不到金鑰。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v27</code> <strong>［護理端］</strong> 裝置管理，等 15 秒。 → <code>DEV-PHONE-01</code>：固定狀態「<strong>已跳出</strong>」（還沒釘）、外殼版本「<strong>版本正常</strong>」<code>0.2.0</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v28</code> <strong>［護理端］</strong> 把一位病人指派到 <code>DEV-PHONE-01</code>。 → 手機出現病人畫面；送出一次透析前問卷與一次求助，護理端即時看到。<strong>這證明 <code>/api/</code> 經病人端的埠轉送是通的。</strong></li>
 </ul>
 <h2 id="126--釘住退不出去跳出時護理端看得到驗收-4">12.6 · 釘住、退不出去、跳出時護理端看得到（驗收 4）📱<a class="headerlink" href="#126--釘住退不出去跳出時護理端看得到驗收-4" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v29</code> <strong>［手機］</strong> 把 App 從多工畫面滑掉，再開啟一次。
-  → 啟動時再跳一次「要固定這個應用程式嗎」，按「確定」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v30</code> <strong>［護理端］</strong> 15～30 秒內。
-  → <code>DEV-PHONE-01</code> 變成「<strong>固定中</strong>」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v31</code> <strong>［手機］</strong> 按上一頁鍵、首頁鍵、多工鍵，從上方往下滑。
-  → 都離不開 App；系統列滑出來一下又自己收回去。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v32</code> <strong>［手機］</strong> 依手機的解除方式解除固定（多半是同時按住上一頁鍵與多工鍵）。
-  → 要求輸入 PIN 才解除；輸入後回到鎖定畫面。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v33</code> <strong>［護理端］</strong> 從解除那一刻起計時。
-  → <strong>30 秒內</strong>變成「<strong>已跳出</strong>」，底下一行「…起」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v34</code> <strong>［手機］</strong> 解鎖，App 仍停在前景但<strong>沒有釘住</strong>。
-  → 護理端維持「已跳出」（不是「固定中」）——<strong>這一條是迭代 12 修的</strong>：以前只看畫面可不可見，這裡會誤報成固定中。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v35</code> <strong>［手機］</strong> 重新開機。
-  → 開機後 App 自己起來並跳出固定確認框；按「確定」後護理端回到「固定中」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v29</code> <strong>［手機］</strong> 把 App 從多工畫面滑掉，再開啟一次。 → 啟動時再跳一次「要固定這個應用程式嗎」，按「確定」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v30</code> <strong>［護理端］</strong> 15～30 秒內。 → <code>DEV-PHONE-01</code> 變成「<strong>固定中</strong>」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v31</code> <strong>［手機］</strong> 按上一頁鍵、首頁鍵、多工鍵，從上方往下滑。 → 都離不開 App；系統列滑出來一下又自己收回去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v32</code> <strong>［手機］</strong> 依手機的解除方式解除固定（多半是同時按住上一頁鍵與多工鍵）。 → 要求輸入 PIN 才解除；輸入後回到鎖定畫面。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v33</code> <strong>［護理端］</strong> 從解除那一刻起計時。 → <strong>30 秒內</strong>變成「<strong>已跳出</strong>」，底下一行「…起」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v34</code> <strong>［手機］</strong> 解鎖，App 仍停在前景但<strong>沒有釘住</strong>。 → 護理端維持「已跳出」（不是「固定中」）——<strong>這一條是迭代 12 修的</strong>：以前只看畫面可不可見，這裡會誤報成固定中。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v35</code> <strong>［手機］</strong> 重新開機。 → 開機後 App 自己起來並跳出固定確認框；按「確定」後護理端回到「固定中」。</li>
 </ul>
 <h2 id="127--最低可用版本調高契約不相容驗收-56">12.7 · 最低可用版本調高、契約不相容（驗收 5、6）🐳＋📱<a class="headerlink" href="#127--最低可用版本調高契約不相容驗收-56" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v36</code> <strong>［終端機］</strong> 暫存 <code>config\.env</code> 的 <code>KIOSK_SHELL_MIN_VERSION=0.2.1</code>，<code>docker compose --env-file $cfg up -d api</code>（只重建 api 容器，不重建映像檔）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v37</code> <strong>［護理端］</strong> 裝置管理，15 秒內（不必等手機再回報）。
-  → <code>DEV-PHONE-01</code> 變成「<strong>外殼過舊</strong>」（琥珀色）<code>0.2.0</code>；手機上<strong>沒有任何變化</strong>（還能用）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v38</code> <strong>［終端機］</strong> 改回空白，再 <code>up -d api</code>。
-  → 回到「版本正常」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v39</code> ⚠ <strong>［終端機］</strong> 做一支契約第 2 版的外殼：在外殼 repo 開一個本機分支，<code>gradle.properties</code> 改成 <code>hdShellVersion=0.2.1</code>、<code>hdShellContractVersion=2</code>，提交並打<strong>本機</strong> tag <code>v0.2.1</code>（不推）；本 repo 的 <code>shell.pin</code> 暫時改成 <code>v0.2.1</code>、<code>2</code>；重跑 <code>v10</code>、<code>v11</code>。
-  → 建置成功，下載頁變成 0.2.1。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v40</code> <strong>［手機］</strong> 從下載頁下載 0.2.1 覆蓋安裝，開啟。
-  → 覆蓋安裝成功（同一把開發用簽章金鑰）；<strong>畫面上方出現琥珀色提示列</strong>：「這台平板的程式與系統版本不相容……（平板：第 2 版／系統：第 1 版）」；<strong>下方的求助區照常可按</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v41</code> <strong>［護理端］</strong> 裝置管理。
-  → <code>DEV-PHONE-01</code> 變成「<strong>版本不相容</strong>」（紅）<code>0.2.1</code>；稽核多一筆「平板程式版本變更」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v42</code> <strong>收尾</strong>：<code>shell.pin</code> 改回 <code>v0.2.0</code>、<code>1</code>；外殼 repo 刪掉本機 tag <code>v0.2.1</code> 與那個分支；重跑 <code>v10</code>、<code>v11</code>。
-  手機要<strong>先解除安裝</strong>再從下載頁裝 0.2.0（Android 不准版本往下覆蓋）；重新佈建後提示列消失、護理端回到「版本正常」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v37</code> <strong>［護理端］</strong> 裝置管理，15 秒內（不必等手機再回報）。 → <code>DEV-PHONE-01</code> 變成「<strong>外殼過舊</strong>」（琥珀色）<code>0.2.0</code>；手機上<strong>沒有任何變化</strong>（還能用）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v38</code> <strong>［終端機］</strong> 改回空白，再 <code>up -d api</code>。 → 回到「版本正常」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v39</code> ⚠ <strong>［終端機］</strong> 做一支契約第 2 版的外殼：在外殼 repo 開一個本機分支，<code>gradle.properties</code> 改成 <code>hdShellVersion=0.2.1</code>、<code>hdShellContractVersion=2</code>，提交並打<strong>本機</strong> tag <code>v0.2.1</code>（不推）；本 repo 的 <code>shell.pin</code> 暫時改成 <code>v0.2.1</code>、<code>2</code>；重跑 <code>v10</code>、<code>v11</code>。 → 建置成功，下載頁變成 0.2.1。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v40</code> <strong>［手機］</strong> 從下載頁下載 0.2.1 覆蓋安裝，開啟。 → 覆蓋安裝成功（同一把開發用簽章金鑰）；<strong>畫面上方出現琥珀色提示列</strong>：「這台平板的程式與系統版本不相容……（平板：第 2 版／系統：第 1 版）」；<strong>下方的求助區照常可按</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v41</code> <strong>［護理端］</strong> 裝置管理。 → <code>DEV-PHONE-01</code> 變成「<strong>版本不相容</strong>」（紅）<code>0.2.1</code>；稽核多一筆「平板程式版本變更」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v42</code> <strong>收尾</strong>：<code>shell.pin</code> 改回 <code>v0.2.0</code>、<code>1</code>；外殼 repo 刪掉本機 tag <code>v0.2.1</code> 與那個分支；重跑 <code>v10</code>、<code>v11</code>。手機要<strong>先解除安裝</strong>再從下載頁裝 0.2.0（Android 不准版本往下覆蓋）；重新佈建後提示列消失、護理端回到「版本正常」。</li>
 </ul>
 <h2 id="128--金鑰備份與核對dep-35">12.8 · 金鑰備份與核對（DEP-35）🐳<a class="headerlink" href="#128--金鑰備份與核對dep-35" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v43</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm shell-builder keys-backup</code>
-  → 「已備份：備份目錄/keys/hd-keys-&lt;時間&gt;.tar.gz」、SHA-256，與一行「這份檔案裡有 CA 與簽章的私鑰……不得出院」。暫存的 <code>backups\keys\</code> 底下看得到它。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v44</code> <strong>［終端機］</strong> <code>… run --rm shell-builder keys-verify</code>
-  → 四個檔案逐一 ✓、「簽章金鑰以備份裡的密碼打得開」、「CA 私鑰完整」、「還原得回來」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v45</code> ⚠ <strong>［終端機］</strong> 把那份備份複製一份，用 7-Zip 之類的工具刪掉裡面的 <code>signing/keystore.pass</code> 再壓回去，對它跑 <code>keys-verify &lt;檔名&gt;</code>。
-  → 「✗ 備份裡沒有 signing/keystore.pass」「這份備份不能用」，結束狀態非零。<strong>刪掉這份壞的。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v43</code> <strong>［終端機］</strong> <code>docker compose --env-file $cfg --profile shell run --rm shell-builder keys-backup</code> → 「已備份：備份目錄/keys/hd-keys-&lt;時間&gt;.tar.gz」、SHA-256，與一行「這份檔案裡有 CA 與簽章的私鑰……不得出院」。暫存的 <code>backups\keys\</code> 底下看得到它。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v44</code> <strong>［終端機］</strong> <code>… run --rm shell-builder keys-verify</code> → 四個檔案逐一 ✓、「簽章金鑰以備份裡的密碼打得開」、「CA 私鑰完整」、「還原得回來」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v45</code> ⚠ <strong>［終端機］</strong> 把那份備份複製一份，用 7-Zip 之類的工具刪掉裡面的 <code>signing/keystore.pass</code> 再壓回去，對它跑 <code>keys-verify &lt;檔名&gt;</code>。 → 「✗ 備份裡沒有 signing/keystore.pass」「這份備份不能用」，結束狀態非零。<strong>刪掉這份壞的。</strong></li>
 </ul>
 <h2 id="129--自動化驗收-">12.9 · 自動化驗收 🖥<a class="headerlink" href="#129--自動化驗收-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v46</code> <strong>［終端機］</strong> <code>npm run verify:iteration12 -- --shell-src &lt;外殼 repo 的 clone&gt;</code>
-  → 靜態部分全部 ✓；最後列出要在別處驗的兩項。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v47</code> <strong>［終端機］</strong> <code>npm run verify:iteration12 -- --live --env-file &lt;暫存的 config\.env&gt;</code>
-  → 加上 Docker 上的部分全部 ✓：兩次 build、指紋相同、換用途被拒、下載頁與 APK、HTTP 轉 HTTPS、只信任院內 CA 就連得上、不信任就連不上。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v48</code> <strong>［終端機］</strong> <code>npm run check:all</code>
-  → 六支全綠；「容器設定」多了金鑰資料卷與 <code>shell-builder</code> 網路兩項，「零院外連線」的外殼那一節改掃 <code>shell-builder</code>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v46</code> <strong>［終端機］</strong> <code>npm run verify:iteration12 -- --shell-src &lt;外殼 repo 的 clone&gt;</code> → 靜態部分全部 ✓；最後列出要在別處驗的兩項。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v47</code> <strong>［終端機］</strong> <code>npm run verify:iteration12 -- --live --env-file &lt;暫存的 config\.env&gt;</code> → 加上 Docker 上的部分全部 ✓：兩次 build、指紋相同、換用途被拒、下載頁與 APK、HTTP 轉 HTTPS、只信任院內 CA 就連得上、不信任就連不上。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>v48</code> <strong>［終端機］</strong> <code>npm run check:all</code> → 六支全綠；「容器設定」多了金鑰資料卷與 <code>shell-builder</code> 網路兩項，「零院外連線」的外殼那一節改掃 <code>shell-builder</code>。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>

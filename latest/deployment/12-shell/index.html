@@ -5337,12 +5337,9 @@
 <h1 id="第十二冊--外殼-app主機上建-apk平板從下載頁安裝">第十二冊 · 外殼 App：主機上建 APK、平板從下載頁安裝<a class="headerlink" href="#第十二冊--外殼-app主機上建-apk平板從下載頁安裝" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案（0927 新增，迭代 12）　編號：<code>Y-xx</code>　<strong>與第十一冊一起印出來帶進去</strong></p>
 <blockquote>
-<p><strong>這一冊接在第十一冊 W-18 之後</strong>：系統已經起來，接著在同一台主機上建外殼 APK、讓平板從院內下載頁安裝。
-取代<a href="../03-tablet-shell/">第三冊</a>的 K-05、K-06（憑證、keystore、在開發機上編 APK）與側載那一段。</p>
-<p>規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》第 7、8 章；外殼與系統之間的介面見
-《<a href="../../reference/kiosk-shell-contract/">病人端外殼 App 契約</a>》。這一冊只寫手指要按什麼、每一步會怎麼壞。</p>
-<p>⚠️ <strong>本冊所有指令都在主機的 PowerShell 下，而且都在 <code>D:\hd-tablet-care\repo</code> 底下下</strong>（與第十一冊相同）。
-<code>$cfg</code> 是第十一冊 W-11 設的 <code>D:\hd-tablet-care\config\.env</code>。</p>
+<p><strong>這一冊接在第十一冊 W-18 之後</strong>：系統已經起來，接著在同一台主機上建外殼 APK、讓平板從院內下載頁安裝。取代<a href="../03-tablet-shell/">第三冊</a>的 K-05、K-06（憑證、keystore、在開發機上編 APK）與側載那一段。</p>
+<p>規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》第 7、8 章；外殼與系統之間的介面見《<a href="../../reference/kiosk-shell-contract/">病人端外殼 App 契約</a>》。這一冊只寫手指要按什麼、每一步會怎麼壞。</p>
+<p>⚠️ <strong>本冊所有指令都在主機的 PowerShell 下，而且都在 <code>D:\hd-tablet-care\repo</code> 底下下</strong>（與第十一冊相同）。 <code>$cfg</code> 是第十一冊 W-11 設的 <code>D:\hd-tablet-care\config\.env</code>。</p>
 </blockquote>
 <hr />
 <h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
@@ -5378,8 +5375,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>私鑰全程不離開主機</strong>：CA 與簽章金鑰在 <code>shell-builder</code> 裡產生、存在資料卷 <code>hd-tablet-care-keys</code>，
-備份時寫到備份目錄、隨資料庫備份一起送往院內另一台機器（DEP-35）。</p>
+<p><strong>私鑰全程不離開主機</strong>：CA 與簽章金鑰在 <code>shell-builder</code> 裡產生、存在資料卷 <code>hd-tablet-care-keys</code>，備份時寫到備份目錄、隨資料庫備份一起送往院內另一台機器（DEP-35）。</p>
 <h3 id="02-東西放在哪裡第十一冊-02-之外多出來的">0.2 東西放在哪裡（第十一冊 0.2 之外多出來的）<a class="headerlink" href="#02-東西放在哪裡第十一冊-02-之外多出來的" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5410,17 +5406,14 @@
 <h3 id="03-開發機實測結果0927">0.3 開發機實測結果（0927）<a class="headerlink" href="#03-開發機實測結果0927" title="Permanent link">&para;</a></h3>
 <p>見《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 9 節。</p>
 <h3 id="04-先接受的一件事">0.4 先接受的一件事<a class="headerlink" href="#04-先接受的一件事" title="Permanent link">&para;</a></h3>
-<p><strong>平板第一次下載 APK 走的是 HTTP。</strong> 那時平板還不信任院內 CA，下載頁若只有 HTTPS，平板的瀏覽器會先跳一個
-「連線不是私人連線」給拿平板的人看。因此病人端的埠同時接 HTTP 與 HTTPS，<strong>HTTP 只留下載頁</strong>，其餘一律轉到 HTTPS。
-下載頁上列出 APK 與簽章憑證的 SHA-256，要核對可以對照 Y-05 的輸出；Android 本身也會擋下簽章不同的覆蓋安裝。</p>
+<p><strong>平板第一次下載 APK 走的是 HTTP。</strong> 那時平板還不信任院內 CA，下載頁若只有 HTTPS，平板的瀏覽器會先跳一個「連線不是私人連線」給拿平板的人看。因此病人端的埠同時接 HTTP 與 HTTPS，<strong>HTTP 只留下載頁</strong>，其餘一律轉到 HTTPS。下載頁上列出 APK 與簽章憑證的 SHA-256，要核對可以對照 Y-05 的輸出；Android 本身也會擋下簽章不同的覆蓋安裝。</p>
 <hr />
 <h2 id="1-進院前在開發端做完">1. 進院前（在開發端做完）<a class="headerlink" href="#1-進院前在開發端做完" title="Permanent link">&para;</a></h2>
 <h3 id="y-01-核對要交的-tag-釘的是哪一版外殼">Y-01 核對要交的 tag 釘的是哪一版外殼<a class="headerlink" href="#y-01-核對要交的-tag-釘的是哪一版外殼" title="Permanent link">&para;</a></h3>
 <p>在開發端，要交的那個 tag 底下：</p>
 <div class="highlight"><pre><span></span><code><span class="n">git</span> <span class="n">show</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;:</span><span class="n">services</span><span class="p">/</span><span class="n">shell-builder</span><span class="p">/</span><span class="n">shell</span><span class="p">.</span><span class="n">pin</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：<code>SHELL_TAG</code> 那一版外殼在 GitHub 的外殼 repo 上看得到（Tags 頁），<code>SHELL_CONTRACT_VERSION</code> 等於契約文件的版本。
-兩者都已在開發機上照本冊第 7 節走過一次。</p>
+<p><strong>怎麼知道成功了</strong>：<code>SHELL_TAG</code> 那一版外殼在 GitHub 的外殼 repo 上看得到（Tags 頁），<code>SHELL_CONTRACT_VERSION</code> 等於契約文件的版本。兩者都已在開發機上照本冊第 7 節走過一次。</p>
 <table>
 <thead>
 <tr>
@@ -5442,8 +5435,7 @@
 <div class="highlight"><pre><span></span><code><span class="n">ssh-keygen</span> <span class="n">-t</span> <span class="n">ed25519</span> <span class="n">-C</span> <span class="s2">"hd-kiosk-shell@</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">"</span> <span class="o">-f</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">-N</span> <span class="s1">'""'</span>
 <span class="nb">Get-Content</span> <span class="nv">$HOME</span><span class="p">\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">hd-kiosk-shell</span><span class="p">.</span><span class="n">pub</span>
 </code></pre></div>
-<p>把印出來的那一行交給 repo 管理者，登記到<strong>外殼 repo</strong>（<code>hd-kiosk-shell</code>）的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。
-<code>$HOME\.ssh\config</code> 再加一段：</p>
+<p>把印出來的那一行交給 repo 管理者，登記到<strong>外殼 repo</strong>（<code>hd-kiosk-shell</code>）的 <strong>Settings → Deploy keys</strong>，<strong>不要勾 Allow write access</strong>。 <code>$HOME\.ssh\config</code> 再加一段：</p>
 <div class="highlight"><pre><span></span><code>Host github-hd-kiosk-shell
     HostName github.com
     User git
@@ -5455,8 +5447,7 @@
 <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nv">@github</span><span class="n">-hd-kiosk-shell</span><span class="p">:</span><span class="n">94sh09sh19sh</span><span class="p">/</span><span class="n">hd-kiosk-shell</span><span class="p">.</span><span class="n">git</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">hd-kiosk-shell</span>
 <span class="n">git</span> <span class="n">-C</span> <span class="n">D</span><span class="p">:\</span><span class="n">hd-tablet-care</span><span class="p">\</span><span class="n">hd-kiosk-shell</span> <span class="n">tag</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：<code>ssh -T</code> 印出 <code>Hi &lt;帳號&gt;/hd-kiosk-shell!…</code>；<code>git tag</code> 列得出 Y-01 的那一版。
-以前的版本也會一起列出來（例如 <code>v0.2.0</code>、<code>v0.3.0</code>），這是正常的：<code>shell-builder</code> 只取 <code>shell.pin</code> 釘住的那一個。</p>
+<p><strong>怎麼知道成功了</strong>：<code>ssh -T</code> 印出 <code>Hi &lt;帳號&gt;/hd-kiosk-shell!…</code>；<code>git tag</code> 列得出 Y-01 的那一版。以前的版本也會一起列出來（例如 <code>v0.2.0</code>、<code>v0.3.0</code>），這是正常的：<code>shell-builder</code> 只取 <code>shell.pin</code> 釘住的那一個。</p>
 <table>
 <thead>
 <tr>
@@ -5518,17 +5509,14 @@
 </tbody>
 </table>
 <blockquote>
-<p><code>MDM_KIOSK_BASE_URL</code> 從 <code>http://</code> 改成 <code>https://</code> 之後，護理端註冊平板時顯示的網址也跟著變。
-它只寫在 <code>api</code> 的環境變數裡，<strong>不必重建映像檔</strong>，<code>docker compose --env-file $cfg up -d api</code> 即可。</p>
+<p><code>MDM_KIOSK_BASE_URL</code> 從 <code>http://</code> 改成 <code>https://</code> 之後，護理端註冊平板時顯示的網址也跟著變。它只寫在 <code>api</code> 的環境變數裡，<strong>不必重建映像檔</strong>，<code>docker compose --env-file $cfg up -d api</code> 即可。</p>
 </blockquote>
 <hr />
 <h2 id="3-建置">3. 建置<a class="headerlink" href="#3-建置" title="Permanent link">&para;</a></h2>
 <h3 id="y-04-建置-shell-builder-的映像檔">Y-04 建置 <code>shell-builder</code> 的映像檔<a class="headerlink" href="#y-04-建置-shell-builder-的映像檔" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">shell</span> <span class="n">build</span> <span class="n">shell-builder</span>
 </code></pre></div>
-<p>第一次要下載 Android SDK、Gradle 與外殼的全部建置相依（約 1.5 GB）。<strong>這一步可以連外、而且必須連外</strong>；
-它不掛任何資料卷（DEP-14）。建置時會核對：外殼 clone 裡有沒有釘住的 tag、tag 裡的版本與契約版本對不對、
-外殼原始碼裡有沒有指向院外的網址。</p>
+<p>第一次要下載 Android SDK、Gradle 與外殼的全部建置相依（約 1.5 GB）。<strong>這一步可以連外、而且必須連外</strong>；它不掛任何資料卷（DEP-14）。建置時會核對：外殼 clone 裡有沒有釘住的 tag、tag 裡的版本與契約版本對不對、外殼原始碼裡有沒有指向院外的網址。</p>
 <p><strong>怎麼知道成功了</strong>：輸出最後幾行有「✓ 外殼 v0.x.x（…，契約第 1 版）已準備好，相依已下載」（<code>v0.x.x</code> 是 <code>shell.pin</code> 釘的那一版，1001 是 <code>v0.3.0</code>）。</p>
 <table>
 <thead>
@@ -5572,13 +5560,9 @@
 <h3 id="y-05-建-apk第一次會產生金鑰">Y-05 建 APK（第一次會產生金鑰）<a class="headerlink" href="#y-05-建-apk第一次會產生金鑰" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">shell</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="n">shell-builder</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：第一次執行印出「這一次新產生：院內 CA 伺服器憑證（&lt;主機&gt;） APK 簽章金鑰（院內）」，
-接著是 APK 檔名與三個 SHA-256（檔案、簽章憑證、院內 CA）。<strong>把三個 SHA-256 抄進交接文件。</strong></p>
-<p><strong>再執行一次</strong>，要看到「<strong>金鑰全部沿用，這一次沒有產生任何新的金鑰</strong>」，簽章憑證的 SHA-256 與第一次相同。
-這是 DEP-35 的核心：<code>shell-builder</code> 絕不覆蓋既有的 CA 與簽章金鑰。</p>
-<p>沒抄到也查得到，不必重跑：<code>http://localhost:&lt;病人端埠&gt;/shell/</code> 下載頁的「版本資訊」列著三個 SHA-256，同一個資料夾的 <code>shell.json</code> 也有；
-<code>patient-web</code> 每次都即時讀檔，不必先做 Y-07。每跑一次建置，APK 就會換成新的一份，<strong>交接文件的檔案 SHA-256 以下載頁上的為準</strong>。
-<code>keys-info</code> 只列得出院內 CA 與簽章金鑰的指紋，格式是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。</p>
+<p><strong>怎麼知道成功了</strong>：第一次執行印出「這一次新產生：院內 CA 伺服器憑證（&lt;主機&gt;） APK 簽章金鑰（院內）」，接著是 APK 檔名與三個 SHA-256（檔案、簽章憑證、院內 CA）。<strong>把三個 SHA-256 抄進交接文件。</strong></p>
+<p><strong>再執行一次</strong>，要看到「<strong>金鑰全部沿用，這一次沒有產生任何新的金鑰</strong>」，簽章憑證的 SHA-256 與第一次相同。這是 DEP-35 的核心：<code>shell-builder</code> 絕不覆蓋既有的 CA 與簽章金鑰。</p>
+<p>沒抄到也查得到，不必重跑：<code>http://localhost:&lt;病人端埠&gt;/shell/</code> 下載頁的「版本資訊」列著三個 SHA-256，同一個資料夾的 <code>shell.json</code> 也有； <code>patient-web</code> 每次都即時讀檔，不必先做 Y-07。每跑一次建置，APK 就會換成新的一份，<strong>交接文件的檔案 SHA-256 以下載頁上的為準</strong>。 <code>keys-info</code> 只列得出院內 CA 與簽章金鑰的指紋，格式是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。</p>
 <table>
 <thead>
 <tr>
@@ -5610,20 +5594,15 @@
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">shell</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="n">shell-builder</span> <span class="n">keys-backup</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">shell</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="n">shell-builder</span> <span class="n">keys-verify</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：第一條印出「已備份：備份目錄/keys/hd-keys-&lt;時間&gt;.tar.gz」；第二條逐項 ✓，最後「還原得回來」。
-<code>D:\hd-tablet-care\backups\keys\</code> 底下看得到那份檔案。</p>
-<p><strong>這份檔案裡有 CA 與簽章的私鑰。</strong> 與資料庫備份一樣由院方送往院內另一台機器，不得出院、不得寄給開發端。
-送過去之後，在那一台上也要能取回——每年核對一次（第 6 節）。</p>
+<p><strong>怎麼知道成功了</strong>：第一條印出「已備份：備份目錄/keys/hd-keys-&lt;時間&gt;.tar.gz」；第二條逐項 ✓，最後「還原得回來」。 <code>D:\hd-tablet-care\backups\keys\</code> 底下看得到那份檔案。</p>
+<p><strong>這份檔案裡有 CA 與簽章的私鑰。</strong> 與資料庫備份一樣由院方送往院內另一台機器，不得出院、不得寄給開發端。送過去之後，在那一台上也要能取回——每年核對一次（第 6 節）。</p>
 <hr />
 <h3 id="y-07-讓病人端改走-https">Y-07 讓病人端改走 HTTPS<a class="headerlink" href="#y-07-讓病人端改走-https" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">restart</span> <span class="n">patient-web</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">logs</span> <span class="n">patient-web</span> <span class="p">-</span><span class="n">-tail</span> <span class="n">5</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：記錄裡有「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」。
-主機的瀏覽器開 <code>http://&lt;主機&gt;:&lt;病人端埠&gt;/shell/</code> 看得到下載頁；開 <code>http://&lt;主機&gt;:&lt;病人端埠&gt;/</code> 會被轉到 <code>https://</code>
-並跳出憑證警告——<strong>這是對的</strong>，主機的瀏覽器不信任院內 CA，平板上的外殼才信任。</p>
-<p><code>--tail 5</code> 常常跨到重新啟動之前那一次，所以「找不到伺服器憑證」與「HTTPS」可能同時出現，以最後一次啟動的那幾行為準。
-記錄裡的 <code>8081</code>、<code>http://api:3000</code> 是容器裡面的埠，對應主機上的 <code>HD_PATIENT_PORT</code>、<code>HD_API_PORT</code>；平板一律連 <code>HD_PATIENT_PORT</code>。</p>
+<p><strong>怎麼知道成功了</strong>：記錄裡有「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」。主機的瀏覽器開 <code>http://&lt;主機&gt;:&lt;病人端埠&gt;/shell/</code> 看得到下載頁；開 <code>http://&lt;主機&gt;:&lt;病人端埠&gt;/</code> 會被轉到 <code>https://</code> 並跳出憑證警告——<strong>這是對的</strong>，主機的瀏覽器不信任院內 CA，平板上的外殼才信任。</p>
+<p><code>--tail 5</code> 常常跨到重新啟動之前那一次，所以「找不到伺服器憑證」與「HTTPS」可能同時出現，以最後一次啟動的那幾行為準。記錄裡的 <code>8081</code>、<code>http://api:3000</code> 是容器裡面的埠，對應主機上的 <code>HD_PATIENT_PORT</code>、<code>HD_API_PORT</code>；平板一律連 <code>HD_PATIENT_PORT</code>。</p>
 <table>
 <thead>
 <tr>
@@ -5643,8 +5622,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>伺服器憑證換過之後也要做這一步</strong>：<code>shell-builder</code> 發現主機位址變了、或憑證 30 天內到期時會重新簽一張，
-<code>patient-web</code> 要重新啟動才讀得到。CA 沒變，平板不受影響。</p>
+<p><strong>伺服器憑證換過之後也要做這一步</strong>：<code>shell-builder</code> 發現主機位址變了、或憑證 30 天內到期時會重新簽一張， <code>patient-web</code> 要重新啟動才讀得到。CA 沒變，平板不受影響。</p>
 </blockquote>
 <hr />
 <h3 id="y-08-平板連得進來">Y-08 平板連得進來<a class="headerlink" href="#y-08-平板連得進來" title="Permanent link">&para;</a></h3>
@@ -5670,10 +5648,7 @@
 <h2 id="4-平板每台各做一次">4. 平板（每台各做一次）<a class="headerlink" href="#4-平板每台各做一次" title="Permanent link">&para;</a></h2>
 <p>照《部署規範》8.2。<strong>首波只佈建實際會用到的兩三台</strong>（DEP-36）。</p>
 <h3 id="y-09-在護理端註冊平板">Y-09 在護理端註冊平板<a class="headerlink" href="#y-09-在護理端註冊平板" title="Permanent link">&para;</a></h3>
-<p>護理端 → 新增裝置（1007 以前叫裝置管理） → 註冊新平板。畫面出現<strong>佈建 QR code</strong> 與文字網址（迭代 14.1 起），
-<strong>兩者只顯示一次</strong>：這個畫面先不要關，拿著平板照 Y-10～Y-12 做完、掃完再離開。
-平板沒有相機、或這一頁非關不可時，才把序號與金鑰抄在佈建單上，佈建完就銷毀那張單子。
-顯示的網址要以 <code>https://</code> 開頭；不是的話回 Y-03（外殼會拒收 <code>http://</code> 的 QR code）。</p>
+<p>護理端 → 新增裝置（1007 以前叫裝置管理） → 註冊新平板。畫面出現<strong>佈建 QR code</strong> 與文字網址（迭代 14.1 起）， <strong>兩者只顯示一次</strong>：這個畫面先不要關，拿著平板照 Y-10～Y-12 做完、掃完再離開。平板沒有相機、或這一頁非關不可時，才把序號與金鑰抄在佈建單上，佈建完就銷毀那張單子。顯示的網址要以 <code>https://</code> 開頭；不是的話回 Y-03（外殼會拒收 <code>http://</code> 的 QR code）。</p>
 <h3 id="y-10-平板的系統設定">Y-10 平板的系統設定<a class="headerlink" href="#y-10-平板的系統設定" title="Permanent link">&para;</a></h3>
 <ol>
 <li>設定裝置 PIN，關閉「新增使用者」</li>
@@ -5702,9 +5677,7 @@
 </table>
 <h3 id="y-12-首次啟動與釘選">Y-12 首次啟動與釘選<a class="headerlink" href="#y-12-首次啟動與釘選" title="Permanent link">&para;</a></h3>
 <ol>
-<li>開啟「透析照護平板」，按「<strong>掃描 QR code</strong>」（外殼 0.3.0 起），允許相機，對準 Y-09 畫面上的 QR code。
-   三欄一次填好，<strong>核對序號與這台平板的標籤一致</strong>。沒有相機時照舊手動輸入：主機位址填 <code>https://&lt;主機&gt;:&lt;病人端埠&gt;</code>
-   （與 <code>MDM_KIOSK_BASE_URL</code> 相同），序號與金鑰填 Y-09 的</li>
+<li>開啟「透析照護平板」，按「<strong>掃描 QR code</strong>」（外殼 0.3.0 起），允許相機，對準 Y-09 畫面上的 QR code。三欄一次填好，<strong>核對序號與這台平板的標籤一致</strong>。沒有相機時照舊手動輸入：主機位址填 <code>https://&lt;主機&gt;:&lt;病人端埠&gt;</code> （與 <code>MDM_KIOSK_BASE_URL</code> 相同），序號與金鑰填 Y-09 的</li>
 <li>按「儲存並啟動」，系統跳出「要固定這個應用程式嗎」，按「確定」</li>
 </ol>
 <p><strong>怎麼知道成功了</strong>：畫面是病人端的等待畫面，沒有任何憑證警告；按上一頁、首頁、多工鍵都離不開。</p>
@@ -5763,9 +5736,7 @@
 </tbody>
 </table>
 <p>把序號與床號的對應記下來。<strong>解除一次固定</strong>（輸入 PIN），30 秒內護理端要變成「已跳出」。</p>
-<p><strong>釘回去</strong>：解鎖後 App 還停在畫面上，但已經沒有釘住，直接點它沒用。按多工鍵把「透析照護平板」<strong>從多工畫面滑掉</strong>，
-再從桌面開啟，系統再問一次「要固定這個應用程式嗎」，按「確定」。護理端 15～30 秒內回到「固定中」。
-沒跳出確認框就重新開機，App 開機後會自己起來並詢問。</p>
+<p><strong>釘回去</strong>：解鎖後 App 還停在畫面上，但已經沒有釘住，直接點它沒用。按多工鍵把「透析照護平板」<strong>從多工畫面滑掉</strong>，再從桌面開啟，系統再問一次「要固定這個應用程式嗎」，按「確定」。護理端 15～30 秒內回到「固定中」。沒跳出確認框就重新開機，App 開機後會自己起來並詢問。</p>
 <hr />
 <h2 id="5-換外殼版本調高最低可用版本">5. 換外殼版本、調高最低可用版本<a class="headerlink" href="#5-換外殼版本調高最低可用版本" title="Permanent link">&para;</a></h2>
 <h3 id="y-14-換外殼版本改-apk-的時候">Y-14 換外殼版本（改 APK 的時候）<a class="headerlink" href="#y-14-換外殼版本改-apk-的時候" title="Permanent link">&para;</a></h3>
@@ -5775,8 +5746,7 @@
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">shell</span> <span class="n">build</span> <span class="n">shell-builder</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">shell</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="n">shell-builder</span>
 </code></pre></div>
-<p>下載頁換成新版之後，<strong>平板要逐台重新安裝</strong>（覆蓋安裝即可，序號與金鑰會留著）。排在非透析時段（DEP-32）。
-<strong>只改網頁不必做這一段</strong>——那是絕大多數的更新，平板下次載入就是新版。</p>
+<p>下載頁換成新版之後，<strong>平板要逐台重新安裝</strong>（覆蓋安裝即可，序號與金鑰會留著）。排在非透析時段（DEP-32）。 <strong>只改網頁不必做這一段</strong>——那是絕大多數的更新，平板下次載入就是新版。</p>
 <h3 id="y-15-調高最低可用版本">Y-15 調高最低可用版本<a class="headerlink" href="#y-15-調高最低可用版本" title="Permanent link">&para;</a></h3>
 <p>所有平板都換上新版之後，把舊版標成「外殼過舊」，下次有人沒換到就看得出來：</p>
 <div class="highlight"><pre><span></span><code><span class="n">notepad</span> <span class="nv">$cfg</span>          <span class="c"># KIOSK_SHELL_MIN_VERSION=&lt;新版本&gt;</span>
@@ -5850,8 +5820,7 @@
 </tr>
 </tbody>
 </table>
-<p>開發機上 <code>HD_SHELL_SIGNING=dev</code>、<code>MDM_KIOSK_BASE_URL</code> 用開發機的區網 IP（手機要連得到，<code>localhost</code> 不行）。
-手機上的每一項見<a href="../../testing/iteration-12/">迭代 12 測試分冊</a> §12.5～§12.7。</p>
+<p>開發機上 <code>HD_SHELL_SIGNING=dev</code>、<code>MDM_KIOSK_BASE_URL</code> 用開發機的區網 IP（手機要連得到，<code>localhost</code> 不行）。手機上的每一項見<a href="../../testing/iteration-12/">迭代 12 測試分冊</a> §12.5～§12.7。</p>
 <hr />
 <h2 id="8-疑難排解這一冊特有的">8. 疑難排解（這一冊特有的）<a class="headerlink" href="#8-疑難排解這一冊特有的" title="Permanent link">&para;</a></h2>
 <table>

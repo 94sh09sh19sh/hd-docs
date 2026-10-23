@@ -2,17 +2,25 @@
 
 版本：v0.1　文件狀態：草案（0930 新增）　編號：`L-xx`　**與第十四冊一起印出來帶進去**
 
-> **1001 第二次進院有沒有照這一冊收過，沒有記到**（[第十四冊之四](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14d-second-visit/index.md) M-10）。 下一次進院照[第十五冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15-from-zero/index.md)：V-04 之前先做 L-01 看一眼，容器已不在就接著做 L-07；還在就從 L-02 起照做。 本冊內文說的「第十四冊 N-04」，在第十五冊是 V-04。
+> **1001 第二次進院有沒有照這一冊收過，沒有記到**（[第十四冊之四](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14d-second-visit/index.md) M-10）。下一次進院照[第十五冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15-from-zero/index.md)：V-04 之前先做 L-01 看一眼，容器已不在就接著做 L-07；還在就從 L-02 起照做。本冊內文說的「第十四冊 N-04」，在第十五冊是 V-04。
 >
-> 0922 第一次進院失敗（[第十冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/10-first-visit/index.md)），院內主機上留下了幾樣東西： 一個**掛著整顆 C 槽**的容器 `dialysis_system_v0`、一份 clone 下來的原始碼、一個 `python` 映像檔， 還可能有一把已作廢權杖的殘留字串。這一冊一步一步教你把它們收乾淨。
+> 0922 第一次進院失敗（[第十冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/10-first-visit/index.md)），院內主機上留下了幾樣東西：一個**掛著整顆 C 槽**的容器 `dialysis_system_v0`、一份 clone 下來的原始碼、一個 `python` 映像檔，還可能有一把已作廢權杖的殘留字串。這一冊一步一步教你把它們收乾淨。
 >
-> **什麼時候做**：下一次進院、在這台主機上動手的**第一件事**，排在[第十四冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14-from-zero/index.md) N-04 之前 （＝第十冊 F-22 第 1、2 項）。只做一次，收完就不必再看這一冊。
+> **什麼時候做**：下一次進院、在這台主機上動手的**第一件事**，排在[第十四冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14-from-zero/index.md) N-04 之前（＝第十冊 F-22 第 1、2 項）。只做一次，收完就不必再看這一冊。
 >
-> 這一冊是第十冊 [F-10](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/10-first-visit/#f-10-%E9%82%A3%E5%80%8B%E5%AE%B9%E5%99%A8%E8%88%87%E5%AE%83%E6%8E%9B%E9%80%B2%E5%8E%BB%E7%9A%84%E6%9D%B1%E8%A5%BF)、F-09、F-11 的**新手版**： 順序相同，每一步標題註明對應的原步驟；兩者衝突時以第十冊為準。
+> 這一冊是第十冊 [F-10](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/10-first-visit/#f-10-%E9%82%A3%E5%80%8B%E5%AE%B9%E5%99%A8%E8%88%87%E5%AE%83%E6%8E%9B%E9%80%B2%E5%8E%BB%E7%9A%84%E6%9D%B1%E8%A5%BF)、F-09、F-11 的**新手版**：順序相同，每一步標題註明對應的原步驟；兩者衝突時以第十冊為準。
 >
 > 🧪 **模擬部署**：開發機上沒有這些東西，不必做。想先練手的話，[附錄](#%E9%99%84%E9%8C%84%E5%9C%A8%E9%96%8B%E7%99%BC%E6%A9%9F%E4%B8%8A%E5%85%88%E7%B7%B4%E4%B8%80%E6%AC%A1)教你在開發機上搭一個無害的替身。
 
 ______________________________________________________________________
+
+## 摘要
+
+- 0922 第一次進院在院內主機留下的東西：掛著整顆 C 槽的容器 `dialysis_system_v0`、一份 clone、`python` 映像檔，可能還有作廢權杖的殘留字串；這一冊一步步收乾淨，編號 `L-xx`
+- 下一次進院在這台主機上動手的第一件事，排在第十五冊 V-04 之前，只做一次
+- 1001 有沒有照這一冊收過沒記到：先做 L-01 看一眼，容器不在就接著做 L-07，還在就從 L-02 起照做
+- 第十冊 F-10（連同 F-09、F-11）的新手版，衝突時以第十冊為準
+- 第 1 節先看不要動、第 2 節收掉、第 3 節收完之後、第 4 節當場停手；附錄是在開發機上先練一次
 
 ## 0. 讀之前
 
@@ -29,7 +37,7 @@ ______________________________________________________________________
 
 > ⚠️ **1. 在容器裡面，一律只看不動。** 本冊在容器裡只下 `ls`、`find`、`git remote`、`git log` 這幾種「看」的指令。 **不准在容器裡下 `rm`、`mv`、`chmod`、`chown`**——`/app` 就是主機的 C 槽，刪下去的是主機上的真檔案，包含另一個專案的東西。
 >
-> ⚠️ **2. 只動名字叫 `dialysis_system_v0` 的那一個容器。** 這台主機上還有另一個專案在用 Docker。清單裡看到的其他容器、映像檔、資料卷都**不是我們的**。 **`docker system prune`、`docker container prune`、`docker image prune` 一律不准下**：它們會連別人的一起刪。 指令裡看到 `-f`（強制）也一樣不加。
+> ⚠️ **2. 只動名字叫 `dialysis_system_v0` 的那一個容器。** 這台主機上還有另一個專案在用 Docker。清單裡看到的其他容器、映像檔、資料卷都**不是我們的**。 **`docker system prune`、`docker container prune`、`docker image prune` 一律不准下**：它們會連別人的一起刪。指令裡看到 `-f`（強制）也一樣不加。
 >
 > ⚠️ **3. 刪主機上的檔案之前，資訊室的人要在旁邊點頭。** 容器是我們開的，收掉不必問；主機上的資料夾與映像檔，要讓對方看過再刪（L-05、L-06）。
 
@@ -63,13 +71,11 @@ docker ps -a --filter name=dialysis_system_v0
 | 一列，`STATUS` 是 `Exited …`                              | 還在，停著（主機斷過電就會這樣） | L-02       |
 | 只有標題那一列（`CONTAINER ID IMAGE …`），底下什麼都沒有  | 容器已經不在了，有人收過         | 看下面方框 |
 
-> 💡 **容器已經不在了**：L-02～L-04 跳過，但 clone 那一份可能還在 C 槽上。 在主機上找找看，列出 C 槽往下三層以內所有 Git 資料夾的位置：
+> 💡 **容器已經不在了**：L-02～L-04 跳過，但 clone 那一份可能還在 C 槽上。在主機上找找看，列出 C 槽往下三層以內所有 Git 資料夾的位置：
 >
-> ```
-> Get-ChildItem C:\ -Directory -Force -Filter .git -Depth 2 -ErrorAction SilentlyContinue | ForEach-Object { $_.Parent.FullName }
-> ```
+> `powershell Get-ChildItem C:\ -Directory -Force -Filter .git -Depth 2 -ErrorAction SilentlyContinue | ForEach-Object { $_.Parent.FullName }`
 >
-> 每一行是一個 clone 的位置。逐一用 L-05 第 2 步的指令認，只認 `url` 裡有 `hd-tablet-care` 的； 找到就照 L-05 刪，找不到就在演練紀錄寫「容器與 clone 皆已不在」，接著做 L-06。
+> 每一行是一個 clone 的位置。逐一用 L-05 第 2 步的指令認，只認 `url` 裡有 `hd-tablet-care` 的；找到就照 L-05 刪，找不到就在演練紀錄寫「容器與 clone 皆已不在」，接著做 L-06。
 
 **可能怎麼壞**
 
@@ -169,7 +175,7 @@ docker exec dialysis_system_v0 git -C <位置> log -1 --oneline
 | 其他（例如 `/hd-tablet-care`、`/root/…`） | **只在容器裡**                                                                                              | L-04 刪容器時一起消失，L-05 跳過          |
 | 一個都沒找到                              | clone 在更深的地方，或當天就刪了                                                                            | 演練紀錄寫「未找到」，照樣往下；L-05 跳過 |
 
-> 💡 **不必另外找權杖**：權杖殘留只可能在兩個地方——clone 的 Git 設定（跟著 L-05 刪掉）， 或容器裡的 shell 歷史與 Git 設定（跟著 L-04 刪掉）。收完這兩樣，殘留就沒了。
+> 💡 **不必另外找權杖**：權杖殘留只可能在兩個地方——clone 的 Git 設定（跟著 L-05 刪掉），或容器裡的 shell 歷史與 Git 設定（跟著 L-04 刪掉）。收完這兩樣，殘留就沒了。
 
 **可能怎麼壞**
 
@@ -328,7 +334,7 @@ Get-Process -Id <OwningProcess> | Select-Object Id, ProcessName, Path
 docker ps --format "{{.Names}}  {{.Ports}}"
 ```
 
-行程是 `com.docker.backend` 或 `wslrelay` 的話，那是 Docker 在轉送某個容器的埠，第二行會看到是哪一個。 把結果告訴資訊室，**請他們登記這個埠是誰的**。
+行程是 `com.docker.backend` 或 `wslrelay` 的話，那是 Docker 在轉送某個容器的埠，第二行會看到是哪一個。把結果告訴資訊室，**請他們登記這個埠是誰的**。
 
 > ⚠️ **不論 3000 空出來與否，本系統都不用 3000，也不用 9000。** 本系統用的是資訊室 0930 確認的 `13000`、`18080`、`18081`，在第十四冊 N-07 確認沒人在用。
 

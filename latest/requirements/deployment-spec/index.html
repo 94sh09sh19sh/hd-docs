@@ -5897,8 +5897,7 @@
 <li><code>api</code> 執行期連院方 API 是<strong>院內連線</strong>，不違反 DEP-14；<code>check:egress</code> 照舊只擋院外</li>
 <li><code>hospital-api-sim</code> 只以 <code>simulation</code> profile 啟動；<strong>正式環境設定下 <code>HOSPITAL_API_BASE_URL</code> 指向它，後端拒絕啟動</strong>（與 DEP-40 同一個道理：抄錯設定不能變成假資料進病房）</li>
 <li>院方 API 的原始回應不落在任何主機目錄（《資料庫使用規範》第 13 條 1005 補充）</li>
-<li>（1005 迭代 15 實作時補）<strong>模擬部署以 <code>HD_SIMULATION_DEPLOYMENT=yes</code> 明示</strong>：compose 把後端固定成正式環境設定，模擬部署也一樣，不明示就連模擬部署都用不了模擬院方 API。
-  <strong>院內主機一律留空</strong>；留空時位址指向 <code>hospital-api-sim</code> 就拒絕啟動，收到模擬院方 API 的回應（帶模擬標頭）也整次作廢——換了名稱的模擬一樣擋得住</li>
+<li>（1005 迭代 15 實作時補）<strong>模擬部署以 <code>HD_SIMULATION_DEPLOYMENT=yes</code> 明示</strong>：compose 把後端固定成正式環境設定，模擬部署也一樣，不明示就連模擬部署都用不了模擬院方 API。 <strong>院內主機一律留空</strong>；留空時位址指向 <code>hospital-api-sim</code> 就拒絕啟動，收到模擬院方 API 的回應（帶模擬標頭）也整次作廢——換了名稱的模擬一樣擋得住</li>
 <li>（同上）探測工具在 <code>api</code> 容器裡跑（部署手冊第十五冊 V-30a）：<strong>位址只在探測時當場輸入，不寫進 <code>.env</code></strong>——探測不等於啟用，<code>.env</code> 填了位址，下一次重新啟動就開始寫真實資料</li>
 </ul>
 <h3 id="33-資料庫落點">3.3 資料庫落點<a class="headerlink" href="#33-資料庫落點" title="Permanent link">&para;</a></h3>
@@ -5950,9 +5949,7 @@
 </table>
 <p><strong><code>db:update</code>、<code>db:restore</code> 與線上備份端點保留</strong>，改成在容器裡執行。它們管的是資料庫，不是安裝包。</p>
 <blockquote>
-<p><strong>0926 迭代 11 已執行</strong>：腳本、npm 指令、包內引擎機制與 <code>check:offline</code> 的安裝包盤點項已從 repo 移除；
-部署手冊的安裝包各冊標為歷史紀錄，現行步驟在第十一冊。<code>installer-route</code> 已確認沒有未合入的修正，
-分支與開發機上的 <code>dist-package/</code> 由使用者確認後刪除。</p>
+<p><strong>0926 迭代 11 已執行</strong>：腳本、npm 指令、包內引擎機制與 <code>check:offline</code> 的安裝包盤點項已從 repo 移除；部署手冊的安裝包各冊標為歷史紀錄，現行步驟在第十一冊。<code>installer-route</code> 已確認沒有未合入的修正，分支與開發機上的 <code>dist-package/</code> 由使用者確認後刪除。</p>
 </blockquote>
 <hr />
 <h2 id="4-時區">4. 時區<a class="headerlink" href="#4-時區" title="Permanent link">&para;</a></h2>
@@ -6294,8 +6291,7 @@
 </tr>
 </tbody>
 </table>
-<p>金鑰資料卷的內容、權限與 <code>shell-builder</code> 的四個指令（<code>build</code>、<code>keys-info</code>、<code>keys-backup</code>、<code>keys-verify</code>）見
-<code>services/shell-builder/README.md</code>，步驟見部署手冊第十二冊。</p>
+<p>金鑰資料卷的內容、權限與 <code>shell-builder</code> 的四個指令（<code>build</code>、<code>keys-info</code>、<code>keys-backup</code>、<code>keys-verify</code>）見 <code>services/shell-builder/README.md</code>，步驟見部署手冊第十二冊。</p>
 </blockquote>
 <p><strong>DEP-35｜（0926 改寫）CA 與 APK 簽章金鑰遺失即無法補救。</strong> 金鑰資料卷的內容與資料庫一併備份到院內另一台機器，每年驗證一次還原得回來。簽章金鑰遺失的後果不變：再也發不出更新版，只能換套件名重新側載全部平板。</p>
 <p>0927 起的做法：<code>shell-builder keys-backup</code> 把金鑰寫到備份目錄底下的 <code>keys\</code>，隨資料庫備份一起送走；<code>shell-builder keys-verify</code> 核對某一份備份還原得回來。<strong><code>shell-builder</code> 絕不覆蓋既有的 CA 與簽章金鑰</strong>，資料卷不完整時拒絕執行，要從備份還原。</p>
@@ -6642,6 +6638,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>平板一律橫放架設（1014 定）；外殼第一版起就鎖橫向，迭代 27 不必重建 APK</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1007/requirements/deployment-spec/">1007</a></td>
 <td>2026-10-07</td>

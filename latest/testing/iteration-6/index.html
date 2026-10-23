@@ -2750,6 +2750,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4784,6 +4795,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4978,17 +5000,21 @@
 
 <h1 id="迭代-6-手動測試--閒置輪播與檔案匯入">迭代 6 手動測試 — 閒置輪播與檔案匯入<a class="headerlink" href="#迭代-6-手動測試--閒置輪播與檔案匯入" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》v2.0 4.4 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 6 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》v2.0 4.4 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 6 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
 </blockquote>
 <p><strong>FR-P09 閒置輪播、FR-P10 卡片細節頁、FR-P11 三層內容、FR-P13 主線保護、FR-S05 檔案匯入。</strong></p>
 <p><strong>本冊有四項是自動化腳本驗不到、只能用手指確認的</strong>（<code>p7</code>～<code>p16</code>、<code>p28</code>～<code>p29</code> 標了 ⚠️）。輪播對病人開啟前請先走過那幾項：輪播是加在病床旁的東西，它可以沒用，但不能擋住求助按鈕。</p>
 <blockquote>
-<p><strong>1005（迭代 16）起病人端沒有輪播。</strong> 首頁中間那一區改成「本次透析」面板，衛教與公告改在底部的跑馬燈播（SRS FR-P09～P11 的 1005 改寫）。
-本冊 §6.1～§6.10、§6.13 驗的是輪播，<strong>留著對帳，不再適用於現行版本</strong>；面板與跑馬燈的手動測試在《<a href="../iteration-16/">迭代 16 分冊</a>》。
-§6.11、§6.12（檔案匯入與欄位對應）照舊有效。<code>verify:iteration6</code> 已依實作規格書 1.1 改對新端點驗，§6.14 的步驟數與說明以腳本為準。</p>
+<p><strong>1005（迭代 16）起病人端沒有輪播。</strong> 首頁中間那一區改成「本次透析」面板，衛教與公告改在底部的跑馬燈播（SRS FR-P09～P11 的 1005 改寫）。本冊 §6.1～§6.10、§6.13 驗的是輪播，<strong>留著對帳，不再適用於現行版本</strong>；面板與跑馬燈的手動測試在《<a href="../iteration-16/">迭代 16 分冊</a>》。 §6.11、§6.12（檔案匯入與欄位對應）照舊有效。<code>verify:iteration6</code> 已依實作規格書 1.1 改對新端點驗，§6.14 的步驟數與說明以腳本為準。</p>
 </blockquote>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>項次 <code>p1</code>～<code>p63</code>，對應實作規格書 4.4；自動化另跑 <code>npm run verify:iteration6</code></li>
+<li><strong>1005（迭代 16）起病人端沒有輪播</strong>：§6.1～§6.10、§6.13 留著對帳、不再適用，面板與跑馬燈改看迭代 16 分冊</li>
+<li>仍然有效的是 §6.11 檔案匯入（全有或全無）與 §6.12 欄位對應可設定（Q-09）</li>
+<li>輪播那幾節原本驗：開關關閉時完全不存在、閒置後自動開始、觸碰立即中止、求助按鈕不動、三層內容、問卷優先、夜間模式</li>
+<li>標 ⚠️ 的項次腳本驗不到，只能用手指確認</li>
+</ul>
 <h2 id="這一冊有什麼">這一冊有什麼<a class="headerlink" href="#這一冊有什麼" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5095,8 +5121,7 @@
 </table>
 <p>本冊不需要 AI 總開關也不需要 <code>BACKUP_DIR</code>，迭代 6 的功能都不呼叫模型。</p>
 <blockquote>
-<p><strong>先把門檻調短</strong>：預設閒置 60 秒才開始輪播，逐項測會等到不耐煩。
-<strong>［護理端］</strong>「系統管理 → 營運參數」把三項一起調（每一項都要填理由，這是設計，不是卡你）：</p>
+<p><strong>先把門檻調短</strong>：預設閒置 60 秒才開始輪播，逐項測會等到不耐煩。 <strong>［護理端］</strong>「系統管理 → 營運參數」把三項一起調（每一項都要填理由，這是設計，不是卡你）：</p>
 <table>
 <thead>
 <tr>
@@ -5133,174 +5158,111 @@
 <h2 id="61--開關關閉時輪播完全不存在fr-s08">6.1 · 開關關閉時，輪播完全不存在（FR-S08）<a class="headerlink" href="#61--開關關閉時輪播完全不存在fr-s08" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p1</code> <strong>［護理端］</strong> 確認三個輪播開關都是關的（系統管理 → 功能開關）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p2</code> <strong>［病人端］</strong> 放著不要碰，等超過閒置門檻。
-  → <strong>什麼都不會發生</strong>，畫面停在主畫面。不是「輪播了但沒有內容」，是後端一張卡片都不送。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p3</code> <strong>［護理端］</strong> 嘗試開啟「輪播第二層」。
-  → 被擋下，訊息「未符合開啟條件：尚無上架中的衛教或公告內容⋯⋯」。沒有內容卻開著，病人只會看到空白的輪播。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p2</code> <strong>［病人端］</strong> 放著不要碰，等超過閒置門檻。 → <strong>什麼都不會發生</strong>，畫面停在主畫面。不是「輪播了但沒有內容」，是後端一張卡片都不送。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p3</code> <strong>［護理端］</strong> 嘗試開啟「輪播第二層」。 → 被擋下，訊息「未符合開啟條件：尚無上架中的衛教或公告內容⋯⋯」。沒有內容卻開著，病人只會看到空白的輪播。</li>
 </ul>
 <h2 id="62--第一層閒置後自動開始fr-p09">6.2 · 第一層：閒置後自動開始（FR-P09）<a class="headerlink" href="#62--第一層閒置後自動開始fr-p09" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><strong>⚠️ 這台平板必須已經填過一次症狀問卷，否則等到天亮也不會開始輪播。</strong>
-本次綁定一次都沒回報過症狀時，後端判定問卷到期，輪播依 FR-P13 全面讓路 ——
-平板會安安靜靜停在主畫面，沒有訊息、沒有錯誤，看起來就像壞了。
-這是 §6.8 <code>p26</code> 要驗的設計，不是故障。剛指派好的平板直接等門檻，一定卡在這裡。</p>
+<p><strong>⚠️ 這台平板必須已經填過一次症狀問卷，否則等到天亮也不會開始輪播。</strong> 本次綁定一次都沒回報過症狀時，後端判定問卷到期，輪播依 FR-P13 全面讓路 ——平板會安安靜靜停在主畫面，沒有訊息、沒有錯誤，看起來就像壞了。這是 §6.8 <code>p26</code> 要驗的設計，不是故障。剛指派好的平板直接等門檻，一定卡在這裡。</p>
 </blockquote>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p4</code> <strong>［護理端］</strong> 開啟「輪播第一層」，理由欄填「迭代 6 驗收」。
-  → 第一層的開啟條件永遠成立（內容取自系統既有資料，不依賴外部）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p64</code> <strong>［病人端］</strong> 先填一次透析前症狀問卷並送出（主手冊 <code>d1</code>–<code>d4</code>）。
-  → 回到主畫面，問卷按鈕副標變成「今天已送出 1 次」。這一步做完輪播才輪得到。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p5</code> <strong>［病人端］</strong> 放著不要碰，等超過門檻。
-  → 輪播自動蓋上來，第一張是「本次療程」，顯示開始時間、已進行、預計剩餘。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p6</code> <strong>［病人端］</strong> 等卡片自動換過一輪。
-  → 卡片依序換，左下角的圓點跟著移動。<strong>全程沒有任何聲音</strong>（把平板音量開到最大再測一次）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p49</code> <strong>［病人端］</strong> 數一下第一層總共有幾種卡片。
-  → 三種：療程進度、今日已回報內容（送過問卷才有）、衛教完成度（讀過衛教內容才有）。三種都取自系統既有資料，不依賴任何外部來源。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p50</code> <strong>［病人端］</strong> 逐張看有沒有出現「還剩幾分鐘就結束」以外的判讀。
-  → 沒有。第一層只呈現事實與進度，不提醒、不建議、不預警 — 那些屬於迭代 7 的高風險功能。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p4</code> <strong>［護理端］</strong> 開啟「輪播第一層」，理由欄填「迭代 6 驗收」。 → 第一層的開啟條件永遠成立（內容取自系統既有資料，不依賴外部）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p64</code> <strong>［病人端］</strong> 先填一次透析前症狀問卷並送出（主手冊 <code>d1</code>–<code>d4</code>）。 → 回到主畫面，問卷按鈕副標變成「今天已送出 1 次」。這一步做完輪播才輪得到。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p5</code> <strong>［病人端］</strong> 放著不要碰，等超過門檻。 → 輪播自動蓋上來，第一張是「本次療程」，顯示開始時間、已進行、預計剩餘。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p6</code> <strong>［病人端］</strong> 等卡片自動換過一輪。 → 卡片依序換，左下角的圓點跟著移動。<strong>全程沒有任何聲音</strong>（把平板音量開到最大再測一次）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p49</code> <strong>［病人端］</strong> 數一下第一層總共有幾種卡片。 → 三種：療程進度、今日已回報內容（送過問卷才有）、衛教完成度（讀過衛教內容才有）。三種都取自系統既有資料，不依賴任何外部來源。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p50</code> <strong>［病人端］</strong> 逐張看有沒有出現「還剩幾分鐘就結束」以外的判讀。 → 沒有。第一層只呈現事實與進度，不提醒、不建議、不預警 — 那些屬於迭代 7 的高風險功能。</li>
 </ul>
 <h2 id="63--觸碰立即中止沒有確認視窗fr-p13-腳本驗不到">6.3 · 觸碰立即中止，沒有確認視窗（FR-P13）⚠️ 腳本驗不到<a class="headerlink" href="#63--觸碰立即中止沒有確認視窗fr-p13-腳本驗不到" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p7</code> <strong>［病人端］</strong> 輪播進行中，<strong>用手指碰畫面正中央</strong>（不是碰卡片）。
-  → <strong>立刻</strong>回到主畫面。沒有「確定要離開嗎」之類的對話框，沒有動畫延遲。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p8</code> <strong>［病人端］</strong> 再等到輪播開始，這次碰畫面<strong>最邊角</strong>。
-  → 一樣立刻回到主畫面。任何一處都算。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p9</code> <strong>［病人端］</strong> 回到主畫面後不要動，等門檻時間。
-  → 輪播重新開始 — 中止不是關掉，是回到計時。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p7</code> <strong>［病人端］</strong> 輪播進行中，<strong>用手指碰畫面正中央</strong>（不是碰卡片）。 → <strong>立刻</strong>回到主畫面。沒有「確定要離開嗎」之類的對話框，沒有動畫延遲。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p8</code> <strong>［病人端］</strong> 再等到輪播開始，這次碰畫面<strong>最邊角</strong>。 → 一樣立刻回到主畫面。任何一處都算。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p9</code> <strong>［病人端］</strong> 回到主畫面後不要動，等門檻時間。 → 輪播重新開始 — 中止不是關掉，是回到計時。</li>
 </ul>
 <h2 id="64--求助按鈕位置與尺寸不變fr-p13-腳本驗不到">6.4 · 求助按鈕位置與尺寸不變（FR-P13）⚠️ 腳本驗不到<a class="headerlink" href="#64--求助按鈕位置與尺寸不變fr-p13-腳本驗不到" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p10</code> <strong>［病人端］</strong> 輪播開始前，記住「我需要協助」按鈕在畫面上的位置與大小（可以拍一張照）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p11</code> <strong>［病人端］</strong> 等輪播開始。
-  → <strong>那顆按鈕仍在原位、同樣大小，浮在輪播之上</strong>，其餘內容被蓋住。位置沒有位移、沒有縮小、沒有變成小圖示。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p12</code> <strong>［病人端］</strong> 輪播進行中直接按那顆按鈕。
-  → 直接進入求助畫面，<strong>不需要先退出輪播</strong>，也不會多一次點擊。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p13</code> <strong>［護理端］</strong> 確認那筆求助進到「緊急通報」。
-  → 與平常按下求助沒有任何差別。反應時間的量化比較由 <code>verify:iteration6</code> 步驟 11 每次執行時重測。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p11</code> <strong>［病人端］</strong> 等輪播開始。 → <strong>那顆按鈕仍在原位、同樣大小，浮在輪播之上</strong>，其餘內容被蓋住。位置沒有位移、沒有縮小、沒有變成小圖示。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p12</code> <strong>［病人端］</strong> 輪播進行中直接按那顆按鈕。 → 直接進入求助畫面，<strong>不需要先退出輪播</strong>，也不會多一次點擊。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p13</code> <strong>［護理端］</strong> 確認那筆求助進到「緊急通報」。 → 與平常按下求助沒有任何差別。反應時間的量化比較由 <code>verify:iteration6</code> 步驟 11 每次執行時重測。</li>
 </ul>
 <h2 id="65--細節頁與自動退回fr-p10-腳本驗不到">6.5 · 細節頁與自動退回（FR-P10）⚠️ 腳本驗不到<a class="headerlink" href="#65--細節頁與自動退回fr-p10-腳本驗不到" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p14</code> <strong>［病人端］</strong> 輪播進行中點<strong>卡片本身</strong>（不是卡片以外的地方）。
-  → 展開細節說明，<strong>輪播暫停不換卡</strong>（病人正在讀，換掉等於把字抽走）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p15</code> <strong>［病人端］</strong> 放著不動，等超過「細節頁自動退回的時間」（預設 45 秒；照本冊開頭調成 15 秒的話等 15 秒）。
-  → 自動收合回卡片正面，輪播繼續。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p16</code> <strong>［病人端］</strong> 點一張沒有細節說明的卡片（例如只有一句話的公告）。
-  → 沒有反應，也不會出現「點一下看說明」的提示字。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p51</code> <strong>［病人端］</strong> 細節頁開著時，按「我需要協助」。
-  → 一樣直接進入求助畫面。細節頁不是另一層畫面，擋不住主線。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p14</code> <strong>［病人端］</strong> 輪播進行中點<strong>卡片本身</strong>（不是卡片以外的地方）。 → 展開細節說明，<strong>輪播暫停不換卡</strong>（病人正在讀，換掉等於把字抽走）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p15</code> <strong>［病人端］</strong> 放著不動，等超過「細節頁自動退回的時間」（預設 45 秒；照本冊開頭調成 15 秒的話等 15 秒）。 → 自動收合回卡片正面，輪播繼續。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p16</code> <strong>［病人端］</strong> 點一張沒有細節說明的卡片（例如只有一句話的公告）。 → 沒有反應，也不會出現「點一下看說明」的提示字。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p51</code> <strong>［病人端］</strong> 細節頁開著時，按「我需要協助」。 → 一樣直接進入求助畫面。細節頁不是另一層畫面，擋不住主線。</li>
 </ul>
 <h2 id="66--第二層靜態衛教與公告fr-p11">6.6 · 第二層：靜態衛教與公告（FR-P11）<a class="headerlink" href="#66--第二層靜態衛教與公告fr-p11" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p17</code> <strong>［護理端］</strong> 進「輪播內容」，新增一則公告：標題、一句話、說明，排序 100，勾「啟用」。
-  → 清單出現該則，狀態「啟用」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p18</code> <strong>［護理端］</strong> 回功能開關，開啟「輪播第二層」。
-  → 這次開得起來，開啟條件顯示「目前有 1 則在架上的衛教或公告」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p19</code> <strong>［病人端］</strong> 等輪播開始。
-  → 剛才那則公告出現在輪播中，點開看得到說明。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p20</code> <strong>［護理端］</strong> 把那則公告「下架」。
-  → <strong>［病人端］</strong> 下一輪起不再出現（平板每分鐘重新取一次內容，或重新整理）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p21</code> <strong>［護理端］</strong> 新增一則，上架時間設在<strong>一小時後</strong>。
-  → 現在不會播；清單上看得到，狀態欄顯示期間。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p17</code> <strong>［護理端］</strong> 進「輪播內容」，新增一則公告：標題、一句話、說明，排序 100，勾「啟用」。 → 清單出現該則，狀態「啟用」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p18</code> <strong>［護理端］</strong> 回功能開關，開啟「輪播第二層」。 → 這次開得起來，開啟條件顯示「目前有 1 則在架上的衛教或公告」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p19</code> <strong>［病人端］</strong> 等輪播開始。 → 剛才那則公告出現在輪播中，點開看得到說明。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p20</code> <strong>［護理端］</strong> 把那則公告「下架」。 → <strong>［病人端］</strong> 下一輪起不再出現（平板每分鐘重新取一次內容，或重新整理）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p21</code> <strong>［護理端］</strong> 新增一則，上架時間設在<strong>一小時後</strong>。 → 現在不會播；清單上看得到，狀態欄顯示期間。</li>
 </ul>
 <h2 id="67--第三層臨床數值與資料時間fr-p11">6.7 · 第三層：臨床數值與資料時間（FR-P11）<a class="headerlink" href="#67--第三層臨床數值與資料時間fr-p11" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p22</code> <strong>［護理端］</strong> 進「臨床數值」，為這位病人以人工輸入建立一筆理想體重。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p23</code> <strong>［護理端］</strong> 開啟「輪播第三層」。
-  → 開啟條件顯示「目前有 N 筆有效的院方臨床數值」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p24</code> <strong>［病人端］</strong> 等輪播播到臨床數值卡片。
-  → 數值下方<strong>一定</strong>看得到「資料時間：⋯⋯」。病人看到三週前的體重卻以為是今天的，比看不到更糟。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p25</code> <strong>［病人端］</strong> 看完整輪輪播，逐張檢查。
-  → <strong>沒有任何一張出現病人姓名或病歷號</strong>。卡片由後端組好再送到平板，這條規則只在一處判定。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p52</code> <strong>［護理端］</strong> 把那筆臨床數值覆蓋成新的值（保留前一版），回到平板等下一輪。
-  → 卡片顯示的是<strong>現行版本</strong>與它的資料時間，被覆蓋的舊值不會出現在病人面前。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p23</code> <strong>［護理端］</strong> 開啟「輪播第三層」。 → 開啟條件顯示「目前有 N 筆有效的院方臨床數值」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p24</code> <strong>［病人端］</strong> 等輪播播到臨床數值卡片。 → 數值下方<strong>一定</strong>看得到「資料時間：⋯⋯」。病人看到三週前的體重卻以為是今天的，比看不到更糟。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p25</code> <strong>［病人端］</strong> 看完整輪輪播，逐張檢查。 → <strong>沒有任何一張出現病人姓名或病歷號</strong>。卡片由後端組好再送到平板，這條規則只在一處判定。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p52</code> <strong>［護理端］</strong> 把那筆臨床數值覆蓋成新的值（保留前一版），回到平板等下一輪。 → 卡片顯示的是<strong>現行版本</strong>與它的資料時間，被覆蓋的舊值不會出現在病人面前。</li>
 </ul>
 <h2 id="68--問卷優先於輪播fr-p13">6.8 · 問卷優先於輪播（FR-P13）<a class="headerlink" href="#68--問卷優先於輪播fr-p13" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p26</code> <strong>［病人端］</strong> 找一台<strong>還沒填過透析前問卷</strong>的已綁定平板，放著不動等門檻。
-  → 輪播<strong>不會</strong>開始 — 問卷到期時，問卷優先。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p27</code> <strong>［病人端］</strong> 填完問卷送出，再放著不動。
-  → 這次輪播開始，而且第一層多了一張「今天您回報的內容」。
-  → 等待時間就是閒置門檻本身（門檻調成 10 秒就是 10 秒）。平板在問卷送出的當下
-  重取一次輪播內容，不必等下一輪的定期輪詢。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p26</code> <strong>［病人端］</strong> 找一台<strong>還沒填過透析前問卷</strong>的已綁定平板，放著不動等門檻。 → 輪播<strong>不會</strong>開始 — 問卷到期時，問卷優先。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p27</code> <strong>［病人端］</strong> 填完問卷送出，再放著不動。 → 這次輪播開始，而且第一層多了一張「今天您回報的內容」。 → 等待時間就是閒置門檻本身（門檻調成 10 秒就是 10 秒）。平板在問卷送出的當下重取一次輪播內容，不必等下一輪的定期輪詢。</li>
 </ul>
 <h2 id="69--夜間模式--腳本驗不到">6.9 · 夜間模式 ⚠️ 腳本驗不到<a class="headerlink" href="#69--夜間模式--腳本驗不到" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p28</code> <strong>［護理端］</strong> 把「夜間模式起始時刻」改成現在這個小時、「結束時刻」改成兩小時後。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p29</code> <strong>［病人端］</strong> 重新整理後等輪播開始。
-  → 整體明顯調暗，但<strong>版面與字級不變</strong>（不是改成另一套畫面，只是不刺眼）。測完把兩個時刻改回 18 與 7。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p53</code> <strong>［病人端］</strong> 夜間模式下按「我需要協助」。
-  → 求助按鈕沒有跟著調暗到看不清楚，按下去的流程與白天完全相同。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p29</code> <strong>［病人端］</strong> 重新整理後等輪播開始。 → 整體明顯調暗，但<strong>版面與字級不變</strong>（不是改成另一套畫面，只是不刺眼）。測完把兩個時刻改回 18 與 7。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p53</code> <strong>［病人端］</strong> 夜間模式下按「我需要協助」。 → 求助按鈕沒有跟著調暗到看不清楚，按下去的流程與白天完全相同。</li>
 </ul>
 <h2 id="610--session-解除後第三層數值不留在平板上srs-44">6.10 · Session 解除後，第三層數值不留在平板上（SRS 4.4）<a class="headerlink" href="#610--session-解除後第三層數值不留在平板上srs-44" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p30</code> <strong>［護理端］</strong> 解除這台平板的綁定。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p31</code> <strong>［病人端］</strong> 平板回到中性等待畫面。用瀏覽器開發者工具看 <code>localStorage</code>。
-  → <strong>沒有任何 <code>hd.session.</code> 開頭的鍵</strong>，輪播快取（含第三層的臨床數值）已隨之清除。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p32</code> <strong>［病人端］</strong> 放著不動等門檻。
-  → 等待畫面不會開始輪播。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p31</code> <strong>［病人端］</strong> 平板回到中性等待畫面。用瀏覽器開發者工具看 <code>localStorage</code>。 → <strong>沒有任何 <code>hd.session.</code> 開頭的鍵</strong>，輪播快取（含第三層的臨床數值）已隨之清除。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p32</code> <strong>［病人端］</strong> 放著不動等門檻。 → 等待畫面不會開始輪播。</li>
 </ul>
 <h2 id="611--檔案匯入全有或全無fr-s05">6.11 · 檔案匯入：全有或全無（FR-S05）<a class="headerlink" href="#611--檔案匯入全有或全無fr-s05" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p33</code> <strong>［護理端］</strong> 進「臨床數值 → 匯入欄位對應」，記下「病歷號」「資料時間」「理想體重」三欄目前的名稱。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p34</code> <strong>［終端機／試算表］</strong> 做一份 Excel：第一列用上述欄位名稱，兩列資料，<strong>其中一列的理想體重故意漏打小數點</strong>（例如 <code>625</code>）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p35</code> <strong>［護理端］</strong> 在「檔案匯入」上傳這份檔案。
-  → 紅色錯誤表格逐列列出問題，明確指出<strong>第 3 列的「理想體重」欄</strong>與原因。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p36</code> <strong>［護理端］</strong> 回到上方的數值清單。
-  → <strong>一筆都沒有寫進去</strong>，包括格式正確的那一列。臨床數值只對一半，比完全沒有更危險。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p37</code> <strong>［護理端］</strong> 把那一列改成 <code>62.5</code>，重新上傳。
-  → 成功，顯示批次編號與寫入筆數。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p38</code> <strong>［護理端］</strong> <strong>把同一份檔案再上傳一次</strong>（可以先改個檔名）。
-  → 被擋下：「同一份內容已於 ⋯⋯ 匯入過（批次 ⋯⋯）」。比對的是內容，不是檔名。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p39</code> <strong>［護理端］</strong> 上傳一份與既有資料同一病人、同一資料時間但數值不同的檔案。
-  → 被擋下並要求確認；勾選「覆蓋並保留前一版」後重送，成功，<strong>舊值在清單上標「已被覆蓋（保留前一版）」而不是消失</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p54</code> <strong>［護理端］</strong> 把同一份內容另存成 CSV 再上傳一次（先改一個數值避免撞到重複比對）。
-  → Excel 與 CSV 都吃得下，逐列檢查的規則完全相同。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p55</code> <strong>［護理端］</strong> 上傳一份查無病歷號的檔案。
-  → 逐列指出是哪一列的病歷號查不到；整批不寫入。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p56</code> <strong>［護理端］</strong> 看「最近的匯入批次」表。
-  → 每一批列出批次編號、來源、筆數、匯入時間與匯入者。人工輸入與檔案匯入寫進同一組資料表，來源欄分得出是哪一種。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p35</code> <strong>［護理端］</strong> 在「檔案匯入」上傳這份檔案。 → 紅色錯誤表格逐列列出問題，明確指出<strong>第 3 列的「理想體重」欄</strong>與原因。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p36</code> <strong>［護理端］</strong> 回到上方的數值清單。 → <strong>一筆都沒有寫進去</strong>，包括格式正確的那一列。臨床數值只對一半，比完全沒有更危險。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p37</code> <strong>［護理端］</strong> 把那一列改成 <code>62.5</code>，重新上傳。 → 成功，顯示批次編號與寫入筆數。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p38</code> <strong>［護理端］</strong> <strong>把同一份檔案再上傳一次</strong>（可以先改個檔名）。 → 被擋下：「同一份內容已於 ⋯⋯ 匯入過（批次 ⋯⋯）」。比對的是內容，不是檔名。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p39</code> <strong>［護理端］</strong> 上傳一份與既有資料同一病人、同一資料時間但數值不同的檔案。 → 被擋下並要求確認；勾選「覆蓋並保留前一版」後重送，成功，<strong>舊值在清單上標「已被覆蓋（保留前一版）」而不是消失</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p54</code> <strong>［護理端］</strong> 把同一份內容另存成 CSV 再上傳一次（先改一個數值避免撞到重複比對）。 → Excel 與 CSV 都吃得下，逐列檢查的規則完全相同。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p55</code> <strong>［護理端］</strong> 上傳一份查無病歷號的檔案。 → 逐列指出是哪一列的病歷號查不到；整批不寫入。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p56</code> <strong>［護理端］</strong> 看「最近的匯入批次」表。 → 每一批列出批次編號、來源、筆數、匯入時間與匯入者。人工輸入與檔案匯入寫進同一組資料表，來源欄分得出是哪一種。</li>
 </ul>
 <h2 id="612--欄位對應可設定q-09">6.12 · 欄位對應可設定（Q-09）<a class="headerlink" href="#612--欄位對應可設定q-09" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p40</code> <strong>［護理端］</strong> 把「理想體重」的檔案欄位名稱改成 <code>理想體重(kg)</code>，按儲存。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p41</code> <strong>［護理端］</strong> 上傳一份標頭寫 <code>理想體重(kg)</code> 的檔案。
-  → 匯入成功。<strong>院方改了欄位名稱，改的是這一列設定，不是程式，也不必重新部署。</strong></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p42</code> <strong>［護理端］</strong> 再上傳一份標頭仍寫舊名稱的檔案。
-  → 被擋下：「標頭中找不到『理想體重(kg)』這一欄⋯⋯」。舊名稱不會被默默接受。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p43</code> <strong>［護理端］</strong> 試著把「資料時間」的欄位名稱改成與「病歷號」相同。
-  → 被擋下：「⋯⋯已對應到『病歷號』，同一個檔案欄位不能同時對應兩種數值」。測完把名稱改回原值。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p57</code> <strong>［護理端］</strong> 看對應表的「是否必填」欄，試著停用「病歷號」那一列。
-  → 病歷號與資料時間標「必填」，停不掉；其餘標「選填」，停用之後檔案裡有那一欄也不會匯入該種數值。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p58</code> <strong>［護理端］</strong> 改完對應後看稽核軌跡。
-  → 查得到「調整匯入欄位對應」，含前後名稱。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p41</code> <strong>［護理端］</strong> 上傳一份標頭寫 <code>理想體重(kg)</code> 的檔案。 → 匯入成功。<strong>院方改了欄位名稱，改的是這一列設定，不是程式，也不必重新部署。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p42</code> <strong>［護理端］</strong> 再上傳一份標頭仍寫舊名稱的檔案。 → 被擋下：「標頭中找不到『理想體重(kg)』這一欄⋯⋯」。舊名稱不會被默默接受。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p43</code> <strong>［護理端］</strong> 試著把「資料時間」的欄位名稱改成與「病歷號」相同。 → 被擋下：「⋯⋯已對應到『病歷號』，同一個檔案欄位不能同時對應兩種數值」。測完把名稱改回原值。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p57</code> <strong>［護理端］</strong> 看對應表的「是否必填」欄，試著停用「病歷號」那一列。 → 病歷號與資料時間標「必填」，停不掉；其餘標「選填」，停用之後檔案裡有那一欄也不會匯入該種數值。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p58</code> <strong>［護理端］</strong> 改完對應後看稽核軌跡。 → 查得到「調整匯入欄位對應」，含前後名稱。</li>
 </ul>
 <h2 id="613--輪播內容管理與瀏覽事件">6.13 · 輪播內容管理與瀏覽事件<a class="headerlink" href="#613--輪播內容管理與瀏覽事件" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p44</code> <strong>［護理端］</strong> 進「輪播內容」下方的「最近 7 天的輪播瀏覽狀況」。
-  → 看得到哪一類卡片被播了幾次、平均停留多久、被點開幾次；表頭是層、卡片種類、播放次數、停留時間、點開細節次數。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p45</code> <strong>［資料庫］</strong> 開 Prisma Studio 看 <code>carousel_view_events</code>。
-  → 全表只有時間、層、卡片種類、停留毫秒、點開次數、是否夜間模式。
-  <strong>沒有病人、沒有綁定、沒有平板序號、沒有卡片內容</strong> — 這張表回答的是「哪一類內容有人看」，
-  那個問題不需要知道是誰在看。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p59</code> <strong>［護理端］</strong> 在「輪播內容」新增第二則，種類選「靜態衛教」，排序填 10。
-  → 清單依排序由小到大排列，種類欄分得出「靜態衛教」與「中心公告」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p60</code> <strong>［護理端］</strong> 編輯 <code>p17</code> 那一則的「一句話」，儲存。
-  → 清單即時更新；<strong>［病人端］</strong> 下一輪起播的是新文字。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p61</code> <strong>［護理端］</strong> 新增一則只有標題與一句話、<strong>不填說明</strong>的內容。
-  → 存得起來；病人端播到它時點下去沒有細節頁（對應 <code>p16</code>）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p62</code> <strong>［護理端］</strong> 以一般護理師 <code>N001</code> 進「輪播內容」與「系統管理 → 功能開關」。
-  → 輪播內容<strong>上得了架</strong>（衛教內容管理，護理師以上皆可）；功能開關看不到，輪播三層的開關要護理長以上。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p63</code> <strong>［病人端］</strong> 把第二層開關關掉後再等一輪。
-  → 第二層的卡片一張都不出現，但「輪播內容」清單上那幾則<strong>還在</strong>，開回來就照播。關開關不是刪內容。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p44</code> <strong>［護理端］</strong> 進「輪播內容」下方的「最近 7 天的輪播瀏覽狀況」。 → 看得到哪一類卡片被播了幾次、平均停留多久、被點開幾次；表頭是層、卡片種類、播放次數、停留時間、點開細節次數。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p45</code> <strong>［資料庫］</strong> 開 Prisma Studio 看 <code>carousel_view_events</code>。 → 全表只有時間、層、卡片種類、停留毫秒、點開次數、是否夜間模式。 <strong>沒有病人、沒有綁定、沒有平板序號、沒有卡片內容</strong> — 這張表回答的是「哪一類內容有人看」，那個問題不需要知道是誰在看。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p59</code> <strong>［護理端］</strong> 在「輪播內容」新增第二則，種類選「靜態衛教」，排序填 10。 → 清單依排序由小到大排列，種類欄分得出「靜態衛教」與「中心公告」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p60</code> <strong>［護理端］</strong> 編輯 <code>p17</code> 那一則的「一句話」，儲存。 → 清單即時更新；<strong>［病人端］</strong> 下一輪起播的是新文字。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p61</code> <strong>［護理端］</strong> 新增一則只有標題與一句話、<strong>不填說明</strong>的內容。 → 存得起來；病人端播到它時點下去沒有細節頁（對應 <code>p16</code>）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p62</code> <strong>［護理端］</strong> 以一般護理師 <code>N001</code> 進「輪播內容」與「系統管理 → 功能開關」。 → 輪播內容<strong>上得了架</strong>（衛教內容管理，護理師以上皆可）；功能開關看不到，輪播三層的開關要護理長以上。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p63</code> <strong>［病人端］</strong> 把第二層開關關掉後再等一輪。 → 第二層的卡片一張都不出現，但「輪播內容」清單上那幾則<strong>還在</strong>，開回來就照播。關開關不是刪內容。</li>
 </ul>
 <h2 id="614--自動化驗收">6.14 · 自動化驗收<a class="headerlink" href="#614--自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p46</code> <strong>［終端機］</strong> <code>npm run verify:iteration6</code>
-  → 15 個步驟全部 ✓，最後顯示「迭代 6 驗收：全部通過」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p47</code> <strong>［終端機］</strong> 依序重跑 <code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>iteration5</code>。
-  → 五支全綠。<strong>迭代 6 沒有改動任何既有行為</strong>，既有腳本一行都沒有改。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p48</code> <strong>［終端機］</strong> <code>npm run check:egress</code>
-  → 仍為 0 筆。輪播與檔案匯入都只在院內。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p46</code> <strong>［終端機］</strong> <code>npm run verify:iteration6</code> → 15 個步驟全部 ✓，最後顯示「迭代 6 驗收：全部通過」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p47</code> <strong>［終端機］</strong> 依序重跑 <code>verify:acceptance</code>、<code>verify:iteration2</code>～<code>iteration5</code>。 → 五支全綠。<strong>迭代 6 沒有改動任何既有行為</strong>，既有腳本一行都沒有改。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>p48</code> <strong>［終端機］</strong> <code>npm run check:egress</code> → 仍為 0 筆。輪播與檔案匯入都只在院內。</li>
 </ul>
 <hr />
 <p><a href="../manual-test-guide/">← 回完整手動測試手冊</a></p>
@@ -5315,6 +5277,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>1021</td>
+<td>2026-10-21</td>
+<td>前置的 §13 連結改指分冊索引的新標題（迭代 3-27 分冊）</td>
+</tr>
 <tr>
 <td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-6/">1014</a></td>
 <td>2026-10-14</td>

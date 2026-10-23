@@ -499,10 +499,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#本週進度" class="md-nav__link">
+  <a href="#摘要本週進度" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本週進度
+        摘要：本週進度
       
     </span>
   </a>
@@ -4746,10 +4746,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#本週進度" class="md-nav__link">
+  <a href="#摘要本週進度" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本週進度
+        摘要：本週進度
       
     </span>
   </a>
@@ -4901,11 +4901,11 @@
 
 
 <h1 id="0930-週報--部署改為容器介面極簡重設計迭代-11145">0930 週報 — 部署改為容器、介面極簡重設計（迭代 11～14.5）<a class="headerlink" href="#0930-週報--部署改為容器介面極簡重設計迭代-11145" title="Permanent link">&para;</a></h1>
-<p><strong>期間</strong>：2026-09-23 ～ 2026-09-30
-<strong>對應 commit</strong>：<code>8856975</code> → <code>865ed3c</code>（程式到迭代 14.5：<code>bad6e3c</code>）
-<strong>狀態</strong>：完成</p>
+<p><strong>期間</strong>：2026-09-23 ～ 2026-09-30</p>
+<p><strong>對應 commit</strong>：<code>8856975</code> → <code>865ed3c</code>（程式到迭代 14.5：<code>bad6e3c</code>）</p>
+<p><strong>狀態</strong>：完成</p>
 <hr />
-<h2 id="本週進度">本週進度<a class="headerlink" href="#本週進度" title="Permanent link">&para;</a></h2>
+<h2 id="摘要本週進度">摘要：本週進度<a class="headerlink" href="#摘要本週進度" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>0926 依第一次進院的教訓重排四件事</strong>：部署改為 Docker ＋ <code>git clone</code>、外殼 App 獨立 repo、AI 閘道、介面極簡重設計，排成迭代 11～14；原迭代 11、12（規則引擎、管理儀表板）順延為 <strong>15、16</strong>。需求文件同步改版（《部署規範》v3.0、SRS 需求 63 → 70 條）</li>
 <li><strong>迭代 11～14 完成（0926～0927）</strong>：開發機上以全新 clone、全新資料卷從零部署，更新與回退各一次；外殼 APK 在主機上離線建置；AI 閘道本機實測通過；<strong>病人端首頁只剩三區、護理端新增簡易版並設為預設</strong></li>
@@ -4915,8 +4915,7 @@
 </ul>
 <h2 id="完成內容">完成內容<a class="headerlink" href="#完成內容" title="Permanent link">&para;</a></h2>
 <h3 id="0926第一次進院失敗之後的四件事">0926：第一次進院失敗之後的四件事<a class="headerlink" href="#0926第一次進院失敗之後的四件事" title="Permanent link">&para;</a></h3>
-<p>0922 第一次進院是 C 級失敗（見 0923 週報）。0926 確認了院方的部署條件：<strong>要容器、要 <code>git clone</code>、不准隨身碟、主機可連出不可連入</strong>。
-照這些條件重排本週工作，<strong>臨床功能範圍一條未動</strong>：</p>
+<p>0922 第一次進院是 C 級失敗（見 0923 週報）。0926 確認了院方的部署條件：<strong>要容器、要 <code>git clone</code>、不准隨身碟、主機可連出不可連入</strong>。照這些條件重排本週工作，<strong>臨床功能範圍一條未動</strong>：</p>
 <table>
 <thead>
 <tr>
@@ -5234,12 +5233,8 @@
 </ul>
 <p><strong>要問資訊室的兩項 Docker Desktop 設定</strong>（清冊記為 Q-27 第 9、10 題。這台 Docker 同時在跑別的專案，兩項都是整台主機的設定，要資訊室同意才能改）：</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Send usage statistics 能不能關？</strong>（0922 看到是開著的）
-  不關的影響：Docker Desktop 會持續把它自己的使用情形送往 Docker 公司，服務執行期間主機就多一條常駐的院外連線。
-  本系統的程式不經過這條線，但送出什麼由 Docker 公司決定、會隨版本改變，開發端無法逐項擔保；
-  文件裡「服務執行時沒有任何一條線跨出醫院」（FR-S07、DEP-39）也要改寫成「有一條 Docker Desktop 自己的例外」</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Microsoft Store 的自動更新能不能改成手動？</strong> 這台的 Docker Desktop 是從市集裝的，更新由市集決定（F-16）；市集的設定管的是整台主機的所有 App。
-  不改的話，Docker Desktop 可能在透析班中自己更新、重新啟動，容器全部中斷——護理端會跳斷線紅框、病人端約 11 秒後改成「請按床邊呼叫鈴」（迭代 14.3），新版也可能改變 compose 的行為</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Send usage statistics 能不能關？</strong>（0922 看到是開著的）不關的影響：Docker Desktop 會持續把它自己的使用情形送往 Docker 公司，服務執行期間主機就多一條常駐的院外連線。本系統的程式不經過這條線，但送出什麼由 Docker 公司決定、會隨版本改變，開發端無法逐項擔保；文件裡「服務執行時沒有任何一條線跨出醫院」（FR-S07、DEP-39）也要改寫成「有一條 Docker Desktop 自己的例外」</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Microsoft Store 的自動更新能不能改成手動？</strong> 這台的 Docker Desktop 是從市集裝的，更新由市集決定（F-16）；市集的設定管的是整台主機的所有 App。不改的話，Docker Desktop 可能在透析班中自己更新、重新啟動，容器全部中斷——護理端會跳斷線紅框、病人端約 11 秒後改成「請按床邊呼叫鈴」（迭代 14.3），新版也可能改變 compose 的行為</li>
 </ul>
 <p><strong>不擋進院，但要在首波試用前有答案</strong>：</p>
 <ul class="task-list">

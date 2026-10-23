@@ -1,14 +1,23 @@
 # 迭代 12 手動測試 — 外殼 App 獨立 repo 與整合
 
-> 《[完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md)》的分冊之一，對應《實作規格書》4.10 節。 共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 12 的部分。 操作端色籤（**護理端**／**病人端**／**終端機**／**資料庫**）的意思見主手冊 §00；本冊另加 **［手機］**。
+> 《[完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md)》的分冊之一，對應《實作規格書》4.10 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 12 的部分。操作端色籤（**護理端**／**病人端**／**終端機**／**資料庫**）的意思見主手冊 §00；本冊另加 **［手機］**。
 
-**這一冊驗的是「外殼與系統只靠一份契約對得起來」。** 外殼的原始碼搬到另一個私人 repo（`hd-kiosk-shell`）， APK 由 `shell-builder` 在主機上建置與簽章，開發手機從病人端的院內下載頁安裝。 契約本身見《[病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md)》，步驟見《[部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)》第十二冊。
+**這一冊驗的是「外殼與系統只靠一份契約對得起來」。** 外殼的原始碼搬到另一個私人 repo（`hd-kiosk-shell`）， APK 由 `shell-builder` 在主機上建置與簽章，開發手機從病人端的院內下載頁安裝。契約本身見《[病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md)》，步驟見《[部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)》第十二冊。
 
 | 標記                              | 意思                                               |
 | --------------------------------- | -------------------------------------------------- |
 | 🖥 **開發機**                      | 平常的開發環境（有 Node.js），用來做檢查與驗收腳本 |
 | 🐳 **開發機，只用 Git 與 Docker** | 部署實測。這一段用到 `npm`、`node` 就不算數        |
 | 📱 **開發手機**                   | Android 手機當平板用，與開發機在同一個 Wi-Fi       |
+
+## 摘要
+
+- 項次 `v1`～`v48`，對應實作規格書 4.10；自動化另跑 `npm run verify:iteration12`
+- 驗「外殼與系統只靠一份契約對得起來」：外殼在私人 repo `hd-kiosk-shell`，APK 由 `shell-builder` 在主機上建置與簽章
+- 外殼只在一個地方、版本握手與護理端的「外殼版本」欄
+- `shell-builder` 建 APK 且第二次不重新產生金鑰、病人端 HTTPS 與下載頁
+- 開發手機從下載頁安裝、釘住與跳出時護理端看得到、調高最低版本與契約不相容
+- 金鑰備份與核對（DEP-35）
 
 ## 這一冊有什麼
 
@@ -59,7 +68,7 @@ ______________________________________________________________________
 
 以下 `$cfg` 是暫存的 `config\.env`，指令在 repo 根目錄執行。
 
-- `v10` **［終端機］** `docker compose --env-file $cfg --profile shell build shell-builder` → 第一次要下載 Android SDK、Gradle 與相依，視網速十幾分鐘到半小時。最後一段印出 「✓ 外殼 v0.2.0（…，契約第 1 版）已準備好，相依已下載」。
+- `v10` **［終端機］** `docker compose --env-file $cfg --profile shell build shell-builder` → 第一次要下載 Android SDK、Gradle 與相依，視網速十幾分鐘到半小時。最後一段印出「✓ 外殼 v0.2.0（…，契約第 1 版）已準備好，相依已下載」。
 - `v11` **［終端機］** `docker compose --env-file $cfg --profile shell run --rm shell-builder` → 印出「這一次新產生：院內 CA 伺服器憑證（） APK 簽章金鑰（開發用）」，以及 APK 檔名與三個 SHA-256。
 - `v12` **［終端機］** 同一個指令再跑一次。 → 「**金鑰全部沿用，這一次沒有產生任何新的金鑰**」；三行「· 沿用既有的……」；APK 的簽章憑證 SHA-256 與 `v11` 相同。
 - `v13` **［終端機］** `docker compose --env-file $cfg --profile shell run --rm shell-builder keys-info`，跑兩次。 → 兩次輸出一模一樣：用途 `dev`、院內 CA 指紋與十年後的到期日、伺服器憑證 `IP Address:<IP>`、簽章金鑰指紋。
@@ -72,7 +81,7 @@ ______________________________________________________________________
 - `v17` **［終端機］** `docker compose --env-file $cfg restart patient-web`，再 `docker compose --env-file $cfg logs patient-web --tail 5` → 「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」「/api/ 轉送至 http://api:3000」「/shell/ 外殼下載頁取自 /keys/public」。
 - `v18` **［病人端］** 開發機的瀏覽器開 `http://<IP>:<病人端埠>/shell/` → 下載頁：一顆「下載 App（版本 0.2.0）」、安裝步驟、主機位址 `https://<IP>:<病人端埠>`、**開發用簽章的黃色警示**、三個 SHA-256。沒有任何憑證警告。
 - `v19` **［病人端］** 開 `http://<IP>:<病人端埠>/` → 被轉到 `https://…`，瀏覽器跳出「連線不是私人連線」——**這是對的**：開發機的瀏覽器不信任院內 CA，平板上的外殼才信任。
-- `v20` **［終端機］** 先取出院內 CA： `docker compose --env-file $cfg --profile shell run --rm --entrypoint cat shell-builder /keys/ca/ca.crt > ca.crt`， 再 `curl.exe -s --cacert ca.crt https://<IP>:<病人端埠>/api/device/shell-contract` → 回契約版本。**只信任院內 CA 就通**，而且 `/api/` 是從病人端的埠轉過去的。
+- `v20` **［終端機］** 先取出院內 CA： `docker compose --env-file $cfg --profile shell run --rm --entrypoint cat shell-builder /keys/ca/ca.crt > ca.crt`，再 `curl.exe -s --cacert ca.crt https://<IP>:<病人端埠>/api/device/shell-contract` → 回契約版本。**只信任院內 CA 就通**，而且 `/api/` 是從病人端的埠轉過去的。
 - `v21` **［終端機］** 同上但不帶 `--cacert`。 → `curl: (60) SSL certificate problem`。
 
 ## 12.5 · 開發手機從下載頁安裝並載入病人端（驗收 3）📱
@@ -103,7 +112,7 @@ ______________________________________________________________________
 - `v39` ⚠ **［終端機］** 做一支契約第 2 版的外殼：在外殼 repo 開一個本機分支，`gradle.properties` 改成 `hdShellVersion=0.2.1`、`hdShellContractVersion=2`，提交並打**本機** tag `v0.2.1`（不推）；本 repo 的 `shell.pin` 暫時改成 `v0.2.1`、`2`；重跑 `v10`、`v11`。 → 建置成功，下載頁變成 0.2.1。
 - `v40` **［手機］** 從下載頁下載 0.2.1 覆蓋安裝，開啟。 → 覆蓋安裝成功（同一把開發用簽章金鑰）；**畫面上方出現琥珀色提示列**：「這台平板的程式與系統版本不相容……（平板：第 2 版／系統：第 1 版）」；**下方的求助區照常可按**。
 - `v41` **［護理端］** 裝置管理。 → `DEV-PHONE-01` 變成「**版本不相容**」（紅）`0.2.1`；稽核多一筆「平板程式版本變更」。
-- `v42` **收尾**：`shell.pin` 改回 `v0.2.0`、`1`；外殼 repo 刪掉本機 tag `v0.2.1` 與那個分支；重跑 `v10`、`v11`。 手機要**先解除安裝**再從下載頁裝 0.2.0（Android 不准版本往下覆蓋）；重新佈建後提示列消失、護理端回到「版本正常」。
+- `v42` **收尾**：`shell.pin` 改回 `v0.2.0`、`1`；外殼 repo 刪掉本機 tag `v0.2.1` 與那個分支；重跑 `v10`、`v11`。手機要**先解除安裝**再從下載頁裝 0.2.0（Android 不准版本往下覆蓋）；重新佈建後提示列消失、護理端回到「版本正常」。
 
 ## 12.8 · 金鑰備份與核對（DEP-35）🐳
 

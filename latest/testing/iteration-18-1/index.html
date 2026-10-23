@@ -3478,6 +3478,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4685,6 +4696,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4780,14 +4802,15 @@
 
 <h1 id="迭代-181-手動測試--書面確認閘門改放進系統管理四條規則的建議門檻">迭代 18.1 手動測試 — 書面確認閘門改放進系統管理、四條規則的建議門檻<a class="headerlink" href="#迭代-181-手動測試--書面確認閘門改放進系統管理四條規則的建議門檻" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.16.1 節與《<a href="../../notes/iteration-18-1-fixes/">迭代 18.1 修正紀錄</a>》。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 18.1 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。
-項次接著迭代 18 分冊編（<code>ab27</code> 起；18 用到 <code>ab26</code>），小版沿用那個迭代的字母。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.16.1 節與《<a href="../../notes/iteration-18-1-fixes/">迭代 18.1 修正紀錄</a>》。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 18.1 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。項次接著迭代 18 分冊編（<code>ab27</code> 起；18 用到 <code>ab26</code>），小版沿用那個迭代的字母。</p>
 </blockquote>
-<p><strong>這一冊驗兩件事</strong>：書面確認閘門從主機設定檔搬進系統管理「判斷規則」——系統管理者填文號與理由登記、填理由取消登記，每一次都寫稽核，護理長只看得到狀態；
-四條沒有書面依據的規則（RISK-IDWG-01、ALERT-SYM-01、DOSE-HB-01、ADEQ-KTV-01）換成開發端依文獻選的建議值，<strong>仍然只對合成資料執行</strong>，既有的資料庫也看得到。
-迭代 18 分冊裡講到 <code>.env</code> 的那幾項（<code>ab5</code>、<code>ab6</code>、<code>ab24</code>）改照這一冊做，其餘照舊有效。</p>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<p>這一冊驗兩件事（項次 <code>ab27</code>～<code>ab40</code>，自動化另跑 <code>npm run verify:iteration18-1</code>）：</p>
+<ul>
+<li>書面確認閘門從主機設定檔搬進系統管理「判斷規則」——系統管理者填文號與理由登記、填理由取消登記，每一次都寫稽核，護理長只看得到狀態</li>
+<li>四條沒有書面依據的規則（RISK-IDWG-01、ALERT-SYM-01、DOSE-HB-01、ADEQ-KTV-01）換成開發端依文獻選的建議值，<strong>仍然只對合成資料執行</strong>，既有的資料庫也看得到</li>
+<li>迭代 18 分冊裡講到 <code>.env</code> 的那幾項（<code>ab5</code>、<code>ab6</code>、<code>ab24</code>）改照這一冊做，其餘照舊有效</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -4857,47 +4880,32 @@
 <hr />
 <h2 id="1811-閘門在系統管理">§18.1.1 閘門在系統管理<a class="headerlink" href="#1811-閘門在系統管理" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab27</code> <strong>［護理端］</strong> 📐 以管理者登入 → 系統管理 → 判斷規則，看最上面「書面確認閘門」。
-  → 「<strong>尚未登記</strong>」，說明寫著只對合成資料病人執行、真實病人一律擋下、拿到書面確認之後由系統管理者在這裡填文號登記；<strong>不再提主機設定檔</strong>。下面一顆「<strong>登記書面確認</strong>」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab28</code> <strong>［護理端］</strong> 按「登記書面確認」。
-  → 展開兩格：書面確認的文號、理由（寫進稽核軌跡）；「確認登記」灰著。只填文號、不填理由，按不下去；只填理由、不填文號，也按不下去。按「不改了」收回，什麼都沒改。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab29</code> <strong>［護理端］</strong> 以護理長登入看同一頁。
-  → 看得到狀態（與最近一次是誰登記的，若有），<strong>沒有</strong>「登記書面確認」，只寫「登記與取消登記只有系統管理者能做」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab30</code> <strong>［終端機］</strong> 以護理長或一般護理師的權杖打 <code>PUT /api/rules/gate</code>（<code>{"open":true,"reference":"測試","reason":"測試"}</code>）。
-  → 403。以管理者的權杖、文號留空（或只有空白）→ 400「登記要填書面確認的文號」；文號超過 200 字 → 400；本來就沒登記又送 <code>{"open":false,"reason":"測試"}</code> → 409「書面確認本來就沒有登記」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab27</code> <strong>［護理端］</strong> 📐 以管理者登入 → 系統管理 → 判斷規則，看最上面「書面確認閘門」。 → 「<strong>尚未登記</strong>」，說明寫著只對合成資料病人執行、真實病人一律擋下、拿到書面確認之後由系統管理者在這裡填文號登記；<strong>不再提主機設定檔</strong>。下面一顆「<strong>登記書面確認</strong>」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab28</code> <strong>［護理端］</strong> 按「登記書面確認」。 → 展開兩格：書面確認的文號、理由（寫進稽核軌跡）；「確認登記」灰著。只填文號、不填理由，按不下去；只填理由、不填文號，也按不下去。按「不改了」收回，什麼都沒改。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab29</code> <strong>［護理端］</strong> 以護理長登入看同一頁。 → 看得到狀態（與最近一次是誰登記的，若有），<strong>沒有</strong>「登記書面確認」，只寫「登記與取消登記只有系統管理者能做」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab30</code> <strong>［終端機］</strong> 以護理長或一般護理師的權杖打 <code>PUT /api/rules/gate</code>（<code>{"open":true,"reference":"測試","reason":"測試"}</code>）。 → 403。以管理者的權杖、文號留空（或只有空白）→ 400「登記要填書面確認的文號」；文號超過 200 字 → 400；本來就沒登記又送 <code>{"open":false,"reason":"測試"}</code> → 409「書面確認本來就沒有登記」。</li>
 </ul>
 <h2 id="1812-登記之後取消登記之後">§18.1.2 登記之後、取消登記之後<a class="headerlink" href="#1812-登記之後取消登記之後" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab31</code> <strong>［護理端］</strong> 管理者填文號「手測-001」、理由「手動測試，測完取消」→ 確認登記。
-  → 綠色訊息「書面確認已登記（手測-001），並已寫入稽核軌跡…」；狀態變「<strong>已登記</strong>」，下面一行「&lt;時間&gt; 由 &lt;管理者&gt; 登記：手動測試，測完取消」；按鈕變「取消登記」。系統管理 → 稽核軌跡查「登記或取消登記書面確認閘門」，有這一筆，寫著文號與理由。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab32</code> <strong>［護理端］</strong> 系統管理 → 功能開關，看「臨床判斷輔助」四項的開啟條件說明。
-  → 寫著「書面確認已登記（手測-001）：生效中的版本對真實病人執行」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab33</code> <strong>［護理端］</strong> 開「劑量調整參考」，病人趨勢選一位病歷號<strong>不是</strong> <code>HD-TEST-</code> 開頭的病人（<code>verify:iteration18-1:api</code> 建的「陳真實」那一類），按「立即比對」。
-  → <strong>不再</strong>出現「書面確認尚未登記」的紅色錯誤；但四條規則都只有草稿，<strong>一則都沒有比對</strong>。稽核軌跡「判斷規則比對遭擋下：真實病人」多一筆，寫著「以下規則沒有生效中的版本…沒有比對：DOSE-HB-01」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab34</code> <strong>［護理端］</strong> 回判斷規則按「取消登記」，理由「手動測試結束」→ 確認取消登記。
-  → 狀態回到「尚未登記」，下面一行寫著誰取消、理由；稽核軌跡多一筆，記著原本的文號。回病人趨勢對同一位病人「立即比對」→ 又是紅色的「書面確認尚未登記…」。<strong>把劑量調整參考關回去。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab31</code> <strong>［護理端］</strong> 管理者填文號「手測-001」、理由「手動測試，測完取消」→ 確認登記。 → 綠色訊息「書面確認已登記（手測-001），並已寫入稽核軌跡…」；狀態變「<strong>已登記</strong>」，下面一行「&lt;時間&gt; 由 &lt;管理者&gt; 登記：手動測試，測完取消」；按鈕變「取消登記」。系統管理 → 稽核軌跡查「登記或取消登記書面確認閘門」，有這一筆，寫著文號與理由。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab32</code> <strong>［護理端］</strong> 系統管理 → 功能開關，看「臨床判斷輔助」四項的開啟條件說明。 → 寫著「書面確認已登記（手測-001）：生效中的版本對真實病人執行」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab33</code> <strong>［護理端］</strong> 開「劑量調整參考」，病人趨勢選一位病歷號<strong>不是</strong> <code>HD-TEST-</code> 開頭的病人（<code>verify:iteration18-1:api</code> 建的「陳真實」那一類），按「立即比對」。 → <strong>不再</strong>出現「書面確認尚未登記」的紅色錯誤；但四條規則都只有草稿，<strong>一則都沒有比對</strong>。稽核軌跡「判斷規則比對遭擋下：真實病人」多一筆，寫著「以下規則沒有生效中的版本…沒有比對：DOSE-HB-01」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab34</code> <strong>［護理端］</strong> 回判斷規則按「取消登記」，理由「手動測試結束」→ 確認取消登記。 → 狀態回到「尚未登記」，下面一行寫著誰取消、理由；稽核軌跡多一筆，記著原本的文號。回病人趨勢對同一位病人「立即比對」→ 又是紅色的「書面確認尚未登記…」。<strong>把劑量調整參考關回去。</strong></li>
 </ul>
 <h2 id="1813-設定檔不再有這一項">§18.1.3 設定檔不再有這一項<a class="headerlink" href="#1813-設定檔不再有這一項" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab35</code> <strong>［終端機］</strong> 在 <code>.env.example</code> 與 <code>deploy/hospital.env.example</code> 裡搜尋 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code>。
-  → 兩份都找不到；<code>docker-compose.yml</code> 也沒有。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab36</code> <strong>［終端機］</strong> 🛠 在開發機的 <code>.env</code> 暫時加一行 <code>HIGH_RISK_WRITTEN_CONFIRMATION=測試</code>，重新啟動後端。
-  → 啟動日誌一行黃色提醒：「設定檔裡還有 HIGH_RISK_WRITTEN_CONFIRMATION，但迭代 18.1 起已經不讀它…請把這一行從設定檔拿掉」；判斷規則那一頁<strong>仍是「尚未登記」</strong>。把那一行拿掉。🧪 模擬部署的設定目錄若還留著這一行，同樣拿掉（部署手冊第十五冊之二）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab35</code> <strong>［終端機］</strong> 在 <code>.env.example</code> 與 <code>deploy/hospital.env.example</code> 裡搜尋 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code>。 → 兩份都找不到；<code>docker-compose.yml</code> 也沒有。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab36</code> <strong>［終端機］</strong> 🛠 在開發機的 <code>.env</code> 暫時加一行 <code>HIGH_RISK_WRITTEN_CONFIRMATION=測試</code>，重新啟動後端。 → 啟動日誌一行黃色提醒：「設定檔裡還有 HIGH_RISK_WRITTEN_CONFIRMATION，但迭代 18.1 起已經不讀它…請把這一行從設定檔拿掉」；判斷規則那一頁<strong>仍是「尚未登記」</strong>。把那一行拿掉。🧪 模擬部署的設定目錄若還留著這一行，同樣拿掉（部署手冊第十五冊之二）。</li>
 </ul>
 <h2 id="1814-四條規則的建議門檻">§18.1.4 四條規則的建議門檻<a class="headerlink" href="#1814-四條規則的建議門檻" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab37</code> <strong>［護理端］</strong> 判斷規則往下看四條：RISK-IDWG-01、ALERT-SYM-01、DOSE-HB-01、ADEQ-KTV-01。
-  → 全新的資料庫是第 1 版、迭代 18 時建的資料庫是<strong>第 2 版</strong>（建立者「系統預設」），門檻依序是：體重增幅 4.0%、往前找 3 天；往前看 6 次、至少 2 次、前後 30 分鐘；血紅素 10.0～11.5 g/dL、35 天內；取最近 6 次、至少 3 次、門檻 1.20。
-  → 四條都是「草稿」、書面依據出處「未附」、<strong>沒有「標為生效」</strong>；備註以「開發端依文獻選的建議值，尚未經臨床端確認，不是書面依據」開頭，寫著依據的指引或研究。兩條收縮壓的（RISK-HYPO-01、ALERT-HYPO-01）沒有多一版。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab38</code> <strong>［終端機］</strong> 迭代 18 時建的資料庫，再重新啟動一次後端，回判斷規則看。
-  → 四條<strong>沒有再多出第 3 版</strong>（同樣的門檻補過一次就不再補）；稽核軌跡「首次啟動寫入預設判斷規則（草稿）」寫著「補上草稿版本」的只有一筆。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab39</code> <strong>［護理端］</strong> 照迭代 18 分冊 <code>ab12</code> 跑一次 <code>verify:iteration18:api -- --keep</code>，看即時總覽的待檢視。
-  → 合成病人的輸出用的是新的那一版（看依據：第 2 版，或全新資料庫的第 1 版）；DOSE-HB-01 那一則寫「規則上下限 10.0～11.5 g/dL」。看完照 <code>ab23</code> 把四項關掉。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab37</code> <strong>［護理端］</strong> 判斷規則往下看四條：RISK-IDWG-01、ALERT-SYM-01、DOSE-HB-01、ADEQ-KTV-01。 → 全新的資料庫是第 1 版、迭代 18 時建的資料庫是<strong>第 2 版</strong>（建立者「系統預設」），門檻依序是：體重增幅 4.0%、往前找 3 天；往前看 6 次、至少 2 次、前後 30 分鐘；血紅素 10.0～11.5 g/dL、35 天內；取最近 6 次、至少 3 次、門檻 1.20。 → 四條都是「草稿」、書面依據出處「未附」、<strong>沒有「標為生效」</strong>；備註以「開發端依文獻選的建議值，尚未經臨床端確認，不是書面依據」開頭，寫著依據的指引或研究。兩條收縮壓的（RISK-HYPO-01、ALERT-HYPO-01）沒有多一版。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab38</code> <strong>［終端機］</strong> 迭代 18 時建的資料庫，再重新啟動一次後端，回判斷規則看。 → 四條<strong>沒有再多出第 3 版</strong>（同樣的門檻補過一次就不再補）；稽核軌跡「首次啟動寫入預設判斷規則（草稿）」寫著「補上草稿版本」的只有一筆。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab39</code> <strong>［護理端］</strong> 照迭代 18 分冊 <code>ab12</code> 跑一次 <code>verify:iteration18:api -- --keep</code>，看即時總覽的待檢視。 → 合成病人的輸出用的是新的那一版（看依據：第 2 版，或全新資料庫的第 1 版）；DOSE-HB-01 那一則寫「規則上下限 10.0～11.5 g/dL」。看完照 <code>ab23</code> 把四項關掉。</li>
 </ul>
 <h2 id="1815-自動化驗收">§18.1.5 自動化驗收<a class="headerlink" href="#1815-自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab40</code> <strong>［終端機］</strong> <code>npm run verify:iteration18-1</code>（不需要後端）；後端開著、閘門沒登記、「劑量調整參考」關著，再跑 <code>npm run verify:iteration18-1:api</code>。
-  → 兩支都全部通過（前一支會再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>、<code>verify:iteration18</code>；後一支結束時閘門回到沒登記、開關改回原狀，<strong>登記紀錄只增不改，每跑一次多兩筆</strong>）。迭代 18 的兩支也照樣通過。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ab40</code> <strong>［終端機］</strong> <code>npm run verify:iteration18-1</code>（不需要後端）；後端開著、閘門沒登記、「劑量調整參考」關著，再跑 <code>npm run verify:iteration18-1:api</code>。 → 兩支都全部通過（前一支會再跑 <code>check:ui</code>、<code>check:ui:design</code>、<code>check:egress</code>、<code>verify:iteration18</code>；後一支結束時閘門回到沒登記、開關改回原狀，<strong>登記紀錄只增不改，每跑一次多兩筆</strong>）。迭代 18 的兩支也照樣通過。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>

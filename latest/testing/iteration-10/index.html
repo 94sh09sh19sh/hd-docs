@@ -2862,6 +2862,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4729,6 +4740,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#這一冊有什麼" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4868,14 +4890,10 @@
 
 <h1 id="迭代-10-手動測試--打包平板佈建與部署演練">迭代 10 手動測試 — 打包、平板佈建與部署演練<a class="headerlink" href="#迭代-10-手動測試--打包平板佈建與部署演練" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.8 節。
-共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 10 的部分。
-操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.8 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 10 的部分。操作端色籤（<strong>護理端</strong>／<strong>病人端</strong>／<strong>終端機</strong>／<strong>資料庫</strong>）的意思見主手冊 §00。</p>
 </blockquote>
 <p><strong>這一冊與前九冊有一個根本差別：一半的項次不在開發機上做。</strong></p>
-<p>前面的迭代驗的是「功能對不對」，可以在一台機器上驗完。迭代 10 驗的是
-「<strong>把它搬到一台什麼都沒有的機器上，還能不能動</strong>」——而開發機正好是那個條件的反面：
-有網路、有 Node.js、有一整份套件目錄。在這裡驗過的東西，只證明安裝包內部是完整的。</p>
+<p>前面的迭代驗的是「功能對不對」，可以在一台機器上驗完。迭代 10 驗的是「<strong>把它搬到一台什麼都沒有的機器上，還能不能動</strong>」——而開發機正好是那個條件的反面：有網路、有 Node.js、有一整份套件目錄。在這裡驗過的東西，只證明安裝包內部是完整的。</p>
 <p>因此每一節開頭都標了它在哪裡做：</p>
 <table>
 <thead>
@@ -4895,6 +4913,14 @@
 </tr>
 </tbody>
 </table>
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>項次 <code>t1</code>～<code>t53</code>，對應實作規格書 4.8；自動化另跑 <code>npm run verify:iteration10</code></li>
+<li>約一半的項次要在乾淨機器、實機平板或院內主機做，結果寫進《部署演練紀錄》</li>
+<li>離線安裝包的建置與五項驗收、服務註冊與啟停（<strong>安裝包部分 0926 已撤除，保留為紀錄</strong>）</li>
+<li>病人端斷網仍開得出畫面、跳出 Kiosk 看得見、更新與回退演練</li>
+<li>自簽 CA 與外殼 App、路線 A 與路線 B</li>
+</ul>
 <h2 id="這一冊有什麼">這一冊有什麼<a class="headerlink" href="#這一冊有什麼" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -4997,162 +5023,87 @@
 <hr />
 <h2 id="101--建置離線安裝包dep-18">10.1 · 建置離線安裝包（DEP-18）🖥<a class="headerlink" href="#101--建置離線安裝包dep-18" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t1</code> <strong>［終端機］</strong> <code>npm run build</code>，再跑 <code>npm run check:offline</code>。
-  → 沒有阻擋項。有阻擋項就<strong>不要往下做</strong>：這一步擋下的東西，到院內會變成起不來的服務。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t2</code> <strong>［終端機］</strong> <code>npm run package:build -- --zip</code>
-  → 最後印出安裝包目錄、檔案數、總大小、<code>CHECKSUMS.txt</code> 的 SHA-256，以及壓縮檔與它的 SHA-256。
-  <strong>把那兩個雜湊值抄進交付單</strong>（DEP-27）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t3</code> <strong>［終端機］</strong> 看一眼安裝包目錄的最上層。
-  → 有 <code>runtime/</code>、<code>app/</code>、<code>engines/</code>、<code>scripts/</code>、<code>VERSION.json</code>、<code>CHECKSUMS.txt</code>、
-  <code>.env.範本</code>、<code>安裝說明.md</code>。
-  → <strong>沒有 <code>.env</code>、沒有 <code>.db</code>、沒有備份檔</strong>（DEP-13）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t4</code> <strong>［終端機］</strong> 開啟 <code>VERSION.json</code>。
-  → 版本、commit、建置時間、Node.js 版本、包內的 Prisma 引擎檔名都在。
-  <code>commitClean</code> 若是 <code>false</code>，表示建置時工作區有未提交的變更——<strong>正式交付的包不接受這個值</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t5</code> <strong>［終端機］</strong> <code>npm run check:egress</code>
-  → 安裝包與外殼 App 兩列都是 0 筆（DEP-14）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t1</code> <strong>［終端機］</strong> <code>npm run build</code>，再跑 <code>npm run check:offline</code>。 → 沒有阻擋項。有阻擋項就<strong>不要往下做</strong>：這一步擋下的東西，到院內會變成起不來的服務。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t2</code> <strong>［終端機］</strong> <code>npm run package:build -- --zip</code> → 最後印出安裝包目錄、檔案數、總大小、<code>CHECKSUMS.txt</code> 的 SHA-256，以及壓縮檔與它的 SHA-256。 <strong>把那兩個雜湊值抄進交付單</strong>（DEP-27）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t3</code> <strong>［終端機］</strong> 看一眼安裝包目錄的最上層。 → 有 <code>runtime/</code>、<code>app/</code>、<code>engines/</code>、<code>scripts/</code>、<code>VERSION.json</code>、<code>CHECKSUMS.txt</code>、 <code>.env.範本</code>、<code>安裝說明.md</code>。 → <strong>沒有 <code>.env</code>、沒有 <code>.db</code>、沒有備份檔</strong>（DEP-13）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t4</code> <strong>［終端機］</strong> 開啟 <code>VERSION.json</code>。 → 版本、commit、建置時間、Node.js 版本、包內的 Prisma 引擎檔名都在。 <code>commitClean</code> 若是 <code>false</code>，表示建置時工作區有未提交的變更——<strong>正式交付的包不接受這個值</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t5</code> <strong>［終端機］</strong> <code>npm run check:egress</code> → 安裝包與外殼 App 兩列都是 0 筆（DEP-14）。</li>
 </ul>
 <h2 id="102--安裝包驗收五項dep-22dep-27--">10.2 · 安裝包驗收五項（DEP-22、DEP-27）🖥 ＋ 🏥<a class="headerlink" href="#102--安裝包驗收五項dep-22dep-27--" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t6</code> <strong>［終端機］</strong> <code>npm run package:verify -- --dir dist-package/&lt;安裝包目錄&gt;</code>
-  → 五項全綠：雜湊值、包內沒有設定檔與資料庫、以包內引擎套用遷移、三個行程起得來、全程沒有對外連線。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t7</code> <strong>［終端機］</strong> 故意改壞一個檔案（例如在 <code>安裝說明.md</code> 尾端加一個字），再跑一次 <code>t6</code>。
-  → <strong>雜湊值那一項變紅</strong>，並指出是哪一個檔案。改回去再跑一次確認恢復綠色。
-  <em>這一項是在驗「驗收腳本本身會不會說謊」——每個檢查都要有人看過它失敗的樣子。</em></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t8</code> 🏥 <strong>［終端機］</strong> 把安裝包與 <code>scripts/verify-package.mjs</code> 一起複製到<strong>一台乾淨的 Windows 機器</strong>，
-  <strong>拔掉網路線</strong>，用包內的執行期跑：
-  <code>.\runtime\node.exe verify-package.mjs --dir .</code>
-  → 五項全綠。<strong>這一次的輸出才是 DEP-22 的交付物</strong>，整段貼進演練紀錄 §3.2。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t9</code> 🏥 <strong>［終端機］</strong> 同一台機器上確認沒有全域 Node.js：<code>node -v</code>
-  → 「不是內部或外部命令」。<strong>如果這台機器上有 Node.js，這次驗收不算數</strong>——
-  你驗的是那一份，不是包裡的那一份。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t6</code> <strong>［終端機］</strong> <code>npm run package:verify -- --dir dist-package/&lt;安裝包目錄&gt;</code> → 五項全綠：雜湊值、包內沒有設定檔與資料庫、以包內引擎套用遷移、三個行程起得來、全程沒有對外連線。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t7</code> <strong>［終端機］</strong> 故意改壞一個檔案（例如在 <code>安裝說明.md</code> 尾端加一個字），再跑一次 <code>t6</code>。 → <strong>雜湊值那一項變紅</strong>，並指出是哪一個檔案。改回去再跑一次確認恢復綠色。 <em>這一項是在驗「驗收腳本本身會不會說謊」——每個檢查都要有人看過它失敗的樣子。</em></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t8</code> 🏥 <strong>［終端機］</strong> 把安裝包與 <code>scripts/verify-package.mjs</code> 一起複製到<strong>一台乾淨的 Windows 機器</strong>， <strong>拔掉網路線</strong>，用包內的執行期跑： <code>.\runtime\node.exe verify-package.mjs --dir .</code> → 五項全綠。<strong>這一次的輸出才是 DEP-22 的交付物</strong>，整段貼進演練紀錄 §3.2。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t9</code> 🏥 <strong>［終端機］</strong> 同一台機器上確認沒有全域 Node.js：<code>node -v</code> → 「不是內部或外部命令」。<strong>如果這台機器上有 Node.js，這次驗收不算數</strong>——你驗的是那一份，不是包裡的那一份。</li>
 </ul>
 <h2 id="103--服務註冊啟動與停止dep-12">10.3 · 服務註冊、啟動與停止（DEP-12）🏥<a class="headerlink" href="#103--服務註冊啟動與停止dep-12" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t10</code> <strong>［終端機］</strong> 以系統管理員身分：
-  <code>.\scripts\service-install.ps1 -Account "&lt;專用低權限帳號&gt;" -DataDir "&lt;資料目錄&gt;" -BackupDir "&lt;備份目錄&gt;" -LockDownDataDir</code>
-  → 註冊完成。<strong>資料目錄若填在安裝包目錄之內會被擋下</strong>（DEP-08）——請實際試一次，看它擋不擋。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t11</code> <strong>［終端機］</strong> <code>.\scripts\service-start.ps1</code> 再 <code>.\scripts\service-status.ps1</code>
-  → 排程工作 Running、本安裝包底下 3 個行程、存活檢查 HTTP 200。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t12</code> <strong>［終端機］</strong> 用<strong>一般登入者</strong>的帳號開啟資料目錄。
-  → 拒絕存取。主機是共用的，同一台機器上別的專案的維運人員也有登入權限，
-  <strong>而他們不該讀得到病人資料</strong>（DEP-12、DEP-37 第 4 項）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t13</code> <strong>［護理端］</strong> 系統管理 → 維運狀態。
-  → 伺服器時區是 Asia/Taipei，<strong>執行身分是剛才那個專用帳號</strong>，不是你現在登入的帳號。
-  主機時區正確不代表服務執行帳號取得的時區正確（DEP-15）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t14</code> <strong>［終端機］</strong> 把機器重新開機。
-  → 開機後不必登入，服務自己起來（<code>service-status.ps1</code> 確認）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t15</code> <strong>［終端機］</strong> <code>.\scripts\service-stop.ps1</code>
-  → 三個行程都停了。<strong>要確認的是「都」</strong>：剩下任何一個還開著資料庫檔案，
-  接下來的備份就是在一個還在被寫入的檔案上做的（DEP-10）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t10</code> <strong>［終端機］</strong> 以系統管理員身分： <code>.\scripts\service-install.ps1 -Account "&lt;專用低權限帳號&gt;" -DataDir "&lt;資料目錄&gt;" -BackupDir "&lt;備份目錄&gt;" -LockDownDataDir</code> → 註冊完成。<strong>資料目錄若填在安裝包目錄之內會被擋下</strong>（DEP-08）——請實際試一次，看它擋不擋。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t11</code> <strong>［終端機］</strong> <code>.\scripts\service-start.ps1</code> 再 <code>.\scripts\service-status.ps1</code> → 排程工作 Running、本安裝包底下 3 個行程、存活檢查 HTTP 200。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t12</code> <strong>［終端機］</strong> 用<strong>一般登入者</strong>的帳號開啟資料目錄。 → 拒絕存取。主機是共用的，同一台機器上別的專案的維運人員也有登入權限， <strong>而他們不該讀得到病人資料</strong>（DEP-12、DEP-37 第 4 項）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t13</code> <strong>［護理端］</strong> 系統管理 → 維運狀態。 → 伺服器時區是 Asia/Taipei，<strong>執行身分是剛才那個專用帳號</strong>，不是你現在登入的帳號。主機時區正確不代表服務執行帳號取得的時區正確（DEP-15）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t14</code> <strong>［終端機］</strong> 把機器重新開機。 → 開機後不必登入，服務自己起來（<code>service-status.ps1</code> 確認）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t15</code> <strong>［終端機］</strong> <code>.\scripts\service-stop.ps1</code> → 三個行程都停了。<strong>要確認的是「都」</strong>：剩下任何一個還開著資料庫檔案，接下來的備份就是在一個還在被寫入的檔案上做的（DEP-10）。</li>
 </ul>
 <h2 id="104--病人端斷網仍開得出畫面平板管控方案-31---">10.4 · 病人端斷網仍開得出畫面（平板管控方案 3.1）⚠ 🖥 ＋ 🏥<a class="headerlink" href="#104--病人端斷網仍開得出畫面平板管控方案-31---" title="Permanent link">&para;</a></h2>
 <p><strong>選 PWA 而不是純網頁的唯一理由就是這一節。</strong> 它不成立，這個選型就是假的。</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t16</code> <strong>［終端機］</strong> 用建置產物起一份靜態站：
-  <code>node apps/api/dist/static-server.js apps/patient-pwa/dist 5175</code>
-  <em>（開發伺服器沒有離線快取，這一節不能用 <code>npm run dev:patient</code> 驗。）</em></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t17</code> <strong>［病人端］</strong> 開 <code>http://localhost:5175</code>，等畫面出來。開發者工具 → 應用程式 → Service Workers。
-  → 有一個已啟用的 Service Worker；快取內容包含 <code>/index.html</code>、樣式與程式檔、圖示。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t16</code> <strong>［終端機］</strong> 用建置產物起一份靜態站： <code>node apps/api/dist/static-server.js apps/patient-pwa/dist 5175</code> <em>（開發伺服器沒有離線快取，這一節不能用 <code>npm run dev:patient</code> 驗。）</em></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t17</code> <strong>［病人端］</strong> 開 <code>http://localhost:5175</code>，等畫面出來。開發者工具 → 應用程式 → Service Workers。 → 有一個已啟用的 Service Worker；快取內容包含 <code>/index.html</code>、樣式與程式檔、圖示。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t18</code> <strong>［終端機］</strong> <strong>把 <code>t16</code> 那個行程停掉</strong>（不是關瀏覽器分頁）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t19</code> <strong>［病人端］</strong> 重新整理。
-  → <strong>畫面照樣出得來</strong>。這就是離線能力：伺服器不在了，平板上仍然有一份可以開的畫面。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t20</code> <strong>［病人端］</strong> 在已綁定病人的平板上重複 <code>t18</code>–<code>t19</code>。
-  → 畫面出得來，求助區在原來的位置、原來的大小，且<strong>明確顯示現在通知不到護理師</strong>——
-  能按而沒有回應才是最糟的那一種。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t21</code> <strong>［病人端］</strong> 開發者工具 → 應用程式 → 快取，逐一點開看內容。
-  → <strong>找不到任何一筆病人資料</strong>（姓名、病歷號、症狀回報、求助紀錄）。
-  快取裡只有畫面本身；資料請求不進快取，離線要送出的東西由本地暫存佇列負責。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t22</code> 🏥 <strong>［病人端］</strong> 在實機平板上把 Wi-Fi 關掉，重複 <code>t19</code>–<code>t20</code>。
-  → 同上。<strong>這一項要在實機上做</strong>，桌機瀏覽器的離線模擬與 Android WebView 的行為不完全一樣。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t19</code> <strong>［病人端］</strong> 重新整理。 → <strong>畫面照樣出得來</strong>。這就是離線能力：伺服器不在了，平板上仍然有一份可以開的畫面。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t20</code> <strong>［病人端］</strong> 在已綁定病人的平板上重複 <code>t18</code>–<code>t19</code>。 → 畫面出得來，求助區在原來的位置、原來的大小，且<strong>明確顯示現在通知不到護理師</strong>——能按而沒有回應才是最糟的那一種。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t21</code> <strong>［病人端］</strong> 開發者工具 → 應用程式 → 快取，逐一點開看內容。 → <strong>找不到任何一筆病人資料</strong>（姓名、病歷號、症狀回報、求助紀錄）。快取裡只有畫面本身；資料請求不進快取，離線要送出的東西由本地暫存佇列負責。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t22</code> 🏥 <strong>［病人端］</strong> 在實機平板上把 Wi-Fi 關掉，重複 <code>t19</code>–<code>t20</code>。 → 同上。<strong>這一項要在實機上做</strong>，桌機瀏覽器的離線模擬與 Android WebView 的行為不完全一樣。</li>
 </ul>
 <h2 id="105--逸出偵測跳出-kiosk-看得見平板管控方案-44-">10.5 · 逸出偵測：跳出 Kiosk 看得見（平板管控方案 4.4）⚠ 🖥<a class="headerlink" href="#105--逸出偵測跳出-kiosk-看得見平板管控方案-44-" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t23</code> <strong>［護理端］</strong> 裝置管理 → 平板清單。
-  → 多了一欄「固定狀態」。還沒裝外殼 App 的平板顯示<strong>尚未回報</strong>，不是「已跳出」——
-  <strong>沒裝 App 與跳出 Kiosk 是兩件事</strong>，護理師要做的處置也不同。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t23</code> <strong>［護理端］</strong> 裝置管理 → 平板清單。 → 多了一欄「固定狀態」。還沒裝外殼 App 的平板顯示<strong>尚未回報</strong>，不是「已跳出」—— <strong>沒裝 App 與跳出 Kiosk 是兩件事</strong>，護理師要做的處置也不同。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t24</code> <strong>［病人端］</strong> 用該台平板開啟病人端畫面並停在前景。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t25</code> <strong>［護理端］</strong> 最多等 15 秒（這一頁自己會重新取得）。
-  → 那一列變成<strong>固定中</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t25</code> <strong>［護理端］</strong> 最多等 15 秒（這一頁自己會重新取得）。 → 那一列變成<strong>固定中</strong>。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t26</code> <strong>［病人端］</strong> 把瀏覽器分頁切走（或在實機上退出 App）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t27</code> <strong>［護理端］</strong> 不要手動重新整理，看著那一列。
-  → <strong>30 秒內</strong>變成<strong>已跳出</strong>，下面一行寫著什麼時候開始的（驗收第 9 條）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t27</code> <strong>［護理端］</strong> 不要手動重新整理，看著那一列。 → <strong>30 秒內</strong>變成<strong>已跳出</strong>，下面一行寫著什麼時候開始的（驗收第 9 條）。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t28</code> <strong>［病人端］</strong> 切回前景。→ 護理端那一列變回<strong>固定中</strong>。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t29</code> <strong>［病人端］</strong> 把平板關機或關掉分頁，然後<strong>等 90 秒以上</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t30</code> <strong>［護理端］</strong> → 那一列變成<strong>失去回報</strong>，並寫出最後一次回報的時間。
-  「已跳出」是平板說的，「失去回報」是它不說話——<strong>要分得開</strong>，後者多半是關機或斷網。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t31</code> <strong>［護理端］</strong> 稽核軌跡 → 動作選「平板跳出固定畫面」。
-  → 查得到 <code>t26</code> 那一次。<strong>只有轉折點有紀錄</strong>：平板每 30 秒回報一次，15 台一天四萬多筆，
-  每筆都記等於把稽核軌跡淹掉。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t32</code> <strong>［護理端］</strong> 同一頁看「平板回到固定畫面」。
-  → 查得到 <code>t28</code>，但<strong>查不到 <code>t24</code> 那一次</strong>——那是 App 裝好之後的第一句話，不是跳出去又回來。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t30</code> <strong>［護理端］</strong> → 那一列變成<strong>失去回報</strong>，並寫出最後一次回報的時間。「已跳出」是平板說的，「失去回報」是它不說話——<strong>要分得開</strong>，後者多半是關機或斷網。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t31</code> <strong>［護理端］</strong> 稽核軌跡 → 動作選「平板跳出固定畫面」。 → 查得到 <code>t26</code> 那一次。<strong>只有轉折點有紀錄</strong>：平板每 30 秒回報一次，15 台一天四萬多筆，每筆都記等於把稽核軌跡淹掉。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t32</code> <strong>［護理端］</strong> 同一頁看「平板回到固定畫面」。 → 查得到 <code>t28</code>，但<strong>查不到 <code>t24</code> 那一次</strong>——那是 App 裝好之後的第一句話，不是跳出去又回來。</li>
 </ul>
 <h2 id="106--更新與回退演練dep-19dep-32-">10.6 · 更新與回退演練（DEP-19、DEP-32）⚠ 🖥<a class="headerlink" href="#106--更新與回退演練dep-19dep-32-" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><strong>在正本上做之前先想清楚。</strong> 這一節要停服務、動資料庫。
-第一次練習時請先把 <code>DATABASE_URL</code> 指到一份複本。</p>
+<p><strong>在正本上做之前先想清楚。</strong> 這一節要停服務、動資料庫。第一次練習時請先把 <code>DATABASE_URL</code> 指到一份複本。</p>
 </blockquote>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t33</code> <strong>［終端機］</strong> 停掉後端，然後 <code>npm run db:update -- --note "演練"</code>
-  → 六步依序完成：確認服務已停 → 開啟更新紀錄 → 備份 → <strong>驗證備份還原得起來</strong> → 套用既有遷移 → 寫紀錄。
-  <strong>抄下備份檔名與 SHA-256</strong>。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t34</code> <strong>［終端機］</strong> 後端還開著的時候再跑一次 <code>t33</code>。
-  → 被擋下，並說明為什麼（更新期間的寫入會落在備份與遷移之間的空窗裡）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t35</code> <strong>［終端機］</strong> 把 <code>BACKUP_DIR</code> 指到一個寫不進去的目錄再跑一次。
-  → 停在備份那一步，<strong>沒有套用任何遷移</strong>。備份沒做成就不往下走，這是整支腳本的重點。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t36</code> <strong>［護理端］</strong> 系統管理 → 維運狀態 → 更新紀錄。
-  → 查得到 <code>t33</code> 那一次：從哪一版到哪一版、備份檔名與雜湊、驗證結果、套用了哪幾個遷移、誰執行的。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t37</code> <strong>［終端機］</strong> 回退：
-  <code>npm run db:restore -- --from &lt;t33 的備份檔&gt; --to &lt;另一個路徑&gt; --sha256 &lt;t33 抄下的雜湊&gt;</code>
-  → 雜湊相符、完整性檢查 ok、列出主要資料表筆數。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t38</code> <strong>［資料庫］</strong> 開啟還原出來的那一份，對照更新後的那一份。
-  → 還原的那份<strong>沒有</strong>這次遷移新增的欄位，筆數與更新前一致。
-  <strong>程式可以退版，資料庫不行退版</strong>——回退是還原備份再換回舊版，不是把遷移倒回去。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t39</code> 🏥 <strong>［終端機］</strong> 正式更新時，<strong>舊版安裝包目錄改名保留，不要刪</strong>。
-  演練時也照做一次，確認退得回去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t33</code> <strong>［終端機］</strong> 停掉後端，然後 <code>npm run db:update -- --note "演練"</code> → 六步依序完成：確認服務已停 → 開啟更新紀錄 → 備份 → <strong>驗證備份還原得起來</strong> → 套用既有遷移 → 寫紀錄。 <strong>抄下備份檔名與 SHA-256</strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t34</code> <strong>［終端機］</strong> 後端還開著的時候再跑一次 <code>t33</code>。 → 被擋下，並說明為什麼（更新期間的寫入會落在備份與遷移之間的空窗裡）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t35</code> <strong>［終端機］</strong> 把 <code>BACKUP_DIR</code> 指到一個寫不進去的目錄再跑一次。 → 停在備份那一步，<strong>沒有套用任何遷移</strong>。備份沒做成就不往下走，這是整支腳本的重點。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t36</code> <strong>［護理端］</strong> 系統管理 → 維運狀態 → 更新紀錄。 → 查得到 <code>t33</code> 那一次：從哪一版到哪一版、備份檔名與雜湊、驗證結果、套用了哪幾個遷移、誰執行的。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t37</code> <strong>［終端機］</strong> 回退： <code>npm run db:restore -- --from &lt;t33 的備份檔&gt; --to &lt;另一個路徑&gt; --sha256 &lt;t33 抄下的雜湊&gt;</code> → 雜湊相符、完整性檢查 ok、列出主要資料表筆數。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t38</code> <strong>［資料庫］</strong> 開啟還原出來的那一份，對照更新後的那一份。 → 還原的那份<strong>沒有</strong>這次遷移新增的欄位，筆數與更新前一致。 <strong>程式可以退版，資料庫不行退版</strong>——回退是還原備份再換回舊版，不是把遷移倒回去。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t39</code> 🏥 <strong>［終端機］</strong> 正式更新時，<strong>舊版安裝包目錄改名保留，不要刪</strong>。演練時也照做一次，確認退得回去。</li>
 </ul>
 <h2 id="107--自簽-ca-與外殼-app平板管控方案-4243">10.7 · 自簽 CA 與外殼 App（平板管控方案 4.2、4.3）🏥<a class="headerlink" href="#107--自簽-ca-與外殼-app平板管控方案-4243" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t40</code> <strong>［終端機］</strong> <code>npm run cert:hospital-ca -- --host &lt;院內主機名稱&gt; --ip &lt;院內 IP&gt;</code>
-  → 產出 CA 與伺服器憑證，印出 CA 指紋與憑證有效期。
-  → <strong>立刻把 CA 私鑰異地備份</strong>（院內，不出院）並寫進交接文件（DEP-35）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t41</code> <strong>［終端機］</strong> 再跑一次同一個指令。
-  → 被擋下，不會蓋掉既有的 CA。換 CA 等於 15 台平板都要重發 APK。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t42</code> <strong>［終端機］</strong> <code>openssl verify -CAfile &lt;CA&gt; &lt;伺服器憑證&gt;</code>，並檢查主體別名。
-  → 驗證通過，別名涵蓋平板實際要連的那個位址。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t43</code> 🏥 <strong>［平板］</strong> 把 CA 放進外殼 App 的資源檔，編譯簽名 APK，側載到一台平板。
-  → 開啟後不出現憑證警告，Service Worker 正常運作（§10.4 的離線能力在實機上仍然成立）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t44</code> 🏥 <strong>［平板］</strong> 首次啟動輸入序號與金鑰。
-  → 進入病人端畫面，<strong>網址列不存在</strong>（外殼沒有網址列），病人看不到金鑰。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t45</code> 🏥 <strong>［平板］</strong> 設定 → 安全性 → 開啟螢幕固定並勾選「解除固定前要求 PIN」，釘住 App。
-  → 病人退不出去；解除要輸入 PIN。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t46</code> 🏥 <strong>［平板］</strong> 把平板重新開機。
-  → App 自己起來，<strong>但螢幕固定沒有恢復</strong>（已知取捨，列入每日交班檢查）。
-  護理端「固定狀態」這時應顯示固定中——<strong>App 在前景，只是沒被釘住</strong>，
-  這正是逸出偵測補不到的那個縫，靠交班檢查補。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t47</code> 🏥 <strong>［平板］</strong> 在 App 內點一個指向外部網站的連結（測試用）。
-  → 不會開啟。長按畫面上的文字 → 不會出現選字選單。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t40</code> <strong>［終端機］</strong> <code>npm run cert:hospital-ca -- --host &lt;院內主機名稱&gt; --ip &lt;院內 IP&gt;</code> → 產出 CA 與伺服器憑證，印出 CA 指紋與憑證有效期。 → <strong>立刻把 CA 私鑰異地備份</strong>（院內，不出院）並寫進交接文件（DEP-35）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t41</code> <strong>［終端機］</strong> 再跑一次同一個指令。 → 被擋下，不會蓋掉既有的 CA。換 CA 等於 15 台平板都要重發 APK。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t42</code> <strong>［終端機］</strong> <code>openssl verify -CAfile &lt;CA&gt; &lt;伺服器憑證&gt;</code>，並檢查主體別名。 → 驗證通過，別名涵蓋平板實際要連的那個位址。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t43</code> 🏥 <strong>［平板］</strong> 把 CA 放進外殼 App 的資源檔，編譯簽名 APK，側載到一台平板。 → 開啟後不出現憑證警告，Service Worker 正常運作（§10.4 的離線能力在實機上仍然成立）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t44</code> 🏥 <strong>［平板］</strong> 首次啟動輸入序號與金鑰。 → 進入病人端畫面，<strong>網址列不存在</strong>（外殼沒有網址列），病人看不到金鑰。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t45</code> 🏥 <strong>［平板］</strong> 設定 → 安全性 → 開啟螢幕固定並勾選「解除固定前要求 PIN」，釘住 App。 → 病人退不出去；解除要輸入 PIN。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t46</code> 🏥 <strong>［平板］</strong> 把平板重新開機。 → App 自己起來，<strong>但螢幕固定沒有恢復</strong>（已知取捨，列入每日交班檢查）。護理端「固定狀態」這時應顯示固定中——<strong>App 在前景，只是沒被釘住</strong>，這正是逸出偵測補不到的那個縫，靠交班檢查補。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t47</code> 🏥 <strong>［平板］</strong> 在 App 內點一個指向外部網站的連結（測試用）。 → 不會開啟。長按畫面上的文字 → 不會出現選字選單。</li>
 </ul>
 <h2 id="108--路線-a-與路線-bdep-2528">10.8 · 路線 A 與路線 B（DEP-25～28）🏥<a class="headerlink" href="#108--路線-a-與路線-bdep-2528" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t48</code> <strong>［終端機］</strong> 在正式主機上依序試 <code>git clone</code>、<code>npm install</code>、套用遷移。
-  → <strong>每一步的錯誤原文、在哪一步、花了多久，逐項記進《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》§1.3。</strong>
-  紀錄本身就是交付物。
-  → <strong>不得為了讓它成功而開對外連線。</strong></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t49</code> <strong>［終端機］</strong> 路線 B：開發端掃毒 → 隨身碟 → 院內掃描站再掃一次 → 解壓 → 核對雜湊。
-  → 兩次掃描結果都留存（DEP-26），雜湊相符（DEP-27）。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t50</code> <strong>［終端機］</strong> 用完清除隨身碟，在部署紀錄寫明「已清除」與執行者（DEP-28）。
-  → <strong>不得帶任何資料出院</strong>——不是備份、不是紀錄檔、不是截圖。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t51</code> <strong>［全部］</strong> 《部署規範》第 9 章的檢查清單逐條確認。
-  → 26 條全部有結果。<strong>缺一條就不算可以部署。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t48</code> <strong>［終端機］</strong> 在正式主機上依序試 <code>git clone</code>、<code>npm install</code>、套用遷移。 → <strong>每一步的錯誤原文、在哪一步、花了多久，逐項記進《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》§1.3。</strong> 紀錄本身就是交付物。 → <strong>不得為了讓它成功而開對外連線。</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t49</code> <strong>［終端機］</strong> 路線 B：開發端掃毒 → 隨身碟 → 院內掃描站再掃一次 → 解壓 → 核對雜湊。 → 兩次掃描結果都留存（DEP-26），雜湊相符（DEP-27）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t50</code> <strong>［終端機］</strong> 用完清除隨身碟，在部署紀錄寫明「已清除」與執行者（DEP-28）。 → <strong>不得帶任何資料出院</strong>——不是備份、不是紀錄檔、不是截圖。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t51</code> <strong>［全部］</strong> 《部署規範》第 9 章的檢查清單逐條確認。 → 26 條全部有結果。<strong>缺一條就不算可以部署。</strong></li>
 </ul>
 <h2 id="109--自動化驗收">10.9 · 自動化驗收<a class="headerlink" href="#109--自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t52</code> <strong>［終端機］</strong> <code>npm run verify:iteration10</code>（後端要先啟動）
-  → 腳本驗得到的部分全部通過，並列出<strong>只有在現場做得到的 5 項</strong>。
-  那 5 項不會變綠，也不該變綠——它們在上面的 🏥 節次裡。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t53</code> <strong>［終端機］</strong> <code>npm run check:all</code>
-  → 五支盤點全過，含安裝包與外殼 App 兩列。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t52</code> <strong>［終端機］</strong> <code>npm run verify:iteration10</code>（後端要先啟動） → 腳本驗得到的部分全部通過，並列出<strong>只有在現場做得到的 5 項</strong>。那 5 項不會變綠，也不該變綠——它們在上面的 🏥 節次裡。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>t53</code> <strong>［終端機］</strong> <code>npm run check:all</code> → 五支盤點全過，含安裝包與外殼 App 兩列。</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>

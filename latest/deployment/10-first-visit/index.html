@@ -5591,21 +5591,15 @@
 <h1 id="第十冊--第一次進院紀錄0922失敗">第十冊 · 第一次進院紀錄（0922，失敗）<a class="headerlink" href="#第十冊--第一次進院紀錄0922失敗" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：紀錄（0922 進院當天的現場資料整理而成）　編號：<code>F-xx</code></p>
 <blockquote>
-<p>前九冊寫的是<strong>應該怎麼做</strong>，這一冊記的是<strong>0922 第一次進院實際發生了什麼</strong>。
-結果是<a href="../#2-三種結果先想清楚哪一種算數">總覽第 2 節</a>的 <strong>C 級：失敗</strong>——服務沒有在院內主機上跑起來。</p>
-<p>依第五冊的前提，C 級不是白跑一趟，<strong>前提是紀錄做滿</strong>。這一冊把當天帶回來的零散資訊
-（現場筆記、第五冊情報蒐集表的回答、四張螢幕照片）整理成下一次進院能直接用的形狀：
-做錯了什麼、主機長什麼樣、哪些題目還空著、現場留下了什麼要收拾、手冊要改哪裡。</p>
+<p>前九冊寫的是<strong>應該怎麼做</strong>，這一冊記的是<strong>0922 第一次進院實際發生了什麼</strong>。結果是<a href="../#2-三種結果先想清楚哪一種算數">總覽第 2 節</a>的 <strong>C 級：失敗</strong>——服務沒有在院內主機上跑起來。</p>
+<p>依第五冊的前提，C 級不是白跑一趟，<strong>前提是紀錄做滿</strong>。這一冊把當天帶回來的零散資訊（現場筆記、第五冊情報蒐集表的回答、四張螢幕照片）整理成下一次進院能直接用的形狀：做錯了什麼、主機長什麼樣、哪些題目還空著、現場留下了什麼要收拾、手冊要改哪裡。</p>
 <p><strong>編號 <code>F-xx</code> 是這一冊的發現與待辦</strong>，寫進訊息或下一次的準備清單時用它指稱。</p>
-<p><strong>公開範圍</strong>：文件站是公開的。主機名稱、帳號名稱、完整的連接埠清單與原始照片<strong>一律不寫進這一冊</strong>，
-留在開發端本機的現場資料夾（不進 repo）。這一冊只寫判斷所需的結論。</p>
+<p><strong>公開範圍</strong>：文件站是公開的。主機名稱、帳號名稱、完整的連接埠清單與原始照片<strong>一律不寫進這一冊</strong>，留在開發端本機的現場資料夾（不進 repo）。這一冊只寫判斷所需的結論。</p>
 </blockquote>
 <hr />
 <h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
 <h3 id="01-一句話">0.1 一句話<a class="headerlink" href="#01-一句話" title="Permanent link">&para;</a></h3>
-<p><strong>院方要求以容器部署，這正是<a href="../09-docker/">第九冊</a>的情境；但當天沒有照第九冊的方式做，
-而是先手動開了一個通用的 Python 容器、在容器裡 <code>git clone</code>，再在容器「裡面」照第九冊從頭執行。</strong>
-第九冊的每一條指令都是寫給<strong>主機上的 PowerShell</strong> 下的，在容器裡一條都不成立，之後就全部亂掉了。</p>
+<p><strong>院方要求以容器部署，這正是<a href="../09-docker/">第九冊</a>的情境；但當天沒有照第九冊的方式做，而是先手動開了一個通用的 Python 容器、在容器裡 <code>git clone</code>，再在容器「裡面」照第九冊從頭執行。</strong> 第九冊的每一條指令都是寫給<strong>主機上的 PowerShell</strong> 下的，在容器裡一條都不成立，之後就全部亂掉了。</p>
 <h3 id="02-失敗原因由重到輕">0.2 失敗原因，由重到輕<a class="headerlink" href="#02-失敗原因由重到輕" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5655,9 +5649,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>即使 F-01～F-03 都沒有發生，照第九冊做也會在 D-14 或 D-18 倒下</strong>：F-04 讓院方拿到的是修正前的
-<code>Dockerfile</code>（沒有 OpenSSL、<code>/data</code> 屬於 root、compose 只接受繫結掛載），第九冊 0.3 節那三個問題會原樣重演。
-所以這一次的失敗有兩層，<strong>現場那一層很顯眼，準備那一層更根本</strong>。</p>
+<p><strong>即使 F-01～F-03 都沒有發生，照第九冊做也會在 D-14 或 D-18 倒下</strong>：F-04 讓院方拿到的是修正前的 <code>Dockerfile</code>（沒有 OpenSSL、<code>/data</code> 屬於 root、compose 只接受繫結掛載），第九冊 0.3 節那三個問題會原樣重演。所以這一次的失敗有兩層，<strong>現場那一層很顯眼，準備那一層更根本</strong>。</p>
 <h3 id="03-院方到底要求什麼還沒釐清">0.3 院方到底要求什麼（還沒釐清）<a class="headerlink" href="#03-院方到底要求什麼還沒釐清" title="Permanent link">&para;</a></h3>
 <p>現場筆記的原話是：「院方要求部署在 container 內，<strong>但似乎又允許鏡像到 docker 外</strong>。」這句話有兩種讀法，結果差很多：</p>
 <table>
@@ -5681,8 +5673,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>下一次進院前要拿到書面答案</strong>（<a href="#8-下一次進院前">F-20</a>）。若院方的意思是乙，那不是手冊能開的例外，
-要回到《<a href="../../requirements/deployment-spec/">部署規範</a>》3.3 談。</p>
+<p><strong>下一次進院前要拿到書面答案</strong>（<a href="#8-下一次進院前">F-20</a>）。若院方的意思是乙，那不是手冊能開的例外，要回到《<a href="../../requirements/deployment-spec/">部署規範</a>》3.3 談。</p>
 <p>兩條路線的逐項比較、以及不用容器也能與同機其他專案隔離的理由，整理在《<a href="../../notes/deployment-route-comparison/">部署路線比較</a>》，詢問院方時帶著它去。</p>
 <hr />
 <h2 id="1-當天實際做了什麼">1. 當天實際做了什麼<a class="headerlink" href="#1-當天實際做了什麼" title="Permanent link">&para;</a></h2>
@@ -5736,16 +5727,13 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>這一條本身就是教訓</strong>：錯誤原文沒抄，下一次連「上次卡在哪」都說不清楚。
-<a href="../#7-現場的基本原則五條">總覽第 7 節</a>第 3 條「錯誤訊息抄原文」在人慌的時候最容易被放掉。</p>
+<p><strong>這一條本身就是教訓</strong>：錯誤原文沒抄，下一次連「上次卡在哪」都說不清楚。 <a href="../#7-現場的基本原則五條">總覽第 7 節</a>第 3 條「錯誤訊息抄原文」在人慌的時候最容易被放掉。</p>
 </blockquote>
 <hr />
 <h2 id="2-為什麼會失敗">2. 為什麼會失敗<a class="headerlink" href="#2-為什麼會失敗" title="Permanent link">&para;</a></h2>
 <h3 id="f-01-在容器裡面照第九冊做">F-01 在容器裡面照第九冊做<a class="headerlink" href="#f-01-在容器裡面照第九冊做" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>：先 <code>docker run</code> 出一個 <code>python</code> 容器，再進去照第九冊做。</p>
-<p><strong>為什麼不成立</strong>：第九冊的形狀是「<strong>主機</strong>上有 Docker → 在<strong>主機</strong>上 <code>git clone</code> → 在<strong>主機</strong>上
-<code>docker build</code> 把原始碼建成映像檔 → <code>docker compose up</code> 由映像檔<strong>開出</strong>三個容器」。
-容器是這一整串的<strong>產物</strong>，不是起點。在容器裡面做，每一步都少了它要的東西：</p>
+<p><strong>為什麼不成立</strong>：第九冊的形狀是「<strong>主機</strong>上有 Docker → 在<strong>主機</strong>上 <code>git clone</code> → 在<strong>主機</strong>上 <code>docker build</code> 把原始碼建成映像檔 → <code>docker compose up</code> 由映像檔<strong>開出</strong>三個容器」。容器是這一整串的<strong>產物</strong>，不是起點。在容器裡面做，每一步都少了它要的東西：</p>
 <table>
 <thead>
 <tr>
@@ -5780,21 +5768,17 @@
 </tr>
 </tbody>
 </table>
-<p><strong>下一次怎麼做</strong>：<strong>不要自己先開任何容器。</strong> 在主機的 PowerShell 視窗裡，從 D-05 開始照第九冊做；
-容器會在 D-19 由 <code>docker compose up -d</code> 自己出現，名字是 <code>api</code>、<code>nurse-web</code>、<code>patient-web</code>。</p>
+<p><strong>下一次怎麼做</strong>：<strong>不要自己先開任何容器。</strong> 在主機的 PowerShell 視窗裡，從 D-05 開始照第九冊做；容器會在 D-19 由 <code>docker compose up -d</code> 自己出現，名字是 <code>api</code>、<code>nurse-web</code>、<code>patient-web</code>。</p>
 <h3 id="f-02-整顆-c-槽被掛進容器">F-02 整顆 C 槽被掛進容器<a class="headerlink" href="#f-02-整顆-c-槽被掛進容器" title="Permanent link">&para;</a></h3>
-<p><strong>發生了什麼</strong>：<code>-v /c:/app</code> 在 Docker Desktop 上的意思是「把主機的 <code>C:\</code> 掛到容器的 <code>/app</code>」。
-（這一點要在主機上用 <a href="#f-10-那個容器與它掛進去的東西">F-10</a> 的指令確認，見下。）</p>
+<p><strong>發生了什麼</strong>：<code>-v /c:/app</code> 在 Docker Desktop 上的意思是「把主機的 <code>C:\</code> 掛到容器的 <code>/app</code>」。（這一點要在主機上用 <a href="#f-10-那個容器與它掛進去的東西">F-10</a> 的指令確認，見下。）</p>
 <p><strong>為什麼嚴重</strong>：</p>
 <ul>
-<li>容器裡預設是 root。<strong>容器裡的任何指令，都能讀寫主機整顆 C 槽</strong>——包含同一台主機上另一個專案的檔案、
-  Windows 使用者資料夾、Docker 自己的虛擬磁碟所在的 <code>AppData</code>。這是 DEP-37 共用主機隔離的反面</li>
+<li>容器裡預設是 root。<strong>容器裡的任何指令，都能讀寫主機整顆 C 槽</strong>——包含同一台主機上另一個專案的檔案、 Windows 使用者資料夾、Docker 自己的虛擬磁碟所在的 <code>AppData</code>。這是 DEP-37 共用主機隔離的反面</li>
 <li><strong>在容器裡對 <code>/app</code> 做的任何刪除，刪的是主機上的真檔案。</strong> 在容器裡下一句 <code>rm -rf /app/*</code>，就是清空 C 槽</li>
 <li>在 <code>/app</code> 底下 <code>git clone</code>，原始碼就落在主機 C 槽的根目錄底下，<strong>而且是在一個沒人預期的位置</strong></li>
 <li>若之後把資料庫也放在 <code>/app</code> 底下，就是 0.3 讀法乙，違反 DEP-23</li>
 </ul>
-<p><strong>下一次怎麼做</strong>：第九冊這條路線上，<strong>只有一個主機目錄會被掛進容器：備份目錄</strong>（<code>HD_BACKUP_DIR</code>，掛到 <code>/backups</code>）。
-其餘一律不掛。這件事由 <code>docker-compose.yml</code> 決定，<strong>不要自己下 <code>-v</code></strong>。</p>
+<p><strong>下一次怎麼做</strong>：第九冊這條路線上，<strong>只有一個主機目錄會被掛進容器：備份目錄</strong>（<code>HD_BACKUP_DIR</code>，掛到 <code>/backups</code>）。其餘一律不掛。這件事由 <code>docker-compose.yml</code> 決定，<strong>不要自己下 <code>-v</code></strong>。</p>
 <h3 id="f-03-連接埠對應兩頭都不對">F-03 連接埠對應兩頭都不對<a class="headerlink" href="#f-03-連接埠對應兩頭都不對" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>：<code>-p 3000:8000</code> 是「主機的 3000 → 容器的 8000」。</p>
 <p><strong>為什麼不成立</strong>：</p>
@@ -5816,9 +5800,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>下一次怎麼做</strong>：<a href="../09-docker/#d-13-決定位址與三個連接埠">D-13</a> 那三個埠要避開 3000 與 9000。
-現場清單上 8080、8081 是空的；後端埠要另外挑一個空的、向資訊室登記，寫進 <code>.env</code> 的 <code>HD_API_PORT</code>，
-<strong>也寫進 D-14 的 <code>VITE_API_BASE_URL</code></strong>（兩處要一致，否則要重建映像檔）。</p>
+<p><strong>下一次怎麼做</strong>：<a href="../09-docker/#d-13-決定位址與三個連接埠">D-13</a> 那三個埠要避開 3000 與 9000。現場清單上 8080、8081 是空的；後端埠要另外挑一個空的、向資訊室登記，寫進 <code>.env</code> 的 <code>HD_API_PORT</code>， <strong>也寫進 D-14 的 <code>VITE_API_BASE_URL</code></strong>（兩處要一致，否則要重建映像檔）。</p>
 <h3 id="f-04-要被-clone-的那一版根本不在-master-上">F-04 要被 clone 的那一版根本不在 <code>master</code> 上<a class="headerlink" href="#f-04-要被-clone-的那一版根本不在-master-上" title="Permanent link">&para;</a></h3>
 <p><strong>發生了什麼</strong>（事後在開發端查到的）：</p>
 <table>
@@ -5845,14 +5827,10 @@
 </tr>
 </tbody>
 </table>
-<p><code>git clone</code> 不指定分支時拿到的是 <code>master</code>。院方當天 clone 到的若是 <code>master</code>，拿到的就是
-<strong>第九冊 0.3 節說「不修會在院內直接倒下」的那一版</strong>：沒有 OpenSSL、<code>/data</code> 屬於 root、compose 只接受繫結掛載。</p>
-<p><strong>為什麼會這樣</strong>：第九冊 <a href="../09-docker/#d-01-確認要被-clone-的那一版">D-01</a> 就是在防這件事——
-「本機與 <code>origin/master</code> 的 commit 一模一樣」。這一步在進院前沒有做到：修正推上了 <code>docker-route</code> 分支，沒有合回 <code>master</code>。</p>
-<p><strong>當天實際 clone 到哪一版不知道</strong>：只記到 <code>git remote -v</code>（有 <code>origin</code>），沒有記 <code>git log -1 --oneline</code>。
-這一版在容器裡、也在主機 C 槽上（F-02），<a href="#f-10-那個容器與它掛進去的東西">F-10</a> 可以查到。</p>
-<p><strong>下一次怎麼做</strong>：進院前把 <code>docker-route</code> 合回 <code>master</code> 並推上去，<strong>然後</strong>才做 D-01 的比對；
-交付單上寫 commit，現場 D-12 用 <code>git log -1</code> 逐字核對。</p>
+<p><code>git clone</code> 不指定分支時拿到的是 <code>master</code>。院方當天 clone 到的若是 <code>master</code>，拿到的就是 <strong>第九冊 0.3 節說「不修會在院內直接倒下」的那一版</strong>：沒有 OpenSSL、<code>/data</code> 屬於 root、compose 只接受繫結掛載。</p>
+<p><strong>為什麼會這樣</strong>：第九冊 <a href="../09-docker/#d-01-確認要被-clone-的那一版">D-01</a> 就是在防這件事——「本機與 <code>origin/master</code> 的 commit 一模一樣」。這一步在進院前沒有做到：修正推上了 <code>docker-route</code> 分支，沒有合回 <code>master</code>。</p>
+<p><strong>當天實際 clone 到哪一版不知道</strong>：只記到 <code>git remote -v</code>（有 <code>origin</code>），沒有記 <code>git log -1 --oneline</code>。這一版在容器裡、也在主機 C 槽上（F-02），<a href="#f-10-那個容器與它掛進去的東西">F-10</a> 可以查到。</p>
+<p><strong>下一次怎麼做</strong>：進院前把 <code>docker-route</code> 合回 <code>master</code> 並推上去，<strong>然後</strong>才做 D-01 的比對；交付單上寫 commit，現場 D-12 用 <code>git log -1</code> 逐字核對。</p>
 <h3 id="f-05-進院前的-d-02d-04-沒有到位">F-05 進院前的 D-02～D-04 沒有到位<a class="headerlink" href="#f-05-進院前的-d-02d-04-沒有到位" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5880,24 +5858,19 @@
 </tr>
 </tbody>
 </table>
-<p>第九冊寫的是「院方要求容器的話翻這一冊」，但院方的要求是<strong>當天才知道的</strong>，準備工作排不進去。
-這條教訓要寫回總覽：<strong>院方有可能臨時改要求，進院前就要把第九冊的準備做完，不管用不用得到。</strong></p>
+<p>第九冊寫的是「院方要求容器的話翻這一冊」，但院方的要求是<strong>當天才知道的</strong>，準備工作排不進去。這條教訓要寫回總覽：<strong>院方有可能臨時改要求，進院前就要把第九冊的準備做完，不管用不用得到。</strong></p>
 <h3 id="f-06-院方的要求沒有當場釐清">F-06 院方的要求沒有當場釐清<a class="headerlink" href="#f-06-院方的要求沒有當場釐清" title="Permanent link">&para;</a></h3>
-<p>0.3 那一句話有兩種讀法，現場沒有問清楚就動手。第九冊 <a href="../09-docker/#d-05-開場時說清楚這條路線的代價">D-05</a>、
-<a href="../09-docker/#d-06-取得書面例外">D-06</a> 本來就是要在動手前把這件事講清楚、簽下來的一步；這次跳過了。</p>
+<p>0.3 那一句話有兩種讀法，現場沒有問清楚就動手。第九冊 <a href="../09-docker/#d-05-開場時說清楚這條路線的代價">D-05</a>、 <a href="../09-docker/#d-06-取得書面例外">D-06</a> 本來就是要在動手前把這件事講清楚、簽下來的一步；這次跳過了。</p>
 <h3 id="f-07-主機當天連得到院外">F-07 主機當天連得到院外<a class="headerlink" href="#f-07-主機當天連得到院外" title="Permanent link">&para;</a></h3>
-<p>這不是失敗原因，但是<strong>這一趟最重要的發現之一</strong>：當天 <code>docker run ... python</code> 能把 <code>python</code> 映像檔從 Docker Hub 拉下來、
-容器裡 <code>git clone</code> 能從 GitHub 拿到私有 repo，表示<strong>這台主機當時有對外連線</strong>。</p>
+<p>這不是失敗原因，但是<strong>這一趟最重要的發現之一</strong>：當天 <code>docker run ... python</code> 能把 <code>python</code> 映像檔從 Docker Hub 拉下來、容器裡 <code>git clone</code> 能從 GitHub 拿到私有 repo，表示<strong>這台主機當時有對外連線</strong>。</p>
 <ul>
-<li>這與部署規範「零院外連線」的前提不一致，要問清楚：<strong>是一直都開著，還是當天為了部署臨時開的？誰開的、誰會關？</strong>
-  （第九冊 D-03 第 7 題、D-24）</li>
+<li>這與部署規範「零院外連線」的前提不一致，要問清楚：<strong>是一直都開著，還是當天為了部署臨時開的？誰開的、誰會關？</strong> （第九冊 D-03 第 7 題、D-24）</li>
 <li>第四冊 <a href="../04-onsite/#h-08-讓它失敗並把失敗記下來dep-25">H-08</a> 預期路線 A「每一步都失敗」，這台主機上不成立</li>
 <li>在這個問題有書面答案之前，<strong>不得輸入任何真實病人資料</strong>（與第九冊 D-24 同一條）</li>
 </ul>
 <hr />
 <h2 id="3-主機實況現場帶回來的">3. 主機實況（現場帶回來的）<a class="headerlink" href="#3-主機實況現場帶回來的" title="Permanent link">&para;</a></h2>
-<p>對照第四冊 <a href="../04-onsite/#h-06-確認這是對的那台機器">H-06</a>、<a href="../04-onsite/#h-07-盤點這台機器上原本有什麼">H-07</a>
-與第九冊 <a href="../09-docker/#d-07-確認-docker-可以用">D-07</a>～<a href="../09-docker/#d-09-確認誰能下-docker-指令">D-09</a>。</p>
+<p>對照第四冊 <a href="../04-onsite/#h-06-確認這是對的那台機器">H-06</a>、<a href="../04-onsite/#h-07-盤點這台機器上原本有什麼">H-07</a> 與第九冊 <a href="../09-docker/#d-07-確認-docker-可以用">D-07</a>～<a href="../09-docker/#d-09-確認誰能下-docker-指令">D-09</a>。</p>
 <h3 id="31-系統">3.1 系統<a class="headerlink" href="#31-系統" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -6005,9 +5978,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>這台與《部署規範》記載的規格對不太上</strong>：規範寫的是「2TB SSD ×2」，現場是一顆約 1.1 TB 的 C 與一顆約 840 GB 的 D。
-可能是同一組硬碟分割的方式不同，也可能<strong>不是同一台</strong>。第四冊 H-06 說過：「裝錯機器是最難救的錯誤」，
-下一次先問清楚（<a href="#8-下一次進院前">F-20</a>）。</p>
+<p><strong>這台與《部署規範》記載的規格對不太上</strong>：規範寫的是「2TB SSD ×2」，現場是一顆約 1.1 TB 的 C 與一顆約 840 GB 的 D。可能是同一組硬碟分割的方式不同，也可能<strong>不是同一台</strong>。第四冊 H-06 說過：「裝錯機器是最難救的錯誤」，下一次先問清楚（<a href="#8-下一次進院前">F-20</a>）。</p>
 </blockquote>
 <h3 id="33-docker">3.3 Docker<a class="headerlink" href="#33-docker" title="Permanent link">&para;</a></h3>
 <table>
@@ -6098,15 +6069,12 @@
 </tr>
 </tbody>
 </table>
-<p>C-09 的回答是「沒在使用的都可以使用」——<strong>這還不算登記</strong>。登記要有人記下「這幾個埠是這個系統的」，
-否則下一個專案一樣會以為「沒在用就能用」（<a href="#8-下一次進院前">F-20</a>）。</p>
+<p>C-09 的回答是「沒在使用的都可以使用」——<strong>這還不算登記</strong>。登記要有人記下「這幾個埠是這個系統的」，否則下一個專案一樣會以為「沒在用就能用」（<a href="#8-下一次進院前">F-20</a>）。</p>
 <h3 id="35-版本控制">3.5 版本控制<a class="headerlink" href="#35-版本控制" title="Permanent link">&para;</a></h3>
-<p><code>git remote -v</code> 顯示 <code>origin</code> 指向 GitHub 的 https 網址（fetch 與 push 各一行）。
-這是在<strong>容器裡</strong>下的，不代表主機上有 Git；主機上有沒有 Git（第九冊 D-03 第 8 題）<strong>沒有記到</strong>。</p>
+<p><code>git remote -v</code> 顯示 <code>origin</code> 指向 GitHub 的 https 網址（fetch 與 push 各一行）。這是在<strong>容器裡</strong>下的，不代表主機上有 Git；主機上有沒有 Git（第九冊 D-03 第 8 題）<strong>沒有記到</strong>。</p>
 <hr />
 <h2 id="4-情報蒐集表回填第五冊第-3-節">4. 情報蒐集表回填（第五冊第 3 節）<a class="headerlink" href="#4-情報蒐集表回填第五冊第-3-節" title="Permanent link">&para;</a></h2>
-<p>「要問」是現場知道要問、但沒問到；「未知」是沒想到要問或問不出來；「未測」是能量但沒量。
-<strong>沒有答案的 A 級題目，就是下一次進院前一定要先拿到的。</strong></p>
+<p>「要問」是現場知道要問、但沒問到；「未知」是沒想到要問或問不出來；「未測」是能量但沒量。 <strong>沒有答案的 A 級題目，就是下一次進院前一定要先拿到的。</strong></p>
 <h3 id="41-主機與權限a-級">4.1 主機與權限（A 級）<a class="headerlink" href="#41-主機與權限a-級" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -6363,9 +6331,7 @@
 <li>Docker Desktop <strong>要有人登入 Windows 才會啟動</strong>（3.3）。斷電 → 有人按開機 → <strong>還要有人登入</strong> → Docker 才起來 → 容器才回來。這條鏈上任何一環沒人做，服務就停著，而且沒人知道</li>
 <li>SQLite 已經以 <code>WAL</code> 加 <code>synchronous FULL</code> 設定，對突然斷電的承受度是它能做到的上限；但<strong>反覆硬斷電</strong>仍然是資料庫最不想遇到的事，備份又只在同一台主機上（C-14）</li>
 </ul>
-<p>第九冊 <a href="../09-docker/#d-26-重新開機測試這一條決定這條路線能不能用">D-26</a> 寫過：
-「沒人登入就不會起來，而院方也不會安排人登入——<strong>這條路線就不適合 24 小時運作的照護系統</strong>。」
-這台主機現在就是這個情形。<strong>要由院方決定</strong>，手冊不替院方決定：</p>
+<p>第九冊 <a href="../09-docker/#d-26-重新開機測試這一條決定這條路線能不能用">D-26</a> 寫過：「沒人登入就不會起來，而院方也不會安排人登入——<strong>這條路線就不適合 24 小時運作的照護系統</strong>。」這台主機現在就是這個情形。<strong>要由院方決定</strong>，手冊不替院方決定：</p>
 <table>
 <thead>
 <tr>
@@ -6404,8 +6370,7 @@
 <li>若是另一個專案的容器，<strong>登記下來</strong>，那就是 DEP-37 第 2 項要的登記</li>
 </ul>
 <h3 id="f-10-那個容器與它掛進去的東西">F-10 那個容器與它掛進去的東西<a class="headerlink" href="#f-10-那個容器與它掛進去的東西" title="Permanent link">&para;</a></h3>
-<p><code>dialysis_system_v0</code> <strong>很可能還在主機上</strong>（<code>-d</code> 讓它在背景跑；主機斷電後它不會自己回來，但容器本身仍在）。
-它掛著整顆 C 槽，裡面有一份 clone 下來的原始碼，也可能留著當天那把權杖的字串（已作廢，F-11）。<strong>下一次進院第一件事就是收掉它，而且順序不能錯</strong>：</p>
+<p><code>dialysis_system_v0</code> <strong>很可能還在主機上</strong>（<code>-d</code> 讓它在背景跑；主機斷電後它不會自己回來，但容器本身仍在）。它掛著整顆 C 槽，裡面有一份 clone 下來的原始碼，也可能留著當天那把權杖的字串（已作廢，F-11）。<strong>下一次進院第一件事就是收掉它，而且順序不能錯</strong>：</p>
 <p><strong>① 先看，不要動</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="n">-a</span> <span class="p">-</span><span class="n">-filter</span> <span class="n">name</span><span class="p">=</span><span class="n">dialysis_system_v0</span>
 <span class="n">docker</span> <span class="n">inspect</span> <span class="n">dialysis_system_v0</span> <span class="p">-</span><span class="n">-format</span> <span class="s2">"{{json .Mounts}}"</span>
@@ -6419,8 +6384,7 @@
 </code></pre></div>
 <p><code>git log -1</code> 就是 F-04 那個「當天實際 clone 到哪一版」的答案。<strong><code>git remote -v</code> 的網址或 Git 設定裡若看得到權杖，那是 0922 那把已刪除的權杖，照 F-11 把殘留清掉即可。</strong></p>
 <blockquote>
-<p>⚠️ <strong>在這個容器裡絕對不要對 <code>/app</code> 下任何刪除、移動、改權限的指令。</strong>
-<code>/app</code> 就是主機的 C 槽，<code>rm -rf</code> 下去刪的是主機上的真檔案，包含另一個專案的東西。</p>
+<p>⚠️ <strong>在這個容器裡絕對不要對 <code>/app</code> 下任何刪除、移動、改權限的指令。</strong> <code>/app</code> 就是主機的 C 槽，<code>rm -rf</code> 下去刪的是主機上的真檔案，包含另一個專案的東西。</p>
 </blockquote>
 <p><strong>③ 收掉容器</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">stop</span> <span class="n">dialysis_system_v0</span>
@@ -6429,15 +6393,13 @@
 </code></pre></div>
 <p>最後一行什麼都沒印才算完成。<strong><code>docker rm</code> 只刪容器，不會刪到主機 C 槽上的檔案</strong>——這是對的。</p>
 <p><strong>④ 收掉主機 C 槽上那一份 clone</strong></p>
-<p>②找到的目錄，在主機上是 <code>C:\</code> 底下同名的資料夾。<strong>確認路徑無誤、確認資訊室同意之後</strong>，用檔案總管刪除
-（不要在容器裡刪）。這條路線要的原始碼目錄是 <code>C:\hd\hd-tablet-care\</code>，那是下一次在主機上重新 clone 的（D-11）。</p>
+<p>②找到的目錄，在主機上是 <code>C:\</code> 底下同名的資料夾。<strong>確認路徑無誤、確認資訊室同意之後</strong>，用檔案總管刪除（不要在容器裡刪）。這條路線要的原始碼目錄是 <code>C:\hd\hd-tablet-care\</code>，那是下一次在主機上重新 clone 的（D-11）。</p>
 <p><strong>⑤ <code>python</code> 映像檔</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">image</span> <span class="nb">ls </span><span class="n">python</span>
 </code></pre></div>
 <p>它是當天為了 F-01 拉下來的，本系統用不到。<strong>要不要刪問過資訊室</strong>：同機另一個專案有可能也在用同一個映像檔。</p>
 <h3 id="f-11-clone-用的憑證">F-11 clone 用的憑證<a class="headerlink" href="#f-11-clone-用的憑證" title="Permanent link">&para;</a></h3>
-<p>本專案的 repo 是私有的，容器裡的 <code>git clone</code> 用的是<strong>部署當天臨時建立的一把 GitHub 權杖（classic）</strong>，
-不是 D-04 要求事先準備的那種唯讀、只限這個 repo、會過期的權杖。</p>
+<p>本專案的 repo 是私有的，容器裡的 <code>git clone</code> 用的是<strong>部署當天臨時建立的一把 GitHub 權杖（classic）</strong>，不是 D-04 要求事先準備的那種唯讀、只限這個 repo、會過期的權杖。</p>
 <table>
 <thead>
 <tr>
@@ -6460,17 +6422,14 @@
 </tr>
 </tbody>
 </table>
-<p><strong>下一次不要再臨時開 classic 權杖。</strong> 照 D-04 事先建 fine-grained 權杖：只勾這個 repo、Contents 唯讀、進院隔天過期；
-院方若要自己 clone，請院方用他們自己的帳號取得存取權。</p>
+<p><strong>下一次不要再臨時開 classic 權杖。</strong> 照 D-04 事先建 fine-grained 權杖：只勾這個 repo、Contents 唯讀、進院隔天過期；院方若要自己 clone，請院方用他們自己的帳號取得存取權。</p>
 <h3 id="f-12-帳號與權限">F-12 帳號與權限<a class="headerlink" href="#f-12-帳號與權限" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>docker-users</code> 群組裡只有一個本機帳號，而那也是平常登入這台主機的帳號</li>
 <li>那個帳號就是最高權限（C-10、C-11）</li>
 <li>帳號的其他現況<strong>不寫在公開文件</strong>，留在院外筆記，下一次當面交給資訊室</li>
 </ul>
-<p>合起來的意思是：<strong>能坐到這台主機前面的人，就能讀到資料卷裡的全部照護資料</strong>，不需要知道任何本系統的密碼。
-這正是第九冊 D-09 說「最容易被忽略的一條」。這一條<strong>不在我們能決定的範圍</strong>，要當面告訴資訊室這代表什麼、
-請院方決定，並寫進交接文件。在院方給出答案之前，這台主機<strong>不得輸入真實病人資料</strong>。</p>
+<p>合起來的意思是：<strong>能坐到這台主機前面的人，就能讀到資料卷裡的全部照護資料</strong>，不需要知道任何本系統的密碼。這正是第九冊 D-09 說「最容易被忽略的一條」。這一條<strong>不在我們能決定的範圍</strong>，要當面告訴資訊室這代表什麼、請院方決定，並寫進交接文件。在院方給出答案之前，這台主機<strong>不得輸入真實病人資料</strong>。</p>
 <hr />
 <h2 id="6-第九冊逐步對照這次做到哪裡">6. 第九冊逐步對照：這次做到哪裡<a class="headerlink" href="#6-第九冊逐步對照這次做到哪裡" title="Permanent link">&para;</a></h2>
 <table>
