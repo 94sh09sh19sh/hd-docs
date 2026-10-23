@@ -1,8 +1,19 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
 **範圍**：目前資料庫實際蒐集的全部資料 — 97 張表、950 個欄位、26 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`）
+
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`、`packages/shared/src/performance.ts`
+
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
+
+## 摘要
+
+- 目前資料庫實際蒐集的全部資料：97 張表、950 個欄位、26 個遷移；寫的是現況，與 `schema.prisma` 不一致時以後者為準
+- 每個欄位兩欄說明：給人看的（在真實世界是什麼、為什麼蒐集）、給 Agent 的（合法值、誰填、動了會踩到什麼）
+- 第一～五章是核心：帳號與憑證、主檔、排班與綁定、病人自述內容、稽核軌跡
+- 第六章起依迭代分章，從迭代 3 的系統治理一路到第三十章迭代 26.3 的處理者指名與名冊身分
+- 有兩列不是人的帳號（「院方資料同步」「隨版本帶入」），登入不了，不要刪、不要改狀態
+- 附錄 A 寫資料不流向哪裡，附錄 B 是 Agent 動 schema 前的自我檢查；改欄位前先讀《資料庫使用規範》第 6 條與第 16 條
 
 ---
 
@@ -100,13 +111,9 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 病人**不在這張表裡**，病人不登入（SRS 4.3）。醫院管理層與稽核角色的帳號也在這張表，以 `role` 區分。
 
-**1005 迭代 15 起多一列不是人的帳號**：`work_id` 為 `SYSTEM-HOSPITAL-SYNC`、顯示名稱「院方資料同步」。院方 API 自動建立療程、接上平板、
-寫入臨床數值時，那幾張表的「建立者」欄位是必填的護理師外鍵，由這一列承擔。它**登入不了**（狀態 `SUSPENDED`、密碼是當場產生又丟掉的亂數），
-帳號清單、審核清單與「資料庫裡有沒有使用者」（初始最高權限帳號的建立條件）都不算它；畫面與稽核顯示「院方資料同步」，不顯示它的帳號識別字。
-⛔ 不要刪它、不要改它的狀態——同步會在下次啟動時找不到它而再建一列。
+**1005 迭代 15 起多一列不是人的帳號**：`work_id` 為 `SYSTEM-HOSPITAL-SYNC`、顯示名稱「院方資料同步」。院方 API 自動建立療程、接上平板、寫入臨床數值時，那幾張表的「建立者」欄位是必填的護理師外鍵，由這一列承擔。它**登入不了**（狀態 `SUSPENDED`、密碼是當場產生又丟掉的亂數），帳號清單、審核清單與「資料庫裡有沒有使用者」（初始最高權限帳號的建立條件）都不算它；畫面與稽核顯示「院方資料同步」，不顯示它的帳號識別字。 ⛔ 不要刪它、不要改它的狀態——同步會在下次啟動時找不到它而再建一列。
 
-**1005 迭代 17 起再多一列**：`work_id` 為 `SYSTEM-RELEASE-CONTENT`、顯示名稱「隨版本帶入」。隨版本帶進院內的跑馬燈衛教草稿（`carousel_items.source = BUNDLED`）
-首次啟動匯入時，`created_by_id` 由這一列承擔。規則與「院方資料同步」完全相同：登入不了、不算人、畫面顯示「隨版本帶入」。
+**1005 迭代 17 起再多一列**：`work_id` 為 `SYSTEM-RELEASE-CONTENT`、顯示名稱「隨版本帶入」。隨版本帶進院內的跑馬燈衛教草稿（`carousel_items.source = BUNDLED`）首次啟動匯入時，`created_by_id` 由這一列承擔。規則與「院方資料同步」完全相同：登入不了、不算人、畫面顯示「隨版本帶入」。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -125,6 +132,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `updated_at` | `TS` | 帳號資料最後修改時間 | 見共通欄位 |
 
 **索引**：`work_id`（唯一）、`status`、`role`
+
 **被參照**：`nurse_sessions`、`treatment_sessions.created_by_id`、`device_bindings.bound_by_id`／`released_by_id`、`help_requests.acknowledged_by_id`／`resolved_by_id`、`audit_logs.actor_nurse_id`、`feature_flags.changed_by_id`、`ai_invocations.actor_nurse_id`、`backup_runs.initiated_by_id`、`clinical_value_imports.imported_by_id`；迭代 4：`ai_jobs.requested_by_id`、`education_contents.requested_by_id`／`reviewed_by_id`、`nursing_records.created_by_id`／`signed_by_id`、`adequacy_calculations.calculated_by_id`、`sop_queries.asked_by_id`；迭代 5：`help_requests.arrived_by_id`、`help_request_follow_ups.created_by_id`／`closed_by_id`、`operational_settings.updated_by_id`、`nurse_shifts.nurse_id`／`created_by_id`、`shift_bed_assignments.assigned_by_id`、`shift_change_requests.requested_by_id`／`proposed_nurse_id`／`decided_by_id`、`baseline_measurements.recorded_by_id`
 
 ---
@@ -146,6 +154,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `user_agent` | `TEXT?` | 登入所用的瀏覽器／裝置資訊。同樣用於追查 | 選填，原樣記錄不解析 |
 
 **索引**：`token_id`（唯一）、`nurse_id`、`expires_at`
+
 **注意**：本表沒有 `updated_at` — 憑證紀錄只會被「作廢」一次，狀態變化由 `revoked_at` 表達。
 
 ---
@@ -171,10 +180,10 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `created_at` | `TS` | 建檔時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 
-**1005 迭代 15 起，接了院方 API 的環境病人主檔由院方資料自動建立與更新**：以病歷號對應，沒有就建立、有就以院方資料為準更新姓名、性別（院方的「男」「女」轉成 `M`／`F`）、生日；
-寫 `PATIENT_CREATED`／`PATIENT_UPDATED`，操作者「院方資料同步」。院方資料的病歷號是 8 碼數字，不是 `HD-TEST-` 格式——**接院方 API 的只有院內主機**，開發機接的模擬院方 API 用 `99` 開頭的虛構病歷號。
+**1005 迭代 15 起，接了院方 API 的環境病人主檔由院方資料自動建立與更新**：以病歷號對應，沒有就建立、有就以院方資料為準更新姓名、性別（院方的「男」「女」轉成 `M`／`F`）、生日；寫 `PATIENT_CREATED`／`PATIENT_UPDATED`，操作者「院方資料同步」。院方資料的病歷號是 8 碼數字，不是 `HD-TEST-` 格式——**接院方 API 的只有院內主機**，開發機接的模擬院方 API 用 `99` 開頭的虛構病歷號。
 
 **索引**：`medical_record_no`（唯一）、`active`、`preferred_device_id`
+
 **被參照**：`treatment_sessions`、`device_bindings`、`symptom_reports`、`help_requests`、`audit_logs`、`ai_invocations`、`clinical_values`；迭代 4：`ai_jobs`、`education_contents`、`education_completions`、`quiz_attempts`、`feedback_responses`、`nursing_records`、`adequacy_calculations`
 
 ---
@@ -205,6 +214,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 
 **索引**：`serial_no`（唯一）、`status`、`bed_no`（唯一）
+
 **被參照**：`device_bindings`、`symptom_reports`、`help_requests`、`audit_logs`
 
 ---
@@ -233,11 +243,10 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `nurse_modified_at` | `TS?` | （迭代 15）護理師改過這次療程的狀態：提前結束、取消、重新開啟、確認下機 | 有值時同步就不再動這筆的狀態，也不再自動接上平板——**護理師的更正優先**（SRS FR-S15 第 1 條界線）。只標記 `HOSPITAL_API` 的療程 |
 | `bed_nurse_modified_at` | `TS?` | （迭代 15）護理師把這位病人換到別床（把他的平板拖到另一床） | 有值時同步不再依院方資料換床。與上一欄分開：換了床的病人，結束體重出現時照樣要自動下機 |
 
-**1005 迭代 15 起院方資料判斷得出來的狀態轉換由同步完成**：當天出現在院方資料就排班（`SCHEDULED`）；開始時間已過、至少一筆紀錄就開始（`IN_PROGRESS`，`started_at` 寫院方的透析開始時間）；
-結束體重大於 0 就下機（`COMPLETED`）。班別依開始時間判斷（12 點前早班、17 點前午班、之後晚班，暫代值待 Q-34）；
-開始時間從預排值變成實際值、跨過班別界線時，**還沒開始的那一筆換班別**，不另建一筆。
+**1005 迭代 15 起院方資料判斷得出來的狀態轉換由同步完成**：當天出現在院方資料就排班（`SCHEDULED`）；開始時間已過、至少一筆紀錄就開始（`IN_PROGRESS`，`started_at` 寫院方的透析開始時間）；結束體重大於 0 就下機（`COMPLETED`）。班別依開始時間判斷（12 點前早班、17 點前午班、之後晚班，暫代值待 Q-34）；開始時間從預排值變成實際值、跨過班別界線時，**還沒開始的那一筆換班別**，不另建一筆。
 
 **唯一約束**：`(patient_id, scheduled_date, shift)` — 同一位病人在同一天的同一班別**只能有一筆排班**，從資料庫層擋掉重複排班。
+
 **索引**：`(scheduled_date, status)` — 供「今天還有哪些班沒開始」這類查詢使用。
 
 ---
@@ -299,6 +308,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `created_at` | `TS` | 紀錄寫入時間 | 見共通欄位 |
 
 **索引**：`client_report_id`（唯一）、`(patient_id, reported_at)`、`treatment_session_id`、`device_binding_id`
+
 **注意**：本表**沒有 `updated_at`** — 送出的問卷是事實紀錄，不修改。要更正就送新的一份。
 
 ---
@@ -317,7 +327,9 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `created_at` | `TS` | 寫入時間 | 見共通欄位 |
 
 **唯一約束**：`(symptom_report_id, item_code)` — 同一份問卷的同一題只能有一個答案。
+
 **索引**：`item_code`（跨病人的單一症狀查詢用）
+
 **注意**：無 `updated_at`，理由同 `symptom_reports`。
 
 ---
@@ -356,9 +368,10 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `created_at` | `TS` | 紀錄建立時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後狀態變更時間 | 見共通欄位。本類三張表中**只有這張有** — 因為通報的狀態會隨處理流程改變 |
 
-**索引**：`client_request_id`（唯一）、`(status, severity)`、`(patient_id, raised_at)`、`(patient_id, category, raised_at)`、`treatment_session_id`、`device_binding_id`
-**`(patient_id, category, raised_at)` 是給 FR-N11 用的**：同一病人、同一類別、在設定期間內的前一次求助，通報畫面要顯示它當初的處理方式。期間長度取自 `operational_settings`，不寫死（暫定 72 小時，Q-13 第 6 題）。
+**索引**：`client_request_id`（唯一）、`(status, severity)`、`(patient_id, raised_at)`、`(patient_id, category, raised_at)`、`treatment_session_id`、`device_binding_id` **`(patient_id, category, raised_at)` 是給 FR-N11 用的**：同一病人、同一類別、在設定期間內的前一次求助，通報畫面要顯示它當初的處理方式。期間長度取自 `operational_settings`，不寫死（暫定 72 小時，Q-13 第 6 題）。
+
 **FR-P12**：結案後平板顯示「已處理」與簡短結果。⛔ 送到平板的只有處理方式與結果的**文字**，不含 `resolution_note`、不含護理師工作 ID——補充是寫給護理端看的，未必適合直接呈現在病床旁的畫面上。
+
 **已知缺口**：`CANCELLED` 狀態沒有對應的 `cancelled_by_id` / `cancelled_at` 欄位，取消者只能從 `audit_logs` 的 `HELP_REQUEST_CANCELLED` 回查。
 
 ---
@@ -419,6 +432,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `created_at` | `TS` | 這個開關列被建立的時間 | 見共通欄位 |
 
 **唯一約束**：`flag_key`
+
 **與功能的關係**：開關關閉時，相關介面元素完全不出現，後端端點以 `@RequireFeatureFlag()` 回應 404。
 
 ---
@@ -451,8 +465,8 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `patient_id` | `TEXT?` | 與哪一位病人相關 | 外鍵 → `patients.id`，`ON DELETE NO ACTION`，有索引 |
 
 **索引**：`invoked_at`、`(provider, outcome)`、`patient_id`
-**查詢**：走唯讀連線。稽核角色可讀（實作規格書 3.1）。
-**被參照**（迭代 4）：`ai_jobs`、`education_contents`、`nursing_records`、`sop_queries` 的 `ai_invocation_id`——每一段 AI 產出都能由此追到發出它的那一次呼叫（實作規格書 4.2）。
+
+**查詢**：走唯讀連線。稽核角色可讀（實作規格書 3.1）。 **被參照**（迭代 4）：`ai_jobs`、`education_contents`、`nursing_records`、`sop_queries` 的 `ai_invocation_id`——每一段 AI 產出都能由此追到發出它的那一次呼叫（實作規格書 4.2）。
 
 ---
 
@@ -475,14 +489,14 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `initiated_by_id` | `TEXT?` | 誰觸發的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。排程備份為 NULL |
 
 **索引**：`started_at`
+
 **注意**：備份一律用 `VACUUM INTO`，不直接複製資料庫檔案。舊備份不自動刪除，留存世代數待醫院定案（Q-05）。
 
 ---
 
 ## 七、院方臨床數值（迭代 3）
 
-FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `ClinicalDataSourcePort` 介面層：人工輸入、檔案匯入、院方 API 三種來源**共用同一組內部資料表**，病人端面板（1005 起取代輪播）與儀表板只讀這兩張表、不認來源。迭代 3 只有人工輸入（`ManualEntryAdapter`）。
-**1005 迭代 15 起院方 API（`HospitalApiAdapter`）是唯一的日常來源**：一次透析一批（全有或全無的單位），批次的 `source_type` 為 `HOSPITAL_API`、匯入者是「院方資料同步」，`content_hash` 留空（相同的值在送進來之前就濾掉了）。人工輸入與檔案匯入只留在專業版當備援。
+FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `ClinicalDataSourcePort` 介面層：人工輸入、檔案匯入、院方 API 三種來源**共用同一組內部資料表**，病人端面板（1005 起取代輪播）與儀表板只讀這兩張表、不認來源。迭代 3 只有人工輸入（`ManualEntryAdapter`）。 **1005 迭代 15 起院方 API（`HospitalApiAdapter`）是唯一的日常來源**：一次透析一批（全有或全無的單位），批次的 `source_type` 為 `HOSPITAL_API`、匯入者是「院方資料同步」，`content_hash` 留空（相同的值在送進來之前就濾掉了）。人工輸入與檔案匯入只留在專業版當備援。
 
 **三條硬性規則**（實作規格書 3.5、規範第 13 條）：
 
@@ -521,8 +535,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `superseded_at` | `TS?` | 被覆蓋的時間 | 與 `superseded_by_id` 同時寫入 |
 | `created_at` | `TS` | 寫入時間（輸入時間） | 見共通欄位。與 `measured_at` 刻意分開 |
 
-**索引**：`(patient_id, value_code, measured_at)`、`import_id`
-**格式防呆的上下限**（`minScaled` / `maxScaled`）只用來擋漏打小數點這類輸入錯誤，**不是臨床判斷門檻**——門檻值屬 FR-R02，必須由臨床端書面提供。
+**索引**：`(patient_id, value_code, measured_at)`、`import_id` **格式防呆的上下限**（`minScaled` / `maxScaled`）只用來擋漏打小數點這類輸入錯誤，**不是臨床判斷門檻**——門檻值屬 FR-R02，必須由臨床端書面提供。
 
 ---
 
@@ -548,6 +561,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `finished_at` | `TS?` | 完成或失敗的時間 | 驗收腳本以「下一件的 `started_at` 不早於上一件的 `finished_at`」確認工作依序處理 |
 
 **索引**：`(status, queued_at)`、`(target_type, target_id)`
+
 **注意**：沒有 `created_at`／`updated_at`，三個時間欄位就是完整的生命週期。失敗的工作另寫一筆 `AI_JOB_FAILED` 稽核。
 
 ---
@@ -631,6 +645,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `correct` | `BOOL` | 答對了沒有 | ⛔ **由後端依題庫判定，不接受平板送上來的對錯** |
 
 **唯一約束**：`(attempt_id, question_code)`
+
 **知識點狀態不入庫**：「需加強／已掌握／尚未測驗」是查詢時由每一題最近一次的作答即時整理（同主題任何一題最近答錯即為需加強），不另存欄位。
 
 ---
@@ -665,6 +680,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `score` | `INT` | 分數 | 1～5，越高越好，由 DTO 把關 |
 
 **唯一約束**：`(response_id, item_code)`
+
 **趨勢比對不入庫**：暫定規則 `PSY-DEV-v1`（近 3 次情緒相關平均比先前最多 6 次低 1.0 分以上即列出，至少 6 份才套用，Q-24）在查詢時即時計算，結果只以事實陳述呈現給護理師，不寫入任何資料表，也不自動觸發轉介。平均分數以十分位整數計算，不用浮點數。
 
 ---
@@ -755,6 +771,7 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 | `calculated_at` | `TS` | 計算時間 | `DEFAULT CURRENT_TIMESTAMP` |
 
 **唯一約束**：五個輸入值的組合 — 同一組數值只算一次。
+
 **輸入值被更正時**：舊結果保留；API 以「輸入值已被覆蓋」標示需重新確認，不自動重算。
 
 ---
@@ -828,14 +845,11 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 本節兩張表都是為了同一件事存在：**外部答覆還沒回來，但開發不能停。**
 
-護理部尚未確認求助的處理方式與處理結果該有哪些選項（Q-13），人資也還沒給勞動條件的醫院規定（Q-14）。
-把暫定值寫死在程式裡，答覆回來那天就得改程式、重新部署、重跑一次測試；
-寫成資料，改的就只是幾列資料。這兩張表是那個決定的結果。
+護理部尚未確認求助的處理方式與處理結果該有哪些選項（Q-13），人資也還沒給勞動條件的醫院規定（Q-14）。把暫定值寫死在程式裡，答覆回來那天就得改程式、重新部署、重跑一次測試；寫成資料，改的就只是幾列資料。這兩張表是那個決定的結果。
 
 ### `help_resolution_options` — 求助處理的選項清單（8 欄）
 
-**蒐集的意義**：FR-N10 要求結案時以結構化欄位登記處理方式與結果。「結構化」的前提是有一份清單，
-而這份清單的內容**不是開發端說了算**——暫定值取自 SRS 5.2 的表格，實際選項待護理部確認。
+**蒐集的意義**：FR-N10 要求結案時以結構化欄位登記處理方式與結果。「結構化」的前提是有一份清單，而這份清單的內容**不是開發端說了算**——暫定值取自 SRS 5.2 的表格，實際選項待護理部確認。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -846,13 +860,12 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `active` | `BOOL` | 這個選項現在還用不用 | 預設 `true`。⛔ 不要刪列：停用即可。刪掉會讓既有紀錄的 `code` 查不到文字 |
 
 **唯一約束**：`(kind, code)`　**索引**：`(kind, sort_order)`
-**初始資料**：後端啟動時，若整張表是空的才寫入 `DEFAULT_HELP_RESOLUTION_OPTIONS`（處理方式 8 項、處理結果 6 項）。
-之後一律以資料表為準，不會回頭覆蓋——護理部改過的清單不該被下一次重新啟動蓋掉。
+
+**初始資料**：後端啟動時，若整張表是空的才寫入 `DEFAULT_HELP_RESOLUTION_OPTIONS`（處理方式 8 項、處理結果 6 項）。之後一律以資料表為準，不會回頭覆蓋——護理部改過的清單不該被下一次重新啟動蓋掉。
 
 ### `operational_settings` — 可設定的營運參數（7 欄）
 
-**蒐集的意義**：FR-N11 的「設定期間」與 FR-M04 的五條勞動條件，目前都是暫定值。
-這張表讓那些數字有個可以被改、而且改了有跡可循的地方。
+**蒐集的意義**：FR-N11 的「設定期間」與 FR-M04 的五條勞動條件，目前都是暫定值。這張表讓那些數字有個可以被改、而且改了有跡可循的地方。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -862,15 +875,11 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `updated_by_id` | `TEXT?` | 誰改的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION` |
 | `updated_at` | `TS?` | 什麼時候改的 | **刻意可為空**：空代表「從未被改過，仍是預設值」，與「有人把它改回預設值」是兩件事 |
 
-**預設值的補齊方式**：後端啟動時比對 `OPERATIONAL_SETTING_DEFINITIONS`，**缺哪一筆補哪一筆**。
-既有的值不會被覆蓋，新增參數也不必另寫遷移腳本。
-每個參數在程式常數中都帶著 `basis`（這個數字現在是誰說的），並原樣顯示在設定畫面上——
-要改的人得先看得到「這是勞基法第 34 條」還是「這是開發端猜的」。
+**預設值的補齊方式**：後端啟動時比對 `OPERATIONAL_SETTING_DEFINITIONS`，**缺哪一筆補哪一筆**。既有的值不會被覆蓋，新增參數也不必另寫遷移腳本。每個參數在程式常數中都帶著 `basis`（這個數字現在是誰說的），並原樣顯示在設定畫面上——要改的人得先看得到「這是勞基法第 34 條」還是「這是開發端猜的」。
 
 ### `help_request_follow_ups` — 求助的後續追蹤事項（9 欄）
 
-**蒐集的意義**：FR-N10 的「是否需後續追蹤」勾了「是」，就會落在這張表上。
-結案不等於事情結束——「下次上機前確認穿刺處是否仍紅腫」這種事，沒有地方放就只會被忘記。
+**蒐集的意義**：FR-N10 的「是否需後續追蹤」勾了「是」，就會落在這張表上。結案不等於事情結束——「下次上機前確認穿刺處是否仍紅腫」這種事，沒有地方放就只會被忘記。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -888,21 +897,15 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 ## 十三、護理師班表與成效基準（迭代 5）
 
-**這一節的資料級別與前面所有章節都不同。** 前十二節談的是病人的資料；這一節談的是**護理師自己的資料**，
-而它的風險不在外洩，在**目的外利用**：同一批班表資料，拿來排班是管理工具，拿來算個人績效就是另一回事
-（《[資料庫使用規範](../requirements/database-policy.md)》第 11 條）。
+**這一節的資料級別與前面所有章節都不同。** 前十二節談的是病人的資料；這一節談的是**護理師自己的資料**，而它的風險不在外洩，在**目的外利用**：同一批班表資料，拿來排班是管理工具，拿來算個人績效就是另一回事（《[資料庫使用規範](../requirements/database-policy.md)》第 11 條）。
 
-因此本節三張表一律為 **L2 班次層級**：一般護理師只看得到自己的班，看他人的班需 `shift:manage`，
-而這個限制是**後端縮查詢範圍**做到的，不是前端少畫幾列。
-`baseline_measurements` 是 **L1 單位聚合**，不含任何個人識別。
+因此本節三張表一律為 **L2 班次層級**：一般護理師只看得到自己的班，看他人的班需 `shift:manage`，而這個限制是**後端縮查詢範圍**做到的，不是前端少畫幾列。 `baseline_measurements` 是 **L1 單位聚合**，不含任何個人識別。
 
-⛔ 本節**不得**新增以下欄位，這是硬性界線（SRS 5.3「禁止事項」）：總分、排名、
-「護理師×病人臨床結果」的關聯評分、任何回寫到臨床資料表的績效彙整結果。
+⛔ 本節**不得**新增以下欄位，這是硬性界線（SRS 5.3「禁止事項」）：總分、排名、「護理師×病人臨床結果」的關聯評分、任何回寫到臨床資料表的績效彙整結果。
 
 ### `nurse_shifts` — 護理師班表（13 欄）
 
-**蒐集的意義**：FR-M01。要協助排班、要檢查勞動條件、要知道當班的人負責哪幾床，都得先有班表。
-迭代 8 的工作量實測儀表板（FR-M05）也以這張表為分母——沒有班表，「這一班有多忙」算不出來。
+**蒐集的意義**：FR-M01。要協助排班、要檢查勞動條件、要知道當班的人負責哪幾床，都得先有班表。迭代 8 的工作量實測儀表板（FR-M05）也以這張表為分母——沒有班表，「這一班有多忙」算不出來。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -918,17 +921,12 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `created_by_id` | `TEXT` | 誰排的班 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。與 `nurse_id` 是不同的人：一個是排班者，一個是上班的人 |
 
 **唯一約束**：`(nurse_id, shift_date, shift_type)` — 同一人同一天同一班別只能有一筆
+
 **索引**：`shift_date`、`(nurse_id, shift_date)`、`import_batch_no`
 
-**FR-M04 勞動條件檢查**：寫入前一律先跑 `evaluateLabourRules()`，違反就**擋下儲存**並逐條說明。
-六條規則（單一班次工時、班距、單日工時、連續七日工時、連續出勤日數、同時段重複排班）的判定函式放在
-`@hd/shared`，前後端共用同一份，畫面提示與後端擋下的理由不會不一致；
-規則的數值一律從 `operational_settings` 取，**程式裡沒有寫死任何一個數字**。
-被擋下的嘗試會寫入 `NURSE_SHIFT_REJECTED_LABOUR_RULE` 稽核——
-事後檢討「那週的班為什麼排不出來」時，看得到系統擋了幾次、擋的是哪一條。
+**FR-M04 勞動條件檢查**：寫入前一律先跑 `evaluateLabourRules()`，違反就**擋下儲存**並逐條說明。六條規則（單一班次工時、班距、單日工時、連續七日工時、連續出勤日數、同時段重複排班）的判定函式放在 `@hd/shared`，前後端共用同一份，畫面提示與後端擋下的理由不會不一致；規則的數值一律從 `operational_settings` 取，**程式裡沒有寫死任何一個數字**。被擋下的嘗試會寫入 `NURSE_SHIFT_REJECTED_LABOUR_RULE` 稽核——事後檢討「那週的班為什麼排不出來」時，看得到系統擋了幾次、擋的是哪一條。
 
-**檔案匯入**：全有或全無。格式、查無此人、與既有班次重複、勞動條件，任一關不過整批退回並逐列回報原因，
-一筆都不寫入。⚠️ 現行班表格式待護理長提供（Q-15），目前收的是最小欄位集的 CSV。
+**檔案匯入**：全有或全無。格式、查無此人、與既有班次重複、勞動條件，任一關不過整批退回並逐列回報原因，一筆都不寫入。⚠️ 現行班表格式待護理長提供（Q-15），目前收的是最小欄位集的 CSV。
 
 ### `shift_bed_assignments` — 當班床位分配（5 欄）
 
@@ -942,7 +940,9 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `assigned_at` | `TS` | 指派時間 | `DEFAULT CURRENT_TIMESTAMP` |
 
 **唯一約束**：`(nurse_shift_id, bed_no)`
+
 **一床兩主的防呆**：同一天同一班別、同一張床已指派給別人時，後端擋下並指出是誰——一床兩主等於沒有分配。
+
 **寫入方式**：整組取代（先清後寫，同一個交易），避免出現半套的分配。
 
 ### `shift_change_requests` — 調班申請（12 欄）
@@ -961,20 +961,15 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `decided_at` | `TS?` | 核示時間 | 與 `decided_by_id` 同時寫入 |
 | `decision_note` | `TEXT?` | 核示時的說明 | 選填 |
 
-**核准的副作用**：請假核准 → 該班次轉為 `CANCELLED`；換班核准 → 班次改掛到接手的人身上，
-而且**要對接手的人重跑一次勞動條件檢查**——換班最容易換出違規班表。
-兩者都各自寫一筆班表異動的稽核，與「核示申請」分開記錄：查班表異動史的人不必先知道當初有一張申請單。
+**核准的副作用**：請假核准 → 該班次轉為 `CANCELLED`；換班核准 → 班次改掛到接手的人身上，而且**要對接手的人重跑一次勞動條件檢查**——換班最容易換出違規班表。兩者都各自寫一筆班表異動的稽核，與「核示申請」分開記錄：查班表異動史的人不必先知道當初有一張申請單。
 
-⚠️ **FR-M03 的候補人選排序不在本迭代**：依技能標記、連續工時、近期負荷產生排序屬 **L3 個人層級**，
-須先通過規範 11.3 的啟用流程（護理部書面同意＋計分規則公告＋觀察期），留待後續迭代。
+⚠️ **FR-M03 的候補人選排序不在本迭代**：依技能標記、連續工時、近期負荷產生排序屬 **L3 個人層級**，須先通過規範 11.3 的啟用流程（護理部書面同意＋計分規則公告＋觀察期），留待後續迭代。
 
 ### `baseline_measurements` — 成效基準（15 欄）
 
 **蒐集的意義**：FR-M07。這是全系統唯一「**過了時點就再也拿不到**」的資料。
 
-系統上線後，「病人按鈴到護理師到床邊要多久」會自動被記錄；但**上線前的數字不存在於任何地方**，
-它只存在於現在正在發生的紙本與口頭流程裡。紙本流程一消失，就再也無從量測。
-這張表的存在理由，就是趕在那之前把數字留下來。
+系統上線後，「病人按鈴到護理師到床邊要多久」會自動被記錄；但**上線前的數字不存在於任何地方**，它只存在於現在正在發生的紙本與口頭流程裡。紙本流程一消失，就再也無從量測。這張表的存在理由，就是趕在那之前把數字留下來。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -993,8 +988,8 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `recorded_at` | `TS` | 建檔時間 | `DEFAULT CURRENT_TIMESTAMP`。有索引 |
 
 **索引**：`(metric_code, superseded)`、`recorded_at`
-**建檔進度**：`/baselines/overview` 逐指標列出「尚未建檔」與「只有估算值」兩種缺口。
-上線前只有這個畫面看得出來還差什麼——這是它比輸入表單更重要的理由。
+
+**建檔進度**：`/baselines/overview` 逐指標列出「尚未建檔」與「只有估算值」兩種缺口。上線前只有這個畫面看得出來還差什麼——這是它比輸入表單更重要的理由。
 
 ---
 
@@ -1002,21 +997,15 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 
 三張表，兩件事。
 
-> **1005 迭代 16 拿掉病人端的輪播**：表不變、欄位不變。`carousel_items` 的內容改在面板底部的跑馬燈播（一則「標題：內容」，內容取 `body_text`、留白時取 `summary`），
-> `carousel_view_events` 改記跑馬燈每一則的播放（`layer` 多一個值 `MARQUEE`）。下面兩張表的說明是迭代 6 寫的，與現況不同的地方各自標了 1005。
+> **1005 迭代 16 拿掉病人端的輪播**：表不變、欄位不變。`carousel_items` 的內容改在面板底部的跑馬燈播（一則「標題：內容」，內容取 `body_text`、留白時取 `summary`）， `carousel_view_events` 改記跑馬燈每一則的播放（`layer` 多一個值 `MARQUEE`）。下面兩張表的說明是迭代 6 寫的，與現況不同的地方各自標了 1005。
 >
-> **1005 迭代 17**：`carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源），**只播「已核准」的**；
-> 「內容留白時播一句話」的退路拿掉，`summary` 不再使用。新欄位的說明在第二十節，下表的列也各自標了。
+> **1005 迭代 17**：`carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源），**只播「已核准」的**；「內容留白時播一句話」的退路拿掉，`summary` 不再使用。新欄位的說明在第二十節，下表的列也各自標了。
 
-前兩張是**輪播**：第一層取自系統既有資料、第三層讀 `clinical_values`，兩層都不需要自己的表；
-只有第二層（中心自己寫的衛教與公告）與瀏覽事件需要存進資料表。
-第三張是**檔案匯入的欄位對應**——院方匯出檔的欄位名稱會被人改動，
-那是別人的系統，不會為了我們保持不變，所以「哪一欄是理想體重」必須是資料而不是程式。
+前兩張是**輪播**：第一層取自系統既有資料、第三層讀 `clinical_values`，兩層都不需要自己的表；只有第二層（中心自己寫的衛教與公告）與瀏覽事件需要存進資料表。第三張是**檔案匯入的欄位對應**——院方匯出檔的欄位名稱會被人改動，那是別人的系統，不會為了我們保持不變，所以「哪一欄是理想體重」必須是資料而不是程式。
 
 ### `carousel_items` — 輪播第二層內容，1005 起是跑馬燈內容（22 欄；迭代 17 加七欄，見第二十節；迭代 20 加一欄，見第二十三節）
 
-**蒐集的意義**：FR-P11 的第二層是靜態衛教與中心公告，由護理端在管理介面上架。
-這是輪播三層中唯一「人自己寫」的一層，因此也是唯一需要編輯、排序與上下架的一層。
+**蒐集的意義**：FR-P11 的第二層是靜態衛教與中心公告，由護理端在管理介面上架。這是輪播三層中唯一「人自己寫」的一層，因此也是唯一需要編輯、排序與上下架的一層。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1032,15 +1021,12 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `updated_by_id` | `TEXT?` | 最後誰改的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未被改過時為空 |
 
 **索引**：`(active, sort_order)`、（迭代 17）`(approval_status)`
-**與功能開關的關係**：~~第二層開關（`CAROUSEL_LAYER_2`）的開啟條件是「至少有一則在架上的內容」——
-沒有內容就開啟，病人只會看到空白的輪播，因此後端直接擋下（`FeatureFlagsService`）。~~
-**1005 起**是 `MARQUEE`：開啟條件是速度經長者看過（把關在核准依據），不再以內容擋——一則都沒有時跑馬燈整條不出現，不會是空白。
+
+**與功能開關的關係**：~~第二層開關（`CAROUSEL_LAYER_2`）的開啟條件是「至少有一則在架上的內容」——沒有內容就開啟，病人只會看到空白的輪播，因此後端直接擋下（`FeatureFlagsService`）。~~ **1005 起**是 `MARQUEE`：開啟條件是速度經長者看過（把關在核准依據），不再以內容擋——一則都沒有時跑馬燈整條不出現，不會是空白。
 
 ### `carousel_view_events` — 輪播瀏覽事件（7 欄）
 
-**蒐集的意義**：迭代 8 要回答「哪一類內容真的有人看」。
-這張表刻意**只**回答那個問題：沒有病人、沒有綁定、沒有平板序號、沒有卡片內容。
-不留可識別欄位，日後也就不會有人想從這裡回推個人行為（SRS FR-P11 補充說明）。
+**蒐集的意義**：迭代 8 要回答「哪一類內容真的有人看」。這張表刻意**只**回答那個問題：沒有病人、沒有綁定、沒有平板序號、沒有卡片內容。不留可識別欄位，日後也就不會有人想從這裡回推個人行為（SRS FR-P11 補充說明）。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1051,14 +1037,11 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `detail_open_count` | `INT` | 這一輪被點開細節頁幾次 | 預設 0。跑馬燈沒有細節頁，一律 0 |
 | `night_mode` | `BOOL` | 當下是否為夜間模式 | 預設 `false`。供日後比較晚班與日班的閱讀行為 |
 
-**⛔ 不要加欄位**：任何「哪一位病人」「哪一台平板」「哪一則內容」的欄位都會改變這張表的性質。
-要做個人層級的閱讀分析，先回頭看《[資料庫使用規範](../requirements/database-policy.md)》第 11 條與 SRS 5.3。
-端點的 DTO 開著 `forbidNonWhitelisted`，前端多送一個 `patientId` 會讓整包請求被擋下，而不是默默存起來。
+**⛔ 不要加欄位**：任何「哪一位病人」「哪一台平板」「哪一則內容」的欄位都會改變這張表的性質。要做個人層級的閱讀分析，先回頭看《[資料庫使用規範](../requirements/database-policy.md)》第 11 條與 SRS 5.3。端點的 DTO 開著 `forbidNonWhitelisted`，前端多送一個 `patientId` 會讓整包請求被擋下，而不是默默存起來。
 
 ### `import_field_mappings` — 匯入欄位對應設定（8 欄）
 
-**蒐集的意義**：FR-S05 的檔案匯入要能對上院方的匯出檔，而那份檔案的欄位名稱不在我們手上。
-把對應寫成資料，院方改名那天要改的就是一列設定，不是一次部署（實作規格書 3.5）。
+**蒐集的意義**：FR-S05 的檔案匯入要能對上院方的匯出檔，而那份檔案的欄位名稱不在我們手上。把對應寫成資料，院方改名那天要改的就是一列設定，不是一次部署（實作規格書 3.5）。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1070,21 +1053,18 @@ FR-N09 只能在收錄的文件範圍內回答，並標出原文出處。開發�
 | `updated_at` | `TS?` | 什麼時候改的 | 與 `operational_settings` 同樣的取捨：空代表從未被改過，仍是預設值 |
 
 **唯一約束**：`(profile_code, target_field)`　**索引**：`(profile_code, active)`
-**預設值的補齊方式**：後端啟動時缺哪一筆補哪一筆，既有設定不覆蓋。
-預設欄位名稱是**開發端的猜測**，不是院方給的格式（Q-09）；每次修改連同新舊名稱寫入
-`audit_logs` 的 `IMPORT_FIELD_MAPPING_UPDATED`。
+
+**預設值的補齊方式**：後端啟動時缺哪一筆補哪一筆，既有設定不覆蓋。預設欄位名稱是**開發端的猜測**，不是院方給的格式（Q-09）；每次修改連同新舊名稱寫入 `audit_logs` 的 `IMPORT_FIELD_MAPPING_UPDATED`。
 
 ---
 
 ## 十五、版本更新紀錄（迭代 7）
 
-FR-S12、規範第 18 條。**第一次正式部署之後，每一次更新面對的都是真實病人資料，而那份資料只有一個檔案。**
-這一類只有一張表，記的是「更新這件事本身」——與第八條的日常備份是兩回事。
+FR-S12、規範第 18 條。**第一次正式部署之後，每一次更新面對的都是真實病人資料，而那份資料只有一個檔案。** 這一類只有一張表，記的是「更新這件事本身」——與第八條的日常備份是兩回事。
 
 ### `update_runs` — 版本更新紀錄（14 欄）
 
-**蒐集的意義**：規範 18.4。沒有這份紀錄，半年後發現資料對不上時，沒有人答得出「那是哪一次更新帶進來的」。
-每一次執行更新流程（`npm run db:update`）留一列，**成功與中止都留**。
+**蒐集的意義**：規範 18.4。沒有這份紀錄，半年後發現資料對不上時，沒有人答得出「那是哪一次更新帶進來的」。每一次執行更新流程（`npm run db:update`）留一列，**成功與中止都留**。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1104,19 +1084,16 @@ FR-S12、規範第 18 條。**第一次正式部署之後，每一次更新面�
 | `error_message` | `TEXT?` | 中止原因 | 已把資料庫與備份目錄的實際路徑換成設定名稱（第 9 條） |
 
 **索引**：`started_at`
-**誰寫這張表**：只有更新腳本。**後端只讀不寫**（`UpdateRunRepository` 走唯讀連線），
-護理端「系統管理 → 資料庫與備份」最下方呈現它。
-**同一次更新在稽核軌跡留下的**：`DATABASE_UPDATE_STARTED`、`DATABASE_BACKUP_CREATED`、
-`DATABASE_BACKUP_VERIFIED`、`DATABASE_UPDATE_COMPLETED`（或 `DATABASE_UPDATE_FAILED`）。
-在正式環境誤用開發用遷移指令而被擋下時，另留一筆 `DATABASE_MIGRATION_BLOCKED`。
+
+**誰寫這張表**：只有更新腳本。**後端只讀不寫**（`UpdateRunRepository` 走唯讀連線），護理端「系統管理 → 資料庫與備份」最下方呈現它。
+
+**同一次更新在稽核軌跡留下的**：`DATABASE_UPDATE_STARTED`、`DATABASE_BACKUP_CREATED`、 `DATABASE_BACKUP_VERIFIED`、`DATABASE_UPDATE_COMPLETED`（或 `DATABASE_UPDATE_FAILED`）。在正式環境誤用開發用遷移指令而被擋下時，另留一筆 `DATABASE_MIGRATION_BLOCKED`。
 
 ---
 
 ## 十六、導覽版位與內容資料化（迭代 9）
 
-FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓「有哪些、放在哪、問什麼」
-不必改程式就能改。** 寫在程式裡的選項，每改一次就要重新部署一次；
-而重新部署的門檻高到最後大家就不改了——不改的結果不是穩定，是護理部放棄使用這一部分。
+FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓「有哪些、放在哪、問什麼」不必改程式就能改。** 寫在程式裡的選項，每改一次就要重新部署一次；而重新部署的門檻高到最後大家就不改了——不改的結果不是穩定，是護理部放棄使用這一部分。
 
 ### `nav_placement_settings` — 導覽版位（7 欄）
 
@@ -1132,8 +1109,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `changed_at` | `TS?` | 什麼時候調的 | **刻意可為空**：空代表從未被調過，與「有人把它調回預設值」是兩件事 |
 | `created_at` | `TS` | 這一列建立的時間 | 第一次啟動時由 `NAV_ITEM_DEFINITIONS` 補齊 |
 
-**誰寫這張表**：`NavigationService`。預設值來自共用常數，**只在那一列還不存在時寫入一次**——
-之後一律以資料表為準，否則每次重新部署都會把護理長的調整洗掉。
+**誰寫這張表**：`NavigationService`。預設值來自共用常數，**只在那一列還不存在時寫入一次**——之後一律以資料表為準，否則每次重新部署都會把護理長的調整洗掉。
+
 **稽核**：`NAV_PLACEMENT_CHANGED`（改版位）、`NAV_ITEM_ACCESS_BLOCKED`（關閉的端點被呼叫）。
 
 ### `help_categories` — 求助類別（10 欄）
@@ -1155,8 +1132,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ### `help_request_methods` — 處理方式的執行順序（5 欄）
 
-**蒐集的意義**：附錄 C.3。一次求助常常做了不只一件事，而且**順序有意義**——
-「先平躺再回填食鹽水」和「先回填再平躺」是不同的處置路徑。
+**蒐集的意義**：附錄 C.3。一次求助常常做了不只一件事，而且**順序有意義**——「先平躺再回填食鹽水」和「先回填再平躺」是不同的處置路徑。
 
 | 欄位 | 型別 | 說明 |
 |---|---|---|
@@ -1168,9 +1144,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ### 三組帶版本號的內容
 
-`questionnaire_versions` ＋ `questionnaire_items` ＋ `questionnaire_item_options` ＋ `questionnaire_item_triggers`（附錄 C.5）、
-`quiz_bank_versions` ＋ `quiz_bank_questions` ＋ `quiz_bank_question_options` ＋ `quiz_topics`（附錄 C.6）、
-`feedback_form_versions` ＋ `feedback_form_items`（附錄 C.7）。
+`questionnaire_versions` ＋ `questionnaire_items` ＋ `questionnaire_item_options` ＋ `questionnaire_item_triggers`（附錄 C.5）、 `quiz_bank_versions` ＋ `quiz_bank_questions` ＋ `quiz_bank_question_options` ＋ `quiz_topics`（附錄 C.6）、 `feedback_form_versions` ＋ `feedback_form_items`（附錄 C.7）。
 
 **三組是同一個形狀，規則也一樣**：
 
@@ -1182,24 +1156,17 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 版本號從 **2** 起算 | 第 1 版留給迭代 9 之前那一版題目，**只在既有環境才寫入**（全新環境沒有人填過它）。同一個版本字串在任何一套環境裡都要指同一份題目 |
 | 知識點與題目的識別碼**不可重用** | 一個識別碼一輩子只對應一個知識點，否則「這位病人在鉀離子上錯了三次」會變成假的 |
 
-**`symptom_answer_options`** 是複選題的子表：單選題不會有這裡的資料，`answer_value` 就是答案本身；
-複選題的 `answer_value` 記 `SELECTED` 或 `NONE`，選了哪幾項存在這張表，順序即病人點選的順序。
+**`symptom_answer_options`** 是複選題的子表：單選題不會有這裡的資料，`answer_value` 就是答案本身；複選題的 `answer_value` 記 `SELECTED` 或 `NONE`，選了哪幾項存在這張表，順序即病人點選的順序。
 
-**`help_requests.category_label`**（迭代 9 新增的欄位）：按下求助的當下，病人在平板上看到的那行字。
-類別的顯示文字之後可能被改掉（識別碼不動），但**這一筆紀錄要留住當時的措辭**——
-事後回頭看，要知道病人按的是哪一個按鈕上的哪幾個字。迭代 9 之前的紀錄為空，顯示時退回以識別碼查目前的文字。
+**`help_requests.category_label`**（迭代 9 新增的欄位）：按下求助的當下，病人在平板上看到的那行字。類別的顯示文字之後可能被改掉（識別碼不動），但**這一筆紀錄要留住當時的措辭**——事後回頭看，要知道病人按的是哪一個按鈕上的哪幾個字。迭代 9 之前的紀錄為空，顯示時退回以識別碼查目前的文字。
 
-**趨勢偏離仍然不入庫**：規則 `PSY-DEV-v2`（這位病人自己近六次的移動中位數，
-連續兩次低於它達 2 分才標示；三個門檻皆可在 `operational_settings` 調整）在查詢時即時計算，
-結果只以事實陳述呈現給護理師，**不寫入任何資料表，也不自動觸發轉介**。
+**趨勢偏離仍然不入庫**：規則 `PSY-DEV-v2`（這位病人自己近六次的移動中位數，連續兩次低於它達 2 分才標示；三個門檻皆可在 `operational_settings` 調整）在查詢時即時計算，結果只以事實陳述呈現給護理師，**不寫入任何資料表，也不自動觸發轉介**。
 
 ---
 
 ## 十七、床位圖（迭代 14）
 
-**蒐集的意義**：護理端簡易版的畫面是一張床位圖（SRS FR-N15）。迭代 14 之前系統裡沒有「床」：
-病人綁的是平板，班表記的床號只是一串字。空床也要畫得出來、平板要貼得上去、輪播內容要能只推給某一床，
-床位因此成為資料。三處都**只做加法**，既有資料不必搬。
+**蒐集的意義**：護理端簡易版的畫面是一張床位圖（SRS FR-N15）。迭代 14 之前系統裡沒有「床」：病人綁的是平板，班表記的床號只是一串字。空床也要畫得出來、平板要貼得上去、輪播內容要能只推給某一床，床位因此成為資料。三處都**只做加法**，既有資料不必搬。
 
 ### `beds` — 床位清單（8 欄）
 
@@ -1214,8 +1181,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `created_at` | `TS` | 建檔時間 | 見共通欄位 |
 | `updated_at` | `TS` | 最後修改時間 | 見共通欄位 |
 
-**預設值**：~~全新環境第一次啟動時，資料表是空的就寫入共用常數 `DEFAULT_BED_NOS`（15 床，01～15）~~。**1005 迭代 15 起後端不再預設床位**：床位由院方資料帶進來，沒接院方 API 的環境由護理長在系統管理建；`DEFAULT_BED_NOS` 只剩開發環境的 seed 在用（**1007 迭代 17.7 起是醫院的寫法**：A1、A2、A3、A5～A9、B1～B3、B5～B8 共 15 床，區碼＋數字、沒有 4 號床；原本是 01～15，已建好的開發資料庫不會自己換）。1005 之前已經建過 15 床的環境，那 15 床照舊在，接上院方資料後由護理長拿掉。床位數不設上限，床號照醫院編號。
-**之後一律以資料表為準**，重新部署不會洗掉護理長的調整。整組取代走 `PUT /beds`（營運參數權限、要填理由），寫 `BEDS_UPDATED`。
+**預設值**：~~全新環境第一次啟動時，資料表是空的就寫入共用常數 `DEFAULT_BED_NOS`（15 床，01～15）~~。**1005 迭代 15 起後端不再預設床位**：床位由院方資料帶進來，沒接院方 API 的環境由護理長在系統管理建；`DEFAULT_BED_NOS` 只剩開發環境的 seed 在用（**1007 迭代 17.7 起是醫院的寫法**：A1、A2、A3、A5～A9、B1～B3、B5～B8 共 15 床，區碼＋數字、沒有 4 號床；原本是 01～15，已建好的開發資料庫不會自己換）。1005 之前已經建過 15 床的環境，那 15 床照舊在，接上院方資料後由護理長拿掉。床位數不設上限，床號照醫院編號。 **之後一律以資料表為準**，重新部署不會洗掉護理長的調整。整組取代走 `PUT /beds`（營運參數權限、要填理由），寫 `BEDS_UPDATED`。
+
 **索引**：`bed_no`（唯一）、`(active, sort_order)`
 
 ### `carousel_item_targets` — 輪播內容的播放床位（5 欄）
@@ -1228,10 +1195,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `created_by_id` | `TEXT` → `nurses` | 誰推送的 | — |
 | `created_at` | `TS` | 推送時間 | — |
 
-**一列都沒有＝全部床位**，因此迭代 14 之前的內容維持原本的行為。整組取代走 `PUT /carousel/items/:id/targets`，
-寫 `CAROUSEL_ITEM_TARGETS_CHANGED`（說明寫出改前與改後的範圍）。病人端取第二層內容時，
-只拿「沒有指定床位」或「指定床位裡有自己那台平板所在床號」的內容；平板沒放上床位時只看得到全部床位的內容。
-**索引**：`(carousel_item_id, bed_no)`（唯一）、`bed_no`
+**一列都沒有＝全部床位**，因此迭代 14 之前的內容維持原本的行為。整組取代走 `PUT /carousel/items/:id/targets`，寫 `CAROUSEL_ITEM_TARGETS_CHANGED`（說明寫出改前與改後的範圍）。病人端取第二層內容時，只拿「沒有指定床位」或「指定床位裡有自己那台平板所在床號」的內容；平板沒放上床位時只看得到全部床位的內容。 **索引**：`(carousel_item_id, bed_no)`（唯一）、`bed_no`
 
 **1007 迭代 17.7 起**另有下一張表指定平板；「一列都沒有＝全部床位」改成**兩張表都沒有列**才是全部床位。
 
@@ -1245,26 +1209,17 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `created_by_id` | `TEXT` → `nurses` | 誰推送的 | — |
 | `created_at` | `TS` | 推送時間 | — |
 
-**為什麼要這張表**：簡易版中間 1007 起是平板，把內容拖到平板時，平板不一定有床號（使用者 1007：有病人配著就要能播）。
-指定的是平板，病人換床時平板跟著病人走，內容也跟著走。不改 `carousel_item_targets` 的理由：把 `bed_no` 改成可為空要重建表，違反只做加法。
-寫入走同兩支端點：核准 `POST /carousel/items/:id/approve` 與播放範圍 `PUT /carousel/items/:id/targets` 的 `deviceIds`（可不帶），
-與床號**一起整組取代**；稽核說明寫平板序號（「平板 DEMO-01」）。病人端的查詢（`listPlayable`）：兩張表都沒列＝全部床位；
-有列時，**床號對得上或平板對得上**就播。
+**為什麼要這張表**：簡易版中間 1007 起是平板，把內容拖到平板時，平板不一定有床號（使用者 1007：有病人配著就要能播）。指定的是平板，病人換床時平板跟著病人走，內容也跟著走。不改 `carousel_item_targets` 的理由：把 `bed_no` 改成可為空要重建表，違反只做加法。寫入走同兩支端點：核准 `POST /carousel/items/:id/approve` 與播放範圍 `PUT /carousel/items/:id/targets` 的 `deviceIds`（可不帶），與床號**一起整組取代**；稽核說明寫平板序號（「平板 DEMO-01」）。病人端的查詢（`listPlayable`）：兩張表都沒列＝全部床位；有列時，**床號對得上或平板對得上**就播。
+
 **索引**：`(carousel_item_id, device_id)`（唯一）、`device_id`
 
-**`operational_settings` 多兩個鍵**（值存在既有的表裡，不是新欄位）：
-`PATIENT_TASK_FEEDBACK_AFTER_MINUTES`（心情問卷在綁定後幾分鐘出現，預設 120）、
-`PATIENT_TASK_EDUCATION_AFTER_MINUTES`（衛教在綁定後幾分鐘出現，預設 180）。FR-P15。
-**1005 迭代 15 起兩者都從院方資料的透析開始時間起算**（沒有院方資料時仍從綁定起算），鍵與預設值不變。
+**`operational_settings` 多兩個鍵**（值存在既有的表裡，不是新欄位）： `PATIENT_TASK_FEEDBACK_AFTER_MINUTES`（心情問卷在綁定後幾分鐘出現，預設 120）、 `PATIENT_TASK_EDUCATION_AFTER_MINUTES`（衛教在綁定後幾分鐘出現，預設 180）。FR-P15。 **1005 迭代 15 起兩者都從院方資料的透析開始時間起算**（沒有院方資料時仍從綁定起算），鍵與預設值不變。
 
 ---
 
 ## 十八、院方 API 介接（迭代 15）
 
-**蒐集的意義**：1005 使用者指示院方透析清單 API **全面取代手動輸入**（SRS FR-S15、FR-S16）。病人主檔、床位、療程寫進上面幾張既有的表，
-四種數值經 `ClinicalDataImportService` 寫進 `clinical_values`（來源 `HOSPITAL_API`）；這一節的兩張表只記兩件新的事：**每一次抓取的結果**，
-與**有綁定平板的病人的生命徵象紀錄**。院方 API 每次回傳全中心當天到目前為止的全部紀錄，**原始回應不存**（《資料庫使用規範》第 13 條 1005 補充）。
-兩張表都不帶級聯刪除：抓取紀錄是治理證據，生命徵象是照護紀錄。
+**蒐集的意義**：1005 使用者指示院方透析清單 API **全面取代手動輸入**（SRS FR-S15、FR-S16）。病人主檔、床位、療程寫進上面幾張既有的表，四種數值經 `ClinicalDataImportService` 寫進 `clinical_values`（來源 `HOSPITAL_API`）；這一節的兩張表只記兩件新的事：**每一次抓取的結果**，與**有綁定平板的病人的生命徵象紀錄**。院方 API 每次回傳全中心當天到目前為止的全部紀錄，**原始回應不存**（《資料庫使用規範》第 13 條 1005 補充）。兩張表都不帶級聯刪除：抓取紀錄是治理證據，生命徵象是照護紀錄。
 
 ### `hospital_api_fetch_runs` — 院方 API 的抓取紀錄（14 欄）
 
@@ -1286,13 +1241,12 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `duration_ms` | `INT?` | 花了多久 | — |
 
 **誰寫這張表**：只有後端的同步排程（預設每 3 分鐘，營運參數）與「立即同步」。
-**稽核只寫狀態變了的那一次**：開始失敗（`HOSPITAL_API_FETCH_FAILED`）、恢復（`HOSPITAL_API_FETCH_RECOVERED`）、拒收（`HOSPITAL_API_FETCH_REFUSED`）；
-每 3 分鐘一筆的成功不寫稽核，這張表本身就是紀錄。⚠️ 一天約 480 列，留存期限待 Q-05；定案前不刪。
+
+**稽核只寫狀態變了的那一次**：開始失敗（`HOSPITAL_API_FETCH_FAILED`）、恢復（`HOSPITAL_API_FETCH_RECOVERED`）、拒收（`HOSPITAL_API_FETCH_REFUSED`）；每 3 分鐘一筆的成功不寫稽核，這張表本身就是紀錄。⚠️ 一天約 480 列，留存期限待 Q-05；定案前不刪。
 
 ### `dialysis_vital_records` — 院方的生命徵象紀錄（17 欄；1018 迭代 25 加四欄）
 
-**只收這次療程有綁定平板的病人**（SRS FR-S16、規範第 13 條 1005 補充「最小蒐集」）：病人端「本次透析」面板只需要他們的，其餘病人的紀錄留在院方。
-剛配平板的病人不會少掉前面幾點——下一次抓取本來就回傳當天全部。
+**只收這次療程有綁定平板的病人**（SRS FR-S16、規範第 13 條 1005 補充「最小蒐集」）：病人端「本次透析」面板只需要他們的，其餘病人的紀錄留在院方。剛配平板的病人不會少掉前面幾點——下一次抓取本來就回傳當天全部。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1314,12 +1268,9 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `venous_pressure_mmhg` | `INT?` | 靜脈壓（mmHg） | 同上，第 42 欄。速覽的血壓圖畫它 |
 | `dialysate_temp_x10` | `INT?` | 透析液溫度（℃ 乘 10） | 同上，第 47 欄。36.5 ℃ 存 365（規範 6.2，不用浮點數） |
 
-**唯一約束**：`(patient_id, dialysis_started_at, recorded_at)`——資料表層的最後一道防線，同步本身先查過已寫的紀錄時間才寫。
-**寫入時**推一則「有新紀錄」給那一台平板（`GET /device/stream`，事件不帶數值），並寫一筆 `HOSPITAL_VITALS_RECORDED` 稽核（一次抓取一筆，寫幾筆、幾位病人）。
+**唯一約束**：`(patient_id, dialysis_started_at, recorded_at)`——資料表層的最後一道防線，同步本身先查過已寫的紀錄時間才寫。 **寫入時**推一則「有新紀錄」給那一台平板（`GET /device/stream`，事件不帶數值），並寫一筆 `HOSPITAL_VITALS_RECORDED` 稽核（一次抓取一筆，寫幾筆、幾位病人）。
 
-**`operational_settings` 多四個鍵**：`HOSPITAL_API_FETCH_INTERVAL_MINUTES`（抓取頻率，預設 3、範圍 1～30）、
-`HOSPITAL_API_STALE_ALERT_MINUTES`（多久沒更新就提示，預設 10）、`HOSPITAL_END_CONFIRM_AFTER_MINUTES`（過了預計結束多久標示待確認下機，預設 60；1007 迭代 17.5 起預計結束一律是開始後四小時）、
-`HOSPITAL_BED_NO_FORMAT`（院方床位轉床號：0 原樣、1 改字母在前、2 改數字在前，預設 0）。
+**`operational_settings` 多四個鍵**：`HOSPITAL_API_FETCH_INTERVAL_MINUTES`（抓取頻率，預設 3、範圍 1～30）、 `HOSPITAL_API_STALE_ALERT_MINUTES`（多久沒更新就提示，預設 10）、`HOSPITAL_END_CONFIRM_AFTER_MINUTES`（過了預計結束多久標示待確認下機，預設 60；1007 迭代 17.5 起預計結束一律是開始後四小時）、 `HOSPITAL_BED_NO_FORMAT`（院方床位轉床號：0 原樣、1 改字母在前、2 改數字在前，預設 0）。
 
 **院方 API 的位址不在資料庫裡**：只在主機設定目錄的 `.env`（DEP-46），不寫進資料庫、日誌、稽核或任何回應。
 
@@ -1338,12 +1289,9 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | 跑馬燈 | `carousel_items`（＋`carousel_item_targets`、`carousel_item_device_targets`） | 在架上、期間內、指定給這一床、這台平板（1007 迭代 17.7）或全部床位；夜間一則都不送 |
 | 每一則的播放 | 寫 `carousel_view_events` | `layer = MARQUEE` |
 
-**送到平板的只有畫面要用的欄位**：時間與值。SRS 取捨表標「不顯示」的東西（靜脈壓、血流速、透析液設定、體溫、肝素、透析器、血管通路、低血壓預測、姓名、病歷號）
-本來就不在這幾張表裡，或在表裡但不讀。平板端的本機快取掛在 Session 前綴底下，綁定解除時一併清掉。
+**送到平板的只有畫面要用的欄位**：時間與值。SRS 取捨表標「不顯示」的東西（靜脈壓、血流速、透析液設定、體溫、肝素、透析器、血管通路、低血壓預測、姓名、病歷號）本來就不在這幾張表裡，或在表裡但不讀。平板端的本機快取掛在 Session 前綴底下，綁定解除時一併清掉。
 
-**`operational_settings` 多三個鍵**：`MARQUEE_CHARS_PER_MINUTE`（跑馬燈速度，預設 120 字／分鐘＝每秒 2 字，範圍 60～180）、
-`MARQUEE_LEAD_PAUSE_SECONDS`（每一則開頭靜止，預設 3）、`MARQUEE_GAP_SECONDS`（兩則之間的空白，預設 5）。速度經長者試看之後，採用的值與試看結果寫在那一列的 `last_reason`。
-**停用兩個鍵**：`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（跑馬燈不換卡、沒有細節頁）。列留在表裡，畫面上不再出現、改不到。
+**`operational_settings` 多三個鍵**：`MARQUEE_CHARS_PER_MINUTE`（跑馬燈速度，預設 120 字／分鐘＝每秒 2 字，範圍 60～180）、 `MARQUEE_LEAD_PAUSE_SECONDS`（每一則開頭靜止，預設 3）、`MARQUEE_GAP_SECONDS`（兩則之間的空白，預設 5）。速度經長者試看之後，採用的值與試看結果寫在那一列的 `last_reason`。 **停用兩個鍵**：`CAROUSEL_CARD_INTERVAL_SECONDS`、`CAROUSEL_DETAIL_TIMEOUT_SECONDS`（跑馬燈不換卡、沒有細節頁）。列留在表裡，畫面上不再出現、改不到。
 
 **`feature_flags` 多兩個鍵**：`TODAY_PANEL`（預設開啟）、`MARQUEE`（預設關閉）；**停用三個鍵**：`CAROUSEL_LAYER_1`～`3`，列與切換紀錄保留。
 
@@ -1363,25 +1311,17 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `topic_code` | `TEXT?` | 衛教草稿的主題 | 附錄 C.6 的主題識別碼（衛教題庫 `quiz_topics.code`，`EDU_*`），**只能是啟用中的主題**。刻意不設外鍵，與 `education_contents.topic_code` 同一個寫法。公告為空。挑「最久沒生成過的主題」靠這一欄 |
 | `source` | `TEXT` | 這一則是怎麼來的 | 合法值 `MANUAL`（護理師撰寫，含核准制度以前的全部內容）/ `AI_GENERATED` / `BUNDLED`（隨版本帶入）（`CarouselItemSource`），預設 `MANUAL`；**迭代 20 加** `PATIENT_SELECTED`（病友選的小撇步，建立者是登入不了的系統帳號「病友選的小撇步」） |
 
-**隨版本帶入的草稿**：院內推論端點就位之前（Q-07），衛教草稿由開發端事先生成、存在 `apps/api/src/modules/carousel/marquee-bundle.ts`，
-**首次啟動時匯入為 `PENDING`、`source = BUNDLED`**，建立者是「隨版本帶入」那個系統帳號。每一則寫一筆 `MARQUEE_DRAFT_IMPORTED` 稽核（記下生成的模型與閘道設定），
-整批再寫一筆以 `MARQUEE-BUNDLE-<版本>` 為 `target_id` 的——**有這一筆就不再匯入**，護理師全部退回之後重新啟動也不會再倒一次。
+**隨版本帶入的草稿**：院內推論端點就位之前（Q-07），衛教草稿由開發端事先生成、存在 `apps/api/src/modules/carousel/marquee-bundle.ts`， **首次啟動時匯入為 `PENDING`、`source = BUNDLED`**，建立者是「隨版本帶入」那個系統帳號。每一則寫一筆 `MARQUEE_DRAFT_IMPORTED` 稽核（記下生成的模型與閘道設定），整批再寫一筆以 `MARQUEE-BUNDLE-<版本>` 為 `target_id` 的——**有這一筆就不再匯入**，護理師全部退回之後重新啟動也不會再倒一次。
 
-**稽核軌跡多七個動作**：`MARQUEE_DRAFT_REQUESTED`（要一份草稿）、`MARQUEE_DRAFT_GENERATED`（生成完成，記模型與次數）、`MARQUEE_DRAFT_IMPORTED`、
-`CAROUSEL_ITEM_APPROVED`（記核准者、播放範圍、上下架時間；修改後核准時記下改前與改後＝留稿）、`CAROUSEL_ITEM_REJECTED`、`CAROUSEL_ITEM_REOPENED`、`CAROUSEL_ITEM_SCHEDULE_CHANGED`。
-`CAROUSEL_ITEM_UPSERTED` 留著，迭代 17 起只用在「護理師寫一則公告（待核准）」。
+**稽核軌跡多七個動作**：`MARQUEE_DRAFT_REQUESTED`（要一份草稿）、`MARQUEE_DRAFT_GENERATED`（生成完成，記模型與次數）、`MARQUEE_DRAFT_IMPORTED`、 `CAROUSEL_ITEM_APPROVED`（記核准者、播放範圍、上下架時間；修改後核准時記下改前與改後＝留稿）、`CAROUSEL_ITEM_REJECTED`、`CAROUSEL_ITEM_REOPENED`、`CAROUSEL_ITEM_SCHEDULE_CHANGED`。 `CAROUSEL_ITEM_UPSERTED` 留著，迭代 17 起只用在「護理師寫一則公告（待核准）」。
 
 **沒有送進模型的東西**：任何病人資料。衛教只送主題名稱與主題重點，公告只送事由；`ai_invocations.patient_id` 一律為空。
 
 ## 二十一、規則引擎與三項高風險功能（迭代 18）
 
-**蒐集的意義**：風險分層（FR-P03）、療程中預警（FR-P05）、劑量調整參考（FR-N06）與適足性的趨勢推估（FR-N07 的預測部分）**一律由規則計算，不經語言模型**（SRS FR-R01）。
-這一節的七張表記四件事（第七張 `rule_gate_changes` 是 1010 迭代 18.1 加的書面確認閘門登記紀錄）：**規則與它的每一個版本**（門檻、文字範本、書面依據出處）、**每一次比對**（對誰、用哪一版、引用了哪幾筆資料、組出什麼字）、**誰檢視過、有沒有採納**（FR-R06、FR-N13）。
-規格書列的是四張；門檻值與引用的資料各拆一張明細表，不用 JSON 欄位承載（規範 6.1 第 2 條）。遷移 `iteration18_rule_engine`，只做加法。
-級聯刪除只留「版本 → 門檻」「比對 → 引用資料」兩條；其餘一律 `NO ACTION`——這些是治理紀錄，留存期限定案前不刪。
+**蒐集的意義**：風險分層（FR-P03）、療程中預警（FR-P05）、劑量調整參考（FR-N06）與適足性的趨勢推估（FR-N07 的預測部分）**一律由規則計算，不經語言模型**（SRS FR-R01）。這一節的七張表記四件事（第七張 `rule_gate_changes` 是 1010 迭代 18.1 加的書面確認閘門登記紀錄）：**規則與它的每一個版本**（門檻、文字範本、書面依據出處）、**每一次比對**（對誰、用哪一版、引用了哪幾筆資料、組出什麼字）、**誰檢視過、有沒有採納**（FR-R06、FR-N13）。規格書列的是四張；門檻值與引用的資料各拆一張明細表，不用 JSON 欄位承載（規範 6.1 第 2 條）。遷移 `iteration18_rule_engine`，只做加法。級聯刪除只留「版本 → 門檻」「比對 → 引用資料」兩條；其餘一律 `NO ACTION`——這些是治理紀錄，留存期限定案前不刪。
 
-> ⚠️ **這一節的表才是「系統的判讀」放的地方**。第四節的症狀與求助是病人自己說的，第十八節的生命徵象是院方量的；把它們拿來比門檻、組成文字的，只有這裡。
-> 每一筆比對都標了**合成資料或真實病人**（`data_mode`）與**當時版本是草稿還是生效中**：書面確認閘門沒開（`rule_gate_changes` 最新一列不是登記；迭代 18 時看的是院內主機設定檔，18.1 起改在系統管理登記）時，`data_mode = REAL` 的列一筆都不會出現。
+> ⚠️ **這一節的表才是「系統的判讀」放的地方**。第四節的症狀與求助是病人自己說的，第十八節的生命徵象是院方量的；把它們拿來比門檻、組成文字的，只有這裡。每一筆比對都標了**合成資料或真實病人**（`data_mode`）與**當時版本是草稿還是生效中**：書面確認閘門沒開（`rule_gate_changes` 最新一列不是登記；迭代 18 時看的是院內主機設定檔，18.1 起改在系統管理登記）時，`data_mode = REAL` 的列一筆都不會出現。
 
 ### `rule_definitions` — 規則（7 欄）
 
@@ -1472,15 +1412,11 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 | `not_adopted_reason` | `TEXT?` | 未採納的原因 | 選填，最長 300 字；採納時一律為空。連同採納與否寫進稽核 `RULE_OUTPUT_REVIEWED` |
 | `reviewed_at` | `TS` | 檢視的時間 | — |
 
-**稽核軌跡多九個動作**：`RULE_DEFAULTS_SEEDED`（第一次啟動寫入預設規則）、`RULE_VERSION_CREATED`、`RULE_VERSION_UPDATED`（只有沒用過的草稿）、`RULE_VERSION_ACTIVATED`、
-`RULE_VERSION_CHANGE_REJECTED`（沒有出處標為生效、改用過的版本、範本有結論字詞…）、`RULE_EVALUATION_REQUESTED`（按了立即比對）、`RULE_EVALUATION_BLOCKED`（真實病人被閘門擋下；定時比對同一位病人一天記一筆）、
-`RULE_OUTPUT_REVIEWED`、`RULE_GATE_STATE_RECORDED`（啟動時閘門狀態與上一次記的不同才記；**18.1 起不再產生**）。
-18.1 再多一個：`RULE_GATE_CHANGED`（系統管理者登記或取消登記書面確認，記文號與理由）。預設規則補上草稿版本時沿用 `RULE_DEFAULTS_SEEDED`，`detail` 寫「補上草稿版本」與哪幾條第幾版。
+**稽核軌跡多九個動作**：`RULE_DEFAULTS_SEEDED`（第一次啟動寫入預設規則）、`RULE_VERSION_CREATED`、`RULE_VERSION_UPDATED`（只有沒用過的草稿）、`RULE_VERSION_ACTIVATED`、 `RULE_VERSION_CHANGE_REJECTED`（沒有出處標為生效、改用過的版本、範本有結論字詞…）、`RULE_EVALUATION_REQUESTED`（按了立即比對）、`RULE_EVALUATION_BLOCKED`（真實病人被閘門擋下；定時比對同一位病人一天記一筆）、 `RULE_OUTPUT_REVIEWED`、`RULE_GATE_STATE_RECORDED`（啟動時閘門狀態與上一次記的不同才記；**18.1 起不再產生**）。 18.1 再多一個：`RULE_GATE_CHANGED`（系統管理者登記或取消登記書面確認，記文號與理由）。預設規則補上草稿版本時沿用 `RULE_DEFAULTS_SEEDED`，`detail` 寫「補上草稿版本」與哪幾條第幾版。
 
 ### `rule_gate_changes` — 書面確認閘門的登記紀錄（6 欄，迭代 18.1）
 
-法務／資訊室對 TFDA 分類的書面確認（SRS FR-R08）。**只增不改**：每一次登記或取消登記都是新的一列，**最新一列就是現況**；一列都沒有＝從來沒登記過（閘門沒開）。
-迭代 18 時閘門是院內主機設定檔的 `HIGH_RISK_WRITTEN_CONFIRMATION`；1010 使用者指示改放進系統管理，設定檔不再有這一項。
+法務／資訊室對 TFDA 分類的書面確認（SRS FR-R08）。**只增不改**：每一次登記或取消登記都是新的一列，**最新一列就是現況**；一列都沒有＝從來沒登記過（閘門沒開）。迭代 18 時閘門是院內主機設定檔的 `HIGH_RISK_WRITTEN_CONFIRMATION`；1010 使用者指示改放進系統管理，設定檔不再有這一項。
 
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 |
 |---|---|---|---|
@@ -1497,10 +1433,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 二十二、管理儀表板、獎勵制度與對外揭露（迭代 19）
 
-**蒐集的意義**：成效儀表板（FR-M06）、各班工作量（FR-M05）、獎勵制度（FR-M08～M11）、臨時調動候補（FR-M03）與對外報表（FR-X01～X04）。
-**算數字用的全部是既有紀錄**（求助、護理紀錄、衛教、症狀問卷的時間戳；FDE 評估 5.1），這一節的表只存三種東西：**定義**（指標、計分規則、技能標記）、**算過一次就不再改的結果**（每日快照、結算的計分、產生的對外報表）、**人的決定**（計分期間、更正申請、核准）。
-規格書列的是七張；對外報表的指標與每一格、護理師的技能標記各一張，不用 JSON 欄位承載（規範 6.1 第 2 條）。遷移 `iteration19_performance_rewards_external`，只做加法。
-級聯刪除只留「對外報表 → 指標、每一格」兩條（主表 → 自己的明細）；其餘一律 `NO ACTION`。
+**蒐集的意義**：成效儀表板（FR-M06）、各班工作量（FR-M05）、獎勵制度（FR-M08～M11）、臨時調動候補（FR-M03）與對外報表（FR-X01～X04）。 **算數字用的全部是既有紀錄**（求助、護理紀錄、衛教、症狀問卷的時間戳；FDE 評估 5.1），這一節的表只存三種東西：**定義**（指標、計分規則、技能標記）、**算過一次就不再改的結果**（每日快照、結算的計分、產生的對外報表）、**人的決定**（計分期間、更正申請、核准）。規格書列的是七張；對外報表的指標與每一格、護理師的技能標記各一張，不用 JSON 欄位承載（規範 6.1 第 2 條）。遷移 `iteration19_performance_rewards_external`，只做加法。級聯刪除只留「對外報表 → 指標、每一格」兩條（主表 → 自己的明細）；其餘一律 `NO ACTION`。
 
 > ⚠️ **這一節是「跟人有關的數字」放的地方，硬性界線三條**（實作規格書 3.10、《資料庫使用規範》11.2）：
 > 1. **沒有總分、沒有排名**欄位——`reward_scores` 一列只有一條規則；要排就在查詢時算（目前畫面上也不排）
@@ -1660,9 +1593,8 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 ## 二十三、平板現有功能的遊戲化（迭代 20）
 
 **蒐集的意義**：問卷、衛教、跑馬燈開始做心理支援（SRS FR-P17、FR-P18、FR-N19；實作規格書 4.20）。這一節記三件事：**病人能選的預設小撇步**（資料，不是程式常數）、**哪位病人在哪一次透析選了哪一則**、**護理師對病人回的貼圖或預設回覆與病人什麼時候看到**。
-**我的衛教小本子不另存**：亮了哪些主題，每次由 `quiz_answers`（主題、對錯）與 `quiz_attempts.submitted_at` 算（`notebookLitTopics`，同一個主題連對兩題亮起，亮了不熄）。
-遷移 `iteration20_gamification_existing`，只做加法：三張新表、`carousel_items` 多一欄可為空的 `peer_tip_preset_id`（以 `ADD COLUMN` 加，不重建表）。三張表一條級聯都不帶。
-這是遊戲化的第一批資料，照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**——病人不能打字分享，護理師的回覆也只有代號。
+
+**我的衛教小本子不另存**：亮了哪些主題，每次由 `quiz_answers`（主題、對錯）與 `quiz_attempts.submitted_at` 算（`notebookLitTopics`，同一個主題連對兩題亮起，亮了不熄）。遷移 `iteration20_gamification_existing`，只做加法：三張新表、`carousel_items` 多一欄可為空的 `peer_tip_preset_id`（以 `ADD COLUMN` 加，不重建表）。三張表一條級聯都不帶。這是遊戲化的第一批資料，照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**——病人不能打字分享，護理師的回覆也只有代號。
 
 > 遊戲盤面快照（規範 6.1 的 JSON 例外）**不在這一節**：迭代 20 沒有遊戲，快照在第二十四節的 `game_saves`（迭代 21）。
 
@@ -1722,10 +1654,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 二十四、透析小花園、送花、共同花園（迭代 21）
 
-**蒐集的意義**：小花園是遊戲化的骨幹（SRS FR-P16、FR-P19、FR-S17；實作規格書 4.21）。這一節記四件事：**每位病人的花園存到哪裡**（換平板、換床接得上）、**每一步做了什麼**（斷線補送的依據，也是將來狀態評估的資料）、**送給護理站的花**、**每一班每個月大家一起種的花園**。
-遷移 `iteration21_garden_gifts_shared`，只做加法：六張新表，既有的表一欄都不動（`nurse_replies.source_kind` 多一種值，不是新欄位）。六張表一條級聯都不帶。
-照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**。
-**植物沒有自己的表**（實作規格書 4.21 列的 `garden_plants` 沒有建）：狀態評估與彙總都不查它，只在盤面快照裡。
+**蒐集的意義**：小花園是遊戲化的骨幹（SRS FR-P16、FR-P19、FR-S17；實作規格書 4.21）。這一節記四件事：**每位病人的花園存到哪裡**（換平板、換床接得上）、**每一步做了什麼**（斷線補送的依據，也是將來狀態評估的資料）、**送給護理站的花**、**每一班每個月大家一起種的花園**。遷移 `iteration21_garden_gifts_shared`，只做加法：六張新表，既有的表一欄都不動（`nurse_replies.source_kind` 多一種值，不是新欄位）。六張表一條級聯都不帶。照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**。 **植物沒有自己的表**（實作規格書 4.21 列的 `garden_plants` 沒有建）：狀態評估與彙總都不查它，只在盤面快照裡。
 
 ### `game_saves` — 遊戲盤面快照（8 欄）
 
@@ -1824,9 +1753,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 二十五、麻將連連看與狀態評估彙整（迭代 22）
 
-**蒐集的意義**：麻將連連看是遊戲裡資料最乾淨的一款（SRS FR-P16、FR-N20；實作規格書 4.22）。這一節記兩件事：**麻將的每一步**（存檔的依據，也是狀態評估彙整唯一的來源）、**彙整怎麼算**。
-遷移 `iteration22_mahjong_trends`，只做加法：`game_events` 多十二個**可為空**的欄位與一個索引（`patient_id`、`game_code`、`table_no`），花園的列這十二欄都是空的。沒有新表。
-照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**。**「狀態評估彙整」開關關著時照樣寫**（FR-N20：只是不顯示）。
+**蒐集的意義**：麻將連連看是遊戲裡資料最乾淨的一款（SRS FR-P16、FR-N20；實作規格書 4.22）。這一節記兩件事：**麻將的每一步**（存檔的依據，也是狀態評估彙整唯一的來源）、**彙整怎麼算**。遷移 `iteration22_mahjong_trends`，只做加法：`game_events` 多十二個**可為空**的欄位與一個索引（`patient_id`、`game_code`、`table_no`），花園的列這十二欄都是空的。沒有新表。照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**。**「狀態評估彙整」開關關著時照樣寫**（FR-N20：只是不顯示）。
 
 **麻將的存檔**在 `game_saves`（`game_code = 'MAHJONG'`）：快照是 JSON，只有難度級數、連續順利／要提示的桌數、開過與完成過幾桌、還沒消完的那一桌（這一桌的編號、第幾桌、是不是今日牌局與哪一天哪一班、大小、要不要連線、每一格的牌碼、重排過幾次、這一桌的提示與點錯次數）、最近完成過的今日牌局識別。驗格式與上限 16 KB 同第二十四節（`validateMahjongSnapshot`）。⛔ 沒有病人識別資料、臨床數值與其他資料表的編號；**存牌碼不存圖**（換牌面不影響存檔）。
 
@@ -1864,8 +1791,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 二十六、老台灣記憶相簿（迭代 23）
 
-**蒐集的意義**：記憶相簿讓長輩當「懂的人」（SRS FR-P16、FR-S17；實作規格書 4.23；子文件《[透析中的遊戲化之三：記憶相簿的主題](../notes/dialysis-gamification-album.md)》）。這一節記兩件事：**圖卡**（以資料表存、護理端可以改、改了就是新的一版）、**每看完一張的作答**（存檔的依據，也是護理端「可以聊的話題」、共同記憶的人數與小花園養分唯一的來源）。
-遷移 `iteration23_memory_album`，只做加法：四張新表，不動任何既有的表。照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**（病人沒有打字的地方）、**沒有任何護理師欄位**。
+**蒐集的意義**：記憶相簿讓長輩當「懂的人」（SRS FR-P16、FR-S17；實作規格書 4.23；子文件《[透析中的遊戲化之三：記憶相簿的主題](../notes/dialysis-gamification-album.md)》）。這一節記兩件事：**圖卡**（以資料表存、護理端可以改、改了就是新的一版）、**每看完一張的作答**（存檔的依據，也是護理端「可以聊的話題」、共同記憶的人數與小花園養分唯一的來源）。遷移 `iteration23_memory_album`，只做加法：四張新表，不動任何既有的表。照《資料庫使用規範》第 19 條比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄**（病人沒有打字的地方）、**沒有任何護理師欄位**。
 
 **圖卡怎麼進資料表**：後端啟動時把 `@hd/shared` 的 `ALBUM_SEED_CARDS`（起始 60 張）裡**資料表還沒有的代號**寫進去（第 1 版、上架中，建立者是系統），寫一筆稽核 `ALBUM_CARDS_SEEDED`。已經有的一律不碰（護理端改過的字、下架的不會被蓋回去）；之後每一季新加的圖卡照同一份常數往下加，下一次啟動自動補進來。之後平板、出卡、檢查作答一律讀資料表（實作規格書 3.14 第 5 條，沒有雙軌）。
 
@@ -1947,8 +1873,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 二十七、種子袋、小訪客與兩個圖鑑（迭代 24.4）
 
-**蒐集的意義**：使用者 1015 的六個決定（實作規格書 4.24；子文件《[透析中的遊戲化之四：花園與相簿的擴充](../notes/dialysis-gamification-expansion.md)》）裡，要存東西的只有三件：**這次療程種了幾顆**（種子袋每次療程補到 3 顆）、**在門口等著的小訪客**、**看過哪幾種訪客**（圖鑑「花園的訪客」）。
-遷移 `iteration24_seed_bag_visitors`，只做加法：一張新表、`game_events` 一個可為空的欄位，不動任何既有的表與欄位。照《資料庫使用規範》第 19 條比照平板其他資料；**沒有任何自由文字欄**。相簿圖鑑從 `album_responses` 算（第二十六節），不另開資料表。
+**蒐集的意義**：使用者 1015 的六個決定（實作規格書 4.24；子文件《[透析中的遊戲化之四：花園與相簿的擴充](../notes/dialysis-gamification-expansion.md)》）裡，要存東西的只有三件：**這次療程種了幾顆**（種子袋每次療程補到 3 顆）、**在門口等著的小訪客**、**看過哪幾種訪客**（圖鑑「花園的訪客」）。遷移 `iteration24_seed_bag_visitors`，只做加法：一張新表、`game_events` 一個可為空的欄位，不動任何既有的表與欄位。照《資料庫使用規範》第 19 條比照平板其他資料；**沒有任何自由文字欄**。相簿圖鑑從 `album_responses` 算（第二十六節），不另開資料表。
 
 **花園快照第 2 版**（`game_saves`，`game_code = 'GARDEN'`、`format_version = 2`）多六個欄位，全部只用來「接著玩」，統計不查它們：
 
@@ -1982,8 +1907,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 二十八、床邊前速覽與求助處置記錄（迭代 25）
 
-**蒐集的意義**：使用者 1015 操作護理端之後指出，護理師手上沒有裝置（Q-30），**離開護理站之前是唯一能看資料的時間**，回來才能登記（《[緊急通報的處理流程與護理紀錄連動](../notes/emergency-handling-redesign.md)》）。所以兩件事要存東西：去床邊之前要看的**透析設定與機器量測**（院方 API 多收的欄位，SRS FR-N03 1015 補充說明），以及結案那一下建好的**護理紀錄草稿來自哪一則求助**（SRS FR-N10 1015）。
-遷移 `iteration25_emergency_quick_view`，只做加法：一張新表、`dialysis_vital_records` 四個可為空的欄位（第十八節）、`nursing_records` 一個可為空的欄位（第十節），外鍵欄以 `ADD COLUMN … REFERENCES` 加上，不重建資料表。
+**蒐集的意義**：使用者 1015 操作護理端之後指出，護理師手上沒有裝置（Q-30），**離開護理站之前是唯一能看資料的時間**，回來才能登記（《[緊急通報的處理流程與護理紀錄連動](../notes/emergency-handling-redesign.md)》）。所以兩件事要存東西：去床邊之前要看的**透析設定與機器量測**（院方 API 多收的欄位，SRS FR-N03 1015 補充說明），以及結案那一下建好的**護理紀錄草稿來自哪一則求助**（SRS FR-N10 1015）。遷移 `iteration25_emergency_quick_view`，只做加法：一張新表、`dialysis_vital_records` 四個可為空的欄位（第十八節）、`nursing_records` 一個可為空的欄位（第十節），外鍵欄以 `ADD COLUMN … REFERENCES` 加上，不重建資料表。
 
 **最小蒐集照舊**（《資料庫使用規範》第 13 章 1015）：只收這次療程有配平板的病人——會發出求助的本來就只有他們；**只給護理端的床邊前速覽看，不上病人平板**（`GET /device/home` 不帶這些欄位，`verify:iteration16:api` 驗）。參考畫面上有、本系統不收的院方欄位（呼吸、ESA、凝血情況、膜上壓、透析次數等）照舊不收。
 
@@ -2033,8 +1957,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 二十九、儀表板的資料補齊與對外報表的修正（迭代 26.1）
 
-**蒐集的意義**：迭代 19 的儀表板只有九條指標，之後做了遊戲化、緊急通報的速覽與求助處置紀錄，儀表板沒跟上（《[管理儀表板、獎勵制度與對外揭露的更新與修正](../notes/management-rewards-disclosure-update.md)》第 2 節）。補的指標大多是**讀既有的表、讀的時候才算**；要新存的只有三件：平板什麼時候斷線（原本只有「最後一次連線」，斷過幾次、多久都留不下來）、哪一條指標從哪一天起才開始記或改了意思（不然期間跨過那一天，前後比起來像是變好或變差）、對外報表**沒有呈現的那幾格**與當時附的基準（核准之後要說得出為什麼少了一組、基準是哪一份）。
-遷移 `iteration26_1_dashboard_data`，只做加法：四張新表、`external_reports` 兩欄。
+**蒐集的意義**：迭代 19 的儀表板只有九條指標，之後做了遊戲化、緊急通報的速覽與求助處置紀錄，儀表板沒跟上（《[管理儀表板、獎勵制度與對外揭露的更新與修正](../notes/management-rewards-disclosure-update.md)》第 2 節）。補的指標大多是**讀既有的表、讀的時候才算**；要新存的只有三件：平板什麼時候斷線（原本只有「最後一次連線」，斷過幾次、多久都留不下來）、哪一條指標從哪一天起才開始記或改了意思（不然期間跨過那一天，前後比起來像是變好或變差）、對外報表**沒有呈現的那幾格**與當時附的基準（核准之後要說得出為什麼少了一組、基準是哪一份）。遷移 `iteration26_1_dashboard_data`，只做加法：四張新表、`external_reports` 兩欄。
 
 ### `device_connection_gaps` — 平板斷線的一段（6 欄）
 
@@ -2109,8 +2032,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 ## 三十、處理者指名與名冊身分（迭代 26.3）
 
-**蒐集的意義**：迭代 19 的計分「歸給做那件事的人」實作成**當時登入的帳號**。護理站一人登入大家用，那是誰的帳號開著，不是誰做的（《[管理儀表板、獎勵制度與對外揭露的更新與修正](../notes/management-rewards-disclosure-update.md)》第 4 節）。所以多記一件事：**那一件事是哪一位護理師做的**，由接手、結案、簽核、審閱、完成追蹤的人在同一個畫面按名字。沒有帳號的支援人力也要選得到，所以護理師多兩種狀態。
-遷移 `iteration26_3_handler_declarations`，只做加法：一張新表、`nurses` 一欄（以 `ADD COLUMN … REFERENCES` 加上，不重建資料表），另把「獎勵制度」頁的版位從沒人改過的關閉搬成選單。
+**蒐集的意義**：迭代 19 的計分「歸給做那件事的人」實作成**當時登入的帳號**。護理站一人登入大家用，那是誰的帳號開著，不是誰做的（《[管理儀表板、獎勵制度與對外揭露的更新與修正](../notes/management-rewards-disclosure-update.md)》第 4 節）。所以多記一件事：**那一件事是哪一位護理師做的**，由接手、結案、簽核、審閱、完成追蹤的人在同一個畫面按名字。沒有帳號的支援人力也要選得到，所以護理師多兩種狀態。遷移 `iteration26_3_handler_declarations`，只做加法：一張新表、`nurses` 一欄（以 `ADD COLUMN … REFERENCES` 加上，不重建資料表），另把「獎勵制度」頁的版位從沒人改過的關閉搬成選單。
 
 **整組跟著「獎勵制度」開關**（`REWARD_PROGRAM`）：關著時不記、畫面上沒有任何名字按鈕；已記下的保留。**不讀班表、不從登入帳號推**。
 
@@ -2201,6 +2123,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1021 | 2026-10-21 | 迭代 24～26 新增的資料表與欄位逐欄說明（第二十七～三十章），對到 97 張表 950 個欄位、26 個遷移 |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/reference/data-dictionary/) | 2026-10-14 | 迭代 17.8～23 新增的資料表與欄位逐欄說明，對到 90 張表 877 個欄位（含遊戲盤面快照的 JSON 例外） |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/reference/data-dictionary/) | 2026-10-07 | 改寫到迭代 17.7：迭代 15 院方 API 介接（同步紀錄、院方紀錄的來源欄位）、迭代 16 跑馬燈播放紀錄、迭代 17 草稿核准欄位、迭代 17.7 `carousel_item_device_targets`（59 張表 593 個欄位）；開關清單補 `LAB_VALUE_FEATURES`、`TODAY_PANEL`、`MARQUEE`、`MANUAL_PATIENT_CREATE`；開發 seed 床號改成醫院格式 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/reference/data-dictionary/) | 2026-09-30 | 改寫到迭代 14.2：新增 `beds`、`carousel_item_targets`（56 張表 547 個欄位），平板的外殼版本與所在床位、病人端任務時點的營運參數、求助「其他」框的開關；備份另存同名 .sha256 |

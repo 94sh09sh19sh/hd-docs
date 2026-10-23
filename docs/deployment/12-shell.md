@@ -2,14 +2,11 @@
 
 版本：v0.1　文件狀態：草案（0927 新增，迭代 12）　編號：`Y-xx`　**與第十一冊一起印出來帶進去**
 
-> **這一冊接在第十一冊 W-18 之後**：系統已經起來，接著在同一台主機上建外殼 APK、讓平板從院內下載頁安裝。
-> 取代[第三冊](03-tablet-shell.md)的 K-05、K-06（憑證、keystore、在開發機上編 APK）與側載那一段。
+> **這一冊接在第十一冊 W-18 之後**：系統已經起來，接著在同一台主機上建外殼 APK、讓平板從院內下載頁安裝。取代[第三冊](03-tablet-shell.md)的 K-05、K-06（憑證、keystore、在開發機上編 APK）與側載那一段。
 >
-> 規則的真本是《[部署規範](../requirements/deployment-spec.md)》第 7、8 章；外殼與系統之間的介面見
-> 《[病人端外殼 App 契約](../reference/kiosk-shell-contract.md)》。這一冊只寫手指要按什麼、每一步會怎麼壞。
+> 規則的真本是《[部署規範](../requirements/deployment-spec.md)》第 7、8 章；外殼與系統之間的介面見《[病人端外殼 App 契約](../reference/kiosk-shell-contract.md)》。這一冊只寫手指要按什麼、每一步會怎麼壞。
 
-> ⚠️ **本冊所有指令都在主機的 PowerShell 下，而且都在 `D:\hd-tablet-care\repo` 底下下**（與第十一冊相同）。
-> `$cfg` 是第十一冊 W-11 設的 `D:\hd-tablet-care\config\.env`。
+> ⚠️ **本冊所有指令都在主機的 PowerShell 下，而且都在 `D:\hd-tablet-care\repo` 底下下**（與第十一冊相同）。 `$cfg` 是第十一冊 W-11 設的 `D:\hd-tablet-care\config\.env`。
 
 ---
 
@@ -24,8 +21,7 @@
 | 病人端改走 HTTPS | 主機：重新啟動 `patient-web` | 病人端以院內 CA 簽的伺服器憑證提供 HTTPS |
 | 裝到平板 | 平板：瀏覽器開院內下載頁 | 平板上的「透析照護平板」 |
 
-**私鑰全程不離開主機**：CA 與簽章金鑰在 `shell-builder` 裡產生、存在資料卷 `hd-tablet-care-keys`，
-備份時寫到備份目錄、隨資料庫備份一起送往院內另一台機器（DEP-35）。
+**私鑰全程不離開主機**：CA 與簽章金鑰在 `shell-builder` 裡產生、存在資料卷 `hd-tablet-care-keys`，備份時寫到備份目錄、隨資料庫備份一起送往院內另一台機器（DEP-35）。
 
 ### 0.2 東西放在哪裡（第十一冊 0.2 之外多出來的）
 
@@ -41,9 +37,7 @@
 
 ### 0.4 先接受的一件事
 
-**平板第一次下載 APK 走的是 HTTP。** 那時平板還不信任院內 CA，下載頁若只有 HTTPS，平板的瀏覽器會先跳一個
-「連線不是私人連線」給拿平板的人看。因此病人端的埠同時接 HTTP 與 HTTPS，**HTTP 只留下載頁**，其餘一律轉到 HTTPS。
-下載頁上列出 APK 與簽章憑證的 SHA-256，要核對可以對照 Y-05 的輸出；Android 本身也會擋下簽章不同的覆蓋安裝。
+**平板第一次下載 APK 走的是 HTTP。** 那時平板還不信任院內 CA，下載頁若只有 HTTPS，平板的瀏覽器會先跳一個「連線不是私人連線」給拿平板的人看。因此病人端的埠同時接 HTTP 與 HTTPS，**HTTP 只留下載頁**，其餘一律轉到 HTTPS。下載頁上列出 APK 與簽章憑證的 SHA-256，要核對可以對照 Y-05 的輸出；Android 本身也會擋下簽章不同的覆蓋安裝。
 
 ---
 
@@ -57,8 +51,7 @@
 git show <tag>:services/shell-builder/shell.pin
 ```
 
-**怎麼知道成功了**：`SHELL_TAG` 那一版外殼在 GitHub 的外殼 repo 上看得到（Tags 頁），`SHELL_CONTRACT_VERSION` 等於契約文件的版本。
-兩者都已在開發機上照本冊第 7 節走過一次。
+**怎麼知道成功了**：`SHELL_TAG` 那一版外殼在 GitHub 的外殼 repo 上看得到（Tags 頁），`SHELL_CONTRACT_VERSION` 等於契約文件的版本。兩者都已在開發機上照本冊第 7 節走過一次。
 
 | 症狀 | 處置 |
 |---|---|
@@ -77,8 +70,7 @@ ssh-keygen -t ed25519 -C "hd-kiosk-shell@$(hostname)" -f $HOME\.ssh\hd-kiosk-she
 Get-Content $HOME\.ssh\hd-kiosk-shell.pub
 ```
 
-把印出來的那一行交給 repo 管理者，登記到**外殼 repo**（`hd-kiosk-shell`）的 **Settings → Deploy keys**，**不要勾 Allow write access**。
-`$HOME\.ssh\config` 再加一段：
+把印出來的那一行交給 repo 管理者，登記到**外殼 repo**（`hd-kiosk-shell`）的 **Settings → Deploy keys**，**不要勾 Allow write access**。 `$HOME\.ssh\config` 再加一段：
 
 ```
 Host github-hd-kiosk-shell
@@ -96,8 +88,7 @@ git clone git@github-hd-kiosk-shell:94sh09sh19sh/hd-kiosk-shell.git D:\hd-tablet
 git -C D:\hd-tablet-care\hd-kiosk-shell tag
 ```
 
-**怎麼知道成功了**：`ssh -T` 印出 `Hi <帳號>/hd-kiosk-shell!…`；`git tag` 列得出 Y-01 的那一版。
-以前的版本也會一起列出來（例如 `v0.2.0`、`v0.3.0`），這是正常的：`shell-builder` 只取 `shell.pin` 釘住的那一個。
+**怎麼知道成功了**：`ssh -T` 印出 `Hi <帳號>/hd-kiosk-shell!…`；`git tag` 列得出 Y-01 的那一版。以前的版本也會一起列出來（例如 `v0.2.0`、`v0.3.0`），這是正常的：`shell-builder` 只取 `shell.pin` 釘住的那一個。
 
 | 症狀 | 處置 |
 |---|---|
@@ -126,8 +117,7 @@ notepad $cfg
 |---|---|
 | `required variable HD_SHELL_SRC_DIR is missing a value` | **每一條 compose 指令都會檢查它**，不只 `shell-builder` 那幾條。填上 |
 
-> `MDM_KIOSK_BASE_URL` 從 `http://` 改成 `https://` 之後，護理端註冊平板時顯示的網址也跟著變。
-> 它只寫在 `api` 的環境變數裡，**不必重建映像檔**，`docker compose --env-file $cfg up -d api` 即可。
+> `MDM_KIOSK_BASE_URL` 從 `http://` 改成 `https://` 之後，護理端註冊平板時顯示的網址也跟著變。它只寫在 `api` 的環境變數裡，**不必重建映像檔**，`docker compose --env-file $cfg up -d api` 即可。
 
 ---
 
@@ -139,9 +129,7 @@ notepad $cfg
 docker compose --env-file $cfg --profile shell build shell-builder
 ```
 
-第一次要下載 Android SDK、Gradle 與外殼的全部建置相依（約 1.5 GB）。**這一步可以連外、而且必須連外**；
-它不掛任何資料卷（DEP-14）。建置時會核對：外殼 clone 裡有沒有釘住的 tag、tag 裡的版本與契約版本對不對、
-外殼原始碼裡有沒有指向院外的網址。
+第一次要下載 Android SDK、Gradle 與外殼的全部建置相依（約 1.5 GB）。**這一步可以連外、而且必須連外**；它不掛任何資料卷（DEP-14）。建置時會核對：外殼 clone 裡有沒有釘住的 tag、tag 裡的版本與契約版本對不對、外殼原始碼裡有沒有指向院外的網址。
 
 **怎麼知道成功了**：輸出最後幾行有「✓ 外殼 v0.x.x（…，契約第 1 版）已準備好，相依已下載」（`v0.x.x` 是 `shell.pin` 釘的那一版，1001 是 `v0.3.0`）。
 
@@ -163,15 +151,11 @@ docker compose --env-file $cfg --profile shell build shell-builder
 docker compose --env-file $cfg --profile shell run --rm shell-builder
 ```
 
-**怎麼知道成功了**：第一次執行印出「這一次新產生：院內 CA 伺服器憑證（<主機>） APK 簽章金鑰（院內）」，
-接著是 APK 檔名與三個 SHA-256（檔案、簽章憑證、院內 CA）。**把三個 SHA-256 抄進交接文件。**
+**怎麼知道成功了**：第一次執行印出「這一次新產生：院內 CA 伺服器憑證（<主機>） APK 簽章金鑰（院內）」，接著是 APK 檔名與三個 SHA-256（檔案、簽章憑證、院內 CA）。**把三個 SHA-256 抄進交接文件。**
 
-**再執行一次**，要看到「**金鑰全部沿用，這一次沒有產生任何新的金鑰**」，簽章憑證的 SHA-256 與第一次相同。
-這是 DEP-35 的核心：`shell-builder` 絕不覆蓋既有的 CA 與簽章金鑰。
+**再執行一次**，要看到「**金鑰全部沿用，這一次沒有產生任何新的金鑰**」，簽章憑證的 SHA-256 與第一次相同。這是 DEP-35 的核心：`shell-builder` 絕不覆蓋既有的 CA 與簽章金鑰。
 
-沒抄到也查得到，不必重跑：`http://localhost:<病人端埠>/shell/` 下載頁的「版本資訊」列著三個 SHA-256，同一個資料夾的 `shell.json` 也有；
-`patient-web` 每次都即時讀檔，不必先做 Y-07。每跑一次建置，APK 就會換成新的一份，**交接文件的檔案 SHA-256 以下載頁上的為準**。
-`keys-info` 只列得出院內 CA 與簽章金鑰的指紋，格式是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。
+沒抄到也查得到，不必重跑：`http://localhost:<病人端埠>/shell/` 下載頁的「版本資訊」列著三個 SHA-256，同一個資料夾的 `shell.json` 也有； `patient-web` 每次都即時讀檔，不必先做 Y-07。每跑一次建置，APK 就會換成新的一份，**交接文件的檔案 SHA-256 以下載頁上的為準**。 `keys-info` 只列得出院內 CA 與簽章金鑰的指紋，格式是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。
 
 | 症狀 | 處置 |
 |---|---|
@@ -189,11 +173,9 @@ docker compose --env-file $cfg --profile shell run --rm shell-builder keys-backu
 docker compose --env-file $cfg --profile shell run --rm shell-builder keys-verify
 ```
 
-**怎麼知道成功了**：第一條印出「已備份：備份目錄/keys/hd-keys-<時間>.tar.gz」；第二條逐項 ✓，最後「還原得回來」。
-`D:\hd-tablet-care\backups\keys\` 底下看得到那份檔案。
+**怎麼知道成功了**：第一條印出「已備份：備份目錄/keys/hd-keys-<時間>.tar.gz」；第二條逐項 ✓，最後「還原得回來」。 `D:\hd-tablet-care\backups\keys\` 底下看得到那份檔案。
 
-**這份檔案裡有 CA 與簽章的私鑰。** 與資料庫備份一樣由院方送往院內另一台機器，不得出院、不得寄給開發端。
-送過去之後，在那一台上也要能取回——每年核對一次（第 6 節）。
+**這份檔案裡有 CA 與簽章的私鑰。** 與資料庫備份一樣由院方送往院內另一台機器，不得出院、不得寄給開發端。送過去之後，在那一台上也要能取回——每年核對一次（第 6 節）。
 
 ---
 
@@ -204,20 +186,16 @@ docker compose --env-file $cfg restart patient-web
 docker compose --env-file $cfg logs patient-web --tail 5
 ```
 
-**怎麼知道成功了**：記錄裡有「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」。
-主機的瀏覽器開 `http://<主機>:<病人端埠>/shell/` 看得到下載頁；開 `http://<主機>:<病人端埠>/` 會被轉到 `https://`
-並跳出憑證警告——**這是對的**，主機的瀏覽器不信任院內 CA，平板上的外殼才信任。
+**怎麼知道成功了**：記錄裡有「靜態資源已提供於連接埠 8081（HTTPS；HTTP 只留外殼下載頁）」。主機的瀏覽器開 `http://<主機>:<病人端埠>/shell/` 看得到下載頁；開 `http://<主機>:<病人端埠>/` 會被轉到 `https://` 並跳出憑證警告——**這是對的**，主機的瀏覽器不信任院內 CA，平板上的外殼才信任。
 
-`--tail 5` 常常跨到重新啟動之前那一次，所以「找不到伺服器憑證」與「HTTPS」可能同時出現，以最後一次啟動的那幾行為準。
-記錄裡的 `8081`、`http://api:3000` 是容器裡面的埠，對應主機上的 `HD_PATIENT_PORT`、`HD_API_PORT`；平板一律連 `HD_PATIENT_PORT`。
+`--tail 5` 常常跨到重新啟動之前那一次，所以「找不到伺服器憑證」與「HTTPS」可能同時出現，以最後一次啟動的那幾行為準。記錄裡的 `8081`、`http://api:3000` 是容器裡面的埠，對應主機上的 `HD_PATIENT_PORT`、`HD_API_PORT`；平板一律連 `HD_PATIENT_PORT`。
 
 | 症狀 | 處置 |
 |---|---|
 | **最後一次**啟動的記錄是「找不到伺服器憑證…暫以 HTTP 提供」 | Y-05 還沒跑成功，或跑完沒有重新啟動 `patient-web` |
 | 下載頁顯示「外殼 App 尚未建置」 | 同上 |
 
-> **伺服器憑證換過之後也要做這一步**：`shell-builder` 發現主機位址變了、或憑證 30 天內到期時會重新簽一張，
-> `patient-web` 要重新啟動才讀得到。CA 沒變，平板不受影響。
+> **伺服器憑證換過之後也要做這一步**：`shell-builder` 發現主機位址變了、或憑證 30 天內到期時會重新簽一張， `patient-web` 要重新啟動才讀得到。CA 沒變，平板不受影響。
 
 ---
 
@@ -243,10 +221,7 @@ Get-NetFirewallRule -Direction Inbound -Enabled True | Where-Object DisplayName 
 
 ### Y-09 在護理端註冊平板
 
-護理端 → 新增裝置（1007 以前叫裝置管理） → 註冊新平板。畫面出現**佈建 QR code** 與文字網址（迭代 14.1 起），
-**兩者只顯示一次**：這個畫面先不要關，拿著平板照 Y-10～Y-12 做完、掃完再離開。
-平板沒有相機、或這一頁非關不可時，才把序號與金鑰抄在佈建單上，佈建完就銷毀那張單子。
-顯示的網址要以 `https://` 開頭；不是的話回 Y-03（外殼會拒收 `http://` 的 QR code）。
+護理端 → 新增裝置（1007 以前叫裝置管理） → 註冊新平板。畫面出現**佈建 QR code** 與文字網址（迭代 14.1 起）， **兩者只顯示一次**：這個畫面先不要關，拿著平板照 Y-10～Y-12 做完、掃完再離開。平板沒有相機、或這一頁非關不可時，才把序號與金鑰抄在佈建單上，佈建完就銷毀那張單子。顯示的網址要以 `https://` 開頭；不是的話回 Y-03（外殼會拒收 `http://` 的 QR code）。
 
 ### Y-10 平板的系統設定
 
@@ -265,9 +240,7 @@ Get-NetFirewallRule -Direction Inbound -Enabled True | Where-Object DisplayName 
 
 ### Y-12 首次啟動與釘選
 
-1. 開啟「透析照護平板」，按「**掃描 QR code**」（外殼 0.3.0 起），允許相機，對準 Y-09 畫面上的 QR code。
-   三欄一次填好，**核對序號與這台平板的標籤一致**。沒有相機時照舊手動輸入：主機位址填 `https://<主機>:<病人端埠>`
-   （與 `MDM_KIOSK_BASE_URL` 相同），序號與金鑰填 Y-09 的
+1. 開啟「透析照護平板」，按「**掃描 QR code**」（外殼 0.3.0 起），允許相機，對準 Y-09 畫面上的 QR code。三欄一次填好，**核對序號與這台平板的標籤一致**。沒有相機時照舊手動輸入：主機位址填 `https://<主機>:<病人端埠>` （與 `MDM_KIOSK_BASE_URL` 相同），序號與金鑰填 Y-09 的
 2. 按「儲存並啟動」，系統跳出「要固定這個應用程式嗎」，按「確定」
 
 **怎麼知道成功了**：畫面是病人端的等待畫面，沒有任何憑證警告；按上一頁、首頁、多工鍵都離不開。
@@ -292,9 +265,7 @@ Get-NetFirewallRule -Direction Inbound -Enabled True | Where-Object DisplayName 
 
 把序號與床號的對應記下來。**解除一次固定**（輸入 PIN），30 秒內護理端要變成「已跳出」。
 
-**釘回去**：解鎖後 App 還停在畫面上，但已經沒有釘住，直接點它沒用。按多工鍵把「透析照護平板」**從多工畫面滑掉**，
-再從桌面開啟，系統再問一次「要固定這個應用程式嗎」，按「確定」。護理端 15～30 秒內回到「固定中」。
-沒跳出確認框就重新開機，App 開機後會自己起來並詢問。
+**釘回去**：解鎖後 App 還停在畫面上，但已經沒有釘住，直接點它沒用。按多工鍵把「透析照護平板」**從多工畫面滑掉**，再從桌面開啟，系統再問一次「要固定這個應用程式嗎」，按「確定」。護理端 15～30 秒內回到「固定中」。沒跳出確認框就重新開機，App 開機後會自己起來並詢問。
 
 ---
 
@@ -311,8 +282,7 @@ docker compose --env-file $cfg --profile shell build shell-builder
 docker compose --env-file $cfg --profile shell run --rm shell-builder
 ```
 
-下載頁換成新版之後，**平板要逐台重新安裝**（覆蓋安裝即可，序號與金鑰會留著）。排在非透析時段（DEP-32）。
-**只改網頁不必做這一段**——那是絕大多數的更新，平板下次載入就是新版。
+下載頁換成新版之後，**平板要逐台重新安裝**（覆蓋安裝即可，序號與金鑰會留著）。排在非透析時段（DEP-32）。 **只改網頁不必做這一段**——那是絕大多數的更新，平板下次載入就是新版。
 
 ### Y-15 調高最低可用版本
 
@@ -350,8 +320,7 @@ docker compose --env-file $cfg up -d api
 | 4 | 手機跳出螢幕固定，護理端 30 秒內看得到 | Y-13 |
 | 5 | `npm run verify:iteration12 -- --live --env-file <設定目錄>\.env` | 唯一允許用 Node 的一步，**它是驗收，不是部署步驟** |
 
-開發機上 `HD_SHELL_SIGNING=dev`、`MDM_KIOSK_BASE_URL` 用開發機的區網 IP（手機要連得到，`localhost` 不行）。
-手機上的每一項見[迭代 12 測試分冊](../testing/iteration-12.md) §12.5～§12.7。
+開發機上 `HD_SHELL_SIGNING=dev`、`MDM_KIOSK_BASE_URL` 用開發機的區網 IP（手機要連得到，`localhost` 不行）。手機上的每一項見[迭代 12 測試分冊](../testing/iteration-12.md) §12.5～§12.7。
 
 ---
 

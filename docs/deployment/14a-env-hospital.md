@@ -2,17 +2,21 @@
 
 版本：v0.1　文件狀態：草案（0929 新增）　**與第十四冊一起印出來帶進去**
 
-> **1001 起由[第十五冊之一](15a-env-hospital.md)取代。** 這一冊是 1001 第二次進院時照著填的那一版，保留為紀錄、不再改寫。
-> 本冊的範例 `hd-server` **不是院內主機的名字**；根目錄 1001 實際用的是 `C:\hd\hd-tablet-care`。
+> **1001 起由[第十五冊之一](15a-env-hospital.md)取代。** 這一冊是 1001 第二次進院時照著填的那一版，保留為紀錄、不再改寫。本冊的範例 `hd-server` **不是院內主機的名字**；根目錄 1001 實際用的是 `C:\hd\hd-tablet-care`。
 
-> 這一冊只做一件事：**院內主機上那一份 `.env`，每一行要填什麼**。
-> 它接在[第十四冊](14-from-zero.md) N-11（＝第十一冊 W-11、第十二冊 Y-03）。
-> 模擬部署的填法不同，看[第十四冊之二](14b-env-simulation.md)。
+> 這一冊只做一件事：**院內主機上那一份 `.env`，每一行要填什麼**。它接在[第十四冊](14-from-zero.md) N-11（＝第十一冊 W-11、第十二冊 Y-03）。模擬部署的填法不同，看[第十四冊之二](14b-env-simulation.md)。
 >
-> 變數的真本是 repo 裡的 `deploy\hospital.env.example`（每一項上面都有註解），規則的真本是《[部署規範](../requirements/deployment-spec.md)》v3.0。
-> 本冊與範本不一致時，以範本為準。
+> 變數的真本是 repo 裡的 `deploy\hospital.env.example`（每一項上面都有註解），規則的真本是《[部署規範](../requirements/deployment-spec.md)》v3.0。本冊與範本不一致時，以範本為準。
 
 ---
+
+## 摘要
+
+- **1001 起由第十五冊之一取代**，保留為紀錄、不再改寫
+- 只做一件事：院內主機那一份 `.env` 每一行要填什麼，接在第十四冊 N-11
+- 變數的真本是 `deploy\hospital.env.example`，規則的真本是《部署規範》v3.0
+- 範例的 `hd-server` 不是院內主機的名字；1001 實際的根目錄是 `C:\hd\hd-tablet-care`
+- 第 1～3 節逐項填、填好的樣子、填完核對；第 4～5 節日後改值與檔案保管
 
 ## 0. 開始之前
 
@@ -55,11 +59,9 @@ notepad $cfg
 | 要交付的 tag | 你自己（N-03） | `HD_IMAGE_TAG` |
 | 第一個管理員帳號的工號與名字 | 護理長 | `SUPER_ADMIN_WORK_ID`、`SUPER_ADMIN_DISPLAY_NAME` |
 
-> ⚠️ **主機名稱還是 IP，擇一之後不要再換。** 平板的伺服器憑證就簽這個名字；換了要重簽憑證、每一台平板重新佈建。
-> 選的原則：平板與護理站在院內網路上**確定連得到、而且不會變**的那一個。IP 由 DHCP 發的話可能會變，要請資訊室固定下來。
+> ⚠️ **主機名稱還是 IP，擇一之後不要再換。** 平板的伺服器憑證就簽這個名字；換了要重簽憑證、每一台平板重新佈建。選的原則：平板與護理站在院內網路上**確定連得到、而且不會變**的那一個。IP 由 DHCP 發的話可能會變，要請資訊室固定下來。
 
-下面的範例一律假設：主機名稱 `hd-server`、三個埠 `13000`、`18080`、`18081`（0930 資訊室確認的實際值）、根目錄 `D:\hd-tablet-care`、tag `v0.2.0`。
-**這些只是範例，請換成你拿到的答案。**
+下面的範例一律假設：主機名稱 `hd-server`、三個埠 `13000`、`18080`、`18081`（0930 資訊室確認的實際值）、根目錄 `D:\hd-tablet-care`、tag `v0.2.0`。 **這些只是範例，請換成你拿到的答案。**
 
 ---
 
@@ -110,8 +112,7 @@ notepad $cfg
 | `MDM_KIOSK_BASE_URL` | **平板**要連的病人端位址，**一律 `https://`**：`https://<主機>:<病人端埠>` | `https://hd-server:18081` |
 
 - `HD_PUBLIC_API_URL` **會在建置時寫進護理端的網頁檔案裡**。事後改它，要重新 `build` 再 `up -d`，只重新啟動沒有用。
-- `CORS_ORIGINS` 的主機與埠要與護理站瀏覽器網址列上看到的**一字不差**（`hd-server` 與 `hd-server.hospital.local` 算兩個不同的來源）。
-  病人端與後端同一個來源，**不必列**。
+- `CORS_ORIGINS` 的主機與埠要與護理站瀏覽器網址列上看到的**一字不差**（`hd-server` 與 `hd-server.hospital.local` 算兩個不同的來源）。病人端與後端同一個來源，**不必列**。
 - `MDM_KIOSK_BASE_URL`：
   - 開頭**一定是 `https://`**。寫成 `http://`，`shell-builder` 會拒絕、平板的外殼也會拒收 QR code。
   - **不能是 `localhost`**：平板上的 `localhost` 是平板自己。
@@ -127,8 +128,7 @@ notepad $cfg
 | `KIOSK_SHELL_MIN_VERSION` | **留空** | （空白） |
 
 - `HD_SHELL_SRC_DIR` 還沒 clone 也要**先填好路徑**：每一條 `docker compose` 指令都會檢查它有沒有填。
-- `HD_SHELL_SIGNING`：院內主機一律 `hospital`。金鑰第一次產生時會記下它，**之後填別的值 `shell-builder` 會拒絕執行**。
-  看到「這個金鑰資料卷是『dev』用的」就是有人把模擬部署的設定搬過來了——**停手**。
+- `HD_SHELL_SIGNING`：院內主機一律 `hospital`。金鑰第一次產生時會記下它，**之後填別的值 `shell-builder` 會拒絕執行**。看到「這個金鑰資料卷是『dev』用的」就是有人把模擬部署的設定搬過來了——**停手**。
 - `KIOSK_SHELL_MIN_VERSION`：留空就用程式內建的預設值。等所有平板都換上新版外殼才調高（第十二冊 Y-15）。
 
 ### 1.6 身分驗證
@@ -149,13 +149,10 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 
 印出一行 64 個字元、只有英數字與 `-`、`_` 的字串。把那一整串貼在 `JWT_SECRET=` 後面。
 
-> 舊版手冊用 `docker run --rm node:20-bookworm-slim …` 產生。那條指令要先從 Docker Hub 下載映像檔，
-> 第一次跑會先印出 `Unable to find image 'node:20-bookworm-slim' locally`，網路不通就停在那裡。改用上面這一行就沒有這個問題。
+> 舊版手冊用 `docker run --rm node:20-bookworm-slim …` 產生。那條指令要先從 Docker Hub 下載映像檔，第一次跑會先印出 `Unable to find image 'node:20-bookworm-slim' locally`，網路不通就停在那裡。改用上面這一行就沒有這個問題。
 
-- `JWT_SECRET` 是**登入憑證的簽章金鑰**。每次部署產生新的，**不要沿用模擬部署那一串，也不要寫在任何別的地方**。
-  事後換掉它，所有人會被登出，要重新登入。
-- `SUPER_ADMIN_*` **只在資料庫裡一個使用者都沒有時**才用得到：第一次啟動時建立這個帳號，第一次登入強制改密碼。
-  改完密碼之後，這兩行可以清空（清空後 `docker compose --env-file $cfg up -d`）。
+- `JWT_SECRET` 是**登入憑證的簽章金鑰**。每次部署產生新的，**不要沿用模擬部署那一串，也不要寫在任何別的地方**。事後換掉它，所有人會被登出，要重新登入。
+- `SUPER_ADMIN_*` **只在資料庫裡一個使用者都沒有時**才用得到：第一次啟動時建立這個帳號，第一次登入強制改密碼。改完密碼之後，這兩行可以清空（清空後 `docker compose --env-file $cfg up -d`）。
 - **填錯**：沒填 `SUPER_ADMIN_WORK_ID` 或密碼 → 沒有任何帳號能登入。補上再 `up -d`，資料庫不必重建。
 
 ### 1.7 備份與磁碟
@@ -186,8 +183,7 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 
 ### 1.9 其他營運參數
 
-`BINDING_MAX_HOURS`、`BINDING_EXPIRY_SWEEP_SECONDS`、`SYMPTOM_TREND_WINDOW_DAYS`、`SYMPTOM_TREND_REPORT_LIMIT`、
-`DEVICE_ONLINE_THRESHOLD_SECONDS`、`REALTIME_HEARTBEAT_SECONDS`：**全部維持範本的值**。沒有護理長或需求文件的明確理由，不要改。
+`BINDING_MAX_HOURS`、`BINDING_EXPIRY_SWEEP_SECONDS`、`SYMPTOM_TREND_WINDOW_DAYS`、`SYMPTOM_TREND_REPORT_LIMIT`、 `DEVICE_ONLINE_THRESHOLD_SECONDS`、`REALTIME_HEARTBEAT_SECONDS`：**全部維持範本的值**。沒有護理長或需求文件的明確理由，不要改。
 
 ---
 

@@ -2,27 +2,27 @@
 
 版本：v0.1　文件狀態：草案（1001 新增）　編號：`V-xx`　**要印出來帶進去**
 
-> **這一冊取代[第十四冊](14-from-zero.md)。** 第十四冊是 1001 第二次進院時照著走的那一版，
-> 這一冊依那一次帶回來的資料（[第十四冊之四](14d-second-visit.md)）重寫：
-> 根目錄改成院內實際用的 `C:\hd\hd-tablet-care`、在填 `.env` 之前多一步「決定主機位址」、
-> 建置之前先用 Docker 自己下載一次基底映像（1001 三次查不到 Docker Hub 的網域）、
-> Git 沒裝時怎麼辦、防毒怎麼查、護理端登不進去怎麼查，都併進步驟本身；
-> 也多了一節「**1001 之後的院內主機從哪裡接著做**」（0.5 節）。
+> **這一冊取代[第十四冊](14-from-zero.md)。** 第十四冊是 1001 第二次進院時照著走的那一版，這一冊依那一次帶回來的資料（[第十四冊之四](14d-second-visit.md)）重寫：根目錄改成院內實際用的 `C:\hd\hd-tablet-care`、在填 `.env` 之前多一步「決定主機位址」、建置之前先用 Docker 自己下載一次基底映像（1001 三次查不到 Docker Hub 的網域）、 Git 沒裝時怎麼辦、防毒怎麼查、護理端登不進去怎麼查，都併進步驟本身；也多了一節「**1001 之後的院內主機從哪裡接著做**」（0.5 節）。
 >
-> 和第十四冊一樣，這一冊給第一次部署的人：從「一台什麼都還沒動的主機」走到「護理站登得進去、平板釘住、交接完成」，
-> 每一步都寫出要打什麼、畫面上應該看到什麼、沒看到時怎麼辦。讀完不需要先懂 Docker 或 Git，第 0.4 節的名詞表就夠了。
+> 和第十四冊一樣，這一冊給第一次部署的人：從「一台什麼都還沒動的主機」走到「護理站登得進去、平板釘住、交接完成」，每一步都寫出要打什麼、畫面上應該看到什麼、沒看到時怎麼辦。讀完不需要先懂 Docker 或 Git，第 0.4 節的名詞表就夠了。
 >
-> 同一套步驟也用來做**模擬部署**：在自己的開發機上照走一次。兩者不同的地方，每一步都用
-> **🧪 模擬部署** 的方框標出來；沒有方框的步驟，兩者一字不差。
+> 同一套步驟也用來做**模擬部署**：在自己的開發機上照走一次。兩者不同的地方，每一步都用 **🧪 模擬部署** 的方框標出來；沒有方框的步驟，兩者一字不差。
 >
-> 這一冊是第十一、十二、十三冊（現行路線）的**新手導讀版**：每一步標題後面註明對應的第十四冊與原冊步驟編號（例如「＝N-13、W-13」）。
-> 兩者衝突時，以原冊為準，規則的真本仍是《[部署規範](../requirements/deployment-spec.md)》v3.0。
+> 這一冊是第十一、十二、十三冊（現行路線）的**新手導讀版**：每一步標題後面註明對應的第十四冊與原冊步驟編號（例如「＝N-13、W-13」）。兩者衝突時，以原冊為準，規則的真本仍是《[部署規範](../requirements/deployment-spec.md)》v3.0。
 >
-> `.env` 的逐項填法另成兩冊：[第十五冊之一（實際部署）](15a-env-hospital.md)、[第十五冊之二（模擬部署）](15b-env-simulation.md)。
-> 1001 為什麼登不進去、下一次要做什麼，白話版在[第十五冊之三](15c-why-1001-failed.md)。
-> 院內主機的 `<主機>` 要從名稱改成 IP，照[第十五冊之四](15d-switch-host-to-ip.md)。
+> `.env` 的逐項填法另成兩冊：[第十五冊之一（實際部署）](15a-env-hospital.md)、[第十五冊之二（模擬部署）](15b-env-simulation.md)。 1001 為什麼登不進去、下一次要做什麼，白話版在[第十五冊之三](15c-why-1001-failed.md)。院內主機的 `<主機>` 要從名稱改成 IP，照[第十五冊之四](15d-switch-host-to-ip.md)。
 
 ---
+
+## 摘要
+
+- **現行的新手版**（1001 取代第十四冊）：依第二次進院帶回的資料重寫，編號 `V-xx`，要印出來帶進去
+- 和第十四冊不同處：根目錄改成 `C:\hd\hd-tablet-care`、填 `.env` 之前多一步「決定主機位址」（V-08）、建置前先用 Docker 自己下載一次基底映像
+- 從一台沒動過的主機走到護理站登得進去、平板釘住、交接完成；模擬部署的差異以「🧪 模擬部署」方框標出
+- 第十一～十三冊的新手導讀版，每一步註明對應的 N 與 W／Y／Z 編號；衝突時以原冊為準
+- 院內現場資料以「📍 1001」方框標在步驟裡；1005 新增 9.5 節院方 API 探測一次
+- 附錄：步驟編號對照、護理端頁面開得起來卻登不進去
+- `.env` 的填法另成兩本子手冊（之一實際、之二模擬）；之三解說 1001 為什麼登不進去，之四是主機位址改 IP
 
 ## 0. 讀之前
 
@@ -37,8 +37,7 @@
 
 **第一次讀這本的正確順序：先照著做一次模擬部署，再帶著它進院做實際部署。**
 
-> ⚠️ **1001 的教訓**：那一次帶進院的 `v0.3.0` 是出發前才打的 tag，**沒有先模擬部署過**（第十四冊之四 1.1 節）。
-> 院內遇到的問題剛好都不是程式本身的問題，但這是運氣。這一條不准再跳過。
+> ⚠️ **1001 的教訓**：那一次帶進院的 `v0.3.0` 是出發前才打的 tag，**沒有先模擬部署過**（第十四冊之四 1.1 節）。院內遇到的問題剛好都不是程式本身的問題，但這是運氣。這一條不准再跳過。
 
 ### 0.2 標記怎麼看
 
@@ -48,8 +47,7 @@
 
 > 📍 **1001**：這種方框寫的是 **1001 第二次進院在院內主機上實際看到的**，讓你知道這一步在那台主機上會長什麼樣。
 
-每一步照舊分三塊：**做什麼**、**怎麼知道成功了**、**可能怎麼壞**。
-**「怎麼知道成功了」那一塊沒看到，就是沒成功**——不要因為「好像沒出錯」就往下。
+每一步照舊分三塊：**做什麼**、**怎麼知道成功了**、**可能怎麼壞**。 **「怎麼知道成功了」那一塊沒看到，就是沒成功**——不要因為「好像沒出錯」就往下。
 
 ### 0.3 兩者不同的地方，一張表看完
 
@@ -72,9 +70,7 @@
 | 備份送往另一台機器 | 院方負責，要當場確認 | 不必 | V-18 |
 | 做完之後 | 交接，服務留著跑 | **撤除乾淨**，下一次才又是「從零」 | 第 10 節 |
 
-> 第十四冊的模擬部署，護理端用 `localhost` 開；這一冊改成用開發機的區網 IP。
-> 用 `localhost` 時，「網址列的來源」與「`.env` 寫的位址」永遠一致，**1001 院內那種登不進去的情形在模擬部署裡永遠不會出現**。
-> 換成區網 IP，模擬部署才和院內同一個形狀。
+> 第十四冊的模擬部署，護理端用 `localhost` 開；這一冊改成用開發機的區網 IP。用 `localhost` 時，「網址列的來源」與「`.env` 寫的位址」永遠一致，**1001 院內那種登不進去的情形在模擬部署裡永遠不會出現**。換成區網 IP，模擬部署才和院內同一個形狀。
 
 ### 0.4 先認識十個名詞
 
@@ -184,8 +180,7 @@ curl.exe -s http://localhost:13000/api/health
 
 ### V-01 約好人（＝N-01、總覽第 3 節）
 
-**做什麼**：至少一週前，用訊息向資訊室確認：「當天 X 點到 Y 點，需要一位能登入那台主機、有管理員權限的同仁全程在旁。」
-另約護理長或指定的護理師，交接時要在。
+**做什麼**：至少一週前，用訊息向資訊室確認：「當天 X 點到 Y 點，需要一位能登入那台主機、有管理員權限的同仁全程在旁。」另約護理長或指定的護理師，交接時要在。
 
 **怎麼知道成功了**：有具體的人名與時段。「到時候看看」要當成沒約到。
 
@@ -250,19 +245,15 @@ git show <tag>:services/shell-builder/shell.pin
 
 > 📍 **1001**：本系統 `v0.3.0`（`9992721`）、外殼 `v0.3.0`（`44b4d62`）。院內主機上現在跑的就是這一版。
 
-> 🧪 **模擬部署**：這一步做的就是「準備一個要測的 tag」。tag 要先推上 GitHub，
-> 因為模擬部署是從 GitHub 全新 clone，不是用你的工作目錄。外殼 repo 那個 tag 也一樣要推上去。
+> 🧪 **模擬部署**：這一步做的就是「準備一個要測的 tag」。tag 要先推上 GitHub，因為模擬部署是從 GitHub 全新 clone，不是用你的工作目錄。外殼 repo 那個 tag 也一樣要推上去。
 
 ---
 
 ## 2. 主機這一層
 
-> ⚠️ **從這裡開始，所有指令都在「要部署的那台機器」的 PowerShell 裡打**：實際部署是院內主機，🧪 模擬部署是開發機。
-> **不要自己開任何容器，不要下 `docker run -v`、`-p`。** 0922 就是這樣失敗的（[第十冊](10-first-visit.md) F-01、F-02）；1001 照手冊沒有開，就沒有重演。
+> ⚠️ **從這裡開始，所有指令都在「要部署的那台機器」的 PowerShell 裡打**：實際部署是院內主機，🧪 模擬部署是開發機。 **不要自己開任何容器，不要下 `docker run -v`、`-p`。** 0922 就是這樣失敗的（[第十冊](10-first-visit.md) F-01、F-02）；1001 照手冊沒有開，就沒有重演。
 
-> ⚠️ **實際部署：做 V-04 之前，先確認 0922 留下的容器 `dialysis_system_v0` 不在了。**
-> 1001 有沒有收過**沒有記到**。照[第十四冊之三](14c-cleanup-first-visit.md) L-01 看一眼：只剩標題列就是不在了，接著做 L-07；
-> 還在的話照 L-02 起收掉。那個容器掛著整顆 C 槽，沒收掉不開始部署。🧪 模擬部署不必做。
+> ⚠️ **實際部署：做 V-04 之前，先確認 0922 留下的容器 `dialysis_system_v0` 不在了。** 1001 有沒有收過**沒有記到**。照[第十四冊之三](14c-cleanup-first-visit.md) L-01 看一眼：只剩標題列就是不在了，接著做 L-07；還在的話照 L-02 起收掉。那個容器掛著整顆 C 槽，沒收掉不開始部署。🧪 模擬部署不必做。
 
 ### V-04 確認 Git 與 Docker 能用（＝N-04、W-04）
 
@@ -320,13 +311,11 @@ docker compose version
 3. 安裝選項全部用預設值。
 4. **關掉 PowerShell，開一個新的**（舊視窗不會知道新的 PATH），再打一次本步驟的四條指令。
 
-> 📍 **1001**：院內主機原本**沒有 Git**，現場照上面裝了 x64 Setup，版本 `2.56.0.windows.1`。誰裝、資訊室是否同意沒有記到，下一次要補問。
-> Docker 29.3.1（Client 與 Server 相同）、Compose v5.1.1，與 0922 相同。
+> 📍 **1001**：院內主機原本**沒有 Git**，現場照上面裝了 x64 Setup，版本 `2.56.0.windows.1`。誰裝、資訊室是否同意沒有記到，下一次要補問。 Docker 29.3.1（Client 與 Server 相同）、Compose v5.1.1，與 0922 相同。
 
 > 🧪 **模擬部署**：開發機沒有的話自己裝，裝完**重新開機**再做一次本步驟。
 > 1. **Git for Windows**：照上面的裝法。
-> 2. **Docker Desktop**：到 `docker.com` 下載 Docker Desktop for Windows，安裝時勾「Use WSL 2」。
->    第一次開啟會要你接受使用條款；若提示要更新 WSL，照畫面指示在 PowerShell 打 `wsl --update`。
+> 2. **Docker Desktop**：到 `docker.com` 下載 Docker Desktop for Windows，安裝時勾「Use WSL 2」。第一次開啟會要你接受使用條款；若提示要更新 WSL，照畫面指示在 PowerShell 打 `wsl --update`。
 > 3. 開發機上已經有 Node.js 也沒關係，但**這一輪部署裡不准用到它**（驗收的 V-31 例外）。
 
 ---
@@ -344,13 +333,9 @@ docker compose version
 | 3 | Software updates → Automatically check for updates | 不勾（見下方說明） |
 | 4 | Resources → Advanced → Disk image location | **把路徑抄下來**，第二部分要用 |
 
-> **第 3 項找不到勾選框？** 這台的 Docker Desktop 是從 **Microsoft Store** 裝的，設定頁只會叫你去市集管理（第十冊 F-16，院內主機就是這種情形）。
-> 更新是否自動發生，由**市集的自動更新設定**決定，而那管的是**整台主機的所有 App**，只能交給資訊室決定。
-> 在演練紀錄寫下「更新由市集管理，現行設定＝＿＿」，問資訊室能不能改成手動；不行的話至少請他們避開透析時段。
+> **第 3 項找不到勾選框？** 這台的 Docker Desktop 是從 **Microsoft Store** 裝的，設定頁只會叫你去市集管理（第十冊 F-16，院內主機就是這種情形）。更新是否自動發生，由**市集的自動更新設定**決定，而那管的是**整台主機的所有 App**，只能交給資訊室決定。在演練紀錄寫下「更新由市集管理，現行設定＝＿＿」，問資訊室能不能改成手動；不行的話至少請他們避開透析時段。
 
-> **第 2 項是開著的？** 院內主機 0922 就是開著的。它是**整台主機**的設定，同機另一個專案也受影響，~~**答覆前只看不改**~~（Q-27 第 9 題）。
-> **1007 答覆可以關：第三次進院把它取消勾選**，按右下角的套用按鈕（依版本叫 **Apply** 或 **Apply & restart**；後者會讓 Docker Desktop 重新啟動、容器跟著中斷一下，挑沒有透析的時段做），演練紀錄寫「使用統計已關，＿＿月＿＿日」。
-> 第 3 項（市集自動更新）**1007 答覆先不改**：照舊只看、記下現行設定。
+> **第 2 項是開著的？** 院內主機 0922 就是開著的。它是**整台主機**的設定，同機另一個專案也受影響，~~**答覆前只看不改**~~（Q-27 第 9 題）。 **1007 答覆可以關：第三次進院把它取消勾選**，按右下角的套用按鈕（依版本叫 **Apply** 或 **Apply & restart**；後者會讓 Docker Desktop 重新啟動、容器跟著中斷一下，挑沒有透析的時段做），演練紀錄寫「使用統計已關，＿＿月＿＿日」。第 3 項（市集自動更新）**1007 答覆先不改**：照舊只看、記下現行設定。
 
 **第二部分：防毒查哪一套、排除清單裡有什麼**（只看不改）
 
@@ -363,18 +348,15 @@ docker compose version
      Select-Object displayName, productState, @{n='hex';e={'{0:X6}' -f $_.productState}}
    ```
 
-   每一套防毒列成一行，看 `hex` 那一欄**中間兩碼**：`10` 或 `11` 是**正在運作**，排除要在這一套裡做；`00` 或 `01` 是裝了但沒在運作。
-   例：`061100` 是正在運作，`060100` 是已關閉。
+   每一套防毒列成一行，看 `hex` 那一欄**中間兩碼**：`10` 或 `11` 是**正在運作**，排除要在這一套裡做；`00` 或 `01` 是裝了但沒在運作。例：`061100` 是正在運作，`060100` 是已關閉。
 
-2. **排除清單裡有什麼**。正在運作的是 Windows Defender（`displayName` 為 `Windows Defender` 或 `Microsoft Defender Antivirus`）時，
-   **用系統管理員身分開的 PowerShell**（開始選單對「Windows PowerShell」按右鍵 →「以系統管理員身分執行」）打：
+2. **排除清單裡有什麼**。正在運作的是 Windows Defender（`displayName` 為 `Windows Defender` 或 `Microsoft Defender Antivirus`）時， **用系統管理員身分開的 PowerShell**（開始選單對「Windows PowerShell」按右鍵 →「以系統管理員身分執行」）打：
 
    ```powershell
    Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
    ```
 
-   每一行是一個排除的路徑；**什麼都沒印出來**就是沒有任何排除。
-   正在運作的是第三方防毒（趨勢、賽門鐵克等）時，PowerShell 看不到它的排除清單，直接問資訊室。
+   每一行是一個排除的路徑；**什麼都沒印出來**就是沒有任何排除。正在運作的是第三方防毒（趨勢、賽門鐵克等）時，PowerShell 看不到它的排除清單，直接問資訊室。
 
 3. **對照**：清單裡有第 4 項的路徑或它的上層資料夾 → 已經排除；沒有 → 演練紀錄寫「防毒＝＿＿，排除清單未含 Docker 的資料夾」，交給資訊室加。
 
@@ -390,8 +372,7 @@ docker compose version
 | 防毒第 2 條印出 `N/A: Must be an administrator to view exclusions` | PowerShell 不是系統管理員身分，照上面的方式重開一個再打 |
 | 防毒第 2 條出現 `0x800106ba` 之類的錯誤 | Defender 沒在運作，正在運作的是第三方防毒。回第 1 條確認 |
 
-> 📍 **1001**：Windows Defender，`061100`（正在運作）；排除清單**是空的**——Docker 的資料夾沒有被排除。
-> **加上排除之前，這台主機不得輸入真實病人資料**（總覽第 6 節：SQLite 被即時掃描鎖住的錯誤是間歇性的，會在一個月後才爆開）。
+> 📍 **1001**：Windows Defender，`061100`（正在運作）；排除清單**是空的**——Docker 的資料夾沒有被排除。 **加上排除之前，這台主機不得輸入真實病人資料**（總覽第 6 節：SQLite 被即時掃描鎖住的錯誤是間歇性的，會在一個月後才爆開）。
 
 > 🧪 **模擬部署**：看一眼、抄下來即可，防毒排除不必做。想先熟悉指令可以在開發機上跑一次，同樣只看不改。
 
@@ -427,8 +408,7 @@ docker pull node:20-bookworm-slim
 docker pull eclipse-temurin:17-jdk-jammy
 ```
 
-`Test-NetConnection` 是 Windows 去查名稱、去連線；`docker pull` 是 **Docker Desktop 自己**去查、去下載，兩條路不一定同時通。
-1001 就是 Windows 那一側沒測、Docker 那一側在 N-11 與 N-20 **三次查不到 Docker Hub 的網域**。這兩條先跑過，之後的建置不會半途卡在這裡，而且已下載的映像檔會直接沿用、建置也比較快。
+`Test-NetConnection` 是 Windows 去查名稱、去連線；`docker pull` 是 **Docker Desktop 自己**去查、去下載，兩條路不一定同時通。 1001 就是 Windows 那一側沒測、Docker 那一側在 N-11 與 N-20 **三次查不到 Docker Hub 的網域**。這兩條先跑過，之後的建置不會半途卡在這裡，而且已下載的映像檔會直接沿用、建置也比較快。
 
 **怎麼知道成功了**：第一段每一條最後都是 `TcpTestSucceeded : True`；第二段兩條最後都是 `Status: Downloaded newer image for …` 或 `Status: Image is up to date for …`。
 
@@ -443,10 +423,7 @@ docker pull eclipse-temurin:17-jdk-jammy
 | 經代理伺服器，全部 `False` | 改用 `curl.exe -I https://registry.npmjs.org` 測；Docker 要在 Settings → Resources → Proxies 設代理 |
 | 有幾個不通 | 請資訊室補齊再往下 |
 
-> 📍 **1001**：第一段沒有記到結果；第二段當時還不是步驟。結果 Docker 在三個地方查不到名稱：
-> N-11 用 `docker run node:20-bookworm-slim` 產生 `JWT_SECRET` 時，先是 `production.cloudfront.docker.com: no such host`、再打一次變成 `auth.docker.io: no such host`；
-> N-20 建 `shell-builder` 時又是 `production.cloudfront.docker.com: no such host`，同一條指令再打一次就過了。所以是**時好時壞**，不是完全擋掉——上表的第 ① 項（再打一次）先做。
-> Docker Hub 的兩個下載站（`cloudflare`、`cloudfront`）會擇一使用，**兩個都要通**。
+> 📍 **1001**：第一段沒有記到結果；第二段當時還不是步驟。結果 Docker 在三個地方查不到名稱： N-11 用 `docker run node:20-bookworm-slim` 產生 `JWT_SECRET` 時，先是 `production.cloudfront.docker.com: no such host`、再打一次變成 `auth.docker.io: no such host`； N-20 建 `shell-builder` 時又是 `production.cloudfront.docker.com: no such host`，同一條指令再打一次就過了。所以是**時好時壞**，不是完全擋掉——上表的第 ① 項（再打一次）先做。 Docker Hub 的兩個下載站（`cloudflare`、`cloudfront`）會擇一使用，**兩個都要通**。
 
 > 🧪 **模擬部署**：開發機通常全部通，照做一次確認即可。
 
@@ -462,8 +439,7 @@ Get-NetTCPConnection -State Listen | Where-Object LocalPort -in 13000,18080,1808
 
 **怎麼知道成功了**：**什麼都沒印出來**，代表三個埠都沒人在用。
 
-**可能怎麼壞**：印出了某個埠 → 有別的程式在用它。實際部署：**先停手回報資訊室**，這三個埠是他們確認過的，不要自己換；模擬部署：自己換一個沒人用的。
-**不要用 `-p` 之類的方式把埠對到別處**，埠只寫在 `.env` 裡。
+**可能怎麼壞**：印出了某個埠 → 有別的程式在用它。實際部署：**先停手回報資訊室**，這三個埠是他們確認過的，不要自己換；模擬部署：自己換一個沒人用的。 **不要用 `-p` 之類的方式把埠對到別處**，埠只寫在 `.env` 裡。
 
 > 📍 **1001**：三個埠都沒人用，服務啟動沒有撞埠。**1001 的服務還在跑的話，這三個埠會印出來，那是我們自己的**——0.5 節已經確認過就不必再做這一步。
 
@@ -475,8 +451,7 @@ Get-NetTCPConnection -State Listen | Where-Object LocalPort -in 13000,18080,1808
 
 ### V-08 決定主機位址：護理站與平板用什麼連這台主機（新增）
 
-`.env` 有三項要寫主機位址（`HD_PUBLIC_API_URL`、`CORS_ORIGINS`、`MDM_KIOSK_BASE_URL`），三項**寫同一個值**。
-這個值本冊與子手冊一律寫成 `<主機>`。**它要在填 `.env` 之前定下來**，而且定了之後不要再換：平板的伺服器憑證就簽這個名字。
+`.env` 有三項要寫主機位址（`HD_PUBLIC_API_URL`、`CORS_ORIGINS`、`MDM_KIOSK_BASE_URL`），三項**寫同一個值**。這個值本冊與子手冊一律寫成 `<主機>`。**它要在填 `.env` 之前定下來**，而且定了之後不要再換：平板的伺服器憑證就簽這個名字。
 
 > ⚠️ **第十四冊之一的範例 `hd-server` 只是範例，不是要你填的值。** 1001 現場就問過「`hd-server` 要照寫嗎」。不要照抄任何範例。
 
@@ -506,8 +481,7 @@ Get-NetTCPConnection -State Listen | Where-Object LocalPort -in 13000,18080,1808
 
 3. 與資訊室確認：**平板的 Wi-Fi 網段也連得到同一個名稱或 IP**。平板常常查不到 Windows 的電腦名稱（院內 DNS 沒登記的話），**拿不準就用資訊室固定下來的 IP**。
 
-**怎麼知道成功了**：一個值，資訊室點過頭；護理站查得到（用名稱時）。
-演練紀錄寫「`<主機>` 用的是**名稱／IP**，由＿＿確認」——**值本身不寫進演練紀錄以外的任何文件**。
+**怎麼知道成功了**：一個值，資訊室點過頭；護理站查得到（用名稱時）。演練紀錄寫「`<主機>` 用的是**名稱／IP**，由＿＿確認」——**值本身不寫進演練紀錄以外的任何文件**。
 
 **真正的驗證在後面**：V-17 在護理站登入成功、V-25 平板開得到下載頁，這個值才算對。
 
@@ -519,11 +493,9 @@ Get-NetTCPConnection -State Listen | Where-Object LocalPort -in 13000,18080,1808
 | 資訊室說 IP 不能固定 | 用名稱，並請資訊室確認平板的網段查得到它 |
 | 名稱與 IP 都不確定 | **停在這一步**。這個值填錯，之後每一台平板都要重新佈建 |
 
-> 📍 **1001**：現場打了 `hostname`，自己決定了一個值，沒有資訊室的書面答案。當天沒有記是名稱還是 IP，1005 補記：**是名稱**（有沒有帶 DNS 尾碼未記）。
-> 下一次照上面再確認一次；確認的結果是改用 IP 的話，照[第十五冊之四](15d-switch-host-to-ip.md)換。
+> 📍 **1001**：現場打了 `hostname`，自己決定了一個值，沒有資訊室的書面答案。當天沒有記是名稱還是 IP，1005 補記：**是名稱**（有沒有帶 DNS 尾碼未記）。下一次照上面再確認一次；確認的結果是改用 IP 的話，照[第十五冊之四](15d-switch-host-to-ip.md)換。
 
-> 🧪 **模擬部署**：`<主機>` 是開發機 **Wi-Fi 那張網卡的 IPv4 位址**（第十五冊之二 0.3 節），例如 `192.168.1.23`。
-> 手機要連同一個 Wi-Fi；同一輪模擬部署之內不要換 Wi-Fi。
+> 🧪 **模擬部署**：`<主機>` 是開發機 **Wi-Fi 那張網卡的 IPv4 位址**（第十五冊之二 0.3 節），例如 `192.168.1.23`。手機要連同一個 Wi-Fi；同一輪模擬部署之內不要換 Wi-Fi。
 
 ---
 
@@ -541,26 +513,17 @@ Get-ChildItem $root
 $cfg
 ```
 
-前兩行設定兩個變數，本冊之後一直會用到：`$root` 是根目錄，`$cfg` 是 V-12 要建立的 `.env` 的位置。
-本冊之後的 `docker compose` 指令都寫成 `--env-file $cfg`，而且都在 `$root\repo` 底下打。
+前兩行設定兩個變數，本冊之後一直會用到：`$root` 是根目錄，`$cfg` 是 V-12 要建立的 `.env` 的位置。本冊之後的 `docker compose` 指令都寫成 `--env-file $cfg`，而且都在 `$root\repo` 底下打。
 
-**怎麼知道成功了**：列出 `backups`、`config` 兩個資料夾，最後一行印出 `C:\hd\hd-tablet-care\config\.env`（🧪 模擬部署是 `C:\hd-sim\config\.env`）。
-`repo` 現在還沒有是對的，下一步 clone 才會產生；`.env` 也還沒有，V-12 才會建立。
+**怎麼知道成功了**：列出 `backups`、`config` 兩個資料夾，最後一行印出 `C:\hd\hd-tablet-care\config\.env`（🧪 模擬部署是 `C:\hd-sim\config\.env`）。 `repo` 現在還沒有是對的，下一步 clone 才會產生；`.env` 也還沒有，V-12 才會建立。
 
-**不可以放的地方**：OneDrive 之類的雲端同步資料夾、網路磁碟機、RAM 磁碟（院內主機有一顆 E 槽是 RAM 磁碟，第十冊 3.2 節）、
-`C:\Users\<帳號>\` 底下的桌面／文件／下載。
+**不可以放的地方**：OneDrive 之類的雲端同步資料夾、網路磁碟機、RAM 磁碟（院內主機有一顆 E 槽是 RAM 磁碟，第十冊 3.2 節）、 `C:\Users\<帳號>\` 底下的桌面／文件／下載。
 
-> 📍 **1001**：根目錄是 `C:\hd\hd-tablet-care`。第十四冊寫的是 `D:\hd-tablet-care`，但院內主機的 D 槽 0922 時只剩約 4.6%（第十冊 3.2 節），
-> C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。**院方同不同意這個位置還沒有書面答覆**（V-02 第 5 題）。
+> 📍 **1001**：根目錄是 `C:\hd\hd-tablet-care`。第十四冊寫的是 `D:\hd-tablet-care`，但院內主機的 D 槽 0922 時只剩約 4.6%（第十冊 3.2 節）， C 槽空間充足、Docker 的虛擬磁碟也在 C 槽。**院方同不同意這個位置還沒有書面答覆**（V-02 第 5 題）。
 
-> ⚠️ **開工三行**：PowerShell 關掉再開，`$root`、`$cfg` 就不見了。**之後每開一個新的 PowerShell 視窗，先輸入這三行**
-> （第三行要等 V-11 clone 完才有那個資料夾）：
+> ⚠️ **開工三行**：PowerShell 關掉再開，`$root`、`$cfg` 就不見了。**之後每開一個新的 PowerShell 視窗，先輸入這三行** （第三行要等 V-11 clone 完才有那個資料夾）：
 >
-> ```powershell
-> $root = "C:\hd\hd-tablet-care"          # 🧪 模擬部署改成 C:\hd-sim
-> $cfg  = "$root\config\.env"
-> cd $root\repo
-> ```
+> ```powershell $root = "C:\hd\hd-tablet-care"          # 🧪 模擬部署改成 C:\hd-sim $cfg  = "$root\config\.env" cd $root\repo ```
 >
 > 看到 `couldn't find env file`，十次有九次是忘了這三行。
 
@@ -580,11 +543,9 @@ $cfg
    Get-Content $HOME\.ssh\hd-tablet-care.pub
    ```
 
-   第一行是先建好 `.ssh` 資料夾：沒用過 SSH 的新帳號沒有這個資料夾，`ssh-keygen` 不會自己建。資料夾已經在的話，這一行什麼都不會動。
-   `$(hostname)` 會自動換成這台機器的名字，只當註記用，讓管理者在 GitHub 上認得這把金鑰是哪台機器的。
+   第一行是先建好 `.ssh` 資料夾：沒用過 SSH 的新帳號沒有這個資料夾，`ssh-keygen` 不會自己建。資料夾已經在的話，這一行什麼都不會動。 `$(hostname)` 會自動換成這台機器的名字，只當註記用，讓管理者在 GitHub 上認得這把金鑰是哪台機器的。
 
-2. 把印出來的那**一整行**（`ssh-ed25519 AAAA… hd-tablet-care@…`）交給 repo 管理者。
-   管理者到 GitHub 的 `hd-tablet-care` repo → **Settings → Deploy keys → Add deploy key** 貼上，**不要勾 Allow write access**。
+2. 把印出來的那**一整行**（`ssh-ed25519 AAAA… hd-tablet-care@…`）交給 repo 管理者。管理者到 GitHub 的 `hd-tablet-care` repo → **Settings → Deploy keys → Add deploy key** 貼上，**不要勾 Allow write access**。
 3. 開 SSH 的設定檔。兩行照抄：
 
    ```powershell
@@ -592,8 +553,7 @@ $cfg
    notepad $HOME\.ssh\config
    ```
 
-   第一行是先建好沒有副檔名的空檔：直接讓記事本建新檔，它會自作主張存成 `config.txt`，ssh 就讀不到。
-   在檔案最後加上這一段，存檔關閉：
+   第一行是先建好沒有副檔名的空檔：直接讓記事本建新檔，它會自作主張存成 `config.txt`，ssh 就讀不到。在檔案最後加上這一段，存檔關閉：
 
    ```
    Host github-hd-tablet-care
@@ -609,8 +569,7 @@ $cfg
 ssh -T github-hd-tablet-care
 ```
 
-第一次會問 `Are you sure you want to continue connecting (yes/no)?`，核對顯示的指紋是 GitHub 公布的那一組再打 `yes`。
-最後看到 `Hi 94sh09sh19sh/hd-tablet-care! You've successfully authenticated, but GitHub does not provide shell access.`
+第一次會問 `Are you sure you want to continue connecting (yes/no)?`，核對顯示的指紋是 GitHub 公布的那一組再打 `yes`。最後看到 `Hi 94sh09sh19sh/hd-tablet-care! You've successfully authenticated, but GitHub does not provide shell access.`
 
 **可能怎麼壞**
 
@@ -619,11 +578,10 @@ ssh -T github-hd-tablet-care
 | `Permission denied (publickey)` | 公鑰還沒登記，或登記到別的 repo 去了 |
 | `ssh-keygen` 找不到 | Windows 的 OpenSSH Client 選用功能沒裝。實際部署問資訊室；模擬部署到「設定 → 系統 → 選用功能」加裝 |
 | `Saving key ... failed: No such file or directory`，接著 `Get-Content` 說 `.pub` 不存在 | 漏打了建立 `.ssh` 資料夾那一行。補打後重跑 `ssh-keygen` |
-| 22 埠不通（V-06） | 設定檔那一段的 `HostName` 改成 `ssh.github.com`，並加一行 `    Port 443` |
+| 22 埠不通（V-06） | 設定檔那一段的 `HostName` 改成 `ssh.github.com`，並加一行 ` Port 443` |
 | `Could not resolve hostname github-hd-tablet-care:` 後面接一串亂碼（那是 big5 的「無法辨別這台主機。」） | ssh 沒讀到設定檔，幾乎都是記事本存成了 `config.txt`。`Get-ChildItem $HOME\.ssh` 看得到 `config.txt` 就打 `Rename-Item $HOME\.ssh\config.txt config`，再重跑 `ssh -T` |
 
-> 🧪 **模擬部署**：開發機上**另產生一把**，不要拿你平常推程式碼的那把 SSH 金鑰頂替——那樣走的就不是院內那條路。
-> 登記時標題寫「模擬部署（開發機）」，之後可以一直留著重複使用。開發機的 `$HOME\.ssh\config` 裡已經有別的段落的話，加在最後面即可。
+> 🧪 **模擬部署**：開發機上**另產生一把**，不要拿你平常推程式碼的那把 SSH 金鑰頂替——那樣走的就不是院內那條路。登記時標題寫「模擬部署（開發機）」，之後可以一直留著重複使用。開發機的 `$HOME\.ssh\config` 裡已經有別的段落的話，加在最後面即可。
 
 ---
 
@@ -671,8 +629,7 @@ notepad $cfg
 - 實際部署 → [第十五冊之一 · 實際部署的 `.env`](15a-env-hospital.md)
 - 🧪 模擬部署 → [第十五冊之二 · 模擬部署的 `.env`](15b-env-simulation.md)
 
-三個位址都寫 V-08 定下的 `<主機>`。外殼 App 那三項（`HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING`、`MDM_KIOSK_BASE_URL`）**現在就一起填好**，
-雖然外殼第 8 節才做——每一條 `docker compose` 指令都會檢查它們。
+三個位址都寫 V-08 定下的 `<主機>`。外殼 App 那三項（`HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING`、`MDM_KIOSK_BASE_URL`）**現在就一起填好**，雖然外殼第 8 節才做——每一條 `docker compose` 指令都會檢查它們。
 
 `JWT_SECRET` 用 PowerShell 產生（子手冊有那一行），**不要用 `docker run node:…`**：1001 用那條，兩次都因為 Docker 查不到 Docker Hub 的網域而失敗（V-06 方框）。
 
@@ -694,8 +651,7 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BA
 | 第二條看到 `hd-server` | 那是舊版子手冊的範例，**照抄了**。換成 V-08 的值 |
 | 實際部署，第二條看到 `localhost` | 護理站與平板連不到 `localhost`（那是它們自己）。換成 V-08 的值 |
 
-> ⚠️ **不要拿 repo 根目錄的 `.env.example` 來填。** 那一份是日常開發（`npm run dev`）用的，變數名稱不同。
-> 部署用的範本只有 `deploy\hospital.env.example` 這一份。
+> ⚠️ **不要拿 repo 根目錄的 `.env.example` 來填。** 那一份是日常開發（`npm run dev`）用的，變數名稱不同。部署用的範本只有 `deploy\hospital.env.example` 這一份。
 
 > 📍 **1001**：院內主機上已經有一份 `C:\hd\hd-tablet-care\config\.env`。下一次**不要再複製範本蓋掉它**，照第十五冊之一第 6 節核對。
 
@@ -715,8 +671,7 @@ docker volume ls
 
 **怎麼知道成功了**：清單裡看得到這兩個名字。
 
-> 🧪 **模擬部署**：做之前先 `docker volume ls` 看一眼，**清單裡不該已經有 `hd-tablet-care-` 開頭的**。
-> 有的話是上一輪留下來的，照第 10.2 節撤除再回來，否則就不是「從零」。
+> 🧪 **模擬部署**：做之前先 `docker volume ls` 看一眼，**清單裡不該已經有 `hd-tablet-care-` 開頭的**。有的話是上一輪留下來的，照第 10.2 節撤除再回來，否則就不是「從零」。
 
 ---
 
@@ -771,8 +726,7 @@ docker compose --env-file $cfg up -d
 docker compose --env-file $cfg ps
 ```
 
-**怎麼知道成功了**：`api`、`nurse-web`、`patient-web` 三個的狀態都是 `Up`。
-`ai-gateway` 與 `shell-builder` **不在清單上是對的**，它們平時不跑。
+**怎麼知道成功了**：`api`、`nurse-web`、`patient-web` 三個的狀態都是 `Up`。 `ai-gateway` 與 `shell-builder` **不在清單上是對的**，它們平時不跑。
 
 **可能怎麼壞**
 
@@ -795,8 +749,7 @@ curl.exe -s http://localhost:13000/api/health
 docker compose --env-file $cfg logs api --tail 30
 ```
 
-`13000` 是 `.env` 的 `HD_API_PORT`，**實際部署與模擬部署都是 `13000`**。第一條用 `localhost`，是在主機自己身上問、不經過網路與防火牆：
-這一條不通，問題在服務本身；這一條通、後面不通，問題在位址或網路。
+`13000` 是 `.env` 的 `HD_API_PORT`，**實際部署與模擬部署都是 `13000`**。第一條用 `localhost`，是在主機自己身上問、不經過網路與防火牆：這一條不通，問題在服務本身；這一條通、後面不通，問題在位址或網路。
 
 | 看什麼 | 應該是 |
 |---|---|
@@ -814,8 +767,7 @@ Select-String -Path $cfg -Pattern '^HD_PUBLIC_API_URL='
 docker compose --env-file $cfg exec nurse-web grep -rhoE 'https?://[A-Za-z0-9.-]+:[0-9]+' apps/nurse-pwa/dist/assets
 ```
 
-第二條印出的是**護理端網頁實際會去連的後端位址**（V-14 建置時寫進去的）。**兩條印出的位址要一模一樣**，例如都是 `http://<主機>:13000`。
-不一樣的話，是先 `build`、之後才改了 `.env` 的位址。再建置一次：
+第二條印出的是**護理端網頁實際會去連的後端位址**（V-14 建置時寫進去的）。**兩條印出的位址要一模一樣**，例如都是 `http://<主機>:13000`。不一樣的話，是先 `build`、之後才改了 `.env` 的位址。再建置一次：
 
 ```powershell
 docker compose --env-file $cfg build
@@ -831,16 +783,13 @@ curl.exe -s -i -H "Origin: http://<主機>:18080" http://<主機>:13000/api/heal
 
 第一條要是 `CORS_ORIGINS=http://<主機>:18080`；第二條要印出 `Access-Control-Allow-Origin: http://<主機>:18080`。
 
-第二條**什麼都沒印出來**，就是後端不放行護理端的來源，登入一定 `Failed to fetch`——**1001 就是這個結果**。
-把第一條的值改對（或值是對的、只是改完還沒套用），然後 `docker compose --env-file $cfg up -d`，再打一次第二條。
-`.env` 只在容器建立時讀一次，改完不 `up -d`，後端還在用舊的名單。
+第二條**什麼都沒印出來**，就是後端不放行護理端的來源，登入一定 `Failed to fetch`——**1001 就是這個結果**。把第一條的值改對（或值是對的、只是改完還沒套用），然後 `docker compose --env-file $cfg up -d`，再打一次第二條。 `.env` 只在容器建立時讀一次，改完不 `up -d`，後端還在用舊的名單。
 
 **第三段：在主機上用正確的網址登入**
 
 主機的瀏覽器開 **`http://<主機>:18080`**——**不要用 `localhost`**。
 
-> ⚠️ 實際部署用 `http://localhost:18080` 開，頁面出得來，**登入一定失敗**（`Failed to fetch`）：網址列的來源是 `localhost`，
-> `CORS_ORIGINS` 寫的是 `<主機>`，後端不放行。這不是壞掉，是設計如此。1001 現場就先用 `localhost` 開過。
+> ⚠️ 實際部署用 `http://localhost:18080` 開，頁面出得來，**登入一定失敗**（`Failed to fetch`）：網址列的來源是 `localhost`， `CORS_ORIGINS` 寫的是 `<主機>`，後端不放行。這不是壞掉，是設計如此。1001 現場就先用 `localhost` 開過。
 
 用 `.env` 的 `SUPER_ADMIN_WORK_ID` 與 `SUPER_ADMIN_INITIAL_PASSWORD` 登入，**被要求改密碼**。
 
@@ -862,12 +811,9 @@ curl.exe -s -i -H "Origin: http://<主機>:18080" http://<主機>:13000/api/heal
 
 > 改完密碼之後，實際部署要把新密碼交給院方指定的人保管，`.env` 裡的初始密碼可以清空（清空後 `up -d`）。
 
-> 📍 **1001**：第一段 health 正常；登入出現 `Failed to fetch`。現場查到「放不放行護理端」那一條**印出空的**——後端不放行護理端的來源，離院時未解。
-> 下一次從第二段開始（0.5 節）：先看 `CORS_ORIGINS` 寫了什麼、改對後 `up -d`，再確認網頁裡的後端位址與瀏覽器網址列。
+> 📍 **1001**：第一段 health 正常；登入出現 `Failed to fetch`。現場查到「放不放行護理端」那一條**印出空的**——後端不放行護理端的來源，離院時未解。下一次從第二段開始（0.5 節）：先看 `CORS_ORIGINS` 寫了什麼、改對後 `up -d`，再確認網頁裡的後端位址與瀏覽器網址列。
 
-> 🧪 **模擬部署**：`<主機>` 是開發機的區網 IP，開 `http://<開發機區網 IP>:18080`。
-> 登入成功之後，**故意用 `http://localhost:18080` 再開一次、按登入**，親眼看一次 `Failed to fetch` 長什麼樣——這就是院內用錯網址時會看到的。
-> 看完關掉，回到用區網 IP 開的那一頁。第四段改成用手機的瀏覽器開同一個網址（要連同一個 Wi-Fi）；開不到時照 V-25 方框處理防火牆。
+> 🧪 **模擬部署**：`<主機>` 是開發機的區網 IP，開 `http://<開發機區網 IP>:18080`。登入成功之後，**故意用 `http://localhost:18080` 再開一次、按登入**，親眼看一次 `Failed to fetch` 長什麼樣——這就是院內用錯網址時會看到的。看完關掉，回到用區網 IP 開的那一頁。第四段改成用手機的瀏覽器開同一個網址（要連同一個 Wi-Fi）；開不到時照 V-25 方框處理防火牆。
 
 ---
 
@@ -879,8 +825,7 @@ curl.exe -s -i -H "Origin: http://<主機>:18080" http://<主機>:13000/api/heal
 
 **做什麼**
 
-1. 護理端 → **系統管理** → 「立即備份」，記下畫面上的檔名。
-   備份歷程的 SHA-256 只顯示前 12 碼；完整的 64 碼到備份資料夾讀同名的 `.sha256` 檔：
+1. 護理端 → **系統管理** → 「立即備份」，記下畫面上的檔名。備份歷程的 SHA-256 只顯示前 12 碼；完整的 64 碼到備份資料夾讀同名的 `.sha256` 檔：
 
    ```powershell
    Get-Content "$root\backups\<檔名>.sha256"
@@ -896,9 +841,7 @@ curl.exe -s -i -H "Origin: http://<主機>:18080" http://<主機>:13000/api/heal
 
 **怎麼知道成功了**：輸出有 `✓ 與備份歷程上的紀錄相符` 與 `完整性檢查：ok`；`$root\backups\` 裡看得到那個檔和同名的 `.sha256`。
 
-> 💡 **服務起不來時**：備份歷程與稽核軌跡都存在資料庫裡，打不開網頁就看不到。這時直接看資料夾：
-> `Get-ChildItem "$root\backups\*.db" | Sort-Object LastWriteTime` 最後一個是最新的備份，雜湊在它旁邊的 `.sha256`。
-> 送往院內另一台機器時，`.sha256` 要跟著一起送。
+> 💡 **服務起不來時**：備份歷程與稽核軌跡都存在資料庫裡，打不開網頁就看不到。這時直接看資料夾： `Get-ChildItem "$root\backups\*.db" | Sort-Object LastWriteTime` 最後一個是最新的備份，雜湊在它旁邊的 `.sha256`。送往院內另一台機器時，`.sha256` 要跟著一起送。
 
 實際部署還要**當場問清楚**：備份資料夾的內容由誰、多久送往院內另一台機器一次？答不出來就寫進交接文件的「已知限制」。
 
@@ -937,8 +880,7 @@ curl.exe -s http://localhost:13000/api/health
 
 ## 8. 外殼 App 與平板
 
-這一節做兩件事：在主機上把外殼 App（APK）建出來，然後讓平板從院內的下載頁安裝、釘住。
-**私鑰全程不離開主機**，平板也不必接電腦。
+這一節做兩件事：在主機上把外殼 App（APK）建出來，然後讓平板從院內的下載頁安裝、釘住。 **私鑰全程不離開主機**，平板也不必接電腦。
 
 ### V-20 外殼 repo 的部署金鑰與 clone（＝N-19、Y-02）
 
@@ -971,8 +913,7 @@ curl.exe -s http://localhost:13000/api/health
    git -C $root\hd-kiosk-shell tag
    ```
 
-**怎麼知道成功了**：`ssh -T` 印出 `Hi 94sh09sh19sh/hd-kiosk-shell!…`（**是 `hd-kiosk-shell`，不是 `hd-tablet-care`**）；`git tag` 列得出 V-03 看到的那一版。
-`git tag` 會把外殼 repo 的**每一個** tag 都列出來，連以前的版本也在（1001 是 `v0.2.0`、`v0.3.0` 兩行）——**這是對的**，`shell-builder` 只取 `shell.pin` 釘住的那一個。
+**怎麼知道成功了**：`ssh -T` 印出 `Hi 94sh09sh19sh/hd-kiosk-shell!…`（**是 `hd-kiosk-shell`，不是 `hd-tablet-care`**）；`git tag` 列得出 V-03 看到的那一版。 `git tag` 會把外殼 repo 的**每一個** tag 都列出來，連以前的版本也在（1001 是 `v0.2.0`、`v0.3.0` 兩行）——**這是對的**，`shell-builder` 只取 `shell.pin` 釘住的那一個。
 
 | 症狀 | 處置 |
 |---|---|
@@ -1016,16 +957,13 @@ docker compose --env-file $cfg --profile shell build shell-builder
 docker compose --env-file $cfg --profile shell run --rm shell-builder
 ```
 
-**怎麼知道成功了**：第一次會印出「這一次新產生：院內 CA 伺服器憑證（<主機>） APK 簽章金鑰（…）」，
-接著是 APK 檔名與**三個 SHA-256**（檔案、簽章憑證、院內 CA）。**把三個 SHA-256 抄下來**，實際部署要寫進交接文件。
+**怎麼知道成功了**：第一次會印出「這一次新產生：院內 CA 伺服器憑證（<主機>） APK 簽章金鑰（…）」，接著是 APK 檔名與**三個 SHA-256**（檔案、簽章憑證、院內 CA）。**把三個 SHA-256 抄下來**，實際部署要寫進交接文件。
 
 括號裡的 `<主機>` 要是 V-08 定的那一個——伺服器憑證就簽這個名字。
 
 **再打一次同一條指令**，這次要看到「**金鑰全部沿用，這一次沒有產生任何新的金鑰**」，而且簽章憑證的 SHA-256 與第一次相同。
 
-> 💡 **沒抄到也查得到，不必重跑。** 瀏覽器開 `http://localhost:18081/shell/`，下載頁最下面「版本資訊」列著三個 SHA-256（同一個資料夾的 `shell.json` 也有）。
-> 每跑一次建置，下載頁上的 APK 就會換成新的一份，所以**交接文件的檔案 SHA-256 以下載頁上的為準**。
-> `shell-builder keys-info` 只列得出院內 CA 與簽章金鑰的指紋，而且是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。
+> 💡 **沒抄到也查得到，不必重跑。** 瀏覽器開 `http://localhost:18081/shell/`，下載頁最下面「版本資訊」列著三個 SHA-256（同一個資料夾的 `shell.json` 也有）。每跑一次建置，下載頁上的 APK 就會換成新的一份，所以**交接文件的檔案 SHA-256 以下載頁上的為準**。 `shell-builder keys-info` 只列得出院內 CA 與簽章金鑰的指紋，而且是大寫、以冒號分隔，對照時去掉冒號、大小寫不計。
 
 | 症狀 | 處置 |
 |---|---|
@@ -1050,11 +988,9 @@ docker compose --env-file $cfg --profile shell run --rm shell-builder keys-verif
 
 **怎麼知道成功了**：第一條印出「已備份：備份目錄/keys/hd-keys-<時間>.tar.gz」；第二條每一項都 ✓，最後「還原得回來」。
 
-> 📍 **1001**：`keys-verify` 印出 `ca/ca.key`、`ca/ca.crt`、`signing/shell-signing.p12`、`signing/keystore.pass`、
-> 「備份裡的簽章金鑰以備份裡的密碼打得開」「備份裡的 CA 私鑰完整」，最後「`hd-keys-20261001-173347.tar.gz` 還原得回來」，全部 ✓。
+> 📍 **1001**：`keys-verify` 印出 `ca/ca.key`、`ca/ca.crt`、`signing/shell-signing.p12`、`signing/keystore.pass`、「備份裡的簽章金鑰以備份裡的密碼打得開」「備份裡的 CA 私鑰完整」，最後「`hd-keys-20261001-173347.tar.gz` 還原得回來」，全部 ✓。
 
-> ⚠️ **這份檔案裡有私鑰。** 實際部署：與資料庫備份一樣由院方送往院內另一台機器，**不得出院、不得寄給開發端**。
-> 金鑰遺失的後果是**每一台平板都要解除安裝重裝**。
+> ⚠️ **這份檔案裡有私鑰。** 實際部署：與資料庫備份一樣由院方送往院內另一台機器，**不得出院、不得寄給開發端**。金鑰遺失的後果是**每一台平板都要解除安裝重裝**。
 
 ---
 
@@ -1067,15 +1003,14 @@ docker compose --env-file $cfg restart patient-web
 docker compose --env-file $cfg logs patient-web --tail 5
 ```
 
-**怎麼知道成功了**：日誌**最後一次**出現的「靜態資源已提供於連接埠 8081」那一行，後面是「（HTTPS；HTTP 只留外殼下載頁）」。
-主機的瀏覽器開 `http://localhost:18081/shell/` 看得到下載頁；開 `http://localhost:18081/` 會被轉到 `https://` 並跳出憑證警告——
+**怎麼知道成功了**：日誌**最後一次**出現的「靜態資源已提供於連接埠 8081」那一行，後面是「（HTTPS；HTTP 只留外殼下載頁）」。主機的瀏覽器開 `http://localhost:18081/shell/` 看得到下載頁；開 `http://localhost:18081/` 會被轉到 `https://` 並跳出憑證警告——
+
 **這是對的**：主機的瀏覽器不認得院內 CA，只有平板上的外殼 App 認得。
 
 日誌裡兩個常讓人愣一下的地方，**都是正常的**（1001 兩個都遇到了）：
 
 - **「找不到伺服器憑證」和「HTTPS」同時出現**：`--tail 5` 取最後 5 行，常常跨到重新啟動**之前**那一次的輸出。以**最後一次**啟動的那幾行為準。
-- **寫的是 `8081` 和 `http://api:3000`，不是 `18081`、`13000`**：這兩個是**容器裡面**的埠。主機的 `18081` 轉進容器的 8081；
-  `api:3000` 是 `patient-web` 經容器之間的網路找後端的位址，不經過主機。瀏覽器和平板一律連 `18081`。
+- **寫的是 `8081` 和 `http://api:3000`，不是 `18081`、`13000`**：這兩個是**容器裡面**的埠。主機的 `18081` 轉進容器的 8081； `api:3000` 是 `patient-web` 經容器之間的網路找後端的位址，不經過主機。瀏覽器和平板一律連 `18081`。
 
 | 症狀 | 處置 |
 |---|---|
@@ -1098,11 +1033,7 @@ docker compose --env-file $cfg logs patient-web --tail 5
 
 > 🧪 **模擬部署**：手機和開發機要連**同一個 Wi-Fi**，位址是開發機的區網 IP。手機開不到時：
 > 1. Windows「設定 → 網路和網際網路 → Wi-Fi → 這個網路的內容」，網路設定檔類型改成**私人**。
-> 2. 仍不行的話，用**系統管理員身分**開 PowerShell，只對私人網路開放病人端那一個埠：
->    ```powershell
->    New-NetFirewallRule -DisplayName "hd-sim patient 18081" -Direction Inbound -Protocol TCP -LocalPort 18081 -Profile Private -Action Allow
->    ```
->    撤除時（第 10.2 節）記得刪掉這條規則。V-17 第四段要用手機開護理端的話，`18080`、`13000` 照樣各加一條（名稱也用 `hd-sim` 開頭）。
+> 2. 仍不行的話，用**系統管理員身分**開 PowerShell，只對私人網路開放病人端那一個埠： ```powershell New-NetFirewallRule -DisplayName "hd-sim patient 18081" -Direction Inbound -Protocol TCP -LocalPort 18081 -Profile Private -Action Allow ``` 撤除時（第 10.2 節）記得刪掉這條規則。V-17 第四段要用手機開護理端的話，`18080`、`13000` 照樣各加一條（名稱也用 `hd-sim` 開頭）。
 > 3. 學校或公司的 Wi-Fi 常常擋裝置互連，改用手機熱點或家裡的 Wi-Fi。
 
 ---
@@ -1138,14 +1069,11 @@ docker compose --env-file $cfg logs patient-web --tail 5
 
 **做什麼**
 
-1. 開啟「透析照護平板」→ 按「**掃描 QR code**」→ 允許相機 → 對準 V-26 畫面上的 QR code。三欄會自動填好，**核對序號與這台平板的標籤一致**。
-   （沒有相機時手動填：主機位址填 `MDM_KIOSK_BASE_URL` 的值，序號與金鑰照 V-26 畫面上的）
+1. 開啟「透析照護平板」→ 按「**掃描 QR code**」→ 允許相機 → 對準 V-26 畫面上的 QR code。三欄會自動填好，**核對序號與這台平板的標籤一致**。（沒有相機時手動填：主機位址填 `MDM_KIOSK_BASE_URL` 的值，序號與金鑰照 V-26 畫面上的）
 2. 按「儲存並啟動」→ 系統問「要固定這個應用程式嗎」→ 按「確定」。
 3. 回到護理端 → 新增裝置，等 15～30 秒。
 4. 在平板上**解除一次固定**（輸入 PIN），30 秒內護理端要變成「已跳出」。
-5. 釘回去：解鎖後 App 還停在畫面上，但已經沒有釘住，直接點它沒用。按多工鍵把「透析照護平板」**從多工畫面滑掉**，
-   再從桌面開啟 → 系統再問一次「要固定這個應用程式嗎」→ 按「確定」。護理端 15～30 秒內回到「固定中」。
-   （沒跳出確認框就重新開機，App 開機後會自己起來並詢問）
+5. 釘回去：解鎖後 App 還停在畫面上，但已經沒有釘住，直接點它沒用。按多工鍵把「透析照護平板」**從多工畫面滑掉**，再從桌面開啟 → 系統再問一次「要固定這個應用程式嗎」→ 按「確定」。護理端 15～30 秒內回到「固定中」。（沒跳出確認框就重新開機，App 開機後會自己起來並詢問）
 
 **怎麼知道成功了**
 
@@ -1163,8 +1091,7 @@ docker compose --env-file $cfg logs patient-web --tail 5
 | 一片空白或「網頁無法使用」 | 位址錯或 V-24 沒做。平板「設定 → 應用程式 → 透析照護平板 → 儲存空間 → 清除資料」，重新佈建 |
 | 上方出現琥珀色「……版本不相容」 | 下載頁的 APK 與系統版本對不上，見第十二冊第 5 節 |
 
-> 🧪 **模擬部署**：用開發用的 Android 手機代替平板。做完之後手機上的 App 要**解除安裝**，
-> 免得日後拿這支手機裝院內版時衝突（V-27 的第一列）。
+> 🧪 **模擬部署**：用開發用的 Android 手機代替平板。做完之後手機上的 App 要**解除安裝**，免得日後拿這支手機裝院內版時衝突（V-27 的第一列）。
 
 ---
 
@@ -1211,16 +1138,13 @@ docker compose --env-file $cfg exec -T api node -e "fetch('http://ai-gateway:800
 | `找不到設定檔` | V-29 的路徑不對，必須是 `config\ai-gateway\config.yaml` |
 | 建置時 `no such host` | 同 V-06 第二段那一列 |
 
-> ⚠️ 閘道起過之後，**日後更新時 `build` 與 `up -d` 都要加 `--profile ai`**，閘道才會跟著換新版。
-> 接上正式 GPU API 是 Q-07 有答案之後的事，見[第十三冊](13-ai-gateway.md) Z-23。
+> ⚠️ 閘道起過之後，**日後更新時 `build` 與 `up -d` 都要加 `--profile ai`**，閘道才會跟著換新版。接上正式 GPU API 是 Q-07 有答案之後的事，見[第十三冊](13-ai-gateway.md) Z-23。
 
 ---
 
 ## 9.5 院方 API：探測一次（1005 新增）
 
-1005 起院方透析清單 API 要取代護理師的手動輸入（《[實作規格書](../requirements/implementation-spec.md)》4.13）。
-**這一次只探測、不啟用**：看主機連不連得到、回應長什麼樣（透析中的結束欄位、床位格式、姓名欄），把輸出帶回來。
-啟用（`.env` 填位址）要等探測結果看過、Q-35 報備過，見第 11 節。
+1005 起院方透析清單 API 要取代護理師的手動輸入（《[實作規格書](../requirements/implementation-spec.md)》4.13）。 **這一次只探測、不啟用**：看主機連不連得到、回應長什麼樣（透析中的結束欄位、床位格式、姓名欄），把輸出帶回來。啟用（`.env` 填位址）要等探測結果看過、Q-35 報備過，見第 11 節。
 
 ### V-30a 探測院方透析清單 API（新增，第十五冊之三 E-16）
 
@@ -1231,8 +1155,7 @@ $u = Read-Host '院方透析清單 API 的位址（含 dialysislist.php，不含
 docker compose --env-file $cfg exec -T -e HOSPITAL_API_BASE_URL=$u api node apps/api/dist/hospital-api-probe.js
 ```
 
-**怎麼知道成功了**：印出「連線：成功」、「解析：成功」，接著是每一欄的型態分布與幾段統計，最後一行「以上可以整段抄進演練紀錄」。
-**整段抄進演練紀錄**——工具只印結構（型態、欄數、筆數、床位的樣式），**不印任何一個病人的值，也不印位址**，抄下來不會帶出病人資料。
+**怎麼知道成功了**：印出「連線：成功」、「解析：成功」，接著是每一欄的型態分布與幾段統計，最後一行「以上可以整段抄進演練紀錄」。 **整段抄進演練紀錄**——工具只印結構（型態、欄數、筆數、床位的樣式），**不印任何一個病人的值，也不印位址**，抄下來不會帶出病人資料。
 
 | 症狀 | 處置 |
 |---|---|
@@ -1247,15 +1170,9 @@ docker compose --env-file $cfg exec -T -e HOSPITAL_API_BASE_URL=$u api node apps
 
 > 🧪 **模擬部署**：先照[第十五冊之二](15b-env-simulation.md) 1.9 把 `.env` 指向模擬院方 API、寫上 `HD_SIMULATION_DEPLOYMENT=yes`，然後
 >
-> ```powershell
-> docker compose --env-file $cfg --profile simulation up -d
-> docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js
-> ```
+> ```powershell docker compose --env-file $cfg --profile simulation up -d docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js ```
 >
-> 第二行用的是 `.env` 裡的位址，所以不必輸入。印出「模擬標頭：有」是對的。接著開護理端簡易版：
-> 不必碰任何東西，床位圖上就會出現 A1、A2… 與「模擬甲」等病人（全是虛構的）。
-> 最後驗「院內的設定擋得住模擬」（部署規範第 9 章第 8 項）：把 `.env` 的 `HD_SIMULATION_DEPLOYMENT` 清空，`docker compose --env-file $cfg up -d api`，
-> `docker compose --env-file $cfg logs --tail 20 api` 要看到**拒絕啟動、指出 DEP-46**；看到之後改回 `yes`、再 `up -d api`。
+> 第二行用的是 `.env` 裡的位址，所以不必輸入。印出「模擬標頭：有」是對的。接著開護理端簡易版：不必碰任何東西，床位圖上就會出現 A1、A2… 與「模擬甲」等病人（全是虛構的）。最後驗「院內的設定擋得住模擬」（部署規範第 9 章第 8 項）：把 `.env` 的 `HD_SIMULATION_DEPLOYMENT` 清空，`docker compose --env-file $cfg up -d api`， `docker compose --env-file $cfg logs --tail 20 api` 要看到**拒絕啟動、指出 DEP-46**；看到之後改回 `yes`、再 `up -d api`。
 
 ---
 
@@ -1292,8 +1209,7 @@ docker compose --env-file $cfg exec -T -e HOSPITAL_API_BASE_URL=$u api node apps
 
 #### V-31 跑三支驗收（＝N-30、第十一冊第 7 節、第十二冊第 7 節）
 
-**這一步是驗收，不是部署步驟**，也是整輪裡唯一准用 Node.js 的地方。
-在**平常開發的工作目錄**（不是 `C:\hd-sim\repo`）打：
+**這一步是驗收，不是部署步驟**，也是整輪裡唯一准用 Node.js 的地方。在**平常開發的工作目錄**（不是 `C:\hd-sim\repo`）打：
 
 ```powershell
 npm run verify:iteration11 -- --live --env-file C:\hd-sim\config\.env
@@ -1324,9 +1240,7 @@ Remove-Item -Recurse -Force C:\hd-sim
 Get-NetFirewallRule -DisplayName "hd-sim *" -ErrorAction SilentlyContinue | Remove-NetFirewallRule
 ```
 
-（最後一條只有 V-25 真的加過防火牆規則時才會刪到東西，要用系統管理員身分打。）
-手機上的「透析照護平板」解除安裝。部署金鑰與 `$HOME\.ssh\config` 那兩段**可以留著**，下一輪繼續用。
-V-06 下載的兩個基底映像也可以留著。
+（最後一條只有 V-25 真的加過防火牆規則時才會刪到東西，要用系統管理員身分打。）手機上的「透析照護平板」解除安裝。部署金鑰與 `$HOME\.ssh\config` 那兩段**可以留著**，下一輪繼續用。 V-06 下載的兩個基底映像也可以留著。
 
 **怎麼知道成功了**：`docker volume ls` 與 `docker images` 都看不到 `hd-tablet-care` 開頭的東西；`C:\hd-sim` 不存在。
 
@@ -1362,8 +1276,7 @@ V-06 下載的兩個基底映像也可以留著。
 
 停手時做三件事：`docker compose --env-file $cfg stop` 把服務停掉、把現況寫進演練紀錄、當場講清楚下一次需要什麼。
 
-> 📍 **1001** 離院時服務沒有停，留著在跑（第十四冊之四 M-09）。登入不通，沒有人能用，所以風險不大；
-> 但從這一冊起，**登入沒通就離院時，照上面把服務停掉**，下一次來再 `up -d`。
+> 📍 **1001** 離院時服務沒有停，留著在跑（第十四冊之四 M-09）。登入不通，沒有人能用，所以風險不大；但從這一冊起，**登入沒通就離院時，照上面把服務停掉**，下一次來再 `up -d`。
 
 ---
 
@@ -1452,9 +1365,7 @@ curl.exe -s -i -H "Origin: http://<主機>:18080" http://<主機>:13000/api/heal
 | 第三條印出 `Access-Control-Allow-Origin: http://<主機>:18080` | 後端有放行這個來源 | 問題不在 CORS，回第 2、3 步 |
 | 第三條什麼都沒印出來 | 後端沒放行這個來源 | `.env` 看起來對的話，多半是**改完 `.env` 還沒 `up -d`**：`.env` 只在容器建立時讀一次，執行中的後端還在用舊值。打 `up -d` 讓 compose 用新值重建後端 |
 
-> 💡 **輸出被截斷也算有印出來。** 視窗太窄時，第三條那一行可能只看得到後半段（例如 `…rol-Allow-Origin`）。
-> 看得到 `Allow-Origin` 這幾個字就是有放行；要看完整的一行，把視窗拉寬，或在指令最後加 ` | Out-String -Width 300`。
-> 反過來，**真的什麼都沒印出來才是沒放行**。1001 就是空的。
+> 💡 **輸出被截斷也算有印出來。** 視窗太窄時，第三條那一行可能只看得到後半段（例如 `…rol-Allow-Origin`）。看得到 `Allow-Origin` 這幾個字就是有放行；要看完整的一行，把視窗拉寬，或在指令最後加 ` | Out-String -Width 300`。反過來，**真的什麼都沒印出來才是沒放行**。1001 就是空的。
 
 **把第 2～4 步的結果全部抄進演練紀錄**，包括正常的那幾條。1001 帶回了第 4 步的第二、三條（health 正常、第三條空的），但第一條 `CORS_ORIGINS` 的內容沒帶回來，所以分不出是寫錯了還是改完沒 `up -d`。
 

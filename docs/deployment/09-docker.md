@@ -2,12 +2,9 @@
 
 版本：v0.1　文件狀態：草案　編號：`D-xx`　**這一冊要印出來帶進去**
 
-> 前八冊走的都是隨身碟帶離線安裝包進去、以排程工作常駐的路線（DEP-07）。
-> 這一冊處理院方**指定**另一條路：**在主機上 `git clone`，再用 Docker 建置並執行。**
+> 前八冊走的都是隨身碟帶離線安裝包進去、以排程工作常駐的路線（DEP-07）。這一冊處理院方**指定**另一條路：**在主機上 `git clone`，再用 Docker 建置並執行。**
 >
-> 它和[第七冊](07-git-clone.md)不一樣。第七冊是「clone 意外成功了，接下來怎麼辦」，終點仍然是安裝包；
-> 這一冊是「院方明說要容器」，那正是《部署規範》[3.3](../requirements/deployment-spec.md#33-容器備案的啟用條件)
-> 列的第一種啟用條件——**容器備案正式啟用**。
+> 它和[第七冊](07-git-clone.md)不一樣。第七冊是「clone 意外成功了，接下來怎麼辦」，終點仍然是安裝包；這一冊是「院方明說要容器」，那正是《部署規範》[3.3](../requirements/deployment-spec.md#33-容器備案的啟用條件) 列的第一種啟用條件——**容器備案正式啟用**。
 
 ---
 
@@ -26,10 +23,7 @@
 | DEP-06 備份到另一台機器 | 不變 | 備份目錄掛主機路徑，再從那裡送走 |
 | DEP-31 套用既有遷移 | 不變 | 容器裡跑同一支 `prisma-cli.mjs migrate deploy` |
 
-> **為什麼 DEP-23 最重要。** 《部署規範》[3.1](../requirements/deployment-spec.md#31-為什麼改掉容器)
-> 改掉容器的理由就是它：Docker 在 Windows 上跑在 WSL2 裡，把資料庫放在「Windows 目錄的繫結掛載」上，
-> SQLite 的檔案鎖不可靠。**這種壞法平常看不出來，會在某一天兩個寫入撞在一起時毀掉資料庫。**
-> 所以這條路線唯一不准商量的，就是資料庫的位置。
+> **為什麼 DEP-23 最重要。** 《部署規範》[3.1](../requirements/deployment-spec.md#31-為什麼改掉容器) 改掉容器的理由就是它：Docker 在 Windows 上跑在 WSL2 裡，把資料庫放在「Windows 目錄的繫結掛載」上， SQLite 的檔案鎖不可靠。**這種壞法平常看不出來，會在某一天兩個寫入撞在一起時毀掉資料庫。** 所以這條路線唯一不准商量的，就是資料庫的位置。
 
 ### 0.2 東西放在哪裡
 
@@ -45,8 +39,7 @@
 
 ### 0.3 開發端演練結果（0921）
 
-這一冊的每一條指令，都在開發機上以「clone → 建置 → 遷移 → 啟動 → 備份 → 更新 → 還原」的順序實際跑過一次。
-**演練抓到三個會讓這條路線在院內直接倒下的問題，已在 0921 修掉**：
+這一冊的每一條指令，都在開發機上以「clone → 建置 → 遷移 → 啟動 → 備份 → 更新 → 還原」的順序實際跑過一次。 **演練抓到三個會讓這條路線在院內直接倒下的問題，已在 0921 修掉**：
 
 | 問題 | 不修會怎樣 | 修在哪 |
 |---|---|---|
@@ -62,8 +55,7 @@
 - 從**另一台電腦**連進來（[D-21](#d-21-從護理站連進來)）
 - 連線關閉之後重新啟動仍然正常（[D-24](#d-24-關閉對外連線並當場確認)）
 
-> **這三條修正必須已經在 GitHub 上。** 院方 clone 到的是遠端那一版，不是你開發機上的那一版。
-> [D-01](#d-01-確認要被-clone-的那一版) 就是在確認這件事。
+> **這三條修正必須已經在 GitHub 上。** 院方 clone 到的是遠端那一版，不是你開發機上的那一版。 [D-01](#d-01-確認要被-clone-的那一版) 就是在確認這件事。
 
 ---
 
@@ -101,8 +93,7 @@ git log -1 --oneline origin/master
 
 **做什麼**
 
-找一台**乾淨的** Windows 機器（與[第二冊](02-dry-run.md) R-01 同一個標準），裝好 Docker Desktop，
-從 [D-11](#d-11-clone-到固定目錄) 一路做到 [D-23](#d-23-備份並驗證還原得起來)。**全程計時。**
+找一台**乾淨的** Windows 機器（與[第二冊](02-dry-run.md) R-01 同一個標準），裝好 Docker Desktop，從 [D-11](#d-11-clone-到固定目錄) 一路做到 [D-23](#d-23-備份並驗證還原得起來)。**全程計時。**
 
 **怎麼知道成功了**
 
@@ -147,8 +138,7 @@ git log -1 --oneline origin/master
 
 ### D-04 準備一把唯讀、會過期的存取憑證
 
-這個 repo 是**私有的**，院方 clone 一定要有憑證。[第七冊 G-03](07-git-clone.md#g-03-查出是誰的憑證) 講過用錯憑證的後果。
-**這一次你可以事先準備對的那一把。**
+這個 repo 是**私有的**，院方 clone 一定要有憑證。[第七冊 G-03](07-git-clone.md#g-03-查出是誰的憑證) 講過用錯憑證的後果。 **這一次你可以事先準備對的那一把。**
 
 **做什麼**
 
@@ -178,8 +168,7 @@ git log -1 --oneline origin/master
 
 ## 2. 進院當天：先確認 Docker 這一層
 
-前面照[第四冊](04-onsite.md) H-01～H-07 走（報到、找人、問問題、確認機器、盤點）。
-**H-08 到 H-13 由這一冊的 D-05～D-23 取代。** H-14 起回到第四冊，差異寫在 [D-27](#d-27-回到第四冊哪些照做哪些要換)。
+前面照[第四冊](04-onsite.md) H-01～H-07 走（報到、找人、問問題、確認機器、盤點）。 **H-08 到 H-13 由這一冊的 D-05～D-23 取代。** H-14 起回到第四冊，差異寫在 [D-27](#d-27-回到第四冊哪些照做哪些要換)。
 
 ### D-05 開場時說清楚這條路線的代價
 
@@ -221,8 +210,7 @@ git log -1 --oneline origin/master
 |---|---|
 | 沒有人願意簽 | 停手。回第四冊 H-08，改走路線 B（隨身碟）。**隨身碟上那份安裝包照樣帶去**，就是為了這一刻 |
 
-> 回去之後，容器備案啟用與這幾條例外要寫進《[部署規範](../requirements/deployment-spec.md)》。
-> **手冊不能替規範開例外**，它只記錄現場發生了什麼（與第七冊 G-09 同一條）。
+> 回去之後，容器備案啟用與這幾條例外要寫進《[部署規範](../requirements/deployment-spec.md)》。 **手冊不能替規範開例外**，它只記錄現場發生了什麼（與第七冊 G-09 同一條）。
 
 ---
 
@@ -273,8 +261,7 @@ wsl --status
 | 3 | Software updates → **Automatically check for updates** | 不勾 | 同上；而且更新 Docker 是院方的變更，不該自己發生 |
 | 4 | Resources → Advanced → **Disk image location** | 本系統自己的路徑，例如 `D:\hd-docker` | 預設在 `C:\Users\<帳號>\AppData\Local\Docker`，是個人資料夾（DEP-37 第 3 項） |
 
-第 4 項若要搬，**要在建資料卷之前搬**；Docker Desktop 會把現有的虛擬磁碟一起搬過去，要花幾分鐘。
-**同機有別的專案在用 Docker 時，第 4 項不要動**，記下現況，回去再談。
+第 4 項若要搬，**要在建資料卷之前搬**；Docker Desktop 會把現有的虛擬磁碟一起搬過去，要花幾分鐘。 **同機有別的專案在用 Docker 時，第 4 項不要動**，記下現況，回去再談。
 
 然後請資訊室把**虛擬磁碟所在的目錄**加入防毒排除清單（[H-14 ①](04-onsite.md#h-14-windows-五件事需要資訊室) 的容器版）。
 
@@ -293,8 +280,7 @@ wsl --status
 
 ### D-09 確認誰能下 docker 指令
 
-**這是容器路線上最容易被忽略的一條**（DEP-12、DEP-37 第 4 項）。容器裡的後端雖然以低權限的 `node` 身分執行，
-但**任何能下 docker 指令的人，都能掛上資料卷、把資料庫整個讀出來**，不需要知道任何密碼。
+**這是容器路線上最容易被忽略的一條**（DEP-12、DEP-37 第 4 項）。容器裡的後端雖然以低權限的 `node` 身分執行，但**任何能下 docker 指令的人，都能掛上資料卷、把資料庫整個讀出來**，不需要知道任何密碼。
 
 **做什麼**
 
@@ -365,8 +351,7 @@ cd C:\hd
 git -c credential.helper= clone https://github.com/<帳號>/<repo>.git hd-tablet-care
 ```
 
-跳出帳號密碼時：帳號填你的 GitHub 帳號，**密碼貼 D-04 那把權杖**。
-`-c credential.helper=` 是**這一次不要把憑證存進 Windows**。
+跳出帳號密碼時：帳號填你的 GitHub 帳號，**密碼貼 D-04 那把權杖**。 `-c credential.helper=` 是**這一次不要把憑證存進 Windows**。
 
 **怎麼知道成功了**
 
@@ -432,8 +417,7 @@ Get-NetTCPConnection -State Listen -LocalPort 3000, 8080, 8081 -ErrorAction Sile
 
 四個值抄在筆記本上；上面那行指令什麼都沒印。
 
-> **主機位址與後端埠會在下一步被寫死進映像檔**，之後改不了，只能重建。
-> 這是為什麼它要先定下來，而且要是別台電腦看得到的那一個。
+> **主機位址與後端埠會在下一步被寫死進映像檔**，之後改不了，只能重建。這是為什麼它要先定下來，而且要是別台電腦看得到的那一個。
 
 ---
 
@@ -521,8 +505,7 @@ notepad .env
 docker run --rm --entrypoint node hd-tablet-care:<標籤> -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 ```
 
-> **compose 只拿 `.env` 做變數代換，不會把整份倒進容器**。所以範本裡的 `DATABASE_URL`、`API_PORT`、`BACKUP_DIR`
-> 這些安裝包用的變數，在這條路線上**填了也沒有作用**，留空即可。容器實際拿到什麼，寫在 `docker-compose.yml` 裡。
+> **compose 只拿 `.env` 做變數代換，不會把整份倒進容器**。所以範本裡的 `DATABASE_URL`、`API_PORT`、`BACKUP_DIR` 這些安裝包用的變數，在這條路線上**填了也沒有作用**，留空即可。容器實際拿到什麼，寫在 `docker-compose.yml` 裡。
 
 **怎麼知道成功了**
 
@@ -564,8 +547,7 @@ docker volume inspect hd-tablet-care-data --format "{{.Name}} {{.Driver}}"
 | 資料卷已經存在 | **停。** 裡面可能有資料（前一次部署、或別人建的）。先 `docker run --rm -v hd-tablet-care-data:/data --entrypoint ls hd-tablet-care:<標籤> -la /data` 看裡面有什麼，問清楚再決定 |
 | 備份目錄只能放在「文件」或共用目錄 | [總覽第 6 節](index.md#6-什麼情況下當場停手)的停手情形之一 |
 
-> **資料卷標成 external，是刻意的。** compose 不會替你建它，也**不會**在有人打了 `docker compose down -v` 時把它刪掉。
-> 整個透析中心的照護紀錄在裡面，刪不刪不該取決於有沒有人多打了兩個字元。
+> **資料卷標成 external，是刻意的。** compose 不會替你建它，也**不會**在有人打了 `docker compose down -v` 時把它刪掉。整個透析中心的照護紀錄在裡面，刪不刪不該取決於有沒有人多打了兩個字元。
 
 ---
 
@@ -581,8 +563,7 @@ docker compose run --rm --no-deps api node apps/api/scripts/prisma-cli.mjs migra
 
 **怎麼知道成功了**
 
-列出一串遷移目錄，最後一行是 `All migrations have been successfully applied.`
-再跑一次同一行，應該是 `No pending migrations to apply.`
+列出一串遷移目錄，最後一行是 `All migrations have been successfully applied.` 再跑一次同一行，應該是 `No pending migrations to apply.`
 
 **可能怎麼壞、怎麼處理**
 
@@ -616,8 +597,7 @@ docker compose logs api --tail 30
 | 存活檢查 | `HTTP/1.1 200`，內容是 `{"status":"ok",...}` |
 | 紀錄檔最後幾行 | `後端服務已啟動`、`版本標記：...（正式環境設定）`、`伺服器時區：Asia/Taipei` |
 
-紀錄檔裡會有一行黃色的 `時區來自環境變數 TZ（Asia/Taipei）……` 警告，**這在容器裡是正常的**：
-容器沒有「主機時區設定」可以看，時區就是 compose 給的那個 `TZ`。
+紀錄檔裡會有一行黃色的 `時區來自環境變數 TZ（Asia/Taipei）……` 警告，**這在容器裡是正常的**：容器沒有「主機時區設定」可以看，時區就是 compose 給的那個 `TZ`。
 
 **可能怎麼壞、怎麼處理**
 
@@ -659,8 +639,7 @@ docker compose logs api --tail 30
 
 **做什麼**
 
-照[第四冊 H-15](04-onsite.md#h-15-防火牆與從護理站連進來)，請資訊室開三個埠的輸入規則，
-然後**到護理站那台電腦上**開 `http://<主機位址>:<HD_NURSE_PORT>`，登入。
+照[第四冊 H-15](04-onsite.md#h-15-防火牆與從護理站連進來)，請資訊室開三個埠的輸入規則，然後**到護理站那台電腦上**開 `http://<主機位址>:<HD_NURSE_PORT>`，登入。
 
 接著照 [H-16](04-onsite.md#h-16-冒煙測試) 走一次主線。
 
@@ -700,8 +679,7 @@ curl.exe -i http://localhost:<HD_API_PORT>/api/health
 
 **做什麼**
 
-用正式環境的更新腳本做一次「備份 → 還原驗證」。它會先備份、還原到另一個檔案做完整性檢查與筆數核對，
-沒有待套用的遷移時就只留下一筆紀錄：
+用正式環境的更新腳本做一次「備份 → 還原驗證」。它會先備份、還原到另一個檔案做完整性檢查與筆數核對，沒有待套用的遷移時就只留下一筆紀錄：
 
 ```powershell
 docker compose stop api
@@ -778,11 +756,9 @@ git config --show-origin --get-regexp "credential"
 cmdkey /list | Select-String -Pattern "git"
 ```
 
-有列出東西就照[第七冊 G-08](07-git-clone.md#g-08-清掉-clone-與憑證) 刪掉。
-**clone 目錄不要刪**：更新時要在這裡 `git fetch` 與重建，`.env` 與 `docker-compose.yml` 也在這裡。
+有列出東西就照[第七冊 G-08](07-git-clone.md#g-08-清掉-clone-與憑證) 刪掉。 **clone 目錄不要刪**：更新時要在這裡 `git fetch` 與重建，`.env` 與 `docker-compose.yml` 也在這裡。
 
-回到院外之後，**當天**到 GitHub 把 D-04 那把權杖作廢（Settings → Developer settings → Personal access tokens → Delete），
-不要等它自己過期。
+回到院外之後，**當天**到 GitHub 把 D-04 那把權杖作廢（Settings → Developer settings → Personal access tokens → Delete），不要等它自己過期。
 
 **怎麼知道成功了**
 
@@ -846,8 +822,7 @@ cmdkey /list | Select-String -Pattern "git"
 | **停用** | 同暫停。另外在交接與紀錄寫明「已停用，恢復要先問 <誰>」 | 不會 |
 | **撤除** | `docker compose down`，再依第八冊 S-08 那張表收拾 | — |
 
-> **注意和安裝包路線反過來的地方**：安裝包的「暫停」在重新開機後會自己回來，這裡不會。
-> 所以這裡的暫停已經是停用的效果，**做完事一定要記得 `start`**，並確認三個都是 `Up`。
+> **注意和安裝包路線反過來的地方**：安裝包的「暫停」在重新開機後會自己回來，這裡不會。所以這裡的暫停已經是停用的效果，**做完事一定要記得 `start`**，並確認三個都是 `Up`。
 
 S-04 四條判準的容器版：
 
@@ -865,8 +840,7 @@ Get-NetTCPConnection -State Listen -LocalPort <HD_API_PORT>, <HD_NURSE_PORT>, <H
 
 **撤除時的兩條硬規則：**
 
-- **不要**下 `docker volume rm hd-tablet-care-data`、`docker compose down -v`、`docker system prune --volumes`。
-  資料卷就是資料庫，依 S-09 由院方決定去向
+- **不要**下 `docker volume rm hd-tablet-care-data`、`docker compose down -v`、`docker system prune --volumes`。資料卷就是資料庫，依 S-09 由院方決定去向
 - 要把資料交給院方，先照 D-23 或護理端的立即備份做一份到 `D:\hd-backup`，交出那一份
 
 ---
@@ -875,8 +849,7 @@ Get-NetTCPConnection -State Listen -LocalPort <HD_API_PORT>, <HD_NURSE_PORT>, <H
 
 ### 更新
 
-每一次都是**開連線 → 建新映像檔 → 關連線 → 備份與遷移 → 換版**，省不了哪一步。
-排在非透析時段，更新後第一個班次要有人在（DEP-32）。
+每一次都是**開連線 → 建新映像檔 → 關連線 → 備份與遷移 → 換版**，省不了哪一步。排在非透析時段，更新後第一個班次要有人在（DEP-32）。
 
 ```powershell
 cd C:\hd\hd-tablet-care
@@ -890,8 +863,7 @@ docker compose run --rm --no-deps api node apps/api/scripts/db-update.mjs --note
 docker compose up -d
 ```
 
-`db-update.mjs` 會先備份並驗證還原，**沒過就停在那裡、不遷移**。
-**舊版映像檔不要刪**，新版穩定之前那是唯一能退回去的東西。
+`db-update.mjs` 會先備份並驗證還原，**沒過就停在那裡、不遷移**。 **舊版映像檔不要刪**，新版穩定之前那是唯一能退回去的東西。
 
 ### 回退
 
@@ -900,8 +872,7 @@ notepad .env                        # HD_IMAGE_TAG 改回舊版標籤
 docker compose up -d
 ```
 
-**這一版動過資料庫結構時**，要先還原 `db-update.mjs` 印出的那一份 `hd-before-update-*.db`，再換回舊版。
-**程式可以退版，資料庫不能退版**，不要試圖把遷移倒回去（規範 18.3）。
+**這一版動過資料庫結構時**，要先還原 `db-update.mjs` 印出的那一份 `hd-before-update-*.db`，再換回舊版。 **程式可以退版，資料庫不能退版**，不要試圖把遷移倒回去（規範 18.3）。
 
 ### 還原一份備份到資料卷
 
@@ -945,8 +916,7 @@ docker compose up -d
 - [ ] 重新開機測試做了，結果寫進紀錄；沒做的話，**誰在什麼時候代看**（D-26）
 - [ ] 交接文件寫明：資料在資料卷 `hd-tablet-care-data`、**不得執行的三個指令**（第九節）、備份在哪個目錄
 
-紀錄寫進《[部署演練紀錄](../notes/deployment-drills.md)》，「交付形態」寫「git clone ＋ Docker」，
-每一步的耗時照記，**D-14 的建置時間尤其要記**——它決定下一次更新要留多長的時段。
+紀錄寫進《[部署演練紀錄](../notes/deployment-drills.md)》，「交付形態」寫「git clone ＋ Docker」，每一步的耗時照記，**D-14 的建置時間尤其要記**——它決定下一次更新要留多長的時段。
 
 ---
 
