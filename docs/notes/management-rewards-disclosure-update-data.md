@@ -218,6 +218,6 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1021 | 2026-10-21 | 首次定版。管理儀表板、獎勵制度、對外揭露各自蒐集與展示的資料清單，逐筆標現有、新增、修正與級別；1018 迭代 26 做完 |
+| [1021](https://94sh09sh19sh.github.io/hd-docs/1021/notes/management-rewards-disclosure-update-data/) | 2026-10-21 | 首次定版。管理儀表板、獎勵制度、對外揭露各自蒐集與展示的資料清單，逐筆標現有、新增、修正與級別；1018 迭代 26 做完 |
 
 [← 回上層文件](management-rewards-disclosure-update.md)　[← 回其他文件總表](index.md)　[← 回進度首頁](../index.md)

@@ -244,7 +244,7 @@ npm run check:egress
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1021 | 2026-10-21 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-27 分冊） |
+| [1021](https://94sh09sh19sh.github.io/hd-docs/1021/testing/iteration-3/) | 2026-10-21 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-27 分冊） |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-3/) | 2026-10-14 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-23 分冊）；迭代 18 起高風險功能開關的預期改照迭代 18 分冊 |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/testing/iteration-3/) | 2026-10-07 | 數值名稱改用院方 API 的稱呼；主手冊 §13 錨點更正 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/testing/iteration-3/) | 2026-09-30 | 前置的 §13 連結改指分冊索引的新標題；備份檢查補上旁邊同名 .sha256（0929 起） |

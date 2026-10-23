@@ -82,7 +82,7 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1021 | 2026-10-21 | 直放的步驟改註「迭代 27 起不適用」 |
+| [1021](https://94sh09sh19sh.github.io/hd-docs/1021/testing/iteration-17-8/) | 2026-10-21 | 直放的步驟改註「迭代 27 起不適用」 |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-17-8/) | 2026-10-14 | 首次定版。護理紀錄移到主列、DART／SOAP 與複製貼上、緊急回報的圖示（`aa147`～`aa168`）；1014 起直放步驟不必驗 |
 
 [← 回主手冊](manual-test-guide.md) · [← 回進度首頁](../index.md)

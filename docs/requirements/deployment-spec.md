@@ -537,7 +537,7 @@ DEP-25（路線 A 的失敗紀錄）、DEP-26（進院前後各掃毒一次）�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1021 | 2026-10-21 | 平板一律橫放架設（1014 定）；外殼第一版起就鎖橫向，迭代 27 不必重建 APK |
+| [1021](https://94sh09sh19sh.github.io/hd-docs/1021/requirements/deployment-spec/) | 2026-10-21 | 平板一律橫放架設（1014 定）；外殼第一版起就鎖橫向，迭代 27 不必重建 APK |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/requirements/deployment-spec/) | 2026-10-07 | 0.1.1 補院方 API：`api` 在院內每 3 分鐘連院方透析清單 API、新增只在開發與模擬部署跑的 `hospital-api-sim`（DEP-46），DEP-22、DEP-29 各補一列；首波關閉清單的輪播第二層改為跑馬燈；1007 待決事項的答覆（斷電後由護理長重新登入、市集自動更新先不改）；「裝置管理」改名「新增裝置」 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/requirements/deployment-spec/) | 2026-09-30 | 改版為 v3.0：容器＋git clone 為正式路線、離線安裝包撤除、不准用隨身碟、主機可連出不可連入；外殼 APK 在院內主機建置、AI 閘道；Q-27、Q-32 的 0930 答覆 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/requirements/deployment-spec/) | 2026-09-23 | 改版為 v2.0：正式主機改為院內共用的 Windows 工作站，部署形態由容器改為離線安裝包、容器留作備案（3.3），新增 DEP-37 安裝包層級的共用主機隔離；第一次部署的兩條路線（路線 A 預期失敗、路線 B 為正式路線） |

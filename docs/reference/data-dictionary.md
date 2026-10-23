@@ -2123,7 +2123,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1021 | 2026-10-21 | 迭代 24～26 新增的資料表與欄位逐欄說明（第二十七～三十章），對到 97 張表 950 個欄位、26 個遷移 |
+| [1021](https://94sh09sh19sh.github.io/hd-docs/1021/reference/data-dictionary/) | 2026-10-21 | 迭代 24～26 新增的資料表與欄位逐欄說明（第二十七～三十章），對到 97 張表 950 個欄位、26 個遷移 |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/reference/data-dictionary/) | 2026-10-14 | 迭代 17.8～23 新增的資料表與欄位逐欄說明，對到 90 張表 877 個欄位（含遊戲盤面快照的 JSON 例外） |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/reference/data-dictionary/) | 2026-10-07 | 改寫到迭代 17.7：迭代 15 院方 API 介接（同步紀錄、院方紀錄的來源欄位）、迭代 16 跑馬燈播放紀錄、迭代 17 草稿核准欄位、迭代 17.7 `carousel_item_device_targets`（59 張表 593 個欄位）；開關清單補 `LAB_VALUE_FEATURES`、`TODAY_PANEL`、`MARQUEE`、`MANUAL_PATIENT_CREATE`；開發 seed 床號改成醫院格式 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/reference/data-dictionary/) | 2026-09-30 | 改寫到迭代 14.2：新增 `beds`、`carousel_item_targets`（56 張表 547 個欄位），平板的外殼版本與所在床位、病人端任務時點的營運參數、求助「其他」框的開關；備份另存同名 .sha256 |
