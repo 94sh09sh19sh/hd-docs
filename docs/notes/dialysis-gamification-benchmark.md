@@ -2,7 +2,7 @@
 
 版本：v0.1　文件狀態：草案（2026-10-25 開立）　適用讀者：院方（護理部、社工、醫師）、FDE 工程團隊
 
-上層文件：《[透析中的遊戲化之一：決定、開關與實作順序](dialysis-gamification-decisions.md)》　篩選過程：《[之五附錄：第四款遊戲的篩選過程](dialysis-gamification-benchmark-sieve.md)》
+上層文件：《[透析中的遊戲化之一：決定、開關與實作順序](dialysis-gamification-decisions.md)》　篩選過程：《[之五附錄：第四款遊戲的篩選過程](dialysis-gamification-benchmark-sieve.md)》　給 STT 團隊的信：《[之五附件](dialysis-gamification-benchmark-stt-letter.md)》
 
 ---
 
@@ -170,7 +170,7 @@ SaMD 風險：**高**。程式可以先做、先對合成資料跑；真實病�
 
 | 事 | 誰 | 卡住哪一次 |
 |---|---|---|
-| 問 Shape Trail Test 的研發團隊（香港中文大學 Agnes Chan 教授團隊，1997 年研發）能否在平板上使用其作法與常模 | 使用者 | 第 2 次的 B 部分能不能說是 STT；不行就用自製的形狀交替，只跟自己比 |
+| 問 Shape Trail Test 的研發團隊（香港中文大學 Agnes Chan 教授團隊，1997 年研發）能否在平板上使用其作法與常模；信件草稿與收件信箱見《[之五附件](dialysis-gamification-benchmark-stt-letter.md)》（1026 寫好、未寄） | 使用者 | 第 2 次的 B 部分能不能說是 STT；不行就用自製的形狀交替，只跟自己比 |
 | 選定常模來源（年齡、教育分層），由臨床端書面提供 | 醫師、社工 | 第 3 次 |
 | 病人告知與同意：遊戲資料會拿來和常模對照 | 社工、護理部 | 第 3 次（上層 9.3） |
 | 若要發表或建院內參考值：人體研究倫理審查 | 醫師 | 院內參考值 |
