@@ -3083,6 +3083,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-27-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 27.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5949,7 +5977,7 @@
 <tbody>
 <tr>
 <td>基本資訊</td>
-<td>床號、<strong>姓名</strong>（1007）、療程進度條、待完成任務的圖示（點了就繼續；<strong>1025 起一次一個</strong>）、~~求助狀態與離線狀態各一個圖示加一句話~~ <strong>1025 起狀態一次一個</strong>（圖示加一句話）、<strong>現在時間</strong>（1007）；<strong>1025 起固定一列</strong>（見下）</td>
+<td>床號、<strong>姓名</strong>（1007）、療程進度條（<strong>1025 起底下寫剩餘時間與結束時間</strong>）、待完成任務的圖示（點了就繼續；<strong>1025 起一次一個</strong>）、~~求助狀態與離線狀態各一個圖示加一句話~~ <strong>1025 起狀態一次一個</strong>（圖示加一句話）、<strong>現在時間</strong>（1007）；<strong>1025 起固定一列</strong>（見下）</td>
 <td><strong>病歷號</strong>（首頁與面板同屬鄰床可見的畫面）、~~姓名~~（1007 起放回，見下）、時段與開始時間的文字、平板序號、<strong>求助的處理方式與結果</strong>（1025）</td>
 </tr>
 <tr>
@@ -5968,18 +5996,33 @@
 <ul>
 <li><strong>姓名</strong>放在床號右邊（<code>.home-name</code>），比床號小一級（<code>--t-number</code>），床號仍是最先看到的那一個；<strong>只在基本資訊區</strong>——面板、跑馬燈照舊不放</li>
 <li><strong>病歷號仍不上首頁</strong>；首頁資料（<code>GET /device/home</code>）照舊沒有任何病人欄位，姓名取自平板本來就在輪詢的綁定狀態</li>
-<li><strong>現在時間</strong>在基本資訊區最右邊（<code>&lt;time className="home-now"&gt;</code>），24 小時制時分、<code>--t-number</code>，每 30 秒更新；<strong>不加圖示</strong>——時鐘圖示已經代表療程進度條（4.6「一個圖示只代表一件事」）</li>
+<li><strong>現在時間</strong>在基本資訊區最右邊（<code>&lt;time className="home-now"&gt;</code>），24 小時制時分、<code>--t-number</code>，每 30 秒更新；<strong>不加圖示</strong>——~~時鐘圖示已經代表療程進度條（4.6「一個圖示只代表一件事」）~~ <strong>1025 起（迭代 27.2，尚未實作）進度條也不帶圖示</strong>，底下的字已經說明它是時間；時分本身就看得出是時間</li>
 <li>鄰床看得到姓名，這是使用者知情的取捨；理由與影響見《<a href="../iteration-17-4-fixes/">迭代 17.4 修正紀錄</a>》</li>
 </ul>
 <p><strong>基本資訊區固定一列（1025，迭代 27.1）</strong>——<strong>1025 定，尚未實作</strong>，做完拿掉這句。1280×800 下結案文字、離線那一句、任務圖示並排都會把它擠成兩列（量測見《<a href="../iteration-27-1-fixes/">迭代 27.1 修正紀錄</a>》第 1 節）：</p>
 <ul>
-<li>不換列；<strong>只有進度條伸縮</strong>，最窄 100px</li>
+<li>不換列；<strong>只有進度條伸縮</strong>，~~最窄 100px~~ <strong>1025 迭代 27.2 改</strong>：最窄是剩餘時間那一句的寬（約 135px）；欄距 32px → 24px。照 100px 與 32px，最壞組合（床號 A12）其實差 40px（《<a href="../iteration-27-2-fixes/">迭代 27.2 修正紀錄</a>》第 1.4 節）</li>
 <li><strong>狀態一次一個</strong>，順序：沒有網路 → 求助狀態 → 一次性提示；待送筆數併進「沒有網路」的無障礙標籤</li>
 <li><strong>每句不超過 6 個字</strong>：沒有網路、已通知護理站、護理師收到了、已處理、問卷已送出、謝謝您。「該怎麼辦」由求助區說，這裡不重複</li>
 <li><strong>結案只寫「已處理」</strong>，不寫處理方式與結果（FR-P12 1025 改寫）——那是護理端的選項文字</li>
 <li><strong>任務圖示一次一個</strong>：時點最早、還沒做的那個，做完換下一個</li>
 <li>姓名最寬 4 個字，超過以「…」收尾</li>
 <li>驗收：姓名 4 個字、1 個任務、遊戲、「護理師收到了」同時出現仍是一列</li>
+</ul>
+<p><strong>療程進度條（1025，迭代 27.2）</strong>——<strong>1025 定，尚未實作</strong>，做完拿掉這句。圖形答不出「還要多久」「幾點結束」（《<a href="../iteration-27-2-fixes/">迭代 27.2 修正紀錄</a>》）：</p>
+<div class="highlight"><pre><span></span><code>━━━━━━━━━━━┃━━━━━━━━━━┃━━━━░░░░░┃░░░░░░░░░░
+剩 2 小時 19 分                      13:25 結束
+</code></pre></div>
+<ul>
+<li>進度條在上、一行字在下，整塊垂直置中，列高不變。字 <code>--t-meta</code>、<code>--c-ink-2</code>、等寬數字</li>
+<li>左：剩餘時間。「剩 2 小時 19 分」，整點「剩 2 小時」，不到一小時「剩 45 分」；<strong>不寫「2:19」</strong>——會被看成時刻。分鐘數取 <code>@hd/shared</code> 的 <code>dialysisProgress</code>（結束與現在的時分相減），與畫面上兩個時刻減得出來的一樣</li>
+<li>右：「13:25 結束」，對齊進度條右端；時刻是 <code>plannedDialysisEndMs</code>，用 <code>TIME</code> 格式化。寫「結束」不寫「下機」——下機還要回血、拔針</li>
+<li>刻度每小時一條（三條），2px、<code>--c-ink-2</code>、上下凸出軌道，不標字</li>
+<li>過了結束時刻：滿格，只留「13:25 結束」，<strong>不寫超過幾分</strong></li>
+<li>擠的時候先收結束時間（容器查詢），<strong>剩餘時間一定留</strong></li>
+<li>沒有時鐘圖示；<code>aria-valuetext</code> 念兩句</li>
+<li>不放：開始時間、經過幾分鐘、百分比、刻度上的時刻、快結束時變色或閃</li>
+<li>驗收：上面的最壞組合加床號 A12 仍是一列，剩餘時間完整</li>
 </ul>
 <p><strong>任務畫面</strong>（FR-P15）：透析前問卷、心情問卷、衛教在各自的時點<strong>自動以全螢幕出現</strong>，一題一頁：</p>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────┐
@@ -6037,7 +6080,7 @@
 <div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────┐
 │ 🛏 05   ▓▓▓▓▓▓░░░░                        │
 ├──────────────────────────────────────────┤
-│ 血壓            10:42 │ 脫水量（公斤）  10:42 │
+│ 血壓 毫米汞柱   10:42 │ 脫水量（公斤）  10:42 │
 │   ╱‾‾╲__╱‾‾‾‾ ● 128   │ - - - - - - - 預計 2.9 │  ← 最新值標在線尾，沒有圖例
 │   ‾‾‾‾‾‾‾‾‾‾‾ ● 76    │       ____╱‾‾ ● 1.8   │     脫水量有一條「預計」虛線
 │ 07:30        11:30   │ 07:30         11:30  │  ← 只在兩端標時間
@@ -6096,6 +6139,7 @@
 </tbody>
 </table>
 <p><strong>數字</strong>：五格，脈搏、透析前體重、理想體重、相差、目標脫水量。每格是名稱（20px）、數值（數值字級）、資料時間（20px）。 <strong>藍本的紅綠色與「輕／重」橫條不搬</strong>——顏色與橫條會把數字變成評語。相差寫 <code>+2.4</code>、<code>-0.3</code>，不寫「多」「少」「超過」。體重與脫水量一律以<strong>公斤</strong>寫到小數一位：院方 API 的脫水量是公升，1 公升約 1 公斤，而病人與醫護口頭說的是「今天脫幾公斤」。讀到 0 的那一格不出現，沒有值的格子不留空殼。</p>
+<p><strong>單位一律中文</strong>：脫水量與體重「公斤」、脈搏「次／分」，<strong>血壓「毫米汞柱」</strong>（1025 迭代 27.2 補，尚未實作；原本漏寫）。不用 mmHg 這類英文縮寫。圖的單位寫在標題右邊、小一級（<code>LineChart</code> 的 <code>unit</code>）；線尾的數字不帶單位。</p>
 <p><strong>跑馬燈</strong>（<code>Marquee.tsx</code>）：</p>
 <table>
 <thead>
@@ -7197,7 +7241,7 @@
 </tr>
 </tbody>
 </table>
-<p>病人端另有：<code>house</code> 回首頁、<code>clock</code> 療程時間、 <code>laugh</code>／<code>smile</code>／<code>meh</code>／<code>frown</code>／<code>angry</code> 心情的五個等級、<code>circle</code> 選項「沒有」、<code>square</code>／<code>square-check</code> 複選、 <code>lightbulb</code> 說明（點開看更多），以及求助類別（下一段）。 <strong>1010 迭代 20 補</strong>：<code>book-heart</code> 我的衛教小本子、<code>users</code> 病友小撇步（我也是這樣做的；護理端核准清單的病友小撇步也用它）；兩端共用的貼圖 <code>heart</code> 送你一顆愛心、<code>thumbs-up</code> 給你按個讚、<code>sun</code> 祝你今天好心情、<code>hand-heart</code> 我們都在這裡，<code>message-square-heart</code> 護理師回你的一句話（預設回覆）；護理端另有 <code>scroll-text</code> 跑馬燈的「你知道嗎」。 <strong>1011 迭代 22 補</strong>（病人端）：<code>grid-2x2</code> 麻將連連看（遊戲選單、開一桌）、<code>scan-search</code> 麻將的提示（框出一對可以消的牌）、<code>calendar-check</code> 今日牌局。<code>lightbulb</code> 已經是「說明（點開看更多）」、<code>layout-grid</code> 已經是護理端的「全部床位」，所以不用它們。</p>
+<p>病人端另有：<code>house</code> 回首頁、~~<code>clock</code> 療程時間~~（1025 迭代 27.2 拿掉，進度條改寫字；尚未實作）、 <code>laugh</code>／<code>smile</code>／<code>meh</code>／<code>frown</code>／<code>angry</code> 心情的五個等級、<code>circle</code> 選項「沒有」、<code>square</code>／<code>square-check</code> 複選、 <code>lightbulb</code> 說明（點開看更多），以及求助類別（下一段）。 <strong>1010 迭代 20 補</strong>：<code>book-heart</code> 我的衛教小本子、<code>users</code> 病友小撇步（我也是這樣做的；護理端核准清單的病友小撇步也用它）；兩端共用的貼圖 <code>heart</code> 送你一顆愛心、<code>thumbs-up</code> 給你按個讚、<code>sun</code> 祝你今天好心情、<code>hand-heart</code> 我們都在這裡，<code>message-square-heart</code> 護理師回你的一句話（預設回覆）；護理端另有 <code>scroll-text</code> 跑馬燈的「你知道嗎」。 <strong>1011 迭代 22 補</strong>（病人端）：<code>grid-2x2</code> 麻將連連看（遊戲選單、開一桌）、<code>scan-search</code> 麻將的提示（框出一對可以消的牌）、<code>calendar-check</code> 今日牌局。<code>lightbulb</code> 已經是「說明（點開看更多）」、<code>layout-grid</code> 已經是護理端的「全部床位」，所以不用它們。</p>
 <p><strong>1011 迭代 23 補</strong>（病人端）：<code>album</code> 老台灣記憶相簿（遊戲選單、翻開相簿）、<code>skip-forward</code> 跳過這張、三個回憶小貼紙 <code>hand</code> 我用過、<code>house-heart</code> 我家也有、<code>user-round</code> 想起某個人。<code>house</code> 已經是「回首頁」、<code>users</code> 已經是「病友小撇步」、<code>book-image</code> 已經是「台灣花卉圖鑑」，所以不用它們。<strong>1018 迭代 24.4</strong>：<code>book-image</code> 改叫「圖鑑」，相簿的「我的相簿」也用它（同一個意思：自己收集的東西），沒有新的圖示。</p>
 <p><strong>1015 迭代 25 補</strong>（護理端，1018 登記進 <code>sync-icons.mjs</code>）：<code>id-card</code> 床邊前速覽（簡易版已接手的格子上重開、專業版緊急通報頁的「病人簡介」）。<code>clipboard-list</code> 已經是「透析前問卷」、<code>user-check</code> 已經是「護理師已接手」，所以不用它們。</p>
 <p><strong>1010 迭代 21 補</strong>（病人端）：<code>gamepad-2</code> 遊戲（基本資訊區的遊戲圖示與遊戲選單）、<code>sprout</code> 透析小花園、<code>droplet</code> 澆水（<code>droplets</code> 已經是護理端的「生理食鹽水回填」，所以用單一顆的）、<code>book-image</code> 台灣花卉圖鑑、<code>trees</code> 大家的花園、<code>gift</code> 送花給護理站、<code>history</code> 以前的花園；護理端 <code>flower-2</code> 病人送給護理站的花。同日修好圖示產生器的一個舊問題：屬性名稱帶數字的（<code>&lt;line&gt;</code> 的 <code>x1</code>、<code>y2</code>）原本被漏掉，<code>line</code> 畫不出來；護理端的 <code>badge-alert</code>、<code>user-plus</code>、<code>unlink</code> 因此補回原本少掉的幾筆線。</p>
@@ -7605,7 +7649,7 @@
 <tr>
 <td>2.4／2.5 療程進度的終點（1007 迭代 17.5）</td>
 <td><code>@hd/shared</code> 的 <code>plannedDialysisEndMs</code>、<code>dialysisProgress</code>；呼叫端是病人端 <code>App.tsx</code>、<code>TodayPanel.tsx</code>，簡易版 <code>simple/TabletCell.tsx</code> 的 <code>progressOf</code>，專業版即時總覽與總覽螢幕模式畫的是後端 <code>composeBindingProgress</code> 算好的值</td>
-<td><code>verify:iteration17-5</code>：四小時只寫在 <code>@hd/shared</code> 一處並實際跑一次、一律開始後四小時（不看院方的預計結束）、五處都用它、起點相同</td>
+<td><code>verify:iteration17-5</code>：四小時只寫在 <code>@hd/shared</code> 一處並實際跑一次、一律開始後四小時（不看院方的預計結束）、五處都用它、起點相同。<strong>1025 迭代 27.2（尚未實作）</strong>：<code>verify:iteration27-2</code> 驗剩餘分鐘是時分相減、病人端進度條的兩句字與刻度</td>
 </tr>
 <tr>
 <td>3.5 簡易版工作台（0926）</td>
