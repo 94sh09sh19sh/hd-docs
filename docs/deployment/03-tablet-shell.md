@@ -23,7 +23,7 @@
 | 編譯環境（Android Studio、JDK 17、SDK 34） | **未安裝** | 擋住 K-06 |
 | 院內 CA 與伺服器憑證 | **未產生**（工具已備：`npm run cert:hospital-ca`） | 擋住 K-05、K-06 |
 | APK 簽名金鑰（keystore） | **未建立** | 擋住 K-06 |
-| 平板實體 | **未購入**，型號與 Android 版本未知 | 擋住 K-10 之後全部 |
+| 平板實體 | ~~**未購入**，型號與 Android 版本未知~~ **1025**：15 台未到，先用一台舊的 Galaxy Tab S6 Lite（SM-P613，Android 13），使用者更新前正式使用只有這一台（《[暫用平板](../notes/interim-tablet.md)》） | K-10 之後只做這一台 |
 | 主機的 HTTPS | **安裝包目前只提供 HTTP**，見下方警告 | **擋住離線能力** |
 
 > ### ⚠ 一個必須先解決的缺口：病人端要離線，就必須是 HTTPS
