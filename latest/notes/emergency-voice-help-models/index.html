@@ -2255,6 +2255,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. 篩選條件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-條件總表" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 條件總表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-等同千星的判準非-github-專案與權重" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 「等同千星」的判準（非 GitHub 專案與權重）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5037,6 +5065,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. 篩選條件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-條件總表" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 條件總表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-等同千星的判準非-github-專案與權重" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 「等同千星」的判準（非 GitHub 專案與權重）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5134,23 +5190,25 @@
 
 
 <h1 id="緊急求助的語音說明之一開源專案與模型的選型">緊急求助的語音說明之一：開源專案與模型的選型<a class="headerlink" href="#緊急求助的語音說明之一開源專案與模型的選型" title="Permanent link">&para;</a></h1>
-<p>版本：v0.1　文件狀態：規劃中（2026-10-25 開立）　適用讀者：FDE 工程團隊、資訊室</p>
+<p>版本：v0.2　文件狀態：規劃中（2026-10-25 開立；1026 依使用者對選型規則的答覆再修）　適用讀者：FDE 工程團隊、資訊室</p>
 <p>上層文件：《<a href="../emergency-voice-help/">緊急求助的語音說明：根本判斷與設計</a>》第 5 節</p>
 <blockquote>
-<p>1026 上層文件依使用者指出的前提重寫：語音不再用於派遣、改用於護理紀錄，轉寫改成批次、語氣不做。本文件的選型不變，用途的寫法跟著改（第 2、6 節）。</p>
+<p>1026 上層文件依使用者指出的前提重寫：語音不再用於派遣、改用於護理紀錄，轉寫改成批次。同日使用者答覆上層第 9 節前三題：非 GitHub 專案也可以用（第 1 節判準）、語氣要做要留（SenseVoice 回到系統裡，只存不顯示）。</p>
 </blockquote>
 <hr />
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
-<li>篩選條件：使用者 1025 定的「GitHub 專案要 MIT 授權、超過 1000 顆星」，加上 DEP-14 零院外連線、能在院內離線跑、聽得懂華語與台語</li>
-<li>採用八個專案，全部 MIT、千星以上：whisper.cpp（辨識引擎）、faster-whisper 與 CTranslate2（備選引擎與權重轉換）、Silero VAD 與 ONNX Runtime（切句）、SenseVoice 與 FunASR（聲音事件，1026 起只留給長期研究）、OpenAI Whisper（模型格式的源頭）（第 2 節）</li>
-<li>星數與授權是 2026-10-25 以 GitHub API 逐一查的，不是憑印象</li>
-<li>排除的專案大多是 Apache-2.0（sherpa-onnx、WeNet、Qwen3-ASR、FireRedASR…），雲端服務違反 DEP-14（第 3 節）</li>
-<li>模型權重放在 Hugging Face、不是 GitHub 專案，授權另計：Breeze-ASR-26／25 是 Apache-2.0，SenseVoiceSmall 是 FunASR 模型授權——要使用者決定算不算在規則裡（第 4 節；上層文件第 9 節第 1 題）</li>
-<li>台語是最大的不確定：Breeze-ASR-26 公開成績只有 30 句政府公告、字元錯誤率約 30%，沒有長者、病中、透析室雜音的資料，一定要自己測（第 5 節）</li>
-<li>DGX Spark 是 ARM 加 GB10，whisper.cpp 要自己以 CUDA 編譯；faster-whisper 在那台上沒有官方 GPU 版（第 6 節）</li>
+<li>篩選條件：直接選用的 GitHub 專案要 MIT 授權、超過 1000 顆星（使用者 1025）；間接相依不算（1026「照建議」）；加上 DEP-14 零院外連線、能在院內離線跑、聽得懂華語與台語（第 1 節）</li>
+<li><strong>1026 放寬</strong>：非 GitHub 的專案與權重也可以用，條件是授權可用、院內硬體跑得動、公信力與安全性至少等同千星專案；開發端把它拆成五條可查核的判準（第 1.2 節）</li>
+<li>採用八個 GitHub 專案，全部 MIT、千星以上：whisper.cpp（辨識引擎）、faster-whisper 與 CTranslate2（備選引擎與權重轉換）、Silero VAD 與 ONNX Runtime（切句）、SenseVoice 與 FunASR（語氣與聲音事件，只存不顯示）、OpenAI Whisper（模型格式的源頭）（第 2 節）</li>
+<li>星數與授權是 2026-10-25 以 GitHub API 逐一查的；權重的下載數、按讚、格式是 1026 以 Hugging Face API 查的，不是憑印象</li>
+<li>權重判定：Breeze-ASR-26／25 合格；SenseVoiceSmall 合格，但檔案是 PyTorch pickle，要隔離轉檔；emotion2vec+ 程式 repo 的授權沒釐清，維持備選（第 4 節）</li>
+<li>排除的 GitHub 專案大多是 Apache-2.0（sherpa-onnx、WeNet、Qwen3-ASR、FireRedASR…），雲端服務違反 DEP-14（第 3 節）</li>
+<li>台語是最大的不確定：Breeze-ASR-26 公開成績只有 30 句政府公告、字元錯誤率約 30%，沒有長者、病中、透析室雜音的資料，一定要自己測；語氣模型沒用台語訓練過（第 5 節）</li>
+<li>DGX Spark 是 ARM 加 GB10，whisper.cpp 要自己以 CUDA 編譯；院內 Windows 主機沒有 GPU，批次轉寫與語氣在 CPU 上跑，速度待實測（第 6 節）</li>
 </ul>
 <h2 id="1-篩選條件">1. 篩選條件<a class="headerlink" href="#1-篩選條件" title="Permanent link">&para;</a></h2>
+<h3 id="11-條件總表">1.1 條件總表<a class="headerlink" href="#11-條件總表" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -5162,37 +5220,81 @@
 <tbody>
 <tr>
 <td>1</td>
-<td>GitHub 專案：MIT 授權、超過 1000 顆星</td>
-<td>使用者 1025</td>
+<td>直接選用的 GitHub 專案：MIT 授權、超過 1000 顆星；間接相依（PyTorch、NumPy 這類）不算</td>
+<td>使用者 1025；1026「照建議」</td>
 </tr>
 <tr>
 <td>2</td>
+<td>非 GitHub 的專案與模型權重也可以用：授權可用、醫院硬體規格夠用、公信力與安全性至少等同 GitHub 千星專案（判準見 1.2）</td>
+<td>使用者 1026</td>
+</tr>
+<tr>
+<td>3</td>
 <td>執行期零院外連線，模型與程式全部在院內</td>
 <td>DEP-14</td>
 </tr>
 <tr>
-<td>3</td>
+<td>4</td>
 <td>聽得懂華語、台語與兩者混用</td>
 <td>院方 1025</td>
 </tr>
 <tr>
-<td>4</td>
-<td>除了文字，還要拿得到語氣與聲音事件</td>
-<td>院方 1025</td>
+<td>5</td>
+<td>除了文字，還要拿得到語氣與聲音事件（1026 使用者：要做、要留，不上護理紀錄）</td>
+<td>院方 1025；使用者 1026</td>
 </tr>
 <tr>
-<td>5</td>
+<td>6</td>
 <td>能在 DGX Spark（aarch64、GB10）或院內 Windows 主機的 CPU 上跑</td>
 <td>Q-07、部署規範第 2 章</td>
 </tr>
 <tr>
-<td>6</td>
-<td>還在維護（近半年有推送）、沒有封存</td>
+<td>7</td>
+<td>還在維護（近半年有推送）、沒有封存；權重是定版的檔案，改看發布者與檔案有沒有固定版本</td>
 <td>開發端</td>
 </tr>
 </tbody>
 </table>
 <p>星數、授權、最後推送時間都是 2026-10-25 以 <code>gh api repos/&lt;名稱&gt;</code> 查的；授權以 GitHub 判讀的 SPDX 為準，判讀不出來的另外開啟 LICENSE 檔看。</p>
+<p>條件 1 照舊只認 MIT，所以第 3 節排除的 Apache-2.0 GitHub 專案維持排除；同樣是 Apache-2.0 的 Breeze 權重能用，是因為它走條件 2。日後若要把 GitHub 專案也放寬成「授權可用」，第一個回頭看的是 sherpa-onnx。</p>
+<h3 id="12-等同千星的判準非-github-專案與權重">1.2 「等同千星」的判準（非 GitHub 專案與權重）<a class="headerlink" href="#12-等同千星的判準非-github-專案與權重" title="Permanent link">&para;</a></h3>
+<p>使用者只定了「公信力與安全性至少等同 GitHub 千星專案」，下表是開發端拆出來的查核方式；門檻是起始值，使用者覺得太鬆或太嚴再調。</p>
+<table>
+<thead>
+<tr>
+<th>面向</th>
+<th>判準</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>發布者</td>
+<td>可查核的機構（公司或學研單位），有公開論文或技術報告</td>
+<td>千星專案的公信力多半來自「有人負責、做法公開」；匿名上傳的權重不收</td>
+</tr>
+<tr>
+<td>社群檢驗</td>
+<td>Hugging Face 按讚 50 以上，或近 30 天下載 5,000 次以上；程式另放在 GitHub 的，那個 repo 本身也要千星以上</td>
+<td>表示有足夠多的人實際用過、出問題會被回報</td>
+</tr>
+<tr>
+<td>安全</td>
+<td>權重格式載入時不會執行程式（safetensors、GGUF、ONNX）；只有 PyTorch pickle（<code>.pt</code>、<code>.bin</code>、<code>.pkl</code>）的，在隔離的開發機以 <code>torch.load(weights_only=True)</code> 載入、轉成前述格式、記雜湊，系統只用轉好的；固定 Hugging Face 的 commit；不用第三方轉好的版本</td>
+<td>pickle 檔載入時可以執行任意程式，是權重最主要的安全風險；千星的程式專案有人審程式碼，權重沒有，只能從格式上擋</td>
+</tr>
+<tr>
+<td>授權</td>
+<td>明文允許院內使用（不限非商用、不禁醫療用途）；要求署名或保留名稱的照辦</td>
+<td>使用者 1026「授權要可用」</td>
+</tr>
+<tr>
+<td>硬體</td>
+<td>院內 Windows 主機（i7-14700、64 GB、沒有 GPU，Q-27）的 CPU 跑得動批次；要即時的，等 DGX Spark（Q-07，尚未架設）</td>
+<td>使用者 1026「醫院硬體規格要夠用」；平板不跑模型（第 6 節）</td>
+</tr>
+</tbody>
+</table>
 <h2 id="2-採用的專案">2. 採用的專案<a class="headerlink" href="#2-採用的專案" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5249,7 +5351,7 @@
 </tr>
 <tr>
 <td><a href="https://github.com/QwenAudio/SenseVoice">QwenAudio/SenseVoice</a></td>
-<td><strong>聲音事件</strong>：一次推論同時給語言、情緒 7 類、事件 8 類（原 FunAudioLLM/SenseVoice，已搬家）。1026 起只用在長期研究（護理師到之前的聲音事件），語氣不做（之二第 5.4 節）</td>
+<td><strong>語氣與聲音事件</strong>：一次推論同時給語言、情緒 7 類、事件 8 類（原 FunAudioLLM/SenseVoice，已搬家）。1026 起語氣要做要留：每一句都跑、結果存進資料庫，第一版不顯示（上層第 3.4 節）；文字以 Breeze 為準</td>
 <td>MIT</td>
 <td>9,587</td>
 <td>2026-09-30</td>
@@ -5296,10 +5398,11 @@
 </table>
 <p><strong>符合條件、但這一版不用的</strong>：</p>
 <ul>
-<li><a href="https://github.com/pyannote/pyannote-audio">pyannote/pyannote-audio</a>（MIT、10,702）：說話者分離。分得出「鄰床的人在說話」，但要建每個人的聲音特徵，等於聲紋，隱私代價大過好處，不做</li>
-<li><a href="https://github.com/ddlBoJack/emotion2vec">ddlBoJack/emotion2vec</a>（1,207 顆星）：語氣辨識 9 類，可當 SenseVoice 的備選。<strong>README 寫 MIT，但 repo 裡沒有 LICENSE 檔，GitHub 判讀不出授權</strong>——要用之前先請作者補或以書面確認</li>
+<li><a href="https://github.com/pyannote/pyannote-audio">pyannote/pyannote-audio</a>（MIT、10,702）：說話者分離。分得出「鄰床的人在說話」，但要建每個人的聲音特徵，等於聲紋，隱私代價大過好處，不做；代價是床邊對話的語氣分不出是病人還是護理師的（上層第 3.4 節）</li>
+<li><a href="https://github.com/ddlBoJack/emotion2vec">ddlBoJack/emotion2vec</a>（1,207 顆星）：語氣辨識 9 類，可當 SenseVoice 的備選。<strong>README 寫 MIT，但 repo 裡沒有 LICENSE 檔，GitHub 判讀不出授權</strong>——不符條件 1；1026 放寬的條件 2 也要「授權可用」，所以要用之前仍要先請作者補或以書面確認</li>
 </ul>
 <h2 id="3-排除的專案與服務">3. 排除的專案與服務<a class="headerlink" href="#3-排除的專案與服務" title="Permanent link">&para;</a></h2>
+<p>條件 1 的 MIT 規則 1026 沒有改，下表照舊。</p>
 <table>
 <thead>
 <tr>
@@ -5352,7 +5455,7 @@
 <tr>
 <td><a href="https://github.com/librosa/librosa">librosa/librosa</a></td>
 <td>ISC／8,710</td>
-<td>不是 MIT。音量、停頓、說話長度改成自寫程式算（上層文件第 4 節）</td>
+<td>不是 MIT。音量、語速、停頓改成自寫程式算（上層第 3.4 節）</td>
 </tr>
 <tr>
 <td><a href="https://github.com/ricky0123/vad">ricky0123/vad</a></td>
@@ -5377,52 +5480,96 @@
 </tbody>
 </table>
 <h2 id="4-模型權重">4. 模型權重<a class="headerlink" href="#4-模型權重" title="Permanent link">&para;</a></h2>
-<p>權重放在 Hugging Face，<strong>不是 GitHub 專案</strong>，授權與程式分開算。是否也要套「MIT＋千星」由使用者決定（上層文件第 9 節第 1 題）；照目前的條件，下表除了 Silero VAD，沒有一份是 MIT。</p>
+<p>權重放在 Hugging Face，<strong>不是 GitHub 專案</strong>，照第 1.2 節的判準逐份查。下載數是 Hugging Face 統計的近 30 天數字，與按讚、格式都是 2026-10-26 以 Hugging Face API 查的。</p>
 <table>
 <thead>
 <tr>
 <th>權重</th>
 <th>授權</th>
-<th>用途</th>
-<th>重點</th>
+<th>發布者與論文</th>
+<th>按讚／近 30 天下載</th>
+<th>格式</th>
+<th>判定</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="https://huggingface.co/MediaTek-Research/Breeze-ASR-26">MediaTek-Research/Breeze-ASR-26</a></td>
 <td>Apache-2.0</td>
-<td><strong>台語與台華混用</strong></td>
-<td>whisper-large-v2 微調，約 1 萬小時<strong>合成</strong>台語（含台華混用）；輸出<strong>華文字</strong>，不是台文正字</td>
+<td>聯發科創新基地、陽明交大；<a href="https://arxiv.org/abs/2603.19259">arXiv 2603.19259</a></td>
+<td>93／37,022</td>
+<td>safetensors</td>
+<td><strong>合格</strong></td>
 </tr>
 <tr>
 <td><a href="https://huggingface.co/MediaTek-Research/Breeze-ASR-25">MediaTek-Research/Breeze-ASR-25</a></td>
 <td>Apache-2.0</td>
-<td><strong>台灣華語</strong>（與英文混用）</td>
-<td>whisper-large-v2 微調；CommonVoice16 台灣華語詞錯誤率 7.97（原版 9.84）；不含台語</td>
+<td>聯發科創新基地；<a href="https://arxiv.org/abs/2506.11130">arXiv 2506.11130</a></td>
+<td>155／22,978</td>
+<td>safetensors（repo 另有訓練狀態的 <code>.pkl</code> 與 <code>.pt</code>，不下載）</td>
+<td><strong>合格</strong></td>
 </tr>
 <tr>
 <td><a href="https://huggingface.co/FunAudioLLM/SenseVoiceSmall">FunAudioLLM/SenseVoiceSmall</a></td>
 <td><a href="https://github.com/modelscope/FunASR/blob/main/MODEL_LICENSE">FunASR 模型授權 1.1</a></td>
-<td>聲音事件、語氣</td>
-<td>維護者書面澄清可商用；要註明出處、保留模型名稱。語言只有華、粵、英、日、韓，<strong>沒有台語</strong></td>
+<td>阿里巴巴通義實驗室；FunAudioLLM 技術報告</td>
+<td>501／22,257</td>
+<td><code>model.pt</code>（pickle）</td>
+<td><strong>合格，要隔離轉檔</strong>（第 1.2 節安全一列）</td>
 </tr>
 <tr>
 <td>Silero VAD 模型</td>
 <td>MIT</td>
-<td>切句</td>
-<td>跟程式同一個 repo，約 2 MB</td>
+<td>跟程式同一個 GitHub repo</td>
+<td>—</td>
+<td>ONNX</td>
+<td>走條件 1，合格</td>
 </tr>
 <tr>
-<td>emotion2vec+（備選）</td>
-<td>FunASR 模型授權</td>
-<td>語氣</td>
-<td>9 類</td>
+<td><a href="https://huggingface.co/emotion2vec/emotion2vec_plus_large">emotion2vec/emotion2vec_plus_large</a>（備選）</td>
+<td>模型卡寫 FunASR 模型授權；程式 repo 沒有 LICENSE 檔</td>
+<td>上海交大等；<a href="https://arxiv.org/abs/2312.15185">arXiv 2312.15185</a></td>
+<td>81／4,527</td>
+<td><code>model.pt</code>（pickle）</td>
+<td><strong>暫不用</strong>：授權沒釐清（第 2 節）</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>權重</th>
+<th>用途</th>
+<th>重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Breeze-ASR-26</td>
+<td><strong>台語與台華混用</strong></td>
+<td>whisper-large-v2 微調，約 1 萬小時<strong>合成</strong>台語（含台華混用）；輸出<strong>華文字</strong>，不是台文正字</td>
+</tr>
+<tr>
+<td>Breeze-ASR-25</td>
+<td><strong>台灣華語</strong>（與英文混用）</td>
+<td>whisper-large-v2 微調；CommonVoice16 台灣華語詞錯誤率 7.97（原版 9.84）；不含台語</td>
+</tr>
+<tr>
+<td>SenseVoiceSmall</td>
+<td><strong>語氣與聲音事件</strong></td>
+<td>約 2.3 億參數；維護者書面澄清可商用；要註明出處、保留模型名稱。語言只有華、粵、英、日、韓，<strong>沒有台語</strong></td>
+</tr>
+<tr>
+<td>Silero VAD</td>
+<td>切句</td>
+<td>約 2 MB</td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li><strong>權重轉換自己做</strong>：從官方權重以 whisper.cpp 的轉換腳本（或 <code>ct2-transformers-converter</code>）轉，記下雜湊值。Hugging Face 上已有十幾份別人轉好的 Breeze-ASR-26（GGML、CTranslate2、量化版），來源無法查核，一律不用</li>
-<li>SenseVoice 的情緒 7 類：開心、難過、生氣、中性、害怕、厭惡、驚訝；事件 8 類：背景音樂、說話、掌聲、笑聲、哭聲、打噴嚏、呼吸聲、咳嗽。<strong>它是用華語等五種語言訓練的，台語長者的語氣認不認得準，沒有人測過</strong></li>
+<li><strong>SenseVoiceSmall 的轉檔</strong>：只有 pickle 格式，在沒有連網、不放院內資料的開發機以 <code>weights_only=True</code> 載入，轉成 ONNX 或 GGUF（FunASR 有 GGUF 版本的路），記雜湊；院內只放轉好的檔案</li>
+<li>SenseVoice 的情緒 7 類：開心、難過、生氣、中性、害怕、厭惡、驚訝；事件 8 類：背景音樂、說話、掌聲、笑聲、哭聲、打噴嚏、呼吸聲、咳嗽。<strong>它是用華語等五種語言訓練的，台語長者的語氣認不認得準，沒有人測過</strong>——這是語氣第一版只存不顯示的主因（上層第 3.4 節）</li>
 </ul>
 <h2 id="5-台語辨識的難處">5. 台語辨識的難處<a class="headerlink" href="#5-台語辨識的難處" title="Permanent link">&para;</a></h2>
 <ul>
@@ -5431,6 +5578,7 @@
 <li><strong>公開成績很薄</strong>：30 句行政院公告（台華對照），字元錯誤率 30.13%，雅婷 32.11%、Gemini 3 Flash 32.52%、Breeze-ASR-25 49.99%——前三名差距不到 2.4 個百分點、樣本只有 30 句，看不出誰真的比較好</li>
 <li><strong>沒測過的情境正好是我們的情境</strong>：訓練資料全是合成語音；論文沒有長者、病中無力的聲音、透析機與鄰床的雜音，也沒有醫療用語</li>
 <li><strong>混用的處理</strong>：Breeze-ASR-26 的訓練資料含台華混用；純華語交給 Breeze-ASR-25 可能比較準。上層文件第 5 節的「兩個模型並跑、取有把握的那個」只是假設，要用上層文件第 6 節的語料驗證，不行就只留 Breeze-ASR-26</li>
+<li><strong>語氣也一樣</strong>：SenseVoice 聽台語時，語言標籤會判錯，情緒標籤準不準要用上層第 6 節的語料分台語、華語各算一次</li>
 <li><strong>Whisper 會幻覺</strong>：在靜音與雜音上會生出不存在的句子（常見的是影片字幕那類「謝謝收看」）。醫療情境最怕這個，防法寫在上層文件第 5 節</li>
 </ul>
 <h2 id="6-在哪裡跑">6. 在哪裡跑<a class="headerlink" href="#6-在哪裡跑" title="Permanent link">&para;</a></h2>
@@ -5449,14 +5597,14 @@
 <td>aarch64＋GB10（計算能力 12.1）。whisper.cpp 的官方 CUDA 映像只有 x86，要在那台上以 <code>-DGGML_CUDA=1</code> 自己編；faster-whisper 在 arm64 上沒有官方 GPU 版 CTranslate2，有人回報裝了也只會用 CPU、要自己編（<a href="https://github.com/speaches-ai/speaches/issues/620">speaches #620</a>）。端點本身要有人架、有人顧（Q-07，<strong>本院區尚未架設</strong>）</td>
 </tr>
 <tr>
-<td>院內 Windows 主機 CPU</td>
-<td>量化版應跑得動，<strong>速度待實測</strong></td>
+<td>院內 Windows 主機 CPU（i7-14700、64 GB）</td>
+<td>量化版應跑得動，<strong>速度待實測</strong>；SenseVoiceSmall 只有 large-v2 的約七分之一大，語氣這一步的負擔小</td>
 <td>主機跟別的專案共用（Q-27）；只建議在端點到之前、合成語料上試。1026 起床邊對話是批次、延遲目標是結案後 2 分鐘，CPU 比即時串流更有機會趕上；按住說話要幾秒內出來，仍要 GPU</td>
 </tr>
 <tr>
 <td>開發機</td>
 <td>跑得動</td>
-<td>驗證語料與效能量測都在這裡先做</td>
+<td>驗證語料、效能量測、pickle 權重的隔離轉檔都在這裡先做</td>
 </tr>
 <tr>
 <td>平板上</td>
@@ -5468,10 +5616,13 @@
 <h2 id="7-參考資料">7. 參考資料<a class="headerlink" href="#7-參考資料" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2603.19259">Breeze Taigi: Benchmarks and Models for Taiwanese Hokkien Speech Recognition and Synthesis</a>（陽明交大、聯發科創新基地，2026-02）</li>
+<li><a href="https://arxiv.org/abs/2506.11130">A Self-Refining Framework for Enhancing ASR Using TTS-Synthesized Data</a>（Breeze-ASR-25 的論文，文中稱 Twister）</li>
 <li><a href="https://huggingface.co/MediaTek-Research/Breeze-ASR-26">Breeze-ASR-26 模型卡</a>、<a href="https://huggingface.co/MediaTek-Research/Breeze-ASR-25">Breeze-ASR-25 模型卡</a></li>
 <li><a href="https://github.com/QwenAudio/SenseVoice#license">SenseVoice README 的授權說明</a>、<a href="https://github.com/modelscope/FunASR/blob/main/MODEL_LICENSE">FunASR 模型授權</a></li>
+<li><a href="https://arxiv.org/abs/2312.15185">emotion2vec 論文</a></li>
 <li><a href="https://github.com/ggml-org/whisper.cpp/tree/master/examples/server">whisper.cpp server 的參數（含 VAD）</a></li>
 <li><a href="https://arxiv.org/abs/2511.06860">CLiFT-ASR：低資源台語辨識的跨語言微調</a>（另一條路線：用 TAT-MOE 語料微調，whisper-small 主測試集字元錯誤率約 18.7%；TAT 語料不是開放授權）</li>
+<li>Hugging Face 模型 API：<code>https://huggingface.co/api/models/&lt;名稱&gt;</code>（下載數、按讚、檔案清單）</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
