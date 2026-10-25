@@ -16,7 +16,7 @@
         <link rel="prev" href="../emergency-voice-help/">
       
       
-        <link rel="next" href="../iteration-9-1-fixes/">
+        <link rel="next" href="../emergency-voice-help-analysis/">
       
       
         
@@ -2127,7 +2127,7 @@
   <span class="md-ellipsis">
     
   
-    緊急求助的語音說明：設計與運作流程
+    緊急求助的語音說明：根本判斷與設計
   
 
     
@@ -2310,6 +2310,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergency-voice-help-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：根本判斷——語音該不該拿來解「按不完三下」
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -5079,12 +5107,15 @@
 
 <h1 id="緊急求助的語音說明之一開源專案與模型的選型">緊急求助的語音說明之一：開源專案與模型的選型<a class="headerlink" href="#緊急求助的語音說明之一開源專案與模型的選型" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：規劃中（2026-10-25 開立）　適用讀者：FDE 工程團隊、資訊室</p>
-<p>上層文件：《<a href="../emergency-voice-help/">緊急求助的語音說明：設計與運作流程</a>》第 5 節</p>
+<p>上層文件：《<a href="../emergency-voice-help/">緊急求助的語音說明：根本判斷與設計</a>》第 5 節</p>
+<blockquote>
+<p>1026 上層文件依使用者指出的前提重寫：語音不再用於派遣、改用於護理紀錄，轉寫改成批次、語氣不做。本文件的選型不變，用途的寫法跟著改（第 2、6 節）。</p>
+</blockquote>
 <hr />
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
 <li>篩選條件：使用者 1025 定的「GitHub 專案要 MIT 授權、超過 1000 顆星」，加上 DEP-14 零院外連線、能在院內離線跑、聽得懂華語與台語</li>
-<li>採用八個專案，全部 MIT、千星以上：whisper.cpp（辨識引擎）、faster-whisper 與 CTranslate2（備選引擎與權重轉換）、Silero VAD 與 ONNX Runtime（切句）、SenseVoice 與 FunASR（聲音事件與語氣）、OpenAI Whisper（模型格式的源頭）（第 2 節）</li>
+<li>採用八個專案，全部 MIT、千星以上：whisper.cpp（辨識引擎）、faster-whisper 與 CTranslate2（備選引擎與權重轉換）、Silero VAD 與 ONNX Runtime（切句）、SenseVoice 與 FunASR（聲音事件，1026 起只留給長期研究）、OpenAI Whisper（模型格式的源頭）（第 2 節）</li>
 <li>星數與授權是 2026-10-25 以 GitHub API 逐一查的，不是憑印象</li>
 <li>排除的專案大多是 Apache-2.0（sherpa-onnx、WeNet、Qwen3-ASR、FireRedASR…），雲端服務違反 DEP-14（第 3 節）</li>
 <li>模型權重放在 Hugging Face、不是 GitHub 專案，授權另計：Breeze-ASR-26／25 是 Apache-2.0，SenseVoiceSmall 是 FunASR 模型授權——要使用者決定算不算在規則裡（第 4 節；上層文件第 9 節第 1 題）</li>
@@ -5190,7 +5221,7 @@
 </tr>
 <tr>
 <td><a href="https://github.com/QwenAudio/SenseVoice">QwenAudio/SenseVoice</a></td>
-<td><strong>聲音事件與語氣</strong>：一次推論同時給語言、情緒 7 類、事件 8 類（原 FunAudioLLM/SenseVoice，已搬家）</td>
+<td><strong>聲音事件</strong>：一次推論同時給語言、情緒 7 類、事件 8 類（原 FunAudioLLM/SenseVoice，已搬家）。1026 起只用在長期研究（護理師到之前的聲音事件），語氣不做（之二第 5.4 節）</td>
 <td>MIT</td>
 <td>9,587</td>
 <td>2026-09-30</td>
@@ -5204,7 +5235,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>只借作法、不進系統的</strong>（同樣 MIT、千星以上）：</p>
+<p><strong>只借作法、不進系統的</strong>（同樣 MIT、千星以上；1026 起床邊對話改成批次轉寫，串流的作法只剩「其他」的按住說話用得到）：</p>
 <table>
 <thead>
 <tr>
@@ -5392,7 +5423,7 @@
 <tr>
 <td>院內 Windows 主機 CPU</td>
 <td>量化版應跑得動，<strong>速度待實測</strong></td>
-<td>主機跟別的專案共用（Q-27）；只建議在端點到之前、合成語料上試</td>
+<td>主機跟別的專案共用（Q-27）；只建議在端點到之前、合成語料上試。1026 起床邊對話是批次、延遲目標是結案後 2 分鐘，CPU 比即時串流更有機會趕上；按住說話要幾秒內出來，仍要 GPU</td>
 </tr>
 <tr>
 <td>開發機</td>
