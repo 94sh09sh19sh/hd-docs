@@ -142,7 +142,6 @@ docs/
 │   ├── dialysis-gamification-expansion.md  透析中的遊戲化之四：花園與相簿的擴充（1015 新增，迭代 24 的子文件）
 │   ├── dialysis-gamification-benchmark.md  透析中的遊戲化之五：有國際常模的第四款遊戲（1025 新增，之一的子文件）
 │   ├── dialysis-gamification-benchmark-sieve.md  之五附錄：第四款遊戲的篩選過程（1025 新增，之五的子文件）
-│   ├── dialysis-gamification-benchmark-stt-letter.md  之五附件：給 Shape Trail Test 研發團隊的信（1026 新增，之五的子文件，未寄）
 │   ├── emergency-handling-redesign.md  緊急通報的處理流程與護理紀錄連動：重新設計規畫（1015 新增）
 │   ├── management-rewards-disclosure-update.md  管理儀表板、獎勵制度與對外揭露的更新與修正（1017 新增）
 │   ├── management-rewards-disclosure-update-data.md  之一：三者蒐集與展示的資料（1017 新增，上一份的子文件）
