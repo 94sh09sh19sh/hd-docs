@@ -2,14 +2,16 @@
 
 版本：v0.1　文件狀態：規劃中（2026-10-25 開立）　適用讀者：FDE 工程團隊、資訊室
 
-上層文件：《[緊急求助的語音說明：設計與運作流程](emergency-voice-help.md)》第 5 節
+上層文件：《[緊急求助的語音說明：根本判斷與設計](emergency-voice-help.md)》第 5 節
+
+> 1026 上層文件依使用者指出的前提重寫：語音不再用於派遣、改用於護理紀錄，轉寫改成批次、語氣不做。本文件的選型不變，用途的寫法跟著改（第 2、6 節）。
 
 ---
 
 ## 摘要
 
 - 篩選條件：使用者 1025 定的「GitHub 專案要 MIT 授權、超過 1000 顆星」，加上 DEP-14 零院外連線、能在院內離線跑、聽得懂華語與台語
-- 採用八個專案，全部 MIT、千星以上：whisper.cpp（辨識引擎）、faster-whisper 與 CTranslate2（備選引擎與權重轉換）、Silero VAD 與 ONNX Runtime（切句）、SenseVoice 與 FunASR（聲音事件與語氣）、OpenAI Whisper（模型格式的源頭）（第 2 節）
+- 採用八個專案，全部 MIT、千星以上：whisper.cpp（辨識引擎）、faster-whisper 與 CTranslate2（備選引擎與權重轉換）、Silero VAD 與 ONNX Runtime（切句）、SenseVoice 與 FunASR（聲音事件，1026 起只留給長期研究）、OpenAI Whisper（模型格式的源頭）（第 2 節）
 - 星數與授權是 2026-10-25 以 GitHub API 逐一查的，不是憑印象
 - 排除的專案大多是 Apache-2.0（sherpa-onnx、WeNet、Qwen3-ASR、FireRedASR…），雲端服務違反 DEP-14（第 3 節）
 - 模型權重放在 Hugging Face、不是 GitHub 專案，授權另計：Breeze-ASR-26／25 是 Apache-2.0，SenseVoiceSmall 是 FunASR 模型授權——要使用者決定算不算在規則裡（第 4 節；上層文件第 9 節第 1 題）
@@ -39,10 +41,10 @@
 | [openai/whisper](https://github.com/openai/whisper) | 模型架構與格式的源頭（Breeze 兩個模型都是它的微調）；不直接拿來跑，PyTorch 原版太慢 | MIT | 111,237 | 2026-08-31 |
 | [snakers4/silero-vad](https://github.com/snakers4/silero-vad) | **切句**：判斷哪一段是人在說話，沒說話的不送辨識（防幻覺的第一道） | MIT | 10,522 | 2026-10-22 |
 | [microsoft/onnxruntime](https://github.com/microsoft/onnxruntime) | Silero VAD 在語音閘道裡的執行環境（CPU） | MIT | 22,167 | 2026-10-25 |
-| [QwenAudio/SenseVoice](https://github.com/QwenAudio/SenseVoice) | **聲音事件與語氣**：一次推論同時給語言、情緒 7 類、事件 8 類（原 FunAudioLLM/SenseVoice，已搬家） | MIT | 9,587 | 2026-09-30 |
+| [QwenAudio/SenseVoice](https://github.com/QwenAudio/SenseVoice) | **聲音事件**：一次推論同時給語言、情緒 7 類、事件 8 類（原 FunAudioLLM/SenseVoice，已搬家）。1026 起只用在長期研究（護理師到之前的聲音事件），語氣不做（之二第 5.4 節） | MIT | 9,587 | 2026-09-30 |
 | [modelscope/FunASR](https://github.com/modelscope/FunASR) | SenseVoice 的執行框架；也有 llama.cpp／GGUF 的免 Python 版本 | MIT | 20,812 | 2026-10-22 |
 
-**只借作法、不進系統的**（同樣 MIT、千星以上）：
+**只借作法、不進系統的**（同樣 MIT、千星以上；1026 起床邊對話改成批次轉寫，串流的作法只剩「其他」的按住說話用得到）：
 
 | 專案 | 星數 | 借什麼 | 為什麼不直接用 |
 |---|---|---|---|
@@ -102,7 +104,7 @@
 | 地方 | 跑得動嗎 | 要注意 |
 |---|---|---|
 | **院內 DGX Spark**（建議） | 跑得動。統一記憶體 128 GB，兩個 large-v2 加 SenseVoice 都放得下 | aarch64＋GB10（計算能力 12.1）。whisper.cpp 的官方 CUDA 映像只有 x86，要在那台上以 `-DGGML_CUDA=1` 自己編；faster-whisper 在 arm64 上沒有官方 GPU 版 CTranslate2，有人回報裝了也只會用 CPU、要自己編（[speaches #620](https://github.com/speaches-ai/speaches/issues/620)）。端點本身要有人架、有人顧（Q-07，**本院區尚未架設**） |
-| 院內 Windows 主機 CPU | 量化版應跑得動，**速度待實測** | 主機跟別的專案共用（Q-27）；只建議在端點到之前、合成語料上試 |
+| 院內 Windows 主機 CPU | 量化版應跑得動，**速度待實測** | 主機跟別的專案共用（Q-27）；只建議在端點到之前、合成語料上試。1026 起床邊對話是批次、延遲目標是結案後 2 分鐘，CPU 比即時串流更有機會趕上；按住說話要幾秒內出來，仍要 GPU |
 | 開發機 | 跑得動 | 驗證語料與效能量測都在這裡先做 |
 | 平板上 | 不考慮 | 4 GB 記憶體跑不動約 15 億參數的模型，而且會發燙、耗電 |
 
