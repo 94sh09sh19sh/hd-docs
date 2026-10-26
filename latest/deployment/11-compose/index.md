@@ -299,17 +299,18 @@ notepad D:\hd-tablet-care\config\.env
 
 範本裡每一項都有說明。必填的：
 
-| 變數                                              | 填什麼                                                                                                           |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `HD_IMAGE_TAG`                                    | 與 W-10 的 tag 相同                                                                                              |
-| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`                  | `D:\hd-tablet-care\backups`、`D:\hd-tablet-care\config`                                                          |
-| `HD_API_PORT`、`HD_NURSE_PORT`、`HD_PATIENT_PORT` | W-07 確認過的三個埠                                                                                              |
-| `HD_PUBLIC_API_URL`                               | 護理站連得到的後端位址，例如 `http://<主機名稱>:<後端埠>`。**建置時寫進護理端的產物**（DEP-39）                  |
-| `CORS_ORIGINS`                                    | 護理端的實際位址（病人端與後端同一個來源，不必列）                                                               |
-| `MDM_KIOSK_BASE_URL`                              | 平板要連的病人端位址，**一律 `https://`**（第十二冊 Y-03）                                                       |
-| `HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING`            | 外殼 repo 的 clone 位置與簽章用途（第十二冊 Y-03）。**每一條 compose 指令都會檢查前者**，還沒 clone 也先填好路徑 |
-| `JWT_SECRET`                                      | 範本裡有不需要 Node.js 的產生指令                                                                                |
-| `SUPER_ADMIN_*`                                   | 第一個最高權限帳號，首次登入強制改密碼                                                                           |
+| 變數                                              | 填什麼                                                                                                                                                                                      |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `HD_IMAGE_TAG`                                    | 與 W-10 的 tag 相同                                                                                                                                                                         |
+| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`                  | `D:\hd-tablet-care\backups`、`D:\hd-tablet-care\config`                                                                                                                                     |
+| `HD_EXPORT_DIR`                                   | `D:\hd-tablet-care\export`（1027 迭代 28 起；與備份目錄分開，只掛給一次性的 `data-export`，見[第十六冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/16-data-export/index.md)） |
+| `HD_API_PORT`、`HD_NURSE_PORT`、`HD_PATIENT_PORT` | W-07 確認過的三個埠                                                                                                                                                                         |
+| `HD_PUBLIC_API_URL`                               | 護理站連得到的後端位址，例如 `http://<主機名稱>:<後端埠>`。**建置時寫進護理端的產物**（DEP-39）                                                                                             |
+| `CORS_ORIGINS`                                    | 護理端的實際位址（病人端與後端同一個來源，不必列）                                                                                                                                          |
+| `MDM_KIOSK_BASE_URL`                              | 平板要連的病人端位址，**一律 `https://`**（第十二冊 Y-03）                                                                                                                                  |
+| `HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING`            | 外殼 repo 的 clone 位置與簽章用途（第十二冊 Y-03）。**每一條 compose 指令都會檢查前者**，還沒 clone 也先填好路徑                                                                            |
+| `JWT_SECRET`                                      | 範本裡有不需要 Node.js 的產生指令                                                                                                                                                           |
+| `SUPER_ADMIN_*`                                   | 第一個最高權限帳號，首次登入強制改密碼                                                                                                                                                      |
 
 `LLM_PROVIDER` 維持 `mock`。**填 `lab` 後端會拒絕啟動**（DEP-40），那是刻意的。
 

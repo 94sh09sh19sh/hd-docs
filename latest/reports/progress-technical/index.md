@@ -4,17 +4,17 @@
 
 **報告日期**：2026-10-27
 
-**版本**：迭代 27.2 完成（master；病人平板進度條寫出剩餘時間與結束時間、血壓單位；迭代 27.1 病人平板頂列固定一列、任務醒著才自動出現、`demo:patient` 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
+**版本**：迭代 28 完成（master；蒐集資料的完整取出——欄位的匯出分類與 `check:export`、院內主機上只讀的取出指令與一次性的 `data-export`、取出紀錄與系統管理唯讀頁；迭代 27.2 病人平板進度條寫出剩餘時間與結束時間、血壓單位；迭代 27.1 病人平板頂列固定一列、任務醒著才自動出現、`demo:patient` 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
 
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 ## 摘要
 
-- 報告日期 1027，對應迭代 27.2 完成（master）；寫給接手或協作的工程師
+- 報告日期 1027，對應迭代 28 完成（master）；寫給接手或協作的工程師
 - 需求來源六份，衝突時以實作規格書為準（資料庫使用規範、部署規範優先權等同），動工前至少讀前三份（第 1 節）
 - 七條不可違反的約束：前端不碰資料庫、身分驗證自建、存取控制在後端、業務邏輯不嵌資料庫語法、測試資料虛構、零院外連線、模型呼叫一律經 `AiGatewayService`（第 3 節）
-- 迭代 26 完成時的規模：221 條路由、97 張表、157 種稽核動作、31 個權限碼、8 種角色、23 個功能開關、41 個營運參數（第 6 節「規模」）
-- 已完成範圍：迭代 24～27.2 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》
+- 迭代 28 完成時的規模：222 條路由、98 張表、158 種稽核動作、31 個權限碼、8 種角色、23 個功能開關、41 個營運參數（第 6 節「規模」）
+- 已完成範圍：迭代 24～28 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》
 - 第 7 節高風險三項：1010 迭代 18 完成實作，對真實病人開啟仍要 Q-02、Q-03
 - 第 9 節已知粗糙處八項（例如重複病歷號回 500），授權判斷本身沒有問題
 - 第 12 節下一階段（第三次進院前的待辦）、第 13 節每次動工前的自我檢查
@@ -136,7 +136,7 @@ ______________________________________________________________________
 
 ## 4. 資料模型
 
-共 97 張表，27 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
+共 98 張表，28 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
 
 | 分類                                                                                                 | 表                                                                                                                                      | 加入於    |
 | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- |
@@ -178,6 +178,7 @@ ______________________________________________________________________
 | 這次透析的設定（院方 API 一次透析一個值的那幾欄；值變了才覆蓋，不是歷程）                            | `dialysis_session_settings`                                                                                                             | 迭代 25   |
 | 平板斷線的一段、指標的變更紀錄、對外報表沒有呈現的那一格與當下抄的基準                               | `device_connection_gaps`、`metric_definition_changes`、`external_report_suppressions`、`external_report_baselines`                      | 迭代 26   |
 | 一件事的處理者（指名、改指名都寫稽核）                                                               | `handler_declarations`                                                                                                                  | 迭代 26   |
+| 資料取出紀錄（取出指令留下、後端收進來）                                                             | `export_runs`                                                                                                                           | 迭代 28   |
 
 迭代 10、12 沒有新表，只在 `devices` 加欄位：前景回報三欄（迭代 10）、`shell_version` 與 `shell_contract_version`（迭代 12）；迭代 14 另加 `devices.bed_no`。迭代 15 除了兩張新表，另加 `patients.preferred_device_id`（配給病人的平板）、`treatment_sessions` 五欄（`source`、`bed_no`、`expected_end_at`、`nurse_modified_at`、`bed_nurse_modified_at`）與 `beds.source`；迭代 16 沒有動 schema（跑馬燈播放紀錄沿用 `carousel_view_events`）；迭代 17 在 `carousel_items` 加七欄（核准狀態、核准者、核准時間、生成它的背景工作、公告事由、衛教主題、來源）；迭代 17.8 在 `nursing_records` 加 `record_format`，並以一次性的遷移把護理長沒改過的護理紀錄版位移到主列；迭代 18 只有六張新表（規格書列四張，門檻與引用資料各拆一張明細表）；迭代 20 另在 `carousel_items` 加 `peer_tip_preset_id`（可為空），我的衛教小本子不另存、由作答紀錄算；迭代 25 在 `dialysis_vital_records` 加四欄（血流量、透析液流量與溫度、靜脈壓）、`nursing_records` 加 `source_help_request_id`；迭代 26 在 `external_reports` 加兩欄（附基準、互減拿掉的格數）、`nurses` 加 `roster_added_by_id`；迭代 27 沒有動 schema。全部只做加法。
 
@@ -572,17 +573,39 @@ ______________________________________________________________________
 - 容器查詢的門檻寫成 em（`--t-meta` 是固定 20px）；改進度條的字級要一起改最窄與門檻，`verify:iteration27-2` 第 4 步會擋
 - 後端路由、資料表、遷移、稽核動作、權限、開關、營運參數都沒有增減
 
+### 迭代 28（1027）：蒐集資料的完整取出
+
+院方 1026 要求系統蒐集的資訊日後全部取得出來、供後續計畫分析（實作規格書 4.28，規劃在《[蒐集資料的完整取出](https://94sh09sh19sh.github.io/hd-docs/latest/notes/data-extraction-plan/index.md)》，與規劃不同的地方在它第 11 節）。三次子迭代同一天做完；院內的步驟在部署手冊[第十六冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/16-data-export/index.md)，手動測試在《[迭代 28 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-28/index.md)》。
+
+| 部分       | 做了什麼                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 共用定義   | `data-export.ts`：十二類（中文類名）、五種匯出分類、98 張表每張的類別、中文名稱與每一欄的分類（不 import 任何東西，腳本直接轉譯載入）；取出紀錄的狀態、等級、範圍與 `ExportRunEntry`；稽核動作 `DATA_EXPORT_RECORDED`                                                                                                                                                                                 |
+| 盤點       | `check:export`（納入 `check:all`）：有表沒歸類、欄位沒登記、登記了卻不在、資料字典那一格不一致都擋                                                                                                                                                                                                                                                                                                    |
+| 取出指令   | `apps/api/scripts/data-export.mjs`（純 Node、只用 Prisma 的原生查詢）：`--list`、`--all`／`--category`／`--tables`、`--with-parents`、`--from-backup`、`--level full`／`pseudonymized`、`--keep-free-text`；用途、核准文號、經手人、等級缺一不跑，印摘要後要打 yes；正本只下一道 `VACUUM INTO`，其餘讀快照；輸出包、SHA256SUMS、假名化金鑰與對照表在輸出包外；紀錄附加到備份目錄的 `export-log.jsonl` |
+| 部署       | compose 的 `data-export`（`export` 設定檔、`network_mode: none`、不掛金鑰資料卷）、`HD_EXPORT_DIR` 必填；映像檔多帶資料字典；`check:container`、`check:egress` 跟著改（實作規格書之一第二十四次）                                                                                                                                                                                                     |
+| 後端       | 新表 `export_runs`（遷移 `iteration28_export_runs`）；`ExportLogService` 啟動時與每小時收紀錄、寫稽核；`GET /ops/exports`（唯讀，**取出本身沒有端點**）                                                                                                                                                                                                                                               |
+| 護理端     | 系統管理多一個分頁「資料取出紀錄」（唯讀、沒有按鈕、表名寫中文）                                                                                                                                                                                                                                                                                                                                      |
+| 工具與腳本 | `verify:iteration28`（不需要後端）、`verify:iteration28:api`（要 Prisma，真的跑取出指令八組）                                                                                                                                                                                                                                                                                                         |
+
+**接手時要知道的幾件事**：
+
+- **加表、加欄要同一個 commit 登記**：`data-export.ts` 補一筆、資料字典那一格補上，不然 `check:all` 不過
+- **假名化級把值裡的 UUID 全部換掉**：要分析的表必須同一次取；對照表只記病人、護理師、平板的識別碼與直接識別的原值
+- **取出紀錄不在匯出目錄**：在備份目錄的 `export-log.jsonl`，api 讀得到的地方；收過沒有看 `run_id`，檔案不改
+- **開發機的資料庫這一次沒有套上 27.1 與 28 的遷移**（開著的開發後端鎖著它），下次開發前先停掉再 `npm run prisma:deploy -w @hd/api`
+- 後端路由 221 → 222、資料表 97 → 98、稽核動作 157 → 158、遷移多一個；權限、角色、開關、營運參數沒有增減
+
 ### 規模
 
-| 量測     | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 | 迭代 17 完成 | 迭代 18.1 完成 | 迭代 19 完成 | 迭代 21 完成 | 迭代 22 完成 | 迭代 23 完成 | 迭代 24 完成 | 迭代 25 完成 | 迭代 26 完成 |
-| -------- | ---------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ------------ | -------------- | ------------ | -------------- | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
-| API 路由 | 43               | 78          | 90          | 107         | 109         | 116         | 117          | 124            | 136          | 158            | 181          | 197          | 203          | 209          | 210          | 214          | 221          |
-| 資料表   | 10               | 29          | 36          | 39          | 40          | 54          | 54           | 56             | 58           | 67             | 77           | 86           | 86           | 90           | 91           | 92           | 97           |
-| 稽核動作 | 32               | 52          | 66          | 68          | 74          | 82          | 84           | 90             | 109          | 121            | 141          | 145          | 147          | 150          | 150          | 151          | 157          |
-| 權限碼   | 9                | 17          | 20          | 21          | 21          | 23          | 23           | 23             | 23           | 23             | 30           | 30           | 31           | 31           | 31           | 31           | 31           |
-| 角色     | 3                | 6           | 6           | 6           | 6           | 6           | 6            | 6              | 6            | 6              | 6            | 6            | 8            | 8            | 8            | 8            | 8            |
-| 功能開關 | —                | 10          | 10          | 10          | 10          | 11          | 11           | 12             | 12           | 14             | 14           | 20           | 22           | 23           | 23           | 23           | 23           |
-| 營運參數 | —                | —           | 6           | 12          | 12          | 20          | 20           | 22             | 27           | 28             | 28           | 34           | 41           | 41           | 41           | 41           | 41           |
+| 量測     | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 | 迭代 17 完成 | 迭代 18.1 完成 | 迭代 19 完成 | 迭代 21 完成 | 迭代 22 完成 | 迭代 23 完成 | 迭代 24 完成 | 迭代 25 完成 | 迭代 26 完成 | 迭代 28 完成 |
+| -------- | ---------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ------------ | -------------- | ------------ | -------------- | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
+| API 路由 | 43               | 78          | 90          | 107         | 109         | 116         | 117          | 124            | 136          | 158            | 181          | 197          | 203          | 209          | 210          | 214          | 221          | 222          |
+| 資料表   | 10               | 29          | 36          | 39          | 40          | 54          | 54           | 56             | 58           | 67             | 77           | 86           | 86           | 90           | 91           | 92           | 97           | 98           |
+| 稽核動作 | 32               | 52          | 66          | 68          | 74          | 82          | 84           | 90             | 109          | 121            | 141          | 145          | 147          | 150          | 150          | 151          | 157          | 158          |
+| 權限碼   | 9                | 17          | 20          | 21          | 21          | 23          | 23           | 23             | 23           | 23             | 30           | 30           | 31           | 31           | 31           | 31           | 31           | 31           |
+| 角色     | 3                | 6           | 6           | 6           | 6           | 6           | 6            | 6              | 6            | 6              | 6            | 6            | 8            | 8            | 8            | 8            | 8            | 8            |
+| 功能開關 | —                | 10          | 10          | 10          | 10          | 11          | 11           | 12             | 12           | 14             | 14           | 20           | 22           | 23           | 23           | 23           | 23           | 23           |
+| 營運參數 | —                | —           | 6           | 12          | 12          | 20          | 20           | 22             | 27           | 28             | 28           | 34           | 41           | 41           | 41           | 41           | 41           | 41           |
 
 （迭代 21 那一欄含迭代 20：遊戲化兩個迭代合起來多 16 條路由、9 張表、4 種稽核動作（迭代 21 的送花與種花刻意不寫稽核，每一步在 `game_events`）、6 個功能開關、6 個營運參數。迭代 22 沒有新表，`game_events` 加十二欄。迭代 23 四張表、3 種稽核動作、1 個功能開關，沒有新的營運參數（共同記憶沿用迭代 21 的兩個門檻）。）
 

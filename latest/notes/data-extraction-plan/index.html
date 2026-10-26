@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1028 — 病人平板頂列一列、問卷醒著才出現、進度條寫出時間（迭代 27.1、27.2），緊急求助的語音與鏡頭、連點成畫與資料取出排進需求
+    1028 — 病人平板頂列一列、問卷醒著才出現、進度條寫出時間（迭代 27.1、27.2），蒐集資料的完整取出（迭代 28），緊急求助的語音與鏡頭、連點成畫排進需求
   
 
     
@@ -2656,6 +2656,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#11-實作與規劃不同的地方1027-迭代-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 實作與規劃不同的地方（1027 迭代 28）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4500,6 +4511,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 28 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5226,6 +5265,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/16-data-export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十六冊 · 取出資料
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5630,6 +5697,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#11-實作與規劃不同的地方1027-迭代-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 實作與規劃不同的地方（1027 迭代 28）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5670,7 +5748,7 @@
 <li>「全部」靠檢查守住：每張表都要歸到一類、每個欄位都要登記匯出分類，沒登記 <code>check:all</code> 就不過（第 5.5 節）</li>
 <li>不靠模型的保證：指令的 <code>--help</code>、輸出包裡的 <code>讀我.txt</code>、部署手冊新的一冊三處都寫得出完整步驟；<strong>取出指令壞了也有第二條路：拿最新一份備份檔，用任何 SQLite 檢視工具直接開</strong>（第 6 節）</li>
 <li><strong>判斷：規劃與取資料手冊都放公開文件站</strong>；院內特定的值（主機位址、目錄、核准文號、經手人、假名化對照表）一律不進任何 repo，只留主機設定目錄（第 7 節）</li>
-<li>六題待院方答覆、要改的文件與迭代切分在第 8～10 節；<strong>1026 需求文件已改</strong>（SRS FR-S19、規範第 20 條、DEP-47、實作規格書迭代 28、清冊 Q-39），<strong>程式還沒動</strong></li>
+<li>六題待院方答覆、要改的文件與迭代切分在第 8～10 節；<strong>1026 需求文件已改</strong>（SRS FR-S19、規範第 20 條、DEP-47、實作規格書迭代 28、清冊 Q-39）；<strong>1027 迭代 28 實作完成</strong>，與本規劃不同的地方在第 11 節</li>
 </ul>
 <h2 id="1-院方的要求與這份文件的範圍">1. 院方的要求與這份文件的範圍<a class="headerlink" href="#1-院方的要求與這份文件的範圍" title="Permanent link">&para;</a></h2>
 <ul>
@@ -5958,7 +6036,7 @@
 </table>
 <h3 id="54-取出紀錄怎麼進稽核軌跡">5.4 取出紀錄怎麼進稽核軌跡<a class="headerlink" href="#54-取出紀錄怎麼進稽核軌跡" title="Permanent link">&para;</a></h3>
 <ul>
-<li>一次性容器若直接寫資料庫，就有第二個寫入者（規範 7.1），因此改成：指令把紀錄<strong>附加到匯出目錄的 <code>export-log.jsonl</code></strong>，api 啟動時與每小時讀一次，收進稽核軌跡與新的 <code>export_runs</code> 表，收過的標記起來</li>
+<li>一次性容器若直接寫資料庫，就有第二個寫入者（規範 7.1），因此改成：指令把紀錄<strong>附加到匯出目錄的 <code>export-log.jsonl</code></strong>，api 啟動時與每小時讀一次，收進稽核軌跡與新的 <code>export_runs</code> 表，收過的標記起來（<strong>1027 實作改成備份目錄</strong>，見第 11 節）</li>
 <li>api 沒開著時一樣取得出來，紀錄等 api 下次啟動補收</li>
 <li>護理端系統管理多一個唯讀的「資料取出紀錄」頁：誰、何時、什麼範圍（取了哪些表）、哪一級、什麼用途、核准文號、筆數；<strong>頁面上沒有取出按鈕</strong></li>
 </ul>
@@ -6113,6 +6191,54 @@
 <li>取出指令、<code>data-export</code> 服務、三種範圍與 <code>--list</code>、<code>--with-parents</code>、兩個等級、輸出包與 <code>讀我.txt</code></li>
 <li>取出紀錄進稽核軌跡、系統管理的唯讀頁、<code>verify:</code> 腳本、第十六冊</li>
 </ol>
+<h2 id="11-實作與規劃不同的地方1027-迭代-28">11. 實作與規劃不同的地方（1027 迭代 28）<a class="headerlink" href="#11-實作與規劃不同的地方1027-迭代-28" title="Permanent link">&para;</a></h2>
+<p>完整的開發端判斷在《<a href="../../requirements/implementation-spec/">實作規格書</a>》4.28 最後；這裡只列改了規劃的幾條：</p>
+<table>
+<thead>
+<tr>
+<th>規劃</th>
+<th>實作</th>
+<th>為什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>紀錄附加到匯出目錄的 <code>export-log.jsonl</code>，收過的標記起來（5.4）</td>
+<td>附加到<strong>備份目錄</strong>；收過沒有看紀錄的識別碼，檔案不改</td>
+<td>DEP-47 要 api 的主機目錄只有兩個，api 讀不到匯出目錄</td>
+</tr>
+<tr>
+<td>直接識別欄換成代號（5.6）</td>
+<td>另外<strong>值裡的識別碼（UUID）一律換成代號</strong></td>
+<td>不換的話同一個 UUID 跨兩次取出接得起來，「分兩次取接不起來」做不到</td>
+</tr>
+<tr>
+<td>準識別含精確時間（5.5）</td>
+<td>時間欄不逐欄標，只標生日、性別、連線位址、瀏覽器資訊</td>
+<td>兩百多個時間欄處理都一樣（兩級照留），標了會淹掉真正要留意的幾欄</td>
+</tr>
+<tr>
+<td>憑證欄內容清空（第 4 節）</td>
+<td>那一欄若是唯一鍵，<code>data.sqlite</code> 裡的唯一索引一併拿掉</td>
+<td>全部清成空字串會撞唯一索引</td>
+</tr>
+<tr>
+<td>用途、核准文號、經手人缺一不跑（5.3）</td>
+<td>等級（<code>--level</code>）也要給</td>
+<td>與「範圍一定要給」同一個理由：不讓忘了寫變成取出完整級</td>
+</tr>
+<tr>
+<td>取出紀錄（5.4）</td>
+<td>多記每張表筆數與 <code>SHA256SUMS.txt</code> 的雜湊</td>
+<td>《資料庫使用規範》20.3 要求</td>
+</tr>
+<tr>
+<td>掛資料卷（讀）（5.1）</td>
+<td>資料卷可寫，只讀由指令保證；另掛備份目錄</td>
+<td>WAL 模式讀也要寫 <code>-shm</code>；從備份取出、附加紀錄要用備份目錄</td>
+</tr>
+</tbody>
+</table>
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
