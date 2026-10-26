@@ -2,19 +2,19 @@
 
 **適用讀者**：接手或協作的工程師
 
-**報告日期**：2026-10-18
+**報告日期**：2026-10-27
 
-**版本**：迭代 27 完成（master；病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
+**版本**：迭代 27.1 完成（master；病人平板頂列固定一列、任務醒著才自動出現、`demo:patient` 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
 
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 ## 摘要
 
-- 報告日期 1018，對應迭代 27 完成（master）；寫給接手或協作的工程師
+- 報告日期 1027，對應迭代 27.1 完成（master）；寫給接手或協作的工程師
 - 需求來源六份，衝突時以實作規格書為準（資料庫使用規範、部署規範優先權等同），動工前至少讀前三份（第 1 節）
 - 七條不可違反的約束：前端不碰資料庫、身分驗證自建、存取控制在後端、業務邏輯不嵌資料庫語法、測試資料虛構、零院外連線、模型呼叫一律經 `AiGatewayService`（第 3 節）
 - 迭代 26 完成時的規模：221 條路由、97 張表、157 種稽核動作、31 個權限碼、8 種角色、23 個功能開關、41 個營運參數（第 6 節「規模」）
-- 已完成範圍：迭代 24～27 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》
+- 已完成範圍：迭代 24～27.1 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》
 - 第 7 節高風險三項：1010 迭代 18 完成實作，對真實病人開啟仍要 Q-02、Q-03
 - 第 9 節已知粗糙處八項（例如重複病歷號回 500），授權判斷本身沒有問題
 - 第 12 節下一階段（第三次進院前的待辦）、第 13 節每次動工前的自我檢查
@@ -136,7 +136,7 @@ npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript�
 
 ## 4. 資料模型
 
-共 97 張表，26 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
+共 97 張表，27 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
 
 | 分類 | 表 | 加入於 |
 |---|---|---|
@@ -530,6 +530,23 @@ npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript�
 - **4×12 已經是 1280×800 的上限**：一列 13 張 80px 放得下、取偶數 12（卡住時的最後保險要靠偶數行）；要再大只能加列，高度只剩 528px，四列 452px 已經用掉大半
 - **發牌的改法刻意不動原本放得下的牌面**：同一個種子先跑原本的 40 次，亂數的消耗順序一樣；只有原本會落到保險的那幾桌換掉。改發牌時用 `verify:iteration27` 第 4 步看「沒有一桌落到保險」
 - 後端路由、資料表、稽核動作、權限、開關、營運參數都沒有增減，下面規模表沒有它那一欄
+
+### 迭代 27.1（1027）：病人平板頂列一列、任務醒著才出現、午夜前後的鎖
+
+使用者 1025 看過迭代 27 之後的病人平板提出三件事，同日定案（實作規格書 4.27.1，分析與量測在《[迭代 27.1 修正紀錄](../notes/iteration-27-1-fixes.md)》）。不切子迭代；手動測試在《[迭代 27.1 分冊](../testing/iteration-27-1.md)》。
+
+| 部分 | 做了什麼 |
+|---|---|
+| 共用定義 | `hospital-api.ts` 加 `PATIENT_TASK_PROMPT_RULES`（醒著 2 分鐘、求助後 15 分鐘、間隔 20 分鐘、最多 2 次、截止 `DIALYSIS_SESSION_MINUTES - 15`）；`operations.ts` 兩個時點預設 180／150、上限接截止；`DeviceHelpRequestView` 拿掉 `outcomeSummary` |
+| 後端 | `help-requests.service.ts` 不再組結案那一句；遷移 `…_iteration27_1_patient_task_timing` 只改值（仍是舊預設或超過 225 的改成新預設，每一筆先寫 `OPERATIONAL_SETTING_UPDATED` 稽核）；`hospital-api-sim-schedule.ts` 抽出排法，開始時間不早於啟動那天 00:00 |
+| 病人端 | `HomeScreen.tsx` 狀態一次一句、任務圖示一次一個；`styles.css` 基本資訊區 `nowrap`、欄距 24px、進度條 `flex: 1 1 0` 最窄 100px、姓名最寬 4em；`patient-tasks.ts` 的 `taskToPrompt`／`recordPrompt`／`dismissPrompt`；`App.tsx` 記最後一次碰平板的時間、碰完 1.5 秒才換畫面；`device.ts` 首頁快取帶 `bindingId`，開機時清掉上一位留下的 `hd.session.` 資料 |
+| 工具與腳本 | `demo:patient` 午夜前後照常跑；15:api、16:api、24、25:api 的時段限制保留、訊息統一；`verify:iteration27-1`（不需要後端，八步）、`verify:iteration27-1:api`（暫存資料庫實套遷移）；5、14、20 三支隨需求改（實作規格書之一第二十二次） |
+
+**接手時要知道的幾件事**：
+- **頂列的寬度沒有餘裕**：1280×800 的最壞組合（床號 A12、姓名 4 個字、1 個任務、遊戲、「護理師收到了」）實量只餘 59px。基本資訊區要加任何東西，先照實作規格書 4.27.1 驗收現況的量法重量
+- **自動出現的紀錄掛在 `hd.session.` 底下**：Session 失效一起清掉；「閒置回首頁」與「自己按回首頁」分開記，前者算一次但下次醒著還會出現，後者不再出現
+- **時點只看這次綁定的首頁資料**：首頁資料沒回來就不判斷任務到期，不要再加 `??` 的寫死分鐘數
+- 後端路由、資料表、稽核動作、權限、開關、營運參數的數目都沒有增減；遷移多一個
 
 ### 規模
 
