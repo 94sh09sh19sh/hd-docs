@@ -22,7 +22,7 @@
 
 **前置**：同迭代 17.1 分冊——本機裝了 Chrome；`.env` 有 `SUPER_ADMIN_WORK_ID`、`SUPER_ADMIN_INITIAL_PASSWORD`。切換功能開關要最高權限帳號（或有功能開關管理權限的帳號）。
 
-**午夜前後兩小時不要做 🎬 的部分**：模擬資料以當天為單位，`npm run demo:patient` 在那段時間自己拒跑。
+**午夜前後兩小時不要做 🎬 的部分**：模擬資料以當天為單位，`npm run demo:patient` 在那段時間自己拒跑。（**1027 迭代 27.1 起**只在跨過午夜時要重開展示環境：模擬院方 API 的開始時間不早於啟動那天 00:00，`npm run demo:patient` 整天都能跑；跑著跨過午夜清單會變空，重開一次。見[迭代 27.1 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-27-1/index.md) `ak34`）
 
 ______________________________________________________________________
 
