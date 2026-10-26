@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1028 — 病人平板頂列一列、問卷醒著才出現（迭代 27.1），緊急求助的語音與鏡頭、連點成畫與資料取出排進需求
+    1028 — 病人平板頂列一列、問卷醒著才出現、進度條寫出時間（迭代 27.1、27.2），緊急求助的語音與鏡頭、連點成畫與資料取出排進需求
   
 
     
@@ -1365,6 +1365,17 @@
     <span class="md-ellipsis">
       
         迭代 27.1（1027）：病人平板頂列一列、任務醒著才出現、午夜前後的鎖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#迭代-2721027病人平板進度條的剩餘時間與結束時間血壓單位" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 27.2（1027）：病人平板進度條的剩餘時間與結束時間、血壓單位
       
     </span>
   </a>
@@ -4860,6 +4871,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-27-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 27.2 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6179,6 +6218,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#迭代-2721027病人平板進度條的剩餘時間與結束時間血壓單位" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        迭代 27.2（1027）：病人平板進度條的剩餘時間與結束時間、血壓單位
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#規模" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6408,15 +6458,15 @@
 <h1 id="血液透析平板照護輔助系統--技術進度報告">血液透析平板照護輔助系統 — 技術進度報告<a class="headerlink" href="#血液透析平板照護輔助系統--技術進度報告" title="Permanent link">&para;</a></h1>
 <p><strong>適用讀者</strong>：接手或協作的工程師</p>
 <p><strong>報告日期</strong>：2026-10-27</p>
-<p><strong>版本</strong>：迭代 27.1 完成（master；病人平板頂列固定一列、任務醒著才自動出現、<code>demo:patient</code> 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）</p>
+<p><strong>版本</strong>：迭代 27.2 完成（master；病人平板進度條寫出剩餘時間與結束時間、血壓單位；迭代 27.1 病人平板頂列固定一列、任務醒著才自動出現、<code>demo:patient</code> 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）</p>
 <p><strong>Repo</strong>：<code>94sh09sh19sh/hd-tablet-care</code></p>
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
-<li>報告日期 1027，對應迭代 27.1 完成（master）；寫給接手或協作的工程師</li>
+<li>報告日期 1027，對應迭代 27.2 完成（master）；寫給接手或協作的工程師</li>
 <li>需求來源六份，衝突時以實作規格書為準（資料庫使用規範、部署規範優先權等同），動工前至少讀前三份（第 1 節）</li>
 <li>七條不可違反的約束：前端不碰資料庫、身分驗證自建、存取控制在後端、業務邏輯不嵌資料庫語法、測試資料虛構、零院外連線、模型呼叫一律經 <code>AiGatewayService</code>（第 3 節）</li>
 <li>迭代 26 完成時的規模：221 條路由、97 張表、157 種稽核動作、31 個權限碼、8 種角色、23 個功能開關、41 個營運參數（第 6 節「規模」）</li>
-<li>已完成範圍：迭代 24～27.1 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》</li>
+<li>已完成範圍：迭代 24～27.2 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》</li>
 <li>第 7 節高風險三項：1010 迭代 18 完成實作，對真實病人開啟仍要 Q-02、Q-03</li>
 <li>第 9 節已知粗糙處八項（例如重複病歷號回 500），授權判斷本身沒有問題</li>
 <li>第 12 節下一階段（第三次進院前的待辦）、第 13 節每次動工前的自我檢查</li>
@@ -7266,6 +7316,39 @@
 - <strong>自動出現的紀錄掛在 <code>hd.session.</code> 底下</strong>：Session 失效一起清掉；「閒置回首頁」與「自己按回首頁」分開記，前者算一次但下次醒著還會出現，後者不再出現
 - <strong>時點只看這次綁定的首頁資料</strong>：首頁資料沒回來就不判斷任務到期，不要再加 <code>??</code> 的寫死分鐘數
 - 後端路由、資料表、稽核動作、權限、開關、營運參數的數目都沒有增減；遷移多一個</p>
+<h3 id="迭代-2721027病人平板進度條的剩餘時間與結束時間血壓單位">迭代 27.2（1027）：病人平板進度條的剩餘時間與結束時間、血壓單位<a class="headerlink" href="#迭代-2721027病人平板進度條的剩餘時間與結束時間血壓單位" title="Permanent link">&para;</a></h3>
+<p>使用者 1025 指出進度條沒有時間、血壓沒有單位（實作規格書 4.27.2，判斷與量測在《<a href="../../notes/iteration-27-2-fixes/">迭代 27.2 修正紀錄</a>》）。欄距 24px 隨 27.1 先做，其餘同日做完；手動測試在《<a href="../../testing/iteration-27-2/">迭代 27.2 分冊</a>》。</p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>做了什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>共用定義</td>
+<td><code>hospital-api.ts</code> 的 <code>dialysisProgress().remainingMinutes</code> 改成結束時刻與現在時刻的分相減（先捨去秒）、夾在 0～240；新增 <code>remainingTimeText</code>（「剩 2 小時 19 分」，0 回 <code>null</code>）</td>
+</tr>
+<tr>
+<td>病人端</td>
+<td><code>HomeScreen.tsx</code> 收 <code>startedAt</code>、<code>endsAt</code>（取代 <code>progress</code>），用 <code>useMinuteClock</code> 那個 <code>now</code> 跑 <code>dialysisProgress</code>；拿掉 <code>clock</code> 圖示、三條刻度、底下一行字、<code>aria-valuetext</code>；<code>styles.css</code> 進度條改上下兩層、最窄 6.8em、<code>container-type: inline-size</code>，≤ 12.2em 收結束時間；<code>TodayPanel.tsx</code> 血壓圖 <code>unit="毫米汞柱"</code></td>
+</tr>
+<tr>
+<td>圖示</td>
+<td><code>sync-icons.mjs</code> 拿掉 <code>clock</code>，重產病人端 <code>icon-data.ts</code>（61 個）</td>
+</tr>
+<tr>
+<td>工具與腳本</td>
+<td><code>verify:iteration27-2</code>（不需要後端，六步）；<code>verify:iteration27-1</code> 的「最窄 100px」隨需求改（實作規格書之一第二十三次）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>接手時要知道的幾件事</strong>：
+- <strong>剩餘分鐘是時分相減，不是毫秒相減再進位</strong>：畫面上「13:25 結束」與現在時間減得出來的才對；後端即時總覽送給護理端的 <code>remainingMinutes</code> 同一支，護理端目前沒有畫面顯示它
+- <strong>頂列最壞組合（A12）進度條區塊實量 159px、最窄 136px，只餘 23px</strong>；基本資訊區要加東西先重量（量法在實作規格書 4.27.2 驗收現況）
+- 容器查詢的門檻寫成 em（<code>--t-meta</code> 是固定 20px）；改進度條的字級要一起改最窄與門檻，<code>verify:iteration27-2</code> 第 4 步會擋
+- 後端路由、資料表、遷移、稽核動作、權限、開關、營運參數都沒有增減</p>
 <h3 id="規模">規模<a class="headerlink" href="#規模" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
