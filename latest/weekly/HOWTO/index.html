@@ -16,7 +16,7 @@
         <link rel="prev" href="../../deployment/15d-switch-host-to-ip/">
       
       
-        <link rel="next" href="../AGENT/">
+        <link rel="next" href="../doc-architecture/">
       
       
         
@@ -5043,6 +5043,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../doc-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件架構與 token 成本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../AGENT/" class="md-nav__link">
         
   
@@ -5050,7 +5078,7 @@
   <span class="md-ellipsis">
     
   
-    文件維護作業指示（agent 用）
+    文件維護作業指示（agent 用，舊章節對照）
   
 
     
@@ -5242,11 +5270,11 @@
 
 
 <h1 id="每週紀錄維護流程人用">每週紀錄維護流程（人用）<a class="headerlink" href="#每週紀錄維護流程人用" title="Permanent link">&para;</a></h1>
-<p>這頁寫給隔了一週回來、細節已經忘光的自己。從「這週做完了」到「別人點得到」，全部步驟在這裡。給 AI agent 執行的精簡版在 <a href="../AGENT/">AGENT.md</a>。</p>
+<p>這頁寫給隔了一週回來、細節已經忘光的自己。從「這週做完了」到「別人點得到」，全部步驟在這裡。給 AI agent 執行的版本是專案 repo 裡的 skill <code>.claude/skills/hd-docs/</code>（2026-10-26 起取代 <a href="../AGENT/">AGENT.md</a>）；文件為什麼這樣分、哪些值交給程式算，見《<a href="../doc-architecture/">文件架構與 token 成本</a>》。</p>
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
 <li>真本在 repo 的 <code>docs/</code>，對外是 GitHub Pages 文件站；一律先改 repo 再 <code>docs:sync</code>，不要回頭改鏡像或站台</li>
-<li>週中改到哪推到哪、首頁標「修訂中」；週三定版才補版本歷程，<strong>先 <code>docs:sync</code> 再 <code>docs:freeze</code></strong></li>
+<li>週中改到哪推到哪，「修訂中」、定版欄、份數、週報側欄由 <code>npm run docs:gen</code> 自動算（2026-10-26 起）；週三定版才補版本歷程，<strong>先 <code>docs:sync</code> 再 <code>docs:freeze</code></strong></li>
 <li>三個網址：現行版（永遠最新）、凍結版（每週定版，之後不變）、鏡像 repo（只有工具在用）</li>
 <li>舊站 HackMD 只在你明確開口時才同步</li>
 <li>「踩過的坑」是一張症狀、原因、解法對照表，出事先查這裡</li>
@@ -5258,13 +5286,14 @@
 <h2 id="一次講完的全貌">一次講完的全貌<a class="headerlink" href="#一次講完的全貌" title="Permanent link">&para;</a></h2>
 <p>文件的<strong>真本在 repo</strong>（<code>docs/</code>），對外看得到的是 <strong>GitHub Pages 文件站</strong>。所有內容都先改 repo，再同步過去，不要反過來去改鏡像 repo 或站台——同步是整份覆蓋。</p>
 <div class="highlight"><pre><span></span><code>週中  改 docs/&lt;文件&gt;.md
-      首頁那幾列標「0909 · 修訂中」
+        ↓  npm run docs:gen            首頁那幾列自動標「0909 · 修訂中」
+        ↓  npm run docs:check          連結、格式、側欄有沒有漏
         ↓  npm run docs:preview        本機先看長什麼樣（可略）
         ↓  npm run docs:sync           讀者看得到進行中的內容
         ↓
-週三  寫 docs/weekly/2026-09-16.md
-      首頁拿掉修訂中、日期換 0916、最近三週插一段
-      改過的文件補版本歷程一列        ← 只有這天做
+週三  寫 docs/weekly/2026-09-16.md，首頁最近三週插一段
+      npm run docs:pending 列出的文件補版本歷程一列   ← 只有這天做
+        ↓  npm run docs:gen            修訂中拿掉、日期換 0916、側欄補週報
         ↓  npm run docs:sync           先把內容推上去
         ↓  npm run docs:freeze          再凍結，建立該週凍結版
         ↓
@@ -5370,11 +5399,13 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:sync
 <h3 id="週中改到哪推到哪">週中：改到哪推到哪<a class="headerlink" href="#週中改到哪推到哪" title="Permanent link">&para;</a></h3>
 <ol>
 <li>改 <code>docs/</code> 底下的文件。</li>
-<li>首頁標上修訂中，讓讀者知道這幾份正在動：</li>
-<li>頂部改成 <code>**本週定版**：0909｜**0916 修訂中**</code></li>
-<li>表格裡<strong>動過的那幾列</strong>，定版欄改成 <code>0909 · 修訂中</code>（沒動的維持原樣）。全新的文件還沒有過第一次定版，那一欄先寫 <code>新增 · 修訂中</code></li>
-<li>進度多的時候，該週週報可以<strong>週中就先建起來當草稿維護</strong>，不必等到週三一次補寫。檔名照樣用該週的星期三，檔頭狀態寫「進行中（…週中草稿，MMDD 定版時收尾）」，首頁「最近三週」那段標題後面加 <code>· 修訂中</code>。<strong>版本歷程與 <code>docs:freeze</code> 一樣不能碰。</strong></li>
-<li><code>npm run docs:sync</code></li>
+<li><code>npm run docs:gen</code>：首頁與其他文件總表標上修訂中，讓讀者知道這幾份正在動。它拿每份文件跟鏡像上最新一次定版的內容比，有差就標：</li>
+<li>頂部變成 <code>**本週定版**：0909｜**0916 修訂中**</code></li>
+<li>表格裡<strong>動過的那幾列</strong>，定版欄變成 <code>0909 · 修訂中</code>；全新的文件還沒有過第一次定版，寫 <code>新增 · 修訂中</code></li>
+<li>以前這一步是手改，1018 與 1021 之後都漏標過；程式比對不會漏，所以這些值<strong>不要再手改</strong></li>
+<li>進度多的時候，該週週報可以<strong>週中就先建起來當草稿維護</strong>，不必等到週三一次補寫。檔名照樣用該週的星期三，檔頭狀態寫「進行中（…週中草稿，MMDD 定版時收尾）」，首頁「最近三週」插一段；那段標題的 <code>· 修訂中</code> 與側欄的那一列由 <code>docs:gen</code> 補。<strong>版本歷程與 <code>docs:freeze</code> 一樣不能碰。</strong></li>
+<li><code>npm run docs:check</code>，有 ✗ 就修到通過</li>
+<li><code>npm run docs:sync</code>（開頭會先確認 <code>docs:gen</code> 跑過，沒跑就擋下）</li>
 </ol>
 <blockquote>
 <p>交給 agent 改的話，這一步它會自己跑完再回報清單，不會停下來等你點頭（2026-09-10 起）。定版日建立凍結版那次仍會先問，因為凍下去改不回來。</p>
@@ -5390,29 +5421,27 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:sync
 </code></pre></div>
 <p>檔名用<strong>該週開會日（星期三）的 ISO 日期</strong>。開會日就是報告日，這樣檔案列表的排序就是時間序。內容照範本填。第一行 <code># MMDD 週報 — 一句話標題</code> 很重要，它會成為站上那一頁的標題。</p>
 <h4 id="2-首頁收尾">2. 首頁收尾<a class="headerlink" href="#2-首頁收尾" title="Permanent link">&para;</a></h4>
-<p>開啟 <code>docs/index.md</code>：</p>
-<ol>
-<li>頂部改回單一週次：<code>**本週定版**：0916</code>，把「修訂中」整段拿掉</li>
-<li>兩張表格：這週動過的那幾列，<code>0909 · 修訂中</code> 換成 <code>0916</code>；沒動過的維持原樣</li>
-<li>「最近三週」最上方插入一段（新的排在上面），檔案裡有註解標出插入點：</li>
-</ol>
+<p>開啟 <code>docs/index.md</code>，「最近三週」最上方插入一段（新的排在上面；週中已開草稿就跳過），檔案裡有註解標出插入點：</p>
 <div class="highlight"><pre><span></span><code><span class="gu">### [0916 — 一句話標題](weekly/2026-09-16.md)</span>
 
 進度：
 
 <span class="k">-</span><span class="w"> </span>三到五條重點
 </code></pre></div>
-<p>插完如果超過三段，把<strong>最舊的那一段整段刪掉</strong>，同時在 <code>docs/weekly/archive.md</code> 的表格最上方補一列。首頁永遠只有三週，這是這套結構最需要自律的地方。</p>
+<p>插完如果超過三段，把<strong>最舊的那一段整段刪掉</strong>；歷次週報（<code>docs/weekly/archive.md</code>）由 <code>docs:gen</code> 自動補上那一週。首頁永遠只有三週，這是這套結構最需要自律的地方（<code>docs:check</code> 會擋第四段）。</p>
+<p>頂部的「本週定版」、兩張表的定版欄，等第 4 步補完版本歷程後由 <code>docs:gen</code> 一起換成 0916，不手改。</p>
 <h4 id="3-新的一頁要進側欄">3. 新的一頁要進側欄<a class="headerlink" href="#3-新的一頁要進側欄" title="Permanent link">&para;</a></h4>
-<p>站台側欄的列序寫在 <code>docs-site/mkdocs.yml</code> 的 <code>nav</code>。<strong>新增一篇週報或一份文件，這裡要跟著加一列</strong>，否則站上點不到（頁面仍會建出來，但沒有入口）。列序照首頁那兩張表的讀者思考順序，不要重排。</p>
+<p>站台側欄的列序寫在 <code>docs-site/mkdocs.yml</code> 的 <code>nav</code>，它也是「有哪些文件」的唯一清單。<strong>週報與測試分冊由 <code>docs:gen</code> 自動加；其他新文件要手動加一列</strong>，否則站上點不到（頁面仍會建出來，但沒有入口），<code>docs:check</code> 會抓出漏掉的。列序照首頁那兩張表的讀者思考順序，不要重排。</p>
 <p>這一步取代了 HackMD 時代「在對應表裡加一行網址」。差別是：現在忘了加只是側欄少一列，不會像以前那樣整篇連結失效。</p>
 <h4 id="4-改過的文件補版本歷程">4. 改過的文件補版本歷程<a class="headerlink" href="#4-改過的文件補版本歷程" title="Permanent link">&para;</a></h4>
-<p>這週動過的每份文件末尾都有「版本歷程」表，在<strong>最上面</strong>加一列：</p>
+<p><code>npm run docs:pending</code> 列出上次定版之後改過、還沒補的文件。逐份在末尾「版本歷程」表的<strong>最上面</strong>加一列（只做格式整理的不補）：</p>
 <div class="highlight"><pre><span></span><code>| 0916 | 2026-09-16 | 補上 FR-N08 的離線重送規則 |
 </code></pre></div>
-<p>第一欄只寫四位數週次，<strong>不要寫網址</strong>——同步時會自動換成該週凍結版的連結。異動摘要寫「改了什麼」，不是「改了哪一節」，這一欄是給半年後的人看的。</p>
+<p>第一欄只寫四位數週次，<strong>不要寫網址</strong>——同步時會自動換成該週凍結版的連結。第二欄的日期一定要寫，<code>docs:gen</code> 靠它比新舊。異動摘要寫「改了什麼」，不是「改了哪一節」，這一欄是給半年後的人看的。</p>
+<p>補完跑 <code>npm run docs:gen</code>：頂部變成 <code>**本週定版**：0916</code>，有補列的那幾份定版欄換成 0916，修訂中拿掉。外殼契約的版本歷程記的是契約版本、沒有週次，它若這週改過，首頁那一欄手改成 0916。</p>
 <h4 id="5-先同步再凍結">5. 先同步，再凍結<a class="headerlink" href="#5-先同步再凍結" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>docs:sync<span class="w">     </span><span class="c1"># 內容先推上去，現行版更新</span>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>docs:check<span class="w">    </span><span class="c1"># 先確認沒有漏</span>
+npm<span class="w"> </span>run<span class="w"> </span>docs:sync<span class="w">     </span><span class="c1"># 內容先推上去，現行版更新</span>
 npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w">   </span><span class="c1"># 再打週次 tag，建立凍結版</span>
 </code></pre></div>
 <p><code>docs:freeze</code> 會掃過所有文件的版本歷程，把出現過、鏡像上還沒有同名 tag 的週次建出來。已經存在的一律不動，它只會印一行「凍結版已存在，不動」。</p>
@@ -5451,7 +5480,17 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w"
 <tr>
 <td>改了 <code>docs/</code> 但站上沒變</td>
 <td>只改了 repo，沒跑 <code>docs:sync</code>。<strong><code>git push</code> 不會更新公開站</strong>——站台只看鏡像，私有 repo 推了也沒用</td>
-<td>跑 <code>npm run docs:sync</code>。跑完 Actions 還要一兩分鐘才建完。交給 agent 時，它的收尾順序寫在 AGENT.md「git：docs 改完就 commit、push」</td>
+<td>跑 <code>npm run docs:sync</code>。跑完 Actions 還要一兩分鐘才建完。交給 agent 時，它的收尾順序寫在 skill <code>hd-docs</code> 的「收尾順序」</td>
+</tr>
+<tr>
+<td><code>docs:sync</code> 一開始就停下，說「衍生內容過期」</td>
+<td>改了文件之後沒跑 <code>docs:gen</code>，首頁的定版欄、份數或側欄跟實際不符</td>
+<td><code>npm run docs:gen</code>，commit 之後再 sync。真的要照現況推才加 <code>-- --force</code></td>
+</tr>
+<tr>
+<td>首頁某一列標著修訂中，但印象中沒改過它</td>
+<td><code>docs:gen</code> 拿它跟鏡像上最新一次定版比，內容有差就標，連子文件、格式整理都算</td>
+<td><code>git -C .docs-mirror show &lt;週次&gt;:docs/&lt;路徑&gt;</code> 比一下；只是格式整理就不補版本歷程，凍結後自然消失</td>
 </tr>
 <tr>
 <td><code>docs:sync</code> 說找不到鏡像 repo</td>
@@ -5536,17 +5575,17 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w"
 <tr>
 <td>迭代做完、分冊與修正紀錄都寫了，使用者仍說「文件收尾沒有收好」</td>
 <td>迭代 18（1010）只改了跟它直接相關的幾份：兩份進度報告的檔頭還停在上一個迭代、「已完成範圍」沒有它；架構圖仍把規則引擎畫成虛線的「規劃中」；首頁看不到那一天的進度；測試手冊的路由數一直累加，早就跟實際對不上</td>
-<td>迭代做完照 AGENT.md「其他硬性規則」第一條逐項對；路由數照後端啟動時印出的清單重數</td>
+<td>迭代做完照 skill <code>hd-docs</code> 的 <code>references/iteration-wrapup.md</code> 逐項對；路由數照後端啟動時印出的清單重數</td>
 </tr>
 <tr>
 <td>週報與首頁都寫到最新迭代了，「實作文件」卻還有幾份停在一週前</td>
 <td>每個迭代只顧著同步會跟著動的那幾份（進度報告、資料字典、測試手冊）；技術棧說明與部署手冊總覽不是每次都要改，就沒人判斷；週報草稿改了標題，首頁那段與站台側欄也沒跟上（1011：前兩份停在迭代 17，兩處標題停在 17.8～22 與 17.8～19）</td>
-<td>迭代做完照 AGENT.md「其他硬性規則」第一條，八份逐份判斷；標題三處一起改</td>
+<td>迭代做完照 <code>references/iteration-wrapup.md</code>，八份逐份判斷；週報標題只改週報第一行，首頁與側欄由 <code>docs:gen</code> 跟上（2026-10-26 起）</td>
 </tr>
 <tr>
 <td>八份都判斷過、週報也寫了「對到迭代 N」，逐項再對還是找到停在舊迭代的地方</td>
 <td>只看了每份的檔頭與補記，沒看檔頭以外寫著數字或範圍的地方：測試主手冊 §13 已列新分冊、標題錨點仍是舊範圍；技術端報告第 4 節「幾張表、幾個遷移」與分類表停在迭代 21～23；技術棧說明的檔頭「對應迭代 N」沒換（1018 迭代 27 收尾後）</td>
-<td>照 AGENT.md「其他硬性規則」第一條的數字與範圍清單逐處對；表數照 <code>schema.prisma</code> 的 <code>model</code> 數、遷移照 <code>migrations/</code> 目錄數，不要沿用上一次的數字</td>
+<td>照 <code>references/iteration-wrapup.md</code> 的數字與範圍清單逐處對；表數照 <code>schema.prisma</code> 的 <code>model</code> 數、遷移照 <code>migrations/</code> 目錄數，不要沿用上一次的數字</td>
 </tr>
 <tr>
 <td>重新產生架構圖時 Chrome 無頭模式沒有任何輸出、也不出錯</td>
@@ -5556,30 +5595,30 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w"
 <tr>
 <td>寫入 <code>.md</code> 被「md 省 token 守門員」擋下</td>
 <td>全域 hook 只看這次寫進去的字：同一段手動斷行、表格補空白，或整份 Write 超過 80 行而前 25 行沒有「摘要」</td>
-<td>照訊息改；長文件先寫 <code>## 摘要</code>；首頁一律用 Edit（首頁刻意不加摘要）。細節在 AGENT.md「md 格式」</td>
+<td>照訊息改；長文件先寫 <code>## 摘要</code>；首頁一律用 Edit（首頁刻意不加摘要）。細節在 skill <code>hd-docs</code> 的 <code>references/format-and-site.md</code></td>
 </tr>
 <tr>
 <td>用 <code>sed</code> 或腳本改過的 <code>.md</code>，格式違規一直沒被抓到</td>
 <td>腳本改檔不經 hook（2026-10-23 整理全部文件時就是用腳本併行）</td>
-<td>改完跑 AGENT.md「驗收」段的 md 格式檢查</td>
+<td>改完跑 <code>npm run docs:check</code>，它把每一份都丟給同一個 hook 檢查</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="什麼時候不只是加一篇週報">什麼時候不只是加一篇週報<a class="headerlink" href="#什麼時候不只是加一篇週報" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>週中改了需求文件或進度報告</strong> → 首頁那一列標修訂中 → <code>docs:sync</code>。<strong>不要碰版本歷程與 <code>docs:freeze</code></strong></li>
-<li><strong>週三定版</strong> → 拿掉修訂中、版本歷程加一列 → <code>docs:sync</code> → <code>docs:freeze</code>，缺一步凍結版就不會出現</li>
-<li><strong>新增一種文件</strong>（不是週報）→ 建檔（文末要有「版本歷程」表）→ 首頁表格加一列（<strong>照下面的列序放進去，不要一律加在最後</strong>；定版欄先寫 <code>新增 · 修訂中</code>） → <code>docs-site/mkdocs.yml</code> 的 <code>nav</code> 加一列 → <code>docs:sync</code></li>
-<li><strong>新增一份「其他文件」</strong>（不屬於需求、報告、參考、測試、部署五類的單篇方案評估、決策紀錄或修正紀錄，放 <code>docs/notes/</code>） → <strong>掛到《其他文件總表》（<code>docs/notes/index.md</code>），不動首頁</strong>（2026-10-07 起）。總表分兩張：<strong>一般文件</strong>、<strong>小迭代文件</strong>（9.1、14.1、17.2 這類非整數迭代的修正紀錄）；定版欄先寫 <code>新增 · 修訂中</code> → <code>nav</code>「其他文件」底下對應的那一組加一列 → <code>docs:sync</code></li>
-<li><strong>某份文件有一大段在條列</strong>（2026-10-15 起）→ 收進子文件、掛在原處，母文件留連結，連結上方或下方寫明收入方式與怎麼維護。收入分兩種：<strong>永久收入</strong>是那張表一直往下長、新的一筆也寫進子文件（測試手冊的路由表、實作規格書 1.1 的改動紀錄）； <strong>一次性收入</strong>是做完的階段搬走、新的階段照舊寫在母文件（實作規格書的迭代 3～23、兩份進度報告的已完成部分）。搬的時候節號與標題一律不動，別處寫的「實作規格書 4.21」才找得到。子文件有版本歷程、不上首頁、<code>nav</code> 裡和母文件收成一組。細節與目前五份的清單在 <a href="../AGENT/">AGENT.md</a> 的「大段條列收進子文件」</li>
+<li><strong>週中改了需求文件或進度報告</strong> → <code>docs:gen</code>（首頁那一列自動標修訂中）→ <code>docs:sync</code>。<strong>不要碰版本歷程與 <code>docs:freeze</code></strong></li>
+<li><strong>週三定版</strong> → 版本歷程加一列 → <code>docs:gen</code>（拿掉修訂中、換週次）→ <code>docs:sync</code> → <code>docs:freeze</code>，缺一步凍結版就不會出現</li>
+<li><strong>新增一種文件</strong>（不是週報）→ 建檔（文末要有「版本歷程」表）→ 首頁表格加一列（<strong>照下面的列序放進去，不要一律加在最後</strong>；定版欄由 <code>docs:gen</code> 填 <code>新增 · 修訂中</code>） → <code>docs-site/mkdocs.yml</code> 的 <code>nav</code> 加一列 → <code>docs:check</code> → <code>docs:sync</code></li>
+<li><strong>新增一份「其他文件」</strong>（不屬於需求、報告、參考、測試、部署五類的單篇方案評估、決策紀錄或修正紀錄，放 <code>docs/notes/</code>） → <strong>掛到《其他文件總表》（<code>docs/notes/index.md</code>），不動首頁</strong>（2026-10-07 起）。總表分兩張：<strong>一般文件</strong>、<strong>小迭代文件</strong>（9.1、14.1、17.2 這類非整數迭代的修正紀錄） → <code>nav</code>「其他文件」底下對應的那一組加一列，順序與總表相同 → <code>docs:gen</code>（首頁的份數、定版欄）→ <code>docs:check</code> → <code>docs:sync</code>。<strong>維護指南不必跟著改</strong>（2026-10-26 起清單只在 nav 與總表）</li>
+<li><strong>某份文件有一大段在條列</strong>（2026-10-15 起）→ 收進子文件、掛在原處，母文件留連結，連結上方或下方寫明收入方式與怎麼維護。收入分兩種：<strong>永久收入</strong>是那張表一直往下長、新的一筆也寫進子文件（測試手冊的路由表、實作規格書 1.1 的改動紀錄）； <strong>一次性收入</strong>是做完的階段搬走、新的階段照舊寫在母文件（實作規格書的迭代 3～23、兩份進度報告的已完成部分）。搬的時候節號與標題一律不動，別處寫的「實作規格書 4.21」才找得到。子文件有版本歷程、不上首頁、<code>nav</code> 裡和母文件收成一組。細節與目前五份的清單在 skill <code>hd-docs</code> 的 <code>references/new-doc.md</code></li>
 <li><strong>改架構圖</strong> → 改 <code>requirements/architecture-diagrams.src.html</code>（不要單獨修 PNG）→ 照 <code>architecture-diagrams.md</code> 文末的指令重新產生 PNG → <code>docs:sync</code>。 <strong>圖片走 repo 相對路徑，不必再另外上傳、不必換任何網址</strong>（這是換掉 HackMD 之後少掉的一整條規則）</li>
 <li><strong>週報要附截圖</strong>（2026-10-07 起）→ PNG 放 <code>docs/weekly/images/&lt;週次&gt;/</code>，週報最後加一節「附錄：截圖」，每張圖上面一句話說是誰、哪個尺寸、看什麼。公開站看得到，<strong>只能是模擬資料的畫面</strong>（<code>demo:patient</code> 的虛構病人）；截圖前確認沒有網址列、平板金鑰、院內位址。<strong>病人平板只截橫放 1280×800</strong>（2026-10-14 起）：院內平板實際是橫放使用，直放的畫面不是病人會看到的樣子，不放進週報</li>
-<li><strong>測試手冊又長出一個迭代</strong> → 在 <code>docs/testing/</code> 開一本 <code>iteration-N.md</code>，內容只寫該迭代新增的部分，共用的環境與主線留在主手冊，再到主手冊最後一章的分冊索引補一列，並在 <code>nav</code> 加一列。 <strong>不要把分冊掛到首頁</strong>——三十九本分冊各占一列，首頁就從入口變成目錄了；讀者要動手驗收時點進主手冊，第一眼就看得到索引。項次編號跨冊不重複，抽出既有章節時沿用原編號，因為那些編號已經寫進週報與驗收紀錄。單一字母到迭代 16 的 <code>z</code> 用完了，迭代 17 起改兩個字母（<code>aa</code>、<code>ab</code>…），照字母順序往後接，一看就知道排在 <code>z</code> 後面。細節規則在 <a href="../AGENT/">AGENT.md</a> 的「測試手冊的分冊」</li>
-<li><strong>部署流程又多一段</strong>（現場多了一類出錯、多了一個要先問的問題）→ 改 <code>docs/deployment/</code> 對應那一冊， <strong>不要在首頁加列</strong>：各冊從總覽的索引進去。規則本身若變了，要改的是《部署規範》而不是手冊——手冊只寫「手指要按什麼」。第十五冊（1001 取代第十四冊）是第十一～十三冊的新手導讀版，指令是抄過去的：改了那三冊的指令，第十五冊對應的步驟要一起改；改了 <code>deploy/hospital.env.example</code>，第十五冊之一、之二兩本 <code>.env</code> 子手冊要一起改。進院回來寫的紀錄（第十冊、第十四冊之四）只記錄不改寫，被它取代的舊版手冊只在開頭標明已取代。細節規則在 <a href="../AGENT/">AGENT.md</a> 的「部署手冊的分冊」</li>
+<li><strong>測試手冊又長出一個迭代</strong> → 在 <code>docs/testing/</code> 開一本 <code>iteration-N.md</code>，內容只寫該迭代新增的部分，共用的環境與主線留在主手冊，再到主手冊最後一章的分冊索引補一列；<code>nav</code> 那一列與首頁寫的分冊本數由 <code>docs:gen</code> 補。 <strong>不要把分冊掛到首頁</strong>——幾十本分冊各占一列，首頁就從入口變成目錄了；讀者要動手驗收時點進主手冊，第一眼就看得到索引。項次編號跨冊不重複，抽出既有章節時沿用原編號，因為那些編號已經寫進週報與驗收紀錄。單一字母到迭代 16 的 <code>z</code> 用完了，迭代 17 起改兩個字母（<code>aa</code>、<code>ab</code>…），照字母順序往後接，一看就知道排在 <code>z</code> 後面。細節規則與字母表在 skill <code>hd-docs</code> 的 <code>references/testing.md</code></li>
+<li><strong>部署流程又多一段</strong>（現場多了一類出錯、多了一個要先問的問題）→ 改 <code>docs/deployment/</code> 對應那一冊， <strong>不要在首頁加列</strong>：各冊從總覽的索引進去。規則本身若變了，要改的是《部署規範》而不是手冊——手冊只寫「手指要按什麼」。第十五冊（1001 取代第十四冊）是第十一～十三冊的新手導讀版，指令是抄過去的：改了那三冊的指令，第十五冊對應的步驟要一起改；改了 <code>deploy/hospital.env.example</code>，第十五冊之一、之二兩本 <code>.env</code> 子手冊要一起改。進院回來寫的紀錄（第十冊、第十四冊之四）只記錄不改寫，被它取代的舊版手冊只在開頭標明已取代。細節規則與各冊的地位在 skill <code>hd-docs</code> 的 <code>references/deployment.md</code></li>
 <li><strong>改了介面設計基準</strong> → <code>docs/notes/uiux-design-baseline.md</code> 與 <code>.claude/skills/hd-uiux/</code> <strong>兩份一起改</strong>。前者寫給人看（為什麼這樣設計），後者寫給 AI agent 看（實際數值與檢查步驟）。 skill 不在 <code>docs/</code> 底下，所以不上站、不出凍結版，但它才是動介面時真正被讀的那一份</li>
-<li><strong>改了維護流程本身</strong>（這頁講的規矩變了、文件多一份少一份、npm 指令改名、又踩到新的坑） → 這頁與 <a href="../AGENT/">AGENT.md</a> <strong>兩份一起改</strong>。詳細的判斷表在 AGENT.md 的「改完文件，回頭檢查這兩份指南」。這兩份沒有版本歷程、不出凍結版，改完只要 <code>docs:sync</code></li>
-<li><strong>寫或整理文件的格式</strong>（2026-10-23 起）→ 照全域的 md 省 token 規則：一段一行、表格不補空白、超過 80 行的文件開頭寫 <code>## 摘要</code>。格式整理不算改寫已發佈的紀錄，也不補版本歷程；首頁不加摘要。細節在 <a href="../AGENT/">AGENT.md</a> 的「md 格式」</li>
+<li><strong>改了維護流程本身</strong>（這頁講的規矩變了、npm 指令改名、又踩到新的坑） → 這頁與 skill <code>hd-docs</code> <strong>兩份一起改</strong>。詳細的判斷表在 skill 的 <code>references/format-and-site.md</code>「維護指南要不要改」。<strong>文件多一份少一份不算</strong>（2026-10-26 起清單只在 nav 與總表，份數由 <code>docs:gen</code> 算）。這兩份沒有版本歷程、不出凍結版，改完只要 <code>docs:sync</code></li>
+<li><strong>寫或整理文件的格式</strong>（2026-10-23 起）→ 照全域的 md 省 token 規則：一段一行、表格不補空白、超過 80 行的文件開頭寫 <code>## 摘要</code>。格式整理不算改寫已發佈的紀錄，也不補版本歷程；首頁不加摘要。細節在 skill <code>hd-docs</code> 的 <code>references/format-and-site.md</code></li>
 <li><strong>那週沒進度</strong> → 不要建空頁，首頁直接跳過該週。時間序有斷點沒關係，硬湊出來的空白紀錄才難讀</li>
 </ul>
 <h2 id="首頁不准長回去">首頁不准長回去<a class="headerlink" href="#首頁不准長回去" title="Permanent link">&para;</a></h2>
@@ -5588,15 +5627,15 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:freeze<span class="w"
 <li><strong>只有四塊</strong>：最近三週／實作文件／需求文件／其他文件。不要再開新的一塊，也不加開頭摘要。「實作文件」原叫「我要找…」，2026-10-23 依你的指示改名，表頭與列序不變。原本最上面還有一塊「現在到哪」，2026-09-22 拿掉了——它寫的全是週報已經寫過的事，越堆越長。 <strong>要速看進度，看「最近三週」每段底下的「進度」條列</strong>；頂部只留「本週定版」那一行，不要把現況摘要加回去。「其他文件」是 2026-09-19 加的，放不屬於前四塊的單篇方案評估（檔案在 <code>docs/notes/</code>）。它是<strong>刻意留的小出口</strong>，免得每有一份技術決策就要硬塞進需求文件、或是沒地方放就不寫；但正因為是出口，最容易長歪——<strong>果然長歪了</strong>：到 2026-10-07 已經十三份，每多一個小迭代就多一列，比其他三塊都長。使用者當天指示<strong>收進一份總表</strong>（<code>docs/notes/index.md</code>，分成一般文件與小迭代文件兩張表）， <strong>首頁那一塊保留標題、只剩一行連結</strong>。之後新增 <code>notes/</code> 底下的文件只改總表，首頁那一行不再變長；不要再把個別文件掛回首頁</li>
 <li><strong>兩張表的列序是照讀者的思考順序排的，不要動</strong>（2026-09-10 定）：</li>
 <li>「實作文件」：臨床端進度報告 → 技術端進度報告 → 架構圖 → 資料字典 → 這套系統是用什麼蓋的 → 病人端外殼 App 契約 → 完整手動測試手冊 → 部署手冊。先知道進度到哪，再看系統長什麼樣、蒐了哪些資料，然後是名詞解釋與外殼的介面（0927 加，參考文件排在一起），最後兩列才是動手的兩份——先驗收，再部署。 <strong>測試手冊的迭代分冊與部署手冊的各冊（十五冊與八本子手冊）都不另占一列</strong>：它們從各自的索引進去，理由見下一段</li>
-<li>「其他文件」在首頁只有一行連結，沒有列序。總表裡兩張表（目前四十一份）：<ul>
-<li>一般文件沒有閱讀動線，新增的排在表尾（目前二十三份：平板管控、介面設計基準、部署演練紀錄、部署路線比較、同院 IDH 系統參考調查、三種衛教的 AI 生成、透析中的遊戲化、透析中的遊戲化之一、之二、之三、之四、之五、之五附錄、緊急通報的處理流程與護理紀錄連動、管理儀表板、獎勵制度與對外揭露的更新與修正、之一：三者蒐集與展示的資料、暫用平板、緊急求助的語音說明、之一：開源專案與模型的選型、之二：根本判斷、之三：鏡頭能做到哪些事、之四：完整流程、蒐集資料的完整取出）。 <strong>子文件例外</strong>（1010 起）：緊接在上層文件那一列下面、名稱前加 <code>↳</code>，側欄裡和上層文件收成一組</li>
-<li>小迭代文件依迭代編號排（目前十八份：迭代 9.1 修正清單、迭代 14.1～14.5 修正紀錄、迭代 17.1～17.8 修正紀錄、迭代 18.1 修正紀錄、迭代 23 的三次子迭代、迭代 27.1 修正紀錄、迭代 27.2 修正紀錄）</li>
+<li>「其他文件」在首頁只有一行連結，沒有列序。總表裡兩張表，<strong>目前有哪幾份、各幾份就看總表本身</strong>（2026-10-26 起不在這裡另抄一份清單，<code>docs:check</code> 會比對總表與側欄的列序）：<ul>
+<li>一般文件沒有閱讀動線，新增的排在表尾。 <strong>子文件例外</strong>（1010 起）：緊接在上層文件那一列下面、名稱前加 <code>↳</code>，側欄裡和上層文件收成一組</li>
+<li>小迭代文件依迭代編號排</li>
 </ul>
 </li>
 <li>「需求文件」：FDE 數位化評估報告 → SRS → 資料庫使用規範 → 實作規格書 → 部署規範 → 尚待確認事項清冊。前五份是從為什麼要做，讀到做什麼、資料怎麼管、怎麼實作，最後是怎麼部署；第六份（清冊）是進行中的問題總表，不在這條動線上，固定排最後一列。 <strong>這不是優先權順序</strong>——衝突時仍以實作規格書為準，優先權寫在「角色」欄，不要拿列序去推</li>
 <li>每週紀錄<strong>最多三段</strong>，每段三到五條</li>
 <li>細節一律留在週報或該文件裡，首頁只放連結與一句話</li>
-<li>維護用的說明（本頁與 AGENT.md）只准出現在最後一行</li>
+<li>維護用的說明（本頁與 AGENT.md 對照頁）只准出現在最後一行</li>
 </ul>
 <p>首頁一旦開始長內容，累積半年後就沒人讀得下去了，那時再砍要花的力氣是現在的十倍。</p>
 <hr />
