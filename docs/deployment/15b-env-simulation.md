@@ -83,6 +83,7 @@ ipconfig
 | `HD_IMAGE_TAG` | 要測的 tag，例如 `v0.3.0` | |
 | `HD_BACKUP_DIR` | `C:\hd-sim\backups` | ✓ 根目錄不同（院內是 `C:\hd\hd-tablet-care\…`） |
 | `HD_CONFIG_DIR` | `C:\hd-sim\config` | ✓ 同上 |
+| `HD_EXPORT_DIR` | `C:\hd-sim\export` | ✓ 同上；與備份資料夾分開（1027 迭代 28 起，[第十六冊](16-data-export.md)） |
 
 - 要測更新演練時，會另打一個測試 tag（第十一冊第 7 節），那時照 W-19 把 `HD_IMAGE_TAG` 改成測試 tag。
 - 目錄一樣**不要放在 OneDrive 或 `C:\Users\<帳號>\` 底下的桌面／文件／下載**。模擬部署要練的就是院內那套規矩。
@@ -199,6 +200,7 @@ HD_IMAGE_TAG=v0.3.0
 
 HD_BACKUP_DIR=C:\hd-sim\backups
 HD_CONFIG_DIR=C:\hd-sim\config
+HD_EXPORT_DIR=C:\hd-sim\export
 
 HD_API_PORT=13000
 HD_NURSE_PORT=18080
@@ -285,7 +287,7 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BA
 
 | 變數 | 實際部署 | 模擬部署 |
 |---|---|---|
-| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_SHELL_SRC_DIR` | `C:\hd\hd-tablet-care\…`（1001 院內實際用的） | `C:\hd-sim\…` |
+| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_EXPORT_DIR`、`HD_SHELL_SRC_DIR` | `C:\hd\hd-tablet-care\…`（1001 院內實際用的；`HD_EXPORT_DIR` 1027 起才有） | `C:\hd-sim\…` |
 | 三個埠 | `13000`、`18080`、`18081`（0930 資訊室確認） | 相同（例外） |
 | 三個位址的主機 | V-08 定的院內名稱或 IP | 開發機的 Wi-Fi IP |
 | `HD_SHELL_SIGNING` | **`hospital`** | **`dev`** |

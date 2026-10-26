@@ -96,10 +96,12 @@ notepad $cfg
 |---|---|---|
 | `HD_BACKUP_DIR` | 備份資料夾的**完整路徑** | `C:\hd\hd-tablet-care\backups` |
 | `HD_CONFIG_DIR` | 這份 `.env` 所在的資料夾 | `C:\hd\hd-tablet-care\config` |
+| `HD_EXPORT_DIR` | 研究與後續計畫的資料取出寫在這裡（1027 迭代 28 起，DEP-47） | `C:\hd\hd-tablet-care\export` |
 
 - 兩個資料夾都要先存在（V-09 建的）。**填錯**：`bind source path does not exist`。
 - 不准放在雲端同步資料夾、網路磁碟機、RAM 磁碟（院內主機的 E 槽就是）、`C:\Users\<帳號>\` 底下的桌面／文件／下載（DEP-21、DEP-37）。
 - `HD_CONFIG_DIR` **不能是 `repo` 底下**：某一次「整個刪掉重新 clone」會把設定一起刪掉（DEP-08）。
+- `HD_EXPORT_DIR` **與備份資料夾分開**：不能是同一個、也不能一個在另一個裡面（備份會送往院內另一台機器，取出檔不該跟著走）；不准放的地方與上面相同。資料夾不必先建，第一次取出時自動建立；**沒有填的話，每一個 `docker compose` 指令都會停在「請設定 HD_EXPORT_DIR」**。怎麼取資料見[第十六冊](16-data-export.md)
 
 ### 1.3 連接埠
 
@@ -227,6 +229,7 @@ HD_IMAGE_TAG=v0.3.0
 
 HD_BACKUP_DIR=C:\hd\hd-tablet-care\backups
 HD_CONFIG_DIR=C:\hd\hd-tablet-care\config
+HD_EXPORT_DIR=C:\hd\hd-tablet-care\export
 
 HD_API_PORT=13000
 HD_NURSE_PORT=18080
@@ -329,6 +332,7 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 | `HD_IMAGE_TAG` | 只在更新、回退時改，照第十一冊 W-19、W-20，不要單獨改 |
 | `HD_SHELL_SIGNING` | **不准改** |
 | `HD_BACKUP_DIR`、`HD_CONFIG_DIR` | `up -d`。舊資料夾裡的備份要先搬過去，並知會負責把備份送往另一台機器的人 |
+| `HD_EXPORT_DIR` | 不必重新啟動，下一次取出就寫到新位置。舊位置裡的匯出檔照[第十六冊](16-data-export.md)第 7 步刪掉 |
 
 ---
 
@@ -336,12 +340,14 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 
 1001 第二次進院已經在 `C:\hd\hd-tablet-care\config\.env` 填好一份，服務也照它跑起來了。下一次進院**不要再從範本複製**（會蓋掉它），照下面核對：
 
+> **1027 起（迭代 28）**：1001 那一份沒有 `HD_EXPORT_DIR`。換到迭代 28 以後的 tag，第一行 `config --quiet` 會停在「請設定 HD_EXPORT_DIR」——照 1.2 節在 `HD_CONFIG_DIR` 下面補一行 `HD_EXPORT_DIR=C:\hd\hd-tablet-care\export` 再往下。
+
 **做什麼**（先輸入第十五冊 V-09 的開工三行）
 
 ```powershell
 docker compose --env-file $cfg config --quiet
 Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
-Select-String -Path $cfg -Pattern '^(HD_IMAGE_TAG|HD_BACKUP_DIR|HD_CONFIG_DIR|HD_SHELL_SRC_DIR|HD_SHELL_SIGNING|LLM_PROVIDER|HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BASE_URL)='
+Select-String -Path $cfg -Pattern '^(HD_IMAGE_TAG|HD_BACKUP_DIR|HD_CONFIG_DIR|HD_EXPORT_DIR|HD_SHELL_SRC_DIR|HD_SHELL_SIGNING|LLM_PROVIDER|HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BASE_URL)='
 ```
 
 **怎麼看**

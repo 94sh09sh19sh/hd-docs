@@ -303,6 +303,7 @@ notepad D:\hd-tablet-care\config\.env
 |---|---|
 | `HD_IMAGE_TAG` | 與 W-10 的 tag 相同 |
 | `HD_BACKUP_DIR`、`HD_CONFIG_DIR` | `D:\hd-tablet-care\backups`、`D:\hd-tablet-care\config` |
+| `HD_EXPORT_DIR` | `D:\hd-tablet-care\export`（1027 迭代 28 起；與備份目錄分開，只掛給一次性的 `data-export`，見[第十六冊](16-data-export.md)） |
 | `HD_API_PORT`、`HD_NURSE_PORT`、`HD_PATIENT_PORT` | W-07 確認過的三個埠 |
 | `HD_PUBLIC_API_URL` | 護理站連得到的後端位址，例如 `http://<主機名稱>:<後端埠>`。**建置時寫進護理端的產物**（DEP-39） |
 | `CORS_ORIGINS` | 護理端的實際位址（病人端與後端同一個來源，不必列） |
