@@ -58,7 +58,7 @@
 | 我是 | 看這份 | 本週定版 |
 |---|---|---|
 | 醫師、護理部、法規承辦人 | [臨床端進度報告](reports/progress-clinical.md) | 1021 |
-| 接手或協作的工程師 | [技術端進度報告](reports/progress-technical.md) | 1021 |
+| 接手或協作的工程師 | [技術端進度報告](reports/progress-technical.md) | 1021 · 修訂中 |
 | 要看系統實體與邏輯長什麼樣 | [架構圖](requirements/architecture-diagrams.md) | 1021 |
 | 要查資料庫蒐集了哪些資料 | [資料字典](reference/data-dictionary.md) — 97 張表 950 個欄位逐欄說明 | 1021 |
 | 沒有技術背景，想聽懂會議上那些詞 | [這套系統是用什麼蓋的](reference/tech-stack-explained.md) | 1021 |
