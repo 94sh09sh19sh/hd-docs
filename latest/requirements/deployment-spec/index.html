@@ -94,6 +94,48 @@
     }
     .ask-ai-actions button:disabled { opacity: .4; cursor: not-allowed; }
     @media print { .ask-ai-fab, .ask-ai-panel { display: none; } }
+
+    /* 閱讀統計頁（weekly/readership.md，由 npm run docs:readership 產生）。
+       「不含我自己／包含我自己」是兩個 radio 切換兩份預先算好的內容，不靠腳本。 */
+    .rs-mode { position: absolute; opacity: 0; pointer-events: none; }
+    .rs-switch { display: inline-flex; margin: .4rem 0 1rem; border: 1px solid var(--md-primary-fg-color); border-radius: .3rem; overflow: hidden; }
+    .rs-switch label { padding: .35rem .9rem; cursor: pointer; font-size: .7rem; font-weight: 700; color: var(--md-primary-fg-color); }
+    #rs-others:checked ~ .rs-switch label[for="rs-others"],
+    #rs-all:checked ~ .rs-switch label[for="rs-all"] { color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); }
+    #rs-others:focus-visible ~ .rs-switch label[for="rs-others"],
+    #rs-all:focus-visible ~ .rs-switch label[for="rs-all"] { outline: 2px solid var(--md-accent-fg-color); outline-offset: -2px; }
+    .rs-view { display: none; }
+    #rs-others:checked ~ .rs-view-others, #rs-all:checked ~ .rs-view-all { display: block; }
+    .rs-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .6rem; margin: 0 0 1.2rem; }
+    .rs-tile { padding: .6rem .8rem; border-radius: .3rem; background: var(--md-code-bg-color); }
+    .rs-tile b { display: block; font-size: 1.2rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+    .rs-tile span { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-h { margin: 1.4rem 0 .5rem; font-size: .8rem; font-weight: 700; }
+    .rs-note { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-bars { display: grid; grid-template-columns: minmax(6rem, 14rem) 1fr; gap: .3rem .6rem; align-items: center; font-size: .7rem; }
+    .rs-bars a, .rs-bars span.rs-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rs-track { display: flex; align-items: center; gap: .4rem; font-variant-numeric: tabular-nums; }
+    .rs-fill { height: .8rem; min-width: 2px; border-radius: 0 3px 3px 0; background: var(--md-primary-fg-color); }
+    .rs-heat { display: grid; grid-template-columns: 4.2rem repeat(24, minmax(0, 1fr)); gap: 2px; font-size: .55rem; color: var(--md-default-fg-color--light); }
+    .rs-view td:not(:first-child), .rs-view th:not(:first-child) { white-space: nowrap; }
+    .rs-heat i { display: block; aspect-ratio: 1; min-height: .6rem; border-radius: 2px; background: var(--md-default-fg-color--lightest); }
+    .rs-heat i[data-n] { background: var(--md-primary-fg-color); }
+    .rs-heat .rs-day { align-self: center; white-space: nowrap; }
+    .rs-heat .rs-hour { text-align: left; white-space: nowrap; }
+    .rs-legend { display: flex; align-items: center; gap: 3px; margin-top: .4rem; font-size: .6rem; color: var(--md-default-fg-color--light); }
+    .rs-legend i { width: .7rem; height: .7rem; border-radius: 2px; background: var(--md-primary-fg-color); }
+    .rs-legend i.rs-zero { background: var(--md-default-fg-color--lightest); }
+    .rs-weeks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: .4rem; align-items: end; height: 7rem; font-size: .6rem; text-align: center; font-variant-numeric: tabular-nums; }
+    .rs-weeks div { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+    .rs-weeks i { display: block; min-height: 2px; margin: .15rem 15% 0; border-radius: 3px 3px 0 0; background: var(--md-primary-fg-color); }
+    .rs-weeks .rs-now i { background: var(--md-accent-fg-color); }
+    .rs-weeks span { color: var(--md-default-fg-color--light); }
+    .rs-times { font-size: .62rem; color: var(--md-default-fg-color--light); }
+    .rs-toast {
+      position: fixed; left: 50%; bottom: 1.2rem; z-index: 6; transform: translateX(-50%);
+      padding: .6rem 1rem; border-radius: .3rem; font-size: .7rem;
+      color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); box-shadow: var(--md-shadow-z2);
+    }
   </style>
 
   </head>
@@ -557,6 +599,34 @@
     
   
     歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/readership/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件閱讀統計
   
 
     
@@ -1219,6 +1289,17 @@
     <span class="md-ellipsis">
       
         0.1.1 1005 補充：院方 API 全面取代手動輸入
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#012-1026-補充蒐集資料的完整取出規劃中" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.2 1026 補充：蒐集資料的完整取出（規劃中）
       
     </span>
   </a>
@@ -5493,6 +5574,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#012-1026-補充蒐集資料的完整取出規劃中" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.2 1026 補充：蒐集資料的完整取出（規劃中）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#02-v10--v20-異動摘要0919歷史" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6019,6 +6111,13 @@
 <li>第三次進院的步驟見《<a href="../implementation-spec/">實作規格書</a>》4.19，主機位址改用 IP（部署手冊第十五冊之四）</li>
 </ul>
 <p><strong>DEP 條款異動</strong>：DEP-22、DEP-29 補一列；新增 DEP-46。</p>
+<h3 id="012-1026-補充蒐集資料的完整取出規劃中">0.1.2 1026 補充：蒐集資料的完整取出（規劃中）<a class="headerlink" href="#012-1026-補充蒐集資料的完整取出規劃中" title="Permanent link">&para;</a></h3>
+<p>部署形態不變，compose 多一個平時不跑的一次性服務（SRS FR-S19；實作規格書 4.28，<strong>尚未實作</strong>）：</p>
+<ul>
+<li><strong>新增 <code>data-export</code></strong>，只在 <code>export</code> 設定檔裡，預設的 <code>up</code> 不會帶到它；<strong>沒有任何網路</strong>、不掛金鑰資料卷，只寫到主機上新的匯出目錄（DEP-47）</li>
+<li>主機設定目錄的 <code>.env</code> 多一個 <code>HD_EXPORT_DIR</code>；部署手冊多第十六冊「取出資料」（實作時寫）</li>
+</ul>
+<p><strong>DEP 條款異動</strong>：新增 DEP-47；11.1 補一列。</p>
 <h3 id="02-v10--v20-異動摘要0919歷史">0.2 v1.0 → v2.0 異動摘要（0919，歷史）<a class="headerlink" href="#02-v10--v20-異動摘要0919歷史" title="Permanent link">&para;</a></h3>
 <p>正式主機由院內 ARM64 的 DGX Spark 改為院內一台 x86-64 的 Windows 工作站（仍與其他專案共用），DGX Spark 只剩「地端推論端點」一個身分；平板管控改走免 MDM；臨床數值確定走院方 API。v2.0 當時因「容器在 Windows 上會撞到資料庫規範」改走安裝包；v3.0 改以 DEP-23 解決這個顧慮（資料庫只放具名資料卷），而不是以換形態迴避。</p>
 <hr />
@@ -6264,7 +6363,8 @@
     ├── patient-web    病人端 PWA 靜態資源（HTTPS）、`/api/` 轉送給 api、外殼 APK 的院內下載頁（DEP-45）
     ├── ai-gateway     AI 閘道（第 5 章）。AI 功能關閉時不必啟動
     ├── shell-builder  一次性工作：建置外殼 APK（第 7 章），平時不跑
-    └── hospital-api-sim  模擬院方 API（1005 新增，simulation profile）。只在開發機與模擬部署啟動
+    ├── hospital-api-sim  模擬院方 API（1005 新增，simulation profile）。只在開發機與模擬部署啟動
+    └── data-export    資料取出（1026 規劃，export profile）。一次性、沒有網路，取資料時才以 run --rm 執行（DEP-47）
 
 具名資料卷（WSL2 內，compose down -v 也刪不掉）   主機目錄（繫結掛載，只有這兩個）
 ├── hd-tablet-care-data   SQLite 與 -wal、-shm      ├── 備份輸出目錄
@@ -6290,6 +6390,17 @@
 <li>院方 API 的原始回應不落在任何主機目錄（《資料庫使用規範》第 13 條 1005 補充）</li>
 <li>（1005 迭代 15 實作時補）<strong>模擬部署以 <code>HD_SIMULATION_DEPLOYMENT=yes</code> 明示</strong>：compose 把後端固定成正式環境設定，模擬部署也一樣，不明示就連模擬部署都用不了模擬院方 API。 <strong>院內主機一律留空</strong>；留空時位址指向 <code>hospital-api-sim</code> 就拒絕啟動，收到模擬院方 API 的回應（帶模擬標頭）也整次作廢——換了名稱的模擬一樣擋得住</li>
 <li>（同上）探測工具在 <code>api</code> 容器裡跑（部署手冊第十五冊 V-30a）：<strong>位址只在探測時當場輸入，不寫進 <code>.env</code></strong>——探測不等於啟用，<code>.env</code> 填了位址，下一次重新啟動就開始寫真實資料</li>
+</ul>
+<p><strong>DEP-47｜（1026 新增，規劃中）資料取出只以 <code>data-export</code> 一次性服務在院內主機上執行；它沒有網路、沒有端點，只寫到與備份分開的匯出目錄。</strong></p>
+<ul>
+<li><code>data-export</code> 只在 <code>export</code> 設定檔裡，以 <code>docker compose --env-file &lt;設定目錄&gt;\.env --profile export run --rm data-export …</code> 執行；預設的 <code>up</code> 不帶它</li>
+<li><code>network_mode: none</code>：<strong>一條網路都沒有</strong>，DEP-14 不必另開例外；<code>check:egress</code> 照舊全綠</li>
+<li>掛資料卷（讀）與匯出目錄（寫），<strong>不掛金鑰資料卷</strong>；上面那張圖「主機目錄只有這兩個」對 <code>api</code> 仍成立，匯出目錄只掛給 <code>data-export</code></li>
+<li><code>HD_EXPORT_DIR</code> 只放設定目錄的 <code>.env</code>，<strong>與備份目錄分開</strong>；啟動時沿用備份目錄的檢查（不在 clone 目錄、網路磁碟或雲端同步資料夾）</li>
+<li>後端與護理端<strong>不得</strong>為取出開任何端點或按鈕；「只能在主機上操作」靠的就是網路上沒有任何地方叫得動它，能登入主機的人一律可信任（DEP-38）</li>
+<li>取出紀錄不由 <code>data-export</code> 寫進資料庫（後端仍是唯一寫入者，DEP-10），寫到匯出目錄的檔案由 <code>api</code> 收</li>
+<li>映像檔、git repo、文件都不得包含匯出檔、假名化金鑰或對照表（DEP-13）；匯出目錄的實際路徑、核准文號、經手人只在主機上</li>
+<li>步驟寫在部署手冊第十六冊（實作時寫），同樣內容另見指令的 <code>--help</code> 與每一個輸出包的 <code>讀我.txt</code></li>
 </ul>
 <h3 id="33-資料庫落點">3.3 資料庫落點<a class="headerlink" href="#33-資料庫落點" title="Permanent link">&para;</a></h3>
 <p><strong>DEP-23｜（0926 由備案條款升為主規則）資料庫檔案不得落在 Windows 目錄的繫結掛載上，只能放在具名資料卷裡。</strong> 繫結掛載在 WSL2 底下是跨檔案系統的轉譯層，SQLite 的檔案鎖不可靠（《資料庫使用規範》7.2）。<strong>0922 院方那句「似乎允許鏡像到容器外」若指的是資料庫放 Windows 目錄，答案仍然是不行</strong>；能放到容器外的是備份，不是資料庫本身。</p>
@@ -6971,6 +7082,11 @@
 <td>信任邊界（DEP-38）已寫進交接文件</td>
 <td>DEP-38</td>
 </tr>
+<tr>
+<td>26</td>
+<td>（1026 新增，迭代 28 做完後適用）<code>HD_EXPORT_DIR</code> 已設在本系統自己的路徑、與備份目錄分開；<code>data-export</code> 沒有網路；交接文件有一行指向第十六冊</td>
+<td>DEP-47</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -7015,6 +7131,10 @@
 <tr>
 <td>Q-32</td>
 <td>主機對外連線的範圍與穩定性。<strong>0930 已回覆</strong>：常態、沒有限制</td>
+</tr>
+<tr>
+<td>Q-39</td>
+<td>資料取出的核准流程、完整級能不能離開主機、匯出檔在主機上留多久（1026 新增；DEP-47）</td>
 </tr>
 </tbody>
 </table>
@@ -7247,7 +7367,7 @@
     panel.setAttribute('aria-label', '用 AI 問這份文件');
     panel.innerHTML =
       '<h2>用 AI 問這份文件</h2>' +
-      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集任何內容。</p>' +
+      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集你輸入的內容。</p>' +
       '<textarea placeholder="例如：病人按了求助之後，護理師那邊會看到什麼？"></textarea>' +
       '<div class="ask-ai-warn">請勿輸入病人姓名、病歷號等個人資料。</div>' +
       '<div class="ask-ai-actions">' +
@@ -7283,6 +7403,106 @@
 
     document.body.appendChild(panel);
     document.body.appendChild(fab);
+  })();
+  </script>
+  <script>
+  (function () {
+    var ENDPOINT = "";
+    if (!ENDPOINT || !/\.github\.io$/.test(location.hostname) || window.__hdReadership) return;
+    window.__hdReadership = true;
+
+    var IDLE = 120000; // 兩分鐘沒有捲動、點擊、按鍵就當作人離開了，不再計時
+
+    function store(key, value) {
+      try {
+        if (value === undefined) return localStorage.getItem(key);
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      } catch (e) {}
+      return null;
+    }
+    function rid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+
+    // ?me=1 標記、?me=0 取消，標完把參數從網址拿掉並提示一下
+    var params = new URLSearchParams(location.search);
+    var me = params.get('me');
+    if (me === '1' || me === '0') {
+      store('hd-docs-me', me === '1' ? '1' : null);
+      params.delete('me');
+      var rest = params.toString();
+      history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+      var toast = document.createElement('div');
+      toast.className = 'rs-toast';
+      toast.setAttribute('role', 'status');
+      toast.textContent = me === '1' ? '這個瀏覽器已標記為「我自己」，閱讀統計可以一鍵排除' : '已取消「我自己」標記';
+      document.body.appendChild(toast);
+      setTimeout(function () { toast.remove(); }, 4000);
+    }
+
+    var visitor = store('hd-docs-vid');
+    if (!visitor) { visitor = rid(); store('hd-docs-vid', visitor); }
+    var self = store('hd-docs-me') === '1' || navigator.webdriver === true || /HeadlessChrome/.test(navigator.userAgent);
+
+    // 版本根目錄（…/hd-docs/latest/）之後那一段就是頁面路徑，根目錄最後一段是版本
+    function where() {
+      var root;
+      try { root = new URL('.', __md_scope).pathname; } catch (e) { root = location.pathname.replace(/^(\/[^/]+\/[^/]+\/).*$/, '$1'); }
+      var path = location.pathname.indexOf(root) === 0 ? location.pathname.slice(root.length) : location.pathname;
+      try { path = decodeURIComponent(path); } catch (e) {}
+      return { path: path, ver: root.replace(/\/$/, '').split('/').pop() };
+    }
+
+    var view = null;
+    var lastInput = Date.now();
+    var lastTick = Date.now();
+
+    function send(sec) {
+      var body = JSON.stringify({
+        v: visitor, p: view.id, path: view.path, ver: view.ver, title: view.title, t0: view.t0, sec: sec, self: self ? 1 : 0
+      });
+      try { if (navigator.sendBeacon && navigator.sendBeacon(ENDPOINT, body)) return; } catch (e) {}
+      try { fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: body }); } catch (e) {}
+    }
+
+    // 只累計分頁在前景、而且最近有動作的時間；電腦睡著醒來那一大段由單次上限擋掉
+    function tick() {
+      var now = Date.now();
+      if (view && document.visibilityState === 'visible' && now - lastInput < IDLE) view.ms += Math.min(now - lastTick, 15000);
+      lastTick = now;
+    }
+
+    // 送出這一段的秒數；同一次閱讀切走再回來會送好幾段，統計時加總
+    function flush() {
+      tick();
+      if (view && view.ms >= 1000) {
+        send(Math.round(view.ms / 1000));
+        view.ms = 0;
+      }
+    }
+
+    // 開新的一次閱讀：先送一筆 0 秒，萬一離開時那一筆沒送到，至少「看過」有記到
+    function begin() {
+      var w = where();
+      if (view && view.path === w.path) return; // 同一頁只是跳錨點
+      flush();
+      view = { id: rid(), path: w.path, ver: w.ver, title: document.title.split(' - ')[0], t0: Date.now(), ms: 0 };
+      lastInput = lastTick = Date.now();
+      send(0);
+    }
+
+    ['scroll', 'wheel', 'keydown', 'pointerdown', 'pointermove', 'touchstart'].forEach(function (type) {
+      addEventListener(type, function () { lastInput = Date.now(); }, { passive: true, capture: true });
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') flush();
+      else lastInput = lastTick = Date.now();
+    });
+    addEventListener('pagehide', flush);
+    setInterval(tick, 5000);
+
+    // navigation.instant 換頁不會重跑這段，靠 Material 的 document$ 得知換了頁（首次載入也會發一次）
+    if (typeof document$ !== 'undefined' && document$.subscribe) document$.subscribe(begin);
+    else begin();
   })();
   </script>
 

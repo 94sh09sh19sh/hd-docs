@@ -94,6 +94,48 @@
     }
     .ask-ai-actions button:disabled { opacity: .4; cursor: not-allowed; }
     @media print { .ask-ai-fab, .ask-ai-panel { display: none; } }
+
+    /* 閱讀統計頁（weekly/readership.md，由 npm run docs:readership 產生）。
+       「不含我自己／包含我自己」是兩個 radio 切換兩份預先算好的內容，不靠腳本。 */
+    .rs-mode { position: absolute; opacity: 0; pointer-events: none; }
+    .rs-switch { display: inline-flex; margin: .4rem 0 1rem; border: 1px solid var(--md-primary-fg-color); border-radius: .3rem; overflow: hidden; }
+    .rs-switch label { padding: .35rem .9rem; cursor: pointer; font-size: .7rem; font-weight: 700; color: var(--md-primary-fg-color); }
+    #rs-others:checked ~ .rs-switch label[for="rs-others"],
+    #rs-all:checked ~ .rs-switch label[for="rs-all"] { color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); }
+    #rs-others:focus-visible ~ .rs-switch label[for="rs-others"],
+    #rs-all:focus-visible ~ .rs-switch label[for="rs-all"] { outline: 2px solid var(--md-accent-fg-color); outline-offset: -2px; }
+    .rs-view { display: none; }
+    #rs-others:checked ~ .rs-view-others, #rs-all:checked ~ .rs-view-all { display: block; }
+    .rs-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .6rem; margin: 0 0 1.2rem; }
+    .rs-tile { padding: .6rem .8rem; border-radius: .3rem; background: var(--md-code-bg-color); }
+    .rs-tile b { display: block; font-size: 1.2rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+    .rs-tile span { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-h { margin: 1.4rem 0 .5rem; font-size: .8rem; font-weight: 700; }
+    .rs-note { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-bars { display: grid; grid-template-columns: minmax(6rem, 14rem) 1fr; gap: .3rem .6rem; align-items: center; font-size: .7rem; }
+    .rs-bars a, .rs-bars span.rs-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rs-track { display: flex; align-items: center; gap: .4rem; font-variant-numeric: tabular-nums; }
+    .rs-fill { height: .8rem; min-width: 2px; border-radius: 0 3px 3px 0; background: var(--md-primary-fg-color); }
+    .rs-heat { display: grid; grid-template-columns: 4.2rem repeat(24, minmax(0, 1fr)); gap: 2px; font-size: .55rem; color: var(--md-default-fg-color--light); }
+    .rs-view td:not(:first-child), .rs-view th:not(:first-child) { white-space: nowrap; }
+    .rs-heat i { display: block; aspect-ratio: 1; min-height: .6rem; border-radius: 2px; background: var(--md-default-fg-color--lightest); }
+    .rs-heat i[data-n] { background: var(--md-primary-fg-color); }
+    .rs-heat .rs-day { align-self: center; white-space: nowrap; }
+    .rs-heat .rs-hour { text-align: left; white-space: nowrap; }
+    .rs-legend { display: flex; align-items: center; gap: 3px; margin-top: .4rem; font-size: .6rem; color: var(--md-default-fg-color--light); }
+    .rs-legend i { width: .7rem; height: .7rem; border-radius: 2px; background: var(--md-primary-fg-color); }
+    .rs-legend i.rs-zero { background: var(--md-default-fg-color--lightest); }
+    .rs-weeks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: .4rem; align-items: end; height: 7rem; font-size: .6rem; text-align: center; font-variant-numeric: tabular-nums; }
+    .rs-weeks div { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+    .rs-weeks i { display: block; min-height: 2px; margin: .15rem 15% 0; border-radius: 3px 3px 0 0; background: var(--md-primary-fg-color); }
+    .rs-weeks .rs-now i { background: var(--md-accent-fg-color); }
+    .rs-weeks span { color: var(--md-default-fg-color--light); }
+    .rs-times { font-size: .62rem; color: var(--md-default-fg-color--light); }
+    .rs-toast {
+      position: fixed; left: 50%; bottom: 1.2rem; z-index: 6; transform: translateX(-50%);
+      padding: .6rem 1rem; border-radius: .3rem; font-size: .7rem;
+      color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); box-shadow: var(--md-shadow-z2);
+    }
   </style>
 
   </head>
@@ -557,6 +599,34 @@
     
   
     歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/readership/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件閱讀統計
   
 
     
@@ -1090,6 +1160,17 @@
     <span class="md-ellipsis">
       
         0.8 1025 異動摘要（迭代 27.2：進度條的時間與血壓單位）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-1026-異動摘要第四款遊戲連點成畫蒐集資料的完整取出" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9 1026 異動摘要（第四款遊戲「連點成畫」、蒐集資料的完整取出）
       
     </span>
   </a>
@@ -5623,6 +5704,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#09-1026-異動摘要第四款遊戲連點成畫蒐集資料的完整取出" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9 1026 異動摘要（第四款遊戲「連點成畫」、蒐集資料的完整取出）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6468,6 +6560,61 @@
 </tbody>
 </table>
 <p><strong>功能邊界的變動</strong>：兩項都只是把已經畫出來的東西寫清楚，不加任何判讀；剩餘時間是純時間換算（開始後四小時），不是臨床進度。</p>
+<h3 id="09-1026-異動摘要第四款遊戲連點成畫蒐集資料的完整取出">0.9 1026 異動摘要（第四款遊戲「連點成畫」、蒐集資料的完整取出）<a class="headerlink" href="#09-1026-異動摘要第四款遊戲連點成畫蒐集資料的完整取出" title="Permanent link">&para;</a></h3>
+<p>1025～1026 使用者定了兩件事，分析寫在《<a href="../../notes/dialysis-gamification-benchmark/">透析中的遊戲化之五：有國際常模的第四款遊戲</a>》與《<a href="../../notes/data-extraction-plan/">蒐集資料的完整取出</a>》。兩件都<strong>只寫進需求、還沒排程式</strong>（實作規格書 4.28～4.31）。緊急求助的麥克風與鏡頭（《緊急求助的語音說明》與其子文件）要跟醫師確認的事太多，<strong>1026 決定這一週不寫進需求</strong>。需求總數由 83 條增為 <strong>85 條</strong>：新增 FR-N21、FR-S19。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>項次</th>
+<th>原本</th>
+<th>改成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>遊戲（FR-P16）</td>
+<td>三款；「不計時」</td>
+<td><strong>四款</strong>，多「<strong>連點成畫</strong>」：依序點 1～25（連線測驗 A），每月一次標準模式加做圓、方交替的 B 部分；「不計時」改寫成<strong>畫面不顯示計時、不限時</strong>，背景記完成時間（同麻將「找一對的時間」）。一個開關，預設關閉</td>
+</tr>
+<tr>
+<td>2</td>
+<td>遊戲資料的狀態評估彙整（FR-N20）</td>
+<td>小花園、麻將、相簿</td>
+<td>連點成畫的參與與標準模式「跟自己比」也走這一條，規則不變</td>
+</tr>
+<tr>
+<td>3</td>
+<td>認知遊戲的常模對照（<strong>新增 FR-N21</strong>）</td>
+<td>沒有；遊戲資料一律只跟本人過去比</td>
+<td>連點成畫標準模式 A 部分的完成時間，對照臨床端書面提供的公開常模，在護理端寫一句事實陳述（「約在同齡常模第 25 百分位」）並附依據與限制；<strong>B 部分沒有常模，只跟自己比</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>高風險功能控制（5.6 節）</td>
+<td>三項（FR-P03、FR-P05、FR-N06）</td>
+<td><strong>四項</strong>，加 FR-N21；FR-R01～R08 全部適用，FR-N13 的檢視與採納紀錄一併適用</td>
+</tr>
+<tr>
+<td>5</td>
+<td>功能開關中心（FR-S08）</td>
+<td>遊戲化九個開關</td>
+<td>多兩個：「連點成畫」（預設關）、「常模對照」（預設關，受 FR-R08 閘門）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>蒐集資料的完整取出（<strong>新增 FR-S19</strong>）</td>
+<td>沒有；資料離開資料庫的唯一管道是對外報表</td>
+<td>院內主機上的一支<strong>只讀取出指令</strong>：三種範圍（全部、某幾類表、某幾張表）、兩個等級（完整、假名化）、取出紀錄進稽核、每個欄位登記匯出分類；<strong>沒有網路端點、護理端沒有按鈕</strong>，只寫到主機的匯出目錄</td>
+</tr>
+</tbody>
+</table>
+<p><strong>功能邊界的變動</strong>：</p>
+<ul>
+<li>第 3 項是遊戲化第一次<strong>拿病人的表現去跟別人比</strong>，屬「依資料做出可能影響臨床判斷的陳述」，所以列入 5.6 節，與另外三項同一套閘門；措辭只寫百分位與依據，<strong>不寫「疑似認知退化」「執行功能受損」</strong>。透析中、平板、不說「越快越好」三項偏差方向相反、大小不明，常模對照只能當參考（之五第 5 節）</li>
+<li>第 6 項的取出<strong>不離開院內</strong>，與《資料庫使用規範》第 12 條「離開院內只能走對外報表」不衝突；要搬到院內分析機器或出院，仍要院方另行核准（規範第 20 條）</li>
+</ul>
 <hr />
 <h2 id="1-文件目的與範圍">1. 文件目的與範圍<a class="headerlink" href="#1-文件目的與範圍" title="Permanent link">&para;</a></h2>
 <p>本文件定義「血液透析中心平板照護輔助系統」之軟體需求，涵蓋病人端 15 台 Android 平板、護理端多裝置應用、後端服務、地端 AI 輔助功能、單位管理與營運分析，以及資料治理規範。</p>
@@ -6602,7 +6749,7 @@
 </tr>
 <tr>
 <td><strong>社工</strong></td>
-<td>唯讀調閱病人詳細資訊與遊戲資料的狀態評估彙整（FR-N20），調閱寫入稽核軌跡；不具任何臨床操作權</td>
+<td>唯讀調閱病人詳細資訊與遊戲資料的狀態評估彙整（FR-N20；1026 起含連點成畫的常模對照 FR-N21），調閱寫入稽核軌跡；不具任何臨床操作權</td>
 <td><strong>1010 新增</strong>（遊戲化決定第 6 題）</td>
 </tr>
 <tr>
@@ -6911,6 +7058,28 @@
 <td>不可</td>
 </tr>
 <tr>
+<td>認知遊戲的常模對照（FR-N21）調閱（1026）</td>
+<td>不可</td>
+<td>可</td>
+<td>可</td>
+<td>可</td>
+<td>不可</td>
+<td>不可</td>
+<td><strong>可（唯讀，寫稽核）</strong></td>
+<td><strong>可（唯讀，寫稽核）</strong></td>
+</tr>
+<tr>
+<td>資料取出紀錄（FR-S19）檢視（1026）</td>
+<td>不可</td>
+<td>不可</td>
+<td>可（唯讀）</td>
+<td>不可</td>
+<td>不可</td>
+<td>可（唯讀）</td>
+<td>不可</td>
+<td>不可</td>
+</tr>
+<tr>
 <td>AI 規則／模型參數調整</td>
 <td>不可</td>
 <td>不可</td>
@@ -6924,6 +7093,7 @@
 </tbody>
 </table>
 <p><strong>1010：社工與醫師只多一列「可」</strong>（病人詳細資訊與狀態評估彙整的唯讀調閱），其餘全部不可——包括護理記錄、求助處理與任何開關。醫師在本系統不開醫囑，所以沒有比護理師多的臨床操作。</p>
+<p><strong>1026：資料取出本身不在這張表裡。</strong> 護理端任何角色都取不出資料，只看得到「誰、何時、取了什麼」的紀錄；取出只能由院方核准的經手人登入院內主機、以指令執行（FR-S19）。FDE 工程師不因為會操作這支指令就取得臨床資料存取權。常模對照（FR-N21）調閱的角色與 FR-N20 相同，開關開了、閘門也開了才看得到。</p>
 <h3 id="43-裝置與病人綁定流程">4.3 裝置與病人綁定流程<a class="headerlink" href="#43-裝置與病人綁定流程" title="Permanent link">&para;</a></h3>
 <p><strong>前置條件</strong>：護理站已建立當日排班表（病人—療程時段對應）。</p>
 <ol>
@@ -7065,10 +7235,10 @@
 </tr>
 <tr>
 <td><strong>FR-P16</strong></td>
-<td><strong>遊戲</strong>：基本資訊區的遊戲圖示進入遊戲選單，提供<strong>透析小花園、麻將連連看、老台灣記憶相簿</strong>三款。全部只用點一下、不計時、不會輸、完全無聲、隨時可停、<strong>存檔跟著病人走</strong>（存在伺服器，換平板、換床都接得上）、斷線照樣能玩；遊戲畫在任務畫面的框裡，求助區不變。每款一個功能開關，預設關閉</td>
+<td><strong>遊戲</strong>：基本資訊區的遊戲圖示進入遊戲選單，提供<strong>透析小花園、麻將連連看、老台灣記憶相簿</strong>三款。全部只用點一下、不計時、不會輸、完全無聲、隨時可停、<strong>存檔跟著病人走</strong>（存在伺服器，換平板、換床都接得上）、斷線照樣能玩；遊戲畫在任務畫面的框裡，求助區不變。每款一個功能開關，預設關閉。<strong>1026 補</strong>：多第四款「<strong>連點成畫</strong>」（依序點數字，點完揭開一幅畫；每月一盤自動換成標準模式）；「不計時」改寫成<strong>畫面不顯示計時、不限時</strong>，背景照樣記完成時間（補充說明 1026）</td>
 <td>P2</td>
-<td>無</td>
-<td><strong>1010 新增</strong></td>
+<td>無（常模對照另見 FR-N21）</td>
+<td><strong>1010 新增，1026 補</strong></td>
 </tr>
 <tr>
 <td><strong>FR-P17</strong></td>
@@ -7445,10 +7615,17 @@
 </tr>
 <tr>
 <td><strong>FR-N20</strong></td>
-<td><strong>遊戲資料的狀態評估彙整</strong>：由遊戲資料（參與、找一對的時間、提示次數等）照附錄 C.7 同一套規則算出趨勢陳述，顯示在病人詳細資訊；<strong>只陳述事實、只跟本人過去比、不經語言模型、不觸發任何動作</strong>；護理師、社工、醫師可調閱，調閱寫入稽核軌跡。<strong>開關關閉時資料照樣記錄，只是不顯示</strong></td>
+<td><strong>遊戲資料的狀態評估彙整</strong>：由遊戲資料（參與、找一對的時間、提示次數等）照附錄 C.7 同一套規則算出趨勢陳述，顯示在病人詳細資訊；<strong>只陳述事實、只跟本人過去比、不經語言模型、不觸發任何動作</strong>；護理師、社工、醫師可調閱，調閱寫入稽核軌跡。<strong>開關關閉時資料照樣記錄，只是不顯示</strong>。<strong>1026 補</strong>：連點成畫的參與（本月幾盤）與標準模式的跟自己比（例：「本月標準版 A 用時比自己前 6 個月的中位數多 35%」）也走這一條；跟常模比不在這一條，見 FR-N21</td>
 <td>P2</td>
 <td>中（僅事實陳述，非診斷）</td>
-<td><strong>1010 新增</strong></td>
+<td><strong>1010 新增，1026 補</strong></td>
+</tr>
+<tr>
+<td><strong>FR-N21</strong></td>
+<td><strong>認知遊戲的常模對照</strong>：連點成畫標準模式 A 部分的完成時間，查臨床端書面提供、版本化儲存的公開常模表（依年齡、教育程度分層），在病人詳細資訊寫一句事實陳述，例：「本月標準版 A 52 秒，約在同年齡、同教育程度紙本常模的第 25 百分位」；<strong>每一則都附常模出處、施測條件（透析中第幾分鐘、平板）與「僅供參考，非診斷結果」</strong>。B 部分與 B−A 沒有可對照的常模，只走 FR-N20。查表不經語言模型、不觸發任何動作；調閱的角色同 FR-N20，調閱與是否採納寫入稽核軌跡</td>
+<td>P2</td>
+<td><strong>高</strong></td>
+<td><strong>1026 新增</strong>，受 FR-R01～R08 約束</td>
 </tr>
 </tbody>
 </table>
@@ -7876,9 +8053,9 @@
 </tr>
 <tr>
 <td><strong>FR-S08</strong></td>
-<td>功能開關中心：高風險三項、L3 績效、輪播各層、AI 功能，皆可獨立開關，切換寫入稽核軌跡。<strong>1005</strong>：「輪播各層」三個開關改為「本次透析面板」「跑馬燈」兩個。<strong>1010</strong>：遊戲化多九個開關（FR-P16～P19、FR-N19～N20 補充說明）；除了「現有功能的小幅遊戲化」，全部預設關閉；「送花」隨「透析小花園」連動</td>
+<td>功能開關中心：高風險三項、L3 績效、輪播各層、AI 功能，皆可獨立開關，切換寫入稽核軌跡。<strong>1005</strong>：「輪播各層」三個開關改為「本次透析面板」「跑馬燈」兩個。<strong>1010</strong>：遊戲化多九個開關（FR-P16～P19、FR-N19～N20 補充說明）；除了「現有功能的小幅遊戲化」，全部預設關閉；「送花」隨「透析小花園」連動。<strong>1026</strong>：高風險由三項變四項（加 FR-N21）；遊戲化再多兩個開關「連點成畫」「常模對照」，都預設關閉，「常模對照」另受 FR-R08 閘門（FR-P16 補充說明 1026）</td>
 <td>P0</td>
-<td><strong>新增，1005、1010 改寫</strong></td>
+<td><strong>新增，1005、1010、1026 改寫</strong></td>
 </tr>
 <tr>
 <td><strong>FR-S09</strong></td>
@@ -7939,6 +8116,12 @@
 <td><strong>平板連線紀錄</strong>：記下每一台平板每一段斷線的起訖（平板超過線上門檻沒有連線就算斷線，重新連上時補記那一段），以及那時配著的療程；不記病人、不記內容。用在成效儀表板的「療程中斷線過的比例、斷線時長」，讓看數字的人知道資料有沒有斷過；不進對外報表。留存照《資料庫使用規範》8.2</td>
 <td>P2</td>
 <td><strong>1017 新增</strong></td>
+</tr>
+<tr>
+<td><strong>FR-S19</strong></td>
+<td><strong>蒐集資料的完整取出</strong>：院內主機上以一次性容器執行的<strong>只讀</strong>取出指令，供後續計畫的資料分析與模型訓練。三種範圍一定要給一個（全部、某幾類表、某幾張表；後兩者可合用）；兩個等級（完整、假名化）；用途、核准文號、經手人缺一不跑；先做快照再匯出，api 不必停；輸出整包含 SQLite、每表 CSV、說明檔、schema 與資料字典副本、雜湊；取出紀錄進稽核軌跡，護理端系統管理有唯讀的「資料取出紀錄」頁。<strong>沒有網路端點、護理端沒有取出按鈕，取出檔只寫到主機的匯出目錄</strong>；每張表都要歸類、每個欄位都要登記匯出分類，沒登記檢查不過。不靠任何模型也做得完：指令說明、輸出包的讀我檔、部署手冊各寫一份完整步驟</td>
+<td>P1</td>
+<td><strong>1026 新增</strong>（規劃中）</td>
 </tr>
 </tbody>
 </table>
@@ -8032,6 +8215,34 @@
   - <strong>圖鑑照分類排、列出還沒收到的空格</strong>：花照三種種子、訪客照三群、相簿照主題；空格不寫名字。相簿新增「我的相簿」，收的是翻開過答案的每一張，<strong>「想起某個人」點過的照樣收、沒有不同的記號</strong>；下架的圖卡不出現。只跟自己比，不跟別人比。
   - <strong>內容的量</strong>：花 36 種（每種子 12 種）、小訪客 24 種、相簿 120 張（十二個主題）。開關 8 的門檻照舊（至少 60 張、起始六個主題都有）。
 - <strong>遊戲資料是新的個人資料</strong>：存檔、操作紀錄、花園、送花、共同花園與歸檔、彙總都寫進資料字典；留存與取得同意比照平板的其他資料（《資料庫使用規範》第 19 條）。遊戲盤面快照以 JSON 存，是《資料庫使用規範》6.1 第 2 條的唯一例外。</p>
+<p><strong>FR-P16、FR-N20、FR-N21 補充說明（1026，連點成畫）</strong>：</p>
+<p>分析、篩選與偏差表在《<a href="../../notes/dialysis-gamification-benchmark/">透析中的遊戲化之五</a>》與其<a href="../../notes/dialysis-gamification-benchmark-sieve/">篩選過程附錄</a>；與上層文件 9.2 節「只跟自己比」衝突的地方，以之五第 5 節與 FR-N21 為準。</p>
+<ul>
+<li><strong>為什麼是它</strong>：連線測驗（TMT）是腎臟學界指引點名的單項測驗（CONNECT 2024）、透析研究最常用、有大型國際常模、屬公有領域，平板上把「畫線」改成「依序點」就能做。要付費授權或強制受訓認證的工具一律不用</li>
+<li><strong>不走需要香港方面同意的路線</strong>（1026 使用者定）：B 部分以「兩類交替」的典範自製版面，<strong>不稱 Shape Trail Test、不用其版面與常模</strong>；院方法務確認不了自製版面不需任何人同意，B 部分整段不做、只做 A</li>
+<li><strong>遊戲模式（平常）</strong>：25 個圓依序點；點對出現連線、點錯什麼都不變（背景記一次）；點完揭開一幅畫（沿用記憶相簿的插畫）。每點一下就存檔；中斷超過 30 秒的那一盤標「有中斷」、不進基準。<strong>沒有</strong>計時器、倒數、「快一點」、分數、星等、排名</li>
+<li><strong>標準模式（每月一次）</strong>：每月第一盤、而且落在<strong>透析開始後第 30～90 分鐘</strong>的那一盤自動換成標準模式，<strong>不跳邀請、不需要護理師</strong>；先 A（25 個圓）、再 B（1～25 各一圓一方，圓、方交替，50 個）；B 前一張圖說明「圓、方、圓、方」，不靠文字、不用顏色區分；4 套 A、4 套 B 固定版面輪替；指導語「照您自己的速度」，<strong>不說「越快越好」</strong>；前 10 次只當練習；這個月沒玩到就沒有，不補、不提醒</li>
+<li><strong>尺寸</strong>：每個圓 64px、以 76px 的格子鋪，1280×800 的內容區一列 15 格、6 列，A、B 都放得下、不捲動</li>
+<li><strong>記什麼</strong>：A、B 的完成時間、B−A、B÷A；每一個錯點的位置與應點的號碼；每一下的間隔與落點離圓心的距離；是否中斷、在療程第幾分鐘、版面代號。<strong>不記血壓、體重、脫水量，病人端不顯示任何一筆</strong></li>
+<li><strong>護理端分三階段</strong>：只看參與（本月幾盤）→ 跟自己比（FR-N20）→ 常模對照（FR-N21，只有 A 部分）</li>
+<li><strong>常模對照的限制寫在每一則依據裡</strong>：透析中施測讓分數變差、平板讓分數變好、不說「越快越好」讓分數變差，方向相反、大小不明，不能互相抵銷；<strong>主要用法仍是跟自己比</strong>。不引用 FHN 的 300 秒切點當結論</li>
+<li><strong>兩個開關</strong>：「連點成畫」管 FR-P16 這一款與 FR-N20 那一段（預設關）；「常模對照」管 FR-N21（預設關、受 FR-R08 閘門；未取得書面確認前只對合成資料執行）</li>
+<li><strong>要立案建本院參考值嗎</strong>：開發端建議要（B 部分唯一能有 benchmark 的辦法）；研究同意要在收資料之前取得，記在清冊 Q-38，<strong>1102 那週問醫師</strong>。其他前置（常模來源、自製版面的法務確認、病人告知）記在 Q-40</li>
+</ul>
+<p><strong>FR-S19 補充說明（1026，蒐集資料的完整取出）</strong>：</p>
+<p>規劃全文在《<a href="../../notes/data-extraction-plan/">蒐集資料的完整取出</a>》。院方要求系統蒐集的資訊日後要全部取得出來；使用者 1026 定三個前提：<strong>現在開發時就寫好取法、人照文件手動做得完不靠任何模型、只能在院內主機上操作</strong>。</p>
+<ul>
+<li><strong>範圍參數</strong>：<code>--all</code>、<code>--category &lt;類&gt;</code>、<code>--tables &lt;表&gt;</code> 一定要給一個，不給不跑；<code>--category</code> 與 <code>--tables</code> 可合用取聯集，<code>--all</code> 不能與它們合用；表名或類名打錯就停下、列出最接近的名稱，不猜。<code>--list</code> 只列各類各表的筆數與日期範圍、不算一次取出。核准只涵蓋部分資料時用後兩種，不取全部再自己刪（個資法最小必要）</li>
+<li><strong>表與表的關聯</strong>：預設只取指定的表，<code>manifest.json</code> 列出「指向了但沒取」的表；<code>--with-parents</code> 連上一層一起取。<strong>假名化代號每次取出不同，要合併分析的表必須在同一次取出</strong></li>
+<li><strong>兩個等級</strong>：完整（原值，含 SQLite，只留主機）；假名化（直接識別欄換成代號、自由文字欄預設整欄移除、精確時間保留；<strong>仍屬個人資料</strong>，不得稱為「去識別化」或「匿名」）。不做「匿名」一級：真正的去識別化由院方或倫理審查委員會判斷</li>
+<li><strong>不取的</strong>：密碼雜湊、登入憑證、平板金鑰的雜湊（欄位照列、內容清空、標「刻意不取」）；金鑰資料卷與設定目錄的 <code>.env</code></li>
+<li><strong>從舊備份取出</strong>：<code>--from-backup</code> 指定某一份備份，比對備份歷程上的雜湊；範圍照那份備份的 schema 判斷</li>
+<li><strong>取出紀錄</strong>：指令只把紀錄附加到匯出目錄的一個檔案，由 api 收進稽核軌跡與取出紀錄表（後端仍是唯一寫入者）；api 沒開著照樣取得出來，紀錄等下次啟動補收</li>
+<li><strong>欄位登記</strong>：每張表歸一類、每個欄位登記一個匯出分類（一般、直接識別、準識別、自由文字、刻意不取）；新的盤點檢查納入 <code>check:all</code>，有表沒歸類或欄位沒登記就不過。之後任何迭代加表、加欄，沒順手登記就過不了</li>
+<li><strong>第二條路</strong>：指令壞了，拿最新一份雜湊驗過的備份檔，用任何 SQLite 檢視工具直接開；缺的只有假名化與紀錄，要另外手寫一筆紀錄交給院方</li>
+<li><strong>公開與否</strong>：規劃與取資料手冊都放公開文件站；主機位址、目錄、核准文號、經手人、假名化金鑰與對照表<strong>不進任何 repo、不進任何文件</strong>，只留在主機上</li>
+<li>待院方答覆的六題記在清冊 Q-39；資料治理的規定在《資料庫使用規範》第 20 條，部署的規定在《部署規範》DEP-47</li>
+</ul>
 <p><strong>FR-S06 的過渡期限制</strong>：實驗室 API 為院外服務，因此在切換至地端推論之前，<strong>系統不得將任何真實病人資料送入 AI 流程</strong>，僅得使用合成資料。此限制以程式強制（設定為 <code>LabApiProvider</code> 時，帶有真實病人資料的請求應被擋下），不依賴人的自律。</p>
 <p><strong>0926 補一道防線</strong>：院內網路現在連得出去，「把開發機的設定抄到院內」就足以讓資料往實驗室送。因此<strong>正式環境設定下選用實驗室供應者，後端直接拒絕啟動</strong>（部署規範 DEP-40）。合成資料檢查擋「送了什麼」，這一條擋「送往哪裡」。</p>
 <p><strong>AI 生成內容的用語（1007，迭代 17.3）</strong>：系統中所有 AI 生成的內容——病人看的衛教、離院衛教重點、跑馬燈，護理師看的護理記錄初稿與 SOP 查詢回答——<strong>禁用簡體字與中國大陸用語</strong>，台灣不這樣寫的繁體字形也一樣。同樣以程式強制：經 AI 閘道的每一次輸出都查一次字表，不合格就請模型依「哪個詞改成什麼」重寫，最後一次仍不合格也照樣交出（交出前仍要經護理師核准或修改）；這道把關<strong>不在任何畫面上留下痕跡或訊息</strong>。<strong>不自動替換</strong>（一個簡體字可能對到兩個繁體字，替換會換錯）。護理師自己寫的、修改的字不在這一條的範圍。做法與字表見《<a href="../../notes/iteration-17-3-fixes/">迭代 17.3 修正紀錄</a>》。</p>
@@ -8183,7 +8394,7 @@
 </ol>
 <p><strong>FR-S16 的資料範圍（1005）</strong>：API 每次回傳全中心當天到目前為止的全部紀錄。<strong>病人主檔與床位收全部</strong>（床位圖才會與現場一致）；<strong>每一筆生命徵象紀錄只收「這次療程有綁定平板」的病人</strong>——面板只需要他們的，其餘病人的紀錄留在院方。這不會讓剛配平板的病人少掉前面幾點：下一次抓取本來就回傳當天全部紀錄。原始回應整段<strong>不存檔</strong>，只記抓取時間、筆數、結果與內容雜湊。</p>
 <h3 id="56-高風險功能控制0910-新增">5.6 高風險功能控制（0910 新增）<a class="headerlink" href="#56-高風險功能控制0910-新增" title="Permanent link">&para;</a></h3>
-<p>本節適用於 FR-P03、FR-P05、FR-N06 三項。<strong>八條全部滿足才得實作與啟用，缺一不可。</strong></p>
+<p>本節適用於 FR-P03、FR-P05、FR-N06 三項。<strong>八條全部滿足才得實作與啟用，缺一不可。</strong> <strong>1026</strong>：加 FR-N21（連點成畫的常模對照），成為四項；下表的「三項」一律讀作「四項」。FR-N21 的「規則門檻」是常模表本身（FR-R02：由臨床端書面提供、版本化儲存），「輸出」是百分位的事實陳述。</p>
 <table>
 <thead>
 <tr>
@@ -8363,6 +8574,7 @@
 <li><strong>0926 改寫部署形態</strong>：上面「以離線安裝包部署」一句作廢。正式環境改以 <strong>Docker 容器</strong>部署，程式由 <strong>git clone</strong> 取得後在院內主機上就地建置；資料庫只放具名資料卷，備份寫到主機目錄。安裝包路線撤除。詳見《<a href="../deployment-spec/">部署規範</a>》v3.0</li>
 <li><strong>0926 新增</strong>：後端與推論端點之間多一個 <strong>AI 閘道</strong>（本系統的容器之一，不含模型），依設定檔以 LangChain 呼叫推論端點（FR-S13）。<strong>換推論端點只換閘道的設定檔</strong></li>
 <li><strong>0926 新增</strong>：外殼 App 原始碼移到<strong>另一個私人 repo</strong>，APK 在院內主機上以容器建置、由院內下載頁提供給平板，不經任何外部媒介（FR-S14）</li>
+<li><strong>1026 新增（規劃中）</strong>：資料取出是 compose 裡一個只在 <code>export</code> 設定檔才有的一次性服務，<strong>沒有任何網路</strong>、不掛金鑰資料卷，只寫到主機上與備份目錄分開的匯出目錄；後端不多任何端點（FR-S19、DEP-47）</li>
 </ul>
 <p><strong>架構圖現況</strong>：《<a href="../architecture-diagrams/">架構圖</a>》已於 2026-09-11 依本章重繪，推播中繼、外部 LLM 與 PostgreSQL 三處已拿掉；0919 依本節重繪第二次，應用伺服器與 AI 推論端點分成兩台機器，MDM 那格拿掉改為自包外殼與螢幕固定。圖與本章文字若有出入，仍<strong>以本章文字為準</strong>。</p>
 <hr />
@@ -8374,6 +8586,8 @@
 <li>病人可識別資訊不得以任何形式離開醫院網路；去識別化須於寫入資料庫前完成</li>
 <li>護理師績效資料屬目的外利用，適用《資料庫使用規範》第 11 條的分級與啟用限制，個人層級預設關閉</li>
 <li>任何要離開院內的統計數字，須經對外報表模組產生並取得核准（FR-X01～X04）</li>
+<li><strong>1026</strong>：研究與後續計畫用的資料取出（FR-S19）只寫到院內主機，執行前要填用途與院方核准文號（研究用途另附倫理審查文號），取出紀錄進稽核軌跡；要搬到院內分析機器或出院，照《資料庫使用規範》第 20 條另行核准。假名化的取出仍屬個人資料</li>
+<li><strong>1026</strong>：連點成畫的常模對照（FR-N21）同 FR-P03 等三項，上線前要有 TFDA 分類的書面確認（FR-R08，清冊 Q-02）；若要用遊戲資料建本院參考值，屬人體研究，要先過倫理審查、在收資料之前取得研究同意（清冊 Q-38）</li>
 </ul>
 <hr />
 <h2 id="9-裝置管理需求0919-全節改寫免-mdm">9. 裝置管理需求（0919 全節改寫：免 MDM）<a class="headerlink" href="#9-裝置管理需求0919-全節改寫免-mdm" title="Permanent link">&para;</a></h2>
@@ -9554,7 +9768,7 @@
     panel.setAttribute('aria-label', '用 AI 問這份文件');
     panel.innerHTML =
       '<h2>用 AI 問這份文件</h2>' +
-      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集任何內容。</p>' +
+      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集你輸入的內容。</p>' +
       '<textarea placeholder="例如：病人按了求助之後，護理師那邊會看到什麼？"></textarea>' +
       '<div class="ask-ai-warn">請勿輸入病人姓名、病歷號等個人資料。</div>' +
       '<div class="ask-ai-actions">' +
@@ -9590,6 +9804,106 @@
 
     document.body.appendChild(panel);
     document.body.appendChild(fab);
+  })();
+  </script>
+  <script>
+  (function () {
+    var ENDPOINT = "";
+    if (!ENDPOINT || !/\.github\.io$/.test(location.hostname) || window.__hdReadership) return;
+    window.__hdReadership = true;
+
+    var IDLE = 120000; // 兩分鐘沒有捲動、點擊、按鍵就當作人離開了，不再計時
+
+    function store(key, value) {
+      try {
+        if (value === undefined) return localStorage.getItem(key);
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      } catch (e) {}
+      return null;
+    }
+    function rid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+
+    // ?me=1 標記、?me=0 取消，標完把參數從網址拿掉並提示一下
+    var params = new URLSearchParams(location.search);
+    var me = params.get('me');
+    if (me === '1' || me === '0') {
+      store('hd-docs-me', me === '1' ? '1' : null);
+      params.delete('me');
+      var rest = params.toString();
+      history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+      var toast = document.createElement('div');
+      toast.className = 'rs-toast';
+      toast.setAttribute('role', 'status');
+      toast.textContent = me === '1' ? '這個瀏覽器已標記為「我自己」，閱讀統計可以一鍵排除' : '已取消「我自己」標記';
+      document.body.appendChild(toast);
+      setTimeout(function () { toast.remove(); }, 4000);
+    }
+
+    var visitor = store('hd-docs-vid');
+    if (!visitor) { visitor = rid(); store('hd-docs-vid', visitor); }
+    var self = store('hd-docs-me') === '1' || navigator.webdriver === true || /HeadlessChrome/.test(navigator.userAgent);
+
+    // 版本根目錄（…/hd-docs/latest/）之後那一段就是頁面路徑，根目錄最後一段是版本
+    function where() {
+      var root;
+      try { root = new URL('.', __md_scope).pathname; } catch (e) { root = location.pathname.replace(/^(\/[^/]+\/[^/]+\/).*$/, '$1'); }
+      var path = location.pathname.indexOf(root) === 0 ? location.pathname.slice(root.length) : location.pathname;
+      try { path = decodeURIComponent(path); } catch (e) {}
+      return { path: path, ver: root.replace(/\/$/, '').split('/').pop() };
+    }
+
+    var view = null;
+    var lastInput = Date.now();
+    var lastTick = Date.now();
+
+    function send(sec) {
+      var body = JSON.stringify({
+        v: visitor, p: view.id, path: view.path, ver: view.ver, title: view.title, t0: view.t0, sec: sec, self: self ? 1 : 0
+      });
+      try { if (navigator.sendBeacon && navigator.sendBeacon(ENDPOINT, body)) return; } catch (e) {}
+      try { fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: body }); } catch (e) {}
+    }
+
+    // 只累計分頁在前景、而且最近有動作的時間；電腦睡著醒來那一大段由單次上限擋掉
+    function tick() {
+      var now = Date.now();
+      if (view && document.visibilityState === 'visible' && now - lastInput < IDLE) view.ms += Math.min(now - lastTick, 15000);
+      lastTick = now;
+    }
+
+    // 送出這一段的秒數；同一次閱讀切走再回來會送好幾段，統計時加總
+    function flush() {
+      tick();
+      if (view && view.ms >= 1000) {
+        send(Math.round(view.ms / 1000));
+        view.ms = 0;
+      }
+    }
+
+    // 開新的一次閱讀：先送一筆 0 秒，萬一離開時那一筆沒送到，至少「看過」有記到
+    function begin() {
+      var w = where();
+      if (view && view.path === w.path) return; // 同一頁只是跳錨點
+      flush();
+      view = { id: rid(), path: w.path, ver: w.ver, title: document.title.split(' - ')[0], t0: Date.now(), ms: 0 };
+      lastInput = lastTick = Date.now();
+      send(0);
+    }
+
+    ['scroll', 'wheel', 'keydown', 'pointerdown', 'pointermove', 'touchstart'].forEach(function (type) {
+      addEventListener(type, function () { lastInput = Date.now(); }, { passive: true, capture: true });
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') flush();
+      else lastInput = lastTick = Date.now();
+    });
+    addEventListener('pagehide', flush);
+    setInterval(tick, 5000);
+
+    // navigation.instant 換頁不會重跑這段，靠 Material 的 document$ 得知換了頁（首次載入也會發一次）
+    if (typeof document$ !== 'undefined' && document$.subscribe) document$.subscribe(begin);
+    else begin();
   })();
   </script>
 

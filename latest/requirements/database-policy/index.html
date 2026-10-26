@@ -94,6 +94,48 @@
     }
     .ask-ai-actions button:disabled { opacity: .4; cursor: not-allowed; }
     @media print { .ask-ai-fab, .ask-ai-panel { display: none; } }
+
+    /* 閱讀統計頁（weekly/readership.md，由 npm run docs:readership 產生）。
+       「不含我自己／包含我自己」是兩個 radio 切換兩份預先算好的內容，不靠腳本。 */
+    .rs-mode { position: absolute; opacity: 0; pointer-events: none; }
+    .rs-switch { display: inline-flex; margin: .4rem 0 1rem; border: 1px solid var(--md-primary-fg-color); border-radius: .3rem; overflow: hidden; }
+    .rs-switch label { padding: .35rem .9rem; cursor: pointer; font-size: .7rem; font-weight: 700; color: var(--md-primary-fg-color); }
+    #rs-others:checked ~ .rs-switch label[for="rs-others"],
+    #rs-all:checked ~ .rs-switch label[for="rs-all"] { color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); }
+    #rs-others:focus-visible ~ .rs-switch label[for="rs-others"],
+    #rs-all:focus-visible ~ .rs-switch label[for="rs-all"] { outline: 2px solid var(--md-accent-fg-color); outline-offset: -2px; }
+    .rs-view { display: none; }
+    #rs-others:checked ~ .rs-view-others, #rs-all:checked ~ .rs-view-all { display: block; }
+    .rs-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .6rem; margin: 0 0 1.2rem; }
+    .rs-tile { padding: .6rem .8rem; border-radius: .3rem; background: var(--md-code-bg-color); }
+    .rs-tile b { display: block; font-size: 1.2rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+    .rs-tile span { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-h { margin: 1.4rem 0 .5rem; font-size: .8rem; font-weight: 700; }
+    .rs-note { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-bars { display: grid; grid-template-columns: minmax(6rem, 14rem) 1fr; gap: .3rem .6rem; align-items: center; font-size: .7rem; }
+    .rs-bars a, .rs-bars span.rs-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rs-track { display: flex; align-items: center; gap: .4rem; font-variant-numeric: tabular-nums; }
+    .rs-fill { height: .8rem; min-width: 2px; border-radius: 0 3px 3px 0; background: var(--md-primary-fg-color); }
+    .rs-heat { display: grid; grid-template-columns: 4.2rem repeat(24, minmax(0, 1fr)); gap: 2px; font-size: .55rem; color: var(--md-default-fg-color--light); }
+    .rs-view td:not(:first-child), .rs-view th:not(:first-child) { white-space: nowrap; }
+    .rs-heat i { display: block; aspect-ratio: 1; min-height: .6rem; border-radius: 2px; background: var(--md-default-fg-color--lightest); }
+    .rs-heat i[data-n] { background: var(--md-primary-fg-color); }
+    .rs-heat .rs-day { align-self: center; white-space: nowrap; }
+    .rs-heat .rs-hour { text-align: left; white-space: nowrap; }
+    .rs-legend { display: flex; align-items: center; gap: 3px; margin-top: .4rem; font-size: .6rem; color: var(--md-default-fg-color--light); }
+    .rs-legend i { width: .7rem; height: .7rem; border-radius: 2px; background: var(--md-primary-fg-color); }
+    .rs-legend i.rs-zero { background: var(--md-default-fg-color--lightest); }
+    .rs-weeks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: .4rem; align-items: end; height: 7rem; font-size: .6rem; text-align: center; font-variant-numeric: tabular-nums; }
+    .rs-weeks div { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+    .rs-weeks i { display: block; min-height: 2px; margin: .15rem 15% 0; border-radius: 3px 3px 0 0; background: var(--md-primary-fg-color); }
+    .rs-weeks .rs-now i { background: var(--md-accent-fg-color); }
+    .rs-weeks span { color: var(--md-default-fg-color--light); }
+    .rs-times { font-size: .62rem; color: var(--md-default-fg-color--light); }
+    .rs-toast {
+      position: fixed; left: 50%; bottom: 1.2rem; z-index: 6; transform: translateX(-50%);
+      padding: .6rem 1rem; border-radius: .3rem; font-size: .7rem;
+      color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); box-shadow: var(--md-shadow-z2);
+    }
   </style>
 
   </head>
@@ -557,6 +599,34 @@
     
   
     歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/readership/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件閱讀統計
   
 
     
@@ -1562,6 +1632,78 @@
     <span class="md-ellipsis">
       
         19.2 護理紀錄的交出：複製貼上
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-研究與後續計畫的資料取出1026-新增規劃中" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. 研究與後續計畫的資料取出（1026 新增，規劃中）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="20. 研究與後續計畫的資料取出（1026 新增，規劃中）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#201-與其他條的關係" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.1 與其他條的關係
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#202-硬性規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.2 硬性規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#203-取出紀錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.3 取出紀錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#204-欄位登記讓全部一直是全部" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.4 欄位登記：讓「全部」一直是全部
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#205-待院方答覆" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.5 待院方答覆
       
     </span>
   </a>
@@ -6108,6 +6250,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#20-研究與後續計畫的資料取出1026-新增規劃中" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. 研究與後續計畫的資料取出（1026 新增，規劃中）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="20. 研究與後續計畫的資料取出（1026 新增，規劃中）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#201-與其他條的關係" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.1 與其他條的關係
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#202-硬性規則" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.2 硬性規則
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#203-取出紀錄" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.3 取出紀錄
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#204-欄位登記讓全部一直是全部" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.4 欄位登記：讓「全部」一直是全部
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#205-待院方答覆" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20.5 待院方答覆
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6146,7 +6360,7 @@
 <li>存取一律收斂在後端一層：自建身分驗證與 Session、存取控制寫在應用層、統一的資料存取層（第 2～6 條）</li>
 <li>第 7 條 SQLite 必開設定、第 8 條備份還原與留存期限、第 9 條加密與實體安全、第 10 條測試資料</li>
 <li>第 11 條營運與績效資料的蒐集限制、第 12 條資料釋出、第 13 條外部資料匯入、第 14 條 AI 資料的儲存</li>
-<li>第 18 條版本更新前先備份並驗證還原（0919）、第 19 條遊戲資料與護理紀錄的交出（1010）</li>
+<li>第 18 條版本更新前先備份並驗證還原（0919）、第 19 條遊戲資料與護理紀錄的交出（1010）、第 20 條研究與後續計畫的資料取出（1026，規劃中）</li>
 <li>第 16 條是給 agent 的執行前檢查清單；優先權等同實作規格書，容器裡怎麼落實見《部署規範》</li>
 </ul>
 <h2 id="0-背景與核心原則">0. 背景與核心原則<a class="headerlink" href="#0-背景與核心原則" title="Permanent link">&para;</a></h2>
@@ -6622,9 +6836,15 @@
 <td>無限制</td>
 <td>可隨時整份刪除</td>
 </tr>
+<tr>
+<td><strong>資料取出紀錄</strong>（1026，SRS FR-S19）</td>
+<td>永久</td>
+<td>不刪除；與對外報表產出紀錄同理，是取出責任的證據</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Agent 行為規則</strong>：實作任何刪除或封存機制前，先確認醫院是否已定案期限；未定案前一律只做「標記」不做「實際刪除」。</p>
+<p><strong>1026 加註（與第 20 條衝突的地方）</strong>：到期刪除之後，那些資料就「全部取得出來」不了。要不要在刪除前先封存一份研究用取出，待院方答覆（清冊 Q-39 第 3 題）；答覆之前照上一段只標記、不刪，所以現在不衝突。實作刪除機制的那一次迭代，要先看 Q-39 第 3 題。</p>
 <hr />
 <h2 id="9-加密與實體安全">9. 加密與實體安全<a class="headerlink" href="#9-加密與實體安全" title="Permanent link">&para;</a></h2>
 <p>單檔資料庫最大的風險是「整個系統的資料就是這一個檔案」。</p>
@@ -6745,6 +6965,7 @@
 <ul>
 <li>一律經由系統內建的<strong>對外報表功能</strong>產生，不得以資料庫檔案複製、SQL 查詢結果貼上、螢幕截圖等方式取出。</li>
 <li>對外報表功能是一個獨立的模組，有自己的權限與稽核，不共用一般查詢的權限。</li>
+<li><strong>1026 加註</strong>：本條管的是<strong>離開院內</strong>。研究與後續計畫用的資料取出走第 20 條，取出檔只寫到院內主機；<strong>要出院仍只能走對外報表，或院方另行核准的去識別化流程</strong>，假名化的取出不算去識別化。</li>
 </ul>
 <h3 id="122-對外報表的硬性規則">12.2 對外報表的硬性規則<a class="headerlink" href="#122-對外報表的硬性規則" title="Permanent link">&para;</a></h3>
 <table>
@@ -6991,6 +7212,8 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這次的 schema 變更是否可能讓既有資料讀不出來或被清空？→ 見第 18 條，先過那四關</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這次改的是已經套用過的遷移檔嗎？→ 不允許，改成新增一個</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這次的資料表是遊戲資料嗎？→ 照第 19.1 條：寫進資料字典、留存比照平板其他資料、沒有任何護理師欄位、彙總守最低人數門檻</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這次有新增資料表或欄位嗎？→ 照第 20.4 條登記表的類別與欄位的匯出分類（迭代 28 起 <code>check:export</code> 會擋）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 這次的程式會把資料庫內容寫成檔案嗎？→ 只有第 20 條的取出指令與第 12 條的對外報表可以；不得另開匯出端點或按鈕</li>
 </ul>
 <hr />
 <h2 id="17-總結">17. 總結<a class="headerlink" href="#17-總結" title="Permanent link">&para;</a></h2>
@@ -7164,9 +7387,13 @@
 <td>花園與相簿的擴充（1015，迭代 24）</td>
 <td><strong>種子袋</strong>（這次療程種了幾顆）與<strong>在等的小訪客</strong>、連續沒來的次數寫在花園的盤面快照裡，快照格式版本加一、舊快照讀進來當作 0 與沒有訪客；仍守 6.1 的六條界線與 16 KB 上限。<strong>看過哪些訪客</strong>另開正規資料表（病人、訪客代號、第一次看到的時間），比照花園圖鑑，<strong>沒有任何護理師欄位</strong>。<strong>相簿圖鑑不另開資料表</strong>，讀的時候從作答算；「想起某個人」點過的圖卡照樣收進那位病人自己的圖鑑、<strong>不加任何記號</strong>，仍然不進任何彙總。兩個圖鑑的「收到幾種」只給病人自己看，不彙總、不排名</td>
 </tr>
+<tr>
+<td>連點成畫（1026 規劃，迭代 29～31）</td>
+<td>每盤一筆、每一下一筆，照一般規矩正規化，<strong>不用盤面快照</strong>（統計與評估要用的全是正規欄位）；記完成時間、錯點位置與應點號碼、每一下的間隔與落點距離、是否中斷、療程第幾分鐘、版面代號；<strong>不記血壓、體重、脫水量</strong>，沒有任何護理師欄位。跟自己比的陳述同狀態評估陳述，讀的時候才算。<strong>常模對照</strong>（SRS FR-N21）的常模表是規則版本、存臨床端書面出處；每一次查表的結果照規則引擎的執行紀錄存，檢視與採納寫稽核</td>
+</tr>
 </tbody>
 </table>
-<p><strong>遊戲資料不是量表。</strong> 沒有經過驗證前，狀態評估陳述只是「護理師多一扇觀察的窗」；要拿來研究或發表，先送人體研究倫理審查（遊戲化分析 9.3）。</p>
+<p><strong>遊戲資料不是量表。</strong> 沒有經過驗證前，狀態評估陳述只是「護理師多一扇觀察的窗」；要拿來研究或發表，先送人體研究倫理審查（遊戲化分析 9.3）。<strong>1026</strong>：連點成畫若要建本院參考值，就是拿遊戲資料做研究，研究同意要在收資料<strong>之前</strong>取得（清冊 Q-38）；答覆之前遊戲資料只用於照護。</p>
 <h3 id="192-護理紀錄的交出複製貼上">19.2 護理紀錄的交出：複製貼上<a class="headerlink" href="#192-護理紀錄的交出複製貼上" title="Permanent link">&para;</a></h3>
 <p>院方答覆（Q-37）：護理紀錄<strong>不寫入醫院的資料庫</strong>，由護理師把本系統簽核的內容複製、貼進院內的正式紀錄（SRS FR-N18）。</p>
 <ul>
@@ -7176,6 +7403,68 @@
 <li>簽核後不能改（第 14 條）照舊；貼過去之後在院內系統裡再改，不在本系統的範圍</li>
 <li><strong>求助處置紀錄</strong>（1015，SRS FR-N10；迭代 25.3）：臨床組求助結案時，系統建立一筆「求助處置」護理紀錄<strong>草稿</strong>，與結案<strong>同一個交易</strong>——結案失敗就沒有草稿，一則求助最多一筆（「來源求助」欄可空、唯一，只做加法）。草稿與一般護理紀錄同一套規矩：留存同病歷（第 8.2 條）、要護理師簽核才算數、簽核後不能改；結果事後補改時<strong>只重組未簽核的草稿</strong>，已簽核的一個字都不動。段落裡不寫姓名、病歷號、病名。<strong>1018 實作</strong>：<code>nursing_records.source_help_request_id</code>（可空、唯一，以 <code>ADD COLUMN</code> 加上）與記錄類型 <code>HELP_RESPONSE</code>；唯一鍵擋下時整筆結案回 409、不成立；護理師改套範本之後，結果補改不再重組那一筆（實作規格書 4.25 開發端判斷②）</li>
 </ul>
+<hr />
+<h2 id="20-研究與後續計畫的資料取出1026-新增規劃中">20. 研究與後續計畫的資料取出（1026 新增，規劃中）<a class="headerlink" href="#20-研究與後續計畫的資料取出1026-新增規劃中" title="Permanent link">&para;</a></h2>
+<p>院方要求系統蒐集的資訊日後要全部取得出來，供後續計畫做資料分析與模型訓練（SRS FR-S19；實作規格書 4.28，<strong>尚未實作</strong>）。規劃全文在《<a href="../../notes/data-extraction-plan/">蒐集資料的完整取出</a>》。</p>
+<h3 id="201-與其他條的關係">20.1 與其他條的關係<a class="headerlink" href="#201-與其他條的關係" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>條</th>
+<th>關係</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.2 原則 1：資料不離開它該在的機器</td>
+<td>不衝突：取出檔只寫到<strong>主機上的匯出目錄</strong>；搬到院內分析機器、出院，都是院方核准之後的事</td>
+</tr>
+<tr>
+<td>7.1 後端是唯一寫入者</td>
+<td>取出指令<strong>只讀</strong>；它自己的紀錄寫到匯出目錄的檔案，由 api 收進稽核軌跡（20.3）</td>
+</tr>
+<tr>
+<td>8.1 不得直接複製執行中的資料庫檔案</td>
+<td>取出先以 <code>VACUUM INTO</code> 做快照，從快照匯出</td>
+</tr>
+<tr>
+<td>8.2 到期刪除</td>
+<td>會衝突，見 8.2 的 1026 加註（Q-39 第 3 題）</td>
+</tr>
+<tr>
+<td>11.2 目的外利用</td>
+<td>研究與模型訓練對臨床資料同樣是目的外利用，要院方或人體研究倫理審查委員會核准；指令要求填<strong>用途與核准文號</strong>才執行</td>
+</tr>
+<tr>
+<td>12.1 離開院內的唯一管道</td>
+<td>不衝突，12.1 已加註：本條的取出留在院內；出院仍只能走對外報表或院方另行核准的去識別化流程</td>
+</tr>
+</tbody>
+</table>
+<h3 id="202-硬性規則">20.2 硬性規則<a class="headerlink" href="#202-硬性規則" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>只能在院內主機上執行</strong>：以一次性容器跑，<strong>沒有網路</strong>、沒有任何網路端點、護理端沒有取出按鈕（部署規範 DEP-47）</li>
+<li><strong>範圍一定要指定</strong>：全部、某幾類表、某幾張表三選一（後兩者可合用）；不給範圍不跑。核准只涵蓋部分資料時用後兩種，<strong>不取全部再自己刪</strong>（個資法最小必要）</li>
+<li><strong>用途、核准文號、經手人缺一不跑</strong>；系統不驗文號真偽，沒有核准不得執行是院方的規定，手冊寫明</li>
+<li><strong>兩個等級</strong>：完整（原值，只留主機；要搬到院內分析機器須院方核准）；假名化（直接識別欄換成代號、自由文字欄預設移除、精確時間保留）。<strong>假名化仍屬個人資料，不得稱為「去識別化」或「匿名」</strong>；系統不做匿名一級</li>
+<li><strong>假名化的金鑰與對照表只在主機的匯出目錄</strong>，不放進輸出包；每次取出換一把金鑰，所以要合併分析的表必須在同一次取出</li>
+<li><strong>不取的</strong>：密碼雜湊、登入憑證、平板金鑰的雜湊（欄位照列、內容清空）；金鑰資料卷與設定目錄的 <code>.env</code></li>
+<li><strong>院內特定的值不進任何 repo、不進任何文件</strong>：主機位址、目錄實際路徑、核准文號、經手人姓名、假名化金鑰與對照表、任何一次取出的內容</li>
+</ul>
+<h3 id="203-取出紀錄">20.3 取出紀錄<a class="headerlink" href="#203-取出紀錄" title="Permanent link">&para;</a></h3>
+<ul>
+<li>每一次取出都留紀錄：誰、何時、什麼範圍（展開後的表）、哪一級、什麼用途、核准文號、每張表筆數、輸出檔的雜湊</li>
+<li>指令把紀錄附加到匯出目錄的 <code>export-log.jsonl</code>；api 啟動時與每小時收進稽核軌跡與 <code>export_runs</code> 表，收過的標記起來。api 沒開著時照樣取得出來，紀錄等下次啟動補收</li>
+<li>留存永久（8.2）；護理端系統管理只看得到紀錄，看不到資料</li>
+</ul>
+<h3 id="204-欄位登記讓全部一直是全部">20.4 欄位登記：讓「全部」一直是全部<a class="headerlink" href="#204-欄位登記讓全部一直是全部" title="Permanent link">&para;</a></h3>
+<ul>
+<li>每張表登記屬於哪一類，每個欄位登記一個匯出分類：<code>一般</code>、<code>直接識別</code>（姓名、病歷號、工作 ID、床號）、<code>準識別</code>（生日、精確時間）、<code>自由文字</code>（護理紀錄內文、AI 提示與輸出）、<code>刻意不取</code>（憑證欄）</li>
+<li><code>check:export</code> 納入 <code>check:all</code>：有任何一張表沒歸類、任何一個欄位沒登記就不過；登記了卻已不存在的也報出來</li>
+<li>資料字典每欄多一格「匯出分類」，與登記同步</li>
+</ul>
+<h3 id="205-待院方答覆">20.5 待院方答覆<a class="headerlink" href="#205-待院方答覆" title="Permanent link">&para;</a></h3>
+<p>核准流程、完整級能不能離開主機、到期刪除前要不要封存、假名化級的自由文字、匯出檔留多久與誰刪、出院的去識別化誰做，六題都在清冊 Q-39。</p>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>
@@ -7415,7 +7704,7 @@
     panel.setAttribute('aria-label', '用 AI 問這份文件');
     panel.innerHTML =
       '<h2>用 AI 問這份文件</h2>' +
-      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集任何內容。</p>' +
+      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集你輸入的內容。</p>' +
       '<textarea placeholder="例如：病人按了求助之後，護理師那邊會看到什麼？"></textarea>' +
       '<div class="ask-ai-warn">請勿輸入病人姓名、病歷號等個人資料。</div>' +
       '<div class="ask-ai-actions">' +
@@ -7451,6 +7740,106 @@
 
     document.body.appendChild(panel);
     document.body.appendChild(fab);
+  })();
+  </script>
+  <script>
+  (function () {
+    var ENDPOINT = "";
+    if (!ENDPOINT || !/\.github\.io$/.test(location.hostname) || window.__hdReadership) return;
+    window.__hdReadership = true;
+
+    var IDLE = 120000; // 兩分鐘沒有捲動、點擊、按鍵就當作人離開了，不再計時
+
+    function store(key, value) {
+      try {
+        if (value === undefined) return localStorage.getItem(key);
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      } catch (e) {}
+      return null;
+    }
+    function rid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+
+    // ?me=1 標記、?me=0 取消，標完把參數從網址拿掉並提示一下
+    var params = new URLSearchParams(location.search);
+    var me = params.get('me');
+    if (me === '1' || me === '0') {
+      store('hd-docs-me', me === '1' ? '1' : null);
+      params.delete('me');
+      var rest = params.toString();
+      history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+      var toast = document.createElement('div');
+      toast.className = 'rs-toast';
+      toast.setAttribute('role', 'status');
+      toast.textContent = me === '1' ? '這個瀏覽器已標記為「我自己」，閱讀統計可以一鍵排除' : '已取消「我自己」標記';
+      document.body.appendChild(toast);
+      setTimeout(function () { toast.remove(); }, 4000);
+    }
+
+    var visitor = store('hd-docs-vid');
+    if (!visitor) { visitor = rid(); store('hd-docs-vid', visitor); }
+    var self = store('hd-docs-me') === '1' || navigator.webdriver === true || /HeadlessChrome/.test(navigator.userAgent);
+
+    // 版本根目錄（…/hd-docs/latest/）之後那一段就是頁面路徑，根目錄最後一段是版本
+    function where() {
+      var root;
+      try { root = new URL('.', __md_scope).pathname; } catch (e) { root = location.pathname.replace(/^(\/[^/]+\/[^/]+\/).*$/, '$1'); }
+      var path = location.pathname.indexOf(root) === 0 ? location.pathname.slice(root.length) : location.pathname;
+      try { path = decodeURIComponent(path); } catch (e) {}
+      return { path: path, ver: root.replace(/\/$/, '').split('/').pop() };
+    }
+
+    var view = null;
+    var lastInput = Date.now();
+    var lastTick = Date.now();
+
+    function send(sec) {
+      var body = JSON.stringify({
+        v: visitor, p: view.id, path: view.path, ver: view.ver, title: view.title, t0: view.t0, sec: sec, self: self ? 1 : 0
+      });
+      try { if (navigator.sendBeacon && navigator.sendBeacon(ENDPOINT, body)) return; } catch (e) {}
+      try { fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: body }); } catch (e) {}
+    }
+
+    // 只累計分頁在前景、而且最近有動作的時間；電腦睡著醒來那一大段由單次上限擋掉
+    function tick() {
+      var now = Date.now();
+      if (view && document.visibilityState === 'visible' && now - lastInput < IDLE) view.ms += Math.min(now - lastTick, 15000);
+      lastTick = now;
+    }
+
+    // 送出這一段的秒數；同一次閱讀切走再回來會送好幾段，統計時加總
+    function flush() {
+      tick();
+      if (view && view.ms >= 1000) {
+        send(Math.round(view.ms / 1000));
+        view.ms = 0;
+      }
+    }
+
+    // 開新的一次閱讀：先送一筆 0 秒，萬一離開時那一筆沒送到，至少「看過」有記到
+    function begin() {
+      var w = where();
+      if (view && view.path === w.path) return; // 同一頁只是跳錨點
+      flush();
+      view = { id: rid(), path: w.path, ver: w.ver, title: document.title.split(' - ')[0], t0: Date.now(), ms: 0 };
+      lastInput = lastTick = Date.now();
+      send(0);
+    }
+
+    ['scroll', 'wheel', 'keydown', 'pointerdown', 'pointermove', 'touchstart'].forEach(function (type) {
+      addEventListener(type, function () { lastInput = Date.now(); }, { passive: true, capture: true });
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') flush();
+      else lastInput = lastTick = Date.now();
+    });
+    addEventListener('pagehide', flush);
+    setInterval(tick, 5000);
+
+    // navigation.instant 換頁不會重跑這段，靠 Material 的 document$ 得知換了頁（首次載入也會發一次）
+    if (typeof document$ !== 'undefined' && document$.subscribe) document$.subscribe(begin);
+    else begin();
   })();
   </script>
 
