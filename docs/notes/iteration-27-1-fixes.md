@@ -302,6 +302,6 @@ const educationAfter = home?.behaviour.educationAfterMinutes ?? 180;
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1028 | 2026-10-28 | 首次定版。病人平板頂列換行、任務改成病人醒著才自動出現、午夜前後的鎖：原因、改法與實作結果 |
+| [1028](https://94sh09sh19sh.github.io/hd-docs/1028/notes/iteration-27-1-fixes/) | 2026-10-28 | 首次定版。病人平板頂列換行、任務改成病人醒著才自動出現、午夜前後的鎖：原因、改法與實作結果 |
 
 [← 回其他文件總表](index.md)　[← 回進度首頁](../index.md)

@@ -157,6 +157,6 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1028 | 2026-10-28 | 首次定版。15 台未到，暫用一台 Galaxy Tab S6 Lite：規格、逐項可行性、adb 實測（WebView 155、CSS 1333×800、字型大小 1.1 要調回）、進院前要做的事 |
+| [1028](https://94sh09sh19sh.github.io/hd-docs/1028/notes/interim-tablet/) | 2026-10-28 | 首次定版。15 台未到，暫用一台 Galaxy Tab S6 Lite：規格、逐項可行性、adb 實測（WebView 155、CSS 1333×800、字型大小 1.1 要調回）、進院前要做的事 |
 
 [← 回其他文件總表](index.md)　[← 回進度首頁](../index.md)

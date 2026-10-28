@@ -268,6 +268,6 @@ k = 1，附 1 個備案；敏感度分析做前 3 名，另補一次全部 8 個
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1028 | 2026-10-28 | 首次定版。全域登頂篩從認知標準化測驗選出 TMT-A 為第四款遊戲核心的篩選過程；1026 起 B 部分不驗證、新增 A11 |
+| [1028](https://94sh09sh19sh.github.io/hd-docs/1028/notes/dialysis-gamification-benchmark-sieve/) | 2026-10-28 | 首次定版。全域登頂篩從認知標準化測驗選出 TMT-A 為第四款遊戲核心的篩選過程；1026 起 B 部分不驗證、新增 A11 |
 
 [← 回上層文件](dialysis-gamification-benchmark.md)　[← 回進度首頁](../index.md)
