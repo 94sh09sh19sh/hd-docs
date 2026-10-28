@@ -1,17 +1,17 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 98 張表、973 個欄位、28 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 100 張表、1013 個欄位、29 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`）
 
-**來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`、`packages/shared/src/performance.ts`、`packages/shared/src/data-export.ts`（匯出分類）
+**來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`、`packages/shared/src/connect-dots.ts`、`packages/shared/src/performance.ts`、`packages/shared/src/data-export.ts`（匯出分類）
 
 **環境**：SQLite 單一檔案。開發階段在開發者本機、專案目錄外；正式部署在院內伺服器的本機磁碟。見《[資料庫使用規範](../requirements/database-policy.md)》
 
 ## 摘要
 
-- 目前資料庫實際蒐集的全部資料：98 張表、973 個欄位、28 個遷移（迭代 27.1 的那一個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
+- 目前資料庫實際蒐集的全部資料：100 張表、1013 個欄位、29 個遷移（迭代 27.1 的那一個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
 - 每個欄位兩欄說明：給人看的（在真實世界是什麼、為什麼蒐集）、給 Agent 的（合法值、誰填、動了會踩到什麼）；1027 起每欄多一格「匯出分類」（研究用資料取出時怎麼處理，第三十一章）
 - 第一～五章是核心：帳號與憑證、主檔、排班與綁定、病人自述內容、稽核軌跡
-- 第六章起依迭代分章，從迭代 3 的系統治理一路到第三十一章迭代 28 的資料取出紀錄與匯出分類
+- 第六章起依迭代分章，從迭代 3 的系統治理一路到第三十二章迭代 29 的連點成畫
 - 有兩列不是人的帳號（「院方資料同步」「隨版本帶入」），登入不了，不要刪、不要改狀態
 - 附錄 A 寫資料不流向哪裡，附錄 B 是 Agent 動 schema 前的自我檢查；改欄位前先讀《資料庫使用規範》第 6 條與第 16 條
 
@@ -91,6 +91,8 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 二十八、床邊前速覽與求助處置記錄（迭代 25） | `dialysis_session_settings`（另有 `dialysis_vital_records` 加四欄、`nursing_records.source_help_request_id`） | 護理師去床邊之前要看的透析設定與機器量測；結案那一下建好的護理紀錄草稿來自哪一則求助。**只給護理端看，不上病人平板** |
 | 二十九、儀表板的資料補齊與對外報表的修正（迭代 26.1） | `device_connection_gaps`、`metric_definition_changes`、`external_report_suppressions`、`external_report_baselines`（另有 `external_reports` 加兩欄） | 平板斷線的起訖、指標從哪一天起開始記或改了意思、對外報表沒有呈現的那幾格與原因、產生當下抄的一份基準 |
 | 三十、處理者指名與名冊身分（迭代 26.3） | `handler_declarations`（另有 `nurses.roster_added_by_id`、`nurses.status` 兩個新值） | 接手、結案、簽核、審閱、完成追蹤的那一件事是哪一位護理師做的（不是誰的帳號開著）；沒有帳號的支援人力 |
+| 三十一、資料取出紀錄與匯出分類（迭代 28） | `export_runs` | 每一次研究用資料取出：範圍、等級、用途、核准文號、經手人、每張表筆數與雜湊。**取出指令不寫資料庫，紀錄由後端收進來** |
+| 三十二、連點成畫（迭代 29） | `connect_dots_boards`、`connect_dots_taps`（`game_saves` 多一款 `CONNECT_DOTS`） | 每一盤的版面代號、療程第幾分鐘、完成時間、錯點次數、有沒有中斷；每一下的落點、應點與點到的號碼、離圓心多遠、離上一下多久。**沒有血壓、體重、脫水量；病人端不顯示任何一筆** |
 
 ### 每張表都有的三個欄位
 
@@ -425,7 +427,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 | 匯出分類 |
 |---|---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 | 一般 |
-| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `PERF_INDIVIDUAL_L3` `REWARD_PROGRAM`（1018 迭代 26.3，獎勵制度含處理者指名，取代 `REWARD_SCORING`） `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）`MANUAL_PATIENT_CREATE`（1007 迭代 17.7，護理師自己新增病人，預設關閉）`TODAY_PANEL` `MARQUEE`（1005 迭代 16，「本次透析」面板與跑馬燈）`ADEQUACY_PREDICTION`（1010 迭代 18，透析適足性趨勢推估）`GAMIFY_EXISTING` `PEER_TIPS` `NURSE_REPLIES`（1010 迭代 20，現有功能的小幅遊戲化、病友小撇步、護理師回貼圖）`GARDEN` `FLOWER_GIFTS` `PEER_INTERACTION`（1010 迭代 21，透析小花園、送花、病人之間的互動；送花跟著小花園開關，連動的那一次切換照樣寫稽核）`MAHJONG` `GAME_TREND`（1011 迭代 22，麻將連連看、狀態評估彙整的護理端顯示；彙整關著時操作紀錄照樣寫）`ALBUM`（1011 迭代 23，老台灣記憶相簿；上架中的圖卡至少 60 張、六個主題都有才開得起來，見第二十六節）。後端啟動時自動補齊缺少的列，套用各自的預設值（預設開啟的只有 `TODAY_PANEL` 與 `GAMIFY_EXISTING`；9.1～15 是輪播三層）。**`CAROUSEL_LAYER_1`～`3` 於 1005 停用、`REWARD_SCORING` 於 1018 停用**（`RETIRED_FEATURE_FLAG_KEYS`）：那幾列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現 | 一般 |
+| `flag_key` | `TEXT` UNIQUE | 開關的識別字，例如「AI 輔助功能總開關」 | 合法值見 `@hd/shared` 的 `FeatureFlagKey`：`RISK_STRATIFICATION` `INTRA_DIALYSIS_ALERT` `DOSE_REFERENCE` `AI_FEATURES` `REAL_PATIENT_DATA_TO_AI` `PERF_INDIVIDUAL_L3` `REWARD_PROGRAM`（1018 迭代 26.3，獎勵制度含處理者指名，取代 `REWARD_SCORING`） `HANDHELD_FEATURES` `HELP_NON_CLINICAL_GROUP`（0929）`LAB_VALUE_FEATURES`（1005，需要抽血數值的功能）`MANUAL_PATIENT_CREATE`（1007 迭代 17.7，護理師自己新增病人，預設關閉）`TODAY_PANEL` `MARQUEE`（1005 迭代 16，「本次透析」面板與跑馬燈）`ADEQUACY_PREDICTION`（1010 迭代 18，透析適足性趨勢推估）`GAMIFY_EXISTING` `PEER_TIPS` `NURSE_REPLIES`（1010 迭代 20，現有功能的小幅遊戲化、病友小撇步、護理師回貼圖）`GARDEN` `FLOWER_GIFTS` `PEER_INTERACTION`（1010 迭代 21，透析小花園、送花、病人之間的互動；送花跟著小花園開關，連動的那一次切換照樣寫稽核）`MAHJONG` `GAME_TREND`（1011 迭代 22，麻將連連看、狀態評估彙整的護理端顯示；彙整關著時操作紀錄照樣寫）`ALBUM`（1011 迭代 23，老台灣記憶相簿；上架中的圖卡至少 60 張、六個主題都有才開得起來，見第二十六節）`CONNECT_DOTS`（1027 迭代 29，連點成畫，見第三十二節）。後端啟動時自動補齊缺少的列，套用各自的預設值（預設開啟的只有 `TODAY_PANEL` 與 `GAMIFY_EXISTING`；9.1～15 是輪播三層）。**`CAROUSEL_LAYER_1`～`3` 於 1005 停用、`REWARD_SCORING` 於 1018 停用**（`RETIRED_FEATURE_FLAG_KEYS`）：那幾列與它們的切換紀錄留在表裡，後端載入時略過、畫面上不再出現 | 一般 |
 | `enabled` | `BOOL` | 目前是否開啟 | `DEFAULT false`。⛔ **不得直接改資料庫開啟**——開啟必須經 `FeatureFlagsService`：它會判定開啟條件（實作規格書 3.7）、要求核准依據、寫入稽核。後端以記憶體中的狀態為準，直接改資料庫在重新啟動前也不會生效 | 一般 |
 | `last_reason` | `TEXT?` | 最後一次切換時登記的核准依據或理由 | 開與關都必填（FR-S08、FR-M11），長度 2～500 字 | 自由文字 |
 | `changed_by_id` | `TEXT?` | 最後一次是誰切換的 | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`。從未切換過時為 NULL | 一般 |
@@ -1665,7 +1667,7 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 |---|---|---|---|---|
 | `id` | `TEXT` | 內部識別碼 | 主鍵 | 一般 |
 | `patient_id` | `TEXT` → `patients` | 哪一位病人的 | `ON DELETE NO ACTION`。與 `game_code` 唯一（每位病人每款一列）。**以病人為準，不以平板** | 一般 |
-| `game_code` | `TEXT` | 哪一款遊戲 | 合法值 `GARDEN`、`MAHJONG`（1011 迭代 22，快照格式見第二十五節）、`ALBUM`（1011 迭代 23，快照格式見第二十六節）（`GameCode`） | 一般 |
+| `game_code` | `TEXT` | 哪一款遊戲 | 合法值 `GARDEN`、`MAHJONG`（1011 迭代 22，快照格式見第二十五節）、`ALBUM`（1011 迭代 23，快照格式見第二十六節）、`CONNECT_DOTS`（1027 迭代 29，快照格式見第三十二節）（`GameCode`） | 一般 |
 | `format_version` | `INT` | 快照的格式第幾版 | 花園 1018 起第 2 版（迭代 24.4，見第二十七節），麻將、相簿第 1 版。讀出時認不得就**擋下、不猜、不覆寫**（後端回 422）；舊版的升級寫在程式裡（`upgradeGardenSnapshot` 把第 1 版轉成第 2 版），不動資料庫結構 | 一般 |
 | `snapshot` | `TEXT` | 花園現在的樣子 | JSON：12 格（每格是空地或一棵植物：平板產生的植物編號、種子、花的代號、成長點數、這次療程的照顧點數）、算到第幾次療程、澆過水的療程、給過的養分、種過幾棵、開過哪幾種；第 2 版（迭代 24.4）多花園編號、這次療程種了幾顆、在等的訪客與判斷的紀錄、看過哪幾種訪客（第二十七節）。**寫入前與讀出後都驗格式（白名單欄位）、上限 16 KB**；一份約 300～900 位元組。⛔ **沒有病人識別資料、臨床數值，也沒有任何其他資料表的編號**（「第幾次療程」是序數，不是療程的編號）；⛔ **資料庫裡不查它的內容**（程式裡沒有任何查 JSON 內容的函式），也沒有任何表參照它 | 一般 |
 | `last_seq` | `INT` | 已經套用到第幾步 | 平板只送得進 `last_seq + 1`；接不上回「衝突」與這一份——每一步的序號因此不顛倒 | 一般 |
@@ -2125,6 +2127,75 @@ FR-S11、SRS 附錄 C。**這一類的每一張表都是為了同一件事：讓
 **索引**：`run_id`（唯一）、`started_at`
 
 **留存**：永久（規範 8.2 的表，1026 已加）。
+
+---
+
+## 三十二、連點成畫（迭代 29）
+
+**蒐集的意義**：1027 迭代 29（SRS FR-P16、FR-N20；實作規格書 4.29；《透析中的遊戲化之五》3.3）。第四款遊戲，以連線測驗 A 為核心：依序點 1～25。第 1 次（本迭代）只有遊戲模式，**沒有任何評估輸出**；這兩張表記的是之後跟自己比（迭代 30）與常模對照（迭代 31）要用的每一筆。遷移 `iteration29_connect_dots`，只做加法：兩張新表。照《資料庫使用規範》19.1 比照平板其他資料：留存、告知與同意相同；**沒有任何自由文字欄，也沒有血壓、體重、脫水量**（之五 H-7）；病人端不顯示任何一筆（H-10），護理端只看得到「本月連點成畫 N 盤」。**對真實病人收資料前要先有清冊 Q-38 的答覆**（建本院參考值要先取研究同意）。
+
+**連點成畫的存檔**在 `game_saves`（`game_code = 'CONNECT_DOTS'`）：快照是 JSON，只有開過幾盤、點完過幾盤、還沒點完的那一盤（這一盤的編號、第幾盤、下一個要點的號碼）。驗格式與上限 16 KB 同第二十四節（`validateConnectDotsSnapshot`）。⛔ 沒有病人識別資料、臨床數值與其他資料表的編號；**不存版面**：版面由這一盤的編號（種子）以 `connectDotsLayout` 重算，平板與伺服器算出來一樣。
+
+**時間怎麼量**：每一下的時間是平板按下去的那一刻（斷線時晚一點送到也不影響），伺服器用它算間隔與完成時間；平板時鐘偏差超過兩天才改用伺服器時間。
+
+### `connect_dots_boards` — 每一盤（25 欄）
+
+開始那一下建立，點完時補完成的欄位。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 | 匯出分類 |
+|---|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 | 一般 |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人 | `ON DELETE NO ACTION`；與 `board_no` 唯一 | 一般 |
+| `treatment_session_id` | `TEXT` → `treatment_sessions` | 這一盤開始在哪一次療程 | 伺服器依平板這次的綁定決定，不由平板傳。點到一半換一班接著點，仍記開始的那一次 | 一般 |
+| `board_key` | `TEXT` | 平板產生的這一盤編號，也是版面的種子 | 唯一。同一個種子永遠同一個版面（`connectDotsLayout`）；**不是任何資料表的編號** | 一般 |
+| `client_id` | `TEXT` | 開始那一步的識別碼 | 唯一；重送不會多一盤 | 一般 |
+| `seq` | `INT` | 開始那一步的序號 | 與 `game_saves.last_seq`、`connect_dots_taps.seq` 同一條序號 | 一般 |
+| `board_no` | `INT` | 這位病人的第幾盤 | 從 1 起，由快照的「開過幾盤」接著編。迭代 30 的「前 10 次只當練習」看標準模式自己的次數，不看它 | 一般 |
+| `mode` | `TEXT` | 遊戲模式或標準模式 | `ConnectDotsMode`：迭代 29 只有 `GAME`；迭代 30 加標準模式 | 一般 |
+| `layout_code` | `TEXT` | 版面代號 | `R1`＝隨機版面第 1 版（相鄰兩號相距 2～4.5 格、距離總和 72～80 格、連線不穿過別的圓、左中右各至少 6 個）；`R1F`＝兩千次抽不到時的保底版面（一萬個種子實測沒有發生）。**R1 的規則一改舊盤面就重算不出來**，要改就加 R2 | 一般 |
+| `point_count` | `INT` | 一盤幾個點 | 遊戲模式 25 | 一般 |
+| `path_tenths` | `INT` | 相鄰兩號的距離總和（難度校正用） | 單位是格，乘 10 存成整數（76.4 格記 764） | 一般 |
+| `reveal_code` | `TEXT` | 點完揭開的那一張圖 | 記憶相簿預設圖卡的代號（`connectDotsRevealCode`，由種子決定）；只用程式裡的預設圖卡，不參照 `album_cards` | 一般 |
+| `session_minute` | `INT?` | 開始時是療程開始後第幾分鐘 | 療程還沒有開始時間、或算出來是負的時為空。之後分層與標準模式的時窗（第 30～90 分鐘）用它 | 一般 |
+| `started_at` | `TS` | 平板上開始的時間 | — | 一般 |
+| `last_tap_at` | `TS?` | 最近一下的時間 | 算下一下的間隔 | 一般 |
+| `hit_count` | `INT` | 點對了幾個 | 點完是 25 | 一般 |
+| `wrong_count` | `INT` | 點錯幾下 | 點到還沒點的另一個圓（之五「錯點」） | 一般 |
+| `repeat_count` | `INT` | 點到已經點過的幾下 | 不算錯點 | 一般 |
+| `empty_count` | `INT` | 沒點到任何一個圓幾下 | 落點離每個圓心都超過半格（38px） | 一般 |
+| `max_gap_ms` | `INT?` | 兩下之間最長隔多久（毫秒） | 含開始到第一下；上限一天 | 一般 |
+| `interrupted` | `BOOL` | 有沒有中斷 | 有一次間隔超過 30 秒（`CONNECT_DOTS_INTERRUPT_MS`）就是 1，**不進入之後的基準計算** | 一般 |
+| `completed_at` | `TS?` | 點完的時間 | 沒點完是空。「本月連點成畫 N 盤」數這一欄落在這個月的 | 一般 |
+| `completion_ms` | `INT?` | 開始到點完花了多久（毫秒） | 上限一天。**病人端不顯示**（沒有計時） | 一般 |
+| `received_at` | `TS` | 伺服器收到開始那一步的時間 | — | 一般 |
+| `updated_at` | `TS` | 最後一次更新 | 每一下都會更新 | 一般 |
+
+**索引**：`board_key`（唯一）、`client_id`（唯一）、`patient_id`＋`board_no`（唯一）、`treatment_session_id`、`patient_id`＋`completed_at`
+
+### `connect_dots_taps` — 每一下（15 欄）
+
+畫面上只有點對的那一下會變；點錯、點到點過的、點到空白都照樣記一筆。
+
+| 欄位 | 型別 | 給人看的說明 | 給 Agent 的說明 | 匯出分類 |
+|---|---|---|---|---|
+| `id` | `TEXT` | 內部識別碼 | 主鍵 | 一般 |
+| `board_id` | `TEXT` → `connect_dots_boards` | 哪一盤 | 與 `tap_no` 唯一 | 一般 |
+| `patient_id` | `TEXT` → `patients` | 哪一位病人 | 與 `seq` 有索引 | 一般 |
+| `seq` | `INT` | 這位病人在連點成畫的第幾步 | 與 `game_saves.last_seq` 同一條序號；後端只收 `last_seq + 1` | 一般 |
+| `client_id` | `TEXT` | 平板產生的識別碼 | 唯一；重送不會多一筆 | 一般 |
+| `tap_no` | `INT` | 這一盤的第幾下 | 從 1 起 | 一般 |
+| `kind` | `TEXT` | 這一下點在哪裡 | `ConnectDotsTapKind`：`HIT` 點對、`WRONG` 點到還沒點的另一個、`REPEAT` 點到點過的、`EMPTY` 沒點到圓。由伺服器依版面重算（`classifyConnectDotsTap`），不收平板說的對錯 | 一般 |
+| `expected_no` | `INT` | 這一下應該點的號碼 | 1～25 | 一般 |
+| `touched_no` | `INT?` | 實際點到的號碼 | `EMPTY` 是空 | 一般 |
+| `x`、`y` | `INT` | 落點在牌面上的位置（px） | 牌面 1140×456、左上角為原點；超出牌面的夾回邊上。鍵盤或無障礙功能按的記那一個圓的圓心 | 一般 |
+| `distance_px` | `INT?` | 落點離圓心多遠（px） | 點到圓的是那一個圓，`EMPTY` 是應點的那一個；鍵盤按的為空。之五「動作穩定」用 | 一般 |
+| `interval_ms` | `INT` | 離上一下多久（毫秒） | 第一下是離開始；上限一天 | 一般 |
+| `occurred_at` | `TS` | 平板上點下去的時間 | — | 一般 |
+| `received_at` | `TS` | 伺服器收到的時間 | — | 一般 |
+
+**索引**：`client_id`（唯一）、`board_id`＋`tap_no`（唯一）、`patient_id`＋`seq`
+
+**不寫稽核軌跡**：每一下都在這張表，與麻將、相簿同一個判斷。護理端「本月連點成畫 N 盤」在病人詳細資訊裡，那一次調閱照舊寫 `PATIENT_DETAIL_VIEWED`。
 
 ---
 
