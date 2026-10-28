@@ -2,6 +2,8 @@
 
 版本：v0.1　文件狀態：草案（1005 新增）　編號：`E-xx`　**與第十五冊一起印出來帶進去**
 
+> **1028：第 5 節的 `E-xx` 已排進[第十八冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/18-third-visit/index.md)（第三次進院）與[第十七冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/17-rehearsal/index.md)（出發前的模擬部署）**，對照在第十八冊附錄一。這一冊照舊負責「為什麼」，第三次進院只印第十八冊。
+>
 > **這一冊給誰**：沒去過 1001、沒碰過 CORS，下一次卻要進院接手的人。
 >
 > 1001 第二次進院的完整紀錄在[第十四冊之四](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/14d-second-visit/index.md)，但那一冊是寫給已經知道來龍去脈的人看的：編號多、術語多，一句話裡常常塞了三件事。這一冊把它翻成白話，只回答三個問題：
