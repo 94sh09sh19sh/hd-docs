@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1028 — 病人平板頂列一列、問卷醒著才出現、進度條寫出時間（迭代 27.1、27.2），蒐集資料的完整取出（迭代 28），緊急求助的語音與鏡頭、連點成畫排進需求
+    1028 — 病人平板頂列一列、問卷醒著才出現、進度條寫出時間（迭代 27.1、27.2），蒐集資料的完整取出（迭代 28），第四款遊戲連點成畫（迭代 29），緊急求助的語音與鏡頭排進需求
   
 
     
@@ -1825,6 +1825,17 @@
     <span class="md-ellipsis">
       
         2.9 老台灣記憶相簿（1011，迭代 23）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-連點成畫1027迭代-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 連點成畫（1027，迭代 29）
       
     </span>
   </a>
@@ -4810,6 +4821,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 29 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5896,6 +5935,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#210-連點成畫1027迭代-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 連點成畫（1027，迭代 29）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6957,6 +7007,55 @@
 <li>圖只用 <code>&lt;img&gt;</code> 畫（<code>assets/album/&lt;代號&gt;.svg</code>，<code>scripts/album-art</code> 產生的向量圖），<strong>不要自己貼 SVG、不要用 innerHTML</strong>；翻開之前圖的替代文字是「一張老東西的圖」（不能洩漏答案），翻開之後是名稱</li>
 <li>中途離開，下次點進來直接回到那一張；看完一次回相簿封面</li>
 </ul>
+<h3 id="210-連點成畫1027迭代-29">2.10 連點成畫（1027，迭代 29）<a class="headerlink" href="#210-連點成畫1027迭代-29" title="Permanent link">&para;</a></h3>
+<p>第四款遊戲，平常玩的是不計時、不會輸的遊戲模式（實作規格書 4.29；《<a href="../dialysis-gamification-benchmark/">透析中的遊戲化之五</a>》3.1）。開關：連點成畫（預設關）。<strong>關著時每一個畫面與迭代 17.7 一樣</strong>；只開這一款時，基本資訊區照樣有遊戲圖示。</p>
+<table>
+<thead>
+<tr>
+<th>畫面</th>
+<th>長什麼樣子</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>遊戲選單</td>
+<td>多一顆「連點成畫」（<code>waypoints</code>），排在相簿之後、小本子之前</td>
+<td>只在開關開著時出現</td>
+</tr>
+<tr>
+<td>開始（<code>ConnectDotsGame</code>）</td>
+<td>標題「連點成畫」、一句「從 1 開始，照順序點 1、2、3，點完會看到一幅畫」、一顆大按鈕「開始一盤」（<code>waypoints</code>）</td>
+<td>手上有沒點完的一盤時，點進來直接是那一盤</td>
+</tr>
+<tr>
+<td>一盤</td>
+<td>25 個圓散在固定 1140×456px 的牌面上（15 × 6 格、每格 76px）；圓 64px（<code>--dot-size</code>），白底、3px 框線灰、深色號碼（<code>--t-lead</code>、粗體、等寬數字）</td>
+<td>牌面<strong>不隨畫面縮放</strong>：落點要換算成牌面座標，每一盤一樣大，自身基準才比得了；1280×800 不捲動</td>
+</tr>
+<tr>
+<td>點對</td>
+<td>那一個圓變完成色實心、白字（<code>--c-done</code>／<code>--c-done-ink</code>），和上一個之間出現一條 4px 完成色的直線</td>
+<td>直接出現，<strong>不畫動畫</strong>；靠連線與實心，不只靠顏色（P-4）</td>
+</tr>
+<tr>
+<td>點錯、點空白、點已點過的</td>
+<td><strong>畫面完全不變</strong></td>
+<td>不晃動、不出現「錯」、不提示該點哪一個；只進操作紀錄</td>
+</tr>
+<tr>
+<td>點完</td>
+<td>左邊整張圖（沿用記憶相簿的插畫，<code>&lt;img&gt;</code>）、右邊一句「這是〇〇」與「開始一盤」</td>
+<td>不顯示花了多久、第幾盤、錯幾次</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>沒有計時器、倒數、分數、星等、排名、「再一盤就好」，全程無聲、沒有動畫</strong>；求助區不變</li>
+<li><strong>例外：圓按下去沒有變暗的回饋</strong>（4.5 的「按下去的回饋是變暗」不適用）——點錯畫面要完全不變（實作規格書 4.29 驗收 2），按下的回饋會讓點錯也看得到變化；只有點對的那一個變色</li>
+<li>圖只用 <code>&lt;img&gt;</code> 畫（<code>assets/album/&lt;代號&gt;.svg</code>），<strong>不要自己貼 SVG、不要用 innerHTML</strong>；連線的 <code>&lt;svg&gt;</code> 只畫線、不接點擊</li>
+<li>沒有網路又沒有本機存檔時寫「沒有網路，連上之後就能玩」；已經有存檔就照樣能點（先存平板本機再送）</li>
+</ul>
 <hr />
 <h2 id="3-族群二透析室護理師護理端">3. 族群二：透析室護理師（護理端）<a class="headerlink" href="#3-族群二透析室護理師護理端" title="Permanent link">&para;</a></h2>
 <h3 id="31-這群人的事實">3.1 這群人的事實<a class="headerlink" href="#31-這群人的事實" title="Permanent link">&para;</a></h3>
@@ -7539,6 +7638,7 @@
 <h3 id="310-病人詳細資訊1011迭代-22只有專業版">3.10 病人詳細資訊（1011，迭代 22，只有專業版）<a class="headerlink" href="#310-病人詳細資訊1011迭代-22只有專業版" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>1011 迭代 23</strong>：記憶相簿也算「相關的開關」（只開相簿時這一頁也存在）；「最近幾次有沒有玩」多一欄記憶相簿「看了幾張」；下面多一塊「可以聊的話題（記憶相簿）」，見 3.11。</p>
+<p><strong>1027 迭代 29</strong>：連點成畫也算「相關的開關」；病人資料底下只多一句「本月連點成畫 N 盤」（FR-N20），沒有時間、錯點與任何評估。</p>
 </blockquote>
 <p>選單多一頁「病人詳細資訊」（<code>PatientDetailPage</code>）：<strong>透析小花園、麻將連連看、狀態評估彙整至少一個開著才存在</strong>——都關著時連結、路由、系統管理的版位清單都沒有（N-6）。主列滿 7 項，不上主列。</p>
 <table>
@@ -7632,7 +7732,7 @@
 <p><strong>求助按鈕用警示色，而且只有它用。</strong> 病人端畫面上不得有第二個紅色的東西，否則它就不再是「那顆紅色的」。</p>
 <p><strong>兩端都必須通過對比度檢查</strong>：內文對背景至少 4.5:1，大字與圖形至少 3:1。病人端因為糖尿病視網膜病變常見，<strong>目標值提高到內文 7:1</strong>。</p>
 <p><strong>病人端是白底</strong>（0930，迭代 14.5）：醫師說透析室很暗，病人端背景改成白底，框與按鈕是白底上的淺灰。白底上要過 7:1，四種語意色都是同色相的<strong>深色系</strong>（深青、深褐、深紅、深綠）；疊在語意色上的字是白色。紅色仍只給求助——求助區是深紅底白字，注意色是深褐而不是紅。 <strong>夜裡不另做一套深色主題</strong>，夜裡靠夜間模式調暗（4.5）。護理端維持原本的配色，常駐總覽螢幕仍是深色。</p>
-<p><strong>折線圖的線不是語意色</strong>（1005，迭代 16）：「本次透析」面板的線一律用 <code>--c-chart-line</code>（深靛藍），參考線用框線灰 <code>--c-line</code>。四種語意色都各有意思，拿來畫量測值就等於替數值下評語（2.5）。<code>check:ui:design</code> 會擋：圖的顏色與任何一種語意色相同、偏紅，或面板、圖、跑馬燈的樣式與元件引用了語意色。 <strong>麻將牌面的紅色改深棕</strong>（1011，迭代 22；遊戲化決定第 2 節第 2 題）：現成牌面的「萬」字、紅中與筒子條子上的紅點，一律改成深棕 <code>#5a3c14</code>（色相約 34°，不算偏紅；刻意不與注意色 <code>--c-attention</code> 同一色，牌不是「待處理」）。牌靠字與花樣分辨，本來就不靠顏色。牌的底色象牙白 <code>--c-tile-face</code> 只是牌的顏色，不是語意色。 0919～0929 病人端是深色底，改版的理由與色碼對照見《<a href="../iteration-14-5-fixes/">迭代 14.5 修正紀錄</a>》2.1。 <strong>護理端儀表板的圖表色</strong>（1017，迭代 26.2）：<code>--c-chart-1</code> 藍、<code>--c-chart-2</code> 橘、<code>--c-chart-3</code> 綠、陪襯灰、基準線灰，給成效、工作量、對外報表的圖用；同樣<strong>不得用四種語意色畫資料</strong>，<code>check:ui:design</code> 一併擋。三色的相鄰兩色已用色盲模擬驗過區隔；綠色在白底對比不到 3:1，所以每一條線、每一組柱子都直接標字。一張圖最多三個系列，再多就合併成「其他」或拆成並排的小圖。 <strong>1018 實作</strong>：<code>--c-chart-1</code> #1f6fb2、<code>--c-chart-2</code> #b06400、<code>--c-chart-3</code> #2e7d4f（改用深一點的綠，<strong>三色在白底都在 3:1 以上</strong>：5.28、4.50、5.05）、<code>--c-chart-muted</code> #82919f、<code>--c-chart-baseline</code> #5a6b7d；處理結果的「改善」「沒有改善」用藍的中間色與淺色（淺色那一段加深藍框）；熱圖六階 <code>--c-heat-0</code>～<code>5</code>，深兩階上的字 <code>--c-heat-ink</code>。系列依順序<strong>線型不同</strong>（實線、長虛線、點線）、<strong>柱子花紋不同</strong>（實心、斜線、點點），樣本少於 5 的點空心不連線，不呈現的分組整欄淡斜線寫原因。元件在護理端 <code>dashboard-charts.tsx</code>，樣式一律 <code>.dash-</code> 開頭，<code>check:ui:design</code> 擋這兩處引用語意色。</p>
+<p><strong>折線圖的線不是語意色</strong>（1005，迭代 16）：「本次透析」面板的線一律用 <code>--c-chart-line</code>（深靛藍），參考線用框線灰 <code>--c-line</code>。四種語意色都各有意思，拿來畫量測值就等於替數值下評語（2.5）。<code>check:ui:design</code> 會擋：圖的顏色與任何一種語意色相同、偏紅，或面板、圖、跑馬燈的樣式與元件引用了語意色。 <strong>麻將牌面的紅色改深棕</strong>（1011，迭代 22；遊戲化決定第 2 節第 2 題）：現成牌面的「萬」字、紅中與筒子條子上的紅點，一律改成深棕 <code>#5a3c14</code>（色相約 34°，不算偏紅；刻意不與注意色 <code>--c-attention</code> 同一色，牌不是「待處理」）。牌靠字與花樣分辨，本來就不靠顏色。牌的底色象牙白 <code>--c-tile-face</code> 只是牌的顏色，不是語意色。 <strong>連點成畫的圓</strong>（1027，迭代 29）：點過的是完成色 <code>--c-done</code> 實心、白字 <code>--c-done-ink</code>，還沒點的是白底 <code>--c-bg</code>、框線灰 <code>--c-line</code>、深色字；白字疊在完成色上、完成色的連線畫在白底上，這兩組對比 1027 加進 <code>check:ui:design</code>；圓與牌面的尺寸 <code>--dot-size</code>、<code>--dot-board-w</code>／<code>--dot-board-h</code> 寫死、不縮放（2.10）。 0919～0929 病人端是深色底，改版的理由與色碼對照見《<a href="../iteration-14-5-fixes/">迭代 14.5 修正紀錄</a>》2.1。 <strong>護理端儀表板的圖表色</strong>（1017，迭代 26.2）：<code>--c-chart-1</code> 藍、<code>--c-chart-2</code> 橘、<code>--c-chart-3</code> 綠、陪襯灰、基準線灰，給成效、工作量、對外報表的圖用；同樣<strong>不得用四種語意色畫資料</strong>，<code>check:ui:design</code> 一併擋。三色的相鄰兩色已用色盲模擬驗過區隔；綠色在白底對比不到 3:1，所以每一條線、每一組柱子都直接標字。一張圖最多三個系列，再多就合併成「其他」或拆成並排的小圖。 <strong>1018 實作</strong>：<code>--c-chart-1</code> #1f6fb2、<code>--c-chart-2</code> #b06400、<code>--c-chart-3</code> #2e7d4f（改用深一點的綠，<strong>三色在白底都在 3:1 以上</strong>：5.28、4.50、5.05）、<code>--c-chart-muted</code> #82919f、<code>--c-chart-baseline</code> #5a6b7d；處理結果的「改善」「沒有改善」用藍的中間色與淺色（淺色那一段加深藍框）；熱圖六階 <code>--c-heat-0</code>～<code>5</code>，深兩階上的字 <code>--c-heat-ink</code>。系列依順序<strong>線型不同</strong>（實線、長虛線、點線）、<strong>柱子花紋不同</strong>（實心、斜線、點點），樣本少於 5 的點空心不連線，不呈現的分組整欄淡斜線寫原因。元件在護理端 <code>dashboard-charts.tsx</code>，樣式一律 <code>.dash-</code> 開頭，<code>check:ui:design</code> 擋這兩處引用語意色。</p>
 <h3 id="42-字級">4.2 字級<a class="headerlink" href="#42-字級" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7788,6 +7888,7 @@
 </table>
 <p>病人端另有：<code>house</code> 回首頁、~~<code>clock</code> 療程時間~~（1025 迭代 27.2 拿掉，進度條改寫字；1027 已從登記表拿掉）、 <code>laugh</code>／<code>smile</code>／<code>meh</code>／<code>frown</code>／<code>angry</code> 心情的五個等級、<code>circle</code> 選項「沒有」、<code>square</code>／<code>square-check</code> 複選、 <code>lightbulb</code> 說明（點開看更多），以及求助類別（下一段）。 <strong>1010 迭代 20 補</strong>：<code>book-heart</code> 我的衛教小本子、<code>users</code> 病友小撇步（我也是這樣做的；護理端核准清單的病友小撇步也用它）；兩端共用的貼圖 <code>heart</code> 送你一顆愛心、<code>thumbs-up</code> 給你按個讚、<code>sun</code> 祝你今天好心情、<code>hand-heart</code> 我們都在這裡，<code>message-square-heart</code> 護理師回你的一句話（預設回覆）；護理端另有 <code>scroll-text</code> 跑馬燈的「你知道嗎」。 <strong>1011 迭代 22 補</strong>（病人端）：<code>grid-2x2</code> 麻將連連看（遊戲選單、開一桌）、<code>scan-search</code> 麻將的提示（框出一對可以消的牌）、<code>calendar-check</code> 今日牌局。<code>lightbulb</code> 已經是「說明（點開看更多）」、<code>layout-grid</code> 已經是護理端的「全部床位」，所以不用它們。</p>
 <p><strong>1011 迭代 23 補</strong>（病人端）：<code>album</code> 老台灣記憶相簿（遊戲選單、翻開相簿）、<code>skip-forward</code> 跳過這張、三個回憶小貼紙 <code>hand</code> 我用過、<code>house-heart</code> 我家也有、<code>user-round</code> 想起某個人。<code>house</code> 已經是「回首頁」、<code>users</code> 已經是「病友小撇步」、<code>book-image</code> 已經是「台灣花卉圖鑑」，所以不用它們。<strong>1018 迭代 24.4</strong>：<code>book-image</code> 改叫「圖鑑」，相簿的「我的相簿」也用它（同一個意思：自己收集的東西），沒有新的圖示。</p>
+<p><strong>1027 迭代 29 補</strong>（病人端）：<code>waypoints</code> 連點成畫（遊戲選單、開始一盤；畫的是幾個點連成一條線）。<code>grid-2x2</code> 已經是「麻將連連看」，所以不用它。</p>
 <p><strong>1015 迭代 25 補</strong>（護理端，1018 登記進 <code>sync-icons.mjs</code>）：<code>id-card</code> 床邊前速覽（簡易版已接手的格子上重開、專業版緊急通報頁的「病人簡介」）。<code>clipboard-list</code> 已經是「透析前問卷」、<code>user-check</code> 已經是「護理師已接手」，所以不用它們。</p>
 <p><strong>1010 迭代 21 補</strong>（病人端）：<code>gamepad-2</code> 遊戲（基本資訊區的遊戲圖示與遊戲選單）、<code>sprout</code> 透析小花園、<code>droplet</code> 澆水（<code>droplets</code> 已經是護理端的「生理食鹽水回填」，所以用單一顆的）、<code>book-image</code> 台灣花卉圖鑑、<code>trees</code> 大家的花園、<code>gift</code> 送花給護理站、<code>history</code> 以前的花園；護理端 <code>flower-2</code> 病人送給護理站的花。同日修好圖示產生器的一個舊問題：屬性名稱帶數字的（<code>&lt;line&gt;</code> 的 <code>x1</code>、<code>y2</code>）原本被漏掉，<code>line</code> 畫不出來；護理端的 <code>badge-alert</code>、<code>user-plus</code>、<code>unlink</code> 因此補回原本少掉的幾筆線。</p>
 <p><strong>求助類別的圖示要畫出症狀本身（1010，迭代 17.8）</strong>。院方反映緊急回報的圖示與文字不太相符（閃電代表抽筋、波浪代表想吐、大腦代表頭痛），希望即使不看文字也能知道是什麼症狀。Lucide 沒有畫症狀的圖示，所以這十三個<strong>由本專案自己畫</strong>（<code>scripts/icons-custom/</code>，照 Lucide 的規格：24×24、線寬 2、圓角、不填色），登記表第四欄寫 <code>custom</code>；<strong>仍然配字</strong>，字是正式的意思，圖是幫忙認。原本的 <code>rotate-3d</code>、<code>zap</code>、<code>waves</code>、<code>heart-pulse</code>、<code>brain</code>、<code>hand</code>、<code>thermometer</code>、<code>droplet</code>、<code>person-standing</code>、<code>glass-water</code> 拿掉，<code>monitor-dot</code>、<code>syringe</code>、<code>thermometer-sun</code> 病人端不再用（護理端的處理方式照用）。</p>
@@ -8087,6 +8188,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1011 迭代 22）麻將連連看</strong>：每張至少 80×104px、只鋪一層、最大的一桌 4×12 在 1280×800 不捲動（迭代 27 由 4×8 放寬）；沒有計時、級數、分數、花了多久；牌面沒有紅色；點錯沒有任何「錯」的顯示；唯一的動畫是點擊後 0.3 秒，減少動態效果時不做</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1011 迭代 23）記憶相簿</strong>：一張大圖配三個大字選項（不配圖）、1280×800 不捲動；選了就翻、不論對錯，答案只用粗框框起來、病人選的不加記號；沒有「錯」、打字的地方、計時、分數、動畫、聲音與紅色；每一張都有「跳過這張」；共同記憶翻開之後才出現</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1018 迭代 24.4）種子袋、小訪客、兩個圖鑑</strong>：種子用完只有「下次來會再有 3 顆」，沒有「上限」「不能種」；訪客只在門口最下面一格、靜態、點了沒有任何回饋；門口最壞的情形（水＋四份養分＋兩句＋訪客）1280×800 不捲動；兩個圖鑑照清單順序排、空格沒有名字與替代文字、「收到幾種，共幾種」只算自己；「我的相簿」沒有對錯、「想起某個人」沒有不同的記號</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>（1027 迭代 29）連點成畫</strong>：牌面 1140×456px 不縮放、開始、一盤、點完三個畫面 1280×800 不捲動；點錯、點空白、點已點過的畫面完全不變（圓沒有按下變暗）；沒有計時、倒數、分數、動畫、聲音；點完不寫花了多久、第幾盤</li>
 </ul>
 <h3 id="62-護理端">6.2 護理端<a class="headerlink" href="#62-護理端" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -8266,6 +8368,11 @@
 <td>2.6、3.8 遊戲化（1010 迭代 20）</td>
 <td>病人端 <code>src/tasks/TaskComplete.tsx</code>、<code>NotebookTask.tsx</code>、<code>PeerTipTask.tsx</code>、<code>NurseReplyTask.tsx</code>，<code>App.tsx</code> 的 <code>gamifyOn</code>／<code>peerTipsOn</code>；護理端 <code>TrendsPage.tsx</code> 的 <code>ReplyCell</code>、<code>SystemContentPanel.tsx</code> 的 <code>PeerTipBlock</code>；那一句與預設內容在 <code>@hd/shared</code> 的 <code>gamification.ts</code></td>
 <td><code>verify:iteration20</code>：三個全關時每一個入口都不出現、那一句與答案無關、測驗結果沒有勾叉、小撇步沒有輸入框、回覆沒有提醒、新樣式沒有動畫與紅色</td>
+</tr>
+<tr>
+<td>2.10、3.10 連點成畫（1027 迭代 29）</td>
+<td>病人端 <code>src/tasks/ConnectDotsGame.tsx</code>、<code>connect-dots-sync.ts</code>，樣式 <code>styles.css</code> 的 <code>.cd-</code> 開頭、<code>design-tokens.css</code> 的 <code>--dot-*</code> 與 <code>--c-done-ink</code>；版面與點擊判斷在 <code>@hd/shared</code> 的 <code>connect-dots.ts</code>；護理端 <code>PatientDetailPage.tsx</code> 那一句</td>
+<td><code>verify:iteration29</code>：尺寸放得進 1280×800、20 盤版面與距離、點錯畫面不變、沒有計時與動畫、先存本機、開關關著擋、揭圖與字型；<code>verify:iteration29:api</code>：伺服器重算、四種點、中斷標記、本月幾盤</td>
 </tr>
 </tbody>
 </table>
