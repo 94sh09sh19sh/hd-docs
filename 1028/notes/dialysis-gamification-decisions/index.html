@@ -1,0 +1,7368 @@
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="需求、進度、參考與測試文件">
+      
+      
+      
+        <link rel="canonical" href="https://94sh09sh19sh.github.io/hd-docs/1028/notes/dialysis-gamification-decisions/">
+      
+      
+        <link rel="prev" href="../dialysis-gamification/">
+      
+      
+        <link rel="next" href="../dialysis-gamification-garden/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>之一：決定、開關與實作順序 - 血液透析中心平板照護輔助系統</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    .ask-ai-fab {
+      position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 5;
+      display: flex; align-items: center; gap: .4rem;
+      padding: .6rem 1rem; border: 0; border-radius: 2rem; cursor: pointer;
+      font: inherit; font-size: .75rem; font-weight: 700;
+      color: var(--md-primary-bg-color); background: var(--md-primary-fg-color);
+      box-shadow: var(--md-shadow-z2);
+    }
+    .ask-ai-fab svg { width: 1.1rem; height: 1.1rem; fill: currentColor; }
+    .ask-ai-panel {
+      position: fixed; right: 1.2rem; bottom: 4.4rem; z-index: 5;
+      width: min(22rem, calc(100vw - 2.4rem)); padding: 1rem;
+      border-radius: .4rem; font-size: .7rem; line-height: 1.6;
+      color: var(--md-default-fg-color); background: var(--md-default-bg-color);
+      box-shadow: var(--md-shadow-z3);
+    }
+    .ask-ai-panel[hidden] { display: none; }
+    .ask-ai-panel h2 { margin: 0 0 .4rem; font-size: .8rem; font-weight: 700; }
+    .ask-ai-panel p { margin: 0 0 .6rem; color: var(--md-default-fg-color--light); }
+    .ask-ai-panel textarea {
+      box-sizing: border-box; width: 100%; min-height: 5rem; padding: .5rem;
+      border: 1px solid var(--md-default-fg-color--lighter); border-radius: .2rem;
+      font: inherit; color: inherit; background: transparent; resize: vertical;
+    }
+    .ask-ai-panel .ask-ai-warn { margin: .4rem 0 .6rem; color: var(--md-typeset-color, inherit); font-weight: 700; }
+    .ask-ai-actions { display: flex; gap: .5rem; }
+    .ask-ai-actions button {
+      flex: 1; padding: .5rem; border-radius: .2rem; cursor: pointer; font: inherit; font-weight: 700;
+      border: 1px solid var(--md-primary-fg-color);
+      color: var(--md-primary-fg-color); background: transparent;
+    }
+    .ask-ai-actions button:disabled { opacity: .4; cursor: not-allowed; }
+    @media print { .ask-ai-fab, .ask-ai-panel { display: none; } }
+
+    /* 閱讀統計頁（weekly/readership.md，由 npm run docs:readership 產生）。
+       「不含我自己／包含我自己」是兩個 radio 切換兩份預先算好的內容，不靠腳本。 */
+    .rs-mode { position: absolute; opacity: 0; pointer-events: none; }
+    .rs-switch { display: inline-flex; margin: .4rem 0 1rem; border: 1px solid var(--md-primary-fg-color); border-radius: .3rem; overflow: hidden; }
+    .rs-switch label { padding: .35rem .9rem; cursor: pointer; font-size: .7rem; font-weight: 700; color: var(--md-primary-fg-color); }
+    #rs-others:checked ~ .rs-switch label[for="rs-others"],
+    #rs-all:checked ~ .rs-switch label[for="rs-all"] { color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); }
+    #rs-others:focus-visible ~ .rs-switch label[for="rs-others"],
+    #rs-all:focus-visible ~ .rs-switch label[for="rs-all"] { outline: 2px solid var(--md-accent-fg-color); outline-offset: -2px; }
+    .rs-view { display: none; }
+    #rs-others:checked ~ .rs-view-others, #rs-all:checked ~ .rs-view-all { display: block; }
+    .rs-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .6rem; margin: 0 0 1.2rem; }
+    .rs-tile { padding: .6rem .8rem; border-radius: .3rem; background: var(--md-code-bg-color); }
+    .rs-tile b { display: block; font-size: 1.2rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+    .rs-tile span { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-h { margin: 1.4rem 0 .5rem; font-size: .8rem; font-weight: 700; }
+    .rs-note { font-size: .65rem; color: var(--md-default-fg-color--light); }
+    .rs-bars { display: grid; grid-template-columns: minmax(6rem, 14rem) 1fr; gap: .3rem .6rem; align-items: center; font-size: .7rem; }
+    .rs-bars a, .rs-bars span.rs-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rs-track { display: flex; align-items: center; gap: .4rem; font-variant-numeric: tabular-nums; }
+    .rs-fill { height: .8rem; min-width: 2px; border-radius: 0 3px 3px 0; background: var(--md-primary-fg-color); }
+    .rs-heat { display: grid; grid-template-columns: 4.2rem repeat(24, minmax(0, 1fr)); gap: 2px; font-size: .55rem; color: var(--md-default-fg-color--light); }
+    .rs-view td:not(:first-child), .rs-view th:not(:first-child) { white-space: nowrap; }
+    .rs-heat i { display: block; aspect-ratio: 1; min-height: .6rem; border-radius: 2px; background: var(--md-default-fg-color--lightest); }
+    .rs-heat i[data-n] { background: var(--md-primary-fg-color); }
+    .rs-heat .rs-day { align-self: center; white-space: nowrap; }
+    .rs-heat .rs-hour { text-align: left; white-space: nowrap; }
+    .rs-legend { display: flex; align-items: center; gap: 3px; margin-top: .4rem; font-size: .6rem; color: var(--md-default-fg-color--light); }
+    .rs-legend i { width: .7rem; height: .7rem; border-radius: 2px; background: var(--md-primary-fg-color); }
+    .rs-legend i.rs-zero { background: var(--md-default-fg-color--lightest); }
+    .rs-weeks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: .4rem; align-items: end; height: 7rem; font-size: .6rem; text-align: center; font-variant-numeric: tabular-nums; }
+    .rs-weeks div { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+    .rs-weeks i { display: block; min-height: 2px; margin: .15rem 15% 0; border-radius: 3px 3px 0 0; background: var(--md-primary-fg-color); }
+    .rs-weeks .rs-now i { background: var(--md-accent-fg-color); }
+    .rs-weeks span { color: var(--md-default-fg-color--light); }
+    .rs-times { font-size: .62rem; color: var(--md-default-fg-color--light); }
+    .rs-toast {
+      position: fixed; left: 50%; bottom: 1.2rem; z-index: 6; transform: translateX(-50%);
+      padding: .6rem 1rem; border-radius: .3rem; font-size: .7rem;
+      color: var(--md-primary-bg-color); background: var(--md-primary-fg-color); box-shadow: var(--md-shadow-z2);
+    }
+  </style>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#透析中的遊戲化之一決定開關與實作順序" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-header__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            血液透析中心平板照護輔助系統
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              之一：決定、開關與實作順序
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換為深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="切換為淺色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換為淺色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="血液透析中心平板照護輔助系統" class="md-nav__button md-logo" aria-label="血液透析中心平板照護輔助系統" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    血液透析中心平板照護輔助系統
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    每週紀錄
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-10-28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1028 — 病人平板頂列一列、問卷醒著才出現、進度條寫出時間（迭代 27.1、27.2），蒐集資料的完整取出（迭代 28），第四款遊戲連點成畫、標準版與常模對照（迭代 29～31），緊急求助的語音與鏡頭排進需求
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-10-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1021 — 花園與相簿的擴充、緊急通報的床邊前速覽、儀表板與獎勵制度的更新、病人平板固定橫放完成（迭代 24～27）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-10-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1014 — 規則引擎、護理紀錄、管理儀表板、平板遊戲化四款（小花園、麻將連連看、記憶相簿）完成，四條規則的門檻請醫師確認（迭代 17.8～23）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-10-07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1007 — 第二次進院部分成功，院方 API 取代手動輸入（迭代 15～17）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0930 — 部署改為容器、介面極簡重設計（迭代 11～14.5）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0923 — 部署前的迭代 7～10 完成，第一次進院失敗
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0916 — 迭代 3～6 完成，全程留在院內網路
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/2026-09-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0909 — Iteration 1＋2 完成、核心流程可完整執行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/archive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    歷次週報
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/readership/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件閱讀統計
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    臨床端進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    臨床端進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    臨床端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-clinical-past-plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：已完成的各段規劃
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    技術端進度報告
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    技術端進度報告
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    技術端進度報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/progress-technical-iterations-1-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：迭代 1～23 的完成範圍
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    需求文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    需求文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/fde-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FDE 數位化評估報告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/srs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    軟體需求規格書（SRS）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/database-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料庫使用規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    實作規格書
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    實作規格書
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/implementation-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    實作規格書
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/implementation-spec-script-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：既有驗收腳本的刻意改動紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/implementation-spec-iterations-3-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：迭代 3～23 的規格與實作結果
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/deployment-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署規範
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/open-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    尚待確認事項清冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requirements/architecture-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架構圖
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    參考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    參考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data-dictionary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    資料字典
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tech-stack-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    這套系統是用什麼蓋的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kiosk-shell-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    病人端外殼 App 契約
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他文件總表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    一般文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    一般文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mdm-offline-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    平板管控：免 MDM 的全院內方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uiux-design-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介面設計基準
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-drills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署演練紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment-route-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署路線比較：離線安裝包與容器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../idh-reference-survey/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    同院 IDH 系統參考調查
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai-education-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    三種衛教的 AI 生成
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_2_7" id="__nav_6_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    透析中的遊戲化
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_2_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    透析中的遊戲化
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    透析中的遊戲化
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：決定、開關與實作順序
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：決定、開關與實作順序
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0-本文件的定位" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 本文件的定位
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-範圍做哪幾款" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 範圍：做哪幾款
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-上層第-11-節待決事項的決定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 上層第 11 節待決事項的決定
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-技術代價" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 技術代價
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 技術代價">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-存檔" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 存檔
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-跟護理師互動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 跟護理師互動
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-跟其他病人互動只有匿名的彙總" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 跟其他病人互動（只有匿名的彙總）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-狀態評估資料的調閱第-2-節第-6-題衍生" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 狀態評估資料的調閱（第 2 節第 6 題衍生）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-不能用-json-存這條規定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 「不能用 JSON 存」這條規定
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-花園種滿與清空1010-第三輪決定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 花園種滿與清空（1010 第三輪決定）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-功能開關" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 功能開關
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 功能開關">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-九個開關" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 九個開關
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-送花與小花園的連動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 送花與小花園的連動
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-開關-9-管的四樣" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 開關 9 管的四樣
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-九個全關之後還剩什麼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 九個全關之後還剩什麼
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-實作順序" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 實作順序
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 實作順序">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-四個階段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 四個階段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-圖由誰畫兩份分析子文件與繪圖子任務" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 圖由誰畫：兩份分析子文件與繪圖子任務
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-麻將牌面先用現成的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 麻將牌面：先用現成的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-挪用網路上的程式規則與安全" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 挪用網路上的程式：規則與安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-實作時要改的現有文件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 實作時要改的現有文件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-還沒決定的事" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 還沒決定的事
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification-garden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：小花園的植物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification-album/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之三：記憶相簿的主題
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification-expansion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之四：花園與相簿的擴充
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之五：有國際常模的第四款遊戲
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dialysis-gamification-benchmark-sieve/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之五附錄：第四款遊戲的篩選過程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergency-handling-redesign/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    緊急通報的處理流程與護理紀錄連動
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2_9" id="__nav_6_2_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    管理儀表板、獎勵制度與對外揭露的更新
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    管理儀表板、獎勵制度與對外揭露的更新
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../management-rewards-disclosure-update/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    管理儀表板、獎勵制度與對外揭露的更新與修正
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../management-rewards-disclosure-update-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：三者蒐集與展示的資料
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interim-tablet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    暫用平板：Galaxy Tab S6 Lite（SM-P613）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2_11" id="__nav_6_2_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    緊急求助的語音說明
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    緊急求助的語音說明
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergency-voice-help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    緊急求助的語音說明：根本判斷與設計
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergency-voice-help-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之一：開源專案與模型的選型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergency-voice-help-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：根本判斷——語音該不該拿來解「按不完三下」
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergency-voice-help-camera/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之三：鏡頭能做到哪些事
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergency-voice-help-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之四：從按下求助到完成護理紀錄的完整流程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-extraction-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒐集資料的完整取出：程式更動與取資料手冊的規劃
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    小迭代文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    小迭代文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-9-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9.1 修正清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-3-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.3 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-14-5-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.5 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-3-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.3 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-4-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-5-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.5 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-6-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-7-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-17-8-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-18-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-23-split/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 23 的三次子迭代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-27-1-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 27.1 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iteration-27-2-fixes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 27.2 修正紀錄
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手動測試
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    手動測試
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/manual-test-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整手動測試手冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/api-routes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    主手冊之一：API 路由表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 9 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 10 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 11 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 12 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 13 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.2 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-14-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 14.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 15 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 16 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.2 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.3 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.4 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.5 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.6 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.7 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-17-8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 17.8 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-18-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 18.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 19 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 20 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 21 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 22 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 23 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 24 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 25 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 26 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 27 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-27-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 27.1 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-27-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 27.2 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 28 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 29 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 30 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 31 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    部署手冊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    部署手冊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    總覽
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/01-dev-machine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第一冊 · 開發機準備與安裝包建置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/02-dry-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二冊 · 開發端的測試部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/03-tablet-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第三冊 · 平板與外殼 App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/04-onsite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第四冊 · 進院當天
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/05-carry-in-out/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第五冊 · 帶進去與帶出來
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/06-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第六冊 · 現場疑難排解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/07-git-clone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第七冊 · 院方要求直接 git clone
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/08-shutdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第八冊 · 把服務關乾淨
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/09-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第九冊 · 院方要求以 git clone ＋ Docker 部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/10-first-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十冊 · 第一次進院紀錄（0922，失敗）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/11-compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十一冊 · 容器部署（現行路線）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/12-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十二冊 · 外殼 App（主機上建 APK）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/13-ai-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十三冊 · AI 閘道（實驗室實測與院內設定）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14-from-zero/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊 · 從零開始的實際部署（新手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14a-env-hospital/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之一 · 實際部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14b-env-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之二 · 模擬部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14c-cleanup-first-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之三 · 收掉第一次部署留下的東西
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/14d-second-visit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十四冊之四 · 第二次進院紀錄（1001，部分成功）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15-from-zero/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊 · 從零開始的實際部署（新手版第二版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15a-env-hospital/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之一 · 實際部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15b-env-simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之二 · 模擬部署的 .env 怎麼填
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15c-why-1001-failed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之三 · 1001 為什麼登不進去、下一次怎麼做
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/15d-switch-host-to-ip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十五冊之四 · 主機位址從名稱改成 IP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/16-data-export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十六冊 · 取出資料
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    維護流程
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    維護流程
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/HOWTO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    每週紀錄維護流程（人用）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/doc-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件架構與 token 成本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../weekly/AGENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文件維護作業指示（agent 用，舊章節對照）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        摘要
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0-本文件的定位" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 本文件的定位
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-範圍做哪幾款" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 範圍：做哪幾款
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-上層第-11-節待決事項的決定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 上層第 11 節待決事項的決定
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-技術代價" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 技術代價
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 技術代價">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-存檔" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 存檔
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-跟護理師互動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 跟護理師互動
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-跟其他病人互動只有匿名的彙總" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 跟其他病人互動（只有匿名的彙總）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-狀態評估資料的調閱第-2-節第-6-題衍生" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 狀態評估資料的調閱（第 2 節第 6 題衍生）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-不能用-json-存這條規定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 「不能用 JSON 存」這條規定
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-花園種滿與清空1010-第三輪決定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 花園種滿與清空（1010 第三輪決定）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-功能開關" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 功能開關
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 功能開關">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-九個開關" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 九個開關
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-送花與小花園的連動" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 送花與小花園的連動
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-開關-9-管的四樣" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 開關 9 管的四樣
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-九個全關之後還剩什麼" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 九個全關之後還剩什麼
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-實作順序" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 實作順序
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 實作順序">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-四個階段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 四個階段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-圖由誰畫兩份分析子文件與繪圖子任務" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 圖由誰畫：兩份分析子文件與繪圖子任務
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-麻將牌面先用現成的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 麻將牌面：先用現成的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-挪用網路上的程式規則與安全" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 挪用網路上的程式：規則與安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-實作時要改的現有文件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 實作時要改的現有文件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-還沒決定的事" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 還沒決定的事
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#版本歷程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本歷程
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="透析中的遊戲化之一決定開關與實作順序">透析中的遊戲化之一：決定、開關與實作順序<a class="headerlink" href="#透析中的遊戲化之一決定開關與實作順序" title="Permanent link">&para;</a></h1>
+<p>版本：v0.1　文件狀態：草案（2026-10-10 開立）　適用讀者：院方（護理部、社工、醫師）、FDE 工程團隊</p>
+<p>上層文件：《<a href="../dialysis-gamification/">透析中的遊戲化</a>》</p>
+<hr />
+<h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
+<ul>
+<li>記錄 1010 使用者對上層第 11 節的決定，以及之後幾輪接續的分析</li>
+<li>範圍：現有功能的遊戲化最先做，小花園、麻將連連看、記憶相簿都做；換位拼圖、暗棋先不做</li>
+<li>十題決定的重點：遊戲入口是基本資訊區的一個圖示、紅色改深棕、病人之間只做匿名彙總、狀態評估護理師社工醫師都可調閱、里程碑卡不做</li>
+<li>第 3 節技術代價：存檔、送花給誰、最低人數門檻、花園種滿與每月歸檔</li>
+<li>第 4 節九個功能開關：除了「現有功能的小幅遊戲化」，全部預設關閉；1027 迭代 29 多第 10 個「連點成畫」（之五），一樣預設關</li>
+<li>第 5 節實作順序、圖由 AI 畫、網路素材能不能用；第 6 節實作時要改的現有文件</li>
+<li>子文件之二～之五（花、相簿、擴充、有國際常模的第四款）都掛在這份底下</li>
+</ul>
+<h2 id="0-本文件的定位">0. 本文件的定位<a class="headerlink" href="#0-本文件的定位" title="Permanent link">&para;</a></h2>
+<p>《透析中的遊戲化》（以下稱<strong>上層文件</strong>）是分析。這一份是它的子文件，記錄 1010 使用者對上層文件第 11 節的決定，以及之後幾段接續的分析與決定：</p>
+<ul>
+<li>存檔、跟護理師互動、跟其他病人互動的<strong>技術代價</strong>（第 3 節），包括「存檔不能用 JSON」這條規定合不合理、開放要付出什麼（第 3.5 節）</li>
+<li>送花送給誰、最低人數門檻（第 3.2、3.3 節）</li>
+<li>花園種滿與清空：自己的花園開花之後、「一班」怎麼定義、共同花園的格數、每月歸檔與背景（第 3.6 節，1010 第三輪）</li>
+<li>護理站會有幾個<strong>功能開關</strong>、各管什麼，以及全部關掉之後還剩下什麼（第 4 節）</li>
+<li>實作順序、圖由誰畫、能不能挪用網路上的程式與素材（第 5 節）</li>
+</ul>
+<p><strong>1015 擴充</strong>另寫一份子文件《<a href="../dialysis-gamification-expansion/">透析中的遊戲化之四：花園與相簿的擴充</a>》：相簿加圖鑑、種子袋（每次療程補到 3 顆）、花園的小訪客、花加到 36 種、相簿加到 120 張，排成迭代 24（第 5.1 節）。</p>
+<p><strong>1025 第四款</strong>另寫一份子文件《<a href="../dialysis-gamification-benchmark/">透析中的遊戲化之五：有國際常模的第四款遊戲</a>》：以連線測驗為核心的「連點成畫」，護理端可看常模對照（受 FR-R 約束）；只有分析，尚未排迭代。</p>
+<p><strong>這一份仍然不是需求文件。</strong> 1010 使用者指示「完成遊戲化」之後，第 6 節列的需求條文<strong>已一次改齊</strong>（SRS FR-P16～P19、FR-N19～N20、FR-S17 等，實作規格書迭代 20～23，《資料庫使用規範》第 19 條）；資料字典與介面設計基準跟著各迭代的程式改。與需求文件衝突時，以需求文件為準。</p>
+<p>上層文件的章節編號在本文件寫成「上層 7.1」這種形式。</p>
+<hr />
+<h2 id="1-範圍做哪幾款">1. 範圍：做哪幾款<a class="headerlink" href="#1-範圍做哪幾款" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>款式</th>
+<th>決定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平板現有功能的遊戲化（上層第 4 節）</td>
+<td><strong>做</strong>，而且最先做</td>
+</tr>
+<tr>
+<td>透析小花園</td>
+<td><strong>做</strong></td>
+</tr>
+<tr>
+<td>麻將連連看</td>
+<td><strong>做</strong></td>
+</tr>
+<tr>
+<td>老台灣記憶相簿</td>
+<td><strong>做</strong></td>
+</tr>
+<tr>
+<td>換位拼圖</td>
+<td><strong>先不做</strong></td>
+</tr>
+<tr>
+<td>暗棋</td>
+<td><strong>先不做</strong></td>
+</tr>
+</tbody>
+</table>
+<p>院方原本要 3 款遊戲，做的正好是上層第 10 節建議的三款。</p>
+<hr />
+<h2 id="2-上層第-11-節待決事項的決定">2. 上層第 11 節待決事項的決定<a class="headerlink" href="#2-上層第-11-節待決事項的決定" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>題目</th>
+<th>決定</th>
+<th>連帶影響</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>遊戲入口</td>
+<td><strong>A：基本資訊區加一個遊戲圖示</strong>，不做邀請卡</td>
+<td>上層 8.1 的邀請規則不適用；上層 9.1「邀請的接受率」「連續說今天不要」這兩筆資料不存在，參與意願改看主動開啟的次數。上層第 5 節「發現」階段少了邀請卡，<strong>靠護理師口頭介紹一句</strong>與圖示本身。要改 FR-P14</td>
+</tr>
+<tr>
+<td>2</td>
+<td>紅色的替換</td>
+<td><strong>改深棕</strong></td>
+<td>麻將的「萬」字與紅中改深棕。暗棋目前不做；將來做時紅方也用深棕，與黑方的分辨照上層 7.4 靠字與外框形狀，不靠顏色</td>
+</tr>
+<tr>
+<td>3</td>
+<td>連到真實世界的回饋</td>
+<td><strong>先不要</strong></td>
+<td>共同花園照做（屬於「病人之間的互動」開關），但種滿時<strong>不出現任何會讓人以為院方要兌現什麼的字句</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>跟家人的連結</td>
+<td><strong>先不做</strong>，等離院衛教的方式確定</td>
+<td>上層 7.1、7.5 的「帶回家給家人看」都不做；家人照片拼圖隨拼圖一起不做</td>
+</tr>
+<tr>
+<td>5</td>
+<td>病人之間的互動</td>
+<td><strong>可以，照 AI 的建議</strong></td>
+<td>只做<strong>匿名的彙總</strong>：共同花園、「今天這一班有 8 個人完成今日牌局」、「有 5 個人家裡也有大同電鍋」。暗棋不做，所以非同步對弈、雙方同意顯示床號都不做。要先補最低人數門檻（第 3.3 節）；原本也要補「固定班別群組」，1010 第三輪改成一班就是療程的班別、不分星期，不必另建群組（第 3.6 節）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>狀態評估資料誰看、留存與同意</td>
+<td><strong>護理師、社工、醫師都可以調閱</strong>；資料留存與取得同意<strong>比照平板的其他資料</strong></td>
+<td>系統目前的角色只有超級管理者、護理長、組長、護理師、醫院管理層、稽核，<strong>沒有社工與醫師</strong>，要新增角色（第 3.4 節）。遊戲資料照《資料庫使用規範》寫進資料字典</td>
+</tr>
+<tr>
+<td>7</td>
+<td>透析滿 N 次的里程碑卡</td>
+<td><strong>不做</strong></td>
+<td>上層 4.4 那一列取消，也不需要開關</td>
+</tr>
+<tr>
+<td>8</td>
+<td>懷舊相簿的主題篩選</td>
+<td><strong>實作前由 AI 先完整判斷</strong>，寫成子文件掛在上層文件底下</td>
+<td>是記憶相簿實作的前置工作（第 5.2 節）</td>
+</tr>
+<tr>
+<td>9</td>
+<td>圖片素材</td>
+<td><strong>AI 繪製</strong>，是實作記憶相簿的子任務；風格與分類照第 8 題的子文件；<strong>要顧到上層第 5 節的四個階段，尤其是終局</strong></td>
+<td>見第 5.2 節。1010 第二輪決定：小花園的植物插畫也照這個做法，麻將牌面先找可以無條件使用的現成圖（第 5.3 節）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>試辦哪一班、多久</td>
+<td><strong>與實作無關</strong>，使用者會再跟院方討論</td>
+<td>所有開關照第 4 節的預設值；試辦方式定了再回填上層第 12 節</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-技術代價">3. 技術代價<a class="headerlink" href="#3-技術代價" title="Permanent link">&para;</a></h2>
+<p>以目前的程式為基準（迭代 17.7）。範圍已經照第 1、2 節縮小：沒有暗棋，所以沒有對弈。</p>
+<h3 id="31-存檔">3.1 存檔<a class="headerlink" href="#31-存檔" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>可以直接沿用的</th>
+<th>要新做的</th>
+<th>會卡的地方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>病人端 <code>offline-queue.ts</code> 的做法：資料一律先寫進平板本機（IndexedDB）再送出，以 clientId 讓後端不重複寫入。目前只用在症狀回報</td>
+<td>每款遊戲的存檔資料表，加上每一步的操作紀錄（狀態評估要用）</td>
+<td><strong>平板上那份存檔只在這次療程內有用。</strong> 綁定解除時平板要清掉本機資料（SRS 4.3 步驟 8，<code>device_bindings.device_cleared_at</code>），所以換平板接著玩完全靠伺服器</td>
+</tr>
+<tr>
+<td></td>
+<td>每一步帶序號，斷線補送時伺服器照序號排，不會新舊顛倒</td>
+<td><strong>《資料庫使用規範》6.1 不以 JSON 承載。</strong> 見第 3.5 節</td>
+</tr>
+</tbody>
+</table>
+<p><strong>代價：中。</strong> 大部分是存檔資料表的設計與序號處理；JSON 能不能用，會讓這一塊差上好幾張資料表。</p>
+<h3 id="32-跟護理師互動">3.2 跟護理師互動<a class="headerlink" href="#32-跟護理師互動" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>可以直接沿用的</th>
+<th>要新做的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>送花</td>
+<td>護理站常駐總覽螢幕（FR-N12）與它的即時推送</td>
+<td>總覽螢幕上「今天的花瓶」一小塊；送給誰見下方</td>
+</tr>
+<tr>
+<td>護理師回貼圖或預設回覆</td>
+<td>下一次療程才顯示，存起來、開療程時讀出來即可，<strong>不需要即時推送</strong></td>
+<td>貼圖與預設回覆的清單；回覆以病人為準存，不以平板</td>
+</tr>
+<tr>
+<td>病友小撇步</td>
+<td>跑馬燈的核准流程（FR-N17）、長度上限</td>
+<td>病人端「我也是這樣做的」與預設小撇步的選單；護理端核准清單多一種來源；署名只到「本中心病友」</td>
+</tr>
+<tr>
+<td>共通</td>
+<td>稽核軌跡</td>
+<td>護理師送給病人的內容要不要記進稽核軌跡，比照現有的護理師操作</td>
+</tr>
+</tbody>
+</table>
+<p>另外有一件不花程式、但要刻意做的事：<strong>上層 H-13 規定不能變成工作</strong>，所以護理端不能有未讀紅點、待辦清單、催促。</p>
+<p><strong>代價：低～中。</strong></p>
+<h4 id="送花送給誰1010-決定">送花送給誰（1010 決定）<a class="headerlink" href="#送花送給誰1010-決定" title="Permanent link">&para;</a></h4>
+<p><strong>實際情況</strong>：護理站除了一面常駐總覽螢幕，只有一兩台電腦是登入狀態，而且不會是每位護理師各自登入；醫院目前沒有規畫讓護理師隨身帶平板或手機。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A. 送給負責這一床的護理師</th>
+<th><strong>B. 送給護理站（照顧我的護理師們）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 1 角：從被照顧的人變成給予的人</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td>第 5 角：跟人有關</td>
+<td>理論上較強，因為收花的是一個人</td>
+<td>收花的是一群每次都在的人；病人多半不記得今天是哪一位負責</td>
+</tr>
+<tr>
+<td>第 3 角：送出去有沒有回音</td>
+<td><strong>弱</strong>：沒有個人裝置，那位護理師未必看得到。送給一個人卻沒被看見，比送給大家更傷</td>
+<td><strong>強</strong>：花一定出現在總覽螢幕上；經過的護理師看到床號，可以走過去當面說謝謝，這是最好的回音</td>
+</tr>
+<tr>
+<td>上層 H-13：不增加工作</td>
+<td>容易變成「你看到某床送你的花了沒」的壓力</td>
+<td>沒有指定給誰，沒有人欠誰一個回應</td>
+</tr>
+<tr>
+<td>《資料庫使用規範》11.2</td>
+<td><strong>踩線</strong>：「哪位護理師收到幾朵花」就是病人對特定護理師的評分，屬於明文禁止的「護理師×病人」交叉評分，也是要走 11.3 啟用流程的 L3 個人層級資料</td>
+<td>只有護理站層級的數字，屬於 L1 單位聚合</td>
+</tr>
+</tbody>
+</table>
+<p><strong>決定：B，送給護理站。</strong> 規格：</p>
+<ul>
+<li>病人端選好一朵花，按「送給照顧我的護理師們」，一下就好；送出後顯示「花已經放進護理站的花瓶了」</li>
+<li>護理站總覽螢幕的角落有一塊「今天的花瓶」：花的圖加床號，新的一朵直接出現，不閃、不出聲；<strong>有求助橫幅時讓位，求助永遠優先</strong>；跨日清空</li>
+<li>登入的電腦：病人詳細資訊那一格寫「今天送了一朵油桐花」。護理師可以（不是必須）回一句預設的「謝謝你的花」，走開關 2（護理師回貼圖）的同一條管道，病人下次療程看到</li>
+<li>資料只記病人、療程、哪一種花、時間；<strong>不記哪位護理師收到，也不做任何以護理師為單位的統計</strong>。護理站層級的「這個月收到幾朵」可以有</li>
+</ul>
+<h3 id="33-跟其他病人互動只有匿名的彙總">3.3 跟其他病人互動（只有匿名的彙總）<a class="headerlink" href="#33-跟其他病人互動只有匿名的彙總" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>可以直接沿用的</th>
+<th>要新做的</th>
+<th>會卡的地方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>treatment_sessions</code> 有排班日期與班別，「今天這一班」算得出來</td>
+<td>共同花園、今日牌局完成人數、共同記憶三種彙總的計算</td>
+<td>~~<strong>固定班別群組在資料模型裡沒有。</strong> 共同花園要跨很多次療程累積，要的是「一三五早班」這種固定群組，現在只有「某天某班」~~ <strong>1010 第三輪解掉</strong>：病人的透析星期不一定是一三五或二四六，固定群組歸不了組；改成一班就是療程的班別（早／午／晚），不分星期，班別現成就有（第 3.6 節）</td>
+</tr>
+<tr>
+<td></td>
+<td>最低人數門檻（下方）</td>
+<td><strong>人數少時匿名會破功。</strong>「今天這一班有 1 個人家裡也有大同電鍋」，鄰床猜得出是誰</td>
+</tr>
+</tbody>
+</table>
+<p><strong>代價：中。</strong> 若將來做暗棋的非同步對弈，代價會跳到<strong>高</strong>：邀請與同意、輪流下棋的狀態、對方沒來或換床、離線補送，以及第一次把別人的資料畫到自己的平板上（隱私模型要擴大）。這些這次都不做。</p>
+<h4 id="最低人數門檻1010-決定">最低人數門檻（1010 決定）<a class="headerlink" href="#最低人數門檻1010-決定" title="Permanent link">&para;</a></h4>
+<p>前提：平板只有 15 台，一班有平板的人最多 15 位，某一款當天有玩的往往只有幾位。</p>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>人數句要「做到的 ≥ 3 人」，而且「沒做到的是 0 人或 ≥ 3 人」才顯示</strong></td>
+<td>2 人時，兩人都知道另一位做了什麼；3 是讓任何一個人都沒辦法被另一個人單獨認出來的最小數字。後半條是防反面：「9 個人玩、8 個人完成今日牌局」，那一位沒完成的就被凸顯了</td>
+</tr>
+<tr>
+<td>分母是這一班今天開過這款遊戲的人</td>
+<td>沒玩的人不算進「沒做到」</td>
+</tr>
+<tr>
+<td>當天湊不到，改用這星期的累計，句子改成「這星期」；還是湊不到就不顯示</td>
+<td>看不到這一句，遊戲照樣完整（上層 H-8）</td>
+</tr>
+<tr>
+<td>「想起某個人」永遠不做彙總</td>
+<td>牽動情緒的回應，人數再多也不拿來說</td>
+</tr>
+<tr>
+<td>共同花園不顯示人數，花也不標是誰種的</td>
+<td>只看得到花。共同花園不另設門檻，人少的班照常顯示（第 3.6 節）</td>
+</tr>
+<tr>
+<td>兩個 3 都做成營運參數</td>
+<td>試辦後可以調，但不得低於 3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-狀態評估資料的調閱第-2-節第-6-題衍生">3.4 狀態評估資料的調閱（第 2 節第 6 題衍生）<a class="headerlink" href="#34-狀態評估資料的調閱第-2-節第-6-題衍生" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>要新做的</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>社工、醫師的角色</td>
+<td>系統現有角色沒有這兩種。最小的做法是新增兩個角色，只能看病人詳細資訊與狀態評估彙整，不能操作臨床功能</td>
+</tr>
+<tr>
+<td>調閱的稽核</td>
+<td>比照現有病人資料的調閱</td>
+</tr>
+<tr>
+<td>留存與同意</td>
+<td>比照平板其他資料，寫進資料字典與資料庫使用規範，不另立一套</td>
+</tr>
+</tbody>
+</table>
+<p><strong>代價：中。</strong> 角色與權限是整個護理端都會碰到的地方，要連帶檢查每一頁的權限。</p>
+<h3 id="35-不能用-json-存這條規定">3.5 「不能用 JSON 存」這條規定<a class="headerlink" href="#35-不能用-json-存這條規定" title="Permanent link">&para;</a></h3>
+<h4 id="出處與原文">出處與原文<a class="headerlink" href="#出處與原文" title="Permanent link">&para;</a></h4>
+<p>《資料庫使用規範》6.1 第 2 條：</p>
+<blockquote>
+<p><strong>不使用 JSON 欄位承載結構化關聯資料</strong> — 一律正規化成資料表與外鍵。SQLite 雖然有 <code>json_extract</code>，但用了就等於把查詢邏輯埋進方言裡。</p>
+</blockquote>
+<p>這條是 0909 版為了「將來要遷到醫院的 MSSQL」而定的。0910 確定正式環境也用 SQLite 之後，6.1 開頭寫明理由改成「不要被任何一種資料庫綁死」，<strong>優先權下降，但一條都不放寬</strong>。同一份規範第 5 條另外規定 <code>json_extract</code> 這類 SQLite 專屬函式不得出現在業務邏輯。目前的 schema 全部遵守，好幾張表的註解都寫著「不以 JSON 承載」。</p>
+<h4 id="它防的是什麼">它防的是什麼<a class="headerlink" href="#它防的是什麼" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>理由</th>
+<th>說明</th>
+<th>合理嗎</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不被資料庫綁死</td>
+<td>要查 JSON 裡面，就得用各家資料庫自己的函式</td>
+<td>合理</td>
+</tr>
+<tr>
+<td>資料完整</td>
+<td>JSON 裡寫的病人編號、護理師編號沒有外鍵：病人被刪掉不會連帶處理，寫錯的編號也不會被擋下來</td>
+<td>合理</td>
+</tr>
+<tr>
+<td>查得到、對得起來</td>
+<td>統計、對外報表（第 12 條）、稽核都要能逐欄查</td>
+<td>合理</td>
+</tr>
+<tr>
+<td>寫得進資料字典</td>
+<td>資料字典逐欄寫「蒐集的意義」；一大包 JSON 寫不清楚裡面有什麼</td>
+<td>合理</td>
+</tr>
+</tbody>
+</table>
+<p><strong>對臨床、稽核、績效這類資料，這條規定完全合理，不該動。</strong></p>
+<h4 id="套到遊戲存檔">套到遊戲存檔<a class="headerlink" href="#套到遊戲存檔" title="Permanent link">&para;</a></h4>
+<p>遊戲存檔其實分兩種東西：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>盤面快照</th>
+<th>每一步的紀錄與成果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>是什麼</td>
+<td>牌怎麼排、哪幾張消掉了、花園哪一格種什麼長到哪裡</td>
+<td>點了哪裡、花了多久、完成了沒、開了什麼花、送了什麼花</td>
+</tr>
+<tr>
+<td>用途</td>
+<td><strong>只用來「接著玩」</strong>：整份讀出、整份寫回</td>
+<td>狀態評估、彙總、統計</td>
+</tr>
+<tr>
+<td>指向其他資料表嗎</td>
+<td>不會（裡面只有牌碼、格子座標、成長階段）</td>
+<td>會（病人、療程）</td>
+</tr>
+<tr>
+<td>資料庫要查它裡面嗎</td>
+<td>不用</td>
+<td>要</td>
+</tr>
+</tbody>
+</table>
+<p>條文管的是「結構化<strong>關聯</strong>資料」。盤面快照有結構、但不關聯，也從來不在資料庫裡查，是條文沒有寫清楚的灰色地帶。把它拆成欄位，拿到的保護（外鍵、可查）用不上，卻要付出代價：</p>
+<ul>
+<li>麻將一桌最多 48 張牌就是 48 列，每次自動洗牌重寫全部；花園 12 格是 12 列；三款加起來多出五到八張表</li>
+<li><strong>遊戲規則每微調一次，就是一次資料庫遷移</strong>，要過第 18 條的四道關卡（先備份並驗證還原、只能前滾、只做加法……）。像「花園從 3×4 改成 3×5」「連連看多一個難度旋鈕」這種小事，都變成正式環境的結構變更</li>
+</ul>
+<p>每一步的紀錄與成果則<strong>一定要正規化</strong>，跟現在所有資料表一樣，這部分不受影響。</p>
+<h4 id="開放的成本">開放的成本<a class="headerlink" href="#開放的成本" title="Permanent link">&para;</a></h4>
+<p>建議的做法是<strong>開一個窄例外</strong>，不是放寬整條規定：</p>
+<table>
+<thead>
+<tr>
+<th>成本</th>
+<th>內容</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件</td>
+<td>《資料庫使用規範》6.1 第 2 條補一段例外與界線（下方）；資料字典寫每款遊戲快照的格式與版本</td>
+<td>低</td>
+</tr>
+<tr>
+<td>程式：版本與驗證</td>
+<td>快照多一個「格式版本」欄位；寫入前、讀出後都在應用層驗證格式；舊版快照的升級寫在程式裡，等於把一部分「遷移」的責任從資料庫搬到程式，<strong>要有測試</strong></td>
+<td>中</td>
+</tr>
+<tr>
+<td>程式：雙寫</td>
+<td>狀態評估與彙總要用的東西，<strong>一律另外寫成正規欄位</strong>，不從快照裡挖。這條不守，例外遲早長成 JSON 查詢</td>
+<td>低（本來就要寫）</td>
+</tr>
+<tr>
+<td>風險：被擴大解讀</td>
+<td>下一次有人拿「遊戲可以，我這個也可以」開更多例外。靠界線條款擋</td>
+<td>要靠審查守住</td>
+</tr>
+</tbody>
+</table>
+<p>界線條款（寫進規範）：</p>
+<ol>
+<li>只限<strong>遊戲盤面快照</strong>，每位病人每款遊戲一列</li>
+<li>內容不得有病人識別資料、臨床數值，也不得有任何其他資料表的編號</li>
+<li>不得被任何資料表參照；資料庫裡不得以 <code>json_extract</code> 或任何方式查詢它的內容</li>
+<li>要有格式版本欄位，大小設上限（例如 16 KB）</li>
+<li>統計、評估、彙總要用的資料一律另存正規欄位</li>
+</ol>
+<p><strong>比較</strong>：不開例外，三款遊戲多五到八張表，每次規則微調都要遷移；開了例外，多一段規範條文與一套快照版本與驗證的程式。</p>
+<p><strong>1010 使用者決定開窄例外</strong>，已寫進《<a href="../../requirements/database-policy/">資料庫使用規範</a>》6.1「第 2 條的唯一例外」一段（上面五條界線，再加一條「例外只此一處，不得自行類推」），第 16 條檢查清單與資料字典的共通約束也跟著補上。</p>
+<h3 id="36-花園種滿與清空1010-第三輪決定">3.6 花園種滿與清空（1010 第三輪決定）<a class="headerlink" href="#36-花園種滿與清空1010-第三輪決定" title="Permanent link">&para;</a></h3>
+<p>小花園有兩種花園：每位病人<strong>自己的花園</strong>（3×4＝12 格，上層 7.5），以及同一班病人一起種的<strong>共同花園</strong>。自己的花園裡開好的花，可以送給護理站（第 3.2 節），也可以<strong>種進共同花園</strong>。本節說的「種花」指的都是後者，跟送花是兩件事。</p>
+<p>原本的文件只寫了花瓶跨日清空、植物不枯不倒退、共同花園種滿時不出現院方要兌現什麼的字句；<strong>種滿之後怎麼辦、花什麼時候離開花園，都沒有寫</strong>。這一節補上。</p>
+<h4 id="自己的花園">自己的花園<a class="headerlink" href="#自己的花園" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>情況</th>
+<th>做法</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>花開了以後</td>
+<td>一直留在那一格，<strong>系統永遠不自動移走</strong></td>
+<td>上層第 8 角：不會失去</td>
+</tr>
+<tr>
+<td>送給護理站，或種進共同花園</td>
+<td>那一格變回空地，可以再種；圖鑑的紀錄留著</td>
+<td>花園才有事可做；送出去的花在圖鑑裡也找得到</td>
+</tr>
+<tr>
+<td>12 格都有植物，其中有開好的花</td>
+<td>不提醒、不催；種子區旁邊安靜寫一句「花園滿了，可以把開好的花送出去或種到大家的花園，再種新的」</td>
+<td>上層 H-13 不催促，同時不讓花園卡住</td>
+</tr>
+</tbody>
+</table>
+<h4 id="一班怎麼定義">「一班」怎麼定義<a class="headerlink" href="#一班怎麼定義" title="Permanent link">&para;</a></h4>
+<p>原本寫的是「固定班別群組」，例如一三五早班。但病人的透析星期不一定是一三五或二四六：有人一三六、有人一週兩次，也有人臨時改班，固定群組歸不了組。</p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A. 替病人分組（看最近幾週多半在哪一組）</td>
+<td>一三六的人被硬塞進一組，週六種的花跑到週一的花園；換組時以前的花算哪裡要另訂規則</td>
+</tr>
+<tr>
+<td>B. 看種花那一次療程：星期單雙＋班別，共 6 片</td>
+<td>不必分組，看到的是當天在場的人種的；週日的療程要另外歸類</td>
+</tr>
+<tr>
+<td><strong>C. 只看班別：早班、午班、晚班，共 3 片</strong></td>
+<td>不必分組、不必另訂；班別在 <code>treatment_sessions.shift</code> 現成就有</td>
+</tr>
+</tbody>
+</table>
+<p><strong>決定：C。</strong> 一班就是療程的班別，不分星期。每一朵花歸到<strong>種下去那一次療程</strong>的班別；病人改班，之後種的花就進新那一班的花園，以前種的不搬。今日牌局完成人數與共同記憶（FR-S17）的「這一班」照同一個定義：當天的同一班別，「這星期的累計」就是這星期同一班別的累計。</p>
+<p>代價：週一早班的病人看得到週二早班病人種的花，「每次見面的那幾張臉」的感覺比 B 弱一點。換來的是規則只有一條，資料模型不必加群組。</p>
+<h4 id="透析時段跨班的病人實作要特別注意">透析時段跨班的病人（實作要特別注意）<a class="headerlink" href="#透析時段跨班的病人實作要特別注意" title="Permanent link">&para;</a></h4>
+<p>同一位病人這個月不一定都在同一班：例如一天早班、一天午班，或臨時改班。這種病人最容易寫出 bug，實作一律照下表：</p>
+<table>
+<thead>
+<tr>
+<th>情況</th>
+<th>做法</th>
+<th>不可以這樣做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>判斷種進哪一班</td>
+<td>用<strong>當下這一次療程</strong>的 <code>treatment_sessions.shift</code>，由伺服器依病人目前的療程查出</td>
+<td>不可以用病人「平常的班別」、最近幾次最多的班別、平板或床位綁的班別，也不可以讓前端把班別傳上來</td>
+</tr>
+<tr>
+<td>例：週一早班、週三午班</td>
+<td>週一種的花進早班花園，週三種的花進午班花園</td>
+<td>不可以把週三那朵也種進早班花園，或把週一那朵搬到午班</td>
+</tr>
+<tr>
+<td>種下之後</td>
+<td>花永遠留在種下去的那一座，改班不搬、不複製</td>
+<td>不可以依病人現在的班別重新歸類以前種的花</td>
+</tr>
+<tr>
+<td>當月開放中的花園</td>
+<td>只顯示<strong>當下這一次療程那一班</strong>的花園，可以看、可以種；其他班當月的花園不顯示</td>
+<td>不可以在午班療程裡顯示或種進早班當月的花園</td>
+</tr>
+<tr>
+<td>種滿的提示</td>
+<td>「這個月○班的花園種滿了」的○班是當下這一次療程的班別</td>
+<td>不可以寫成病人平常的班別</td>
+</tr>
+<tr>
+<td>圖鑑「我們的花園」</td>
+<td>列出這位病人那個月<strong>所有透析過的班別</strong>的歸檔，例如早班、午班兩座都列</td>
+<td>不可以只列一班，也不可以只看那個月最後一次療程的班別</td>
+</tr>
+</tbody>
+</table>
+<p>驗收要有一位一個月內跨早班與午班的測試病人，上面每一列都要測到。</p>
+<h4 id="共同花園的格數">共同花園的格數<a class="headerlink" href="#共同花園的格數" title="Permanent link">&para;</a></h4>
+<p>每一班每個月一片花園。<strong>這個月種滿了就不能再種</strong>，下個月依這個月的情形調整格數：</p>
+<table>
+<thead>
+<tr>
+<th>這個月歸檔時</th>
+<th>下個月的總格數</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全部種滿</td>
+<td>這個月格數的 1.5 倍</td>
+</tr>
+<tr>
+<td>種下的不到一半</td>
+<td>這個月種下的格數的 1.5 倍，但不少於起始格數</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>不變</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>起始 12 格，跟自己的花園一樣大</li>
+<li>格數一律<strong>向上取到 6 的倍數</strong>，才排得成整齊的格子</li>
+<li><strong>一座花園最多 24 格</strong>：橫放 4 列 × 6 格、直放 6 列 × 4 格（迭代 27 起固定橫放，只剩 4 列 × 6 格）；每格至少 96×96px、間距 12px，比觸控下限 64px（介面設計基準 4.3）大，是為了讓植物插畫看得清楚；在 1280×800 與 800×1280 都不捲動。總格數超過 24 就<strong>分成幾座</strong>，每座平均分（同樣取到 6 的倍數，所以總數可能比算出來的略多），避免格子太密太小</li>
+<li>有好幾座時，花園畫面用「上一座／下一座」翻，一次只看一座（上層 H-2：選項一次不超過 3～4 個）</li>
+<li>這個月種滿時，病人按「種到大家的花園」會看到「這個月早班的花園種滿了，下個月會多一些位置」，花留在自己的花園。這句話<strong>系統自己兌現得了</strong>（下個月一定變大），不涉及院方承諾（第 2 節第 3 題）</li>
+<li>起始格數（12）、一座上限（24）、縮減門檻（一半）是營運參數。一座上限不得超過介面設計基準算得出來的上限；24 是暫定，迭代 21 在目標平板截圖驗收時確認。<strong>1010 迭代 21 確認</strong>：1280×800 一座 24 格每格約 106px、800×1280 約 140px；橫放第 5 列會讓每格掉到 96px 以下，所以上限就是 24（營運參數的最大值也設成 24）</li>
+</ul>
+<p>例：早班第一個月 12 格種滿 → 第二個月 18 格，又種滿 → 第三個月算出 27，超過 24，分兩座、各 18 格（共 36）→ 第三個月只種了 14 格，不到一半 → 第四個月算出 21，取到 24，一座。</p>
+<h4 id="每月歸檔與背景">每月歸檔與背景<a class="headerlink" href="#每月歸檔與背景" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>事情</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>什麼時候清</td>
+<td>每個月 1 日起（伺服器所在地時間），上個月的花園<strong>歸檔</strong>，開一片新的。不是刪掉：花跟著歸檔留下，圖鑑裡看得到</td>
+</tr>
+<tr>
+<td>看得到哪些歸檔</td>
+<td>圖鑑多一頁「我們的花園」，列出這位病人<strong>那個月透析過的班別</strong>的歸檔，新的在前；只能看、不能種。有好幾座的月份一樣用「上一座／下一座」翻</td>
+</tr>
+<tr>
+<td>那個月沒人種</td>
+<td>不歸檔，不留空白的花園</td>
+</tr>
+<tr>
+<td>背景</td>
+<td>每個月一張，<strong>兩年一輪，共 24 張</strong>：同一個月份的兩張季節相同、畫面不同。歸檔的花園保留它那個月的背景</td>
+</tr>
+<tr>
+<td>背景誰畫</td>
+<td>跟植物插畫一樣由 AI 畫，列進植物分析子文件（第 5.2 節）：寫實雅致、不用紅色、不畫人，顏色要退在植物後面</td>
+</tr>
+</tbody>
+</table>
+<h4 id="匿名不另外處理">匿名：不另外處理<a class="headerlink" href="#匿名不另外處理" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>規則</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>種下去<strong>馬上出現</strong></td>
+<td>自己當下就看得到；別人下一次點開花園就看得到，不必即時推送。<strong>不延到下一次療程</strong></td>
+</tr>
+<tr>
+<td>不顯示人數、不標誰種的</td>
+<td>只看得到花（第 3.3 節原本就有）</td>
+</tr>
+<tr>
+<td>不另設門檻</td>
+<td>人少的班（例如晚班）照常顯示。第 3.3 節的最低人數門檻不變，它管的是「幾個人做了什麼」這種句子，共同花園沒有這種句子</td>
+</tr>
+<tr>
+<td>斷線時</td>
+<td>共同花園只能看、不能種，花留在自己的花園，連上之後再種。格數有限，種下去要由伺服器確認那一格還空著</td>
+</tr>
+<tr>
+<td>兩個人同時點同一格</td>
+<td>後到的那一位看到「這一格剛剛有人種了，換一格吧」，花還在自己手上</td>
+</tr>
+</tbody>
+</table>
+<h4 id="資料">資料<a class="headerlink" href="#資料" title="Permanent link">&para;</a></h4>
+<p>共同花園<strong>不用盤面快照</strong>（第 3.5 節的例外只限每位病人每款遊戲一列），照一般規矩正規化：</p>
+<ul>
+<li><code>shared_gardens</code>：班別、年月、第幾座、格數、背景代號、狀態（開放中／已歸檔）、歸檔時間</li>
+<li><code>shared_garden_plots</code>：哪一座、第幾格、花的代號、種下時間。<strong>沒有病人欄位</strong>；誰種的只記在每一步的操作紀錄（<code>game_events</code>），跟其他遊戲操作一樣，畫面上不出現</li>
+<li>歸檔不刪，留存比照平板其他資料（《資料庫使用規範》第 19 條）</li>
+</ul>
+<p>共同花園歸開關 5（病人之間的互動），但花從自己的花園來，所以<strong>開關 3 也開著才出現</strong>。</p>
+<hr />
+<h2 id="4-功能開關">4. 功能開關<a class="headerlink" href="#4-功能開關" title="Permanent link">&para;</a></h2>
+<h3 id="41-九個開關">4.1 九個開關<a class="headerlink" href="#41-九個開關" title="Permanent link">&para;</a></h3>
+<p>照 FR-S08 的做法；切換要有 <code>FEATURE_FLAG_MANAGE</code> 權限，開和關都要登記理由，每次切換寫進稽核軌跡。<strong>除了開關 9，全部預設關閉。</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>開關</th>
+<th>管什麼</th>
+<th>預設</th>
+<th>實作階段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>病友小撇步</td>
+<td>病人端看完衛教後的「我也是這樣做的」與分享選單；護理端核准清單裡的小撇步來源。關掉時已核准上架的照樣播完</td>
+<td>關</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>護理師回貼圖</td>
+<td>護理端對心情問卷「想讓我們知道的事」回貼圖或預設回覆，以及對送花回「謝謝你的花」；病人端下一次療程開始時顯示</td>
+<td>關</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>透析小花園</td>
+<td>花園本身；問卷、衛教、遊戲做完給養分；<strong>連動開關 4</strong></td>
+<td>關</td>
+<td>2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>送花</td>
+<td>病人送花給護理站；總覽螢幕的「今天的花瓶」；病人詳細資訊那一行</td>
+<td>關</td>
+<td>2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>病人之間的互動</td>
+<td>三種匿名彙總：共同花園（開關 3 也開著才出現，第 3.6 節）、今日牌局完成人數、共同記憶</td>
+<td>關</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>麻將連連看</td>
+<td>一般牌局與今日牌局</td>
+<td>關</td>
+<td>3</td>
+</tr>
+<tr>
+<td>7</td>
+<td>狀態評估彙整（護理端顯示）</td>
+<td>護理端看不看得到由遊戲資料整理出的趨勢陳述（上層 9.2）。<strong>關掉時資料照樣記錄</strong>，只是不顯示</td>
+<td>關</td>
+<td>3</td>
+</tr>
+<tr>
+<td>8</td>
+<td>老台灣記憶相簿</td>
+<td>相簿本身，加上護理端病人詳細資訊那格「回應主題」聊天話題</td>
+<td>關</td>
+<td>4</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>現有功能的小幅遊戲化</strong></td>
+<td>問卷送出後的那一句話、任務完成記號、我的衛教小本子、跑馬燈的「你知道嗎」（第 4.3 節）</td>
+<td><strong>開</strong></td>
+<td>1</td>
+</tr>
+<tr>
+<td>10</td>
+<td>連點成畫（1027 加）</td>
+<td>第四款遊戲的遊戲模式、護理端病人詳細資訊「本月連點成畫 N 盤」（《<a href="../dialysis-gamification-benchmark/">之五</a>》3.1、4）；沒有給小花園養分</td>
+<td>關</td>
+<td>之五第 1 次（迭代 29）</td>
+</tr>
+</tbody>
+</table>
+<p>不建立的開關：換位拼圖、暗棋（不做）、里程碑卡（第 7 題不做）。<strong>1028 迭代 31</strong>：之五第 3 次的「連點成畫常模對照」開關建了，但<strong>不在這張表</strong>——它是高風險功能，歸「臨床判斷輔助（開啟前需書面確認）」那一組（與風險分層等四項同一套規則引擎與閘門），要開關 10 也開著才看得到；預設關。</p>
+<p><strong>1027 迭代 29</strong>：開關 10 照開關 6、8 的做法（遊戲化那一組、預設關、沒有開啟前提）；第 4.4 節「九個全關」照樣成立，十個全關時病人端與護理端一樣跟迭代 17.7 相同，開關中心多十列。</p>
+<p><strong>開關 9 預設開啟</strong>是 FR-S08「預設全關」的第二個例外。第一個例外是「本次透析」面板，理由一樣：只呈現、不碰臨床判讀、不碰隱私、不增加護理師的工作。</p>
+<h3 id="42-送花與小花園的連動">4.2 送花與小花園的連動<a class="headerlink" href="#42-送花與小花園的連動" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>動作</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>開小花園</td>
+<td>送花<strong>跟著開</strong></td>
+</tr>
+<tr>
+<td>關小花園</td>
+<td>送花<strong>跟著關</strong></td>
+</tr>
+<tr>
+<td>小花園開著，關送花</td>
+<td>只關送花，花園照常</td>
+</tr>
+<tr>
+<td>小花園關著，開送花</td>
+<td><strong>不允許</strong>：送花的前提是有花園。開關中心顯示「要先開透析小花園」</td>
+</tr>
+</tbody>
+</table>
+<p>一個後果要知道：小花園關了再開，送花會跟著重新開啟。若院方只想要花園、不要送花，每次開小花園之後要再關一次送花。</p>
+<p>實作上，現有的開關中心已經有「開啟前提」的檢查（<code>feature-flags.service.ts</code> 的 <code>judge</code>），「要先開小花園」可以直接用它；<strong>「跟著開、跟著關」的連動是新的行為</strong>。連動造成的那一次切換也寫進稽核軌跡，理由記成「隨透析小花園開啟（或關閉）」。</p>
+<h3 id="43-開關-9-管的四樣">4.3 開關 9 管的四樣<a class="headerlink" href="#43-開關-9-管的四樣" title="Permanent link">&para;</a></h3>
+<p>原本（1010 第一輪）判斷這四樣不必設開關；第二輪改成由開關 9 一起管，讓九個全關時可以關乾淨。</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>上層出處</th>
+<th>關掉時</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>問卷送出後的那一句話</td>
+<td>4.3</td>
+<td>回到現在的送出畫面</td>
+</tr>
+<tr>
+<td>任務完成記號</td>
+<td>4.4</td>
+<td>回到現在的完成畫面。給小花園養分的事歸開關 3，不受影響：開關 9 關、開關 3 開時，養分照給，只是在花園裡才看得到</td>
+</tr>
+<tr>
+<td>我的衛教小本子</td>
+<td>4.4、4.6</td>
+<td>入口與小本子都不出現；已經亮起的主題照樣記著，再開時還在。<strong>入口放在結束衛教做完的畫面</strong>（「翻我的小本子」），遊戲圖示出現時遊戲選單裡也放一份；<strong>首頁不放</strong>（FR-P14）</td>
+</tr>
+<tr>
+<td>跑馬燈的「你知道嗎」</td>
+<td>4.9</td>
+<td>護理端不能再新增這一類，已上架的停播</td>
+</tr>
+</tbody>
+</table>
+<h3 id="44-九個全關之後還剩什麼">4.4 九個全關之後還剩什麼<a class="headerlink" href="#44-九個全關之後還剩什麼" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>改變</th>
+<th>九個全關時</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>病人端每一個畫面</td>
+<td><strong>跟迭代 17.7 一樣</strong>：遊戲圖示要至少一款遊戲的開關開著才出現，其餘都由各自的開關管</td>
+</tr>
+<tr>
+<td>護理端每一個畫面</td>
+<td>跟迭代 17.7 一樣，只有開關中心多了九列</td>
+</tr>
+<tr>
+<td>護理站總覽螢幕</td>
+<td>跟迭代 17.7 一樣（花瓶歸開關 4）</td>
+</tr>
+<tr>
+<td>資料庫</td>
+<td>新的資料表還在（第 18 條只做加法），只是不再寫入；以前記下的資料照留存規定處理，不因關開關而刪</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-實作順序">5. 實作順序<a class="headerlink" href="#5-實作順序" title="Permanent link">&para;</a></h2>
+<h3 id="51-四個階段">5.1 四個階段<a class="headerlink" href="#51-四個階段" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>階段</th>
+<th>做什麼</th>
+<th>開關</th>
+<th>先決條件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 平板現有功能的遊戲化</strong></td>
+<td>問卷送出後的一句話、任務完成記號、我的衛教小本子、跑馬燈的「你知道嗎」、病友小撇步、護理師回貼圖</td>
+<td>9、1、2</td>
+<td>改 FR-P08、FR-N17、FR-S08 等條文（第 6 節）</td>
+</tr>
+<tr>
+<td><strong>2 透析小花園</strong></td>
+<td>遊戲圖示與遊戲框（沿用 <code>TaskFrame</code>）；存檔機制（第 3.1 節）；花園、圖鑑、養分接上階段 1 的完成事件；送花與總覽螢幕的花瓶；最低人數門檻；共同花園（一班就是班別、每月歸檔、格數調整，第 3.6 節）</td>
+<td>3、4、5</td>
+<td>植物分析子文件與插畫（第 5.2 節）；存檔照 JSON 例外的界線設計（第 3.5 節）</td>
+</tr>
+<tr>
+<td><strong>3 麻將連連看</strong></td>
+<td>牌局、連線規則、自動洗牌、今日牌局與完成人數；每一步的操作紀錄；護理端的狀態評估彙整；社工與醫師的角色</td>
+<td>6、7</td>
+<td>牌面（第 5.3 節）</td>
+</tr>
+<tr>
+<td><strong>4 老台灣記憶相簿</strong></td>
+<td>相簿、共同記憶、護理端聊天話題</td>
+<td>8</td>
+<td>主題篩選子文件、圖（第 5.2 節）</td>
+</tr>
+<tr>
+<td><strong>5 花園與相簿的擴充</strong>（1015 加）</td>
+<td>種子袋、小訪客、兩個圖鑑照分類排並列出空格、花 36 種、相簿 120 張</td>
+<td>3、8（不另開開關）</td>
+<td>《之四》子文件（1015 已寫）；新的花、訪客、圖卡的圖</td>
+</tr>
+</tbody>
+</table>
+<p>換位拼圖、暗棋先不做。</p>
+<p><strong>1015：階段 5 對到迭代 24</strong>（實作規格書 4.24），切成四次子迭代：24.1 花與訪客的圖、24.2 與 24.3 相簿第三、四批、24.4 程式。<strong>1017 24.1～24.3 完成，1018 24.4 完成</strong>（階段 5 做完）。</p>
+<p><strong>1010：四個階段對到迭代 20～23</strong>（實作規格書 4.0.5、4.20～4.23），排在迭代 18、19 之後。</p>
+<p><strong>為什麼這個順序</strong>：上層 4.11 指出，第 1、3、5 角大多落在現有功能，<strong>不必等遊戲就能先開始心理支援</strong>；小花園是把其他功能串起來的骨幹，要在另外兩款之前，養分才有地方去；連連看程式量低、資料最乾淨，順便把狀態評估的資料管線做起來；相簿內容量最大，要等主題篩選與繪圖兩件前置工作。</p>
+<h3 id="52-圖由誰畫兩份分析子文件與繪圖子任務">5.2 圖由誰畫：兩份分析子文件與繪圖子任務<a class="headerlink" href="#52-圖由誰畫兩份分析子文件與繪圖子任務" title="Permanent link">&para;</a></h3>
+<p>相簿的圖與小花園的植物插畫，都由 AI（Claude）在實作時畫，<strong>畫之前各先寫一份分析子文件</strong>，掛在上層文件底下。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>老台灣記憶相簿（第 8、9 題）</th>
+<th>透析小花園（1010 第二輪）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>子文件要判斷的</td>
+<td>主題分類（上層 7.1 的飲食、交通、家庭、遊戲、節慶、工作，可增減）與每類要畫哪些物件；要避開的題材（創傷、政治、戰爭、重大歷史事件、選舉）與「可能讓人難過」的判斷準則；「這是什麼？」的選項與說明文字寫法</td>
+<td>要種哪些花（台灣原生與常見花卉、節令花）與分類；<strong>要避開的花</strong>：有喪葬聯想的（例如白菊）、花語不吉利的、會讓人聯想到病或毒的——花會被送進護理站，不能送出會被誤會的花；每種花畫幾個成長階段（種子、芽、苗、花苞、開花）；三種種子怎麼配；<strong>共同花園的 24 張月份背景</strong>（兩年一輪，第 3.6 節）</td>
+</tr>
+<tr>
+<td>畫風</td>
+<td>寫實、不幼稚；不畫可辨識的真人；<strong>只畫物件、不畫商標</strong>（大同電鍋畫的是那個樣子，不是它的商標）</td>
+<td>寫實、雅致的植物圖鑑畫風（上層 7.5），不是卡通</td>
+</tr>
+<tr>
+<td>用語</td>
+<td>照迭代 17.3 的把關</td>
+<td>花名用台灣慣用名</td>
+</tr>
+</tbody>
+</table>
+<p>兩份都要顧到上層第 5 節的四個階段：</p>
+<table>
+<thead>
+<tr>
+<th>階段</th>
+<th>相簿</th>
+<th>小花園</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>發現</td>
+<td>最先出現的是最常見、第一眼就認得的物件</td>
+<td>第一次種下去的是長輩最熟的花</td>
+</tr>
+<tr>
+<td>上手</td>
+<td>起始的幾張難度最低（常見的先出、少見的後出）</td>
+<td>第一朵花在三次療程內開</td>
+</tr>
+<tr>
+<td>養成</td>
+<td>起始約 200 張，涵蓋各主題，每次療程都有沒看過的</td>
+<td>圖鑑一開始就有一定數量，種子開什麼花要有驚喜（第 7 角）</td>
+</tr>
+<tr>
+<td><strong>終局</strong></td>
+<td><strong>一做好幾年，圖要一直有新的</strong>：每季加一包、節令主題、偶爾一張驚喜卡；分類要留得下以後新增的主題</td>
+<td><strong>圖鑑永遠收不完</strong>：每季加新花、節令花（中秋、春節、端午……）；分類要留得下以後新增的花</td>
+</tr>
+</tbody>
+</table>
+<p>上層第 5 節說終局做不好，半年後就沒人玩了，所以兩份子文件都要寫出<strong>第一年之後每一季加什麼</strong>的規畫，不能只畫起始那一批。</p>
+<p><strong>1010 迭代 21</strong>：小花園的子文件已寫好——《<a href="../dialysis-gamification-garden/">透析中的遊戲化之二：小花園的植物</a>》（12 種花、要避開的花、三種種子、五個成長階段與點數、24 張月份背景、第一年之後每一季加什麼）；起始插畫與背景依它由程式產生的向量圖畫好（子文件第 7 節）。</p>
+<p><strong>1011 迭代 23.1</strong>：相簿的子文件已寫好——《<a href="../dialysis-gamification-album/">透析中的遊戲化之三：記憶相簿的主題</a>》（選物件的六條準則、六個主題、要避開的題材與「可能讓人難過」的判斷準則、起始 60 張的名稱與選項與說明、第一年之後每一季加什麼）；圖照小花園的做法由程式產生，第一批 30 張已畫好、第二批 30 張 1011 迭代 23.2 畫好（迭代 23 切成三次子迭代，見《<a href="../iteration-23-split/">迭代 23 的三次子迭代</a>》）；<strong>1011 迭代 23.3 程式做完</strong>：圖卡寫進資料表、護理端可以改（改了就是新的一版），開開關的門檻照上架中的張數算（實作規格書 4.23）。上表「起始約 200 張」改成<strong>起始 60 張</strong>（開開關的門檻），開開關後每季一包、第二年過 200——畫風要長者看過才定，先畫 200 張、畫風一改就全部重畫（子文件第 9 節，使用者要推翻時改那一節）。</p>
+<p><strong>畫得出來的程度要先講清楚</strong>：AI 直接畫的是向量圖（SVG），可以做到精緻的線稿上色，做不到照片級寫實。夠不夠用，照上層 12.2 由長者在病床上實際看過再判斷，尤其是「會不會覺得是給小孩玩的」那一題。</p>
+<h3 id="53-麻將牌面先用現成的">5.3 麻將牌面：先用現成的<a class="headerlink" href="#53-麻將牌面先用現成的" title="Permanent link">&para;</a></h3>
+<p>1010 查到一套可以無條件使用的牌面：<strong><a href="https://github.com/FluffyStuff/riichi-mahjong-tiles">FluffyStuff/riichi-mahjong-tiles</a></strong>，說明檔的授權寫著「All assets are in the public domain」，連到 CC0 1.0。</p>
+<table>
+<thead>
+<tr>
+<th>事情</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>紅色</td>
+<td>這套是日本麻將的牌面，「萬」字與紅中是紅的；照第 2 題改成深棕。CC0 允許修改</td>
+</tr>
+<tr>
+<td>用不到的牌</td>
+<td>日本麻將的紅五（赤寶牌）不用；連連看不需要花牌</td>
+</tr>
+<tr>
+<td>看不看得清</td>
+<td>在 80×104 px 的牌面大小（上層 7.2）、平板放在床邊的距離實際看過；看不清就由 AI 照同一套牌面重畫</td>
+</tr>
+<tr>
+<td>來源紀錄</td>
+<td>放進專案時記下網址、commit、授權全文（第 5.4 節）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-挪用網路上的程式規則與安全">5.4 挪用網路上的程式：規則與安全<a class="headerlink" href="#54-挪用網路上的程式規則與安全" title="Permanent link">&para;</a></h3>
+<p>三款遊戲若 GitHub 上有可以無條件挪用的程式，可以直接拿來改。</p>
+<p><strong>什麼算「無條件」</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>授權</th>
+<th>算不算</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CC0、Unlicense、0BSD、明示放棄著作權（public domain）</td>
+<td><strong>算</strong>，可以直接用</td>
+</tr>
+<tr>
+<td>MIT、BSD、Apache 2.0</td>
+<td><strong>不算</strong>：要保留授權聲明，是有條件的。遇到時另外問使用者</td>
+</tr>
+<tr>
+<td>GPL、LGPL 等</td>
+<td>不算：會要求整個專案跟著開放原始碼</td>
+</tr>
+<tr>
+<td>沒有寫授權</td>
+<td>不算：沒寫就是保留所有權利</td>
+</tr>
+</tbody>
+</table>
+<p><strong>1011 迭代 22</strong>：牌面照上表放進病人端（<code>assets/mahjong-tiles/</code>，釘 commit <code>26e127b</code>，來源、授權全文、改了什麼寫在同目錄的 <code>SOURCE.md</code>）；紅色（含筒子、條子上的紅點）一律改深棕，白板的原檔是空白牌、改畫藍框。<strong>程式沒有挪用</strong>：連線判定、保證有解的發牌、重排都自己寫（<code>@hd/shared</code> 的 <code>mahjong.ts</code>），理由同下段「整套挪過來改，常常比自己寫還費工」。</p>
+<p><strong>1010 初步搜尋的結果</strong>：以 Unlicense、CC0、0BSD 搜「shisen-sho」「mahjong connect」「onet」（連連看的幾種英文叫法）都沒有結果；有一套 Unlicense 的麻將遊戲 tcottrill/myMahjong，但它是多層疊放的麻將接龍，正是上層 6.4 不選的那一種。小花園與相簿的搜尋碰到 GitHub 的查詢次數上限，<strong>沒有查完</strong>，實作開始時要再查一次。（<strong>1010 迭代 21、1011 迭代 23.1</strong>：小花園與相簿的圖都自己畫，沒有挪用任何素材，這次搜尋因此不必再做。）</p>
+<p><strong>實際上能挪用的多半只是片段</strong>：這三款的程式核心很小（連連看是「最多轉兩個彎」的路徑判定、保證有解的發牌、無解時重排；小花園是依療程次數成長的狀態），而上層的硬性限制（只能點、不計時、無聲、不用紅色、只鋪一層、每一步存到伺服器）跟一般遊戲差很多。<strong>整套挪過來改，常常比自己寫還費工</strong>；比較划算的是挪路徑判定、發牌這類程式片段，以及素材。</p>
+<p><strong>安全規則</strong>（挪用任何程式或素材都適用）：</p>
+<ol>
+<li><strong>整份讀過才放進來</strong>，釘在特定 commit；把網址、commit、授權全文跟程式放在一起，資料字典或實作規格書記一筆來源</li>
+<li><strong>複製進專案，不用套件管理器在執行期裝進來</strong>；不帶進任何安裝時會執行的指令碼；若帶進相依套件，照常跑弱點檢查</li>
+<li><strong>拿掉所有對外連線</strong>：分析、廣告、外部字型、更新檢查、回報。病人端本來就不得連向院外（SRS 第 6 章），照現有的內容安全政策</li>
+<li>拿掉 <code>eval</code>、<code>new Function</code>、把外來字串塞進 <code>innerHTML</code>、動態載入腳本這類寫法</li>
+<li>拿掉音效檔與震動（上層 H-3）、計時器、排行榜、內購</li>
+<li><strong>SVG 圖檔也要清</strong>：SVG 裡可以藏腳本、事件屬性與外部參照，放進來前全部清掉</li>
+<li>改完照常做程式審查、跑既有測試</li>
+<li>素材若事後發現授權有問題，直接換掉；存檔只存牌碼不存圖，換圖不影響任何人的存檔</li>
+</ol>
+<hr />
+<h2 id="6-實作時要改的現有文件">6. 實作時要改的現有文件<a class="headerlink" href="#6-實作時要改的現有文件" title="Permanent link">&para;</a></h2>
+<p>照上層 11.2，扣掉不做的部分。<strong>1010 使用者指示完成遊戲化，需求文件一次改齊</strong>（「1010 已改」）；資料字典與介面設計基準是程式的參考文件，跟著各迭代改：</p>
+<table>
+<thead>
+<tr>
+<th>條文</th>
+<th>會怎麼變</th>
+<th>階段</th>
+<th>狀態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRS FR-P08、FR-N17、FR-N 系列</td>
+<td>被聽見的回覆、病友小撇步、送花</td>
+<td>1、2</td>
+<td><strong>1010 已改</strong>（FR-P08 補、FR-N17 補、新增 FR-P18、FR-P19、FR-N19）</td>
+</tr>
+<tr>
+<td>SRS FR-S08（功能開關）</td>
+<td>九個開關、送花的連動、開關 9 預設開啟的例外</td>
+<td>1 起逐步加</td>
+<td><strong>1010 已改</strong>（FR-S08、FR-P16～P19 補充說明；實作規格書 3.7）</td>
+</tr>
+<tr>
+<td>SRS FR-N12（常駐總覽螢幕）</td>
+<td>「今天的花瓶」；求助橫幅優先</td>
+<td>2</td>
+<td><strong>1010 已改</strong></td>
+</tr>
+<tr>
+<td>SRS FR-P13、FR-P14、FR-P15</td>
+<td>遊戲圖示、求助版位不變、任務優先、全程無聲</td>
+<td>2</td>
+<td><strong>1010 已改</strong>（另新增 FR-P16、FR-P17）</td>
+</tr>
+<tr>
+<td>介面設計基準 2.4、FR-P09</td>
+<td>遊戲另設閒置門檻（上層 8.3 建議 3 分鐘）</td>
+<td>2</td>
+<td>FR-P09 <strong>1010 已改</strong>；介面設計基準 <strong>1010 迭代 21 已改</strong>（2.4、新增 2.7、3.9）；迭代 22、23 各自新增麻將與相簿的那幾節（<strong>1011 迭代 23 是 2.9、3.11</strong>）</td>
+</tr>
+<tr>
+<td>介面設計基準 4.1、4.4</td>
+<td>深棕的紅色替換；遊戲的點擊後動畫不算「自己動」</td>
+<td>2、3</td>
+<td>4.4 <strong>1010 迭代 21 已記</strong>：小花園用不到點擊後的動畫，例外沒有開；<strong>1011 迭代 22 已改</strong>：4.1 補深棕的紅色替換，4.4 為麻將開了點擊後 0.3 秒的例外（減少動態效果時不做）</td>
+</tr>
+<tr>
+<td>《資料庫使用規範》6.1、第 16 條</td>
+<td>遊戲盤面快照的窄例外與六條界線、檢查清單一條</td>
+<td>—</td>
+<td><strong>1010 已改</strong>；同日另加第 19 條（遊戲資料比照平板其他資料）與 11.2 送花一句</td>
+</tr>
+<tr>
+<td>SRS 3.1 角色、實作規格書 3.1</td>
+<td>社工、醫師兩個角色</td>
+<td>3</td>
+<td><strong>1010 已改</strong>（SRS 4.2 權限矩陣多兩欄）；<strong>1011 迭代 22 實作</strong></td>
+</tr>
+<tr>
+<td>SRS 附錄 C.7</td>
+<td>遊戲資料照同一套趨勢偏離規則</td>
+<td>3</td>
+<td><strong>1010 已改</strong>（另新增 FR-N20）</td>
+</tr>
+<tr>
+<td>資料字典、資料庫使用規範</td>
+<td>存檔、操作紀錄、花園、送花、彙總、共同花園與歸檔的資料表；挪用素材與程式的來源</td>
+<td>2 起</td>
+<td>資料庫使用規範 <strong>1010 已改</strong>（第三輪補共同花園一列）；資料字典隨迭代 20～23 的 schema 改（<strong>迭代 20 的三張表 1010 已補</strong>，第二十三節；<strong>迭代 21 的六張表 1010 已補</strong>，第二十四節；<strong>迭代 22 的十二欄 1011 已補</strong>，第二十五節；<strong>迭代 23 的四張表 1011 已補</strong>，第二十六節）</td>
+</tr>
+<tr>
+<td>SRS FR-S17、實作規格書 3.7 與 4.21</td>
+<td>一班就是班別、花園種滿與清空（第 3.6 節）</td>
+<td>2</td>
+<td><strong>1010 第三輪已改</strong></td>
+</tr>
+<tr>
+<td>實作規格書</td>
+<td>新的端點與病人端模組；最低人數門檻的兩個營運參數</td>
+<td>1 起</td>
+<td><strong>1010 已改</strong>（4.20～4.23；FR-S17）</td>
+</tr>
+<tr>
+<td>SRS FR-P16、實作規格書 4.24、之二、之三</td>
+<td>花園與相簿的擴充（階段 5）</td>
+<td>5</td>
+<td><strong>1015 已改</strong>；介面設計基準與資料字典 <strong>1018 跟著迭代 24.4 改了</strong>（《之四》第 8 節）</td>
+</tr>
+</tbody>
+</table>
+<p>上層 11.2 原本還列了「尚待確認事項清冊」：第 11 節的題目除了第 10 題都已有決定，第 10 題由使用者直接跟院方談，<strong>不另列進清冊</strong>。</p>
+<hr />
+<h2 id="7-還沒決定的事">7. 還沒決定的事<a class="headerlink" href="#7-還沒決定的事" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>題目</th>
+<th>本文件的建議</th>
+<th>卡在哪個階段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>試辦哪一班、多久（上層 11.1 第 10 題）</td>
+<td>—（使用者會再跟院方討論）</td>
+<td>不卡實作</td>
+</tr>
+</tbody>
+</table>
+<p>1010 第二輪已經決定、從這張表移走的：送花送給誰（第 3.2 節）、植物插畫與麻將牌面（第 5.2、5.3 節）、最低人數門檻（第 3.3 節）、遊戲盤面快照以 JSON 承載（開窄例外，第 3.5 節）。1010 第三輪：花園種滿與清空、「一班」的定義（第 3.6 節）。</p>
+<hr />
+<h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>定版</th>
+<th>日期</th>
+<th>異動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1028</td>
+<td>2026-10-28</td>
+<td>第 4 節加第 10 個開關「連點成畫」（迭代 29）；常模對照開關歸臨床判斷輔助那一組（迭代 31）；子文件改為之二～之五</td>
+</tr>
+<tr>
+<td><a href="https://94sh09sh19sh.github.io/hd-docs/1021/notes/dialysis-gamification-decisions/">1021</a></td>
+<td>2026-10-21</td>
+<td>加階段 5「花園與相簿的擴充」（1015，子文件之四），對到迭代 24 四次子迭代、1018 完成；麻將牌桌迭代 27 起只剩橫放</td>
+</tr>
+<tr>
+<td><a href="https://94sh09sh19sh.github.io/hd-docs/1014/notes/dialysis-gamification-decisions/">1014</a></td>
+<td>2026-10-14</td>
+<td>首次定版。1010 使用者逐題決定：先不做暗棋與換位拼圖、存檔與互動的技術代價、盤面快照的 JSON 例外、送花送給護理站、花園種滿與清空、九個開關、圖與程式的來源、實作順序；迭代 20～23 完成狀態</td>
+</tr>
+</tbody>
+</table>
+<p><a href="../dialysis-gamification/">← 回上層文件</a>　<a href="../../">← 回進度首頁</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+  
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  <script>
+  (function () {
+    if (document.querySelector('.ask-ai-fab')) return; // 保險：萬一被重跑，不要疊出第二顆
+
+    // 各家的「帶問題開新對話」網址；問題放在 q 參數
+    var TARGETS = {
+      claude: 'https://claude.ai/new?q=',
+      chatgpt: 'https://chatgpt.com/?q='
+    };
+
+    // __md_scope 是 Material 在首次載入時算好的版本根目錄（例如 …/hd-docs/latest/）
+    function siteRoot() {
+      try { return new URL('.', __md_scope).href; } catch (e) { return new URL('.', location.href).href; }
+    }
+
+    // 目前這頁對應的 .md：…/requirements/srs/ → …/requirements/srs/index.md
+    function pageMarkdown() {
+      var path = location.pathname;
+      if (!/\.html?$/.test(path) && !path.endsWith('/')) path += '/';
+      path = path.endsWith('/') ? path + 'index.md' : path.replace(/\.html?$/, '.md');
+      return location.origin + path;
+    }
+
+    // ── 候選頁：用站內搜尋索引做字面比對 ──────────────────────────────
+    // Material 內建搜尋對中文整句幾乎查不到東西，只借它的索引，排序自己算：
+    // 問題切成兩字一組，每組依稀有程度加分，標題有命中再加五成，每頁只取分數最高的段落。
+    // 字面比對抓不到同義詞（問題寫「表單」、文件寫「問卷」），所以 prompt 裡只稱「候選」，
+    // 另外靠 llms.txt 的小標讓 AI 自己找。
+    var index = null;      // [{ page, pageTitle, title, text }]
+    var loading = null;
+
+    var STOP = /甚麼|什麼|怎麼|怎樣|為什麼|哪些|哪裡|如何|請問/g;
+    function plain(s) { return String(s || '').replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, ''); }
+    function squash(s) { return plain(s).replace(/[\s\p{P}\p{S}]/gu, ''); }
+    function grams(s) {
+      var t = squash(s), g = {};
+      for (var i = 0; i < t.length - 1; i++) g[t.slice(i, i + 2)] = true;
+      return Object.keys(g);
+    }
+
+    function loadIndex() {
+      if (index || loading) return;
+      loading = fetch(siteRoot() + 'search/search_index.json')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var titles = {};
+          data.docs.forEach(function (d) { if (d.location.indexOf('#') < 0) titles[d.location] = plain(d.title); });
+          index = data.docs.map(function (d) {
+            var page = d.location.split('#')[0];
+            return {
+              page: page, pageTitle: titles[page] || plain(d.title), section: plain(d.title).trim(),
+              title: squash(d.title), text: squash(d.title) + squash(d.text)
+            };
+          });
+        })
+        .catch(function () { loading = null; }); // 拿不到就不附候選，照樣能問
+    }
+
+    function candidates(question, k) {
+      if (!index) return [];
+      var qg = grams(question.replace(STOP, ' '));
+      if (!qg.length) return [];
+      var idf = {};
+      qg.forEach(function (g) {
+        var n = 0;
+        index.forEach(function (d) { if (d.text.indexOf(g) >= 0) n++; });
+        idf[g] = n ? Math.log(index.length / n) : 0;
+      });
+      var best = {};
+      index.forEach(function (d) {
+        var s = 0, titleHit = false;
+        qg.forEach(function (g) {
+          if (d.text.indexOf(g) >= 0) { s += idf[g]; if (d.title.indexOf(g) >= 0) titleHit = true; }
+        });
+        if (titleHit) s *= 1.5;
+        if (s > 0 && (!best[d.page] || s > best[d.page].score)) best[d.page] = { score: s, doc: d };
+      });
+      return Object.keys(best)
+        .map(function (p) { return best[p]; })
+        .sort(function (a, b) { return b.score - a.score; })
+        .slice(0, k)
+        .map(function (r) { return r.doc; });
+    }
+
+    function markdownOf(page) { return siteRoot() + page + 'index.md'; }
+
+    function buildPrompt(question) {
+      var title = document.title.split(' - ')[0];
+      var here = pageMarkdown();
+      var lines = [
+        '請閱讀以下公開文件後回答我的問題。',
+        '- 我正在看的頁面「' + title + '」：' + here
+      ];
+      var picks = candidates(question, 6).filter(function (d) { return markdownOf(d.page) !== here; });
+      if (picks.length) {
+        lines.push('- 站內字面比對最接近的幾頁（只是候選，未必有答案，請逐頁點開讀）：');
+        picks.forEach(function (d) {
+          var sec = d.title && squash(d.pageTitle) !== d.title ? '（段落：' + d.section.slice(0, 30) + '）' : '';
+          lines.push('  - ' + d.pageTitle + sec + '：' + markdownOf(d.page));
+        });
+      }
+      lines.push(
+        '- 全站目錄，每頁附小標：' + siteRoot() + 'llms.txt',
+        '  候選頁沒有答案時，從目錄的小標找相關頁面再讀；文件用詞可能和我的問題不同，請把同義說法也算進去。',
+        '',
+        '回答規則：用台灣繁體中文；只根據上述文件，文件沒寫的就直說沒寫；每個重點附上出處頁面網址。',
+        '',
+        '我的問題：' + question
+      );
+      return lines.join('\n');
+    }
+
+    var fab = document.createElement('button');
+    fab.type = 'button';
+    fab.className = 'ask-ai-fab';
+    fab.setAttribute('aria-expanded', 'false');
+    fab.setAttribute('aria-controls', 'ask-ai-panel');
+    fab.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.2 1.1 4.2 2.9 5.6L4 21l4.6-2.4c1.1.3 2.2.4 3.4.4 5.5 0 10-3.6 10-8s-4.5-8-10-8Z"/></svg>' +
+      '<span>問 AI</span>';
+
+    var panel = document.createElement('section');
+    panel.id = 'ask-ai-panel';
+    panel.className = 'ask-ai-panel';
+    panel.hidden = true;
+    panel.setAttribute('aria-label', '用 AI 問這份文件');
+    panel.innerHTML =
+      '<h2>用 AI 問這份文件</h2>' +
+      '<p>會另開 Claude 或 ChatGPT，由它讀取本頁與全站公開文件後回答。需要自己的帳號，本站不收集你輸入的內容。</p>' +
+      '<textarea placeholder="例如：病人按了求助之後，護理師那邊會看到什麼？"></textarea>' +
+      '<div class="ask-ai-warn">請勿輸入病人姓名、病歷號等個人資料。</div>' +
+      '<div class="ask-ai-actions">' +
+        '<button type="button" data-target="claude" disabled>問 Claude</button>' +
+        '<button type="button" data-target="chatgpt" disabled>問 ChatGPT</button>' +
+      '</div>';
+
+    var input = panel.querySelector('textarea');
+    var sends = panel.querySelectorAll('[data-target]');
+
+    function toggle(open) {
+      panel.hidden = !open;
+      fab.setAttribute('aria-expanded', String(open));
+      if (open) { input.focus(); loadIndex(); }
+    }
+
+    fab.addEventListener('click', function () { toggle(panel.hidden); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) { toggle(false); fab.focus(); }
+    });
+    input.addEventListener('input', function () {
+      var empty = !input.value.trim();
+      sends.forEach(function (b) { b.disabled = empty; });
+    });
+    sends.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var q = input.value.trim();
+        if (!q) return;
+        var url = TARGETS[b.dataset.target] + encodeURIComponent(buildPrompt(q));
+        window.open(url, '_blank', 'noopener');
+      });
+    });
+
+    document.body.appendChild(panel);
+    document.body.appendChild(fab);
+  })();
+  </script>
+  <script>
+  (function () {
+    var ENDPOINT = "";
+    if (!ENDPOINT || !/\.github\.io$/.test(location.hostname) || window.__hdReadership) return;
+    window.__hdReadership = true;
+
+    var IDLE = 120000; // 兩分鐘沒有捲動、點擊、按鍵就當作人離開了，不再計時
+
+    function store(key, value) {
+      try {
+        if (value === undefined) return localStorage.getItem(key);
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      } catch (e) {}
+      return null;
+    }
+    function rid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+
+    // ?me=1 標記、?me=0 取消，標完把參數從網址拿掉並提示一下
+    var params = new URLSearchParams(location.search);
+    var me = params.get('me');
+    if (me === '1' || me === '0') {
+      store('hd-docs-me', me === '1' ? '1' : null);
+      params.delete('me');
+      var rest = params.toString();
+      history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+      var toast = document.createElement('div');
+      toast.className = 'rs-toast';
+      toast.setAttribute('role', 'status');
+      toast.textContent = me === '1' ? '這個瀏覽器已標記為「我自己」，閱讀統計可以一鍵排除' : '已取消「我自己」標記';
+      document.body.appendChild(toast);
+      setTimeout(function () { toast.remove(); }, 4000);
+    }
+
+    var visitor = store('hd-docs-vid');
+    if (!visitor) { visitor = rid(); store('hd-docs-vid', visitor); }
+    var self = store('hd-docs-me') === '1' || navigator.webdriver === true || /HeadlessChrome/.test(navigator.userAgent);
+
+    // 版本根目錄（…/hd-docs/latest/）之後那一段就是頁面路徑，根目錄最後一段是版本
+    function where() {
+      var root;
+      try { root = new URL('.', __md_scope).pathname; } catch (e) { root = location.pathname.replace(/^(\/[^/]+\/[^/]+\/).*$/, '$1'); }
+      var path = location.pathname.indexOf(root) === 0 ? location.pathname.slice(root.length) : location.pathname;
+      try { path = decodeURIComponent(path); } catch (e) {}
+      return { path: path, ver: root.replace(/\/$/, '').split('/').pop() };
+    }
+
+    var view = null;
+    var lastInput = Date.now();
+    var lastTick = Date.now();
+
+    function send(sec) {
+      var body = JSON.stringify({
+        v: visitor, p: view.id, path: view.path, ver: view.ver, title: view.title, t0: view.t0, sec: sec, self: self ? 1 : 0
+      });
+      try { if (navigator.sendBeacon && navigator.sendBeacon(ENDPOINT, body)) return; } catch (e) {}
+      try { fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: body }); } catch (e) {}
+    }
+
+    // 只累計分頁在前景、而且最近有動作的時間；電腦睡著醒來那一大段由單次上限擋掉
+    function tick() {
+      var now = Date.now();
+      if (view && document.visibilityState === 'visible' && now - lastInput < IDLE) view.ms += Math.min(now - lastTick, 15000);
+      lastTick = now;
+    }
+
+    // 送出這一段的秒數；同一次閱讀切走再回來會送好幾段，統計時加總
+    function flush() {
+      tick();
+      if (view && view.ms >= 1000) {
+        send(Math.round(view.ms / 1000));
+        view.ms = 0;
+      }
+    }
+
+    // 開新的一次閱讀：先送一筆 0 秒，萬一離開時那一筆沒送到，至少「看過」有記到
+    function begin() {
+      var w = where();
+      if (view && view.path === w.path) return; // 同一頁只是跳錨點
+      flush();
+      view = { id: rid(), path: w.path, ver: w.ver, title: document.title.split(' - ')[0], t0: Date.now(), ms: 0 };
+      lastInput = lastTick = Date.now();
+      send(0);
+    }
+
+    ['scroll', 'wheel', 'keydown', 'pointerdown', 'pointermove', 'touchstart'].forEach(function (type) {
+      addEventListener(type, function () { lastInput = Date.now(); }, { passive: true, capture: true });
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') flush();
+      else lastInput = lastTick = Date.now();
+    });
+    addEventListener('pagehide', flush);
+    setInterval(tick, 5000);
+
+    // navigation.instant 換頁不會重跑這段，靠 Material 的 document$ 得知換了頁（首次載入也會發一次）
+    if (typeof document$ !== 'undefined' && document$.subscribe) document$.subscribe(begin);
+    else begin();
+  })();
+  </script>
+
+  </body>
+</html>
