@@ -461,6 +461,7 @@ cd apps/kiosk-shell && ./gradlew assembleRelease
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1028 | 2026-10-28 | 現況表的平板實體：15 台未到，先用一台 Galaxy Tab S6 Lite，K-10 之後只做這一台 |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/deployment/03-tablet-shell/) | 2026-10-07 | 「裝置管理」改名「新增裝置」 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/deployment/03-tablet-shell/) | 2026-09-30 | 開頭標明憑證、keystore、APK 與側載部分由第十二冊取代，保留為歷史紀錄；平板採購要求的螢幕改為 0930 院方確定的 10 吋 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/deployment/03-tablet-shell/) | 2026-09-23 | 首次定版。平板與自包外殼 App：平板到貨前就做得完的上半，與到貨後側載、螢幕固定的下半 |
