@@ -6342,7 +6342,7 @@ MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081
 <div class="highlight"><pre><span></span><code><span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">http</span><span class="p">://</span><span class="n">localhost</span><span class="p">:</span><span class="n">13000</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">health</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">nurse-web</span> <span class="n">grep</span> <span class="n">-rhoE</span> <span class="s1">'https?://[A-Za-z0-9.-]+:[0-9]+'</span> <span class="n">apps</span><span class="p">/</span><span class="n">nurse-pwa</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">assets</span>
 <span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">-i</span> <span class="n">-H</span> <span class="s2">"Origin: http://&lt;IP&gt;:18080"</span> <span class="n">http</span><span class="p">://&lt;</span><span class="n">IP</span><span class="p">&gt;:</span><span class="n">13000</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">health</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">Access-Control-Allow-Origin</span>
-<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">logs</span> <span class="n">api</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s1">'允許的前端來源'</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
+<span class="no">[Console]</span><span class="p">::</span><span class="n">OutputEncoding</span> <span class="p">=</span> <span class="no">[Text.Encoding]</span><span class="p">::</span><span class="n">UTF8</span><span class="p">;</span> <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">logs</span> <span class="n">api</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s1">'允許的前端來源'</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
 </code></pre></div>
 <table>
 <thead>
@@ -6588,6 +6588,11 @@ MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081
 <td>T-07</td>
 <td>放行檢查什麼都沒印</td>
 <td><code>CORS_ORIGINS</code> 還不是 <code>http://&lt;IP&gt;:18080</code>，或改完沒有 <code>up -d</code>。日誌最後一行「允許的前端來源」會告訴你後端手上是哪一份</td>
+</tr>
+<tr>
+<td>T-07</td>
+<td>日誌那一條什麼都沒印</td>
+<td>那一行開頭的 <code>[Console]::OutputEncoding = [Text.Encoding]::UTF8;</code> 漏打了：PowerShell 預設用 big5 讀 Docker 的輸出，中文對不上。補上整行再打</td>
 </tr>
 <tr>
 <td>T-08</td>

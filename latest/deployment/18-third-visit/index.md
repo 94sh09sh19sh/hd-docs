@@ -284,7 +284,7 @@ ______________________________________________________________________
 
 ```
 Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BASE_URL)='
-docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
+[Console]::OutputEncoding = [Text.Encoding]::UTF8; docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
 docker compose --env-file $cfg exec nurse-web grep -rhoE 'https?://[A-Za-z0-9.-]+:[0-9]+' apps/nurse-pwa/dist/assets
 docker compose --env-file $cfg --profile shell run --rm shell-builder keys-info
 Test-Path $root\config\ai-gateway\config.yaml
@@ -445,7 +445,7 @@ docker compose --env-file $cfg ps
 curl.exe -s http://localhost:13000/api/health
 docker compose --env-file $cfg exec nurse-web grep -rhoE 'https?://[A-Za-z0-9.-]+:[0-9]+' apps/nurse-pwa/dist/assets
 curl.exe -s -i -H "Origin: http://<IP>:18080" http://<IP>:13000/api/health | Select-String Access-Control-Allow-Origin
-docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
+[Console]::OutputEncoding = [Text.Encoding]::UTF8; docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
 ```
 
 | 哪一條           | 應該是                                                |
@@ -459,13 +459,14 @@ docker compose --env-file $cfg logs api | Select-String '允許的前端來源' 
 
 **可能怎麼壞**
 
-| 症狀                                                                                  | 處置                                                                                                                                                                        |
-| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `failed to resolve source metadata for docker.io/library/node`，後面有 `no such host` | Docker 查不到 Docker Hub 的網域。依序：① 同一條再打一次；② 工作列的 Docker 圖示按右鍵 → Restart，等變綠再打；③ 仍不行，請資訊室看院內 DNS。**用了哪一個辦法才過，寫進紀錄** |
-| `npm error code ETIMEDOUT` 或 `ECONNRESET`                                            | 網路不穩，再打一次；已下載的部分會沿用                                                                                                                                      |
-| 網頁裡的後端位址還是舊名稱                                                            | `build` 沒讀到新的 `.env`：多半是少了 `--env-file $cfg` 或忘了開工三行。補上再 `build`、`up -d`                                                                             |
-| 放行檢查什麼都沒印                                                                    | `CORS_ORIGINS` 不是 `http://<IP>:18080`，或改完沒 `up -d`。看日誌最後一行就知道後端手上是哪一份                                                                             |
-| `api` 一直是 `Restarting`                                                             | `docker compose --env-file $cfg logs api --tail 30`，最後幾行寫是哪一條設定被拒，照著改 `.env` 再 `up -d`                                                                   |
+| 症狀                                                                                  | 處置                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `failed to resolve source metadata for docker.io/library/node`，後面有 `no such host` | Docker 查不到 Docker Hub 的網域。依序：① 同一條再打一次；② 工作列的 Docker 圖示按右鍵 → Restart，等變綠再打；③ 仍不行，請資訊室看院內 DNS。**用了哪一個辦法才過，寫進紀錄**                   |
+| `npm error code ETIMEDOUT` 或 `ECONNRESET`                                            | 網路不穩，再打一次；已下載的部分會沿用                                                                                                                                                        |
+| 網頁裡的後端位址還是舊名稱                                                            | `build` 沒讀到新的 `.env`：多半是少了 `--env-file $cfg` 或忘了開工三行。補上再 `build`、`up -d`                                                                                               |
+| 放行檢查什麼都沒印                                                                    | `CORS_ORIGINS` 不是 `http://<IP>:18080`，或改完沒 `up -d`。看日誌最後一行就知道後端手上是哪一份。先確認 `<IP>` 換成了真的位址，照抄 `<IP>` 一定什麼都不印                                     |
+| 日誌那一條什麼都沒印                                                                  | 那一行開頭的 `[Console]::OutputEncoding = [Text.Encoding]::UTF8;` 漏打了：PowerShell 預設用 big5 讀 Docker 的輸出，中文變亂碼，`允許的前端來源` 就比對不到（1029 模擬部署實測）。補上整行再打 |
+| `api` 一直是 `Restarting`                                                             | `docker compose --env-file $cfg logs api --tail 30`，最後幾行寫是哪一條設定被拒，照著改 `.env` 再 `up -d`                                                                                     |
 
 ______________________________________________________________________
 
@@ -1195,7 +1196,7 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS)='
 docker compose --env-file $cfg exec nurse-web grep -rhoE 'https?://[A-Za-z0-9.-]+:[0-9]+' apps/nurse-pwa/dist/assets
 curl.exe -s http://<IP>:13000/api/health
 curl.exe -s -i -H "Origin: http://<IP>:18080" http://<IP>:13000/api/health | Select-String Access-Control-Allow-Origin
-docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
+[Console]::OutputEncoding = [Text.Encoding]::UTF8; docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
 ```
 
 | 結果                                                        | 意思                       | 處置                                                                                   |

@@ -130,7 +130,7 @@ ______________________________________________________________________
 
 > 💡 **一個第十五冊還沒收進去的查法**：後端每次啟動，日誌裡都會印一行「**允許的前端來源：…**」，那就是**執行中的後端手上那份名單** （程式在 `apps/api/src/main.ts`）。拿它和 `.env` 的 `CORS_ORIGINS` 比一下：
 >
-> `powershell Select-String -Path $cfg -Pattern '^CORS_ORIGINS=' docker compose --env-file $cfg logs api | Select-String '允許的前端來源'`
+> `powershell Select-String -Path $cfg -Pattern '^CORS_ORIGINS=' [Console]::OutputEncoding = [Text.Encoding]::UTF8; docker compose --env-file $cfg logs api | Select-String '允許的前端來源'`
 >
 > | 兩行比起來                               | 是哪一種                                             |
 > | ---------------------------------------- | ---------------------------------------------------- |

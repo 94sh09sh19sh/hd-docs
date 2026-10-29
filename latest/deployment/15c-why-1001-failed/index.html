@@ -6090,7 +6090,7 @@
 <p><strong>兩種的修法最後都是「改對 → <code>up -d</code> → 再打一次第三條，直到它印出 <code>Access-Control-Allow-Origin</code>」</strong>，所以下一次就算還是分不出來，也修得好。但分得出來，才知道手冊哪裡要再改，所以下一次動手之前先抄下三樣東西（E-06）。</p>
 <blockquote>
 <p>💡 <strong>一個第十五冊還沒收進去的查法</strong>：後端每次啟動，日誌裡都會印一行「<strong>允許的前端來源：…</strong>」，那就是<strong>執行中的後端手上那份名單</strong> （程式在 <code>apps/api/src/main.ts</code>）。拿它和 <code>.env</code> 的 <code>CORS_ORIGINS</code> 比一下：</p>
-<p><code>powershell Select-String -Path $cfg -Pattern '^CORS_ORIGINS=' docker compose --env-file $cfg logs api | Select-String '允許的前端來源'</code></p>
+<p><code>powershell Select-String -Path $cfg -Pattern '^CORS_ORIGINS=' [Console]::OutputEncoding = [Text.Encoding]::UTF8; docker compose --env-file $cfg logs api | Select-String '允許的前端來源'</code></p>
 <table>
 <thead>
 <tr>
