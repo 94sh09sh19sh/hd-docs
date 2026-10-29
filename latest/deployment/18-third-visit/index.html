@@ -6835,7 +6835,7 @@
 </tr>
 </tbody>
 </table>
-<p>打指令時連同 <code>&lt;</code>、<code>&gt;</code> 一起換掉。</p>
+<p><strong>打指令時連同 <code>&lt;</code>、<code>&gt;</code> 一起換掉</strong>：<code>http://&lt;IP&gt;:18080</code> 要打成 <code>http://192.168.1.20:18080</code>，不是 <code>http://&lt;192.168.1.20&gt;:18080</code>。1029 模擬部署就把角括號一起打進去過，放行檢查什麼都不印，看起來像名單沒改好。</p>
 </blockquote>
 <hr />
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
@@ -7387,7 +7387,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>怎麼知道成功了</strong>：五樣都抄了。<strong>值本身只寫演練紀錄的紙本</strong>。</p>
+<p><strong>怎麼知道成功了</strong>：五樣都抄了。<strong>值本身只寫演練紀錄的紙本</strong>，不拍照（開頭「公開範圍」）。第 4 條只印指紋、到期日與位址，<strong>不會印出私鑰</strong>；私鑰只在金鑰資料卷與 <code>hd-keys-*.tar.gz</code> 裡。</p>
 <p><strong>怎麼看 1、2 兩條</strong>（看懂就寫，看不懂照抄就好，回去再判斷）：</p>
 <table>
 <thead>
@@ -7579,7 +7579,7 @@ MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081
 </tr>
 </tbody>
 </table>
-<p>再打一條，<code>&lt;名稱&gt;</code> 換成舊的那個名稱，<strong>什麼都沒印</strong>才對（舊名稱一處都不剩）：</p>
+<p>再打一條，<code>&lt;名稱&gt;</code> 換成舊的那個名稱，<strong>什麼都沒印</strong>才對（舊名稱一處都不剩）。舊名稱是 J-07 第 1 條抄到的 <code>HD_PUBLIC_API_URL</code> 中間那一段（第 4 條 <code>DNS:</code> 後面應該是同一個）；照紙本抄，<strong>不要重查 <code>hostname</code></strong>，1001 填的可能是完整網域名稱：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="nv">$cfg</span> <span class="n">-Pattern</span> <span class="s1">'^[^#].*&lt;名稱&gt;'</span>
 </code></pre></div>
 <table>
@@ -7763,6 +7763,10 @@ MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081
 </thead>
 <tbody>
 <tr>
+<td><code>restart patient-web</code> 停在 <code>Restarting</code>、沒有 <code>Started</code> 就回到提示字元</td>
+<td>畫面沒畫完，不是錯。看下一條日誌<strong>最後一次</strong>是不是 HTTPS；<code>docker compose --env-file $cfg ps patient-web</code> 是 <code>Up</code> 就好</td>
+</tr>
+<tr>
 <td>日誌裡「找不到伺服器憑證」和「HTTPS」同時出現</td>
 <td><code>--tail 5</code> 跨到了重新啟動之前那一次。以<strong>最後一次</strong>啟動的那幾行為準</td>
 </tr>
@@ -7870,7 +7874,7 @@ MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081
 <tbody>
 <tr>
 <td><code>git checkout</code></td>
-<td>一大段 <code>You are in 'detached HEAD' state…</code>，<strong>正常</strong></td>
+<td><code>Previous HEAD position was …</code> 與 <code>HEAD is now at …</code> 兩行，<strong>正常</strong>（原本就停在 <code>v0.3.0</code>，所以不會再印 <code>detached HEAD</code> 那一大段；印了也正常）</td>
 </tr>
 <tr>
 <td><code>git describe --tags</code></td>
@@ -8222,8 +8226,12 @@ HD_SIMULATION_DEPLOYMENT=
 <p>「有備份」和「備份能用」是兩件事。</p>
 <p><strong>做什麼</strong></p>
 <ol>
-<li>護理端 → <strong>系統管理</strong> → 「<strong>立即備份</strong>」，記下畫面上的檔名（<code>hd-backup-&lt;時間&gt;.db</code>）。</li>
-<li>讀完整的 SHA-256（畫面上只顯示前 12 碼）：</li>
+<li>護理端 → <strong>系統管理</strong> → 「<strong>立即備份</strong>」，記下畫面上的檔名（<code>hd-backup-&lt;時間&gt;.db</code>）。下面的 <code>&lt;檔名&gt;</code> 都是<strong>含 <code>.db</code> 的整個檔名</strong>。檔名裡的時間是 UTC（結尾的 <code>Z</code>），比台灣時間少 8 小時，下午 3 點的備份檔名是 <code>…T07…</code>。不想抄的話，列出最新的兩個檔、直接複製：</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ChildItem</span> <span class="nv">$root</span><span class="p">\</span><span class="n">backups</span><span class="p">\</span><span class="n">hd-backup</span><span class="p">-*</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">2</span> <span class="n">Name</span>
+</code></pre></div>
+<ol>
+<li>讀完整的 SHA-256（畫面上只顯示前 12 碼；<code>.sha256</code> 接在 <code>.db</code> 後面）：</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-Content</span> <span class="s2">"$root\backups\&lt;檔名&gt;.sha256"</span>
 </code></pre></div>

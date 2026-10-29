@@ -6246,6 +6246,7 @@
 </tr>
 </tbody>
 </table>
+<p>代稱<strong>連同 <code>&lt;</code>、<code>&gt;</code> 一起換掉</strong>（<code>http://&lt;IP&gt;:18080</code> → <code>http://192.168.1.20:18080</code>），1029 第一輪就在 J-11 把角括號一起打進去過。</p>
 <h3 id="03-要準備的東西">0.3 要準備的東西<a class="headerlink" href="#03-要準備的東西" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -6550,6 +6551,7 @@ Host github-hd-kiosk-shell
 </table>
 <p><strong>怎麼知道成功了</strong>：兩個都抄了；<code>Resolve-DnsName</code> 查得到自己的名稱（開發機自己查自己一定查得到）。手機查不到開發機的名稱是<strong>正常的</strong>，這正是院內平板會遇到的事，所以第三次進院要換成 IP。</p>
 <blockquote>
+<p>⚠️ 開發機<strong>同時接著有線網路與 Wi-Fi</strong>（例如另外接了一台旅行路由器）時，<code>&lt;IP&gt;</code> 要抄<strong>手機連的那個網路</strong>的網卡，抄錯張網卡，J-12 簽出來的憑證平板就連不上。用不到的那條，演練期間先拔掉最省事。</p>
 <p>⚠️ <strong>從現在起到第 4 節做完，不要換 Wi-Fi、不要讓開發機睡眠。</strong> IP 變了就要照<a href="../15b-env-simulation/">第十五冊之二</a>第 4 節重簽憑證。</p>
 </blockquote>
 <hr />
@@ -6763,7 +6765,11 @@ SUPER_ADMIN_DISPLAY_NAME=模擬部署管理員
 <h2 id="3-拿第十八冊照做j-04j-21">3. 拿第十八冊照做：J-04～J-21<a class="headerlink" href="#3-拿第十八冊照做j-04j-21" title="Permanent link">&para;</a></h2>
 <p><strong>從這裡開始，翻開印好的第十八冊，從 J-04 一步一步照做。</strong> 下表是每一步模擬部署要改的地方與要記下的東西；表上寫「照做」的，就是一字不差照第十八冊打（<code>$root</code> 換成 <code>C:\hd-sim</code>）。</p>
 <blockquote>
-<p>⚠️ 模擬部署的「護理站的電腦」是<strong>連同一個 Wi-Fi 的手機瀏覽器</strong>。手機要連得到開發機的三個埠，先用<strong>系統管理員身分</strong>的 PowerShell 開三條只對私人網路的防火牆規則（撤除時 I-17 會刪）。Wi-Fi 的網路設定檔類型要是「私人」（設定 → 網路和網際網路 → Wi-Fi → 這個網路的內容）：</p>
+<p>⚠️ 模擬部署的「護理站的電腦」是<strong>連同一個 Wi-Fi 的手機瀏覽器</strong>。手機要連得到開發機的三個埠，先用<strong>系統管理員身分</strong>的 PowerShell 開三條只對私人網路的防火牆規則（撤除時 I-17 會刪）。</p>
+<p><strong>為什麼要「私人」</strong>：三條規則都是 <code>-Profile Private</code>，只在網路設定檔類型是「私人」時生效。Windows 連上新的 Wi-Fi 預設是「公用」，這時規則不生效、手機連不到。不改成對所有網路放行，是因為開發機帶到咖啡廳或學校時，這三個埠會對整個網路開放。</p>
+<p><strong>怎麼改</strong>：設定 → 網路和網際網路 → Wi-Fi → 這個網路的內容 →「網路設定檔類型」選<strong>私人網路</strong>。或在系統管理員身分的 PowerShell 打 <code>Get-NetConnectionProfile</code>，找手機連的那個網路的 <code>InterfaceAlias</code>，再打 <code>Set-NetConnectionProfile -InterfaceAlias "Wi-Fi" -NetworkCategory Private</code>（<code>Wi-Fi</code> 換成那個 <code>InterfaceAlias</code>）；再打一次 <code>Get-NetConnectionProfile</code>，那一段的 <code>NetworkCategory</code> 是 <code>Private</code> 就好。印出 <code>DomainAuthenticated</code> 或改不了：那是學校或公司管的網路，換家裡的 Wi-Fi 或手機熱點。演練完用的是熱點或外面的網路，改回「公用」。</p>
+<p><strong>院內不做這一步</strong>：院內主機的網路類型與防火牆歸資訊室管，第十八冊 J-08 連不到就找資訊室。</p>
+<p>三條規則：</p>
 <p>第一條：<code>New-NetFirewallRule -DisplayName "hd-sim api 13000" -Direction Inbound -Protocol TCP -LocalPort 13000 -Profile Private -Action Allow</code></p>
 <p>第二條：<code>New-NetFirewallRule -DisplayName "hd-sim nurse 18080" -Direction Inbound -Protocol TCP -LocalPort 18080 -Profile Private -Action Allow</code></p>
 <p>第三條：<code>New-NetFirewallRule -DisplayName "hd-sim patient 18081" -Direction Inbound -Protocol TCP -LocalPort 18081 -Profile Private -Action Allow</code></p>
@@ -6800,7 +6806,7 @@ SUPER_ADMIN_DISPLAY_NAME=模擬部署管理員
 <tr>
 <td>J-07 先抄五樣</td>
 <td>照做</td>
-<td>第 1 條 <code>CORS_ORIGINS</code> 是 <code>hd-server</code>、第 2 條日誌也是 <code>hd-server</code> → 照第十八冊那張判斷表，應該判成「可能 A」。<strong>判得出來嗎？</strong> 第 4 條伺服器憑證是 <code>DNS:&lt;名稱&gt;</code></td>
+<td>第 1 條 <code>CORS_ORIGINS</code> 是 <code>hd-server</code>、第 2 條日誌也是 <code>hd-server</code> → 照第十八冊那張判斷表，應該判成「可能 A」。<strong>判得出來嗎？</strong> 第 4 條伺服器憑證是 <code>DNS:&lt;名稱&gt;</code>。模擬部署可以拍照（第 4 條沒有私鑰，開發用金鑰 I-17 也會刪），但<strong>不要拍 <code>notepad $cfg</code> 的畫面</strong>（有 <code>JWT_SECRET</code> 與初始密碼）；院內照第十八冊不拍照</td>
 </tr>
 <tr>
 <td>J-08 確認 IP、從護理站連</td>
@@ -6864,7 +6870,7 @@ SUPER_ADMIN_DISPLAY_NAME=模擬部署管理員
 </tr>
 <tr>
 <td>J-19 啟動新版</td>
-<td>照做；「護理站」是手機</td>
+<td>照做；「護理站」是手機，沒有 Ctrl＋F5：關掉分頁重開，或在瀏覽器的網站設定清除這個網站的資料</td>
 <td>三個服務的映像檔是新 tag；手機重新整理後用改過的密碼登得進去（<strong>資料留住了</strong>：帳號與密碼是更新前的）；版本更新紀錄有一筆</td>
 </tr>
 <tr>
