@@ -222,7 +222,7 @@ docker compose --env-file $cfg ps
 curl.exe -s http://localhost:13000/api/health
 docker compose --env-file $cfg exec nurse-web grep -rhoE 'https?://[A-Za-z0-9.-]+:[0-9]+' apps/nurse-pwa/dist/assets
 curl.exe -s -i -H "Origin: http://<IP>:18080" http://<IP>:13000/api/health | Select-String Access-Control-Allow-Origin
-docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
+[Console]::OutputEncoding = [Text.Encoding]::UTF8; docker compose --env-file $cfg logs api | Select-String '允許的前端來源' | Select-Object -Last 1
 ```
 
 | 哪一條 | 應該是 |
@@ -394,6 +394,7 @@ docker compose --env-file $cfg restart patient-web
 | T-07 | `failed to resolve source metadata`，後面有 `no such host` | Docker 查不到 Docker Hub 的網域，照第十五冊 V-06 第二段那一列處理 |
 | T-07 | 網頁裡的後端位址還是 `<名稱>` | `build` 沒有吃到新的 `.env`：多半是少了 `--env-file $cfg`，或 `$cfg` 沒設（開工三行）。補上再 `build`、`up -d` |
 | T-07 | 放行檢查什麼都沒印 | `CORS_ORIGINS` 還不是 `http://<IP>:18080`，或改完沒有 `up -d`。日誌最後一行「允許的前端來源」會告訴你後端手上是哪一份 |
+| T-07 | 日誌那一條什麼都沒印 | 那一行開頭的 `[Console]::OutputEncoding = [Text.Encoding]::UTF8;` 漏打了：PowerShell 預設用 big5 讀 Docker 的輸出，中文對不上。補上整行再打 |
 | T-08 | `MDM_KIOSK_BASE_URL 要以 https:// 開頭` | 第三行改的時候把 `https://` 改掉了，改回來 |
 | T-08 | 新產生的清單裡有「院內 CA」或「APK 簽章金鑰」 | **停手**（T-08 那張表） |
 | T-10 | **最後一次**啟動的日誌是「找不到伺服器憑證…暫以 HTTP 提供」 | T-08 沒成功，或做完沒有 `restart patient-web` |
