@@ -18,7 +18,7 @@
 > | `<IP>` | 資訊室確認、而且固定下來的院內主機 IP（1007 答覆：固定） |
 > | `<新 tag>` | 這一次要換上去的版本，例如 `v0.4.0`；J-01 定下來 |
 >
-> 打指令時連同 `<`、`>` 一起換掉。
+> **打指令時連同 `<`、`>` 一起換掉**：`http://<IP>:18080` 要打成 `http://192.168.1.20:18080`，不是 `http://<192.168.1.20>:18080`。1029 模擬部署就把角括號一起打進去過，放行檢查什麼都不印，看起來像名單沒改好。
 
 ---
 
@@ -298,7 +298,7 @@ Test-Path $root\config\ai-gateway\config.yaml
 | 4 | 院內 CA、伺服器憑證、簽章金鑰的指紋；「伺服器憑證」那一行應該是 `DNS:<名稱>` |
 | 5 | AI 閘道的設定檔在不在（`True`／`False`），J-20 要用 |
 
-**怎麼知道成功了**：五樣都抄了。**值本身只寫演練紀錄的紙本**。
+**怎麼知道成功了**：五樣都抄了。**值本身只寫演練紀錄的紙本**，不拍照（開頭「公開範圍」）。第 4 條只印指紋、到期日與位址，**不會印出私鑰**；私鑰只在金鑰資料卷與 `hd-keys-*.tar.gz` 裡。
 
 **怎麼看 1、2 兩條**（看懂就寫，看不懂照抄就好，回去再判斷）：
 
@@ -412,7 +412,7 @@ Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
 | 第二條 | 三行，主機部分**都是 `<IP>`、一字不差**；前兩行 `http://`、第三行 `https://` |
 | 第三條 | 什麼都沒印（沒有照抄範例、沒有 `localhost`、沒有忘了換掉的 `<`、`>`） |
 
-再打一條，`<名稱>` 換成舊的那個名稱，**什麼都沒印**才對（舊名稱一處都不剩）：
+再打一條，`<名稱>` 換成舊的那個名稱，**什麼都沒印**才對（舊名稱一處都不剩）。舊名稱是 J-07 第 1 條抄到的 `HD_PUBLIC_API_URL` 中間那一段（第 4 條 `DNS:` 後面應該是同一個）；照紙本抄，**不要重查 `hostname`**，1001 填的可能是完整網域名稱：
 
 ```powershell
 Select-String -Path $cfg -Pattern '^[^#].*<名稱>'
@@ -515,6 +515,7 @@ docker compose --env-file $cfg --profile shell run --rm shell-builder keys-info
 
 | 症狀 | 處置 |
 |---|---|
+| `restart patient-web` 停在 `Restarting`、沒有 `Started` 就回到提示字元 | 畫面沒畫完，不是錯。看下一條日誌**最後一次**是不是 HTTPS；`docker compose --env-file $cfg ps patient-web` 是 `Up` 就好 |
 | 日誌裡「找不到伺服器憑證」和「HTTPS」同時出現 | `--tail 5` 跨到了重新啟動之前那一次。以**最後一次**啟動的那幾行為準 |
 | **最後一次**啟動是「找不到伺服器憑證…暫以 HTTP 提供」 | `shell-builder` 沒成功，或沒 `restart patient-web` |
 | 日誌寫 `8081`、`http://api:3000`，不是 `18081`、`13000` | **正常**，那是容器裡面的埠 |
@@ -589,7 +590,7 @@ docker pull node:20-bookworm-slim
 
 | 看什麼 | 應該是 |
 |---|---|
-| `git checkout` | 一大段 `You are in 'detached HEAD' state…`，**正常** |
+| `git checkout` | `Previous HEAD position was …` 與 `HEAD is now at …` 兩行，**正常**（原本就停在 `v0.3.0`，所以不會再印 `detached HEAD` 那一大段；印了也正常） |
 | `git describe --tags` | **正好是** `<新 tag>`，後面沒有 `-3-g1a2b3c4` 這種尾巴 |
 | `docker pull` | 最後是 `Status: Downloaded newer image for …` 或 `Status: Image is up to date for …` |
 
@@ -823,8 +824,13 @@ docker compose --env-file $cfg --profile export run --rm data-export --help
 
 **做什麼**
 
-1. 護理端 → **系統管理** → 「**立即備份**」，記下畫面上的檔名（`hd-backup-<時間>.db`）。
-2. 讀完整的 SHA-256（畫面上只顯示前 12 碼）：
+1. 護理端 → **系統管理** → 「**立即備份**」，記下畫面上的檔名（`hd-backup-<時間>.db`）。下面的 `<檔名>` 都是**含 `.db` 的整個檔名**。檔名裡的時間是 UTC（結尾的 `Z`），比台灣時間少 8 小時，下午 3 點的備份檔名是 `…T07…`。不想抄的話，列出最新的兩個檔、直接複製：
+
+   ```powershell
+   Get-ChildItem $root\backups\hd-backup-* | Sort-Object LastWriteTime | Select-Object -Last 2 Name
+   ```
+
+2. 讀完整的 SHA-256（畫面上只顯示前 12 碼；`.sha256` 接在 `.db` 後面）：
 
    ```powershell
    Get-Content "$root\backups\<檔名>.sha256"

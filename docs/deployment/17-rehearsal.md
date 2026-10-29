@@ -58,6 +58,8 @@
 | 院內給平板用的 Wi-Fi | 開發機連的同一個 Wi-Fi |
 | 資訊室、護理長 | 自己。要問他們的事跳過，但**在紀錄裡寫「院內要問」** |
 
+代稱**連同 `<`、`>` 一起換掉**（`http://<IP>:18080` → `http://192.168.1.20:18080`），1029 第一輪就在 J-11 把角括號一起打進去過。
+
 ### 0.3 要準備的東西
 
 | 東西 | 備註 |
@@ -258,6 +260,8 @@ Resolve-DnsName (hostname) | Select-Object Name, IPAddress
 | Wi-Fi 的 IPv4 位址 | `ipconfig` 的「無線區域網路介面卡 Wi-Fi」那一段，**不是** `vEthernet (WSL)`、`vEthernet (Default Switch)` | `<IP>` |
 
 **怎麼知道成功了**：兩個都抄了；`Resolve-DnsName` 查得到自己的名稱（開發機自己查自己一定查得到）。手機查不到開發機的名稱是**正常的**，這正是院內平板會遇到的事，所以第三次進院要換成 IP。
+
+> ⚠️ 開發機**同時接著有線網路與 Wi-Fi**（例如另外接了一台旅行路由器）時，`<IP>` 要抄**手機連的那個網路**的網卡，抄錯張網卡，J-12 簽出來的憑證平板就連不上。用不到的那條，演練期間先拔掉最省事。
 
 > ⚠️ **從現在起到第 4 節做完，不要換 Wi-Fi、不要讓開發機睡眠。** IP 變了就要照[第十五冊之二](15b-env-simulation.md)第 4 節重簽憑證。
 
@@ -461,7 +465,15 @@ docker compose --env-file $cfg exec -T api node -e "fetch('http://ai-gateway:800
 
 **從這裡開始，翻開印好的第十八冊，從 J-04 一步一步照做。** 下表是每一步模擬部署要改的地方與要記下的東西；表上寫「照做」的，就是一字不差照第十八冊打（`$root` 換成 `C:\hd-sim`）。
 
-> ⚠️ 模擬部署的「護理站的電腦」是**連同一個 Wi-Fi 的手機瀏覽器**。手機要連得到開發機的三個埠，先用**系統管理員身分**的 PowerShell 開三條只對私人網路的防火牆規則（撤除時 I-17 會刪）。Wi-Fi 的網路設定檔類型要是「私人」（設定 → 網路和網際網路 → Wi-Fi → 這個網路的內容）：
+> ⚠️ 模擬部署的「護理站的電腦」是**連同一個 Wi-Fi 的手機瀏覽器**。手機要連得到開發機的三個埠，先用**系統管理員身分**的 PowerShell 開三條只對私人網路的防火牆規則（撤除時 I-17 會刪）。
+>
+> **為什麼要「私人」**：三條規則都是 `-Profile Private`，只在網路設定檔類型是「私人」時生效。Windows 連上新的 Wi-Fi 預設是「公用」，這時規則不生效、手機連不到。不改成對所有網路放行，是因為開發機帶到咖啡廳或學校時，這三個埠會對整個網路開放。
+>
+> **怎麼改**：設定 → 網路和網際網路 → Wi-Fi → 這個網路的內容 →「網路設定檔類型」選**私人網路**。或在系統管理員身分的 PowerShell 打 `Get-NetConnectionProfile`，找手機連的那個網路的 `InterfaceAlias`，再打 `Set-NetConnectionProfile -InterfaceAlias "Wi-Fi" -NetworkCategory Private`（`Wi-Fi` 換成那個 `InterfaceAlias`）；再打一次 `Get-NetConnectionProfile`，那一段的 `NetworkCategory` 是 `Private` 就好。印出 `DomainAuthenticated` 或改不了：那是學校或公司管的網路，換家裡的 Wi-Fi 或手機熱點。演練完用的是熱點或外面的網路，改回「公用」。
+>
+> **院內不做這一步**：院內主機的網路類型與防火牆歸資訊室管，第十八冊 J-08 連不到就找資訊室。
+>
+> 三條規則：
 >
 > 第一條：`New-NetFirewallRule -DisplayName "hd-sim api 13000" -Direction Inbound -Protocol TCP -LocalPort 13000 -Profile Private -Action Allow`
 >
@@ -475,7 +487,7 @@ docker compose --env-file $cfg exec -T api node -e "fetch('http://ai-gateway:800
 | J-04 開工三行 | `$root = "C:\hd-sim"`，其餘照做 | — |
 | J-05 先看現況 | 照做 | 對照第十八冊那張表：tag `v0.3.0`、三個服務加 `ai-gateway` 都 `Up`、兩個資料卷、`backups\keys` 有一份（檔名是 I-10 抄的，不是 1001 那一份）、`*.db` 是 0 份（開發機剛建，正常）。**表上每一列都對得上嗎？對不上的是手冊寫錯，圈起來** |
 | J-06 0922 的容器 | 跳過（開發機上沒有）。想練的話照第十四冊之三的附錄做替身 | — |
-| J-07 先抄五樣 | 照做 | 第 1 條 `CORS_ORIGINS` 是 `hd-server`、第 2 條日誌也是 `hd-server` → 照第十八冊那張判斷表，應該判成「可能 A」。**判得出來嗎？** 第 4 條伺服器憑證是 `DNS:<名稱>` |
+| J-07 先抄五樣 | 照做 | 第 1 條 `CORS_ORIGINS` 是 `hd-server`、第 2 條日誌也是 `hd-server` → 照第十八冊那張判斷表，應該判成「可能 A」。**判得出來嗎？** 第 4 條伺服器憑證是 `DNS:<名稱>`。模擬部署可以拍照（第 4 條沒有私鑰，開發用金鑰 I-17 也會刪），但**不要拍 `notepad $cfg` 的畫面**（有 `JWT_SECRET` 與初始密碼）；院內照第十八冊不拍照 |
 | J-08 確認 IP、從護理站連 | 第 1 步照做（DHCP 是「是」沒關係）；第 2～4 步用**手機瀏覽器**開 | 手機開得到三個網址。開不到：防火牆規則、Wi-Fi 設定檔類型、Wi-Fi 擋裝置互連（0.3 節） |
 | J-09 留一份 `.env` | 照做 | — |
 | J-10 改三個位址 | 照做 | 第三條檢查原本會抓到 `hd-server`，改完要什麼都不印 |
@@ -488,7 +500,7 @@ docker compose --env-file $cfg exec -T api node -e "fetch('http://ai-gateway:800
 | J-16 補 `.env` | `HD_EXPORT_DIR=C:\hd-sim\export`；其餘照做，兩個院方 API 的變數也先留空白 | 檢查表的 `HD_SHELL_SIGNING` 這裡是 `dev`（院內是 `hospital`） |
 | J-17 建置新版 | 照做 | **耗時**；`docker images hd-tablet-care` 看得到兩個 tag |
 | J-18 更新資料庫 | 照做 | 第 [5] 段寫套用了 **19 個**遷移（從 `iteration15_hospital_api` 到 `iteration31_connect_dots_norm`）；**更新前備份的檔名與 SHA-256 抄下來，I-15 要用** |
-| J-19 啟動新版 | 照做；「護理站」是手機 | 三個服務的映像檔是新 tag；手機重新整理後用改過的密碼登得進去（**資料留住了**：帳號與密碼是更新前的）；版本更新紀錄有一筆 |
+| J-19 啟動新版 | 照做；「護理站」是手機，沒有 Ctrl＋F5：關掉分頁重開，或在瀏覽器的網站設定清除這個網站的資料 | 三個服務的映像檔是新 tag；手機重新整理後用改過的密碼登得進去（**資料留住了**：帳號與密碼是更新前的）；版本更新紀錄有一筆 |
 | J-20 AI 閘道 | 照做（I-11 做過，J-07 第 5 條是 `True`，所以跳過複製設定檔） | 503 那一行；`docker ps` 裡 `ai-gateway` 的映像檔是新 tag |
 | J-21 取出指令 | 照做 | 說明的第一行對得上第十八冊寫的 |
 
