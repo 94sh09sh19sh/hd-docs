@@ -2,13 +2,14 @@
 
 進度首頁只留最近三週，更早的都在這裡。由新到舊排列，一週一行。
 
-| 週次                                                                             | 標題                                                     |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| [1007](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-10-07/index.md) | 第二次進院部分成功，院方 API 取代手動輸入（迭代 15～17） |
-| [0930](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-30/index.md) | 部署改為容器、介面極簡重設計（迭代 11～14.5）            |
-| [0923](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-23/index.md) | 部署前的迭代 7～10 完成，第一次進院失敗                  |
-| [0916](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-16/index.md) | 迭代 3～6 完成，全程留在院內網路                         |
-| [0909](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-09/index.md) | Iteration 1＋2 完成、核心流程可完整執行                  |
+| 週次                                                                             | 標題                                                                                                                          |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| [1014](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-10-14/index.md) | 規則引擎、護理紀錄、管理儀表板、平板遊戲化四款（小花園、麻將連連看、記憶相簿）完成，四條規則的門檻請醫師確認（迭代 17.8～23） |
+| [1007](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-10-07/index.md) | 第二次進院部分成功，院方 API 取代手動輸入（迭代 15～17）                                                                      |
+| [0930](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-30/index.md) | 部署改為容器、介面極簡重設計（迭代 11～14.5）                                                                                 |
+| [0923](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-23/index.md) | 部署前的迭代 7～10 完成，第一次進院失敗                                                                                       |
+| [0916](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-16/index.md) | 迭代 3～6 完成，全程留在院內網路                                                                                              |
+| [0909](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-09-09/index.md) | Iteration 1＋2 完成、核心流程可完整執行                                                                                       |
 
 沒有進度的那一週不會出現在這裡，時間序有斷點是正常的。
 
