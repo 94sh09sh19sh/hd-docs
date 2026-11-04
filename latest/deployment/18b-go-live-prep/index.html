@@ -5762,7 +5762,7 @@
 <li>還有一件事沒人確認過：病人告知與同意涵不涵蓋這套系統（A-03）</li>
 <li><code>v0.4.0</code> 之後只有文件異動，不必換版；補測若要改程式，新 tag 要整輪重做第十七冊（O-02）</li>
 <li>開發端要先補 I-13～I-15（A-12）：<code>v0.4.0</code> 沒做過，而院方 API 同步正是這次要開的東西</li>
-<li>探測結果對照程式：<code>&lt;meta&gt;</code>、下機判定、單位都對得上；<strong>床號未解決</strong>，三種樣式混用（第 3 節）</li>
+<li>探測結果對照程式：<code>&lt;meta&gt;</code>、下機判定、單位都對得上；床號三種樣式混用，成大既有系統的舊資料看得出：<code>9A</code> 與 <code>A9</code> 是不同的床，設定維持 <code>0</code>；<code>99</code> 不是一張床，還要問護理長（第 3 節）</li>
 <li>位址一填，當天清單上<strong>所有病人</strong>的主檔與療程都會進主機，不是只有首波那一位；床號設定要排在填位址之前（第 5 節）</li>
 <li>Q-35、病人告知或防毒排除任何一項沒有答案，就停在位址之前，這次算 B 級（第 6 節）</li>
 </ul>
@@ -5855,8 +5855,8 @@
 <tr>
 <td>A-07</td>
 <td>護理長</td>
-<td><code>9A</code> 是不是就等於 <code>A9</code>，<code>99</code> 是什麼床（第 3 節）</td>
-<td>床號設定</td>
+<td><code>1A</code>～<code>3D</code> 是哪一區的床；<code>99</code> 是什麼情況會填；現在是否仍是這些值（第 3 節）</td>
+<td>床號設定；成大舊資料已看出 <code>9A</code> 與 <code>A9</code> 不是同一床</td>
 </tr>
 <tr>
 <td>A-08</td>
@@ -5926,7 +5926,7 @@
 <p><strong>A-13 那份步驟至少要有</strong>：</p>
 <ol>
 <li>開始前條件：A-01～A-03 都有答案、時段沒有透析</li>
-<li>設「院方床位轉床號的方式」</li>
+<li>確認「院方床位轉床號的方式」是 <code>0</code>（第 3 節）</li>
 <li>位址寫進 <code>.env</code>（DEP-46：不進 repo、不寫進任何文件）；<code>docker compose --env-file $cfg up -d</code></li>
 <li>系統管理「院方資料同步」卡片怎麼看算成功</li>
 <li>第一輪怎麼驗：病人數、床號、療程、稽核軌跡有沒有整次透析被擋下</li>
@@ -5985,33 +5985,45 @@
 <td><strong>床位</strong></td>
 <td><code>A9</code> 429 列、<code>9A</code> 90 列、<code>99</code> 82 列</td>
 <td>預設 <code>0</code> 原樣</td>
-<td><strong>未解決</strong></td>
+<td>維持 <code>0</code>；<code>99</code> 待 A-07</td>
 </tr>
 </tbody>
 </table>
-<p><strong>床號要做的決定</strong>：「院方床位轉床號的方式」是營運參數，不必改程式。</p>
+<p><strong>成大既有 IDH 系統的舊資料（2021-11～2022-07）</strong>：探測只印樣式、不印值，實際的值從這份舊資料看。</p>
 <table>
 <thead>
 <tr>
-<th>情形</th>
-<th>做法</th>
+<th>樣式</th>
+<th>舊資料裡的值</th>
+<th>結論</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>9A</code> 就是 <code>A9</code> 倒過來寫</td>
-<td>設成 <code>1</code>（字母在前），同一床才不會變成兩床</td>
+<td><code>A9</code></td>
+<td><code>A1</code>～<code>E9</code>（沒有 4）、<code>I1</code>、<code>I2</code></td>
+<td>透析室的床，成大系統的床位圖就是這些</td>
 </tr>
 <tr>
-<td><code>9A</code> 與 <code>A9</code> 是不同的床</td>
-<td>維持 <code>0</code></td>
+<td><code>9A</code></td>
+<td>只有 <code>1A</code>～<code>3D</code> 12 個</td>
+<td>與 <code>A9</code> 是<strong>不同的床</strong>，不是倒過來寫；成大系統的床位圖沒有這 12 床</td>
 </tr>
 <tr>
 <td><code>99</code></td>
-<td>探測只印樣式、不印值，看不出是哪種床；三種設定都不會改動它，要問到才知道對不對</td>
+<td>只有 <code>99</code> 一個值</td>
+<td><strong>不是一張床</strong>：一天約 10 次透析、同一時間好幾位病人；斗六分院的程式註解叫它「暫存床」</td>
 </tr>
 </tbody>
 </table>
+<p>成大與斗六分院的系統同步時，都把數字開頭的床位（<code>9A</code>、<code>99</code>）整列丟掉。</p>
+<p><strong>床號的決定</strong>：「院方床位轉床號的方式」維持 <code>0</code>。設成 <code>1</code> 會把 <code>1A</code> 與 <code>A1</code> 兩床的病人併成一床。</p>
+<p><strong>還要問護理長（A-07）</strong>：</p>
+<ul>
+<li><code>1A</code>～<code>3D</code> 是哪一區的床，首波會不會用到</li>
+<li><code>99</code> 是什麼情況會填（還沒排床、床邊透析或別的）</li>
+<li>舊資料是四年前的；1029 探測的列數比例與舊資料相近，但現在的值是否仍一樣要問到才算數</li>
+</ul>
 <hr />
 <h2 id="4-要帶的東西">4. 要帶的東西<a class="headerlink" href="#4-要帶的東西" title="Permanent link">&para;</a></h2>
 <ul>
@@ -6063,7 +6075,7 @@
 </tr>
 <tr>
 <td>7</td>
-<td><strong>設好床號格式，才填位址</strong>；照 A-13 重建 <code>api</code>、確認同步</td>
+<td><strong>確認床號格式是 <code>0</code>，才填位址</strong>；照 A-13 重建 <code>api</code>、確認同步</td>
 <td>第 3 節</td>
 </tr>
 <tr>
