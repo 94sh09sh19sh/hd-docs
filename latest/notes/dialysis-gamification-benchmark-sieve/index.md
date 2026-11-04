@@ -2,7 +2,7 @@
 
 版本：v0.1　文件狀態：草案（2026-10-25 開立）　適用讀者：FDE 工程團隊、要回頭檢查這次選擇的人
 
-上層文件：《[透析中的遊戲化之五：有國際常模的第四款遊戲](https://94sh09sh19sh.github.io/hd-docs/latest/notes/dialysis-gamification-benchmark/index.md)》
+上層文件：《[透析中的遊戲化之五：有國際常模的第四款遊戲](https://94sh09sh19sh.github.io/hd-docs/latest/notes/dialysis-gamification-benchmark/index.md)》　連線測驗是什麼、為什麼用在腎臟：《[之五附錄之一：連線測驗與腎臟](https://94sh09sh19sh.github.io/hd-docs/latest/notes/dialysis-gamification-benchmark-tmt/index.md)》
 
 ______________________________________________________________________
 
