@@ -16,7 +16,7 @@
         <link rel="prev" href="../hospital-api-fetch-methods/">
       
       
-        <link rel="next" href="../iteration-9-1-fixes/">
+        <link rel="next" href="../hospital-api-fetch-methods-questions/">
       
       
         
@@ -2856,10 +2856,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#9-給學長的問題清單草稿" class="md-nav__link">
+  <a href="#9-給學長的問題清單" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9. 給學長的問題清單（草稿）
+        9. 給學長的問題清單
       
     </span>
   </a>
@@ -2892,6 +2892,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hospital-api-fetch-methods-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之二：1108 給學長的問題清單
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6068,10 +6096,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#9-給學長的問題清單草稿" class="md-nav__link">
+  <a href="#9-給學長的問題清單" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9. 給學長的問題清單（草稿）
+        9. 給學長的問題清單
       
     </span>
   </a>
@@ -6119,7 +6147,7 @@
 
 <h1 id="院方-api-的四種抓取方式之一1107-學長答覆後的現況與應對">院方 API 的四種抓取方式之一：1107 學長答覆後的現況與應對<a class="headerlink" href="#院方-api-的四種抓取方式之一1107-學長答覆後的現況與應對" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案（2026-11-08 開立）　適用讀者：FDE 工程團隊、使用者本人</p>
-<p>上層文件：《<a href="../hospital-api-fetch-methods/">院方 API 的四種抓取方式</a>》</p>
+<p>上層文件：《<a href="../hospital-api-fetch-methods/">院方 API 的四種抓取方式</a>》　下一份：《<a href="../hospital-api-fetch-methods-questions/">之二：1108 給學長的問題清單</a>》</p>
 <hr />
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
@@ -6128,7 +6156,8 @@
 <li>學長要的兩件事：①本系統改成直接讀資料的形式；②改寫 IDH 的 <code>fetch_API</code>，不靠 Django、固定時間抓、頻率可調；使用者先用每 3 分鐘</li>
 <li>主機上有一套 IDH 系統＋抓取腳本，<strong>IDH 系統沒在用</strong>，腳本是舊版；歷史 txt 學長已搬到指定位置，「再來只需要處理腳本」</li>
 <li>下次進院：<strong>1109（一）15:30 左右</strong>部署；使用者預估分兩次進院完成</li>
-<li>沒答案的：醫師授權（A-02／Q-35）、IRB 影片、<code>hb</code> 那支 API 的範例、腳本由誰維護、留底的格式與編碼、資料夾會不會被 OneDrive 同步（第 3 節）</li>
+<li><strong>1108 使用者補充兩件已確定的事</strong>：①上週開會醫師明確表示 <strong>API 相關事宜授權學長決定</strong>（U-1 解決，A-02／Q-35 改問學長）；②學長說的「那台主機」就是本系統的部署主機——<strong>現場三台中最右邊那台</strong>，使用者與學長已有共識（U-3 解決）</li>
+<li>沒答案的：<code>hb</code> 那支 API 的範例、腳本由誰維護、留底的格式與編碼、資料夾會不會被 OneDrive 同步、要不要知會資訊室（第 3 節）；1108 當天要問學長的整理成《<a href="../hospital-api-fetch-methods-questions/">之二</a>》</li>
 <li><strong>1108 使用者決定：照學長的做</strong>（第二種：獨立腳本寫檔、本系統讀檔），使用者自己說的「第一種」不做（第 4.3 節）；需求文件、部署規範、清冊已加註</li>
 <li>建議：<strong>週一只讓獨立腳本跑起來，本系統先不碰</strong>（改本系統要換版、整輪重做第十七冊）；讀檔模式排到第二次進院（第 4、8 節）</li>
 <li>公開文件過濾掉的位址、連結、人名、截圖與原始檔，完整收在私人 repo 的 <code>deploy/records/1108-hospital-api/</code></li>
@@ -6172,12 +6201,12 @@
 <tr>
 <td>1107 13:07</td>
 <td>使用者</td>
-<td>①週一可以直接串上 API 嗎、這樣算有醫師授權嗎；②醫師說要看 IRB 影片，哪個平台、幾小時、哪些課程承認</td>
+<td>週一可以直接串上 API 嗎、這樣算有醫師授權嗎（同一則另一題與本專案無關，略）</td>
 </tr>
 <tr>
-<td>1107 13:17～18</td>
+<td>1107 13:18</td>
 <td>學長</td>
-<td>第二題醫師還沒回；第一題反問「串上 API」是指你的系統會抓 API，還是用我放在電腦上腳本抓的資料</td>
+<td>反問「串上 API」是指你的系統會抓 API，還是用我放在電腦上腳本抓的資料</td>
 </tr>
 <tr>
 <td>1107 13:45～47</td>
@@ -6352,22 +6381,22 @@
 </thead>
 <tbody>
 <tr>
-<td>U-1</td>
-<td>週一直接接資料，算不算有醫師授權</td>
-<td>學長只釐清了「串上 API」的意思，<strong>授權本身沒有回答</strong></td>
-<td>真實資料進本系統（《<a href="../../deployment/18b-go-live-prep/">第十八冊之二</a>》A-02、清冊 Q-35）</td>
+<td>~~U-1~~</td>
+<td>~~週一直接接資料，算不算有醫師授權~~</td>
+<td><strong>1108 已解決</strong>：上週開會醫師明確表示 API 相關事宜授權學長決定；授權不必另外再問醫師，報備與通知也由學長決定（《<a href="../../deployment/18b-go-live-prep/">第十八冊之二</a>》A-02、清冊 Q-35 改問學長）</td>
+<td>—</td>
 </tr>
 <tr>
-<td>U-2</td>
-<td>IRB 影片：哪個平台、幾小時、哪些課程承認</td>
-<td>醫師還沒回學長</td>
-<td>不擋腳本；可能擋使用者接觸真實資料</td>
+<td>~~U-2~~</td>
+<td>1108 刪除：與本專案無關</td>
+<td>—</td>
+<td>—</td>
 </tr>
 <tr>
-<td>U-3</td>
-<td>「那台主機」「右邊那台」是不是本系統所在的院內主機</td>
-<td>對話推得出是，沒有明講</td>
-<td>讀檔的前提：腳本與本系統要在同一台，或資料夾分享得到</td>
+<td>~~U-3~~</td>
+<td>~~「那台主機」「右邊那台」是不是本系統所在的院內主機~~</td>
+<td><strong>1108 已解決</strong>：是。本系統的部署主機就是學長說的那台，<strong>現場三台中最右邊那台</strong>，使用者與學長已有共識；腳本與本系統在同一台，讀檔不必跨機分享</td>
+<td>—</td>
 </tr>
 <tr>
 <td>U-4</td>
@@ -6408,7 +6437,7 @@
 <tr>
 <td>U-10</td>
 <td>「呼叫院方 API 要不要報備」該問的事變了沒</td>
-<td>呼叫者從本系統變成腳本</td>
+<td>呼叫者從本系統變成腳本；1108 起由學長決定（U-1）</td>
 <td>Q-35 的問法要改，見第 7.3 節</td>
 </tr>
 </tbody>
@@ -6690,30 +6719,20 @@
 <h3 id="73-q-35-的問法要改">7.3 Q-35 的問法要改<a class="headerlink" href="#73-q-35-的問法要改" title="Permanent link">&para;</a></h3>
 <ul>
 <li>原本問「本系統每 3 分鐘呼叫一次院方 API，要不要報備」</li>
+<li>問誰：1108 起問學長（醫師已授權 API 相關事宜由學長決定），要不要再知會資訊室也由學長決定</li>
 <li>改成問「主機上的腳本每 N 分鐘呼叫一次、存成檔，本系統與 APP 組讀這些檔；這樣的使用要不要報備、存檔的位置與留存期限要不要院方核可」</li>
 </ul>
 <h2 id="8-1109-進院的順序">8. 1109 進院的順序<a class="headerlink" href="#8-1109-進院的順序" title="Permanent link">&para;</a></h2>
 <ol>
-<li>看主機：學長說的「那台」是哪一台（U-3）、Python 版本、現有腳本是哪一版、指定資料夾在不在、歷史 txt 的檔名、大小、最後一筆時間、編碼（U-6）</li>
+<li>看主機（最右邊那台，U-3 已確認）：Python 版本、現有腳本是哪一版、指定資料夾在不在、歷史 txt 的檔名、大小、最後一筆時間、編碼（U-6）</li>
 <li>看 OneDrive 有沒有在同步那個資料夾（U-7）；有在同步就停在這一步，先問學長</li>
 <li>放新腳本、填設定、<code>--once</code> 跑一次，看檔尾兩行對不對、編碼對不對</li>
 <li>開工作排程器，3 分鐘一次；看兩三輪都有附加</li>
-<li>本系統<strong>維持位址空白</strong>；《第十八冊之二》的 A-01～A-03 沒有答案前不接真實資料</li>
-<li>把問題清單（第 9 節）交給學長</li>
+<li>本系統<strong>維持位址空白</strong>；本系統的讀檔模式排第二次進院，《第十八冊之二》A-01、A-03 也還沒有答案</li>
+<li>學長對《之二》問題清單的答覆，回填第 3 節</li>
 </ol>
-<h2 id="9-給學長的問題清單草稿">9. 給學長的問題清單（草稿）<a class="headerlink" href="#9-給學長的問題清單草稿" title="Permanent link">&para;</a></h2>
-<ol>
-<li>週一接資料，醫師那邊算授權了嗎？要不要書面？（U-1）</li>
-<li>IRB 影片的平台、時數、承認課程（U-2）</li>
-<li>「那台主機」是本系統所在的那一台嗎？（U-3）</li>
-<li>新腳本之後由誰維護？放在主機哪裡？（U-4）</li>
-<li>「跟原本一樣存」是指成大版的 <code>YYYY-MM.txt</code> 嗎？<code>temp.csv</code> 要不要？（U-5）</li>
-<li>已搬過去的歷史 txt 是哪一版寫的？（U-6）</li>
-<li>指定資料夾在 OneDrive 底下，有在同步嗎？可以換到不同步的位置嗎？（U-7）</li>
-<li>每天整天每 3 分鐘附加一次，檔案會很大；可以只在透析時段抓、或內容沒變就不附加嗎？（第 6 節）</li>
-<li><code>hb</code> 那支 API 的 <code>.json</code> 範例；是不是另一支端點、要不要一起排程？（U-9）</li>
-</ol>
-<p>（原本第 10 題「第一種、第二種是哪一種」1108 已定案照學長，不必再問。）</p>
+<h2 id="9-給學長的問題清單">9. 給學長的問題清單<a class="headerlink" href="#9-給學長的問題清單" title="Permanent link">&para;</a></h2>
+<p>1108 定稿移到《<a href="../hospital-api-fetch-methods-questions/">之二：1108 給學長的問題清單</a>》。草稿原本的第 1 題（醫師授權）、第 3 題（哪台主機）1108 已有答案，另一題與本專案無關，都已刪除；草稿的第 10 題（第一種、第二種）1108 已定案照學長。</p>
 <h2 id="10-公開界線">10. 公開界線<a class="headerlink" href="#10-公開界線" title="Permanent link">&para;</a></h2>
 <ul>
 <li>院方 API 位址、主機名稱、Google Drive 連結、指定資料夾的完整路徑<strong>不寫進本文件</strong></li>
