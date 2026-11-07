@@ -5996,6 +5996,8 @@ GitHub Pages                            別人看到的
 <p>要看某一版，開站上的 <code>/&lt;週次&gt;/</code>；要原始檔，從鏡像的 tag 取： <code>git -C .docs-mirror show &lt;週次&gt;:docs/&lt;路徑&gt;</code>。首頁只掛現行版，所以<strong>你給出去的連結永遠不會過期</strong>，也不必每週重發。</p>
 </blockquote>
 <p><strong>公開範圍</strong>：鏡像 repo 是 public、站台是公開網址，知道網址就看得到（跟以前的 HackMD 自訂網址一樣）。 <code>robots.txt</code> 擋掉搜尋引擎收錄。程式碼、<code>README.md</code>、<code>.env</code> 都留在私有 repo，同步腳本只複製 <code>docs/</code> 與 <code>docs-site/</code> 兩個目錄，這條界線是結構上的，不是靠記得。</p>
+<p><strong>敏感資料雙軌（2026-11-08 起）</strong>：公開文件過濾、私人紀錄完整。院內位址、帳號、雲端分享連結、個人電腦的完整路徑、對話截圖、外部人員的名字、別人給的原始檔，公開文件只寫結論，完整的收在私有 repo 的 <code>deploy/records/&lt;MMDD-主題&gt;/</code>（不在 <code>docs/</code>，不會同步），兩邊同一次 commit 做完。私人紀錄同樣不寫密碼、PIN、<code>.env</code> 的祕密值與真實病人的值。<code>docs:check</code> 與 <code>docs:sync</code> 會掃院內 IP、Google 雲端連結、OneDrive 路徑，同步時 <code>--force</code> 也略不過；名字、主機名稱、截圖掃不到，仍要靠寫的人過濾。文件裡要舉 IP 的例子，用 <code>192.0.2.x</code> 這種文件專用網段。</p>
+<p>為什麼兩邊都要：只過濾不記錄，下次進院要用的值就散在手機與對話裡找不到；只記錄不過濾，值就跟著鏡像的歷史永遠公開。</p>
 <hr />
 <h2 id="一次性設定">一次性設定<a class="headerlink" href="#一次性設定" title="Permanent link">&para;</a></h2>
 <p>做過就不必再做。</p>

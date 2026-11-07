@@ -176,7 +176,7 @@ interface/views.py 的 corn_job()（成大版第 1018 行；斗六版同樣在 v
 ## 10. 公開界線
 
 - `fetch_API.py` 裡有成大院內的 API 位址，**不寫進本文件**；要找位址看那支程式或私人紀錄
-- `API_script/` 留在 repo 外，不 commit 進專案 repo（專案 repo 的文件會同步到公開站）
+- `API_script/` 留在 repo 外，不 commit 進專案 repo（專案 repo 的文件會同步到公開站）；1108 起複本收在私人 repo 的 `deploy/records/1108-hospital-api/API_script/`（`deploy/` 不會同步）
 - 之後拿到回應，照上層文件第 8 節的做法只看遮罩後的結構，不把任何一筆真實資料放進 `docs/`
 
 ______________________________________________________________________

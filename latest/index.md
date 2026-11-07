@@ -61,14 +61,14 @@ ______________________________________________________________________
 
 前五份**由來龍去脈往下讀到實作與部署細節**，第六份是進行中的問題總表；**優先權另有一套，衝突時的裁決順序看「角色」欄**：
 
-| 文件                                                                                                     | 角色                                               | 本週定版 |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | -------- |
-| [FDE 數位化評估報告](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/fde-assessment/index.md) | 背景脈絡與選型理由                                 | 1007     |
-| [軟體需求規格書（SRS）](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)         | 功能需求來源（FR 編號出處）                        | 1028     |
-| [資料庫使用規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)    | 資料治理強制規則，優先權等同實作規格書             | 1028     |
-| [實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)    | 範圍與技術選型，**衝突時以此為準**                 | 1028     |
-| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1028     |
-| [尚待確認事項清冊](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)   | 卡住進度的問題總表，其餘文件不再各自維護           | 1028     |
+| 文件                                                                                                     | 角色                                               | 本週定版      |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------- |
+| [FDE 數位化評估報告](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/fde-assessment/index.md) | 背景脈絡與選型理由                                 | 1007          |
+| [軟體需求規格書（SRS）](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)         | 功能需求來源（FR 編號出處）                        | 1028 · 修訂中 |
+| [資料庫使用規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)    | 資料治理強制規則，優先權等同實作規格書             | 1028          |
+| [實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)    | 範圍與技術選型，**衝突時以此為準**                 | 1028 · 修訂中 |
+| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1028 · 修訂中 |
+| [尚待確認事項清冊](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)   | 卡住進度的問題總表，其餘文件不再各自維護           | 1028 · 修訂中 |
 
 每份文件末尾都有「版本歷程」，記錄歷次定版與異動摘要；要回頭對帳哪一版談定了什麼，從那裡找。
 

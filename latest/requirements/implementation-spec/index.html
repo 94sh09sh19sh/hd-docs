@@ -8015,6 +8015,42 @@
 </table>
 <p><strong>模擬院方 API</strong>（<code>hospital-api-sim</code>，compose 的 <code>simulation</code> profile）：開發機與模擬部署連不到院內的 API，用它產生<strong>同格式的合成資料</strong>——開頭那段 <code>&lt;meta&gt;</code>、51 欄的陣列、透析隨真實時間推進、每隔幾分鐘多一筆紀錄，並刻意放進各種邊界值（<code>""</code>、字串數字、理想體重 0、透析中結束欄位空白）。<strong>正式環境設定下 <code>HOSPITAL_API_BASE_URL</code> 指向它，後端拒絕啟動</strong>（與 DEP-40 同一個道理）。</p>
 <p><strong>院方 API 探測工具</strong>（<code>probe:hospital-api</code>，在 <code>api</code> 容器裡執行；<strong>1005 迭代 15 已完成</strong>，指令在部署手冊第十五冊 V-30a）：打一次 <code>?date=今天</code>，<strong>只印結構，不印任何一個值</strong>——總筆數、每列欄數、每一欄的型態分布（數字／字串／空字串／0 各幾筆）、床位的格式樣式（數字換成 <code>9</code>、字母換成 <code>A</code>）、透析進行中的列結束時間與結束體重是不是空的、姓名欄有沒有「〇」。輸出可以直接抄進演練紀錄。<strong>第三次進院要用它</strong>（4.19），因此排在迭代 15 的第一項。</p>
+<p><strong>1108 使用者決定：本系統不再自己呼叫院方 API，改讀主機上獨立腳本存下的檔。</strong> 負責 IDH 系統的學長 1107 要求院方 API 只由一支腳本呼叫，存成 IDH 系統原本的留底格式（每月一個 <code>YYYY-MM.txt</code>，一次抓取兩行：<code>Date:</code> 時間戳、原始回應），本系統與另一組都讀這份。影響：</p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>怎麼變</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hospital-api.client.ts</code>（HTTP）</td>
+<td>改成讀檔來源：讀當月檔最後一段完整的 <code>Date:</code>＋JSON；<code>HOSPITAL_API_BASE_URL</code> 換成資料夾設定，兩者二選一</td>
+</tr>
+<tr>
+<td><code>hospital-api.format.ts</code> 之後（解析、驗證、同步）</td>
+<td><strong>照用</strong>，不改</td>
+</tr>
+<tr>
+<td>抓取頻率的營運參數</td>
+<td>變成讀檔頻率；打院方的頻率在腳本的設定檔</td>
+</tr>
+<tr>
+<td>過期示警</td>
+<td>以檔裡的 <code>Date:</code> 判斷資料多舊</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>指定資料夾以唯讀繫結掛載進 <code>api</code>（要改《部署規範》DEP-37 第 3 條、DEP-46）</td>
+</tr>
+<tr>
+<td>探測工具</td>
+<td>改成檢查留底檔的格式（第十五冊 V-30a）</td>
+</tr>
+</tbody>
+</table>
+<p>腳本本身不屬於本系統（DEP-04：本系統不得要求主機裝 Python），由使用者照學長的要求改寫、放在主機上。讀檔模式排成新的迭代，<strong>迭代編號與驗收開工時定</strong>；開工前要先有答案的：腳本與本系統是不是同一台主機、留底的格式與編碼、指定資料夾會不會被雲端同步（《<a href="../../notes/hospital-api-fetch-methods-status/">院方 API 的四種抓取方式之一</a>》第 3、7 節）。在那之前迭代 15 的 HTTP 抓取保留不動，院內主機的位址維持空白。</p>
 <h3 id="36-規則引擎新增">3.6 規則引擎（新增）<a class="headerlink" href="#36-規則引擎新增" title="Permanent link">&para;</a></h3>
 <p>對應 FR-R01。三項高風險功能的計算<strong>由規則引擎執行，不經語言模型</strong>。</p>
 <p><strong>為什麼自建而不用第三方規則引擎套件</strong>：需求是「能逐條印出來給醫師看、能版本化、能指出這次套用了哪一條的哪一個門檻」。第三方套件的表達能力遠超需求，卻讓可解釋性變差。本專案的規則形態很窄——都是「某個數值或次數超過門檻」，自建一個小型評估器即可。</p>

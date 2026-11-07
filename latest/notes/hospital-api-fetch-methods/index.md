@@ -167,6 +167,7 @@ IDH 系統 views.py 的 corn_job()
 - 院方 API 的院內位址、Google Drive 連結、主機上的完整路徑**不寫進本文件**；位址看程式或私人紀錄
 - `ref_project/`、`old_API_ref/` 留在 repo 外，不 commit（專案 repo 的文件會同步到公開站）
 - 留底 txt 有真實病人資料，本文件只寫格式，不放任何一行內容
+- 位址、Drive 連結、原始檔的複本收在私人 repo 的 `deploy/records/1108-hospital-api/`（病人資料不收）
 
 ______________________________________________________________________
 
