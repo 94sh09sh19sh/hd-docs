@@ -11,42 +11,45 @@
 ## 摘要
 
 - 時間：1109（一）15:30 起，學長在場；全部約 60 分鐘，順序是 B-01～B-21
-- 出發前（B-01～B-03）：帶手機、確認自己的 GitHub 開得了 Release 頁、手機能看 `values.md`
+- **這一冊直接開在部署主機上**：主機可以連外網，用主機的 Edge 開公開文件站的這一冊，指令從頁面複製、貼進 PowerShell；不印紙本、不用手機看手冊（B-04）
+- 出發前（B-01～B-03）：帶手機（兩步驟驗證、`values.md`、現場筆記）、確認自己的 GitHub 開得了 Release 頁、手機能看 `values.md`
 - 先看現況（B-04～B-08）：帳號、Python、OneDrive、有沒有舊腳本在跑、兩個位置
 - 下載與放好（B-09～B-11）：InPrivate 視窗登入自己的 GitHub 下載，關視窗、解壓縮、解除下載標記
 - 轉碼（B-12～B-13）：歷史 txt 從 cp950 轉 UTF-8，先預演再實轉，隨時可還原
 - 試跑（B-14～B-16）：填設定、預演、跑一輪，看狀態檔與檔尾
 - 排程（B-17～B-19）：裝排程、看三輪、教學長怎麼停與怎麼看
-- 收尾（B-20～B-21）：記錄；退回步驟在第 3 節；出錯對照、一頁速查、與《之三》的對照在《[第十九冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19a-hospital-fetch-reference/index.md)》
+- 收尾（B-20～B-21）：記錄；退回步驟在第 3 節；出錯對照、一頁速查在《[第十九冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19a-hospital-fetch-reference/index.md)》
 
 ## 0. 開始前先懂的五件事
 
 1. **這支腳本做什麼**：每 3 分鐘問院方 API「今天的透析清單」，把**新的或變了的列**附加到 `<指定資料夾>\YYYY-MM.txt`（一個月一個檔），再把這一輪的結果寫進狀態檔 `fetch-status.json`。同一筆資料不會重複寫
 1. **它會動到的檔**：只有三處——`<指定資料夾>` 裡的當月 txt（只附加、不改舊的）、`<腳本資料夾>` 裡的 `fetch-status.json` 與 `state\`。轉碼工具另外會在 `<指定資料夾>` 底下建一個 `_backup_日期-時間\` 備份
 1. **兩種跑法**：主機有 Python 3.8 以上就用 `.py`；沒有就用 `.exe`（學長決定）。本冊的指令寫 `.py` 版；用 `.exe` 的話，`py fetch_dialysis.py` 換成 `.\fetch_dialysis.exe`、`py transcode_history.py` 換成 `.\transcode_history.exe`，其餘照舊
-1. **怎麼開 PowerShell**：按「開始」→ 打 `powershell` →「Windows PowerShell」（**不要**選「以系統管理員身分執行」）。指令整行複製、貼上（滑鼠右鍵就是貼上）、按 Enter
+1. **怎麼開 PowerShell**：按「開始」→ 打 `powershell` →「Windows PowerShell」（**不要**選「以系統管理員身分執行」）。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 `Alt+Tab` 在瀏覽器與 PowerShell 之間切換
 1. **結束碼**：每跑完一支，接著打 `$LASTEXITCODE` 看數字。`0` 是成功（或「跳過」），`1` 是失敗，`2` 是參數或設定錯
 
 ## 1. 出發前
 
-| #    | 做什麼                                                                                        | 會看到／不對的話                                                                                                                                                      |
-| ---- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-01 | 帶手機：GitHub 兩步驟驗證的驗證碼在手機上；手機也拿來看 `values.md` 與這一冊                  | —                                                                                                                                                                     |
-| B-02 | 在自己的電腦登入 GitHub，開啟 `github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0` | 看到 v0.1.0 與 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`、`transcode_history.exe`、`SHA256SUMS.txt`、`Source code (zip)`；顯示 404 是帳號不對，換成 `94sh09sh19sh` |
-| B-03 | 用手機的 GitHub App 開啟私人 repo（`v0`）的 `deploy/records/1108-hospital-api/values.md`      | 看得到院方位址與指定資料夾的路徑（現場 B-08、B-14 要抄）                                                                                                              |
+| #    | 做什麼                                                                                                       | 會看到／不對的話                                                                                                                                                      |
+| ---- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-01 | 帶手機：GitHub 兩步驟驗證的驗證碼、`values.md`、現場筆記都在手機上。這一冊不用手機看，現場開在主機上（B-04） | —                                                                                                                                                                     |
+| B-02 | 在自己的電腦登入 GitHub，開啟 `github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0`                | 看到 v0.1.0 與 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`、`transcode_history.exe`、`SHA256SUMS.txt`、`Source code (zip)`；顯示 404 是帳號不對，換成 `94sh09sh19sh` |
+| B-03 | 用手機的 GitHub App 開啟私人 repo（`v0`）的 `deploy/records/1108-hospital-api/values.md`                     | 看得到院方位址與指定資料夾的路徑（現場 B-08、B-14 要抄）                                                                                                              |
 
 ## 2. 現場步驟
 
-### B-04 到對的主機、對的帳號
+### B-04 到對的主機、對的帳號，把這一冊開在主機上
 
-現場三台裡**最右邊那台**。開 PowerShell 打：
+1. 現場三台裡**最右邊那台**
+1. 開 Edge 的**一般視窗**（不是 InPrivate），到公開文件站，左邊選「部署手冊」→「第十九冊」。之後的指令都從這一頁複製；B-09 的 InPrivate 是另一個視窗，關掉它不會關到手冊
+1. 開 PowerShell（第 0 節第 4 點），打：
 
 ```
 whoami
 ```
 
 - **會看到**：`<電腦名稱>\<帳號>`，帳號是醫師的
-- **不對的話**：停。不是醫師的帳號就不往下做
+- **不對的話**：停。不是醫師的帳號就不往下做；公開文件站打不開（主機連不到外網）→ 改用手機看這一冊，指令照著打
 
 ### B-05 看 Python
 
@@ -104,7 +107,7 @@ Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Select-Object Proc
 1. 開啟 `github.com/login`，登入**自己的** GitHub；不勾「保持登入」；瀏覽器問要不要存密碼，選「永不」
 1. 開啟 `github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0`，下載 `Source code (zip)`
 1. 用 `.exe` 的話，再下載 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`、`transcode_history.exe`、`SHA256SUMS.txt`
-1. **關掉整個 InPrivate 視窗**（登入、Cookie、瀏覽紀錄跟著清掉）
+1. **關掉整個 InPrivate 視窗**（登入、Cookie、瀏覽紀錄跟著清掉）；開著這一冊的一般視窗不用關，收工時再關（B-21）
 1. **不對的話**：院內網路連不上 GitHub → 停，這次只做到 B-07；Edge 擋 `.exe` 下載 → 在下載清單選「…」→「保留」，保留不了就改用 `.py` 版
 
 ### B-10 解壓縮到腳本資料夾
@@ -305,7 +308,7 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 
 ### B-21 收工前看一眼
 
-- InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 `.exe`
+- InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 `.exe`；最後關掉開著這一冊的 Edge 視窗（公開文件站，不留登入，留下瀏覽紀錄也無妨）
 - `Get-ScheduledTaskInfo -TaskName hd-hospital-fetch` 的 `LastTaskResult` 是 `0`
 - 本系統沒有動：`.env` 的院方位址維持空白（讀檔模式排第二次進院）
 - **不重開機**（同一台還有另一個專案，第十八冊之二 A-04）
