@@ -2936,6 +2936,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hospital-api-fetch-methods-monday-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之三：1109 進院前的工作規劃
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6169,7 +6197,7 @@
 
 <h1 id="院方-api-的四種抓取方式之一1107-學長答覆後的現況與應對">院方 API 的四種抓取方式之一：1107 學長答覆後的現況與應對<a class="headerlink" href="#院方-api-的四種抓取方式之一1107-學長答覆後的現況與應對" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案（2026-11-08 開立）　適用讀者：FDE 工程團隊、使用者本人</p>
-<p>上層文件：《<a href="../hospital-api-fetch-methods/">院方 API 的四種抓取方式</a>》　下一份：《<a href="../hospital-api-fetch-methods-questions/">之二：1108 給學長的問題清單</a>》</p>
+<p>上層文件：《<a href="../hospital-api-fetch-methods/">院方 API 的四種抓取方式</a>》　下一份：《<a href="../hospital-api-fetch-methods-questions/">之二：1108 給學長的問題清單</a>》　週一工作規劃：《<a href="../hospital-api-fetch-methods-monday-plan/">之三</a>》</p>
 <hr />
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
@@ -6699,8 +6727,8 @@
 </tr>
 <tr>
 <td>去重（1108 補）</td>
-<td>「內容跟上一段一樣就不附加」做成設定開關，預設關；學長答 W-5 再定</td>
-<td>學長說「發現重複的資料就不放入」，意思待確認</td>
+<td><strong>逐列</strong>：同一列（病歷號＋透析開始時間＋紀錄時間）沒寫過或內容變了才寫；留底照舊兩行一段、JSON 只放這些列</td>
+<td>學長答 W-5；鍵與寫法現場確認（之二 W-6）；完整規格在《之三》第 3.1 節</td>
 </tr>
 <tr>
 <td>寫檔</td>
@@ -6936,6 +6964,9 @@
 <p>1108 晚間學長答覆後：第 6 項（可以寫狀態檔）、第 9 項（改 UTF-8）、第 12 項（先不加密）的影響已排除；第 10 項看之二 W-5，選「整包一樣就不附加」的話靠狀態檔判斷資料多舊，不會誤報。</p>
 <p>主機與部署：路徑有空白與中文，唯讀掛進 WSL2 的容器要先測；檔案會一直變大，要從檔尾往回讀；本系統要等主機的資料夾在、掛得上才能運作，退版、搬機都要重掛；留底檔在本系統之外，《資料庫使用規範》與資料取出（FR-S19）都管不到。</p>
 <h2 id="8-1109-進院的順序">8. 1109 進院的順序<a class="headerlink" href="#8-1109-進院的順序" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>1108 起以《<a href="../hospital-api-fetch-methods-monday-plan/">之三</a>》第 4 節的現場順序與斷點為準，下面保留原本的版本。</p>
+</blockquote>
 <ol>
 <li>看主機（最右邊那台，U-3 已確認）：Python 版本（之二 W-3）、指定資料夾在不在、歷史 txt 的檔名、大小、最後一筆時間、編碼（U-6）、當月檔存不存在</li>
 <li>看 OneDrive 有沒有在同步那個資料夾（U-7）；有在同步而醫師還沒答覆（之二 W-1），腳本可以放上去，但下面第 4、5 步不做</li>

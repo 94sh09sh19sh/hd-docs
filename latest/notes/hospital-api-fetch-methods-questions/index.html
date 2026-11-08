@@ -16,7 +16,7 @@
         <link rel="prev" href="../hospital-api-fetch-methods-status/">
       
       
-        <link rel="next" href="../iteration-9-1-fixes/">
+        <link rel="next" href="../hospital-api-fetch-methods-monday-plan/">
       
       
         
@@ -2875,6 +2875,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hospital-api-fetch-methods-monday-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之三：1109 進院前的工作規劃
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6057,7 +6085,7 @@
 
 <h1 id="院方-api-的四種抓取方式之二1108-給學長的問題清單">院方 API 的四種抓取方式之二：1108 給學長的問題清單<a class="headerlink" href="#院方-api-的四種抓取方式之二1108-給學長的問題清單" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案（2026-11-08 開立）　適用讀者：負責 IDH 系統的學長、使用者本人</p>
-<p>上層文件：《<a href="../hospital-api-fetch-methods/">院方 API 的四種抓取方式</a>》　前一份：《<a href="../hospital-api-fetch-methods-status/">之一：1107 學長答覆後的現況與應對</a>》</p>
+<p>上層文件：《<a href="../hospital-api-fetch-methods/">院方 API 的四種抓取方式</a>》　前一份：《<a href="../hospital-api-fetch-methods-status/">之一：1107 學長答覆後的現況與應對</a>》　下一份：《<a href="../hospital-api-fetch-methods-monday-plan/">之三：1109 進院前的工作規劃</a>》</p>
 <hr />
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
@@ -6069,6 +6097,7 @@
 <li><strong>1108 21:28～22:13 學長答覆</strong>：A、B 兩組，加上週一前的 C-5（改 UTF-8，歷史要轉碼）、C-11（先不加密、保留功能）、F-1（可以寫狀態檔）、G-1／G-3（都是醫師的帳號，OneDrive 要不要動得問醫師）；使用者請學長其餘只答標「週一前」的。整理在「1108 晚間學長的答覆」一節</li>
 <li><strong>週一進院前還要知道的剩 5 題</strong>（W-1～W-5），最卡的是 W-1：指定資料夾在醫師帳號的 OneDrive 底下，同步與搬位置要醫師決定，週一 15:30 前要有人去問；見「週一進院前還要知道的」一節</li>
 <li><strong>1108 22:40 使用者補</strong>：APP 組現在沒有在讀舊的 txt（使用者已向 APP 組確認）；學長週一陪同進院，現場設斷點、發現狀況就停。所以 W-2 改成現場一起看，出發前一定要有答案的只剩 W-1、W-3、W-4（誰轉、能不能現場轉）、W-5</li>
+<li><strong>1108 學長最後答覆</strong>：W-1、W-3 都不確定（現場看）；W-4 可以先轉檔；W-5 是逐列去重——同一位病人的上一筆跟這一筆一樣就不寫入。去重的鍵與留底寫法變成新的一題 W-6，週一現場放腳本前確認。週一前的工作規劃寫在《<a href="../hospital-api-fetch-methods-monday-plan/">之三</a>》</li>
 </ul>
 <h2 id="已確定不必再問">已確定，不必再問<a class="headerlink" href="#已確定不必再問" title="Permanent link">&para;</a></h2>
 <table>
@@ -6153,7 +6182,7 @@
 <tbody>
 <tr>
 <td>W-1</td>
-<td>出發前（問不到就照右欄做）</td>
+<td>出發前（問不到就照右欄做）；1108 學長答「不確定」，現場看</td>
 <td>醫師；誰去問先講定</td>
 </tr>
 <tr>
@@ -6163,17 +6192,22 @@
 </tr>
 <tr>
 <td>W-3</td>
-<td>出發前</td>
+<td>出發前；1108 學長答「不確定」，現場看，備案見之三 T-5</td>
 <td>學長</td>
 </tr>
 <tr>
 <td>W-4</td>
-<td>出發前</td>
+<td><strong>1108 已答：可以先轉檔</strong></td>
 <td>學長</td>
 </tr>
 <tr>
 <td>W-5</td>
-<td>出發前</td>
+<td><strong>1108 已答：逐列去重</strong>（上面的 ②）</td>
+<td>學長</td>
+</tr>
+<tr>
+<td>W-6</td>
+<td>現場第 6 步放腳本前</td>
 <td>學長</td>
 </tr>
 </tbody>
@@ -6217,6 +6251,12 @@
 <td>學長</td>
 <td>「發現有重複的資料就不放入」是指 ①這次抓到的整包跟上一段一模一樣就不附加；②逐列比對、只附加新的或有變的列；還是 ③以前從 txt 匯進 IDH 資料庫時跳過重複？</td>
 <td>①：照做，狀態檔記每一次抓取的時間，本系統用狀態檔判斷資料多舊，F-4 的誤報顧慮就沒有了。②：留底就不再是原始回應，<code>refetch_from_txt.py</code> 與本系統的讀法都要改，不建議。③：照原本每輪整段附加。沒答覆的話，去重做成設定開關、預設關（跟原本一樣）</td>
+</tr>
+<tr>
+<td>W-6</td>
+<td>學長</td>
+<td>逐列去重的鍵用「病歷號＋透析開始時間＋紀錄時間」、內容有任何一欄變了就再寫一次，可以嗎？留底照舊「<code>Date:</code> 一行＋JSON 一行」、JSON 裡只放新的或變了的列，還是一列寫一行？</td>
+<td>照前者（<code>refetch_from_txt.py</code> 照樣讀得回來）；兩種寫法都先做好，現場改設定（之三第 3.1 節）</td>
 </tr>
 </tbody>
 </table>
