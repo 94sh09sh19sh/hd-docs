@@ -1,0 +1,334 @@
+# 第十九冊 · 院方 API 抓取腳本的安裝（1109，新手版）
+
+版本：v0.1　文件狀態：草案（1108 依《[院方 API 之三](../notes/hospital-api-fetch-methods-monday-plan.md)》第 4 節與 `hd-hospital-fetch` v0.1.0 實際的輸出寫成）　編號：`B-xx`
+
+> **這一冊回答一件事：在醫院那台主機上，把抓取腳本 `hd-hospital-fetch` 放上去，讓它每 3 分鐘自己抓一次院方透析清單。** 本系統（容器、`.env`、平板）這次**完全不動**。
+>
+> 每一步都有「會看到」與「不對的話」。**「不對的話」寫「停」就是斷點：停下來，跟學長決定，不要自己往下做。**
+
+> **公開範圍**：文件站是公開的。院方位址、指定資料夾的完整路徑、帳號一律不寫進這一冊，看私人 repo 的 `deploy/records/1108-hospital-api/values.md`；本冊用 `<指定資料夾>`、`<院方位址>`、`<腳本資料夾>` 代稱。
+
+## 摘要
+
+- 時間：1109（一）15:30 起，學長在場；全部約 60 分鐘，順序是 B-01～B-21
+- 出發前（B-01～B-03）：帶手機、確認自己的 GitHub 開得了 Release 頁、手機能看 `values.md`
+- 先看現況（B-04～B-08）：帳號、Python、OneDrive、有沒有舊腳本在跑、兩個位置
+- 下載與放好（B-09～B-11）：InPrivate 視窗登入自己的 GitHub 下載，關視窗、解壓縮、解除下載標記
+- 轉碼（B-12～B-13）：歷史 txt 從 cp950 轉 UTF-8，先預演再實轉，隨時可還原
+- 試跑（B-14～B-16）：填設定、預演、跑一輪，看狀態檔與檔尾
+- 排程（B-17～B-19）：裝排程、看三輪、教學長怎麼停與怎麼看
+- 收尾（B-20～B-21）：記錄；退回步驟在第 3 節；出錯對照、一頁速查、與《之三》的對照在《[第十九冊之一](19a-hospital-fetch-reference.md)》
+
+## 0. 開始前先懂的五件事
+
+1. **這支腳本做什麼**：每 3 分鐘問院方 API「今天的透析清單」，把**新的或變了的列**附加到 `<指定資料夾>\YYYY-MM.txt`（一個月一個檔），再把這一輪的結果寫進狀態檔 `fetch-status.json`。同一筆資料不會重複寫
+2. **它會動到的檔**：只有三處——`<指定資料夾>` 裡的當月 txt（只附加、不改舊的）、`<腳本資料夾>` 裡的 `fetch-status.json` 與 `state\`。轉碼工具另外會在 `<指定資料夾>` 底下建一個 `_backup_日期-時間\` 備份
+3. **兩種跑法**：主機有 Python 3.8 以上就用 `.py`；沒有就用 `.exe`（學長決定）。本冊的指令寫 `.py` 版；用 `.exe` 的話，`py fetch_dialysis.py` 換成 `.\fetch_dialysis.exe`、`py transcode_history.py` 換成 `.\transcode_history.exe`，其餘照舊
+4. **怎麼開 PowerShell**：按「開始」→ 打 `powershell` →「Windows PowerShell」（**不要**選「以系統管理員身分執行」）。指令整行複製、貼上（滑鼠右鍵就是貼上）、按 Enter
+5. **結束碼**：每跑完一支，接著打 `$LASTEXITCODE` 看數字。`0` 是成功（或「跳過」），`1` 是失敗，`2` 是參數或設定錯
+
+## 1. 出發前
+
+| # | 做什麼 | 會看到／不對的話 |
+|---|---|---|
+| B-01 | 帶手機：GitHub 兩步驟驗證的驗證碼在手機上；手機也拿來看 `values.md` 與這一冊 | — |
+| B-02 | 在自己的電腦登入 GitHub，開啟 `github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0` | 看到 v0.1.0 與 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`、`transcode_history.exe`、`SHA256SUMS.txt`、`Source code (zip)`；顯示 404 是帳號不對，換成 `94sh09sh19sh` |
+| B-03 | 用手機的 GitHub App 開啟私人 repo（`v0`）的 `deploy/records/1108-hospital-api/values.md` | 看得到院方位址與指定資料夾的路徑（現場 B-08、B-14 要抄） |
+
+## 2. 現場步驟
+
+### B-04 到對的主機、對的帳號
+
+現場三台裡**最右邊那台**。開 PowerShell 打：
+
+```powershell
+whoami
+```
+
+- **會看到**：`<電腦名稱>\<帳號>`，帳號是醫師的
+- **不對的話**：停。不是醫師的帳號就不往下做
+
+### B-05 看 Python
+
+```powershell
+py -0p
+python --version
+```
+
+- **會看到**：`py -0p` 列出 `-V:3.x` 與 `python.exe` 的路徑；`python --version` 印出 `Python 3.x.x`。**3.8 以上**才能用 `.py` 版
+- **沒有 `py` 但 `python` 有**：本冊的 `py` 全部換成 `python`
+- **跳出 Microsoft Store、或兩個都說找不到**：就是沒有裝。停，學長決定裝 Python 或用 `.exe`；都不行就做完 B-06、B-07 收工
+- 記下結果：用 `.py` 還是 `.exe`
+
+### B-06 看 OneDrive 有沒有在同步指定資料夾
+
+指令抄自第四冊的雲端同步檢查：
+
+```powershell
+$env:OneDrive; $env:OneDriveCommercial
+Get-Process | Where-Object { $_.Name -match 'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box' } | Select-Object Name
+```
+
+再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。
+
+- **會看到**：第一行印出 OneDrive 的路徑，且 `<指定資料夾>` 在那個路徑底下；第二行有 `OneDrive`；檔案旁有同步圖示 → **在同步**
+- **在同步而醫師還沒同意**：停。學長當場聯絡醫師；聯絡不到就只做到 B-13（轉碼，不產生新的留底），B-14 起不做
+- 沒有同步（第一行沒印東西或路徑不同、檔案旁沒有圖示）：往下
+
+### B-07 看有沒有舊的腳本在跑
+
+```powershell
+Get-ScheduledTask | Where-Object { $_.TaskPath -notlike '\Microsoft\*' -and "$($_.Actions.Execute) $($_.Actions.Arguments)" -match 'python|\.py|fetch|IDH' } | Select-Object TaskName, State
+```
+
+```powershell
+Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Select-Object ProcessId, CommandLine
+```
+
+- 第一個指令找「會執行 Python 或抓取程式的排程工作」，第二個找「現在正在跑的 Python」
+- **會看到**：兩個指令都沒印東西（1108 學長說舊腳本與 IDH 都沒在跑）
+- **不對的話**：有印出東西就停，跟學長確認是什麼、停用後再往下；認不出的不要自己停
+
+### B-08 決定兩個位置
+
+跟學長定好，抄在手機上：
+
+| 代稱 | 是什麼 | 建議 |
+|---|---|---|
+| `<指定資料夾>` | 留底 txt 所在的資料夾 | 照 `values.md` |
+| `<腳本資料夾>` | 腳本放哪 | `C:\hd-hospital-fetch`；**不要**放在 OneDrive 底下、也不要放進 `<指定資料夾>` 裡 |
+
+### B-09 下載（InPrivate 視窗）
+
+1. 開 Edge，按 `Ctrl+Shift+N` 開 InPrivate 視窗
+2. 開啟 `github.com/login`，登入**自己的** GitHub；不勾「保持登入」；瀏覽器問要不要存密碼，選「永不」
+3. 開啟 `github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0`，下載 `Source code (zip)`
+4. 用 `.exe` 的話，再下載 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`、`transcode_history.exe`、`SHA256SUMS.txt`
+5. **關掉整個 InPrivate 視窗**（登入、Cookie、瀏覽紀錄跟著清掉）
+
+- **不對的話**：院內網路連不上 GitHub → 停，這次只做到 B-07；Edge 擋 `.exe` 下載 → 在下載清單選「…」→「保留」，保留不了就改用 `.py` 版
+
+### B-10 解壓縮到腳本資料夾
+
+```powershell
+Expand-Archive "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip" -DestinationPath C:\
+Rename-Item C:\hd-hospital-fetch-0.1.0 hd-hospital-fetch
+cd C:\hd-hospital-fetch
+dir
+```
+
+（`<腳本資料夾>` 不是 `C:\hd-hospital-fetch` 的話，兩處換掉。）用 `.exe` 的話，把四個下載的檔搬進來：
+
+```powershell
+Move-Item "$env:USERPROFILE\Downloads\*.exe", "$env:USERPROFILE\Downloads\SHA256SUMS.txt" .
+```
+
+- **會看到**：`dir` 列出 `fetch_dialysis.py`、`transcode_history.py`、`install-task.ps1`、`uninstall-task.ps1`、`config.example.json`、`README.md` 等
+- 最後把「下載」資料夾裡的 zip 刪掉：`Remove-Item "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"`
+
+### B-11 解除下載標記、比對雜湊
+
+```powershell
+Get-ChildItem -Recurse | Unblock-File
+```
+
+用 `.exe` 的話再比對：
+
+```powershell
+Get-FileHash .\fetch_dialysis.exe, .\fetch_dialysis_w.exe, .\transcode_history.exe -Algorithm SHA256 | Select-Object Hash, Path
+Get-Content .\SHA256SUMS.txt
+```
+
+- **會看到**：`Unblock-File` 不印東西；兩邊的雜湊一樣（大小寫不同不要緊）
+- **不對的話**：雜湊不同 → 刪掉那個 `.exe`，回 B-09 重新下載
+
+### B-12 轉碼：先預演
+
+```powershell
+py transcode_history.py "<指定資料夾>"
+```
+
+- **會看到**（數字是範例）：
+
+```text
+== 預演 ==
+- 2026-10.txt：12,345,678 位元組、9600 行；Date: 4800 段；編碼 cp950
+- 2026-11.txt：1,234,567 位元組、960 行；Date: 480 段；編碼 cp950
+
+要轉 2 個、已是 UTF-8 0 個、不轉（混合或無法判斷）0 個
+這是預演，沒有改任何檔。確認後加 --apply。
+```
+
+每個檔的「編碼」怎麼看：
+
+| 編碼 | 意思 | 怎麼做 |
+|---|---|---|
+| `cp950` | 舊的寫法，要轉 | 往下 B-13 |
+| `utf-8` | 已經是新的寫法 | 不用管 |
+| `混合` | 同一個檔裡兩種寫法都有 | 停，學長決定；這個檔 B-13 不會轉 |
+| `無法判斷` | 有壞掉的字，後面寫第幾行 | 停，學長決定 |
+
+- 後面多一段「解析不出 JSON 的行」：那個檔 B-13 也不會轉。停，學長同意才在 B-13 加 `--allow-bad-json`
+- 多一段「API_script 版混寫行」：舊版留下的寫法，不算錯，照常轉
+- **當月檔**（例如 `2026-11.txt`）如果停在「混合」「無法判斷」，B-14 起不能做（腳本不會往非 UTF-8 的檔附加）
+
+### B-13 轉碼：實轉
+
+```powershell
+py transcode_history.py "<指定資料夾>" --apply
+$LASTEXITCODE
+```
+
+- **會看到**：先印一次跟預演一樣的清單（標題是「== 轉檔前的狀況 ==」），接著：
+
+```text
+已備份 2 個檔到 <指定資料夾>\_backup_20261109-1612
+- 2026-10.txt：已轉成 UTF-8，比對通過
+- 2026-11.txt：已轉成 UTF-8，比對通過
+
+還原：python transcode_history.py --restore "<指定資料夾>\_backup_20261109-1612"
+```
+
+接著 `$LASTEXITCODE` 印 `0`。
+
+- **把最後一行「還原：…」整行抄在手機上**，退回時要用（第 3 節）
+- **不對的話**：任何一個檔寫「比對不合」「原檔有解析不出 JSON 的行」，或 `$LASTEXITCODE` 不是 `0` → 停。沒轉成的原檔沒被動過；要全部回到轉碼前就照第 3 節 R-2 還原
+
+### B-14 填設定
+
+```powershell
+Copy-Item config.example.json config.json
+notepad config.json
+```
+
+記事本裡只改兩行，其他不動：
+
+| 欄位 | 改成 |
+|---|---|
+| `"endpoint"` | `values.md` 的院方位址（`http://` 開頭，到 `.php` 為止，**不要**加 `?date=`） |
+| `"output_dir"` | `<指定資料夾>`。**每個反斜線要寫兩個**：`D:\資料\IDH` 寫成 `"D:\\資料\\IDH"` |
+
+存檔（`Ctrl+S`）、關掉記事本。
+
+### B-15 預演一輪
+
+```powershell
+py fetch_dialysis.py --dry-run
+```
+
+- **會看到**：`2026-11-09 16:20:05 成功 回應 601 列、會寫入 601 列（預演，沒有寫任何檔）`（列數是範例；第一次跑，兩個數字一樣）
+- **不對的話**：照《[第十九冊之一](19a-hospital-fetch-reference.md)》第 1 節「出錯對照」查；查不出來就停
+
+### B-16 跑一輪、看結果
+
+```powershell
+py fetch_dialysis.py --once
+$LASTEXITCODE
+Get-Content -Encoding UTF8 .\fetch-status.json
+```
+
+- **會看到**：第一行 `… 成功 回應 601 列、寫入 601 列`；`$LASTEXITCODE` 是 `0`；狀態檔裡 `"result": "ok"`、`"written_rows"` 與 `"response_rows"` 一樣
+
+看當月檔的最後兩行對不對（**只看開頭與長度，不把病人資料印到螢幕上**）：
+
+```powershell
+$t = Get-Content -Encoding UTF8 "<指定資料夾>\2026-11.txt" -Tail 2
+$t[0]
+$t[1].StartsWith('{"data_list":[')
+$t[1].Length
+```
+
+- **會看到**：`Date: 2026-11-09 16:21:30`（剛剛的時間）、`True`、一個很大的數字
+
+再跑一次 `py fetch_dialysis.py --once`：
+
+- **會看到**：`寫入 0 列`（剛好有新的量測進來就是幾列，不會是整天）
+- **不對的話**：結束碼不是 `0`、`result` 不是 `ok`、第二行不是 `True`、主控台印出姓名或病歷號 → 停
+
+### B-17 裝排程
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-task.ps1
+```
+
+用 `.exe` 的話改成：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -Exe .\fetch_dialysis_w.exe
+```
+
+- **會看到**：
+
+```text
+已建立工作 hd-hospital-fetch
+  帳號：<電腦名稱>\<帳號>（只在使用者登入時執行）
+  頻率：每 3 分鐘，第一次在 1 分鐘後
+  執行：…pythonw.exe "C:\hd-hospital-fetch\fetch_dialysis.py" --once --config "C:\hd-hospital-fetch\config.json"
+  狀態：Ready
+看結果：狀態檔（設定檔的 status_file）每輪覆寫；或 Get-ScheduledTaskInfo -TaskName hd-hospital-fetch
+```
+
+- 排程跑的時候**不會跳出視窗**，這是正常的
+- **不對的話**：紅字寫「執行原則」或「無法載入」→ 停，學長決定（院方的群組原則擋了 PowerShell 腳本）；寫「已經有一個叫 hd-hospital-fetch 的工作」→ 有人裝過，停，跟學長確認
+
+### B-18 看三輪（約 10 分鐘）
+
+每 3 分鐘打一次：
+
+```powershell
+Get-ScheduledTaskInfo -TaskName hd-hospital-fetch | Select-Object LastRunTime, LastTaskResult, NextRunTime
+Get-Content -Encoding UTF8 .\fetch-status.json
+```
+
+- **會看到**：`LastRunTime` 每 3 分鐘往前跳、`LastTaskResult` 是 `0`；狀態檔的 `last_attempt_at` 跟著變、`result` 是 `ok`；`written_rows` 多半是 `0`，有新量測時是幾列
+- `LastTaskResult` 的其他數字：`1` 是那一輪失敗（看狀態檔的 `reason`）；`267009` 是正在跑；`267011` 是還沒跑過
+- **不對的話**：過了 5 分鐘 `LastRunTime` 都沒變、或連續兩輪 `failed` → 停，照第十九冊之一第 1 節查
+
+### B-19 教學長三件事
+
+| 要做的 | 指令（在 `<腳本資料夾>` 裡打） |
+|---|---|
+| 停掉 | `powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1` |
+| 改頻率（例：5 分鐘） | `powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -IntervalMinutes 5 -Force` |
+| 看最近一輪 | `Get-Content -Encoding UTF8 .\fetch-status.json`：`result`、`reason`、`last_success_at`（最後一次成功的時間） |
+
+### B-20 記錄
+
+在手機上記，回去後寫進私人 repo 的 `deploy/records/1109-hospital-fetch/`：
+
+- 做到哪一步；每一步的「會看到」對不對
+- B-05 用 `.py` 還是 `.exe`、Python 版本；B-06 有沒有同步；B-08 的兩個位置
+- B-12 每個檔的編碼與大小；B-13 的備份資料夾名稱與還原指令
+- B-16 的回應列數；B-18 三輪的時間與 `written_rows`
+- 每個斷點學長怎麼決定
+- B-09 用哪個 GitHub 帳號登入、幾點關掉 InPrivate 視窗
+- 不記：院方回應的內容、病人的姓名與病歷號
+
+### B-21 收工前看一眼
+
+- InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 `.exe`
+- `Get-ScheduledTaskInfo -TaskName hd-hospital-fetch` 的 `LastTaskResult` 是 `0`
+- 本系統沒有動：`.env` 的院方位址維持空白（讀檔模式排第二次進院）
+- **不重開機**（同一台還有另一個專案，第十八冊之二 A-04）
+
+## 3. 退回
+
+學長說「不要了」或斷點決定退回時，在 `<腳本資料夾>` 裡依序做：
+
+| # | 做什麼 | 指令 |
+|---|---|---|
+| R-1 | 停排程 | `powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1`，會看到「已移除工作 hd-hospital-fetch」 |
+| R-2 | 歷史 txt 回到轉碼前 | B-13 抄下的那一行（`python` 依 B-05 換成 `py`）：`py transcode_history.py --restore "<指定資料夾>\_backup_…"`，每個檔會看到「已還原」 |
+| R-3 | 刪腳本 | `cd C:\`，再 `Remove-Item -Recurse C:\hd-hospital-fetch` |
+
+- R-2 之後，B-16 起附加到當月檔的那幾段也會一起被蓋回去（還原是整個檔換回備份）
+- 備份資料夾 `_backup_…` 不刪，留給學長
+
+---
+
+## 版本歷程
+
+| 定版 | 日期 | 異動 |
+|---|---|---|
+
+[← 回部署手冊總覽](index.md)

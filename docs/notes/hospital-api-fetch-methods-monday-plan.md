@@ -12,8 +12,9 @@
 - 學長 1108 最後的答覆：W-1（OneDrive）、W-3（Python）都不確定，現場看；W-4 **可以先轉檔**；W-5 **逐列去重**——同一位病人的上一筆跟這一筆一樣就不寫入 txt
 - 腳本**另開私人 repo `hd-hospital-fetch`**，不放 v0（第 2 節）
 - 週一前要做的 6 件事、估時與完成條件在第 3 節；**1108 晚間 T-1～T-6 都做完**：測試 37 項全過（含對模擬院方 API 的 6 項）、排程在開發機實測每 3 分鐘跑、`.exe` 在沒有 Python 的環境跑得起來；第 5 節的延後條件已不成立
-- 腳本怎麼帶進主機：**1108 使用者定走 GitHub**——現場在主機開 InPrivate 視窗登入使用者自己的 GitHub，從 Release 頁下載，關掉視窗就不留登入（第 4.1 節）
-- 現場可以連外網，**不帶紙本**，現場直接開公開站的這一頁照第 4 節做；院方位址、資料夾完整路徑看私人 repo 的 `deploy/records/1108-hospital-api/values.md`
+- 腳本怎麼帶進主機：**1108 使用者定走 GitHub**——現場在主機開 InPrivate 視窗登入使用者自己的 GitHub，從 Release 頁下載，關掉視窗就不留登入
+- **現場照部署手冊第十九冊做**（1108 寫成新手版，第 4 節只留順序）
+- 現場可以連外網，**不帶紙本**，現場直接開公開站的部署手冊第十九冊照做；院方位址、資料夾完整路徑看私人 repo 的 `deploy/records/1108-hospital-api/values.md`
 - 逐列去重讓留底不再是每次的完整回應，本系統的讀檔模式要從「讀最後一段」改成「把當天各段合起來」（第 6 節）
 
 ## 1. 已定的事
@@ -30,7 +31,7 @@
 | 狀態檔 | 可以做 | 之二 F-1 |
 | 去重 | **逐列**：同一位病人的上一筆跟這一筆一樣就不寫入 | 之二 W-5 |
 | 執行帳號 | 醫師的帳號；排程設「只在使用者登入時執行」，不經手醫師的密碼 | 之二 G-3、W-2 |
-| OneDrive、Python | 不確定，現場看（第 4 節第 2、3 步） | 之二 W-1、W-3 |
+| OneDrive、Python | 不確定，現場看（第十九冊 B-05、B-06） | 之二 W-1、W-3 |
 
 ## 2. 腳本放哪：另開私人 repo
 
@@ -67,7 +68,7 @@
 | T-3 | 自己造的 cp950、UTF-8、混合、壞位元組、壞 JSON、`API_script` 混寫假檔：預演、實轉、比對、還原都過 |
 | T-4 | 開發機實測：23:16、23:19、23:22 各跑一次，第二輪寫 0 列、第三輪只寫新增的 2 列；移除後工作排程器沒有殘留 |
 | T-5 | Release v0.1.0 附 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`（排程用，無主控台）、`transcode_history.exe` 與 SHA256；PATH 只留 System32 時抓取、轉檔、還原都過；`.exe` 不含加密 |
-| T-6 | 本文件第 3、4 節照實作改；之一第 6 節改連 README |
+| T-6 | 本文件第 3、4 節照實作改；之一第 6 節改連 README；現場步驟另寫成部署手冊第十九冊、之一 |
 
 Python 3.8 只用語法解析檢查過，沒有實際在 3.8 上跑（開發機是 3.12）。
 
@@ -126,37 +127,17 @@ Python 3.8 只用語法解析檢查過，沒有實際在 3.8 上跑（開發機�
 
 ## 4. 現場順序與斷點（1109 15:30，學長在場）
 
-院方位址、指定資料夾的完整路徑看私人 repo 的 `deploy/records/1108-hospital-api/values.md`。每一步做完、記下結果才往下；**遇到斷點就停，跟學長決定**。下面的指令都在腳本資料夾裡、用 PowerShell 打；用 `.exe` 的話 `py fetch_dialysis.py` 換成 `.\fetch_dialysis.exe`、`py transcode_history.py` 換成 `.\transcode_history.exe`。
+**1108 起寫成部署手冊《[第十九冊 · 院方 API 抓取腳本的安裝](../deployment/19-hospital-fetch.md)》，現場照那一冊做**；每一步的指令、會看到什麼、斷點都在那裡，出錯訊息對照在《[第十九冊之一](../deployment/19a-hospital-fetch-reference.md)》。本節只留順序：
 
-| # | 做什麼 | 斷點：遇到就停 |
-|---|---|---|
-| 0 | 出發前：確認手機在身上（GitHub 兩步驟驗證要用）；第 4.1 節的下載在第 4 步之後、第 5 步之前做 | — |
-| 1 | 到最右邊那台主機，確認登入的是醫師的帳號 | 不是醫師的帳號 |
-| 2 | 看 Python：`py -0p`、`python --version`（3.8 以上才行） | 沒有 Python 或版本太舊：學長決定裝 Python 或用 `.exe`；都不行就到此為止，只做第 3、4 步 |
-| 3 | 看 OneDrive 同步：《第四冊》找同步程式的指令；檔案總管看指定資料夾的同步圖示 | **在同步而醫師還沒同意**：只做到第 5 步（轉檔，不產生新的留底）；第 6 步起不做，或學長當場聯絡醫師 |
-| 4 | 看工作排程器與執行中的程式，有沒有舊的成大版腳本、IDH | 有在跑：跟學長停用後再往下 |
-| 5 | 轉碼：`py transcode_history.py "<指定資料夾>"` 先預演，看每個檔的編碼；再加 `--apply`，看每個檔都是「已轉成 UTF-8，比對通過」或「已是 UTF-8」 | 「混合」「無法判斷」「解析不出 JSON 的行」「比對不合」：照畫面最後一行的 `--restore` 還原、不轉；當月檔不存在就不影響第 6 步，存在就停 |
-| 6 | 放腳本（位置跟學長定）；`copy config.example.json config.json`，記事本填 `endpoint`、`output_dir`（`values.md` 的值）；`py fetch_dialysis.py --dry-run`，再 `py fetch_dialysis.py --once`；`Get-Content -Encoding UTF8 .\fetch-status.json` | 結束碼非零（`$LASTEXITCODE`）、狀態檔 `result` 不是 `ok`、檔尾兩行不對、主控台印出個資 |
-| 7 | `powershell -ExecutionPolicy Bypass -File .\install-task.ps1`（用 `.exe` 加 `-Exe .\fetch_dialysis_w.exe`），看兩三輪：狀態檔的 `last_attempt_at` 每 3 分鐘更新、留底只在有新量測時多一段 | 執行原則被擋、沒有照時間跑、狀態檔連續失敗 |
-| 8 | 跟學長講一次怎麼停（`powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1`）、狀態檔怎麼看、頻率怎麼改（`install-task.ps1 -IntervalMinutes 5 -Force`） | — |
-| 9 | 記錄：做到哪一步、各步的結果、斷點的決定，寫進私人 repo 的 `deploy/records/1109-hospital-fetch/` | — |
+1. 出發前帶手機、確認 Release 頁與 `values.md` 打得開（B-01～B-03）
+2. 看現況：醫師的帳號、Python、OneDrive 同步、有沒有舊腳本在跑（B-04～B-07）
+3. 腳本走 GitHub 帶進主機（1108 使用者定）：InPrivate 視窗登入使用者自己的 GitHub、從 Release 頁下載、關視窗、刪掉下載的原檔、解除下載標記（B-08～B-11）
+4. 轉碼：預演再實轉，抄下還原指令（B-12、B-13）
+5. 填設定、預演、跑一輪（B-14～B-16）
+6. 裝排程、看三輪、教學長怎麼停（B-17～B-19）
+7. 記錄寫進私人 repo 的 `deploy/records/1109-hospital-fetch/`（B-20）
 
-退回：`uninstall-task.ps1`、刪掉腳本資料夾；轉過的檔用 `--restore` 還原。不重開機（同機另一個專案，《第十八冊之二》A-04）。
-
-### 4.1 腳本怎麼帶進主機：走 GitHub（1108 定）
-
-`hd-hospital-fetch` 是私人 repo，要登入才下載得到。不用隨身碟、不在醫師的瀏覽器留下登入：
-
-| # | 做什麼 | 斷點：遇到就停 |
-|---|---|---|
-| 1 | 主機開 Edge 的 InPrivate 視窗（`Ctrl+Shift+N`），登入使用者自己的 GitHub；不勾「保持登入」，瀏覽器問要不要存密碼選「永不」 | 院內網路連不上 GitHub：這次只做第 4 節第 1～4 步 |
-| 2 | 開 Release 頁 `github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0`，下載 `Source code (zip)`；第 4 節第 2 步沒有 Python 的話，再下載三個 `.exe` 與 `SHA256SUMS.txt` | Edge 擋 `.exe` 的下載：選「保留」；保留不了就改用 Python 版 |
-| 3 | 關掉整個 InPrivate 視窗（登入、Cookie、瀏覽紀錄都跟著清掉） | — |
-| 4 | 把 zip 解壓縮到跟學長定好的位置（`.exe` 放同一個資料夾）；「下載」資料夾裡的原檔刪掉 | — |
-| 5 | 解除網路下載標記：在那個資料夾打 `Get-ChildItem -Recurse \| Unblock-File`；用 `.exe` 的話比對雜湊：`Get-FileHash .\fetch_dialysis.exe -Algorithm SHA256`，與 `SHA256SUMS.txt` 相同 | 雜湊不同：刪掉重新下載 |
-
-- InPrivate 不留下載紀錄，但下載的檔案本身會留在「下載」資料夾，所以要在第 4 步刪掉
-- 第 9 步的紀錄要寫：用哪個帳號登入、何時關掉視窗
+退回在第十九冊第 3 節。不重開機（同機另一個專案，《第十八冊之二》A-04）。
 
 ## 5. 什麼情況跟學長說延後
 
