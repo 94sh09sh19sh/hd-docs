@@ -6415,6 +6415,13 @@
 </code></pre></div>
 <ul>
 <li>會印兩個 <code>True</code>／<code>False</code>：第一個是資料夾在不在，第二個是它在不在 OneDrive 的路徑底下；有一段路經過連結（Junction）才會多印一行「… -&gt; …」</li>
+<li><strong>檔案總管網址列最左邊是雲朵圖示加「開始備份」</strong>：那是 Windows 邀請你用 OneDrive 備份「桌面」，表示<strong>沒有</strong>在備份；<strong>不要按</strong>，按了就開始同步（1109 現場：主機的「桌面」就設在 <code>&lt;指定資料夾&gt;</code> 的上層，資料夾名稱裡有 <code>OneDrive</code> 但不是現在同步的那個）。要再確認，在同一個視窗貼：</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="no">[Environment]</span><span class="p">::</span><span class="n">GetFolderPath</span><span class="p">(</span><span class="s1">'Desktop'</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">Get-Item</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span><span class="p">).</span><span class="n">Attributes</span><span class="p">;</span> <span class="nb">Get-ChildItem</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span> <span class="o">-File</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">3</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Attributes</span>
+</code></pre></div>
+<ul>
+<li><strong>沒在同步會看到</strong>：第一行是桌面的實際位置；資料夾是 <code>Directory</code>，檔案只有 <code>Archive</code>（可能多 <code>ReadOnly</code>）。出現 <code>ReparsePoint</code>、<code>Offline</code>、<code>Pinned</code>、<code>Unpinned</code>、<code>RecallOnDataAccess</code> 任何一個 → 有雲端同步在管這些檔，停</li>
 </ul>
 <p>第一個是 <code>True</code> 之後，在同一個視窗確認這是透析清單（只看最新一個 txt 的開頭有沒有 <code>Date:</code> 與 <code>"data_list"</code>，不印病人資料）：</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$f</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span> <span class="n">-Filter</span> <span class="p">*.</span><span class="n">txt</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s1">'^\d{4}-\d{2}\.txt$'</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span><span class="p">;</span> <span class="nv">$f</span><span class="p">.</span><span class="n">Name</span>
