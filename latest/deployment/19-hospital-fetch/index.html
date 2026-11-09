@@ -6505,22 +6505,26 @@
 <span class="nb">cd </span><span class="n">-LiteralPath</span> <span class="nv">$sf</span>
 <span class="nb">dir</span>
 </code></pre></div>
-<p>（在 B-08 的同一個視窗做；<code>$sf</code> 是空的就回 B-08 貼那一行。）用 <code>.exe</code> 的話，把四個下載的檔搬進來（逐一寫檔名，不用 <code>*.exe</code>，免得把醫師「下載」裡其他的 <code>.exe</code> 一起搬走）：</p>
+<p>（在 B-08 的同一個視窗做；<code>$sf</code> 是空的就回 B-08 貼那一行。）</p>
+<ul>
+<li><strong>會看到</strong>：<code>dir</code> 列出 <code>fetch_dialysis.py</code>、<code>transcode_history.py</code>、<code>install-task.ps1</code>、<code>uninstall-task.ps1</code>、<code>config.example.json</code>、<code>README.md</code> 等；提示字元變成 <code>PS …\hd-hospital-fetch&gt;</code></li>
+</ul>
+<p>接著把「下載」資料夾裡的 zip 刪掉：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="s2">"$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"</span>
+</code></pre></div>
+<ul>
+<li><strong>會看到</strong>：不印東西</li>
+</ul>
+<p><strong>只有用 <code>.exe</code> 才做（走 <code>.py</code> 跳過，貼了也只會出現「找不到」紅字、不會動到任何檔）</strong>：把四個下載的檔搬進來，逐一寫檔名，不用 <code>*.exe</code>，免得把醫師「下載」裡其他的 <code>.exe</code> 一起搬走：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Move-Item</span> <span class="s2">"$env:USERPROFILE\Downloads\fetch_dialysis.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\fetch_dialysis_w.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\transcode_history.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\SHA256SUMS.txt"</span> <span class="p">.</span>
 </code></pre></div>
 <ul>
-<li>
-<p>下載的檔名變成 <code>xxx (1).exe</code>：「下載」裡原本就有同名的檔，停，跟學長確認</p>
-</li>
-<li>
-<p><strong>會看到</strong>：<code>dir</code> 列出 <code>fetch_dialysis.py</code>、<code>transcode_history.py</code>、<code>install-task.ps1</code>、<code>uninstall-task.ps1</code>、<code>config.example.json</code>、<code>README.md</code> 等</p>
-</li>
-<li>最後把「下載」資料夾裡的 zip 刪掉：<code>Remove-Item "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"</code></li>
+<li>下載的檔名變成 <code>xxx (1).exe</code>：「下載」裡原本就有同名的檔，停，跟學長確認</li>
 </ul>
 <h3 id="b-11-解除下載標記比對雜湊">B-11 解除下載標記、比對雜湊<a class="headerlink" href="#b-11-解除下載標記比對雜湊" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-ChildItem</span> <span class="n">-Recurse</span> <span class="p">|</span> <span class="nb">Unblock-File</span>
 </code></pre></div>
-<p>用 <code>.exe</code> 的話再比對：</p>
+<p><strong>只有用 <code>.exe</code> 才做（走 <code>.py</code> 跳過）</strong>：比對雜湊：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-FileHash</span> <span class="p">.\</span><span class="n">fetch_dialysis</span><span class="p">.</span><span class="n">exe</span><span class="p">,</span> <span class="p">.\</span><span class="n">fetch_dialysis_w</span><span class="p">.</span><span class="n">exe</span><span class="p">,</span> <span class="p">.\</span><span class="n">transcode_history</span><span class="p">.</span><span class="n">exe</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Hash</span><span class="p">,</span> <span class="n">Path</span>
 <span class="nb">Get-Content</span> <span class="p">.\</span><span class="n">SHA256SUMS</span><span class="p">.</span><span class="n">txt</span>
 </code></pre></div>
