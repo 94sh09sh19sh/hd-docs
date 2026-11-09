@@ -6614,6 +6614,8 @@
 <ul>
 <li>後面多一段「解析不出 JSON 的行」：那個檔 B-13 也不會轉。停，學長同意才在 B-13 加 <code>--allow-bad-json</code></li>
 <li>多一段「API_script 版混寫行」：舊版留下的寫法，不算錯，照常轉</li>
+<li><strong>全部都是 <code>utf-8</code>（「要轉 0 個」）</strong>：不用轉碼，<strong>B-13 跳過</strong>，直接 B-14（1109 現場 24 個檔全是 UTF-8，學長之前已轉過）</li>
+<li><code>utf-8</code> 的檔寫「解析不出 JSON 的行」：不轉碼就不受影響；不是當月檔就只回報學長（1109 現場 <code>2026-02.txt</code> 第 49 行一行）</li>
 <li><strong>當月檔</strong>（例如 <code>2026-11.txt</code>）如果停在「混合」「無法判斷」，B-14 起不能做（腳本不會往非 UTF-8 的檔附加）</li>
 </ul>
 <h3 id="b-13-轉碼實轉">B-13 轉碼：實轉<a class="headerlink" href="#b-13-轉碼實轉" title="Permanent link">&para;</a></h3>
@@ -6761,14 +6763,14 @@
 <h3 id="中途收工b-17-排程還沒裝就得走">中途收工（B-17 排程還沒裝就得走）<a class="headerlink" href="#中途收工b-17-排程還沒裝就得走" title="Permanent link">&para;</a></h3>
 <ol>
 <li>預演還在跑：等它印完、拍下整份清單（每個檔的編碼）；來不及就按 <code>Ctrl+C</code>（預演不寫檔，不會壞任何東西）</li>
-<li><strong>不要在快走前才開始 B-13 實轉</strong>：要再讀一次全部檔、整份備份、逐檔轉寫與比對，7.7 GB 估計 30 分鐘以上；中途被關掉會留下暫存檔，下次要先處理</li>
+<li>B-12 寫「要轉 0 個」就沒有 B-13；有要轉的話，<strong>不要在快走前才開始 B-13 實轉</strong>：要再讀一次全部檔、整份備份、逐檔轉寫與比對，7.7 GB 估計 30 分鐘以上；中途被關掉會留下暫存檔，下次要先處理</li>
 <li>看指定資料夾那顆磁碟的可用空間（B-13 會把全部 txt 備份一份），在同一個視窗貼：</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="s2">"{0} 槽可用 {1:N1} GB"</span> <span class="o">-f</span> <span class="nv">$dir</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="n">1</span><span class="p">),</span> <span class="p">((</span><span class="nb">Get-PSDrive</span> <span class="nv">$dir</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="n">1</span><span class="p">)).</span><span class="n">Free</span><span class="p">/</span><span class="n">1GB</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>
-<p>可用空間要至少是 B-12「合計」的 1.5 倍；不夠就回報，下次先跟學長清空間</p>
+<p>有要轉的檔時，可用空間要至少是 B-12「合計」的 1.5 倍；不夠就回報，下次先跟學長清空間（「要轉 0 個」可跳過這一點）</p>
 </li>
 <li>
 <p>確認沒留下會自己跑的東西與下載檔：</p>
