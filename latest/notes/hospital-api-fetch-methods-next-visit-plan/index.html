@@ -6081,6 +6081,7 @@
 <li>進院前要有答案的 <code>hb</code> 題目 6 題：A-5、I-2、I-6、I-8、I-10、I-11（第 3 節），都改排到《之二》的「B-16 前」</li>
 <li>進院前開發端要做 T-7～T-14（第 4 節）；<strong>學長的程式原樣不改</strong>，要加的東西都包在外面</li>
 <li>現場先做完透析清單 B-16～B-19，再做 <code>hb</code>；時間從 30 分鐘改成約 60 分鐘（第 5 節）</li>
+<li><code>Hb_API_Fetch</code> 的檔不能帶出、不能拍：現場改跑《第十九冊之一》第 3 節的只讀盤點（只印統計、不印病歷號與數值），I-10、I-8、I-3、I-9 與 I-2 前半現場就有答案，結論抄在紙上帶回（第 5 節第 2 步）</li>
 <li><strong><code>hb</code> 卡住不擋透析清單</strong>：端點沒答、主機上已有程式在跑、現有月份檔有壞行，<code>hb</code> 就延後，透析清單照做（第 6 節）</li>
 </ul>
 <h2 id="1-目標與已定的事">1. 目標與已定的事<a class="headerlink" href="#1-目標與已定的事" title="Permanent link">&para;</a></h2>
@@ -6241,6 +6242,7 @@
 </tbody>
 </table>
 <p>K-5（下一次的時段）要留的時間從 30 分鐘改成約 60 分鐘。</p>
+<p>學長答不出來或來不及答的，現場用《<a href="../../deployment/19a-hospital-fetch-reference/">第十九冊之一</a>》第 3 節的盤點查：I-10、I-8（主機上有實際的 <code>config.json</code> 時）、I-2 前半（病人清單行數），連同《之二》列「不急」的 I-3、I-9 一起有答案。<code>Hb_API_Fetch</code> 的檔不能帶出、不能拍，盤點只讀、只印統計，第 5 段結論抄在紙上帶回。</p>
 <h2 id="4-進院前開發端的工作另開對話照這張表做">4. 進院前開發端的工作（另開對話照這張表做）<a class="headerlink" href="#4-進院前開發端的工作另開對話照這張表做" title="Permanent link">&para;</a></h2>
 <p>編號接《之三》的 T-1～T-6。都在 <code>hd-hospital-fetch</code> 做，v0 只改文件。</p>
 <table>
@@ -6273,7 +6275,7 @@
 </tr>
 <tr>
 <td>T-10</td>
-<td><code>hb/check_hb_store.py</code>：<strong>只讀</strong>檢查既有 <code>raw_txt</code>，每個月份檔印行數與壞掉的行號，不印內容；另寫「預演」的做法：把 <code>hospital_dataset</code> 複製一份、設定的 <code>output_dir</code> 指過去跑一輪</td>
+<td><code>hb/check_hb_store.py</code>：<strong>只讀</strong>檢查既有 <code>raw_txt</code>，每個月份檔印行數與壞掉的行號，不印內容；另寫「預演」的做法：把 <code>hospital_dataset</code> 複製一份、設定的 <code>output_dir</code> 指過去跑一輪。現場盤點（第十九冊之一第 3 節）已經會印壞行，可直接收成這支，不必重寫</td>
 <td>0.5 時</td>
 <td>用自己造的好檔、壞檔、多欄位檔各跑一次，結果對</td>
 </tr>
@@ -6306,10 +6308,10 @@
 <h2 id="5-現場順序約-60-分鐘">5. 現場順序（約 60 分鐘）<a class="headerlink" href="#5-現場順序約-60-分鐘" title="Permanent link">&para;</a></h2>
 <ol>
 <li>透析清單：第十九冊之二第 6.3 節——B-16 前的檢查一、檢查二，K-1 查清；B-16 跑一輪 → B-17 裝排程 → B-18 看三輪 → B-19 教學長（約 30 分鐘）</li>
-<li><code>hb</code> 看現況（I-10）：<code>Hb_API_Fetch</code> 底下有哪些檔（只列檔名與時間）、工作排程器與正在跑的 Python 有沒有它；有在跑就停在這裡、只記錄</li>
+<li><code>hb</code> 看現況與盤點（約 10 分鐘）：照《第十九冊之一》3.1 查檔案時間、排程與正在跑的 Python（I-10），再照 3.2～3.3 跑盤點、抄第 5 段結論；有程式在跑就停在這裡、只記錄（盤點照樣可以跑）</li>
 <li>帶進：新版 Release 已在 B-09 一起下載的話直接用；沒有就照 B-09～B-11 再下載一次</li>
 <li>填設定：端點、<code>active_patients.txt</code>（或 T-11 產生）；設定檔不進 repo</li>
-<li>只讀檢查既有 <code>raw_txt</code>（T-10）；有壞行就停，備份交學長</li>
+<li>只讀檢查既有 <code>raw_txt</code>（T-10；第 2 步盤點的「壞」已經看過就跳過）；有壞行就停，備份交學長</li>
 <li>預演：輸出指到 <code>hospital_dataset</code> 的複本跑一輪，看狀態檔的四個數</li>
 <li>正式跑一輪 → 裝排程 → 手動觸發一次看狀態檔（等不了 6 小時）→ 教學長怎麼停、怎麼看狀態檔</li>
 <li>第十九冊 B-20 記錄（兩支都寫進私人紀錄）→ B-21 收工</li>
