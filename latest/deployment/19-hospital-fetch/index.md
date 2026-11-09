@@ -11,10 +11,10 @@
 ## 摘要
 
 - 時間：1109（一）15:30 起，學長在場；全部約 60 分鐘，順序是 B-01～B-21
-- **這一冊直接開在部署主機上**：主機可以連外網，用主機的 Edge 開公開文件站的這一冊，指令從頁面複製、貼進 PowerShell；不印紙本、不用手機看手冊（B-04）
+- **這一冊直接開在部署主機上**：主機可以連外網，用主機的 Edge 或 Chrome 開公開文件站的這一冊（1109 用的是 Chrome），指令從頁面複製、貼進 PowerShell；不印紙本、不用手機看手冊（B-04）
 - 出發前（B-01～B-03）：帶手機（兩步驟驗證、`values.md`、現場筆記）、確認自己的 GitHub 開得了 Release 頁、手機能看 `values.md`
 - 先看現況（B-04～B-08）：帳號、Python、OneDrive、有沒有舊腳本在跑、兩個位置
-- 下載與放好（B-09～B-11）：InPrivate 視窗登入自己的 GitHub 下載，關視窗、解壓縮、解除下載標記
+- 下載與放好（B-09～B-11）：InPrivate（Chrome 叫無痕）視窗登入自己的 GitHub 下載，關視窗、解壓縮、解除下載標記
 - 轉碼（B-12～B-13）：歷史 txt 從 cp950 轉 UTF-8，先預演再實轉，隨時可還原
 - 試跑（B-14～B-16）：填設定、預演、跑一輪，看狀態檔與檔尾
 - 排程（B-17～B-19）：裝排程、看三輪、教學長怎麼停與怎麼看
@@ -25,7 +25,7 @@
 1. **這支腳本做什麼**：每 3 分鐘問院方 API「今天的透析清單」，把**新的或變了的列**附加到 `<指定資料夾>\YYYY-MM.txt`（一個月一個檔），再把這一輪的結果寫進狀態檔 `fetch-status.json`。同一筆資料不會重複寫
 1. **它會動到的檔**：只有三處——`<指定資料夾>` 裡的當月 txt（只附加、不改舊的）、`<腳本資料夾>` 裡的 `fetch-status.json` 與 `state\`。轉碼工具另外會在 `<指定資料夾>` 底下建一個 `_backup_日期-時間\` 備份
 1. **兩種跑法**：主機有 Python 3.8 以上就用 `.py`；沒有就用 `.exe`（學長決定）。本冊的指令寫 `.py` 版；用 `.exe` 的話，`py fetch_dialysis.py` 換成 `.\fetch_dialysis.exe`、`py transcode_history.py` 換成 `.\transcode_history.exe`，其餘照舊
-1. **怎麼開 PowerShell**：按「開始」→ 打 `powershell` →「Windows PowerShell」（**不要**選「以系統管理員身分執行」）。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 `Alt+Tab` 在瀏覽器與 PowerShell 之間切換
+1. **怎麼開 PowerShell**：按「開始」→ 打 `powershell` →「Windows PowerShell」（**不要**選「以系統管理員身分執行」，也**不要**用 `Win+X` 再按 `A`——那是系統管理員；1109 之前每次進院都是這樣開的）。搜尋到之後直接按 Enter 是一般權限，`Ctrl+Shift+Enter` 才是系統管理員。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 `Alt+Tab` 在瀏覽器與 PowerShell 之間切換
 1. **結束碼**：每跑完一支，接著打 `$LASTEXITCODE` 看數字。`0` 是成功（或「跳過」），`1` 是失敗，`2` 是參數或設定錯
 1. **兩個變數**：B-06 設 `$dir`（指定資料夾）、B-08 設 `$sf`（腳本資料夾），之後的指令直接用，不用打路徑。PowerShell 視窗關掉就會不見；重開後先貼這一行，出現提示時貼上指定資料夾的路徑（從檔案總管網址列複製）：`$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"', "'"); $sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; cd -LiteralPath $sf`（腳本資料夾用 `C:\hd-hospital-fetch` 的話，`$sf =` 後面改成 `'C:\hd-hospital-fetch'`）
 
@@ -42,7 +42,7 @@
 ### B-04 到對的主機、對的帳號，把這一冊開在主機上
 
 1. 現場三台裡**最右邊那台**
-1. 開 Edge 的**一般視窗**（不是 InPrivate），到公開文件站，左邊選「部署手冊」→「第十九冊」。之後的指令都從這一頁複製；B-09 的 InPrivate 是另一個視窗，關掉它不會關到手冊
+1. 開 Edge 或 Chrome 的**一般視窗**（不是 InPrivate／無痕；**一般視窗不要登入 GitHub**，公開文件站不用登入），到公開文件站，左邊選「部署手冊」→「第十九冊」。之後的指令都從這一頁複製；B-09 的 InPrivate 是另一個視窗，關掉它不會關到手冊
 1. 開 PowerShell（第 0 節第 4 點），打：
 
 ```
@@ -154,7 +154,7 @@ $sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; $sf; Test-Path -L
 
 ### B-09 下載（InPrivate 視窗）
 
-1. 開 Edge，按 `Ctrl+Shift+N` 開 InPrivate 視窗
+1. 開 Edge 按 `Ctrl+Shift+N` 開 InPrivate 視窗；用 Chrome 也是 `Ctrl+Shift+N`，叫「無痕視窗」（1109 用 Chrome 無痕）
 1. 開啟 `github.com/login`，登入**自己的** GitHub；不勾「保持登入」；瀏覽器問要不要存密碼，選「永不」
 1. 在 InPrivate 視窗的網址列貼上 `https://github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0`，按 Enter；捲到頁面最下面的「Assets」區塊（收合著就點開），點 `Source code (zip)` 下載。顯示 404 是登入的帳號不對（repo 是私人的）。跳出「另存新檔」選位置時，左邊選「下載」（`C:\Users\<帳號>\Downloads`）、檔名不改，按「存檔」；B-10 的指令從這裡找 zip
 1. 用 `.exe` 的話，再下載 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`、`transcode_history.exe`、`SHA256SUMS.txt`
@@ -301,6 +301,32 @@ py fetch_dialysis.py --dry-run
 
 ### B-16 跑一輪、看結果
 
+**先做兩個檢查（1109 起）**。B-16 起會真的寫進當月檔，寫之前確認：這個視窗寫得進腳本資料夾、當月檔沒有別的程式在寫。`$dir`、`$sf` 是空的就照第 0 節第 6 點先設好。
+
+檢查一，權限（1109 一開始用系統管理員開 PowerShell，重開後不確定是哪一種，B-10 的腳本資料夾可能是系統管理員建的）：
+
+```
+([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+$w = Join-Path $sf 'write-test.tmp'; Set-Content -LiteralPath $w 'x'; Test-Path -LiteralPath $w; Remove-Item -LiteralPath $w
+```
+
+- **會看到**：`False`、`True`（一般權限，寫得進去）
+- 第一個 `True` 而且視窗標題有「系統管理員」：關掉，照第 0 節第 4 點重開一般的再檢查一次
+- 第一個 `True` 但標題沒有「系統管理員」：這台關掉了 UAC，一般視窗也是最高權限，照樣往下
+- 第二行出現紅字「存取被拒」：一般權限寫不進腳本資料夾，停，回報
+
+檢查二，當月檔還有沒有別的程式在寫（1109 時當月檔已有上千段，是學長從別處搬來的，來源還有沒有在寫不知道）。只印時間與長度，不印病人資料：
+
+```
+$m = Join-Path $dir ((Get-Date -Format 'yyyy-MM') + '.txt'); (Get-Item -LiteralPath $m).LastWriteTime
+Get-Content -LiteralPath $m -Tail 6 -Encoding UTF8 | ForEach-Object { if ($_ -like 'Date:*') { $_ } else { '（{0} 字）' -f $_.Length } }
+```
+
+- **會看到**：檔案的修改時間；接著最後幾行，`Date:` 行印原文，其他行只印字數（例如 `（96000 字）`、`（0 字）`）
+- 修改時間與最後一個 `Date:` 都在**幾分鐘內**：有別的程式在寫，停，跟學長確認是誰在寫、要不要先停掉
+- 時間是幾天前：等 5 分鐘再貼一次，修改時間沒變就往下
+- 每段之間夾一行 `（0 字）`（空行）是舊檔的寫法，本腳本每段只寫 `Date:` 與 JSON 兩行，不夾空行；記下來（B-20），不影響往下做
+
 ```
 py fetch_dialysis.py --once
 $LASTEXITCODE
@@ -381,12 +407,12 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 - B-12 每個檔的編碼與大小；B-13 的備份資料夾名稱與還原指令
 - B-16 的回應列數；B-18 三輪的時間與 `written_rows`
 - 每個斷點學長怎麼決定
-- B-09 用哪個 GitHub 帳號登入、幾點關掉 InPrivate 視窗
+- B-09 用哪個 GitHub 帳號登入、有沒有要求兩步驟驗證、幾點關掉 InPrivate／無痕視窗
 - 不記：院方回應的內容、病人的姓名與病歷號
 
 ### B-21 收工前看一眼
 
-- InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 `.exe`；最後關掉開著這一冊的 Edge 視窗（公開文件站，不留登入，留下瀏覽紀錄也無妨）
+- InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 `.exe`；最後關掉開著這一冊的瀏覽器視窗（公開文件站，不留登入，留下瀏覽紀錄也無妨）；一般視窗如果登入過 GitHub，先登出
 - `Get-ScheduledTaskInfo -TaskName hd-hospital-fetch` 的 `LastTaskResult` 是 `0`
 - 本系統沒有動：`.env` 的院方位址維持空白（讀檔模式排第二次進院）
 - **不重開機**（同一台還有另一個專案，第十八冊之二 A-04）
@@ -414,7 +440,7 @@ Test-Path "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"
 
 **收工-4** 腳本資料夾留著（程式檔，做過 B-14 的話還有 `config.json`；沒有排程就不會自己跑、不會碰資料），跟學長說一聲。
 
-**收工-5** 關掉 PowerShell 與開著這一冊的 Edge 視窗，確認 InPrivate 視窗已關；**不重開機**。
+**收工-5** 關掉 PowerShell 與開著這一冊的瀏覽器視窗，確認 InPrivate／無痕視窗已關、一般視窗沒有登入 GitHub；**不重開機**。
 
 **收工-6** 問學長、帶回來：B-04 的帳號是不是醫師的；下次接著做（B-16 起，含 B-18 看三輪約 10 分鐘）哪個時段可以；檔案總管的「開始備份」不要按。
 

@@ -5876,6 +5876,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19b-fourth-visit-record/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十九冊之二 · 第四次進院紀錄（1109，做到 B-15）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6355,10 +6383,10 @@
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
 <li>時間：1109（一）15:30 起，學長在場；全部約 60 分鐘，順序是 B-01～B-21</li>
-<li><strong>這一冊直接開在部署主機上</strong>：主機可以連外網，用主機的 Edge 開公開文件站的這一冊，指令從頁面複製、貼進 PowerShell；不印紙本、不用手機看手冊（B-04）</li>
+<li><strong>這一冊直接開在部署主機上</strong>：主機可以連外網，用主機的 Edge 或 Chrome 開公開文件站的這一冊（1109 用的是 Chrome），指令從頁面複製、貼進 PowerShell；不印紙本、不用手機看手冊（B-04）</li>
 <li>出發前（B-01～B-03）：帶手機（兩步驟驗證、<code>values.md</code>、現場筆記）、確認自己的 GitHub 開得了 Release 頁、手機能看 <code>values.md</code></li>
 <li>先看現況（B-04～B-08）：帳號、Python、OneDrive、有沒有舊腳本在跑、兩個位置</li>
-<li>下載與放好（B-09～B-11）：InPrivate 視窗登入自己的 GitHub 下載，關視窗、解壓縮、解除下載標記</li>
+<li>下載與放好（B-09～B-11）：InPrivate（Chrome 叫無痕）視窗登入自己的 GitHub 下載，關視窗、解壓縮、解除下載標記</li>
 <li>轉碼（B-12～B-13）：歷史 txt 從 cp950 轉 UTF-8，先預演再實轉，隨時可還原</li>
 <li>試跑（B-14～B-16）：填設定、預演、跑一輪，看狀態檔與檔尾</li>
 <li>排程（B-17～B-19）：裝排程、看三輪、教學長怎麼停與怎麼看</li>
@@ -6369,7 +6397,7 @@
 <li><strong>這支腳本做什麼</strong>：每 3 分鐘問院方 API「今天的透析清單」，把<strong>新的或變了的列</strong>附加到 <code>&lt;指定資料夾&gt;\YYYY-MM.txt</code>（一個月一個檔），再把這一輪的結果寫進狀態檔 <code>fetch-status.json</code>。同一筆資料不會重複寫</li>
 <li><strong>它會動到的檔</strong>：只有三處——<code>&lt;指定資料夾&gt;</code> 裡的當月 txt（只附加、不改舊的）、<code>&lt;腳本資料夾&gt;</code> 裡的 <code>fetch-status.json</code> 與 <code>state\</code>。轉碼工具另外會在 <code>&lt;指定資料夾&gt;</code> 底下建一個 <code>_backup_日期-時間\</code> 備份</li>
 <li><strong>兩種跑法</strong>：主機有 Python 3.8 以上就用 <code>.py</code>；沒有就用 <code>.exe</code>（學長決定）。本冊的指令寫 <code>.py</code> 版；用 <code>.exe</code> 的話，<code>py fetch_dialysis.py</code> 換成 <code>.\fetch_dialysis.exe</code>、<code>py transcode_history.py</code> 換成 <code>.\transcode_history.exe</code>，其餘照舊</li>
-<li><strong>怎麼開 PowerShell</strong>：按「開始」→ 打 <code>powershell</code> →「Windows PowerShell」（<strong>不要</strong>選「以系統管理員身分執行」）。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 <code>Alt+Tab</code> 在瀏覽器與 PowerShell 之間切換</li>
+<li><strong>怎麼開 PowerShell</strong>：按「開始」→ 打 <code>powershell</code> →「Windows PowerShell」（<strong>不要</strong>選「以系統管理員身分執行」，也<strong>不要</strong>用 <code>Win+X</code> 再按 <code>A</code>——那是系統管理員；1109 之前每次進院都是這樣開的）。搜尋到之後直接按 Enter 是一般權限，<code>Ctrl+Shift+Enter</code> 才是系統管理員。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 <code>Alt+Tab</code> 在瀏覽器與 PowerShell 之間切換</li>
 <li><strong>結束碼</strong>：每跑完一支，接著打 <code>$LASTEXITCODE</code> 看數字。<code>0</code> 是成功（或「跳過」），<code>1</code> 是失敗，<code>2</code> 是參數或設定錯</li>
 <li><strong>兩個變數</strong>：B-06 設 <code>$dir</code>（指定資料夾）、B-08 設 <code>$sf</code>（腳本資料夾），之後的指令直接用，不用打路徑。PowerShell 視窗關掉就會不見；重開後先貼這一行，出現提示時貼上指定資料夾的路徑（從檔案總管網址列複製）：<code>$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"', "'"); $sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; cd -LiteralPath $sf</code>（腳本資料夾用 <code>C:\hd-hospital-fetch</code> 的話，<code>$sf =</code> 後面改成 <code>'C:\hd-hospital-fetch'</code>）</li>
 </ol>
@@ -6404,7 +6432,7 @@
 <h3 id="b-04-到對的主機對的帳號把這一冊開在主機上">B-04 到對的主機、對的帳號，把這一冊開在主機上<a class="headerlink" href="#b-04-到對的主機對的帳號把這一冊開在主機上" title="Permanent link">&para;</a></h3>
 <ol>
 <li>現場三台裡<strong>最右邊那台</strong></li>
-<li>開 Edge 的<strong>一般視窗</strong>（不是 InPrivate），到公開文件站，左邊選「部署手冊」→「第十九冊」。之後的指令都從這一頁複製；B-09 的 InPrivate 是另一個視窗，關掉它不會關到手冊</li>
+<li>開 Edge 或 Chrome 的<strong>一般視窗</strong>（不是 InPrivate／無痕；<strong>一般視窗不要登入 GitHub</strong>，公開文件站不用登入），到公開文件站，左邊選「部署手冊」→「第十九冊」。之後的指令都從這一頁複製；B-09 的 InPrivate 是另一個視窗，關掉它不會關到手冊</li>
 <li>開 PowerShell（第 0 節第 4 點），打：</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">whoami</span>
@@ -6510,7 +6538,7 @@
 </ul>
 <h3 id="b-09-下載inprivate-視窗">B-09 下載（InPrivate 視窗）<a class="headerlink" href="#b-09-下載inprivate-視窗" title="Permanent link">&para;</a></h3>
 <ol>
-<li>開 Edge，按 <code>Ctrl+Shift+N</code> 開 InPrivate 視窗</li>
+<li>開 Edge 按 <code>Ctrl+Shift+N</code> 開 InPrivate 視窗；用 Chrome 也是 <code>Ctrl+Shift+N</code>，叫「無痕視窗」（1109 用 Chrome 無痕）</li>
 <li>開啟 <code>github.com/login</code>，登入<strong>自己的</strong> GitHub；不勾「保持登入」；瀏覽器問要不要存密碼，選「永不」</li>
 <li>在 InPrivate 視窗的網址列貼上 <code>https://github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0</code>，按 Enter；捲到頁面最下面的「Assets」區塊（收合著就點開），點 <code>Source code (zip)</code> 下載。顯示 404 是登入的帳號不對（repo 是私人的）。跳出「另存新檔」選位置時，左邊選「下載」（<code>C:\Users\&lt;帳號&gt;\Downloads</code>）、檔名不改，按「存檔」；B-10 的指令從這裡找 zip</li>
 <li>用 <code>.exe</code> 的話，再下載 <code>fetch_dialysis.exe</code>、<code>fetch_dialysis_w.exe</code>、<code>transcode_history.exe</code>、<code>SHA256SUMS.txt</code></li>
@@ -6668,6 +6696,27 @@
 <li><strong>不對的話</strong>：照《<a href="../19a-hospital-fetch-reference/">第十九冊之一</a>》第 1 節「出錯對照」查；查不出來就停</li>
 </ul>
 <h3 id="b-16-跑一輪看結果">B-16 跑一輪、看結果<a class="headerlink" href="#b-16-跑一輪看結果" title="Permanent link">&para;</a></h3>
+<p><strong>先做兩個檢查（1109 起）</strong>。B-16 起會真的寫進當月檔，寫之前確認：這個視窗寫得進腳本資料夾、當月檔沒有別的程式在寫。<code>$dir</code>、<code>$sf</code> 是空的就照第 0 節第 6 點先設好。</p>
+<p>檢查一，權限（1109 一開始用系統管理員開 PowerShell，重開後不確定是哪一種，B-10 的腳本資料夾可能是系統管理員建的）：</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="no">[Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]</span><span class="p">::</span><span class="n">GetCurrent</span><span class="p">()).</span><span class="n">IsInRole</span><span class="p">(</span><span class="no">[Security.Principal.WindowsBuiltInRole]</span><span class="p">::</span><span class="n">Administrator</span><span class="p">)</span>
+<span class="nv">$w</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="nv">$sf</span> <span class="s1">'write-test.tmp'</span><span class="p">;</span> <span class="nb">Set-Content</span> <span class="n">-LiteralPath</span> <span class="nv">$w</span> <span class="s1">'x'</span><span class="p">;</span> <span class="nb">Test-Path</span> <span class="n">-LiteralPath</span> <span class="nv">$w</span><span class="p">;</span> <span class="nb">Remove-Item</span> <span class="n">-LiteralPath</span> <span class="nv">$w</span>
+</code></pre></div>
+<ul>
+<li><strong>會看到</strong>：<code>False</code>、<code>True</code>（一般權限，寫得進去）</li>
+<li>第一個 <code>True</code> 而且視窗標題有「系統管理員」：關掉，照第 0 節第 4 點重開一般的再檢查一次</li>
+<li>第一個 <code>True</code> 但標題沒有「系統管理員」：這台關掉了 UAC，一般視窗也是最高權限，照樣往下</li>
+<li>第二行出現紅字「存取被拒」：一般權限寫不進腳本資料夾，停，回報</li>
+</ul>
+<p>檢查二，當月檔還有沒有別的程式在寫（1109 時當月檔已有上千段，是學長從別處搬來的，來源還有沒有在寫不知道）。只印時間與長度，不印病人資料：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$m</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="nv">$dir</span> <span class="p">((</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">'yyyy-MM'</span><span class="p">)</span> <span class="p">+</span> <span class="s1">'.txt'</span><span class="p">);</span> <span class="p">(</span><span class="nb">Get-Item</span> <span class="n">-LiteralPath</span> <span class="nv">$m</span><span class="p">).</span><span class="n">LastWriteTime</span>
+<span class="nb">Get-Content</span> <span class="n">-LiteralPath</span> <span class="nv">$m</span> <span class="n">-Tail</span> <span class="n">6</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span> <span class="o">-like</span> <span class="s1">'Date:*'</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$_</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s1">'（{0} 字）'</span> <span class="o">-f</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Length</span> <span class="p">}</span> <span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><strong>會看到</strong>：檔案的修改時間；接著最後幾行，<code>Date:</code> 行印原文，其他行只印字數（例如 <code>（96000 字）</code>、<code>（0 字）</code>）</li>
+<li>修改時間與最後一個 <code>Date:</code> 都在<strong>幾分鐘內</strong>：有別的程式在寫，停，跟學長確認是誰在寫、要不要先停掉</li>
+<li>時間是幾天前：等 5 分鐘再貼一次，修改時間沒變就往下</li>
+<li>每段之間夾一行 <code>（0 字）</code>（空行）是舊檔的寫法，本腳本每段只寫 <code>Date:</code> 與 JSON 兩行，不夾空行；記下來（B-20），不影響往下做</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">fetch_dialysis</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-once</span>
 <span class="nv">$LASTEXITCODE</span>
 <span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="p">.\</span><span class="n">fetch-status</span><span class="p">.</span><span class="n">json</span>
@@ -6750,12 +6799,12 @@
 <li>B-12 每個檔的編碼與大小；B-13 的備份資料夾名稱與還原指令</li>
 <li>B-16 的回應列數；B-18 三輪的時間與 <code>written_rows</code></li>
 <li>每個斷點學長怎麼決定</li>
-<li>B-09 用哪個 GitHub 帳號登入、幾點關掉 InPrivate 視窗</li>
+<li>B-09 用哪個 GitHub 帳號登入、有沒有要求兩步驟驗證、幾點關掉 InPrivate／無痕視窗</li>
 <li>不記：院方回應的內容、病人的姓名與病歷號</li>
 </ul>
 <h3 id="b-21-收工前看一眼">B-21 收工前看一眼<a class="headerlink" href="#b-21-收工前看一眼" title="Permanent link">&para;</a></h3>
 <ul>
-<li>InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 <code>.exe</code>；最後關掉開著這一冊的 Edge 視窗（公開文件站，不留登入，留下瀏覽紀錄也無妨）</li>
+<li>InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 <code>.exe</code>；最後關掉開著這一冊的瀏覽器視窗（公開文件站，不留登入，留下瀏覽紀錄也無妨）；一般視窗如果登入過 GitHub，先登出</li>
 <li><code>Get-ScheduledTaskInfo -TaskName hd-hospital-fetch</code> 的 <code>LastTaskResult</code> 是 <code>0</code></li>
 <li>本系統沒有動：<code>.env</code> 的院方位址維持空白（讀檔模式排第二次進院）</li>
 <li><strong>不重開機</strong>（同一台還有另一個專案，第十八冊之二 A-04）</li>
@@ -6774,7 +6823,7 @@
 <li><strong>會看到</strong>：第一行沒印東西（排程沒裝）、第二行 <code>False</code>（zip 已刪）</li>
 </ul>
 <p><strong>收工-4</strong> 腳本資料夾留著（程式檔，做過 B-14 的話還有 <code>config.json</code>；沒有排程就不會自己跑、不會碰資料），跟學長說一聲。</p>
-<p><strong>收工-5</strong> 關掉 PowerShell 與開著這一冊的 Edge 視窗，確認 InPrivate 視窗已關；<strong>不重開機</strong>。</p>
+<p><strong>收工-5</strong> 關掉 PowerShell 與開著這一冊的瀏覽器視窗，確認 InPrivate／無痕視窗已關、一般視窗沒有登入 GitHub；<strong>不重開機</strong>。</p>
 <p><strong>收工-6</strong> 問學長、帶回來：B-04 的帳號是不是醫師的；下次接著做（B-16 起，含 B-18 看三輪約 10 分鐘）哪個時段可以；檔案總管的「開始備份」不要按。</p>
 <p><strong>收工-7</strong> B-20 照記：做到哪一步、各步驟的照片、學長的決定。</p>
 <h2 id="3-退回">3. 退回<a class="headerlink" href="#3-退回" title="Permanent link">&para;</a></h2>
