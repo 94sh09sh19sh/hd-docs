@@ -74,15 +74,27 @@ $env:OneDrive; $env:OneDriveCommercial
 Get-Process | Where-Object { $_.Name -match 'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box' } | Select-Object Name
 ```
 
-再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。接著點檔案總管上方的網址列、按 `Ctrl+C` 複製路徑，回 PowerShell 貼下面這段；出現「貼上指定資料夾的路徑」時按滑鼠右鍵貼上、按 Enter：
+再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。`<指定資料夾>` 是**透析清單**的資料夾，`values.md` 裡結尾是 `IDH_interface` 的那一個；`Hb_API_Fetch` 底下（含 `hospital_dataset\raw_txt`）是檢驗資料，裡面也有「年-月.txt」，**不是這一個**（1109 現場選錯過）。
+
+接著點檔案總管上方的網址列、按 `Ctrl+C` 複製路徑，回 PowerShell 貼下面這段。**指令原樣貼、不要把路徑改進指令裡**；出現「貼上指定資料夾的路徑:」時才按滑鼠右鍵貼上路徑（前後有引號也沒關係）、按 Enter：
 
 ```
-$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"'); Test-Path -LiteralPath $dir
+$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"', "'"); Test-Path -LiteralPath $dir
 $dir.StartsWith("$env:OneDrive\", 'OrdinalIgnoreCase')
 $p = Get-Item -LiteralPath $dir; while ($p) { if ($p.LinkType) { "$($p.FullName) -> $($p.Target)" }; $p = $p.Parent }
 ```
 
 - 會印兩個 `True`／`False`：第一個是資料夾在不在，第二個是它在不在 OneDrive 的路徑底下；有一段路經過連結（Junction）才會多印一行「… -> …」
+
+第一個是 `True` 之後，在同一個視窗確認這是透析清單（只看最新一個 txt 的開頭有沒有 `Date:` 與 `"data_list"`，不印病人資料）：
+
+```
+$f = Get-ChildItem -LiteralPath $dir -Filter *.txt | Sort-Object Name | Select-Object -Last 1; $f.Name
+$h = (Get-Content -LiteralPath $f.FullName -TotalCount 2) -join ' '; $h.StartsWith('Date:'); $h.Contains('"data_list"')
+```
+
+- **會看到**：最新的檔名（例如 `2026-11.txt`），接著兩個 `True`
+- **不是兩個 `True`**：這不是透析清單的資料夾。停，請學長指出正確的那一個
 - **在同步**：第二個是 `True`，或檔案旁有同步圖示
 - **在同步而醫師還沒同意**：停。學長當場聯絡醫師；聯絡不到就只做到 B-13（轉碼，不產生新的留底），B-14 起不做
 - **多印了「… -> …」**：資料夾經過連結，實際位置可能在 OneDrive 底下。停，跟學長確認
