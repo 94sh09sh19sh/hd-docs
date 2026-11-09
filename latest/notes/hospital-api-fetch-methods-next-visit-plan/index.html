@@ -2832,6 +2832,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. 進院前開發端的工作（另開對話照這張表做）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-1110-完成狀況" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 1110 完成狀況
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5782,6 +5799,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/19c-hb-fetch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第十九冊之三 · 檢驗資料（hb）抓取的安裝
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6006,6 +6051,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. 進院前開發端的工作（另開對話照這張表做）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-1110-完成狀況" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 1110 完成狀況
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6079,7 +6141,7 @@
 <li>檢驗資料那支照透析清單同一套：GitHub Release 帶進主機、跑 <code>.py</code>、工作排程器 <code>--once</code>，但<strong>另開一個排程、每 6 小時</strong>，輸出在 <code>Hb_API_Fetch</code>，兩支不共用設定（第 1 節）</li>
 <li>兩支的差別在第 2 節：學長的程式沒有狀態檔、靠工作目錄找相對路徑、<code>pythonw</code> 跑時什麼都不印、現有月份檔有一行壞掉就整支停</li>
 <li>進院前要有答案的 <code>hb</code> 題目 6 題：A-5、I-2、I-6、I-8、I-10、I-11（第 3 節），都改排到《之二》的「B-16 前」</li>
-<li>進院前開發端要做 T-7～T-14（第 4 節）；<strong>學長的程式原樣不改</strong>，要加的東西都包在外面</li>
+<li>進院前開發端要做 T-7～T-14（第 4 節）；<strong>學長的程式原樣不改</strong>，要加的東西都包在外面。<strong>1110 做完 T-7、T-8、T-10～T-14</strong>（<code>hd-hospital-fetch</code> v0.2.0、測試 62 項過、手冊《<a href="../../deployment/19c-hb-fetch/">第十九冊之三</a>》）；T-9 的排程腳本寫好、還沒在開發機實際註冊過（4.1 節）</li>
 <li>現場先做完透析清單 B-16～B-19，再做 <code>hb</code>；時間從 30 分鐘改成約 60 分鐘（第 5 節）</li>
 <li><code>Hb_API_Fetch</code> 的檔不能帶出、不能拍：現場改跑《第十九冊之一》第 3 節的只讀盤點（只印統計、不印病歷號與數值），I-10、I-8、I-3、I-9 與 I-2 前半現場就有答案，結論抄在紙上帶回（第 5 節第 2 步）</li>
 <li><strong><code>hb</code> 卡住不擋透析清單</strong>：端點沒答、主機上已有程式在跑、現有月份檔有壞行，<code>hb</code> 就延後，透析清單照做（第 6 節）</li>
@@ -6305,13 +6367,57 @@
 </tr>
 </tbody>
 </table>
+<h3 id="41-1110-完成狀況">4.1 1110 完成狀況<a class="headerlink" href="#41-1110-完成狀況" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-7</td>
+<td>三個檔收在 <code>hb/</code>，與私人紀錄 <code>deploy/records/1108-hospital-api/API_script/</code> 的原檔雜湊相同（含 Release zip 裡的）；測試會比對雜湊</td>
+</tr>
+<tr>
+<td>T-8</td>
+<td><code>run_hb.py</code>：四種回應與另外的錯誤、佔位字、病人清單缺或空、留底壞行、鎖檔、工作目錄、<code>pythonw</code> 都測過；結果分 <code>ok</code>、<code>partial</code>（有人查詢失敗）、<code>failed</code>、<code>skipped</code>；<code>error_kinds</code> 只寫學長程式的固定訊息與例外種類</td>
+</tr>
+<tr>
+<td>T-9</td>
+<td>另寫 <code>hb/install-hb-task.ps1</code>、<code>uninstall-hb-task.ps1</code>，不改透析清單的 <code>install-task.ps1</code>；兩支都拒用 <code>hd-hospital-fetch</code> 這個名稱。第一次自動執行在 360 分鐘後，裝好用 <code>Start-ScheduledTask</code> 手動觸發。<strong>語法與拒絕路徑驗過；在開發機註冊工作、觸發、移除還沒做</strong>（1110 被權限擋下，待使用者同意）</td>
+</tr>
+<tr>
+<td>T-10</td>
+<td><code>check_hb_store.py</code> 用學長的 <code>validate()</code>，不是收成現場盤點：盤點只看每行是不是 JSON，學長的程式還會擋缺病歷號、日期格式、不認得的欄位，兩者的「壞」不一樣。預演做法是 <code>run_hb.py --output-dir</code> 指向複本、<code>--status</code> 另一個檔</td>
+</tr>
+<tr>
+<td>T-11</td>
+<td><code>make_patients.py</code>：對 v0 模擬院方 API 經 <code>fetch_dialysis.py</code> 寫出的留底實測，人數對、沒有重複；另讀得懂舊的混寫行、<code>&lt;meta&gt;</code>、cp950；病歷號加密過就不寫</td>
+</tr>
+<tr>
+<td>T-12</td>
+<td><code>tests/test_hb.py</code> 25 項（含 T-7 雜湊、T-10、T-11）；整套 62 項，設 <code>HD_SIM_URL</code> 時全過、沒有略過的</td>
+</tr>
+<tr>
+<td>T-13</td>
+<td>《<a href="../../deployment/19c-hb-fetch/">第十九冊之三</a>》BH-01～BH-10；輸出原文照開發機實跑。BH-09 排程那一段的「會看到」照腳本原文，待 T-9 實測後核對</td>
+</tr>
+<tr>
+<td>T-14</td>
+<td>Release v0.2.0（只有 <code>.py</code>）；主機已有 v0.1.0，只搬 <code>hb\</code> 資料夾（BH-04），透析清單的檔不動</td>
+</tr>
+</tbody>
+</table>
 <h2 id="5-現場順序約-60-分鐘">5. 現場順序（約 60 分鐘）<a class="headerlink" href="#5-現場順序約-60-分鐘" title="Permanent link">&para;</a></h2>
+<p>第 2～7 步的指令在《<a href="../../deployment/19c-hb-fetch/">第十九冊之三</a>》BH-03～BH-10。</p>
 <ol>
 <li>透析清單：第十九冊之二第 6.3 節——B-16 前的檢查一、檢查二，K-1 查清；B-16 跑一輪 → B-17 裝排程 → B-18 看三輪 → B-19 教學長（約 30 分鐘）</li>
 <li><code>hb</code> 看現況與盤點（約 10 分鐘）：照《第十九冊之一》3.1 查檔案時間、排程與正在跑的 Python（I-10），再照 3.2～3.3 跑盤點、抄第 5 段結論；有程式在跑就停在這裡、只記錄（盤點照樣可以跑）</li>
-<li>帶進：新版 Release 已在 B-09 一起下載的話直接用；沒有就照 B-09～B-11 再下載一次</li>
+<li>帶進：InPrivate 視窗下載 v0.2.0，只把 <code>hb\</code> 搬進腳本資料夾（主機上已是 v0.1.0，不重新解壓整包）</li>
 <li>填設定：端點、<code>active_patients.txt</code>（或 T-11 產生）；設定檔不進 repo</li>
-<li>只讀檢查既有 <code>raw_txt</code>（T-10；第 2 步盤點的「壞」已經看過就跳過）；有壞行就停，備份交學長</li>
+<li>只讀檢查既有 <code>raw_txt</code>（T-10）；<strong>一律要做</strong>：第 2 步盤點的「壞」只看是不是 JSON，比學長的程式寬鬆（1110 改）。有壞行就停，備份交學長</li>
 <li>預演：輸出指到 <code>hospital_dataset</code> 的複本跑一輪，看狀態檔的四個數</li>
 <li>正式跑一輪 → 裝排程 → 手動觸發一次看狀態檔（等不了 6 小時）→ 教學長怎麼停、怎麼看狀態檔</li>
 <li>第十九冊 B-20 記錄（兩支都寫進私人紀錄）→ B-21 收工</li>

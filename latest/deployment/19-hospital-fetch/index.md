@@ -19,6 +19,7 @@
 - 試跑（B-14～B-16）：填設定、預演、跑一輪，看狀態檔與檔尾
 - 排程（B-17～B-19）：裝排程、看三輪、教學長怎麼停與怎麼看
 - 收尾（B-20～B-21）：記錄；退回步驟在第 3 節；出錯對照、一頁速查在《[第十九冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19a-hospital-fetch-reference/index.md)》
+- 檢驗資料（`hb`）：B-19 做完、B-20 之前照《[第十九冊之三](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19c-hb-fetch/index.md)》做 BH-03～BH-10；`hb` 卡住不擋本冊
 
 ## 0. 開始前先懂的五件事
 
@@ -397,6 +398,8 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 | 停掉                 | `powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1`                                               |
 | 改頻率（例：5 分鐘） | `powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -IntervalMinutes 5 -Force`                       |
 | 看最近一輪           | `Get-Content -Encoding UTF8 .\fetch-status.json`：`result`、`reason`、`last_success_at`（最後一次成功的時間） |
+
+**接著做檢驗資料（`hb`）**：照《[第十九冊之三](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19c-hb-fetch/index.md)》BH-03～BH-10，做完或延後再回來做 B-20。透析清單做到這裡已超過約 40 分鐘、或學長要先走，`hb` 延後，直接做 B-20。
 
 ### B-20 記錄
 
