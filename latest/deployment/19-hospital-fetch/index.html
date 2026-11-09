@@ -6761,31 +6761,22 @@
 <li><strong>不重開機</strong>（同一台還有另一個專案，第十八冊之二 A-04）</li>
 </ul>
 <h3 id="中途收工b-17-排程還沒裝就得走">中途收工（B-17 排程還沒裝就得走）<a class="headerlink" href="#中途收工b-17-排程還沒裝就得走" title="Permanent link">&para;</a></h3>
-<ol>
-<li>預演還在跑：等它印完、拍下整份清單（每個檔的編碼）；來不及就按 <code>Ctrl+C</code>（預演不寫檔，不會壞任何東西）</li>
-<li>B-12 寫「要轉 0 個」就沒有 B-13；有要轉的話，<strong>不要在快走前才開始 B-13 實轉</strong>：要再讀一次全部檔、整份備份、逐檔轉寫與比對，7.7 GB 估計 30 分鐘以上；中途被關掉會留下暫存檔，下次要先處理</li>
-<li>看指定資料夾那顆磁碟的可用空間（B-13 會把全部 txt 備份一份），在同一個視窗貼：</li>
-</ol>
+<p>用「收工-1」到「收工-7」對照（程式碼框會打斷自動編號，所以不用 1、2、3）。</p>
+<p><strong>收工-1</strong> 預演還在跑：等它印完、拍下整份清單（每個檔的編碼）；來不及就按 <code>Ctrl+C</code>（預演不寫檔，不會壞任何東西）。</p>
+<p><strong>收工-2</strong> B-12 寫「要轉 0 個」就沒有 B-13；有要轉的話，<strong>不要在快走前才開始 B-13 實轉</strong>：要再讀一次全部檔、整份備份、逐檔轉寫與比對，7.7 GB 估計 30 分鐘以上；中途被關掉會留下暫存檔，下次要先處理。有要轉的檔時，再看指定資料夾那顆磁碟的可用空間（要至少是 B-12「合計」的 1.5 倍）：</p>
 <div class="highlight"><pre><span></span><code><span class="s2">"{0} 槽可用 {1:N1} GB"</span> <span class="o">-f</span> <span class="nv">$dir</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="n">1</span><span class="p">),</span> <span class="p">((</span><span class="nb">Get-PSDrive</span> <span class="nv">$dir</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="n">1</span><span class="p">)).</span><span class="n">Free</span><span class="p">/</span><span class="n">1GB</span><span class="p">)</span>
 </code></pre></div>
-<ul>
-<li>
-<p>有要轉的檔時，可用空間要至少是 B-12「合計」的 1.5 倍；不夠就回報，下次先跟學長清空間（「要轉 0 個」可跳過這一點）</p>
-</li>
-<li>
-<p>確認沒留下會自己跑的東西與下載檔：</p>
-</li>
-</ul>
+<p><strong>收工-3</strong> 確認沒留下會自己跑的東西與下載檔：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-ScheduledTask</span> <span class="n">-TaskName</span> <span class="n">hd-hospital-fetch</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
 <span class="nb">Test-Path</span> <span class="s2">"$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"</span>
 </code></pre></div>
 <ul>
 <li><strong>會看到</strong>：第一行沒印東西（排程沒裝）、第二行 <code>False</code>（zip 已刪）</li>
-<li>腳本資料夾留著（只有程式檔，沒有 <code>config.json</code>、沒有排程，不會自己跑、不會碰資料），跟學長說一聲</li>
-<li>關掉 PowerShell 與開著這一冊的 Edge 視窗，確認 InPrivate 視窗已關；<strong>不重開機</strong></li>
-<li>問學長、帶回來：B-04 的帳號是不是醫師的；下次 B-13 要 30 分鐘以上、期間主機記憶體幾乎吃滿，哪個時段可以；檔案總管的「開始備份」不要按</li>
-<li>B-20 照記：做到哪一步、預演清單照片、磁碟空間、學長的決定</li>
 </ul>
+<p><strong>收工-4</strong> 腳本資料夾留著（程式檔，做過 B-14 的話還有 <code>config.json</code>；沒有排程就不會自己跑、不會碰資料），跟學長說一聲。</p>
+<p><strong>收工-5</strong> 關掉 PowerShell 與開著這一冊的 Edge 視窗，確認 InPrivate 視窗已關；<strong>不重開機</strong>。</p>
+<p><strong>收工-6</strong> 問學長、帶回來：B-04 的帳號是不是醫師的；下次接著做（B-16 起，含 B-18 看三輪約 10 分鐘）哪個時段可以；檔案總管的「開始備份」不要按。</p>
+<p><strong>收工-7</strong> B-20 照記：做到哪一步、各步驟的照片、學長的決定。</p>
 <h2 id="3-退回">3. 退回<a class="headerlink" href="#3-退回" title="Permanent link">&para;</a></h2>
 <p>學長說「不要了」或斷點決定退回時，在 <code>&lt;腳本資料夾&gt;</code> 裡依序做：</p>
 <table>
