@@ -6417,11 +6417,13 @@
 <li>會印兩個 <code>True</code>／<code>False</code>：第一個是資料夾在不在，第二個是它在不在 OneDrive 的路徑底下；有一段路經過連結（Junction）才會多印一行「… -&gt; …」</li>
 </ul>
 <p>第一個是 <code>True</code> 之後，在同一個視窗確認這是透析清單（只看最新一個 txt 的開頭有沒有 <code>Date:</code> 與 <code>"data_list"</code>，不印病人資料）：</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$f</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span> <span class="n">-Filter</span> <span class="p">*.</span><span class="n">txt</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span><span class="p">;</span> <span class="nv">$f</span><span class="p">.</span><span class="n">Name</span>
+<div class="highlight"><pre><span></span><code><span class="nv">$f</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span> <span class="n">-Filter</span> <span class="p">*.</span><span class="n">txt</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s1">'^\d{4}-\d{2}\.txt$'</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span><span class="p">;</span> <span class="nv">$f</span><span class="p">.</span><span class="n">Name</span>
 <span class="nv">$h</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Content</span> <span class="n">-LiteralPath</span> <span class="nv">$f</span><span class="p">.</span><span class="n">FullName</span> <span class="n">-TotalCount</span> <span class="n">2</span><span class="p">)</span> <span class="n">-join</span> <span class="s1">' '</span><span class="p">;</span> <span class="nv">$h</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s1">'Date:'</span><span class="p">);</span> <span class="nv">$h</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s1">'"data_list"'</span><span class="p">)</span>
 </code></pre></div>
 <ul>
-<li><strong>會看到</strong>：最新的檔名（例如 <code>2026-11.txt</code>），接著兩個 <code>True</code></li>
+<li><strong>會看到</strong>：最新的「年-月.txt」檔名（例如 <code>2026-11.txt</code>），接著兩個 <code>True</code></li>
+<li>沒印檔名、接著是紅字：資料夾裡沒有「年-月.txt」，停，跟學長確認歷史檔放在哪</li>
+<li>資料夾裡另有 <code>data_list_sucess.txt</code>：舊腳本（<code>API_script</code> 版）的留底，也是透析清單，B-12 的清單會列出它並一起轉碼，不用處理（1109 現場就有）</li>
 <li><strong>不是兩個 <code>True</code></strong>：這不是透析清單的資料夾。停，請學長指出正確的那一個</li>
 <li><strong>在同步</strong>：第二個是 <code>True</code>，或檔案旁有同步圖示</li>
 <li><strong>在同步而醫師還沒同意</strong>：停。學長當場聯絡醫師；聯絡不到就只做到 B-13（轉碼，不產生新的留底），B-14 起不做</li>
