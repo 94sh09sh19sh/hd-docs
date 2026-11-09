@@ -85,6 +85,14 @@ $p = Get-Item -LiteralPath $dir; while ($p) { if ($p.LinkType) { "$($p.FullName)
 ```
 
 - 會印兩個 `True`／`False`：第一個是資料夾在不在，第二個是它在不在 OneDrive 的路徑底下；有一段路經過連結（Junction）才會多印一行「… -> …」
+- **檔案總管網址列最左邊是雲朵圖示加「開始備份」**：那是 Windows 邀請你用 OneDrive 備份「桌面」，表示**沒有**在備份；**不要按**，按了就開始同步（1109 現場：主機的「桌面」就設在 `<指定資料夾>` 的上層，資料夾名稱裡有 `OneDrive` 但不是現在同步的那個）。要再確認，在同一個視窗貼：
+
+```powershell
+[Environment]::GetFolderPath('Desktop')
+(Get-Item -LiteralPath $dir).Attributes; Get-ChildItem -LiteralPath $dir -File | Select-Object -First 3 Name, Attributes
+```
+
+- **沒在同步會看到**：第一行是桌面的實際位置；資料夾是 `Directory`，檔案只有 `Archive`（可能多 `ReadOnly`）。出現 `ReparsePoint`、`Offline`、`Pinned`、`Unpinned`、`RecallOnDataAccess` 任何一個 → 有雲端同步在管這些檔，停
 
 第一個是 `True` 之後，在同一個視窗確認這是透析清單（只看最新一個 txt 的開頭有沒有 `Date:` 與 `"data_list"`，不印病人資料）：
 
