@@ -2,7 +2,7 @@
 
 版本：v0.1　文件狀態：草案（2026-11-08 開立）　適用讀者：FDE 工程團隊、使用者本人
 
-子文件：《[之一：1107 學長答覆後的現況與應對](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-status/index.md)》（介接方式要改、週一進院前後要做什麼）、《[之二：1108 給學長的問題清單](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》
+子文件：《[之一：1107 學長答覆後的現況與應對](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-status/index.md)》（介接方式要改、週一進院前後要做什麼）、《[之二：1108 給學長的問題清單](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》、《[之四：下一次進院的工作規劃（兩支都跑起來）](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-next-visit-plan/index.md)》
 
 ______________________________________________________________________
 
