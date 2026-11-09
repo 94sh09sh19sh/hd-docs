@@ -6533,6 +6533,16 @@
 <li><strong>不對的話</strong>：雜湊不同 → 刪掉那個 <code>.exe</code>，回 B-09 重新下載</li>
 </ul>
 <h3 id="b-12-轉碼先預演">B-12 轉碼：先預演<a class="headerlink" href="#b-12-轉碼先預演" title="Permanent link">&para;</a></h3>
+<p>先看檔案有多大、主機還有多少記憶體（預演會把每個檔整個讀進記憶體逐行檢查，大檔要等很久）：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ChildItem</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span> <span class="n">-Filter</span> <span class="p">*.</span><span class="n">txt</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Length</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">n</span><span class="p">=</span><span class="s1">'MB'</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Length</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+<span class="s2">"合計 {0:N0} MB"</span> <span class="o">-f</span> <span class="p">((</span><span class="nb">Get-ChildItem</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span> <span class="n">-Filter</span> <span class="p">*.</span><span class="n">txt</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Length</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">/</span><span class="n">1MB</span><span class="p">)</span>
+<span class="s2">"可用記憶體 {0:N1} GB"</span> <span class="o">-f</span> <span class="p">((</span><span class="nb">Get-CimInstance</span> <span class="n">Win32_OperatingSystem</span><span class="p">).</span><span class="n">FreePhysicalMemory</span><span class="p">/</span><span class="n">1MB</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><strong>會看到</strong>：每個 txt 的大小（大的排前面）、合計、可用記憶體</li>
+<li>速度約每 1 GB 一分鐘；最大的那個檔需要約 6 倍大小的可用記憶體</li>
+<li><strong>最大的檔超過可用記憶體的六分之一</strong>：停，回報大小，不跑預演（1109 現場預演跑很久、按 <code>Ctrl+C</code> 中斷過；預演不寫檔，中斷不會壞任何東西）</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">transcode_history</span><span class="p">.</span><span class="n">py</span> <span class="nv">$dir</span>
 </code></pre></div>
 <ul>

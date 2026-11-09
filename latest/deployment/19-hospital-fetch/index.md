@@ -208,6 +208,18 @@ Get-Content .\SHA256SUMS.txt
 
 ### B-12 轉碼：先預演
 
+先看檔案有多大、主機還有多少記憶體（預演會把每個檔整個讀進記憶體逐行檢查，大檔要等很久）：
+
+```
+Get-ChildItem -LiteralPath $dir -Filter *.txt | Sort-Object Length -Descending | Select-Object Name, @{n='MB';e={[math]::Round($_.Length/1MB,1)}}
+"合計 {0:N0} MB" -f ((Get-ChildItem -LiteralPath $dir -Filter *.txt | Measure-Object Length -Sum).Sum/1MB)
+"可用記憶體 {0:N1} GB" -f ((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory/1MB)
+```
+
+- **會看到**：每個 txt 的大小（大的排前面）、合計、可用記憶體
+- 速度約每 1 GB 一分鐘；最大的那個檔需要約 6 倍大小的可用記憶體
+- **最大的檔超過可用記憶體的六分之一**：停，回報大小，不跑預演（1109 現場預演跑很久、按 `Ctrl+C` 中斷過；預演不寫檔，中斷不會壞任何東西）
+
 ```
 py transcode_history.py $dir
 ```
