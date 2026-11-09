@@ -218,8 +218,8 @@ Get-ChildItem -LiteralPath $dir -Filter *.txt | Sort-Object Length -Descending |
 ```
 
 - **會看到**：每個 txt 的大小（大的排前面）、合計、可用記憶體
-- 速度約每 1 GB 一分鐘；最大的那個檔需要約 6 倍大小的可用記憶體
-- **最大的檔超過可用記憶體的六分之一**：停，回報大小，不跑預演（1109 現場預演跑很久、按 `Ctrl+C` 中斷過；預演不寫檔，中斷不會壞任何東西）
+- 速度約每 1 GB 一分鐘；**所有檔會同時留在記憶體**，需要約「合計」的 4.5 倍可用記憶體（v0.1.0 實測；1109 現場 7.7 GB 約 35 GB，可用 40 GB，很緊）。跑的時候開「工作管理員」看記憶體，接近 100%、主機變很卡就按 `Ctrl+C`
+- **合計 × 4.5 超過可用記憶體**：停，回報大小，不跑預演（1109 現場預演跑很久、按 `Ctrl+C` 中斷過；預演不寫檔，中斷不會壞任何東西）
 
 ```powershell
 py transcode_history.py $dir
@@ -389,6 +389,31 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 - `Get-ScheduledTaskInfo -TaskName hd-hospital-fetch` 的 `LastTaskResult` 是 `0`
 - 本系統沒有動：`.env` 的院方位址維持空白（讀檔模式排第二次進院）
 - **不重開機**（同一台還有另一個專案，第十八冊之二 A-04）
+
+### 中途收工（B-17 排程還沒裝就得走）
+
+1. 預演還在跑：等它印完、拍下整份清單（每個檔的編碼）；來不及就按 `Ctrl+C`（預演不寫檔，不會壞任何東西）
+2. **不要在快走前才開始 B-13 實轉**：要再讀一次全部檔、整份備份、逐檔轉寫與比對，7.7 GB 估計 30 分鐘以上；中途被關掉會留下暫存檔，下次要先處理
+3. 看指定資料夾那顆磁碟的可用空間（B-13 會把全部 txt 備份一份），在同一個視窗貼：
+
+```powershell
+"{0} 槽可用 {1:N1} GB" -f $dir.Substring(0,1), ((Get-PSDrive $dir.Substring(0,1)).Free/1GB)
+```
+
+- 可用空間要至少是 B-12「合計」的 1.5 倍；不夠就回報，下次先跟學長清空間
+
+4. 確認沒留下會自己跑的東西與下載檔：
+
+```powershell
+Get-ScheduledTask -TaskName hd-hospital-fetch -ErrorAction SilentlyContinue
+Test-Path "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"
+```
+
+- **會看到**：第一行沒印東西（排程沒裝）、第二行 `False`（zip 已刪）
+5. 腳本資料夾留著（只有程式檔，沒有 `config.json`、沒有排程，不會自己跑、不會碰資料），跟學長說一聲
+6. 關掉 PowerShell 與開著這一冊的 Edge 視窗，確認 InPrivate 視窗已關；**不重開機**
+7. 問學長、帶回來：B-04 的帳號是不是醫師的；下次 B-13 要 30 分鐘以上、期間主機記憶體幾乎吃滿，哪個時段可以；檔案總管的「開始備份」不要按
+8. B-20 照記：做到哪一步、預演清單照片、磁碟空間、學長的決定
 
 ## 3. 退回
 
