@@ -48,7 +48,8 @@
 whoami
 ```
 
-- **會看到**：`<電腦名稱>\<帳號>`，帳號是醫師的
+- **會看到**：`<電腦名稱>\<帳號>`，帳號是醫師的；帳號名稱看不出是誰（例如 `user`）就問學長
+- **PowerShell 視窗標題有「系統管理員」**：關掉，照第 0 節第 4 點重開一般的（1109 現場開成系統管理員過）。用系統管理員建的腳本資料夾，排程以一般權限跑時可能寫不進狀態檔；已經做過的查看指令不用重做
 - **不對的話**：停。不是醫師的帳號就不往下做；公開文件站打不開（主機連不到外網）→ 改用手機看這一冊，指令照著打
 
 ### B-05 看 Python
@@ -60,6 +61,7 @@ python --version
 
 - **會看到**：`py -0p` 列出 `-V:3.x` 與 `python.exe` 的路徑；`python --version` 印出 `Python 3.x.x`。**3.8 以上**才能用 `.py` 版
 - **沒有 `py` 但 `python` 有**：本冊的 `py` 全部換成 `python`
+- **`py` 有、`python --version` 什麼都沒印**：`python` 指到 Microsoft Store 的空殼，不要緊，本冊照用 `py`（1109 現場就是這樣）
 - **跳出 Microsoft Store、或兩個都說找不到**：就是沒有裝。停，學長決定裝 Python 或用 `.exe`；都不行就做完 B-06、B-07 收工
 - 記下結果：用 `.py` 還是 `.exe`
 
@@ -72,11 +74,21 @@ $env:OneDrive; $env:OneDriveCommercial
 Get-Process | Where-Object { $_.Name -match 'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box' } | Select-Object Name
 ```
 
-再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。
+再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。接著點檔案總管上方的網址列、按 `Ctrl+C` 複製路徑，回 PowerShell 貼下面這段；出現「貼上指定資料夾的路徑」時按滑鼠右鍵貼上、按 Enter：
 
-- **會看到**：第一行印出 OneDrive 的路徑，且 `<指定資料夾>` 在那個路徑底下；第二行有 `OneDrive`；檔案旁有同步圖示 → **在同步**
+```powershell
+$dir = Read-Host '貼上指定資料夾的路徑'
+Test-Path -LiteralPath $dir
+$dir.StartsWith("$env:OneDrive\", 'OrdinalIgnoreCase')
+$p = Get-Item -LiteralPath $dir; while ($p) { if ($p.LinkType) { "$($p.FullName) -> $($p.Target)" }; $p = $p.Parent }
+```
+
+- 會印兩個 `True`／`False`：第一個是資料夾在不在，第二個是它在不在 OneDrive 的路徑底下；有一段路經過連結（Junction）才會多印一行「… -> …」
+- **在同步**：第二個是 `True`，或檔案旁有同步圖示
 - **在同步而醫師還沒同意**：停。學長當場聯絡醫師；聯絡不到就只做到 B-13（轉碼，不產生新的留底），B-14 起不做
-- 沒有同步（第一行沒印東西或路徑不同、檔案旁沒有圖示）：往下
+- **多印了「… -> …」**：資料夾經過連結，實際位置可能在 OneDrive 底下。停，跟學長確認
+- **第一個是 `False`**：路徑貼錯，重貼一次；還是 `False` 就停，請學長指出實際的資料夾
+- 沒有同步（`True`、`False`、沒有多印、檔案旁沒有圖示）：往下。第一段印的 OneDrive 路徑開頭跟 `values.md` 的路徑不一樣不要緊，以這裡的結果為準
 
 ### B-07 看有沒有舊的腳本在跑
 
@@ -120,11 +132,13 @@ cd C:\hd-hospital-fetch
 dir
 ```
 
-（`<腳本資料夾>` 不是 `C:\hd-hospital-fetch` 的話，兩處換掉。）用 `.exe` 的話，把四個下載的檔搬進來：
+（`<腳本資料夾>` 不是 `C:\hd-hospital-fetch` 的話，兩處換掉。）用 `.exe` 的話，把四個下載的檔搬進來（逐一寫檔名，不用 `*.exe`，免得把醫師「下載」裡其他的 `.exe` 一起搬走）：
 
 ```powershell
-Move-Item "$env:USERPROFILE\Downloads\*.exe", "$env:USERPROFILE\Downloads\SHA256SUMS.txt" .
+Move-Item "$env:USERPROFILE\Downloads\fetch_dialysis.exe", "$env:USERPROFILE\Downloads\fetch_dialysis_w.exe", "$env:USERPROFILE\Downloads\transcode_history.exe", "$env:USERPROFILE\Downloads\SHA256SUMS.txt" .
 ```
+
+- 下載的檔名變成 `xxx (1).exe`：「下載」裡原本就有同名的檔，停，跟學長確認
 
 - **會看到**：`dir` 列出 `fetch_dialysis.py`、`transcode_history.py`、`install-task.ps1`、`uninstall-task.ps1`、`config.example.json`、`README.md` 等
 - 最後把「下載」資料夾裡的 zip 刪掉：`Remove-Item "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"`
