@@ -137,7 +137,7 @@ G-1 已答。G-2、G-3 各答了一半。
 
 ## 12. I. 另一支 API（`hb`）
 
-1106 學長說 `hb` 的 API 資料也可以放進來考量，會傳 `.json` 的例子。1108 21:29 學長把 `collector_common.py`、`config.json`（範本）放上 Drive，1109 晚上下載核對：**I-1、I-4 已答**，搬到《之二之一》；I-2、I-3 答了一半；讀程式多出 I-8、I-9。1109 晚上使用者定**下一次進院 `hb` 也要跑起來**，I-2、I-6、I-8 與新增的 I-10、I-11 改成 B-16 前要有答案，規劃見《[之四](hospital-api-fetch-methods-next-visit-plan.md)》。程式讀到什麼見《[參考調查之一](idh-reference-survey-api-script.md)》第 4 節。1109 現場看到主機上的 `Hb_API_Fetch` 底下有 `hospital_dataset\raw_txt`，裡面也是「年-月.txt」。
+1106 學長說 `hb` 的 API 資料也可以放進來考量，會傳 `.json` 的例子。1108 21:29 學長把 `collector_common.py`、`config.json`（範本）放上 Drive，1109 晚上下載核對：**I-1、I-4 已答**，搬到《之二之一》；I-2、I-3 答了一半；讀程式多出 I-8、I-9。1109 晚上使用者定**下一次進院 `hb` 也要跑起來**，I-2、I-6、I-8 與新增的 I-10、I-11 改成 B-16 前要有答案，規劃見《[之四](hospital-api-fetch-methods-next-visit-plan.md)》。程式讀到什麼見《[參考調查之一](idh-reference-survey-api-script.md)》第 4 節。1109 現場看到主機上的 `Hb_API_Fetch` 底下有 `hospital_dataset\raw_txt`，裡面也是「年-月.txt」。那些檔不能帶出、不能拍；I-10、I-8、I-2 前半、I-3、I-9 下一次可以在主機上跑《[第十九冊之一](../deployment/19a-hospital-fetch-reference.md)》第 3 節的只讀盤點查到（只印統計，結論抄在紙上帶回）。
 
 | # | 問題 | 為什麼要問 |
 |---|---|---|
