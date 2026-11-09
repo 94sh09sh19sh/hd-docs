@@ -5801,6 +5801,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#中途收工b-17-排程還沒裝就得走" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中途收工（B-17 排程還沒裝就得走）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6279,6 +6290,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#中途收工b-17-排程還沒裝就得走" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中途收工（B-17 排程還沒裝就得走）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6540,8 +6562,8 @@
 </code></pre></div>
 <ul>
 <li><strong>會看到</strong>：每個 txt 的大小（大的排前面）、合計、可用記憶體</li>
-<li>速度約每 1 GB 一分鐘；最大的那個檔需要約 6 倍大小的可用記憶體</li>
-<li><strong>最大的檔超過可用記憶體的六分之一</strong>：停，回報大小，不跑預演（1109 現場預演跑很久、按 <code>Ctrl+C</code> 中斷過；預演不寫檔，中斷不會壞任何東西）</li>
+<li>速度約每 1 GB 一分鐘；<strong>所有檔會同時留在記憶體</strong>，需要約「合計」的 4.5 倍可用記憶體（v0.1.0 實測；1109 現場 7.7 GB 約 35 GB，可用 40 GB，很緊）。跑的時候開「工作管理員」看記憶體，接近 100%、主機變很卡就按 <code>Ctrl+C</code></li>
+<li><strong>合計 × 4.5 超過可用記憶體</strong>：停，回報大小，不跑預演（1109 現場預演跑很久、按 <code>Ctrl+C</code> 中斷過；預演不寫檔，中斷不會壞任何東西）</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">transcode_history</span><span class="p">.</span><span class="n">py</span> <span class="nv">$dir</span>
 </code></pre></div>
@@ -6735,6 +6757,32 @@
 <li><code>Get-ScheduledTaskInfo -TaskName hd-hospital-fetch</code> 的 <code>LastTaskResult</code> 是 <code>0</code></li>
 <li>本系統沒有動：<code>.env</code> 的院方位址維持空白（讀檔模式排第二次進院）</li>
 <li><strong>不重開機</strong>（同一台還有另一個專案，第十八冊之二 A-04）</li>
+</ul>
+<h3 id="中途收工b-17-排程還沒裝就得走">中途收工（B-17 排程還沒裝就得走）<a class="headerlink" href="#中途收工b-17-排程還沒裝就得走" title="Permanent link">&para;</a></h3>
+<ol>
+<li>預演還在跑：等它印完、拍下整份清單（每個檔的編碼）；來不及就按 <code>Ctrl+C</code>（預演不寫檔，不會壞任何東西）</li>
+<li><strong>不要在快走前才開始 B-13 實轉</strong>：要再讀一次全部檔、整份備份、逐檔轉寫與比對，7.7 GB 估計 30 分鐘以上；中途被關掉會留下暫存檔，下次要先處理</li>
+<li>看指定資料夾那顆磁碟的可用空間（B-13 會把全部 txt 備份一份），在同一個視窗貼：</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="s2">"{0} 槽可用 {1:N1} GB"</span> <span class="o">-f</span> <span class="nv">$dir</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="n">1</span><span class="p">),</span> <span class="p">((</span><span class="nb">Get-PSDrive</span> <span class="nv">$dir</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="n">1</span><span class="p">)).</span><span class="n">Free</span><span class="p">/</span><span class="n">1GB</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>
+<p>可用空間要至少是 B-12「合計」的 1.5 倍；不夠就回報，下次先跟學長清空間</p>
+</li>
+<li>
+<p>確認沒留下會自己跑的東西與下載檔：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ScheduledTask</span> <span class="n">-TaskName</span> <span class="n">hd-hospital-fetch</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<span class="nb">Test-Path</span> <span class="s2">"$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"</span>
+</code></pre></div>
+<ul>
+<li><strong>會看到</strong>：第一行沒印東西（排程沒裝）、第二行 <code>False</code>（zip 已刪）</li>
+<li>腳本資料夾留著（只有程式檔，沒有 <code>config.json</code>、沒有排程，不會自己跑、不會碰資料），跟學長說一聲</li>
+<li>關掉 PowerShell 與開著這一冊的 Edge 視窗，確認 InPrivate 視窗已關；<strong>不重開機</strong></li>
+<li>問學長、帶回來：B-04 的帳號是不是醫師的；下次 B-13 要 30 分鐘以上、期間主機記憶體幾乎吃滿，哪個時段可以；檔案總管的「開始備份」不要按</li>
+<li>B-20 照記：做到哪一步、預演清單照片、磁碟空間、學長的決定</li>
 </ul>
 <h2 id="3-退回">3. 退回<a class="headerlink" href="#3-退回" title="Permanent link">&para;</a></h2>
 <p>學長說「不要了」或斷點決定退回時，在 <code>&lt;腳本資料夾&gt;</code> 裡依序做：</p>
