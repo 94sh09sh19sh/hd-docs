@@ -1,6 +1,6 @@
 # 同院 IDH 系統參考調查之一：API_script 資料夾
 
-版本：v0.1　文件狀態：草案（2026-11-06 開立）　適用讀者：FDE 工程團隊、使用者本人
+版本：v0.1　文件狀態：草案（2026-11-06 開立；1109 補齊 `collector_common.py`、`config.json` 後改寫第 4 節）　適用讀者：FDE 工程團隊、使用者本人
 
 上層文件：《[同院 IDH 系統參考調查](idh-reference-survey.md)》
 
@@ -8,31 +8,34 @@
 
 ## 摘要
 
-- 1106 使用者在專案 repo 外放了一個 `API_script` 資料夾（兩支 Python、一份 Word），不是本系統的程式
+- 1106 使用者在專案 repo 外放了一個 `API_script` 資料夾（兩支 Python、一份 Word），不是本系統的程式；**1109 晚上補齊**原本缺的 `collector_common.py`、`config.json`（學長 1108 放上 Drive）
 - `fetch_API.py` 是 IDH 系統抓透析清單 API 的又一個版本（看起來比成大版早），與上層文件讀到的一致，**沒有新資訊**；本系統的介接程式不是它改寫的，是照上層調查用 TypeScript 重寫、刻意避開它的坑（第 6 節）
-- `hb_online_v2.py` 是**新線索**：照病人逐一查詢檢驗資料的收集程式，資料夾名是 `Hb_API_Fetch`；`ref_project/` 兩份 IDH 系統都沒有它，也沒有任何血紅素的程式
-- **「醫院有第二支 API、裡面有抽血數值」都還沒證實**：端點與解析在缺的 `collector_common.py`、`config.json` 裡（第 4 節）
+- `hb_online_v2.py` 照病人逐一查檢驗資料。1109 補齊後確認：**程式是為另一支 API 寫的**，路徑把病歷號與起迄日串在一起，不是 `dialysislist.php` 的 `?date=`；每次回一筆、88 欄，**有血紅素、白蛋白、BUN、Kt/V、URR**（第 4.3、4.5 節）
+- 但 `config.json` 只是範本，主機換成佔位字，**真正的端點仍不知道**；病人清單 `active_patients.txt` 與一份回應樣本也還沒拿到（第 9 節）
 - 透析清單 API 的 51 欄沒有抽血數值，1004 讀程式、1029 院內探測都確認過；第三次進院只探測這一支，沒人查過檢驗資料從哪來（第 5 節）
 - 本系統一填 `HOSPITAL_API_BASE_URL`，打的就是**與 IDH 系統同一台、同一支**的透析清單 API，每 3 分鐘一次；現在院內主機的位址是空的，還沒在打（第 7 節）
-- 「需要抽血數值的功能」與劑量調整參考照舊關閉；要取得的東西列在第 9 節
+- 「需要抽血數值的功能」與劑量調整參考照舊關閉：欄位對得上了，但端點、核准與樣本都還沒有（第 8 節）
 
 ## 1. 資料夾裡有什麼
 
-| 檔案 | 是什麼 | 來源（Word 檔寫的） |
+| 檔案 | 是什麼 | 來源 |
 |---|---|---|
-| `fetch_API.py` | 抓某一天全中心的透析清單、轉成 CSV | `API_Fetch\IDH_interface` |
-| `hb_online_v2.py` | 定期逐一查詢病人的檢驗資料、按月存檔 | `API_Fetch\Hb_API_Fetch` |
-| `API raw data address.docx` | 只有兩行：上面那兩個資料夾在某台電腦 OneDrive「Old data」底下的路徑 | — |
+| `fetch_API.py` | 抓某一天全中心的透析清單、轉成 CSV | Word 檔寫的 `API_Fetch\IDH_interface` |
+| `hb_online_v2.py` | 定期逐一查詢病人的檢驗資料、按月存檔 | Word 檔寫的 `API_Fetch\Hb_API_Fetch` |
+| `collector_common.py` | `hb_online_v2.py` 真正做事的部分：設定、病人清單、呼叫、檢查回應、存檔（第 4.4～4.6 節） | 學長 1108 21:29 放上 Drive，1109 晚上下載 |
+| `config.json` | `hb_online_v2.py` 的設定範本，位址是佔位字 | 同上 |
+| `API raw data address.docx` | 只有兩行：`IDH_interface`、`Hb_API_Fetch` 兩個資料夾在某台電腦 OneDrive「Old data」底下的路徑 | — |
 
-- 位置：`lab_project/API_script/`，在專案 repo 外，與 `ref_project/` 同層；檔案時間都是 1106 下午（1108 起移到 `lab_project/old_API_ref/API_script/`；來源是學長以連結共享給使用者帳號的 Google Drive 資料夾，四種抓取方式的比較見《[院方 API 的四種抓取方式](hospital-api-fetch-methods.md)》）
+- 位置：`lab_project/API_script/`，在專案 repo 外，與 `ref_project/` 同層；前三個檔的時間是 1106 下午（1108 起移到 `lab_project/old_API_ref/API_script/`；來源是學長以連結共享給使用者帳號的 Google Drive 資料夾，四種抓取方式的比較見《[院方 API 的四種抓取方式](hospital-api-fetch-methods.md)》）
 - Word 檔只寫路徑，沒有說明用途、作者與 API 位址
+- 1109 進院知道：Word 檔寫的那台電腦就是本系統的部署主機，`Hb_API_Fetch` 底下已經有 `hospital_dataset\raw_txt` 與月份檔（《[第十九冊之二](../deployment/19b-fourth-visit-record.md)》BR-08）
 
 ## 2. 跟 `ref_project/` 的關係
 
 | 檔案 | `ref_project/` 裡有沒有 |
 |---|---|
 | `fetch_API.py` | **有，但不是同一份**：成大版、斗六版各有一支 `scripts/fetch_API.py`，三份逐行比對都不同（第 3 節） |
-| `hb_online_v2.py`、`collector_common.py`、`config.json` | **都沒有**；整個 `lab_project/` 只有 `API_script/` 裡這一支 `hb_online_v2.py` |
+| `hb_online_v2.py`、`collector_common.py`、`config.json` | **都沒有**；整個 `lab_project/` 只有 `API_script/` 裡這一份 |
 | 血紅素、檢驗相關的程式 | 兩份 IDH 系統都**搜不到**；IDH 系統完全沒用到抽血數值 |
 
 IDH 系統的病人資料只靠 `fetch_API.py` 那一類取得：
@@ -77,51 +80,96 @@ interface/views.py 的 corn_job()（成大版第 1018 行；斗六版同樣在 v
 
 | 面向 | 內容 |
 |---|---|
-| 執行方式 | `--once` 只跑一輪（失敗就回非零結束碼，可交給排程器）；不加就在程式裡每隔一段時間跑一輪 |
+| 執行方式 | `--once` 只跑一輪（有任何一位查詢失敗就回非零結束碼，可交給排程器）；不加就在程式裡每隔一段時間跑一輪 |
 | 間隔 | `config.json` 的 `interval_hours`，預設 6 小時 |
 | 查誰 | `active_patients.txt` 裡的病歷號清單，**逐一查詢**，不是像透析清單那樣一次查全中心 |
-| 查什麼期間 | 從 `config.json` 的 `start_date` 到今天 |
-| 判斷 | `has_lab_data()`：回應裡沒有檢驗資料就算「空」 |
-| 存檔 | `MonthlyStore`：按月存到 `hospital_dataset/`，已有的不重複存（新、重複、空、錯誤各計一次） |
+| 查什麼期間 | 從 `config.json` 的 `start_date`（範本是 2024-01-01）到今天，每位病人每輪查一次 |
+| 判斷 | 病歷號與日期以外，88 欄裡至少一欄有值才算有檢驗資料；空白、`-`、`null`、`N/A` 這類不算（第 4.4 節） |
+| 存檔 | 按檢驗日期的月份存到 `hospital_dataset/`，完全一樣的不重複存；新、重複、空、錯誤各計一次（第 4.6 節） |
 | 出錯時 | 只印錯誤種類，**刻意不印病歷號與網址** |
+| 套件 | 只用 Python 標準函式庫，不必裝 `requests` |
 
 ### 4.2 各檔的用處與相依
 
 | 檔案 | 在不在 | 用處 |
 |---|---|---|
 | `hb_online_v2.py` | 在 | 主程式外殼：讀設定與病人清單、逐一呼叫、計數、排程 |
-| `collector_common.py` | **缺** | 真正做事的地方。從 import 看得出五個：`load_config`、`patient_ids`、`call_api`（端點、參數、解析都在這）、`MonthlyStore`（按月存檔、去重）、`has_lab_data`（判斷有沒有檢驗資料） |
-| `config.json` | **缺** | 主程式讀到的欄位：`start_date`、`patients_file`、`output_dir`、`interval_hours`；API 位址與認證應該也在這，由 `call_api` 讀（推論） |
-| `active_patients.txt` | **缺** | 要查的病歷號清單 |
-| `hospital_dataset/` | **缺** | 輸出資料夾 |
+| `collector_common.py` | **在（1109 補）** | `load_config`（設定）、`patient_ids`（病人清單）、`call_api`（組網址、呼叫）、`decode`／`validate`（檢查回應）、`has_lab_data`（有沒有檢驗資料）、`MonthlyStore`（按月存檔、去重） |
+| `config.json` | **在，但是範本（1109 補）** | `url_template`（位址，主機是佔位字）、`start_date`、`interval_hours`、`patients_file`、`output_dir`、`timeout_seconds`、`allow_approved_http` |
+| `active_patients.txt` | **缺** | 要查的病歷號清單，範本設定放在 `hospital_dataset/` 底下 |
+| `hospital_dataset/` | repo 外的資料夾沒有；**部署主機上有**（第 1 節） | 輸出資料夾 |
 
-推論（未驗證）：說明文字寫「Online V2」，可能另有 V1 或一支補抓歷史資料的程式；`collector_common.py` 自己大概也要 `requests` 之類的套件。
+推論（未驗證）：說明文字寫「Online V2」，可能另有 V1 或一支補抓歷史資料的程式。
 
-### 4.3 不知道的事：是不是第二支 API、裡面有沒有抽血數值
+### 4.3 1109 補齊後知道的與還不知道的
 
-| 不知道 | 影響 |
+| 面向 | 已知（讀程式） | 還不知道 |
+|---|---|---|
+| 是不是另一支 API | **是另一種查法**：網址把病歷號、起日、迄日用底線串進路徑，不是 `dialysislist.php` 的 `?date=`，也不是斗六版的 `?case_number=` | 哪一台主機：範本換成佔位字，完整範本在私人紀錄 |
+| 認證 | 不帶任何認證，只送 `Accept: application/json` 與 `User-Agent`；網址裡放帳密會被拒絕 | 院方那邊有沒有另外限制來源 |
+| `http` 或 `https` | 預設只打 `https`；`http` 要院方核准後，在設定把 `allow_approved_http` 設成 `true` | 實際是哪一種（透析清單那支是 `http`） |
+| 回應 | 一個 JSON 物件，必須有 `MedicalId` 與 `ExecuteDate`（`YYYY-MM-DD`）；被包成 JSON 字串也認（最多三層）；空字串、`{}`、`[]` 算沒資料 | 一份實際的回應（遮罩後） |
+| 一次幾筆 | 程式只接受**一筆**，回陣列會當成格式錯誤 | 期間是 2024-01-01 到今天卻只回一筆，推論是期間內最近一次的檢驗（未驗證） |
+| 欄位 | 88 個欄名寫死在程式裡（第 4.5 節）；回應多出不認得的欄位**整筆拒收**、算錯誤，不自動丟掉 | 欄名有沒有改過 |
+| 單位與時間 | 只有日期，沒有採檢時間；數值可以帶單位（例如數字後面接 `g/dL`），存 CSV 時只留數字 | 每一欄實際的單位、定性結果（陰性、陽性）怎麼寫 |
+
+### 4.4 回應的檢查
+
+`call_api` 拿到回應後依序檢查，任何一項不過就算這位病人查詢失敗：
+
+1. 回應超過 5 MB 拒收；逾時預設 15 秒，**不重試**（下一輪再查）
+2. 解碼成 JSON 物件，空的算「沒資料」
+3. 回傳的 `MedicalId` 要跟查的一樣（字串比對，不補零、不去前導零）
+4. `ExecuteDate` 要是 `YYYY-MM-DD`，而且在查詢區間內
+5. 不准有 88 欄以外的欄位
+6. 病歷號清單只收純數字，重複的去掉，`#` 開頭的行當註解
+
+### 4.5 88 個欄位
+
+| 類別 | 欄名（原樣） |
 |---|---|
-| 端點是哪一台、哪一支 | 可能是另一支檢驗 API；也可能是同一支 `dialysislist.php` 換成「某位病人一段期間」的查法（上層第 2 節查詢二，只有斗六版用過）——那樣拿回來的仍是 51 欄，不會有血紅素 |
-| 回應裡有什麼 | 只有資料夾名 `Hb_API_Fetch` 與函式名 `has_lab_data` 暗示是檢驗資料；有沒有白蛋白、BUN、Kt/V、單位、採檢時間都不知道 |
-| 參數與認證 | 不知道要不要帳號、金鑰 |
+| 識別 | `MedicalId`、`ExecuteDate` |
+| 血液常規 | `Hb`、`Hct`、`WBC`、`RBC`、`MCV`、`Plt`、`Seg`、`Eos`、`Baso`、`Mono`、`Lymph` |
+| 透析適足性 | `本次透析前BUN`、`本次透析後BUN`、`下次透析前BUN`、`URR`、`Kt/V(Gotch)`、`Kt/V(Daugirdas)`、`nPCR`、`TAC-urea` |
+| 營養與生化 | `ALBUMIN`、`ALB`、`T PROT`、`TP`、`本次透析前CREA`、`URIC`、`GLU.A.C`、`GLU, AC`、`HbA1c`、`CHOL`、`TRIG`、`TG`、`HDL-C`、`LDL-C` |
+| 電解質與骨礦物質 | `本次透析前NA`、`Na`、`本次透析前K`、`CA`、`Ca`、`離子鈣`、`本次透析前P`、`CL`、`CO2`、`MG`、`Al`、`Zn`、`Cu`、`PTHi`、`PTH`、`ALK-P`、`ALP` |
+| 鐵 | `IRON`、`TIBC`、`SAT`、`UIBC`、`Ferritin`、`FERR` |
+| 肝功能 | `AST`、`ALT`、`BIL-T` |
+| 感染篩檢 | `HBs Ag`、`Anti-HBC`、`Anti-HBs`、`Anti-HBs Ab`、`HBs Ab`、`HCV Ab`、`HIV screening test`、`RPR/VDRL` |
+| 其他檢驗 | `AFP`、`AFP.`、`CRP`、`B-2MG` |
+| 透析處方與量測 | `Dialyzer`、`Blood flow`、`Dialyste Ca`、`透析前體重`、`透析後體重`、`透析前收縮壓`、`透析前舒張壓`、`本次透析時間`、`兩次透析時間間隔`、`動態靜脈壓`、`身高` |
+| 其他 | `Cardiac/thoracic ratio`、`EKG`、`自訂七`、`自訂八` |
 
-推論（未驗證）：只能逐一查病人、又用 `has_lab_data` 判斷空不空，比較像**另一支照病人查詢的檢驗 API**；但「醫院有兩支 API」「新的那支有抽血數值」目前都只是推論。
+- 同一項有兩三個名字：`ALBUMIN`／`ALB`、`ALK-P`／`ALP`、`CA`／`Ca`、`Ferritin`／`FERR`、`本次透析前NA`／`Na`、`GLU.A.C`／`GLU, AC`、`TRIG`／`TG`、`T PROT`／`TP`、`PTHi`／`PTH`、`Anti-HBs`／`Anti-HBs Ab`／`HBs Ab`、`AFP`／`AFP.`。推論是檢驗系統改過名或換過機台（未驗證）；要用的話得先問哪一個是現行的，或兩個合併
+- 本系統十種臨床數值裡，血紅素、白蛋白、Kt/V 三種在透析清單 API 拿不到（上層第 3 節），這裡**三種都有欄位**
 
-### 4.4 兩支合起來的目的
+### 4.6 存檔
+
+| 東西 | 寫法 |
+|---|---|
+| `hospital_dataset/raw_txt/YYYY-MM.txt` | **真本**。每行一筆 JSON：`{"FetchedAt": 抓取時間, "record": {88 欄}}`，月份照 `ExecuteDate` 分；每寫一行就強制寫進磁碟 |
+| `hospital_dataset/csv/YYYY-MM.csv` | 從 txt 重建，UTF-8 含 BOM、88 欄；病歷號與日期原樣，其他欄只留數字，抓不出數字的寫 `NaN`（定性結果在 CSV 看不到，要看 txt） |
+| 去重 | 88 欄全部一樣才算重複；同一天的檢驗有任何一欄改了，會**多存一筆**，不覆蓋舊的 |
+| 啟動時 | 讀完全部 txt 建去重清單，重建全部 CSV；txt 任何一行壞掉就整支停下，要先備份修復 |
+| 同時寫 | 程式註明不能有兩支同時寫同一個資料夾 |
+
+與透析清單留底的分法：透析清單的月份檔每段開頭是 `Date:`、內容有 `"data_list"`；這裡每行開頭是 `{"FetchedAt"`。1109 第十九冊 B-06 選錯資料夾，選到的就是這一種。
+
+### 4.7 兩支合起來的目的
 
 兩套是獨立的收集程式，不是同一條流水線：
 
 | 程式 | 抓什麼 | 給誰用 |
 |---|---|---|
 | `fetch_API.py` | 透析中的即時紀錄：生命徵象、體重、脫水量 | IDH 系統的低血壓預警 |
-| `hb_online_v2.py`（加缺的檔） | 一份病人清單的檢驗資料，按月累積 | 從 `hospital_dataset/` 這個名字看，比較像累積研究用的資料集，不是即時顯示（推論） |
+| `hb_online_v2.py`＋`collector_common.py` | 一份病人清單的檢驗資料，按月累積 | 從 `hospital_dataset/`、同時輸出 CSV 看，比較像累積研究用的資料集，不是即時顯示（推論） |
 
 ## 5. 為什麼抽血數值算新線索
 
 - 早就知道的只有**透析清單 API** 這一支：51 欄沒有抽血數值，1004 讀程式就確認（上層第 2～3 節）
 - 1029 第三次進院的探測只打這一支、只印結構：51 欄、601 列，與預期相符；它本來就不會有抽血數值
 - 「抽血數值存在哪個系統、有沒有另一支 API」原本是清冊 Q-09 第 11 題；1005 使用者決定「暫定拿不到」、相關功能預設關閉，之後沒有再追，第三次進院也沒人問、沒人查
-- `hb_online_v2.py` 是第一次看到有人用**另一種查法**抓檢驗資料，所以是新線索，但還沒證實（第 4.3 節）
+- `hb_online_v2.py` 是第一次看到有人用**另一種查法**抓檢驗資料；1109 補齊程式後，查法不同、欄位有抽血數值都從程式確認了，**院方真的有這支、現在打得到**還沒確認（第 4.3 節）
 
 ## 6. 本系統的介接程式與 `fetch_API.py` 的對照
 
@@ -156,28 +204,34 @@ interface/views.py 的 corn_job()（成大版第 1018 行；斗六版同樣在 v
 | 面向 | 意義 |
 |---|---|
 | 透析清單 API | 無新事，介接不改（第 3、6 節） |
-| 抽血數值的來源 | 1005 決定「暫定拿不到」（上層第 10 節）。這是**第一個院內可能拿得到血紅素的線索**，不是院方答覆，也不知道端點 |
+| 抽血數值的來源 | 1005 決定「暫定拿不到」（上層第 10 節）。1109 補齊程式後，**欄位確定有血紅素、白蛋白、Kt/V**，但這仍是程式，不是院方答覆，也不知道端點 |
 | 功能開關 | 「需要抽血數值的功能」（`LAB_VALUE_FEATURES`：透析適足性、護理端病人趨勢的抽血數值）與劑量調整參考**照舊關閉**；開啟條件仍是院方提供來源，劑量調整參考另需 FR-R08 書面確認 |
 | 清冊 | Q-09 第 11 題多一條線索；確定有這支 API 才回頭改清冊 |
 | 頻率 | 抽血大多每月一次，每 6 小時查一次已經夠；不需要像透析清單那樣每 3 分鐘 |
-| 如果之後要接 | 會是 `ClinicalDataSourcePort` 底下的另一個來源；病人清單可以直接拿透析清單 API 帶進來的病歷號，不用另外維護 `active_patients.txt` |
-| 報備 | 呼叫院方 API 的報備（Q-35）只講透析清單；要接這一支就要一起報 |
+| 如果之後要接 | 照學長 1107 的做法，本系統讀 `hb_online_v2.py` 存下來的 `raw_txt`，不自己打；讀 txt 不讀 CSV（CSV 丟了單位與定性結果）；同名異欄要先定哪一個算數；只有日期、沒有採檢時間；同一天改過的檢驗會有兩筆，要取最後抓到的那筆。來源介面是 `ClinicalDataSourcePort` 底下的另一個來源 |
+| 病人清單 | 可以直接拿透析清單帶進來的病歷號產生 `active_patients.txt`，不用另外人工維護 |
+| 報備 | 呼叫院方 API 的報備（Q-35）只講透析清單；這一支要排上也要一起報 |
 
 ## 9. 要取得的東西
 
-照優先順序；最直接的做法是回 Word 檔寫的那台電腦，把 OneDrive 裡整個 `Hb_API_Fetch` 資料夾拿回來：
+照優先順序；最直接的做法是在部署主機上看 `Hb_API_Fetch` 資料夾（第 1 節）：
 
-1. `collector_common.py`：端點、參數、回應解析都在裡面
-2. `config.json` 的範本（位址可以先遮掉，看欄位名就好）
-3. 一份**遮罩後**的回應：只看結構，數字與中文換成佔位字元，跟上層第 1 節處理 2024 年回應的做法一樣
-4. 誰寫的、現在有沒有在跑、V1 跟 V2 差在哪
-5. 確認後問資訊室：這支 API 本系統能不能也呼叫、要不要另外報備
+1. ~~`collector_common.py`~~：1109 補齊
+2. ~~`config.json` 的範本~~：1109 補齊，但位址是佔位字
+3. 實際的端點：哪一台主機、`http` 還是 `https`（只寫進私人紀錄）
+4. `active_patients.txt` 的範本與誰在維護
+5. 一份**遮罩後**的回應或 `raw_txt` 的一行：只看結構，數字與中文換成佔位字元，跟上層第 1 節處理 2024 年回應的做法一樣；要看一次回幾筆、單位與定性結果怎麼寫
+6. 同名異欄（第 4.5 節）哪一個是現行的
+7. 誰寫的、現在有沒有在跑（主機上已有月份檔）、V1 跟 V2 差在哪
+8. 確認後問學長：這支 API 要不要也排上抓取腳本、本系統能不能讀它的輸出
+
+題號在《[院方 API 之二](hospital-api-fetch-methods-questions.md)》I 組。
 
 ## 10. 公開界線
 
-- `fetch_API.py` 裡有成大院內的 API 位址，**不寫進本文件**；要找位址看那支程式或私人紀錄
-- `API_script/` 留在 repo 外，不 commit 進專案 repo（專案 repo 的文件會同步到公開站）；1108 起複本收在私人 repo 的 `deploy/records/1108-hospital-api/API_script/`（`deploy/` 不會同步）
-- 之後拿到回應，照上層文件第 8 節的做法只看遮罩後的結構，不把任何一筆真實資料放進 `docs/`
+- `fetch_API.py` 裡有成大院內的 API 位址，**不寫進本文件**；要找位址看那支程式或私人紀錄。`config.json` 的完整網址範本也只在私人紀錄
+- `API_script/` 留在 repo 外，不 commit 進專案 repo（專案 repo 的文件會同步到公開站）；1108 起複本收在私人 repo 的 `deploy/records/1108-hospital-api/API_script/`（`deploy/` 不會同步），1109 補的兩個檔也複製進去了
+- 第 4.5 節只列欄名，不含任何一筆資料；之後拿到回應，照上層文件第 8 節的做法只看遮罩後的結構，不把任何一筆真實資料放進 `docs/`
 
 ---
 
