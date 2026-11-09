@@ -77,8 +77,7 @@ Get-Process | Where-Object { $_.Name -match 'OneDrive|GoogleDrive|Dropbox|Synolo
 再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。接著點檔案總管上方的網址列、按 `Ctrl+C` 複製路徑，回 PowerShell 貼下面這段；出現「貼上指定資料夾的路徑」時按滑鼠右鍵貼上、按 Enter：
 
 ```powershell
-$dir = Read-Host '貼上指定資料夾的路徑'
-Test-Path -LiteralPath $dir
+$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"'); Test-Path -LiteralPath $dir
 $dir.StartsWith("$env:OneDrive\", 'OrdinalIgnoreCase')
 $p = Get-Item -LiteralPath $dir; while ($p) { if ($p.LinkType) { "$($p.FullName) -> $($p.Target)" }; $p = $p.Parent }
 ```
@@ -87,7 +86,14 @@ $p = Get-Item -LiteralPath $dir; while ($p) { if ($p.LinkType) { "$($p.FullName)
 - **在同步**：第二個是 `True`，或檔案旁有同步圖示
 - **在同步而醫師還沒同意**：停。學長當場聯絡醫師；聯絡不到就只做到 B-13（轉碼，不產生新的留底），B-14 起不做
 - **多印了「… -> …」**：資料夾經過連結，實際位置可能在 OneDrive 底下。停，跟學長確認
-- **第一個是 `False`**：路徑貼錯，重貼一次；還是 `False` 就停，請學長指出實際的資料夾
+- **第一個是 `False`**（明明在檔案總管看得到）：在同一個視窗貼下面這段，逐層找出哪一層對不上。檔案總管會把某些資料夾顯示成中文（例如實際叫 `Desktop`、畫面上顯示「桌面」），複製出來的路徑就跟實際的不同
+
+```powershell
+$parts = $dir.TrimEnd('\').Split('\'); $q = $parts[0] + '\'
+foreach ($s in $parts[1..($parts.Count-1)]) { $n = Join-Path $q $s; if (Test-Path -LiteralPath $n) { "有   $n" } else { "沒有 $n"; "$q 底下實際的資料夾："; Get-ChildItem -LiteralPath $q -Directory -Force | Select-Object -ExpandProperty Name; break }; $q = $n }
+```
+
+- 印到「沒有 …」那一行就是對不上的那一層，下面列出那一層實際的資料夾名稱。把路徑那一段換成實際名稱，重貼 B-06 那段再確認一次第一個是 `True`；**之後 B-12、B-13、B-14 的 `<指定資料夾>` 都用這個實際路徑**，不用 `values.md` 的。對不出來就停，請學長指出實際的資料夾
 - 沒有同步（`True`、`False`、沒有多印、檔案旁沒有圖示）：往下。第一段印的 OneDrive 路徑開頭跟 `values.md` 的路徑不一樣不要緊，以這裡的結果為準
 
 ### B-07 看有沒有舊的腳本在跑
