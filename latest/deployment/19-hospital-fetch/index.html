@@ -6387,7 +6387,8 @@
 <div class="highlight"><pre><span></span><code><span class="n">whoami</span>
 </code></pre></div>
 <ul>
-<li><strong>會看到</strong>：<code>&lt;電腦名稱&gt;\&lt;帳號&gt;</code>，帳號是醫師的</li>
+<li><strong>會看到</strong>：<code>&lt;電腦名稱&gt;\&lt;帳號&gt;</code>，帳號是醫師的；帳號名稱看不出是誰（例如 <code>user</code>）就問學長</li>
+<li><strong>PowerShell 視窗標題有「系統管理員」</strong>：關掉，照第 0 節第 4 點重開一般的（1109 現場開成系統管理員過）。用系統管理員建的腳本資料夾，排程以一般權限跑時可能寫不進狀態檔；已經做過的查看指令不用重做</li>
 <li><strong>不對的話</strong>：停。不是醫師的帳號就不往下做；公開文件站打不開（主機連不到外網）→ 改用手機看這一冊，指令照著打</li>
 </ul>
 <h3 id="b-05-看-python">B-05 看 Python<a class="headerlink" href="#b-05-看-python" title="Permanent link">&para;</a></h3>
@@ -6397,6 +6398,7 @@
 <ul>
 <li><strong>會看到</strong>：<code>py -0p</code> 列出 <code>-V:3.x</code> 與 <code>python.exe</code> 的路徑；<code>python --version</code> 印出 <code>Python 3.x.x</code>。<strong>3.8 以上</strong>才能用 <code>.py</code> 版</li>
 <li><strong>沒有 <code>py</code> 但 <code>python</code> 有</strong>：本冊的 <code>py</code> 全部換成 <code>python</code></li>
+<li><strong><code>py</code> 有、<code>python --version</code> 什麼都沒印</strong>：<code>python</code> 指到 Microsoft Store 的空殼，不要緊，本冊照用 <code>py</code>（1109 現場就是這樣）</li>
 <li><strong>跳出 Microsoft Store、或兩個都說找不到</strong>：就是沒有裝。停，學長決定裝 Python 或用 <code>.exe</code>；都不行就做完 B-06、B-07 收工</li>
 <li>記下結果：用 <code>.py</code> 還是 <code>.exe</code></li>
 </ul>
@@ -6405,11 +6407,19 @@
 <div class="highlight"><pre><span></span><code><span class="nv">$env:OneDrive</span><span class="p">;</span> <span class="nv">$env:OneDriveCommercial</span>
 <span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s1">'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box'</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
 </code></pre></div>
-<p>再用檔案總管開啟 <code>&lt;指定資料夾&gt;</code>，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。</p>
+<p>再用檔案總管開啟 <code>&lt;指定資料夾&gt;</code>，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。接著點檔案總管上方的網址列、按 <code>Ctrl+C</code> 複製路徑，回 PowerShell 貼下面這段；出現「貼上指定資料夾的路徑」時按滑鼠右鍵貼上、按 Enter：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$dir</span> <span class="p">=</span> <span class="nb">Read-Host</span> <span class="s1">'貼上指定資料夾的路徑'</span>
+<span class="nb">Test-Path</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span>
+<span class="nv">$dir</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">"$env:OneDrive\"</span><span class="p">,</span> <span class="s1">'OrdinalIgnoreCase'</span><span class="p">)</span>
+<span class="nv">$p</span> <span class="p">=</span> <span class="nb">Get-Item</span> <span class="n">-LiteralPath</span> <span class="nv">$dir</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="nv">$p</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$p</span><span class="p">.</span><span class="n">LinkType</span><span class="p">)</span> <span class="p">{</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$p</span><span class="p">.</span><span class="n">FullName</span><span class="p">)</span><span class="s2"> -&gt; </span><span class="p">$(</span><span class="nv">$p</span><span class="p">.</span><span class="n">Target</span><span class="p">)</span><span class="s2">"</span> <span class="p">};</span> <span class="nv">$p</span> <span class="p">=</span> <span class="nv">$p</span><span class="p">.</span><span class="n">Parent</span> <span class="p">}</span>
+</code></pre></div>
 <ul>
-<li><strong>會看到</strong>：第一行印出 OneDrive 的路徑，且 <code>&lt;指定資料夾&gt;</code> 在那個路徑底下；第二行有 <code>OneDrive</code>；檔案旁有同步圖示 → <strong>在同步</strong></li>
+<li>會印兩個 <code>True</code>／<code>False</code>：第一個是資料夾在不在，第二個是它在不在 OneDrive 的路徑底下；有一段路經過連結（Junction）才會多印一行「… -&gt; …」</li>
+<li><strong>在同步</strong>：第二個是 <code>True</code>，或檔案旁有同步圖示</li>
 <li><strong>在同步而醫師還沒同意</strong>：停。學長當場聯絡醫師；聯絡不到就只做到 B-13（轉碼，不產生新的留底），B-14 起不做</li>
-<li>沒有同步（第一行沒印東西或路徑不同、檔案旁沒有圖示）：往下</li>
+<li><strong>多印了「… -&gt; …」</strong>：資料夾經過連結，實際位置可能在 OneDrive 底下。停，跟學長確認</li>
+<li><strong>第一個是 <code>False</code></strong>：路徑貼錯，重貼一次；還是 <code>False</code> 就停，請學長指出實際的資料夾</li>
+<li>沒有同步（<code>True</code>、<code>False</code>、沒有多印、檔案旁沒有圖示）：往下。第一段印的 OneDrive 路徑開頭跟 <code>values.md</code> 的路徑不一樣不要緊，以這裡的結果為準</li>
 </ul>
 <h3 id="b-07-看有沒有舊的腳本在跑">B-07 看有沒有舊的腳本在跑<a class="headerlink" href="#b-07-看有沒有舊的腳本在跑" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TaskPath</span> <span class="o">-notlike</span> <span class="s1">'\Microsoft\*'</span> <span class="o">-and</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Actions</span><span class="p">.</span><span class="n">Execute</span><span class="p">)</span><span class="s2"> </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Actions</span><span class="p">.</span><span class="n">Arguments</span><span class="p">)</span><span class="s2">"</span> <span class="o">-match</span> <span class="s1">'python|\.py|fetch|IDH'</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TaskName</span><span class="p">,</span> <span class="n">State</span>
@@ -6463,11 +6473,16 @@
 <span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">hd-hospital-fetch</span>
 <span class="nb">dir</span>
 </code></pre></div>
-<p>（<code>&lt;腳本資料夾&gt;</code> 不是 <code>C:\hd-hospital-fetch</code> 的話，兩處換掉。）用 <code>.exe</code> 的話，把四個下載的檔搬進來：</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Move-Item</span> <span class="s2">"$env:USERPROFILE\Downloads\*.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\SHA256SUMS.txt"</span> <span class="p">.</span>
+<p>（<code>&lt;腳本資料夾&gt;</code> 不是 <code>C:\hd-hospital-fetch</code> 的話，兩處換掉。）用 <code>.exe</code> 的話，把四個下載的檔搬進來（逐一寫檔名，不用 <code>*.exe</code>，免得把醫師「下載」裡其他的 <code>.exe</code> 一起搬走）：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Move-Item</span> <span class="s2">"$env:USERPROFILE\Downloads\fetch_dialysis.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\fetch_dialysis_w.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\transcode_history.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\SHA256SUMS.txt"</span> <span class="p">.</span>
 </code></pre></div>
 <ul>
-<li><strong>會看到</strong>：<code>dir</code> 列出 <code>fetch_dialysis.py</code>、<code>transcode_history.py</code>、<code>install-task.ps1</code>、<code>uninstall-task.ps1</code>、<code>config.example.json</code>、<code>README.md</code> 等</li>
+<li>
+<p>下載的檔名變成 <code>xxx (1).exe</code>：「下載」裡原本就有同名的檔，停，跟學長確認</p>
+</li>
+<li>
+<p><strong>會看到</strong>：<code>dir</code> 列出 <code>fetch_dialysis.py</code>、<code>transcode_history.py</code>、<code>install-task.ps1</code>、<code>uninstall-task.ps1</code>、<code>config.example.json</code>、<code>README.md</code> 等</p>
+</li>
 <li>最後把「下載」資料夾裡的 zip 刪掉：<code>Remove-Item "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"</code></li>
 </ul>
 <h3 id="b-11-解除下載標記比對雜湊">B-11 解除下載標記、比對雜湊<a class="headerlink" href="#b-11-解除下載標記比對雜湊" title="Permanent link">&para;</a></h3>
