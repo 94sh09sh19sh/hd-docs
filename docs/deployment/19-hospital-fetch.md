@@ -137,7 +137,7 @@ Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Select-Object Proc
 
 1. 開 Edge，按 `Ctrl+Shift+N` 開 InPrivate 視窗
 2. 開啟 `github.com/login`，登入**自己的** GitHub；不勾「保持登入」；瀏覽器問要不要存密碼，選「永不」
-3. 開啟 `github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0`，下載 `Source code (zip)`
+3. 在 InPrivate 視窗的網址列貼上 `https://github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.1.0`，按 Enter；捲到頁面最下面的「Assets」區塊（收合著就點開），點 `Source code (zip)` 下載。顯示 404 是登入的帳號不對（repo 是私人的）
 4. 用 `.exe` 的話，再下載 `fetch_dialysis.exe`、`fetch_dialysis_w.exe`、`transcode_history.exe`、`SHA256SUMS.txt`
 5. **關掉整個 InPrivate 視窗**（登入、Cookie、瀏覽紀錄跟著清掉）；開著這一冊的一般視窗不用關，收工時再關（B-21）
 
