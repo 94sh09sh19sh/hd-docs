@@ -171,7 +171,19 @@ cd -LiteralPath $sf
 dir
 ```
 
-（在 B-08 的同一個視窗做；`$sf` 是空的就回 B-08 貼那一行。）用 `.exe` 的話，把四個下載的檔搬進來（逐一寫檔名，不用 `*.exe`，免得把醫師「下載」裡其他的 `.exe` 一起搬走）：
+（在 B-08 的同一個視窗做；`$sf` 是空的就回 B-08 貼那一行。）
+
+- **會看到**：`dir` 列出 `fetch_dialysis.py`、`transcode_history.py`、`install-task.ps1`、`uninstall-task.ps1`、`config.example.json`、`README.md` 等；提示字元變成 `PS …\hd-hospital-fetch>`
+
+接著把「下載」資料夾裡的 zip 刪掉：
+
+```powershell
+Remove-Item "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"
+```
+
+- **會看到**：不印東西
+
+**只有用 `.exe` 才做（走 `.py` 跳過，貼了也只會出現「找不到」紅字、不會動到任何檔）**：把四個下載的檔搬進來，逐一寫檔名，不用 `*.exe`，免得把醫師「下載」裡其他的 `.exe` 一起搬走：
 
 ```powershell
 Move-Item "$env:USERPROFILE\Downloads\fetch_dialysis.exe", "$env:USERPROFILE\Downloads\fetch_dialysis_w.exe", "$env:USERPROFILE\Downloads\transcode_history.exe", "$env:USERPROFILE\Downloads\SHA256SUMS.txt" .
@@ -179,16 +191,13 @@ Move-Item "$env:USERPROFILE\Downloads\fetch_dialysis.exe", "$env:USERPROFILE\Dow
 
 - 下載的檔名變成 `xxx (1).exe`：「下載」裡原本就有同名的檔，停，跟學長確認
 
-- **會看到**：`dir` 列出 `fetch_dialysis.py`、`transcode_history.py`、`install-task.ps1`、`uninstall-task.ps1`、`config.example.json`、`README.md` 等
-- 最後把「下載」資料夾裡的 zip 刪掉：`Remove-Item "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"`
-
 ### B-11 解除下載標記、比對雜湊
 
 ```powershell
 Get-ChildItem -Recurse | Unblock-File
 ```
 
-用 `.exe` 的話再比對：
+**只有用 `.exe` 才做（走 `.py` 跳過）**：比對雜湊：
 
 ```powershell
 Get-FileHash .\fetch_dialysis.exe, .\fetch_dialysis_w.exe, .\transcode_history.exe -Algorithm SHA256 | Select-Object Hash, Path
