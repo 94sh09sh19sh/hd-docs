@@ -27,6 +27,7 @@
 1. **兩種跑法**：主機有 Python 3.8 以上就用 `.py`；沒有就用 `.exe`（學長決定）。本冊的指令寫 `.py` 版；用 `.exe` 的話，`py fetch_dialysis.py` 換成 `.\fetch_dialysis.exe`、`py transcode_history.py` 換成 `.\transcode_history.exe`，其餘照舊
 1. **怎麼開 PowerShell**：按「開始」→ 打 `powershell` →「Windows PowerShell」（**不要**選「以系統管理員身分執行」）。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 `Alt+Tab` 在瀏覽器與 PowerShell 之間切換
 1. **結束碼**：每跑完一支，接著打 `$LASTEXITCODE` 看數字。`0` 是成功（或「跳過」），`1` 是失敗，`2` 是參數或設定錯
+1. **兩個變數**：B-06 設 `$dir`（指定資料夾）、B-08 設 `$sf`（腳本資料夾），之後的指令直接用，不用打路徑。PowerShell 視窗關掉就會不見；重開後先貼這一行，出現提示時貼上指定資料夾的路徑（從檔案總管網址列複製）：`$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"', "'"); $sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; cd -LiteralPath $sf`（腳本資料夾用 `C:\hd-hospital-fetch` 的話，`$sf =` 後面改成 `'C:\hd-hospital-fetch'`）
 
 ## 1. 出發前
 
@@ -136,10 +137,20 @@ Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Select-Object Proc
 
 跟學長定好，抄在手機上：
 
-| 代稱           | 是什麼                | 建議                                                                             |
-| -------------- | --------------------- | -------------------------------------------------------------------------------- |
-| `<指定資料夾>` | 留底 txt 所在的資料夾 | 照 `values.md`                                                                   |
-| `<腳本資料夾>` | 腳本放哪              | `C:\hd-hospital-fetch`；**不要**放在 OneDrive 底下、也不要放進 `<指定資料夾>` 裡 |
+| 代稱           | 是什麼                | 建議                                                                                                                                                                                                                                               |
+| -------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<指定資料夾>` | 留底 txt 所在的資料夾 | 照 `values.md`                                                                                                                                                                                                                                     |
+| `<腳本資料夾>` | 腳本放哪              | 學長要跟資料放一起（1109 定）：`<指定資料夾>` 的**上一層**底下的 `hd-hospital-fetch`，跟 `<指定資料夾>` 並列；**不要**放進 `<指定資料夾>` 裡、也不要放在正在同步的 OneDrive 底下（B-06 已確認沒在同步才行）。學長沒要求就用 `C:\hd-hospital-fetch` |
+
+在 B-06 的同一個視窗貼（`$dir` 是 B-06 填的指定資料夾，`$sf` 是腳本資料夾，B-10 起的指令都用這兩個）：
+
+```
+$sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; $sf; Test-Path -LiteralPath $sf
+```
+
+- **會看到**：`<指定資料夾>` 的上一層加 `\hd-hospital-fetch`，接著 `False`（還沒建）
+- 印出 `True`：已經有人放過，停，跟學長確認
+- 學長要用 `C:\hd-hospital-fetch` 的話改貼：`$sf = 'C:\hd-hospital-fetch'`
 
 ### B-09 下載（InPrivate 視窗）
 
@@ -153,13 +164,13 @@ Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Select-Object Proc
 ### B-10 解壓縮到腳本資料夾
 
 ```
-Expand-Archive "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip" -DestinationPath C:\
-Rename-Item C:\hd-hospital-fetch-0.1.0 hd-hospital-fetch
-cd C:\hd-hospital-fetch
+Expand-Archive "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip" -DestinationPath (Split-Path -Parent $sf)
+Rename-Item -LiteralPath (Join-Path (Split-Path -Parent $sf) 'hd-hospital-fetch-0.1.0') 'hd-hospital-fetch'
+cd -LiteralPath $sf
 dir
 ```
 
-（`<腳本資料夾>` 不是 `C:\hd-hospital-fetch` 的話，兩處換掉。）用 `.exe` 的話，把四個下載的檔搬進來（逐一寫檔名，不用 `*.exe`，免得把醫師「下載」裡其他的 `.exe` 一起搬走）：
+（在 B-08 的同一個視窗做；`$sf` 是空的就回 B-08 貼那一行。）用 `.exe` 的話，把四個下載的檔搬進來（逐一寫檔名，不用 `*.exe`，免得把醫師「下載」裡其他的 `.exe` 一起搬走）：
 
 ```
 Move-Item "$env:USERPROFILE\Downloads\fetch_dialysis.exe", "$env:USERPROFILE\Downloads\fetch_dialysis_w.exe", "$env:USERPROFILE\Downloads\transcode_history.exe", "$env:USERPROFILE\Downloads\SHA256SUMS.txt" .
@@ -188,9 +199,10 @@ Get-Content .\SHA256SUMS.txt
 ### B-12 轉碼：先預演
 
 ```
-py transcode_history.py "<指定資料夾>"
+py transcode_history.py $dir
 ```
 
+- `$dir` 是 B-06 填的指定資料夾，不用自己打路徑
 - **會看到**（數字是範例）：
 
 ```
@@ -218,7 +230,7 @@ py transcode_history.py "<指定資料夾>"
 ### B-13 轉碼：實轉
 
 ```
-py transcode_history.py "<指定資料夾>" --apply
+py transcode_history.py $dir --apply
 $LASTEXITCODE
 ```
 
@@ -246,10 +258,10 @@ notepad config.json
 
 記事本裡只改兩行，其他不動：
 
-| 欄位           | 改成                                                                          |
-| -------------- | ----------------------------------------------------------------------------- |
-| `"endpoint"`   | `values.md` 的院方位址（`http://` 開頭，到 `.php` 為止，**不要**加 `?date=`） |
-| `"output_dir"` | `<指定資料夾>`。**每個反斜線要寫兩個**：`D:\資料\IDH` 寫成 `"D:\\資料\\IDH"`  |
+| 欄位           | 改成                                                                                                                                                                                                            |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"endpoint"`   | `values.md` 的院方位址（`http://` 開頭，到 `.php` 為止，**不要**加 `?date=`）                                                                                                                                   |
+| `"output_dir"` | `<指定資料夾>`。**每個反斜線要寫兩個**：`D:\資料\IDH` 寫成 `"D:\\資料\\IDH"`。不用自己打：開記事本前先貼 `Set-Clipboard $dir.Replace('\', '\\')`，在記事本裡把 `output_dir` 引號中間原本的值選起來、按 `Ctrl+V` |
 
 存檔（`Ctrl+S`）、關掉記事本。
 
@@ -275,7 +287,7 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 看當月檔的最後兩行對不對（**只看開頭與長度，不把病人資料印到螢幕上**）：
 
 ```
-$t = Get-Content -Encoding UTF8 "<指定資料夾>\2026-11.txt" -Tail 2
+$t = Get-Content -Encoding UTF8 -LiteralPath (Join-Path $dir ((Get-Date -Format 'yyyy-MM') + '.txt')) -Tail 2
 $t[0]
 $t[1].StartsWith('{"data_list":[')
 $t[1].Length
@@ -362,7 +374,7 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 | --- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | R-1 | 停排程              | `powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1`，會看到「已移除工作 hd-hospital-fetch」                               |
 | R-2 | 歷史 txt 回到轉碼前 | B-13 抄下的那一行（`python` 依 B-05 換成 `py`）：`py transcode_history.py --restore "<指定資料夾>\_backup_…"`，每個檔會看到「已還原」 |
-| R-3 | 刪腳本              | `cd C:\`，再 `Remove-Item -Recurse C:\hd-hospital-fetch`                                                                              |
+| R-3 | 刪腳本              | `cd ..`，再 `Remove-Item -Recurse -LiteralPath $sf`（`$sf` 是空的就照第 0 節第 6 點先設好）                                           |
 
 - R-2 之後，B-16 起附加到當月檔的那幾段也會一起被蓋回去（還原是整個檔換回備份）
 - 備份資料夾 `_backup_…` 不刪，留給學長

@@ -6349,6 +6349,7 @@
 <li><strong>兩種跑法</strong>：主機有 Python 3.8 以上就用 <code>.py</code>；沒有就用 <code>.exe</code>（學長決定）。本冊的指令寫 <code>.py</code> 版；用 <code>.exe</code> 的話，<code>py fetch_dialysis.py</code> 換成 <code>.\fetch_dialysis.exe</code>、<code>py transcode_history.py</code> 換成 <code>.\transcode_history.exe</code>，其餘照舊</li>
 <li><strong>怎麼開 PowerShell</strong>：按「開始」→ 打 <code>powershell</code> →「Windows PowerShell」（<strong>不要</strong>選「以系統管理員身分執行」）。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 <code>Alt+Tab</code> 在瀏覽器與 PowerShell 之間切換</li>
 <li><strong>結束碼</strong>：每跑完一支，接著打 <code>$LASTEXITCODE</code> 看數字。<code>0</code> 是成功（或「跳過」），<code>1</code> 是失敗，<code>2</code> 是參數或設定錯</li>
+<li><strong>兩個變數</strong>：B-06 設 <code>$dir</code>（指定資料夾）、B-08 設 <code>$sf</code>（腳本資料夾），之後的指令直接用，不用打路徑。PowerShell 視窗關掉就會不見；重開後先貼這一行，出現提示時貼上指定資料夾的路徑（從檔案總管網址列複製）：<code>$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"', "'"); $sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; cd -LiteralPath $sf</code>（腳本資料夾用 <code>C:\hd-hospital-fetch</code> 的話，<code>$sf =</code> 後面改成 <code>'C:\hd-hospital-fetch'</code>）</li>
 </ol>
 <h2 id="1-出發前">1. 出發前<a class="headerlink" href="#1-出發前" title="Permanent link">&para;</a></h2>
 <table>
@@ -6473,10 +6474,18 @@
 <tr>
 <td><code>&lt;腳本資料夾&gt;</code></td>
 <td>腳本放哪</td>
-<td><code>C:\hd-hospital-fetch</code>；<strong>不要</strong>放在 OneDrive 底下、也不要放進 <code>&lt;指定資料夾&gt;</code> 裡</td>
+<td>學長要跟資料放一起（1109 定）：<code>&lt;指定資料夾&gt;</code> 的<strong>上一層</strong>底下的 <code>hd-hospital-fetch</code>，跟 <code>&lt;指定資料夾&gt;</code> 並列；<strong>不要</strong>放進 <code>&lt;指定資料夾&gt;</code> 裡、也不要放在正在同步的 OneDrive 底下（B-06 已確認沒在同步才行）。學長沒要求就用 <code>C:\hd-hospital-fetch</code></td>
 </tr>
 </tbody>
 </table>
+<p>在 B-06 的同一個視窗貼（<code>$dir</code> 是 B-06 填的指定資料夾，<code>$sf</code> 是腳本資料夾，B-10 起的指令都用這兩個）：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$sf</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="p">(</span><span class="nb">Split-Path</span> <span class="n">-Parent</span> <span class="nv">$dir</span><span class="p">)</span> <span class="s1">'hd-hospital-fetch'</span><span class="p">;</span> <span class="nv">$sf</span><span class="p">;</span> <span class="nb">Test-Path</span> <span class="n">-LiteralPath</span> <span class="nv">$sf</span>
+</code></pre></div>
+<ul>
+<li><strong>會看到</strong>：<code>&lt;指定資料夾&gt;</code> 的上一層加 <code>\hd-hospital-fetch</code>，接著 <code>False</code>（還沒建）</li>
+<li>印出 <code>True</code>：已經有人放過，停，跟學長確認</li>
+<li>學長要用 <code>C:\hd-hospital-fetch</code> 的話改貼：<code>$sf = 'C:\hd-hospital-fetch'</code></li>
+</ul>
 <h3 id="b-09-下載inprivate-視窗">B-09 下載（InPrivate 視窗）<a class="headerlink" href="#b-09-下載inprivate-視窗" title="Permanent link">&para;</a></h3>
 <ol>
 <li>開 Edge，按 <code>Ctrl+Shift+N</code> 開 InPrivate 視窗</li>
@@ -6491,12 +6500,12 @@
 </li>
 </ol>
 <h3 id="b-10-解壓縮到腳本資料夾">B-10 解壓縮到腳本資料夾<a class="headerlink" href="#b-10-解壓縮到腳本資料夾" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">Expand-Archive</span> <span class="s2">"$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"</span> <span class="n">-DestinationPath</span> <span class="n">C</span><span class="p">:\</span>
-<span class="nb">Rename-Item</span> <span class="n">C</span><span class="p">:\</span><span class="n">hd-hospital-fetch</span><span class="p">-</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">0</span> <span class="n">hd-hospital-fetch</span>
-<span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">hd-hospital-fetch</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Expand-Archive</span> <span class="s2">"$env:USERPROFILE\Downloads\hd-hospital-fetch-0.1.0.zip"</span> <span class="n">-DestinationPath</span> <span class="p">(</span><span class="nb">Split-Path</span> <span class="n">-Parent</span> <span class="nv">$sf</span><span class="p">)</span>
+<span class="nb">Rename-Item</span> <span class="n">-LiteralPath</span> <span class="p">(</span><span class="nb">Join-Path</span> <span class="p">(</span><span class="nb">Split-Path</span> <span class="n">-Parent</span> <span class="nv">$sf</span><span class="p">)</span> <span class="s1">'hd-hospital-fetch-0.1.0'</span><span class="p">)</span> <span class="s1">'hd-hospital-fetch'</span>
+<span class="nb">cd </span><span class="n">-LiteralPath</span> <span class="nv">$sf</span>
 <span class="nb">dir</span>
 </code></pre></div>
-<p>（<code>&lt;腳本資料夾&gt;</code> 不是 <code>C:\hd-hospital-fetch</code> 的話，兩處換掉。）用 <code>.exe</code> 的話，把四個下載的檔搬進來（逐一寫檔名，不用 <code>*.exe</code>，免得把醫師「下載」裡其他的 <code>.exe</code> 一起搬走）：</p>
+<p>（在 B-08 的同一個視窗做；<code>$sf</code> 是空的就回 B-08 貼那一行。）用 <code>.exe</code> 的話，把四個下載的檔搬進來（逐一寫檔名，不用 <code>*.exe</code>，免得把醫師「下載」裡其他的 <code>.exe</code> 一起搬走）：</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Move-Item</span> <span class="s2">"$env:USERPROFILE\Downloads\fetch_dialysis.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\fetch_dialysis_w.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\transcode_history.exe"</span><span class="p">,</span> <span class="s2">"$env:USERPROFILE\Downloads\SHA256SUMS.txt"</span> <span class="p">.</span>
 </code></pre></div>
 <ul>
@@ -6520,9 +6529,10 @@
 <li><strong>不對的話</strong>：雜湊不同 → 刪掉那個 <code>.exe</code>，回 B-09 重新下載</li>
 </ul>
 <h3 id="b-12-轉碼先預演">B-12 轉碼：先預演<a class="headerlink" href="#b-12-轉碼先預演" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">transcode_history</span><span class="p">.</span><span class="n">py</span> <span class="s2">"&lt;指定資料夾&gt;"</span>
+<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">transcode_history</span><span class="p">.</span><span class="n">py</span> <span class="nv">$dir</span>
 </code></pre></div>
 <ul>
+<li><code>$dir</code> 是 B-06 填的指定資料夾，不用自己打路徑</li>
 <li><strong>會看到</strong>（數字是範例）：</li>
 </ul>
 <div class="highlight"><pre><span></span><code>== 預演 ==
@@ -6570,7 +6580,7 @@
 <li><strong>當月檔</strong>（例如 <code>2026-11.txt</code>）如果停在「混合」「無法判斷」，B-14 起不能做（腳本不會往非 UTF-8 的檔附加）</li>
 </ul>
 <h3 id="b-13-轉碼實轉">B-13 轉碼：實轉<a class="headerlink" href="#b-13-轉碼實轉" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">transcode_history</span><span class="p">.</span><span class="n">py</span> <span class="s2">"&lt;指定資料夾&gt;"</span> <span class="p">-</span><span class="n">-apply</span>
+<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">transcode_history</span><span class="p">.</span><span class="n">py</span> <span class="nv">$dir</span> <span class="p">-</span><span class="n">-apply</span>
 <span class="nv">$LASTEXITCODE</span>
 </code></pre></div>
 <ul>
@@ -6606,7 +6616,7 @@
 </tr>
 <tr>
 <td><code>"output_dir"</code></td>
-<td><code>&lt;指定資料夾&gt;</code>。<strong>每個反斜線要寫兩個</strong>：<code>D:\資料\IDH</code> 寫成 <code>"D:\\資料\\IDH"</code></td>
+<td><code>&lt;指定資料夾&gt;</code>。<strong>每個反斜線要寫兩個</strong>：<code>D:\資料\IDH</code> 寫成 <code>"D:\\資料\\IDH"</code>。不用自己打：開記事本前先貼 <code>Set-Clipboard $dir.Replace('\', '\\')</code>，在記事本裡把 <code>output_dir</code> 引號中間原本的值選起來、按 <code>Ctrl+V</code></td>
 </tr>
 </tbody>
 </table>
@@ -6627,7 +6637,7 @@
 <li><strong>會看到</strong>：第一行 <code>… 成功 回應 601 列、寫入 601 列</code>；<code>$LASTEXITCODE</code> 是 <code>0</code>；狀態檔裡 <code>"result": "ok"</code>、<code>"written_rows"</code> 與 <code>"response_rows"</code> 一樣</li>
 </ul>
 <p>看當月檔的最後兩行對不對（<strong>只看開頭與長度，不把病人資料印到螢幕上</strong>）：</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$t</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="s2">"&lt;指定資料夾&gt;\2026-11.txt"</span> <span class="n">-Tail</span> <span class="n">2</span>
+<div class="highlight"><pre><span></span><code><span class="nv">$t</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="n">-LiteralPath</span> <span class="p">(</span><span class="nb">Join-Path</span> <span class="nv">$dir</span> <span class="p">((</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">'yyyy-MM'</span><span class="p">)</span> <span class="p">+</span> <span class="s1">'.txt'</span><span class="p">))</span> <span class="n">-Tail</span> <span class="n">2</span>
 <span class="nv">$t</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
 <span class="nv">$t</span><span class="p">[</span><span class="n">1</span><span class="p">].</span><span class="n">StartsWith</span><span class="p">(</span><span class="s1">'{"data_list":['</span><span class="p">)</span>
 <span class="nv">$t</span><span class="p">[</span><span class="n">1</span><span class="p">].</span><span class="n">Length</span>
@@ -6735,7 +6745,7 @@
 <tr>
 <td>R-3</td>
 <td>刪腳本</td>
-<td><code>cd C:\</code>，再 <code>Remove-Item -Recurse C:\hd-hospital-fetch</code></td>
+<td><code>cd ..</code>，再 <code>Remove-Item -Recurse -LiteralPath $sf</code>（<code>$sf</code> 是空的就照第 0 節第 6 點先設好）</td>
 </tr>
 </tbody>
 </table>
