@@ -75,7 +75,7 @@ $env:OneDrive; $env:OneDriveCommercial
 Get-Process | Where-Object { $_.Name -match 'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box' } | Select-Object Name
 ```
 
-再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。`<指定資料夾>` 是**透析清單**的資料夾，`values.md` 裡結尾是 `IDH_interface` 的那一個；`Hb_API_Fetch` 底下（含 `hospital_dataset\raw_txt`）是檢驗資料，裡面也有「年-月.txt」，**不是這一個**（1109 現場選錯過）。
+再用檔案總管開啟 `<指定資料夾>`，看檔案旁邊有沒有雲朵或綠色勾勾的圖示。`<指定資料夾>` 是**透析清單**的資料夾，`values.md` 裡結尾是 `IDH_interface` 的那一個；`Hb_API_Fetch` 底下（含 `hospital_dataset\raw_txt`）是檢驗資料，裡面也有「年-月.txt」，**不是這一個**（1109 現場選錯過）；檢驗資料的 txt 每一行開頭是 `{"FetchedAt"`，沒有 `Date:`。
 
 接著點檔案總管上方的網址列、按 `Ctrl+C` 複製路徑，回 PowerShell 貼下面這段。**指令原樣貼、不要把路徑改進指令裡**；出現「貼上指定資料夾的路徑:」時才按滑鼠右鍵貼上路徑（前後有引號也沒關係）、按 Enter：
 

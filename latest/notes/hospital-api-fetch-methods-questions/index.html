@@ -6209,7 +6209,7 @@
 <li>K 組是 <strong>1109 進院帶回來的新題目</strong>（第十九冊之二 BR-01～BR-04、BR-09），其他各組是 1108 第二版的題目</li>
 <li>C 組有 10 列是開發端已照建議做進 <code>hd-hospital-fetch</code> v0.1.0、不影響檔的，學長沒有異議就<strong>不必回</strong></li>
 <li>醫師已授權 API 相關事宜由學長決定，所以原本掛給資訊室或護理長、但跟 API 有關的題目先問學長；學長不知道的，再去問原本要問的人</li>
-<li>已答的 17 項（九組 54 項裡的 13 項、W 表 4 項；含 1109 現場看到答案的 W-1、W-3、W-4、A-1、A-3、G-1）在《之二之一》</li>
+<li>已答的 19 項（九組 54 項裡的 15 項、W 表 4 項；含 1109 現場看到答案的 W-1、W-3、W-4、A-1、A-3、G-1，與 1109 晚上讀補齊的 <code>hb</code> 程式答掉的 I-1、I-4）在《之二之一》；I 組讀程式多出 I-8、I-9</li>
 </ul>
 <h2 id="1-還沒答的總表">1. 還沒答的總表<a class="headerlink" href="#1-還沒答的總表" title="Permanent link">&para;</a></h2>
 <table>
@@ -6234,7 +6234,7 @@
 </tr>
 <tr>
 <td>不急</td>
-<td>A-5 <code>hb</code> 的輸出位置；B-4 IDH 資料庫少掉的列；C-16 單一病人查詢；H-1、H-2 報備與改版通知；I-1～I-7 <code>hb</code> 那支 API</td>
+<td>A-5 <code>hb</code> 的輸出位置；B-4 IDH 資料庫少掉的列；C-16 單一病人查詢；H-1、H-2 報備與改版通知；I-2、I-3、I-5～I-9 <code>hb</code> 那支 API</td>
 </tr>
 <tr>
 <td>不必回（學長沒異議就照建議）</td>
@@ -6605,7 +6605,7 @@
 </tbody>
 </table>
 <h2 id="12-i-另一支-apihb">12. I. 另一支 API（<code>hb</code>）<a class="headerlink" href="#12-i-另一支-apihb" title="Permanent link">&para;</a></h2>
-<p>1106 學長說 <code>hb</code> 的 API 資料也可以放進來考量，會傳 <code>.json</code> 的例子；到 1109 為止還沒收到。光有 <code>.json</code> 不夠：<code>hb_online_v2.py</code> 真正做事的部分在缺少的 <code>collector_common.py</code> 裡，見《<a href="../idh-reference-survey-api-script/">參考調查之一</a>》第 4、9 節。1109 現場看到主機上的 <code>Hb_API_Fetch</code> 底下有 <code>hospital_dataset\raw_txt</code>，裡面也是「年-月.txt」。</p>
+<p>1106 學長說 <code>hb</code> 的 API 資料也可以放進來考量，會傳 <code>.json</code> 的例子。1108 21:29 學長把 <code>collector_common.py</code>、<code>config.json</code>（範本）放上 Drive，1109 晚上下載核對：<strong>I-1、I-4 已答</strong>，搬到《之二之一》；I-2、I-3 答了一半；讀程式多出 I-8、I-9。程式讀到什麼見《<a href="../idh-reference-survey-api-script/">參考調查之一</a>》第 4 節。1109 現場看到主機上的 <code>Hb_API_Fetch</code> 底下有 <code>hospital_dataset\raw_txt</code>，裡面也是「年-月.txt」。</p>
 <table>
 <thead>
 <tr>
@@ -6616,29 +6616,19 @@
 </thead>
 <tbody>
 <tr>
-<td>I-1</td>
-<td><code>collector_common.py</code> 什麼時候能補？</td>
-<td>端點、參數、回應怎麼解析都在這支裡面；少了它，<code>hb_online_v2.py</code> 跑不起來，也看不出它抓的是什麼</td>
-</tr>
-<tr>
 <td>I-2</td>
-<td><code>config.json</code>（位址可以先遮掉）與 <code>active_patients.txt</code> 的範本什麼時候能補？病人清單是誰維護的？</td>
+<td><code>config.json</code>（位址可以先遮掉）與 <code>active_patients.txt</code> 的範本什麼時候能補？病人清單是誰維護的？<strong>1109 已答一半</strong>：<code>config.json</code> 範本拿到了（位址是佔位字）；<code>active_patients.txt</code> 與誰維護還沒</td>
 <td>決定要查哪些病人；本系統可以直接用透析清單帶進來的病歷號，不必再另外維護一份</td>
 </tr>
 <tr>
 <td>I-3</td>
-<td>能給一份遮罩過的回應嗎（數字與中文換成佔位字元）？裡面有血紅素、白蛋白、BUN 嗎？單位與採檢時間呢？</td>
+<td>能給一份遮罩過的回應嗎（數字與中文換成佔位字元）？裡面有血紅素、白蛋白、BUN 嗎？單位與採檢時間呢？<strong>1109 已答一半</strong>：程式寫死 88 個欄名，有 <code>Hb</code>、<code>ALBUMIN</code>、BUN、<code>Kt/V</code>；只有日期、沒有採檢時間。遮罩過的回應、單位與陰性陽性怎麼寫、一次回一筆是不是期間內最近那次，還沒</td>
 <td>決定本系統關著的「需要抽血數值的功能」（透析適足性、抽血數值趨勢）有沒有機會開啟</td>
-</tr>
-<tr>
-<td>I-4</td>
-<td>這是另一支端點，還是同一支 <code>dialysislist.php</code> 換成「查一位病人一段期間」的查法？</td>
-<td>如果是同一支，拿回來的還是 51 欄，不會有抽血數值</td>
 </tr>
 <tr>
 <td>I-5</td>
 <td>這支是誰寫的？現在有在跑嗎？資料給誰用？V1 和 V2 差在哪？</td>
-<td>從 <code>hospital_dataset/</code> 這個名字看，比較像研究用的資料集；要知道會不會跟本系統搶同一份資料</td>
+<td>從 <code>hospital_dataset/</code> 這個名字看，比較像研究用的資料集；要知道會不會跟本系統搶同一份資料。主機上已有月份檔，表示跑過</td>
 </tr>
 <tr>
 <td>I-6</td>
@@ -6648,7 +6638,17 @@
 <tr>
 <td>I-7</td>
 <td>Word 檔寫的那台電腦，OneDrive 裡整個 <code>Hb_API_Fetch</code> 資料夾可以拿到嗎？</td>
-<td>這是最快把 I-1～I-3 一次拿齊的方法；1109 已知它就在部署主機的 D 槽</td>
+<td>程式已補齊，剩 <code>active_patients.txt</code> 與實際設定、輸出（I-2、I-3、I-8）；1109 已知它就在部署主機的 D 槽</td>
+</tr>
+<tr>
+<td>I-8</td>
+<td>實際的端點是哪一台主機？<code>http</code> 還是 <code>https</code>？（1109 補）</td>
+<td>範本把主機換成佔位字；程式預設只打 <code>https</code>，<code>http</code> 要院方核准後在設定明確允許</td>
+</tr>
+<tr>
+<td>I-9</td>
+<td>88 欄裡同一項有兩三個名字（<code>ALBUMIN</code>／<code>ALB</code>、<code>Ferritin</code>／<code>FERR</code>、<code>PTHi</code>／<code>PTH</code> 等 11 組），是改過名還是不同機台？現行的是哪一個？（1109 補）</td>
+<td>本系統要顯示時得知道讀哪一欄，或兩個怎麼合併</td>
 </tr>
 </tbody>
 </table>
