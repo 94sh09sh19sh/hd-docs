@@ -89,11 +89,13 @@ $p = Get-Item -LiteralPath $dir; while ($p) { if ($p.LinkType) { "$($p.FullName)
 第一個是 `True` 之後，在同一個視窗確認這是透析清單（只看最新一個 txt 的開頭有沒有 `Date:` 與 `"data_list"`，不印病人資料）：
 
 ```powershell
-$f = Get-ChildItem -LiteralPath $dir -Filter *.txt | Sort-Object Name | Select-Object -Last 1; $f.Name
+$f = Get-ChildItem -LiteralPath $dir -Filter *.txt | Where-Object { $_.Name -match '^\d{4}-\d{2}\.txt$' } | Sort-Object Name | Select-Object -Last 1; $f.Name
 $h = (Get-Content -LiteralPath $f.FullName -TotalCount 2) -join ' '; $h.StartsWith('Date:'); $h.Contains('"data_list"')
 ```
 
-- **會看到**：最新的檔名（例如 `2026-11.txt`），接著兩個 `True`
+- **會看到**：最新的「年-月.txt」檔名（例如 `2026-11.txt`），接著兩個 `True`
+- 沒印檔名、接著是紅字：資料夾裡沒有「年-月.txt」，停，跟學長確認歷史檔放在哪
+- 資料夾裡另有 `data_list_sucess.txt`：舊腳本（`API_script` 版）的留底，也是透析清單，B-12 的清單會列出它並一起轉碼，不用處理（1109 現場就有）
 - **不是兩個 `True`**：這不是透析清單的資料夾。停，請學長指出正確的那一個
 - **在同步**：第二個是 `True`，或檔案旁有同步圖示
 - **在同步而醫師還沒同意**：停。學長當場聯絡醫師；聯絡不到就只做到 B-13（轉碼，不產生新的留底），B-14 起不做
