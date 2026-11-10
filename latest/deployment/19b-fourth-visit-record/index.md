@@ -307,7 +307,7 @@ ______________________________________________________________________
 
 ### 6.1 進院前先問學長
 
-問題的真本在《[院方 API 的四種抓取方式之二：給學長的問題清單](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》，這一冊帶回來的收成那裡的 **K 組**；該清單第 1 節的總表列出全部還沒答的題目與什麼時候要有答案。B-16 前一定要有答案的：
+問題的真本在《[院方 API 的四種抓取方式之二：給學長的問題清單](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》，這一冊帶回來的收成那裡的 **K 組**；補充版《[之二之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-detail/index.md)》第 1 節的總表列出全部還沒答的題目與什麼時候要有答案。B-16 前一定要有答案的：
 
 - K-1 當月檔是從哪裡搬來的、來源那邊的程式還有沒有在跑（BR-01）
 - K-2 D 槽要不要清（BR-02）

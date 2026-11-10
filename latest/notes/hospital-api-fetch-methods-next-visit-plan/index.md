@@ -46,7 +46,7 @@ ______________________________________________________________________
 
 ## 3. 進院前要有答案的
 
-題目的真本在《[之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》第 12 節 I 組與第 3 節 A 組；1109 晚上改排到「B-16 前」：
+題目的真本在《[之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》（理由在補充版《[之二之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-detail/index.md)》第 12 節 I 組與第 4 節 A 組）；1109 晚上改排到「B-16 前」：
 
 | #    | 一句話                                                                                                          | 沒答案的話                                     |
 | ---- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
