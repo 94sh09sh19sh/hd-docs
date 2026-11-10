@@ -4798,6 +4798,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#306-迭代-304b-部分" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §30.6 迭代 30.4：B 部分
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6072,6 +6083,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#306-迭代-304b-部分" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §30.6 迭代 30.4：B 部分
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6101,16 +6123,17 @@
 
 <h1 id="迭代-30-手動測試--連點成畫之二標準模式與跟自己比">迭代 30 手動測試 — 連點成畫之二：標準模式與跟自己比<a class="headerlink" href="#迭代-30-手動測試--連點成畫之二標準模式與跟自己比" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.30 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 30 的部分。設計與理由在《<a href="../../notes/dialysis-gamification-benchmark/">透析中的遊戲化之五</a>》第 3.2、4、6.2 節；迭代 29 的遊戲模式在《<a href="../iteration-29/">迭代 29 分冊</a>》。<strong>1028 只做了 A 部分</strong>：B 部分（圓、方交替）等清冊 Q-40 第 2 題，這一冊不驗 B。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.30 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 30 的部分。設計與理由在《<a href="../../notes/dialysis-gamification-benchmark/">透析中的遊戲化之五</a>》第 3.2、4、6.2 節；迭代 29 的遊戲模式在《<a href="../iteration-29/">迭代 29 分冊</a>》。<strong>1028 只做了 A 部分</strong>；B 部分 1110 做成迭代 30.4，在 §30.6（<code>an17</code> 起，對應實作規格書 4.30.4）。</p>
 </blockquote>
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
-<p>這一冊驗五件事（項次 <code>an1</code>～<code>an16</code>，自動化另跑 <code>npm run verify:iteration30</code> 與 <code>npm run verify:iteration30:api</code>）：</p>
+<p>這一冊驗六件事（項次 <code>an1</code>～<code>an24</code>，自動化另跑 <code>npm run verify:iteration30</code>、<code>npm run verify:iteration30:api</code>，30.4 另跑 <code>npm run verify:iteration30-4</code>、<code>npm run verify:iteration30-4:api</code>）：</p>
 <ul>
 <li>每月第一盤、而且在透析開始後第 30～90 分鐘開始的那一盤是標準模式，病人看到的和平常一樣</li>
 <li>標準模式的版面只從固定的 A1～A4 四套輪流；不合條件的照樣能玩，記成平常那一種</li>
 <li>五個新的營運參數（時窗起止、練習幾盤、取前幾次、至少幾次）在系統管理改得到</li>
 <li>護理端病人詳細資訊的狀態評估彙整多一段「連點成畫標準版」：前 10 盤只當練習、只寫事實、附施測時點</li>
 <li>沒玩到的月份就沒有，不補、不提醒</li>
+<li>（30.4）標準版 A 點完先一張圓方圖解、再點圓方交替的 50 個；護理端多 B 與 B−A 兩句</li>
 </ul>
 <table>
 <thead>
@@ -6175,6 +6198,12 @@
 <td>🛠</td>
 <td>驗收第 7 條</td>
 </tr>
+<tr>
+<td>§30.6</td>
+<td>迭代 30.4：B 部分</td>
+<td>📱 🖥 🛠</td>
+<td>4.30.4 驗收第 1～5 條</td>
+</tr>
 </tbody>
 </table>
 <p><strong>前置</strong>：病人平板已配給一位透析中的合成病人；療程有開始時間（院方資料或護理端記的開始）。<code>demo:patient</code> 的病人透析到一半，開始時間在 40 分鐘前左右就落在時窗裡。</p>
@@ -6209,6 +6238,18 @@
 <h2 id="305-自動化驗收">§30.5 自動化驗收<a class="headerlink" href="#305-自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an16</code> <strong>［開發機］</strong> 🛠 跑 <code>npm run verify:iteration30</code>（不需要後端，八步：四套版面的規則與配平、輪替、快照第 2 版、時窗、病人畫面沒有差別、算式與用字、營運參數、只有 A 部分，加上介面檢查、零院外連線、匯出登記與迭代 22、29 的驗收）與 <code>npm run verify:iteration30:api</code>（要 Prisma，不需要開發機的後端，五步：營運參數與時窗、標準模式那一盤、不合條件記成平常、輪替與舊存檔、護理端陳述與稽核）。 → 兩支都「全部通過」；<code>verify:acceptance</code> 與全部回歸照樣通過。</li>
+</ul>
+<h2 id="306-迭代-304b-部分">§30.6 迭代 30.4：B 部分<a class="headerlink" href="#306-迭代-304b-部分" title="Permanent link">&para;</a></h2>
+<p>前置：展示資料庫把營運參數「標準模式時窗的止」暫改大一點（<code>demo:patient</code> 的病人已透析約 100 分鐘），開「連點成畫」。</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an17</code> <strong>［病人端］</strong> 📱 在時窗裡開一盤、點完 25 個圓。 → 不揭圖，換成一張圖：上面一句「照您自己的速度，照這個順序點」、中間 1 圓、1 方、2 圓、2 方、3 圓、3 方一列、下面「接著點」；那一列點了沒有反應；沒有計時、「標準」字樣。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an18</code> <strong>［病人端］</strong> 按「接著點」。 → 50 個圓與方（1～25 各一圓一方），1280×800 不捲動、求助區照舊在下面；沒有線。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an19</code> <strong>［病人端］</strong> 先點 1 方、再點 2 圓。 → 畫面都不變；照 1 圓、1 方、2 圓的順序點，點對的變成完成色、不畫線。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an20</code> <strong>［病人端］</strong> 點到一半按回首頁，再進連點成畫。 → 回到同一盤、點過的照舊；停在圖解那一頁回來也還是圖解。50 個點完揭圖。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an21</code> <strong>［病人端］</strong> 截一張 B 點到一半的圖轉成灰階。 → 圓與方一眼分得出、點過的與沒點的分得出。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an22</code> <strong>［開發機］</strong> 🛠 看 <code>connect_dots_boards</code> 那一列與 <code>connect_dots_taps</code>。 → <code>b_layout_code</code> 與 <code>layout_code</code> 同一個序號（A1 配 B1）、<code>b_point_count</code> 50；<code>completion_ms</code> 是 A、<code>b_completion_ms</code> 從按「接著點」算；<code>b_minus_a_ms</code>、<code>b_over_a_hundredths</code> 有值；B 的每一下 <code>part</code> 是 B。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an23</code> <strong>［護理端］</strong> 🖥 照 <code>an11</code> 補前 6 個月的標準版時也補 B 的欄位（<code>verify:iteration30-4:api</code> 步驟 5 是範本），看病人詳細資訊。 → 多兩句「B 部分點完的時間」「B 部分比 A 部分多用的時間」，附 B 的施測時點；A 點完、B 沒點完時只寫「B 部分還沒點完」；沒有常模與結論字眼。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>an24</code> <strong>［人］</strong> 請一兩位長者看圖解與 B 的牌面。 → 不靠說明就知道要圓、方交替點；50 個會不會太多（之五第 8 節第 4 題，試辦看完成率）。</li>
 </ul>
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>

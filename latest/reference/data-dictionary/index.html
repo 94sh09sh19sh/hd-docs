@@ -3172,10 +3172,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#connect_dots_taps--每一下15-欄" class="md-nav__link">
+  <a href="#connect_dots_taps--每一下16-欄" class="md-nav__link">
     <span class="md-ellipsis">
       
-        connect_dots_taps — 每一下（15 欄）
+        connect_dots_taps — 每一下（16 欄）
       
     </span>
   </a>
@@ -9332,10 +9332,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#connect_dots_taps--每一下15-欄" class="md-nav__link">
+  <a href="#connect_dots_taps--每一下16-欄" class="md-nav__link">
     <span class="md-ellipsis">
       
-        connect_dots_taps — 每一下（15 欄）
+        connect_dots_taps — 每一下（16 欄）
       
     </span>
   </a>
@@ -17758,7 +17758,7 @@
 <td><code>point_count</code></td>
 <td><code>INT</code></td>
 <td>一盤幾個點</td>
-<td>遊戲模式與標準模式（A 部分）都是 25；B 部分（50）等清冊 Q-40 第 2 題（1110 醫師放行，實作規格書迭代 30.4 實作時改這一列）</td>
+<td>遊戲模式與標準模式（A 部分）都是 25；B 部分另記在 <code>b_point_count</code>（迭代 30.4）</td>
 <td>一般</td>
 </tr>
 <tr>
@@ -17849,7 +17849,63 @@
 <td><code>completion_ms</code></td>
 <td><code>INT?</code></td>
 <td>開始到點完花了多久（毫秒）</td>
-<td>上限一天。<strong>病人端不顯示</strong>（沒有計時）</td>
+<td>上限一天。<strong>病人端不顯示</strong>（沒有計時）。有 B 部分的那一盤（迭代 30.4）這一欄與 <code>completed_at</code> 是 <strong>A 部分</strong>點完</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_layout_code</code></td>
+<td><code>TEXT?</code></td>
+<td>B 部分的固定版面（迭代 30.4）</td>
+<td>B1～B4，與 A 同一個序號輪替；沒有 B 的那一盤是空。用過的代號不改內容</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_point_count</code>、<code>b_path_tenths</code></td>
+<td><code>INT?</code></td>
+<td>B 部分幾個點、相鄰兩點的距離總和（格 × 10）</td>
+<td>50、1603</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_client_id</code>、<code>b_started_at</code>、<code>b_session_minute</code></td>
+<td><code>TEXT?</code> 唯一、<code>DATETIME?</code>、<code>INT?</code></td>
+<td>在 B 前那一張圖按「接著點」的那一步、時間、療程第幾分鐘</td>
+<td>B 的時間與施測時點從這一刻算；重送不重記</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_last_tap_at</code></td>
+<td><code>DATETIME?</code></td>
+<td>B 部分最近一下</td>
+<td>算下一下的間隔</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_hit_count</code>、<code>b_wrong_count</code>、<code>b_repeat_count</code>、<code>b_empty_count</code></td>
+<td><code>INT</code> 預設 0</td>
+<td>B 部分點對、錯點、點到點過的、點空白各幾下</td>
+<td></td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_max_gap_ms</code>、<code>b_interrupted</code></td>
+<td><code>INT?</code>、<code>BOOLEAN</code> 預設否</td>
+<td>B 部分最長間隔、有沒有超過 30 秒</td>
+<td>只標 B，A 照舊</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_completed_at</code>、<code>b_completion_ms</code></td>
+<td><code>DATETIME?</code>、<code>INT?</code></td>
+<td>B 部分點完、按「接著點」到點完多久（毫秒）</td>
+<td><strong>病人端不顯示</strong></td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>b_minus_a_ms</code>、<code>b_over_a_hundredths</code></td>
+<td><code>INT?</code></td>
+<td>B−A（毫秒，可為負）、B÷A（× 100）</td>
+<td>B 點完時一併記</td>
 <td>一般</td>
 </tr>
 <tr>
@@ -17869,7 +17925,7 @@
 </tbody>
 </table>
 <p><strong>索引</strong>：<code>board_key</code>（唯一）、<code>client_id</code>（唯一）、<code>patient_id</code>＋<code>board_no</code>（唯一）、<code>treatment_session_id</code>、<code>patient_id</code>＋<code>completed_at</code></p>
-<h3 id="connect_dots_taps--每一下15-欄"><code>connect_dots_taps</code> — 每一下（15 欄）<a class="headerlink" href="#connect_dots_taps--每一下15-欄" title="Permanent link">&para;</a></h3>
+<h3 id="connect_dots_taps--每一下16-欄"><code>connect_dots_taps</code> — 每一下（16 欄）<a class="headerlink" href="#connect_dots_taps--每一下16-欄" title="Permanent link">&para;</a></h3>
 <p>畫面上只有點對的那一下會變；點錯、點到點過的、點到空白都照樣記一筆。</p>
 <table>
 <thead>
@@ -17929,6 +17985,13 @@
 <td><code>TEXT</code></td>
 <td>這一下點在哪裡</td>
 <td><code>ConnectDotsTapKind</code>：<code>HIT</code> 點對、<code>WRONG</code> 點到還沒點的另一個、<code>REPEAT</code> 點到點過的、<code>EMPTY</code> 沒點到圓。由伺服器依版面重算（<code>classifyConnectDotsTap</code>），不收平板說的對錯</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><code>part</code></td>
+<td><code>TEXT</code> 預設 A</td>
+<td>點在 A 還是 B 部分（迭代 30.4）</td>
+<td>B 部分的 <code>expected_no</code>、<code>touched_no</code> 是第幾個（1～50：單數是圓、雙數是方，點上的數字除以 2 進位）</td>
 <td>一般</td>
 </tr>
 <tr>
