@@ -513,6 +513,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#1110-規劃與醫師答覆" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1110 規劃與醫師答覆
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#文件維護" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6068,6 +6079,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#1110-規劃與醫師答覆" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1110 規劃與醫師答覆
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#文件維護" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6144,6 +6166,7 @@
 <li><strong>1108 腳本寫好</strong>：私人 repo <code>hd-hospital-fetch</code> v0.1.0（抓取、逐列去重、cp950 轉 UTF-8、排程安裝與移除），測試 37 項全過；現場步驟寫成部署手冊第十九冊（新手版）與第十九冊之一（出錯對照）</li>
 <li><strong>1109 第四次進院，做到 B-15</strong>：腳本放上 1029 那台主機、設定填好、預演一輪成功（院方回應 703 列），24 個歷史檔全已是 UTF-8、不必轉碼；<strong>排程沒裝</strong>，本系統沒動。當月檔是誰在寫（BR-01）沒查清，下一次從 B-16 接</li>
 <li><strong>1109 晚上定：下一次兩支都跑起來</strong>——透析清單從 B-16 接，再裝學長的檢驗資料（<code>hb</code>）那支；1110 <code>hd-hospital-fetch</code> v0.2.0 收入學長的程式（原樣不改、外面包一層），測試 62 項過，手冊寫成第十九冊之三</li>
+<li><strong>1110 規劃與醫師答覆</strong>：本系統讀檔模式排成<strong>迭代 32</strong>（透析清單與 <code>hb</code> 兩支一起，只寫文件）；連點成畫 B 部分醫師放行、排成<strong>迭代 30.4</strong>；醫師要保留錄音原檔、之後訓練透析場景的台語語音模型；鏡頭改由醫師安排的另一位同學研究</li>
 <li>文件站<strong>閱讀統計 1109 啟用</strong>；文件維護加上<strong>敏感資料雙軌</strong>（公開文件過濾、私人 repo 的 <code>deploy/records/</code> 完整記錄）</li>
 </ul>
 <h2 id="完成內容">完成內容<a class="headerlink" href="#完成內容" title="Permanent link">&para;</a></h2>
@@ -6175,7 +6198,7 @@
 </tr>
 <tr>
 <td>給學長的問題</td>
-<td>從本系統每個用到院方資料的地方反推，還沒答 50 項、已答 19 項（之二、之二之一）；B-16 前要有答案的 12 項</td>
+<td>從本系統每個用到院方資料的地方反推，還沒答 50 項（1110 為 52 項）、已答 19 項（之二、之二之一）；B-16 前要有答案的 12 項</td>
 </tr>
 <tr>
 <td>檢驗資料（<code>hb</code>）</td>
@@ -6247,6 +6270,38 @@
 </tr>
 </tbody>
 </table>
+<h3 id="1110-規劃與醫師答覆">1110 規劃與醫師答覆<a class="headerlink" href="#1110-規劃與醫師答覆" title="Permanent link">&para;</a></h3>
+<p>說明：程式都還沒動。迭代規格在《<a href="../../requirements/implementation-spec/">實作規格書</a>》0.8、4.30.4、4.32。</p>
+<table>
+<thead>
+<tr>
+<th>看什麼</th>
+<th>結論</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>迭代 32：院方資料改讀檔</td>
+<td>本系統只讀兩個資料夾（唯讀掛載），不再打院方 API；透析清單讀當天所有段落合起來、交給既有的解析與同步，驗收要「直接打 API 與讀檔寫進資料庫的完全相同」；<code>hb</code> 的血紅素、白蛋白、Kt/V、BUN 第一次有來源，需要抽血數值的功能照舊關；正式環境靠模擬標記檔擋模擬資料；開發機用模擬模式驗得完，換版上線排在兩支腳本穩定之後</td>
+</tr>
+<tr>
+<td>給學長的問題</td>
+<td>為了迭代 32 多 I-12（Kt/V 用哪一種公式）、I-13（<code>ExecuteDate</code> 是什麼日期），I-9 改排讀檔模式之前；還沒答 52 項</td>
+</tr>
+<tr>
+<td>連點成畫 B 部分</td>
+<td>醫師放行自製的圓、方交替版面，清冊 Q-40 第 2 題結案（不再問法務）；排成迭代 30.4（4.30 判斷①原寫 30.1，與子迭代表撞號，改 30.4）</td>
+</tr>
+<tr>
+<td>錄音原檔</td>
+<td>醫師要保留，之後訓練模型用得到，特別是透析場景的台語語音模型；《緊急求助的語音說明》第 9 節第 3 題結案，留存表、同意書、資料取出跟著改</td>
+</tr>
+<tr>
+<td>鏡頭</td>
+<td>不歸使用者處理，醫師已安排另一位同學研究、之後討論；之三留作參考，第 12、13 題不再由這邊問</td>
+</tr>
+</tbody>
+</table>
 <h3 id="文件維護">文件維護<a class="headerlink" href="#文件維護" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>閱讀統計 1109 啟用</strong>：站上每一頁送到使用者 Gmail 底下的試算表，定版日由 <code>docs:readership</code> 產生統計頁；Apps Script 對 <code>sendBeacon</code> 一律回 503，追蹤碼改用 <code>fetch</code></li>
@@ -6308,6 +6363,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 醫師帳號會不會登出、重開機會不會自動登入（W-2）；去重的鍵與留底寫法（W-6）；腳本出錯找誰（G-2 後半）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>hb</code> 的端點與進院前的 6 題（I-8、I-10、I-2、I-11、A-5、I-6）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 下一次進院的時段，留約 60 分鐘（K-5）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 迭代 32 的檢驗欄位對照：同名異欄哪個是現行的（I-9）、Kt/V 用哪一種公式（I-12）、<code>ExecuteDate</code> 是什麼日期（I-13）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 1104 週報留下的：防毒排除、病人告知、重新開機的時段、床號 <code>1A</code>～<code>3D</code> 與 <code>99</code>、首波護理師與床位</li>
 </ul>
 <h2 id="下週規劃">下週規劃<a class="headerlink" href="#下週規劃" title="Permanent link">&para;</a></h2>
@@ -6315,7 +6371,8 @@
 <ul>
 <li>進院前問學長 B-16 前要有答案的 12 項，K-1 沒答就不裝排程</li>
 <li>約時段；出發前手機開好 <code>values.md</code>、帶兩步驟驗證</li>
-<li>本系統這一次照舊不動；讀檔模式（含讀 <code>hb</code>）等兩支都穩定再排迭代</li>
+<li>本系統這一次照舊不動；讀檔模式（含讀 <code>hb</code>）1110 已排成迭代 32，換版上線等兩支都穩定</li>
+<li>迭代 32、30.4 何時實作，使用者另外開口</li>
 </ul>
 <hr />
 <p>參考：<a href="../../">進度首頁</a></p>
