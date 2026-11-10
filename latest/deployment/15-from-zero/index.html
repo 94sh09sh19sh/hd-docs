@@ -4736,6 +4736,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 32 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -9185,6 +9213,46 @@
 </table>
 <blockquote>
 <p>⚠️ <strong>不要用瀏覽器或 <code>curl</code> 直接打院方 API</strong>：回應是全中心病人的姓名與病歷號，會整片印在螢幕上（第十五冊之三 E-16）。</p>
+</blockquote>
+<p><strong>1111 起（迭代 32 的版本）院內改成讀檔，探測改成只讀檢查兩個資料夾</strong>。設定目錄的 <code>.env</code> 填好兩個資料夾與 <code>COMPOSE_FILE</code>（<a href="../15a-env-hospital/">第十五冊之一</a> 1.12）、<code>docker compose --env-file $cfg up -d api</code> 之後：</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">hospital-api-probe</span><span class="p">.</span><span class="n">js</span>
+</code></pre></div>
+<p><strong>怎麼知道成功了</strong>：標題「院方資料讀檔檢查（只讀、只印結構……）」；「透析清單資料夾」「檢驗資料資料夾」各寫「在、讀得到」「唯讀：是」「模擬標記檔：沒有」；透析清單的狀態檔「讀得到」、結果「成功」、當天段落數、合起來的列數與每一欄的型態分布；檢驗資料寫留底資料夾 <code>hospital_dataset/raw_txt</code>、對照表每一欄有值的筆數與樣式。最後一行「以上可以整段抄進演練紀錄」。工具只讀、不寫任何檔，<strong>不印路徑、姓名、病歷號與檢驗值</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>透析清單資料夾：✗ 透析清單資料夾不在</code></td>
+<td><code>COMPOSE_FILE</code> 沒有帶到 <code>docker-compose.dialysis-files.yml</code>，或 <code>.env</code> 的路徑寫錯。核對兩行後再 <code>up -d api</code></td>
+</tr>
+<tr>
+<td>在、讀得到，但月份檔 0 個、狀態檔看不到</td>
+<td>路徑寫錯了：Docker Desktop 會替寫錯的路徑建一個空資料夾（1111 實測）。核對 <code>HD_DIALYSIS_LIST_DIR</code>，回主機刪掉多出來的空資料夾</td>
+</tr>
+<tr>
+<td><code>唯讀：否</code></td>
+<td>不是用附加檔掛的（少了 <code>read_only</code>）。停下來，不要啟用</td>
+</tr>
+<tr>
+<td><code>模擬標記檔：有</code></td>
+<td>掛到的是模擬院方 API 寫的資料夾。正式環境設定下會整次作廢，核對路徑</td>
+</tr>
+<tr>
+<td>透析清單的狀態檔「看不到」，其餘正常</td>
+<td>抓取腳本的 <code>status_file</code> 還沒改指到指定資料夾裡（第十八冊之二 A-13 第 3 步）</td>
+</tr>
+<tr>
+<td>當月檔「還沒建立」</td>
+<td>月初腳本還沒寫第一輪，不算失敗；過了第一班開始時間還是這樣，看腳本的排程</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
 <p>🧪 <strong>模擬部署</strong>：先照<a href="../15b-env-simulation/">第十五冊之二</a> 1.9 把 <code>.env</code> 指向模擬院方 API、寫上 <code>HD_SIMULATION_DEPLOYMENT=yes</code>，然後</p>
 <p><code>powershell docker compose --env-file $cfg --profile simulation up -d docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js</code></p>
 <p>第二行用的是 <code>.env</code> 裡的位址，所以不必輸入。印出「模擬標頭：有」是對的。接著開護理端簡易版：不必碰任何東西，床位圖上就會出現 A1、A2… 與「模擬甲」等病人（全是虛構的）。最後驗「院內的設定擋得住模擬」（部署規範第 9 章第 8 項）：把 <code>.env</code> 的 <code>HD_SIMULATION_DEPLOYMENT</code> 清空，<code>docker compose --env-file $cfg up -d api</code>， <code>docker compose --env-file $cfg logs --tail 20 api</code> 要看到<strong>拒絕啟動、指出 DEP-46</strong>；看到之後改回 <code>yes</code>、再 <code>up -d api</code>。</p>

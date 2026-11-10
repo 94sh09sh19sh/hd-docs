@@ -4736,6 +4736,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 32 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6427,13 +6455,13 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>1108 起</strong>：本系統改讀主機上獨立腳本的留底檔（實作規格書 3.5 的 1108 段落），下面第 3 步的「位址寫進 <code>.env</code>」會換成「資料夾路徑寫進 <code>.env</code>、唯讀掛載」，其餘各步照用。讀檔模式做完之前不寫這份步驟。</p>
+<p><strong>1108 起</strong>：本系統改讀主機上獨立腳本的留底檔（實作規格書 3.5 的 1108 段落）。<strong>1111 迭代 32 做完</strong>：下面第 3 步改成「資料夾路徑寫進 <code>.env</code>、唯讀掛載」，其餘各步照用。換的是本系統的版本，所以排在兩支抓取腳本在院內穩定跑過之後，新 tag 要整輪重做第十七冊（O-02）。</p>
 </blockquote>
 <p><strong>A-13 那份步驟至少要有</strong>：</p>
 <ol>
-<li>開始前條件：A-01～A-03 都有答案、時段沒有透析</li>
+<li>開始前條件：A-01～A-03 都有答案、時段沒有透析；兩支抓取腳本已在院內穩定跑過（之二 K-1、I-8）</li>
 <li>確認「院方床位轉床號的方式」是 <code>0</code>（第 3 節）</li>
-<li>位址寫進 <code>.env</code>（DEP-46：不進 repo、不寫進任何文件）；<code>docker compose --env-file $cfg up -d</code></li>
+<li>（1111 改）抓取腳本 <code>config.json</code> 的 <code>status_file</code> 改成 <code>&lt;指定資料夾&gt;\fetch-status.json</code>（本系統只掛兩個資料夾，狀態檔要在資料夾裡；單一檔案不能掛，腳本先寫暫存檔再改名，容器會一直看到舊的）；設定目錄 <code>.env</code> 照<a href="../15a-env-hospital/">第十五冊之一</a> 1.12 填兩個資料夾與 <code>COMPOSE_FILE</code>（DEP-46：路徑不進 repo、不寫進公開文件）；<code>docker compose --env-file $cfg up -d</code>；再照第十五冊 V-30a 的讀檔檢查看一次</li>
 <li>系統管理「院方資料同步」卡片怎麼看算成功</li>
 <li>第一輪怎麼驗：病人數、床號、療程、稽核軌跡有沒有整次透析被擋下</li>
 <li>退回：清空位址再 <code>up -d</code> 會停止抓取；已寫進主機的資料怎麼處理要寫明，第八冊撤除是不是適用</li>

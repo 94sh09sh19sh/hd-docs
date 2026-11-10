@@ -182,6 +182,7 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 
 - `hospital-api-sim` 是模擬院方 API，跟 `api` 用同一個映像檔，**只在 `--profile simulation` 時啟動**（第十五冊 V-30a），不開埠，只有 `api` 連得到。病人全是虛構的
 - compose 把後端固定成正式環境設定，模擬部署也一樣；**沒有 `HD_SIMULATION_DEPLOYMENT=yes`，位址指向模擬時後端拒絕啟動**——院內就是靠這一條擋住抄錯的設定，V-30a 最後會故意清空它驗一次
+- **1111 起（迭代 32）也可以模擬讀檔**：`HOSPITAL_API_BASE_URL` 留空，`.env` 加 `COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml`，模擬院方 API 照抓取腳本的契約把兩種留底檔寫進一個具名資料卷、`api` 唯讀讀同一個；資料夾裡有模擬標記檔，所以一樣要 `HD_SIMULATION_DEPLOYMENT=yes`。`HD_DIALYSIS_LIST_DIR`、`HD_LAB_DIR` 留空（那是院內的主機路徑）
 
 ### 1.10 判斷規則的書面確認閘門（1010 新增，同日迭代 18.1 拿掉）
 

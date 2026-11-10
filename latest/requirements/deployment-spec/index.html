@@ -5256,6 +5256,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 32 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -7118,7 +7146,7 @@
 </tr>
 <tr>
 <td>3</td>
-<td><strong>只繫結掛載兩個主機目錄：備份輸出目錄與設定目錄</strong>，兩者都在本系統自己的路徑底下</td>
+<td><strong>只繫結掛載兩個主機目錄：備份輸出目錄與設定目錄</strong>，兩者都在本系統自己的路徑底下。<strong>1111 迭代 32 加一個例外</strong>：院方資料資料夾（透析清單資料夾、檢驗資料資料夾），<strong>唯讀</strong>掛載、不在本系統路徑底下、沒填就不掛（<code>docker-compose.dialysis-files.yml</code>、<code>docker-compose.lab-files.yml</code>，由設定目錄 <code>.env</code> 的 <code>COMPOSE_FILE</code> 帶進來）</td>
 <td>0922 的 <code>-v /c:/app</code> 把整顆 C 槽掛進容器——容器裡任何一個程式都讀寫得到主機上別的專案與系統檔案（部署手冊第十冊 F-02）</td>
 </tr>
 <tr>
@@ -7256,7 +7284,9 @@
 <li>院方 API 的原始回應不落在任何主機目錄（《資料庫使用規範》第 13 條 1005 補充）</li>
 <li>（1005 迭代 15 實作時補）<strong>模擬部署以 <code>HD_SIMULATION_DEPLOYMENT=yes</code> 明示</strong>：compose 把後端固定成正式環境設定，模擬部署也一樣，不明示就連模擬部署都用不了模擬院方 API。 <strong>院內主機一律留空</strong>；留空時位址指向 <code>hospital-api-sim</code> 就拒絕啟動，收到模擬院方 API 的回應（帶模擬標頭）也整次作廢——換了名稱的模擬一樣擋得住</li>
 <li>（同上）探測工具在 <code>api</code> 容器裡跑（部署手冊第十五冊 V-30a）：<strong>位址只在探測時當場輸入，不寫進 <code>.env</code></strong>——探測不等於啟用，<code>.env</code> 填了位址，下一次重新啟動就開始寫真實資料</li>
-<li><strong>（1108 待改）介接改成讀檔</strong>：使用者 1108 決定本系統不再自己呼叫院方 API，改讀主機上獨立腳本存下的留底檔（實作規格書 3.5 的 1108 段落）。讀檔模式實作時要一起改三處：DEP-37 第 3 條加上「院方資料資料夾，<strong>唯讀</strong>掛載、不在本系統路徑底下」這一個例外；本條的位址改成資料夾路徑、一樣只放 <code>.env</code>；「原始回應不落在任何主機目錄」限定為<strong>本系統不寫</strong>——腳本的留底檔是腳本與學長管的，本系統只讀不搬不刪。在讀檔模式上線之前，本條與 DEP-37 照現行文字</li>
+<li><strong>（1108 決定，1111 迭代 32 實作）介接改成讀檔</strong>：本系統不再自己呼叫院方 API，改讀主機上獨立腳本存下的留底檔（實作規格書 3.5 的 1108 段落、4.32）。三處已改：DEP-37 第 3 條的例外（院方資料資料夾唯讀掛載）；<strong>院內設定的是兩個資料夾的主機路徑</strong>（<code>HD_DIALYSIS_LIST_DIR</code>、<code>HD_LAB_DIR</code>），一樣只放設定目錄的 <code>.env</code>、不寫進公開文件，<code>HOSPITAL_API_BASE_URL</code> 留空，兩種都填後端拒絕啟動；上面「原始回應不落在任何主機目錄」限定為<strong>本系統不寫</strong>——腳本的留底檔是腳本與學長管的，本系統只讀不搬不刪，日誌、抓取紀錄與稽核不印路徑</li>
+<li>（1111 迭代 32）<strong>模擬資料的阻擋改用標記檔</strong>：檔案沒有回應標頭，模擬院方 API 的寫檔模式在兩個資料夾各放一個 <code>.hd-simulated</code>；正式環境設定下（沒有 <code>HD_SIMULATION_DEPLOYMENT=yes</code>）後端讀到它就整次作廢、一筆都不寫，取代讀檔時靠模擬標頭的那一層；模擬部署的讀檔模式用 <code>docker-compose.hospital-files-sim.yml</code>（具名資料卷，院內主機不得使用）</li>
+<li>（1111 迭代 32）探測工具在讀檔模式下改成<strong>只讀檢查兩個資料夾</strong>、只印結構（第十五冊 V-30a）</li>
 </ul>
 <p><strong>DEP-47｜（1026 新增，1027 迭代 28 實作）資料取出只以 <code>data-export</code> 一次性服務在院內主機上執行；它沒有網路、沒有端點，只寫到與備份分開的匯出目錄。</strong></p>
 <ul>

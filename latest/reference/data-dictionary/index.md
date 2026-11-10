@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 101 張表、1025 個欄位、30 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration31_connect_dots_norm`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 102 張表、1065 個欄位、32 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`）
 
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`、`packages/shared/src/connect-dots.ts`、`packages/shared/src/performance.ts`、`packages/shared/src/data-export.ts`（匯出分類）
 
@@ -8,7 +8,7 @@
 
 ## 摘要
 
-- 目前資料庫實際蒐集的全部資料：101 張表、1025 個欄位、30 個遷移（迭代 27.1 的那一個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
+- 目前資料庫實際蒐集的全部資料：102 張表、1065 個欄位、32 個遷移（迭代 27.1 的那一個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
 - 每個欄位兩欄說明：給人看的（在真實世界是什麼、為什麼蒐集）、給 Agent 的（合法值、誰填、動了會踩到什麼）；1027 起每欄多一格「匯出分類」（研究用資料取出時怎麼處理，第三十一章）
 - 第一～五章是核心：帳號與憑證、主檔、排班與綁定、病人自述內容、稽核軌跡
 - 第六章起依迭代分章，從迭代 3 的系統治理一路到第三十二章迭代 29、30 的連點成畫；迭代 31 的常模對照寫在第二十一章（規則引擎）與第二章（病人的教育年數）
@@ -78,7 +78,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | 十五、版本更新紀錄（迭代 7）                          | `update_runs`                                                                                                                                                                                             | 每一次版本更新前備份了什麼、驗證還原成不成功、套用了哪幾個遷移、誰執行的                                                                                                      |
 | 十六、導覽版位與內容資料化（迭代 9）                  | `nav_placement_settings`、`help_categories`、`help_request_methods`、`questionnaire_*`、`quiz_*`、`feedback_form_*`、`symptom_answer_options`                                                             | 哪些功能出現在哪裡；病人與護理師看到的選項與題目是什麼，以及它們改過幾版                                                                                                      |
 | 十七、床位圖（迭代 14）                               | `beds`、`carousel_item_targets`、`carousel_item_device_targets`（1007 迭代 17.7；另有 `devices.bed_no`）                                                                                                  | 透析室有哪幾床、每台平板貼在哪一床、哪則輪播內容（1005 起是跑馬燈內容）只在哪幾床、哪幾台平板播                                                                               |
-| 十八、院方 API 介接（迭代 15）                        | `hospital_api_fetch_runs`、`dialysis_vital_records`                                                                                                                                                       | 每一次抓院方 API 的結果；有綁定平板的病人在透析中的血壓、脈搏與脫水量                                                                                                         |
+| 十八、院方 API 介接（迭代 15；迭代 32 改讀檔）        | `hospital_api_fetch_runs`、`dialysis_vital_records`、`hospital_lab_read_runs`（迭代 32）                                                                                                                  | 每一次抓院方 API 的結果；有綁定平板的病人在透析中的血壓、脈搏與脫水量                                                                                                         |
 | 十九、「本次透析」面板與跑馬燈（迭代 16）             | 沒有新表（讀 `dialysis_vital_records`、`clinical_values`、`carousel_items`）                                                                                                                              | 病人平板上的兩張圖、五個數字與一條跑馬燈，各從哪裡來                                                                                                                          |
 | 二十、跑馬燈內容的 AI 草稿與核准（迭代 17）           | 沒有新表（`carousel_items` 加七欄）                                                                                                                                                                       | 跑馬燈的每一則是誰生成、從哪個主題或事由來、誰核准、什麼時候上架                                                                                                              |
 | 二十一、規則引擎與三項高風險功能（迭代 18）           | `rule_definitions`、`rule_versions`、`rule_version_parameters`、`rule_evaluations`、`rule_evaluation_inputs`、`rule_evaluation_reviews`、`rule_gate_changes`（1010 迭代 18.1）                            | 判斷規則與它的每一版、每一次比對引用了什麼、誰檢視過、書面確認閘門的登記                                                                                                      |
@@ -512,16 +512,16 @@ FR-S05。院方尚未確定給 API 還是 Excel（Q-09），因此先立 `Clinic
 
 ### `clinical_value_imports` — 匯入批次（8 欄）
 
-| 欄位             | 型別          | 給人看的說明                                     | 給 Agent 的說明                                                                     | 匯出分類 |
-| ---------------- | ------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------- | -------- |
-| `id`             | `TEXT`        | 內部識別碼                                       | 主鍵                                                                                | 一般     |
-| `batch_no`       | `TEXT` UNIQUE | 人可讀的批次編號，例如 `CV-20260910-110540-3F2A` | UTC 時間加隨機碼，由應用層產生                                                      | 一般     |
-| `source_type`    | `TEXT`        | 來源種類：人工輸入、檔案匯入、院方 API           | 合法值 `MANUAL_ENTRY` / `FILE_IMPORT` / `HOSPITAL_API`（`ClinicalValueSourceType`） | 一般     |
-| `source_label`   | `TEXT`        | 來源描述：檔名或端點                             | 人工輸入為固定字樣「護理端人工輸入」                                                | 一般     |
-| `content_hash`   | `TEXT?`       | 來源內容的雜湊，用來偵測同一份檔案重複匯入       | SHA-256。人工輸入為 NULL。有索引                                                    | 一般     |
-| `row_count`      | `INT`         | 這批有幾筆                                       | 單批上限 200 筆（`CLINICAL_BATCH_MAX_ROWS`）                                        | 一般     |
-| `imported_by_id` | `TEXT`        | 誰匯入的                                         | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`                                           | 一般     |
-| `imported_at`    | `TS`          | 匯入時間                                         | `DEFAULT CURRENT_TIMESTAMP`，有索引                                                 | 一般     |
+| 欄位             | 型別          | 給人看的說明                                                | 給 Agent 的說明                                                                                                                                                                                                                                                                                           | 匯出分類 |
+| ---------------- | ------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `id`             | `TEXT`        | 內部識別碼                                                  | 主鍵                                                                                                                                                                                                                                                                                                      | 一般     |
+| `batch_no`       | `TEXT` UNIQUE | 人可讀的批次編號，例如 `CV-20260910-110540-3F2A`            | UTC 時間加隨機碼，由應用層產生                                                                                                                                                                                                                                                                            | 一般     |
+| `source_type`    | `TEXT`        | 來源種類：人工輸入、檔案匯入、院方 API、院方檢驗（迭代 32） | 合法值 `MANUAL_ENTRY` / `FILE_IMPORT` / `HOSPITAL_API` / `HOSPITAL_LAB_FILE`（`ClinicalValueSourceType`）。`HOSPITAL_LAB_FILE`＝檢驗資料腳本（`hb`）的留底檔，只有血紅素、白蛋白、Kt/V、透析前後 BUN 五種；**「需要抽血數值的功能」關著時，這個來源的值與批次在臨床數值清單、匯入批次與判斷輔助一律濾掉** | 一般     |
+| `source_label`   | `TEXT`        | 來源描述：檔名或端點                                        | 人工輸入為固定字樣「護理端人工輸入」                                                                                                                                                                                                                                                                      | 一般     |
+| `content_hash`   | `TEXT?`       | 來源內容的雜湊，用來偵測同一份檔案重複匯入                  | SHA-256。人工輸入為 NULL。有索引                                                                                                                                                                                                                                                                          | 一般     |
+| `row_count`      | `INT`         | 這批有幾筆                                                  | 單批上限 200 筆（`CLINICAL_BATCH_MAX_ROWS`）                                                                                                                                                                                                                                                              | 一般     |
+| `imported_by_id` | `TEXT`        | 誰匯入的                                                    | 外鍵 → `nurses.id`，`ON DELETE NO ACTION`                                                                                                                                                                                                                                                                 | 一般     |
+| `imported_at`    | `TS`          | 匯入時間                                                    | `DEFAULT CURRENT_TIMESTAMP`，有索引                                                                                                                                                                                                                                                                       | 一般     |
 
 **注意**：被拒的批次**不會出現在這張表**——它們一筆都沒寫入。
 
@@ -1227,28 +1227,59 @@ ______________________________________________________________________
 
 **蒐集的意義**：1005 使用者指示院方透析清單 API **全面取代手動輸入**（SRS FR-S15、FR-S16）。病人主檔、床位、療程寫進上面幾張既有的表，四種數值經 `ClinicalDataImportService` 寫進 `clinical_values`（來源 `HOSPITAL_API`）；這一節的兩張表只記兩件新的事：**每一次抓取的結果**，與**有綁定平板的病人的生命徵象紀錄**。院方 API 每次回傳全中心當天到目前為止的全部紀錄，**原始回應不存**（《資料庫使用規範》第 13 條 1005 補充）。兩張表都不帶級聯刪除：抓取紀錄是治理證據，生命徵象是照護紀錄。
 
-### `hospital_api_fetch_runs` — 院方 API 的抓取紀錄（14 欄）
+### `hospital_api_fetch_runs` — 院方資料的抓取紀錄（20 欄；1111 迭代 32 加六欄）
 
-| 欄位                 | 型別    | 給人看的說明                               | 給 Agent 的說明                                                                                                                         | 匯出分類 |
-| -------------------- | ------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `id`                 | `TEXT`  | 內部識別碼                                 | 主鍵                                                                                                                                    | 一般     |
-| `started_at`         | `TS`    | 這一次抓取開始的時間                       | 有索引。同步現況（多久沒更新）以最近一筆成功的這一欄計算                                                                                | 一般     |
-| `finished_at`        | `TS?`   | 結束的時間                                 | 抓取開始時先建一列（生命徵象要指得到它），結束時補                                                                                      | 一般     |
-| `outcome`            | `TEXT`  | 結果：成功、失敗、拒收                     | 合法值 `SUCCESS` / `FAILED` / `REFUSED`（`HospitalFetchOutcome`）。`REFUSED`＝正式環境設定下收到模擬院方 API 的回應，整次作廢（DEP-46） | 一般     |
-| `attempt_count`      | `INT`   | 含重試共試了幾次                           | 30 秒逾時、失敗再試 3 次，最多 4                                                                                                        | 一般     |
-| `http_status`        | `INT?`  | 院方伺服器回的狀態碼                       | 連不上時為空                                                                                                                            | 一般     |
-| `row_count`          | `INT`   | 回應裡有幾列                               | `DEFAULT 0`                                                                                                                             | 一般     |
-| `dialysis_count`     | `INT`   | 回應裡有幾次透析（依病歷號＋開始時間分組） | `DEFAULT 0`。一位病人的一次透析＝全有或全無的單位                                                                                       | 一般     |
-| `rejected_count`     | `INT`   | 其中幾次因格式不符整個不寫入               | `DEFAULT 0`。格式不符的每一次另寫 `HOSPITAL_API_DIALYSIS_REJECTED` 稽核（同一天同一組原因只寫一次）                                     | 一般     |
-| `vital_record_count` | `INT`   | 這一次新增了幾筆生命徵象紀錄               | `DEFAULT 0`。同一份回應抓兩次，第二次是 0                                                                                               | 一般     |
-| `content_hash`       | `TEXT?` | 回應內容的雜湊                             | SHA-256。**原始內容不存**——同一份回應抓兩次看得出來就夠了                                                                               | 一般     |
-| `simulated`          | `BOOL`  | 回應是不是模擬院方 API 給的                | 依回應的模擬標頭（`x-hd-simulated`）判斷。開發機與模擬部署為 true                                                                       | 一般     |
-| `error_message`      | `TEXT?` | 失敗的原因，一句話                         | ⛔ **不得含院方 API 的位址與任何一個欄位值**。由程式自己寫的句子組成（「逾時」「連線被拒」「回應格式不符」），不轉錄院方的回應          | 一般     |
-| `duration_ms`        | `INT?`  | 花了多久                                   | —                                                                                                                                       | 一般     |
+| 欄位                     | 型別    | 給人看的說明                                          | 給 Agent 的說明                                                                                                                         | 匯出分類 |
+| ------------------------ | ------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `id`                     | `TEXT`  | 內部識別碼                                            | 主鍵                                                                                                                                    | 一般     |
+| `started_at`             | `TS`    | 這一次抓取開始的時間                                  | 有索引。同步現況（多久沒更新）以最近一筆成功的這一欄計算                                                                                | 一般     |
+| `finished_at`            | `TS?`   | 結束的時間                                            | 抓取開始時先建一列（生命徵象要指得到它），結束時補                                                                                      | 一般     |
+| `outcome`                | `TEXT`  | 結果：成功、失敗、拒收                                | 合法值 `SUCCESS` / `FAILED` / `REFUSED`（`HospitalFetchOutcome`）。`REFUSED`＝正式環境設定下收到模擬院方 API 的回應，整次作廢（DEP-46） | 一般     |
+| `attempt_count`          | `INT`   | 含重試共試了幾次                                      | 30 秒逾時、失敗再試 3 次，最多 4                                                                                                        | 一般     |
+| `http_status`            | `INT?`  | 院方伺服器回的狀態碼                                  | 連不上時為空                                                                                                                            | 一般     |
+| `row_count`              | `INT`   | 回應裡有幾列                                          | `DEFAULT 0`                                                                                                                             | 一般     |
+| `dialysis_count`         | `INT`   | 回應裡有幾次透析（依病歷號＋開始時間分組）            | `DEFAULT 0`。一位病人的一次透析＝全有或全無的單位                                                                                       | 一般     |
+| `rejected_count`         | `INT`   | 其中幾次因格式不符整個不寫入                          | `DEFAULT 0`。格式不符的每一次另寫 `HOSPITAL_API_DIALYSIS_REJECTED` 稽核（同一天同一組原因只寫一次）                                     | 一般     |
+| `vital_record_count`     | `INT`   | 這一次新增了幾筆生命徵象紀錄                          | `DEFAULT 0`。同一份回應抓兩次，第二次是 0                                                                                               | 一般     |
+| `content_hash`           | `TEXT?` | 回應內容的雜湊                                        | SHA-256。**原始內容不存**——同一份回應抓兩次看得出來就夠了                                                                               | 一般     |
+| `simulated`              | `BOOL`  | 回應是不是模擬院方 API 給的                           | 依回應的模擬標頭（`x-hd-simulated`）判斷。開發機與模擬部署為 true                                                                       | 一般     |
+| `error_message`          | `TEXT?` | 失敗的原因，一句話                                    | ⛔ **不得含院方 API 的位址與任何一個欄位值**。由程式自己寫的句子組成（「逾時」「連線被拒」「回應格式不符」），不轉錄院方的回應          | 一般     |
+| `duration_ms`            | `INT?`  | 花了多久                                              | —                                                                                                                                       | 一般     |
+| `source`                 | `TEXT`  | （迭代 32）這一次是直接打院方 API，還是讀抓取腳本的檔 | 合法值 `API` / `FILE`（`HospitalDataMode`），`DEFAULT 'API'`（舊的每一筆都是打 API）。院內是 `FILE`；兩種同時設定後端拒絕啟動           | 一般     |
+| `script_result`          | `TEXT?` | （迭代 32）讀檔時抓取腳本最近一輪的結果               | 合法值 `OK` / `PARTIAL` / `FAILED` / `SKIPPED` / `UNKNOWN`（`HospitalScriptResult`）；`UNKNOWN`＝狀態檔不在或讀不出。API 模式為空       | 一般     |
+| `script_reason`          | `TEXT?` | （迭代 32）抓取腳本寫的失敗或跳過原因                 | 照狀態檔的 `reason`，截到 200 字；腳本保證不含網址與欄位值                                                                              | 一般     |
+| `script_last_success_at` | `TS?`   | （迭代 32）抓取腳本最後一次成功的時間                 | 讀檔模式下「已 N 分鐘未更新」看這一欄（取最近一筆有值的），不看段落的 `Date:`；狀態檔看不到時記當月檔的修改時間                         | 一般     |
+| `skipped_segment_count`  | `INT`   | （迭代 32）解析不出、略過的段落數                     | `DEFAULT 0`。壞掉的 JSON、不是 UTF-8、檔尾寫到一半的那一段；不擋其他段                                                                  | 一般     |
+| `content_unchanged`      | `BOOL`  | （迭代 32）合起來的清單與上一輪相同，沒有寫入         | `DEFAULT false`。比的是 `content_hash`（讀檔模式是合起來的清單的雜湊）；抓取紀錄照寫                                                    | 一般     |
 
-**誰寫這張表**：只有後端的同步排程（預設每 3 分鐘，營運參數）與「立即同步」。
+**誰寫這張表**：只有後端的同步排程（預設每 3 分鐘，營運參數）與「立即同步」。**1111 迭代 32 起院內讀檔**：讀的是透析清單資料夾當月 `YYYY-MM.txt` 當天的所有段落（唯讀掛載），留底的內容一樣不存；錯誤原文只說「透析清單資料夾」，不含路徑。
 
 **稽核只寫狀態變了的那一次**：開始失敗（`HOSPITAL_API_FETCH_FAILED`）、恢復（`HOSPITAL_API_FETCH_RECOVERED`）、拒收（`HOSPITAL_API_FETCH_REFUSED`）；每 3 分鐘一筆的成功不寫稽核，這張表本身就是紀錄。⚠️ 一天約 480 列，留存期限待 Q-05；定案前不刪。
+
+### `hospital_lab_read_runs` — 院方檢驗資料的讀檔紀錄（16 欄；1111 迭代 32 新增）
+
+**蒐集的意義**：抽血數值（FR-N07）第一次有來源：主機上的檢驗資料腳本（`hb`）每 6 小時抓一次、存成 `hospital_dataset/raw_txt/YYYY-MM.txt`，本系統每 30 分鐘（營運參數）唯讀讀一次。這張表記每一次讀了什麼、寫了幾筆、退回幾筆與原因，與透析清單的抓取紀錄分開。**留底的內容不存**；病歷號、檢驗值、路徑一律不進這張表。
+
+| 欄位                     | 型別    | 給人看的說明             | 給 Agent 的說明                                                                                               | 匯出分類 |
+| ------------------------ | ------- | ------------------------ | ------------------------------------------------------------------------------------------------------------- | -------- |
+| `id`                     | `TEXT`  | 內部識別碼               | 主鍵                                                                                                          | 一般     |
+| `started_at`             | `TS`    | 這一次讀檔開始的時間     | 有索引                                                                                                        | 一般     |
+| `finished_at`            | `TS?`   | 結束的時間               | 開始時先建一列，結束時補                                                                                      | 一般     |
+| `outcome`                | `TEXT`  | 結果：成功、失敗、拒收   | 合法值同 `hospital_api_fetch_runs.outcome`；`REFUSED`＝正式環境設定下資料夾裡有模擬標記檔                     | 一般     |
+| `files_read`             | `INT`   | 真的讀了幾個月份檔       | 大小與修改時間沒變的不重讀                                                                                    | 一般     |
+| `record_count`           | `INT`   | 讀到幾筆                 | 同一位病人同一個 `ExecuteDate` 多筆時取 `FetchedAt` 最後那筆，只算一筆                                        | 一般     |
+| `value_count`            | `INT`   | 新寫入或更新的臨床數值   | 同一資料時間值沒變的跳過；變了才覆蓋（前一版保留）                                                            | 一般     |
+| `rejected_count`         | `INT`   | 退回的數值               | 單位不符、超出範圍、對照表兩欄都有值而且不同、不是數值；**一種退回不擋同一筆的其他種**                        | 一般     |
+| `unmatched_count`        | `INT`   | 對不到本系統病人的筆數   | 病歷號不記                                                                                                    | 一般     |
+| `skipped_line_count`     | `INT`   | 解析不出、略過的行數     | 不是 JSON、不是 UTF-8                                                                                         | 一般     |
+| `script_result`          | `TEXT?` | `hb-status.json` 的結果  | 同 `hospital_api_fetch_runs.script_result`；`PARTIAL` 照樣讀                                                  | 一般     |
+| `script_reason`          | `TEXT?` | 腳本寫的原因             | 腳本保證不含網址與病人資料                                                                                    | 一般     |
+| `script_last_success_at` | `TS?`   | 腳本最後一次成功的時間   | —                                                                                                             | 一般     |
+| `simulated`              | `BOOL`  | 資料夾裡有沒有模擬標記檔 | `.hd-simulated`；開發機與模擬部署為 true                                                                      | 一般     |
+| `error_message`          | `TEXT?` | 失敗原因或退回原因的彙總 | 例「退回 2 筆：白蛋白：單位不符 1 筆、透析適足度 Kt/V：兩欄都有值而且不同 1 筆」；⛔ 不含路徑、病歷號與檢驗值 | 一般     |
+| `duration_ms`            | `INT?`  | 花了多久                 | —                                                                                                             | 一般     |
+
+**誰寫這張表**：只有後端的檢驗資料讀檔排程與「立即讀檢驗資料」（`POST hospital-sync/lab-run`）。讀到的值經 `ClinicalDataImportService` 寫進 `clinical_values`，批次的 `source_type` 是 `HOSPITAL_LAB_FILE`；對照表在設定目錄 `.env` 的 `HOSPITAL_LAB_FIELD_MAP`（空白用暫定值：`Hb`→血紅素、`ALBUMIN`／`ALB`→白蛋白、`Kt/V(Daugirdas)`／`Kt/V(Gotch)`→Kt/V、`本次透析前BUN`、`本次透析後BUN`）。量測時間記成採檢那一天的 00:00（院內時間）。**稽核只寫狀態變了的那一次**：`HOSPITAL_LAB_READ_FAILED`／`RECOVERED`／`REFUSED`；退回原因變了才寫 `HOSPITAL_LAB_VALUES_REJECTED`。
 
 ### `dialysis_vital_records` — 院方的生命徵象紀錄（17 欄；1018 迭代 25 加四欄）
 

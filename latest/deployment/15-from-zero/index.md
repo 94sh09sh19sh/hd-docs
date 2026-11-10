@@ -1169,7 +1169,24 @@ docker compose --env-file $cfg exec -T -e HOSPITAL_API_BASE_URL=$u api node apps
 | `沒有設定院方 API 的位址`                                  | `Read-Host` 那一行沒有輸入東西                                                                      |
 
 > ⚠️ **不要用瀏覽器或 `curl` 直接打院方 API**：回應是全中心病人的姓名與病歷號，會整片印在螢幕上（第十五冊之三 E-16）。
->
+
+**1111 起（迭代 32 的版本）院內改成讀檔，探測改成只讀檢查兩個資料夾**。設定目錄的 `.env` 填好兩個資料夾與 `COMPOSE_FILE`（[第十五冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15a-env-hospital/index.md) 1.12）、`docker compose --env-file $cfg up -d api` 之後：
+
+```
+docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js
+```
+
+**怎麼知道成功了**：標題「院方資料讀檔檢查（只讀、只印結構……）」；「透析清單資料夾」「檢驗資料資料夾」各寫「在、讀得到」「唯讀：是」「模擬標記檔：沒有」；透析清單的狀態檔「讀得到」、結果「成功」、當天段落數、合起來的列數與每一欄的型態分布；檢驗資料寫留底資料夾 `hospital_dataset/raw_txt`、對照表每一欄有值的筆數與樣式。最後一行「以上可以整段抄進演練紀錄」。工具只讀、不寫任何檔，**不印路徑、姓名、病歷號與檢驗值**。
+
+| 症狀                                    | 處置                                                                                                                          |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `透析清單資料夾：✗ 透析清單資料夾不在`  | `COMPOSE_FILE` 沒有帶到 `docker-compose.dialysis-files.yml`，或 `.env` 的路徑寫錯。核對兩行後再 `up -d api`                   |
+| 在、讀得到，但月份檔 0 個、狀態檔看不到 | 路徑寫錯了：Docker Desktop 會替寫錯的路徑建一個空資料夾（1111 實測）。核對 `HD_DIALYSIS_LIST_DIR`，回主機刪掉多出來的空資料夾 |
+| `唯讀：否`                              | 不是用附加檔掛的（少了 `read_only`）。停下來，不要啟用                                                                        |
+| `模擬標記檔：有`                        | 掛到的是模擬院方 API 寫的資料夾。正式環境設定下會整次作廢，核對路徑                                                           |
+| 透析清單的狀態檔「看不到」，其餘正常    | 抓取腳本的 `status_file` 還沒改指到指定資料夾裡（第十八冊之二 A-13 第 3 步）                                                  |
+| 當月檔「還沒建立」                      | 月初腳本還沒寫第一輪，不算失敗；過了第一班開始時間還是這樣，看腳本的排程                                                      |
+
 > 🧪 **模擬部署**：先照[第十五冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15b-env-simulation/index.md) 1.9 把 `.env` 指向模擬院方 API、寫上 `HD_SIMULATION_DEPLOYMENT=yes`，然後
 >
 > `powershell docker compose --env-file $cfg --profile simulation up -d docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js`

@@ -4736,6 +4736,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 32 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6814,7 +6842,12 @@
 </table>
 <ul>
 <li><code>hospital-api-sim</code> 是模擬院方 API，跟 <code>api</code> 用同一個映像檔，<strong>只在 <code>--profile simulation</code> 時啟動</strong>（第十五冊 V-30a），不開埠，只有 <code>api</code> 連得到。病人全是虛構的</li>
-<li>compose 把後端固定成正式環境設定，模擬部署也一樣；<strong>沒有 <code>HD_SIMULATION_DEPLOYMENT=yes</code>，位址指向模擬時後端拒絕啟動</strong>——院內就是靠這一條擋住抄錯的設定，V-30a 最後會故意清空它驗一次</li>
+<li>
+<p>compose 把後端固定成正式環境設定，模擬部署也一樣；<strong>沒有 <code>HD_SIMULATION_DEPLOYMENT=yes</code>，位址指向模擬時後端拒絕啟動</strong>——院內就是靠這一條擋住抄錯的設定，V-30a 最後會故意清空它驗一次</p>
+</li>
+<li>
+<p><strong>1111 起（迭代 32）也可以模擬讀檔</strong>：<code>HOSPITAL_API_BASE_URL</code> 留空，<code>.env</code> 加 <code>COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml</code>，模擬院方 API 照抓取腳本的契約把兩種留底檔寫進一個具名資料卷、<code>api</code> 唯讀讀同一個；資料夾裡有模擬標記檔，所以一樣要 <code>HD_SIMULATION_DEPLOYMENT=yes</code>。<code>HD_DIALYSIS_LIST_DIR</code>、<code>HD_LAB_DIR</code> 留空（那是院內的主機路徑）</p>
+</li>
 </ul>
 <h3 id="110-判斷規則的書面確認閘門1010-新增同日迭代-181-拿掉">1.10 判斷規則的書面確認閘門（1010 新增，同日迭代 18.1 拿掉）<a class="headerlink" href="#110-判斷規則的書面確認閘門1010-新增同日迭代-181-拿掉" title="Permanent link">&para;</a></h3>
 <p><strong><code>.env</code> 裡沒有這一項了</strong>（迭代 18 時是 <code>HIGH_RISK_WRITTEN_CONFIRMATION</code>）。迭代 18.1 起書面確認由系統管理者在護理端系統管理「判斷規則」登記；<strong>模擬部署永遠不登記</strong>。照舊版範本填過的設定目錄，那一行刪掉即可（留著不生效，後端啟動時提醒一聲）。</p>

@@ -4736,6 +4736,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 32 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5612,6 +5640,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#112-院方資料讀抓取腳本存下的檔1111-迭代-32-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 院方資料：讀抓取腳本存下的檔（1111 迭代 32 新增）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6393,6 +6432,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#112-院方資料讀抓取腳本存下的檔1111-迭代-32-新增" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 院方資料：讀抓取腳本存下的檔（1111 迭代 32 新增）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6954,6 +7004,42 @@
 <li><strong>照舊版範本填過的設定目錄</strong>，那一行留著也不會生效（後端啟動時提醒一聲），刪掉即可。</li>
 </ul>
 <hr />
+<h3 id="112-院方資料讀抓取腳本存下的檔1111-迭代-32-新增">1.12 院方資料：讀抓取腳本存下的檔（1111 迭代 32 新增）<a class="headerlink" href="#112-院方資料讀抓取腳本存下的檔1111-迭代-32-新增" title="Permanent link">&para;</a></h3>
+<p>1111 起院內不打院方 API，讀主機上兩支抓取腳本存下的檔（實作規格書 4.32）。<strong>啟用照<a href="../18b-go-live-prep/">第十八冊之二</a> A-13</strong>，那之前這幾項留空、<code>COMPOSE_FILE</code> 那一行維持註解。</p>
+<table>
+<thead>
+<tr>
+<th>變數</th>
+<th>填什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HD_DIALYSIS_LIST_DIR</code></td>
+<td>透析清單的指定資料夾（寫 <code>YYYY-MM.txt</code> 的那一個）的完整路徑，有空白與中文照寫、不加引號。現場值只記在私人紀錄</td>
+</tr>
+<tr>
+<td><code>HD_LAB_DIR</code></td>
+<td>檢驗資料的 <code>Hb_API_Fetch</code> 完整路徑（底下有 <code>hospital_dataset\raw_txt</code> 與 <code>hb-status.json</code>）</td>
+</tr>
+<tr>
+<td><code>COMPOSE_FILE</code></td>
+<td>把範本那一行開頭的 <code>#</code> 拿掉，只留有填的那幾個檔：<code>docker-compose.yml;docker-compose.dialysis-files.yml;docker-compose.lab-files.yml</code>。<strong>不能留成空白的一行</strong>（compose 會讀不到設定檔）</td>
+</tr>
+<tr>
+<td><code>HOSPITAL_LAB_FIELD_MAP</code></td>
+<td><strong>（空白）</strong>——用暫定的對照表；之二 I-9、I-12 答覆後才填</td>
+</tr>
+<tr>
+<td><code>HOSPITAL_API_BASE_URL</code></td>
+<td><strong>（空白）</strong>——與 <code>HD_DIALYSIS_LIST_DIR</code> 兩個都填，後端拒絕啟動</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>兩個資料夾都以<strong>唯讀</strong>掛進 <code>api</code>，本系統不搬、不刪、不改任何留底檔（DEP-37 第 3 條的例外）</li>
+<li>讀檔頻率、檢驗資料讀檔頻率、「未更新」提示時段在護理端「系統管理 → 營運參數與選項清單」調</li>
+</ul>
 <h2 id="2-填好的樣子">2. 填好的樣子<a class="headerlink" href="#2-填好的樣子" title="Permanent link">&para;</a></h2>
 <p>照 0.3 節的假設填完，會像這樣（說明行省略）。<strong>角括號那幾處要換成你自己的，<code>&lt;主機&gt;</code> 三處換成同一個值</strong>：</p>
 <div class="highlight"><pre><span></span><code>HD_IMAGE_TAG=v0.3.0
