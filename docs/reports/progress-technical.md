@@ -683,6 +683,7 @@ npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript�
 | 驗收 | `verify:iteration32`（不需要後端，九步）、`verify:iteration32:api`（三個全新資料庫，九步，含 2 GB 的月份檔）通過；`verify:acceptance` 通過；`verify:iteration15:api` 有一步在午夜到 05:10 之間造不出來（舊腳本的限制，見 4.32 驗收現況） |
 
 **接手時要知道的幾件事**：
+- **1111 稍晚學長答 `hb` 不用這邊處理**（院方 API 之二 A-5）：檢驗資料那一半（`HospitalLabSyncService`、`docker-compose.lab-files.yml`）程式照留、院內不掛，`HD_LAB_DIR` 留空；之後要讀先重問 I-9、I-12、I-13
 - **合段落有一條契約沒寫的規則**（判斷①）：病人開始之後，舊段落裡沒有紀錄時間的預排列拿掉；開始時間在已經有紀錄之後才改的情形沒處理
 - 讀檔模式的「資料多舊」來自抓取紀錄的 `script_last_success_at`，不是本系統讀成功的時間；看不到狀態檔時退回當月檔的修改時間
 - 透析清單的狀態檔要在透析清單資料夾裡：抓取腳本的 `status_file` 部署時要改（第十八冊之二 A-13）

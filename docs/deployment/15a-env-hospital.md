@@ -227,8 +227,8 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 | 變數 | 填什麼 |
 |---|---|
 | `HD_DIALYSIS_LIST_DIR` | 透析清單的指定資料夾（寫 `YYYY-MM.txt` 的那一個）的完整路徑，有空白與中文照寫、不加引號。現場值只記在私人紀錄 |
-| `HD_LAB_DIR` | 檢驗資料的 `Hb_API_Fetch` 完整路徑（底下有 `hospital_dataset\raw_txt` 與 `hb-status.json`） |
-| `COMPOSE_FILE` | 把範本那一行開頭的 `# ` 拿掉，只留有填的那幾個檔：`docker-compose.yml;docker-compose.dialysis-files.yml;docker-compose.lab-files.yml`。**不能留成空白的一行**（compose 會讀不到設定檔） |
+| `HD_LAB_DIR` | **（空白）**——1111 學長答 `hb` 不用這邊處理（之二 A-5），檢驗資料先不讀。日後要讀才填 `Hb_API_Fetch` 的完整路徑（底下有 `hospital_dataset\raw_txt`），填之前先重問之二之一第 3.4 節的 I-9、I-12、I-13 |
+| `COMPOSE_FILE` | 把範本那一行開頭的 `# ` 拿掉，只留有填的那幾個檔：現在是 `docker-compose.yml;docker-compose.dialysis-files.yml`（`HD_LAB_DIR` 空白就不放 `docker-compose.lab-files.yml`，放了 compose 會停下來）。**不能留成空白的一行**（compose 會讀不到設定檔） |
 | `HOSPITAL_LAB_FIELD_MAP` | **（空白）**——用暫定的對照表；之二 I-9、I-12 答覆後才填 |
 | `HOSPITAL_API_BASE_URL` | **（空白）**——與 `HD_DIALYSIS_LIST_DIR` 兩個都填，後端拒絕啟動 |
 
