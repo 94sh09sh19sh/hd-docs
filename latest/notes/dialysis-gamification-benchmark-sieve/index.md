@@ -268,7 +268,7 @@ ______________________________________________________________________
 
 | 定版                                                                                             | 日期       | 異動                                                                                                      |
 | ------------------------------------------------------------------------------------------------ | ---------- | --------------------------------------------------------------------------------------------------------- |
-| 1111                                                                                             | 2026-11-11 | 上層連結加之五附錄之一                                                                                    |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/dialysis-gamification-benchmark-sieve/) | 2026-11-11 | 上層連結加之五附錄之一                                                                                    |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/notes/dialysis-gamification-benchmark-sieve/) | 2026-10-28 | 首次定版。全域登頂篩從認知標準化測驗選出 TMT-A 為第四款遊戲核心的篩選過程；1026 起 B 部分不驗證、新增 A11 |
 
 [← 回上層文件](https://94sh09sh19sh.github.io/hd-docs/latest/notes/dialysis-gamification-benchmark/index.md)　[← 回進度首頁](https://94sh09sh19sh.github.io/hd-docs/latest/index.md)
