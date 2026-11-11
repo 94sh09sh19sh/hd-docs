@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1111 — 院方 API 改由主機上的獨立腳本抓取、第四次進院放上透析清單腳本（做到 B-15）、檢驗資料（hb）的腳本與手冊備妥，下一次兩支都跑起來
+    1111 — 院方 API 改由主機上的獨立腳本抓取、第四次進院放上透析清單腳本（做到 B-15）、檢驗資料（hb）學長答不用這邊處理，下一次只做透析清單
   
 
     
@@ -2724,10 +2724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-下一次進院前要答5-題" class="md-nav__link">
+  <a href="#1-下一次進院前要答4-題" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. 下一次進院前要答（5 題）
+        1. 下一次進院前要答（4 題）
       
     </span>
   </a>
@@ -2746,10 +2746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-a-5-答要才答" class="md-nav__link">
+  <a href="#3-檢驗資料hb不必答" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. A-5 答「要」才答
+        3. 檢驗資料（hb）：不必答
       
     </span>
   </a>
@@ -6022,10 +6022,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-下一次進院前要答5-題" class="md-nav__link">
+  <a href="#1-下一次進院前要答4-題" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. 下一次進院前要答（5 題）
+        1. 下一次進院前要答（4 題）
       
     </span>
   </a>
@@ -6044,10 +6044,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-a-5-答要才答" class="md-nav__link">
+  <a href="#3-檢驗資料hb不必答" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. A-5 答「要」才答
+        3. 檢驗資料（hb）：不必答
       
     </span>
   </a>
@@ -6098,7 +6098,7 @@
 <p>上層文件：《<a href="../hospital-api-fetch-methods/">院方 API 的四種抓取方式</a>》　前一份：《<a href="../hospital-api-fetch-methods-status/">之一</a>》　下一份：《<a href="../hospital-api-fetch-methods-monday-plan/">之三</a>》</p>
 <p><strong>回法</strong>：題號＋選項就好，例如「K-2 ①、K-7 要」。標「建議」的是這邊的預設，沒意見就照建議。</p>
 <hr />
-<h2 id="1-下一次進院前要答5-題">1. 下一次進院前要答（5 題）<a class="headerlink" href="#1-下一次進院前要答5-題" title="Permanent link">&para;</a></h2>
+<h2 id="1-下一次進院前要答4-題">1. 下一次進院前要答（4 題）<a class="headerlink" href="#1-下一次進院前要答4-題" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -6127,11 +6127,6 @@
 <td>W-6</td>
 <td>去重的鍵用「病歷號＋透析開始時間＋紀錄時間」，任何一欄變了就再寫一次。留底寫法選哪個？</td>
 <td>① 一段 <code>Date:</code>＋JSON，只放新的或變了的列（建議）② 一列寫一行</td>
-</tr>
-<tr>
-<td>A-5</td>
-<td><code>hb_online_v2.py</code>（檢驗資料）也由這邊改寫、裝排程嗎？</td>
-<td>要（跟透析清單分開兩支、各自排程）／不要（第 3 節就不必答）</td>
 </tr>
 </tbody>
 </table>
@@ -6207,74 +6202,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="3-a-5-答要才答">3. A-5 答「要」才答<a class="headerlink" href="#3-a-5-答要才答" title="Permanent link">&para;</a></h2>
-<p>前五題下一次進院前要答，其餘不急。</p>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>問題</th>
-<th>選項</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>I-8</td>
-<td><code>hb</code> 實際的端點是哪一台主機？<code>http</code> 還是 <code>https</code>？</td>
-<td></td>
-</tr>
-<tr>
-<td>I-10</td>
-<td>主機上 <code>Hb_API_Fetch</code> 現在有程式在跑嗎？底下有實際的 <code>config.json</code>、<code>active_patients.txt</code> 嗎？</td>
-<td>有在跑／沒在跑</td>
-</tr>
-<tr>
-<td>I-2</td>
-<td>病人清單改成每輪從透析清單自動產生，可以嗎？</td>
-<td>可以（建議）／不行，用 <code>active_patients.txt</code></td>
-</tr>
-<tr>
-<td>I-11</td>
-<td>學長的程式原樣收進 <code>hd-hospital-fetch</code>（不改內容，只在外面包狀態檔與排程），可以嗎？</td>
-<td>可以／不行</td>
-</tr>
-<tr>
-<td>I-6</td>
-<td>每 6 小時抓一次可以嗎？</td>
-<td>可以（建議）／改成每幾小時</td>
-</tr>
-<tr>
-<td>I-9</td>
-<td>同一項有兩三個欄名（<code>ALBUMIN</code>／<code>ALB</code>、<code>Ferritin</code>／<code>FERR</code>、<code>PTHi</code>／<code>PTH</code> 等 11 組），現行的是哪一個？</td>
-<td></td>
-</tr>
-<tr>
-<td>I-12</td>
-<td>Kt/V 用 <code>Kt/V(Gotch)</code> 還是 <code>Kt/V(Daugirdas)</code>？不確定請問醫師</td>
-<td>Gotch／Daugirdas</td>
-</tr>
-<tr>
-<td>I-13</td>
-<td><code>ExecuteDate</code> 是採檢日、報告日還是執行日？同一天兩筆是更正還是兩次檢驗？</td>
-<td></td>
-</tr>
-<tr>
-<td>I-3</td>
-<td>能給一份遮罩過的回應嗎（數字與中文換成佔位字元）？單位與陰性陽性怎麼寫？</td>
-<td>可以／不行</td>
-</tr>
-<tr>
-<td>I-5</td>
-<td>這支是誰寫的？資料給誰用？V1 和 V2 差在哪？</td>
-<td></td>
-</tr>
-<tr>
-<td>I-7</td>
-<td>OneDrive 裡整個 <code>Hb_API_Fetch</code> 資料夾可以拿到嗎？</td>
-<td>可以／不行</td>
-</tr>
-</tbody>
-</table>
+<h2 id="3-檢驗資料hb不必答">3. 檢驗資料（<code>hb</code>）：不必答<a class="headerlink" href="#3-檢驗資料hb不必答" title="Permanent link">&para;</a></h2>
+<p>1111 學長答 A-5：<code>hb_online_v2.py</code> 不由這邊處理。原本列在這裡的 I 組 11 題（I-2、I-3、I-5～I-13）跟著不問，題目與答覆留在《<a href="../hospital-api-fetch-methods-questions-answered/">之二之一</a>》。</p>
 <h2 id="4-不必回">4. 不必回<a class="headerlink" href="#4-不必回" title="Permanent link">&para;</a></h2>
 <p>C-1～C-4、C-6～C-8、C-12、C-13、C-15 已照建議做進 <code>hd-hospital-fetch</code> v0.1.0（逾時重試、只印筆數不印個資、端點寫在設定檔等），有異議才回題號；明細在補充版第 6 節。</p>
 <hr />

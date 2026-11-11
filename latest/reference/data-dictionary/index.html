@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1111 — 院方 API 改由主機上的獨立腳本抓取、第四次進院放上透析清單腳本（做到 B-15）、檢驗資料（hb）的腳本與手冊備妥，下一次兩支都跑起來
+    1111 — 院方 API 改由主機上的獨立腳本抓取、第四次進院放上透析清單腳本（做到 B-15）、檢驗資料（hb）學長答不用這邊處理，下一次只做透析清單
   
 
     
@@ -14081,7 +14081,7 @@
 <p><strong>誰寫這張表</strong>：只有後端的同步排程（預設每 3 分鐘，營運參數）與「立即同步」。<strong>1111 迭代 32 起院內讀檔</strong>：讀的是透析清單資料夾當月 <code>YYYY-MM.txt</code> 當天的所有段落（唯讀掛載），留底的內容一樣不存；錯誤原文只說「透析清單資料夾」，不含路徑。</p>
 <p><strong>稽核只寫狀態變了的那一次</strong>：開始失敗（<code>HOSPITAL_API_FETCH_FAILED</code>）、恢復（<code>HOSPITAL_API_FETCH_RECOVERED</code>）、拒收（<code>HOSPITAL_API_FETCH_REFUSED</code>）；每 3 分鐘一筆的成功不寫稽核，這張表本身就是紀錄。⚠️ 一天約 480 列，留存期限待 Q-05；定案前不刪。</p>
 <h3 id="hospital_lab_read_runs--院方檢驗資料的讀檔紀錄16-欄1111-迭代-32-新增"><code>hospital_lab_read_runs</code> — 院方檢驗資料的讀檔紀錄（16 欄；1111 迭代 32 新增）<a class="headerlink" href="#hospital_lab_read_runs--院方檢驗資料的讀檔紀錄16-欄1111-迭代-32-新增" title="Permanent link">&para;</a></h3>
-<p><strong>蒐集的意義</strong>：抽血數值（FR-N07）第一次有來源：主機上的檢驗資料腳本（<code>hb</code>）每 6 小時抓一次、存成 <code>hospital_dataset/raw_txt/YYYY-MM.txt</code>，本系統每 30 分鐘（營運參數）唯讀讀一次。這張表記每一次讀了什麼、寫了幾筆、退回幾筆與原因，與透析清單的抓取紀錄分開。<strong>留底的內容不存</strong>；病歷號、檢驗值、路徑一律不進這張表。</p>
+<p><strong>蒐集的意義</strong>：抽血數值（FR-N07）第一次有來源：主機上的檢驗資料腳本（<code>hb</code>）每 6 小時抓一次、存成 <code>hospital_dataset/raw_txt/YYYY-MM.txt</code>，本系統每 30 分鐘（營運參數）唯讀讀一次（<strong>1111 稍晚學長答 <code>hb</code> 不用這邊處理，院內先不掛檢驗資料資料夾，這張表在院內不會有列</strong>）。這張表記每一次讀了什麼、寫了幾筆、退回幾筆與原因，與透析清單的抓取紀錄分開。<strong>留底的內容不存</strong>；病歷號、檢驗值、路徑一律不進這張表。</p>
 <table>
 <thead>
 <tr>

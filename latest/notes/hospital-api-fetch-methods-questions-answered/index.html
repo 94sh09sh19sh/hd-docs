@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1111 — 院方 API 改由主機上的獨立腳本抓取、第四次進院放上透析清單腳本（做到 B-15）、檢驗資料（hb）的腳本與手冊備妥，下一次兩支都跑起來
+    1111 — 院方 API 改由主機上的獨立腳本抓取、第四次進院放上透析清單腳本（做到 B-15）、檢驗資料（hb）學長答不用這邊處理，下一次只做透析清單
   
 
     
@@ -2834,6 +2834,17 @@
     <span class="md-ellipsis">
       
         3.4 1111 刪掉的題目
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-1111-學長答的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 1111 學長答的
       
     </span>
   </a>
@@ -6171,6 +6182,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#35-1111-學長答的" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 1111 學長答的
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6228,6 +6250,7 @@
 <li>1109 學長在現場另外定的：腳本資料夾放在指定資料夾的上一層、<code>.py</code> 與 <code>.exe</code> 都可以（第 1 節）</li>
 <li>1109 晚上補齊 <code>hb</code> 缺的兩個檔：I-1 有了；I-4 讀程式確認是另一種查法、有抽血數值的欄位（第 3.2 節）</li>
 <li><strong>1111 使用者先答 13 題</strong>（第 3.3 節）：W-2、A-4、B-4、E-1～E-3、F-3～F-5、G-2～G-4、H-1；另刪 K-5、K-6、A-6 三題（第 3.4 節）。同時定出題原則（《之二之二》第 1.1 節）：已知的事不再問，人與權限的事一律學長或醫師同意就算</li>
+<li><strong>1111 學長答 A-5</strong>：檢驗資料（<code>hb_online_v2.py</code>）不用這邊處理，I 組 11 題跟著刪（第 3.4、3.5 節）</li>
 <li><strong>1111 補充</strong>：主機只有一位使用者；開機要輸入 Windows 登入密碼，登入後開管理員權限不必再輸入密碼——1109 記的「沒有密碼」指的是後者（第 1 節「帳號」列）</li>
 <li>答覆的原文截圖在私人 repo 的 <code>deploy/records/1108-hospital-api/</code>，1109 的現場紀錄在 <code>deploy/records/1109-hospital-fetch/</code> 與《<a href="../../deployment/19b-fourth-visit-record/">第十九冊之二</a>》</li>
 </ul>
@@ -6545,6 +6568,78 @@
 <td>之後改格式由誰決定、要先通知誰</td>
 <td>到時學長或醫師同意就好，現在定了沒意義</td>
 </tr>
+<tr>
+<td>I-8</td>
+<td><code>hb</code> 實際的端點是哪一台主機？<code>http</code> 還是 <code>https</code>？</td>
+<td>A-5 答不要（第 3.5 節），I 組整組不問</td>
+</tr>
+<tr>
+<td>I-10</td>
+<td>主機上 <code>Hb_API_Fetch</code> 現在有程式在跑嗎？底下有實際的 <code>config.json</code>、<code>active_patients.txt</code> 嗎？</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>I-2</td>
+<td>病人清單改成每輪從透析清單自動產生，可以嗎？</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>I-11</td>
+<td>學長的程式原樣收進 <code>hd-hospital-fetch</code>（不改內容，只在外面包狀態檔與排程），可以嗎？</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>I-6</td>
+<td>每 6 小時抓一次可以嗎？</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>I-9</td>
+<td>同一項有兩三個欄名（<code>ALBUMIN</code>／<code>ALB</code>、<code>Ferritin</code>／<code>FERR</code>、<code>PTHi</code>／<code>PTH</code> 等 11 組），現行的是哪一個？</td>
+<td>同上；本系統要讀檢驗資料時再問</td>
+</tr>
+<tr>
+<td>I-12</td>
+<td>Kt/V 用 <code>Kt/V(Gotch)</code> 還是 <code>Kt/V(Daugirdas)</code>？</td>
+<td>同上；本系統要讀檢驗資料時再問</td>
+</tr>
+<tr>
+<td>I-13</td>
+<td><code>ExecuteDate</code> 是採檢日、報告日還是執行日？同一天兩筆是更正還是兩次檢驗？</td>
+<td>同上；本系統要讀檢驗資料時再問</td>
+</tr>
+<tr>
+<td>I-3</td>
+<td>能給一份遮罩過的回應嗎？單位與陰性陽性怎麼寫？</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>I-5</td>
+<td>這支是誰寫的？資料給誰用？V1 和 V2 差在哪？</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>I-7</td>
+<td>OneDrive 裡整個 <code>Hb_API_Fetch</code> 資料夾可以拿到嗎？</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="35-1111-學長答的">3.5 1111 學長答的<a class="headerlink" href="#35-1111-學長答的" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>問題</th>
+<th>答覆</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A-5</td>
+<td><code>hb_online_v2.py</code>（檢驗資料）也由這邊改寫、裝排程嗎？</td>
+<td><strong>1111 學長：不用這邊處理</strong>（使用者轉述）。I 組整組不問（第 3.4 節）；《之四》的 <code>hb</code> 部分與《第十九冊之三》不做；迭代 32 的檢驗資料讀檔（實作規格書 32.4）程式留著，院內 <code>HD_LAB_DIR</code> 留空、不掛，要讀時 I-9、I-12、I-13 再問</td>
+</tr>
 </tbody>
 </table>
 <h2 id="4-答覆經過">4. 答覆經過<a class="headerlink" href="#4-答覆經過" title="Permanent link">&para;</a></h2>
@@ -6556,6 +6651,7 @@
 <li>1109 進院：W-1、W-3、W-4、A-1、A-3、G-1 在現場有了答案；學長另外定腳本資料夾的位置與跑法；新的問題收在《之二》K 組</li>
 <li>1109 晚上：使用者下載學長 1108 放上 Drive 的 <code>collector_common.py</code>、<code>config.json</code>，讀程式答掉 I-1、I-4；I-2、I-3 答一半，新增 I-8、I-9</li>
 <li>1111：使用者看清單時先答 13 題、刪 3 題，定出題原則；核對聊天紀錄發現學長只請改寫 <code>fetch_API</code>，<code>hb</code> 改成先問《之二》A-5；K-1 改成只確認來源、K-2 補 D 槽估算與搬 C 槽的選項、K-4 補處理選項；同日使用者指出搬進來的有兩支腳本與它們的檔，K-2 重估為約 12 月 14 日滿；補 K-7（閒置鎖定、疑似醫師遠端）</li>
+<li>1111 稍晚：學長答 A-5 不用這邊處理 <code>hb</code>，I 組 11 題跟著刪；《之二》還沒答的剩 26 項、下一次進院前剩 4 題</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
