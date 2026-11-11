@@ -253,6 +253,7 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1111 | 2026-11-11 | 第二十八次：迭代 30.5 改的驗收腳本與為什麼不算放寬 |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/requirements/implementation-spec-script-changes/) | 2026-10-28 | 第二十二～二十七次：迭代 27.1～31 隨開關數、頂列寬度改的驗收腳本，以及 1028 全量回歸補改的 verify:iteration20:api |
 | [1021](https://94sh09sh19sh.github.io/hd-docs/1021/requirements/implementation-spec-script-changes/) | 2026-10-21 | 首次定版。1015 起永久收入實作規格書 1.1 的刻意改動（第二次起），接到迭代 27 的第二十一次 |
 
