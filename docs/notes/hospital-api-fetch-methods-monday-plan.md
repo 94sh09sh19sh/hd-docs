@@ -158,6 +158,6 @@ Python 3.8 只用語法解析檢查過，沒有實際在 3.8 上跑（開發機�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 首次定版。1109 進院前的工作規劃：學長 1108 最後答覆、私人 repo `hd-hospital-fetch` v0.1.0（T-1～T-6）、腳本走 GitHub Release 帶進主機 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/hospital-api-fetch-methods-monday-plan/) | 2026-11-11 | 首次定版。1109 進院前的工作規劃：學長 1108 最後答覆、私人 repo `hd-hospital-fetch` v0.1.0（T-1～T-6）、腳本走 GitHub Release 帶進主機 |
 
 [← 回上層文件](hospital-api-fetch-methods.md)　[← 回進度首頁](../index.md)

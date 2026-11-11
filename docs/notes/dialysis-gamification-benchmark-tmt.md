@@ -63,6 +63,6 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 首次定版。連線測驗不是為腎臟設計，腎臟領域常用是因它量的注意力、處理速度、執行功能正是透析病人受損最重的；A、B、B−A 各量什麼 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/dialysis-gamification-benchmark-tmt/) | 2026-11-11 | 首次定版。連線測驗不是為腎臟設計，腎臟領域常用是因它量的注意力、處理速度、執行功能正是透析病人受損最重的；A、B、B−A 各量什麼 |
 
 [← 回上層文件](dialysis-gamification-benchmark-sieve.md)　[← 回進度首頁](../index.md)

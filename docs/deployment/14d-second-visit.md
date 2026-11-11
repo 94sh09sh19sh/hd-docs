@@ -377,7 +377,7 @@ N-23 那張照片同時是 N-22 的證據：`keys-verify` 印出 `ca/ca.key`、`
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 1029 補記：第三次進院確認 1001 的前端來源名單沒寫錯（M-01） |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/deployment/14d-second-visit/) | 2026-11-11 | 1029 補記：第三次進院確認 1001 的前端來源名單沒寫錯（M-01） |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/deployment/14d-second-visit/) | 2026-10-07 | 首次定版。1001 第二次進院紀錄（B 級部分成功）：護理端登不進去、主機實況、手冊待改清單（`M-xx`） |
 
 [← 回第十四冊](14-from-zero.md)　[→ 第十五冊](15-from-zero.md)　[← 回部署手冊總覽](index.md)

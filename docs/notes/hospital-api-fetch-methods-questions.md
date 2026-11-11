@@ -48,6 +48,6 @@ C-1～C-4、C-6～C-8、C-12、C-13、C-15 已照建議做進 `hd-hospital-fetch
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 首次定版。給學長的問題清單：從本系統每一個用到院方資料的地方反推、分組；1109 起只列沒答的題，1111 改成只有題目與選項的簡易版（已發給學長）、I 組刪 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/hospital-api-fetch-methods-questions/) | 2026-11-11 | 首次定版。給學長的問題清單：從本系統每一個用到院方資料的地方反推、分組；1109 起只列沒答的題，1111 改成只有題目與選項的簡易版（已發給學長）、I 組刪 |
 
 [← 看補充版](hospital-api-fetch-methods-questions-detail.md)　[← 回上層文件](hospital-api-fetch-methods.md)

@@ -191,7 +191,7 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 1110 醫師定原音保留 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/emergency-voice-help-analysis/) | 2026-11-11 | 1110 醫師定原音保留 |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/notes/emergency-voice-help-analysis/) | 2026-10-28 | 首次定版。根本判斷：按不完三下的病人多半也說不好話，十種解法逐一評估；語音改用於護理紀錄，語氣做且留存 |
 
 [← 回上層文件](emergency-voice-help.md)　[← 回其他文件總表](index.md)　[← 回進度首頁](../index.md)

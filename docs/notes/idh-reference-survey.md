@@ -313,7 +313,7 @@ EBM 模型的 16 個輸入：性別、年齡、過去 7 天與 28 天的低血�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 加子文件之一（API_script 資料夾）的連結 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/idh-reference-survey/) | 2026-11-11 | 加子文件之一（API_script 資料夾）的連結 |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/notes/idh-reference-survey/) | 2026-10-07 | 首次定版。1004 讀了同院 IDH 系統的程式：院方透析清單 API 的用法與 51 欄順序、41 床的床位配置、低血壓門檻與處置選擇；1005 使用者逐項決定，迭代 15 依此寫好介接程式 |
 
 [← 回進度首頁](../index.md)

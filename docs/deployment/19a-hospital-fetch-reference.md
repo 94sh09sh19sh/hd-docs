@@ -288,6 +288,6 @@ I-3 HBs Ag 的樣式：Negative、<9.9
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 首次定版。第十九冊的出錯對照與速查；第 3 節 hb 現況盤點（1111 學長答 hb 不用這邊處理，不做） |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/deployment/19a-hospital-fetch-reference/) | 2026-11-11 | 首次定版。第十九冊的出錯對照與速查；第 3 節 hb 現況盤點（1111 學長答 hb 不用這邊處理，不做） |
 
 [← 回第十九冊](19-hospital-fetch.md)　[← 回部署手冊總覽](index.md)

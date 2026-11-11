@@ -240,6 +240,6 @@ interface/views.py 的 corn_job()（成大版第 1018 行；斗六版同樣在 v
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 首次定版。API_script 資料夾：`fetch_API.py` 是抓透析清單的較早版本、介接不改；`hb_online_v2.py` 照病人逐一查檢驗資料（每次一筆 88 欄）；1111 hb 不用這邊處理 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/idh-reference-survey-api-script/) | 2026-11-11 | 首次定版。API_script 資料夾：`fetch_API.py` 是抓透析清單的較早版本、介接不改；`hb_online_v2.py` 照病人逐一查檢驗資料（每次一筆 88 欄）；1111 hb 不用這邊處理 |
 
 [← 回上層文件](idh-reference-survey.md)　[← 回進度首頁](../index.md)

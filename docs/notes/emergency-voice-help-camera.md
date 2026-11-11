@@ -239,7 +239,7 @@ v0.1 的設計：錄音期間平板多一顆「拍照給紀錄」，護理師拍
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 1110 移交：鏡頭改由醫師安排的另一位同學研究，本文件留作討論參考 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/emergency-voice-help-camera/) | 2026-11-11 | 1110 移交：鏡頭改由醫師安排的另一位同學研究，本文件留作討論參考 |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/notes/emergency-voice-help-camera/) | 2026-10-28 | 首次定版。鏡頭能做的九件事（查 48 個 repo 的授權與星數）與文獻；鏡頭不放在派遣路徑上，第一版不開鏡頭、床邊拍照不做 |
 
 [← 回上層文件](emergency-voice-help.md)　[← 回其他文件總表](index.md)　[← 回進度首頁](../index.md)

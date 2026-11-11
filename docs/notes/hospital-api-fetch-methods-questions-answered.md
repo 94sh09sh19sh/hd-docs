@@ -139,6 +139,6 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 首次定版。給學長的問題中已答覆的題目（題號不變）：1109 現場看到答案的 W-1、W-3、W-4、A-1、A-3、G-1，1111 使用者先答的 13 題與 A-5 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/hospital-api-fetch-methods-questions-answered/) | 2026-11-11 | 首次定版。給學長的問題中已答覆的題目（題號不變）：1109 現場看到答案的 W-1、W-3、W-4、A-1、A-3、G-1，1111 使用者先答的 13 題與 A-5 |
 
 [← 回上層文件](hospital-api-fetch-methods-questions.md)

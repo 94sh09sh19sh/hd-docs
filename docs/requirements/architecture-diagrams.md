@@ -166,7 +166,7 @@ chrome --headless=new --disable-gpu --hide-scrollbars \
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 註明圖二院方資料那條線還沒照迭代 32 重繪 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/requirements/architecture-diagrams/) | 2026-11-11 | 註明圖二院方資料那條線還沒照迭代 32 重繪 |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/requirements/architecture-diagrams/) | 2026-10-28 | 迭代 28 兩張圖各多一格（資料取出的一次性容器、匯出目錄），沒有新的跨出主機的線；迭代 27.1～27.2、29～31 不必改，現在對應迭代 31 |
 | [1021](https://94sh09sh19sh.github.io/hd-docs/1021/requirements/architecture-diagrams/) | 2026-10-21 | 迭代 24～27 兩張圖都不必改，逐一寫明理由；現在對應迭代 27 完成時的系統 |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/requirements/architecture-diagrams/) | 2026-10-14 | 迭代 18、19 圖一的規則引擎與對外報表由虛線改實線、圖例拿掉「規劃中」；迭代 20～23 兩張圖都不必改，逐一寫明理由 |

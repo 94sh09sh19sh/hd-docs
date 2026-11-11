@@ -789,7 +789,7 @@ npm run db:restore -- --from <BACKUP_DIR 裡的備份檔> --to <新的絕對路�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 對應迭代 32、228 條路由；§13 加迭代 32 分冊 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/testing/manual-test-guide/) | 2026-11-11 | 對應迭代 32、228 條路由；§13 加迭代 32 分冊 |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/testing/manual-test-guide/) | 2026-10-28 | 對到迭代 31：226 條路由、159 種稽核動作；§13 加迭代 27.1～31 六本分冊 |
 | [1021](https://94sh09sh19sh.github.io/hd-docs/1021/testing/manual-test-guide/) | 2026-10-21 | §13 分冊索引補迭代 24～27 四本（三十九本、1490 項），標題改「迭代 3-27 分冊」；§09 路由表收進子文件《API 路由表》；檔頭對到迭代 27 |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/testing/manual-test-guide/) | 2026-10-14 | §13 分冊索引補迭代 17.8～23 八本（三十五本），標題改「迭代 3-23 分冊」；§09 路由表補新端點，照啟動清單重數為 209 條 |

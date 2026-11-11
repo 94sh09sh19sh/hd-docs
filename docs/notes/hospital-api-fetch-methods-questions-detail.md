@@ -188,6 +188,6 @@ H-1 1111 使用者答：不用另外知會，醫師授權學長，學長說了�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 首次定版。給學長的問題清單補充版：各題的理由與估算，題號與之二相同 |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/hospital-api-fetch-methods-questions-detail/) | 2026-11-11 | 首次定版。給學長的問題清單補充版：各題的理由與估算，題號與之二相同 |
 
 [← 回正式版](hospital-api-fetch-methods-questions.md)　[← 回進度首頁](../index.md)

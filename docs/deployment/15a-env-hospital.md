@@ -393,7 +393,7 @@ Select-String -Path $cfg -Pattern '^(HD_IMAGE_TAG|HD_BACKUP_DIR|HD_CONFIG_DIR|HD
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1111 | 2026-11-11 | 新增 1.12 院方資料讀檔的變數（`HD_DIALYSIS_LIST_DIR`、`COMPOSE_FILE`；`HD_LAB_DIR` 1111 起先留空） |
+| [1111](https://94sh09sh19sh.github.io/hd-docs/1111/deployment/15a-env-hospital/) | 2026-11-11 | 新增 1.12 院方資料讀檔的變數（`HD_DIALYSIS_LIST_DIR`、`COMPOSE_FILE`；`HD_LAB_DIR` 1111 起先留空） |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/deployment/15a-env-hospital/) | 2026-10-28 | 補 HD_EXPORT_DIR：位置、與備份資料夾分開的規則、沒填會停在哪裡、改位置的做法，舊設定檔升級到迭代 28 的提醒 |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/deployment/15a-env-hospital/) | 2026-10-14 | 1.11 判斷規則的書面確認閘門：迭代 18 加的 `HIGH_RISK_WRITTEN_CONFIRMATION` 迭代 18.1 拿掉，改在系統管理登記 |
 | [1007](https://94sh09sh19sh.github.io/hd-docs/1007/deployment/15a-env-hospital/) | 2026-10-07 | 首次定版。第十五冊之一：實際部署的 .env 怎麼填（取代第十四冊之一） |
