@@ -395,6 +395,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../weekly/2026-11-18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1118 — 三班時間答了，下一次進院同一趟讓抓取腳本跑起來、本系統換版上線
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../weekly/2026-11-11/" class="md-nav__link">
         
   
@@ -5715,6 +5743,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#03-1111-開會下一次同一趟做完" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 1111 開會：下一次同一趟做完
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6156,6 +6195,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#03-1111-開會下一次同一趟做完" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 1111 開會：下一次同一趟做完
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6296,6 +6346,7 @@
 <li>位址一填，當天清單上<strong>所有病人</strong>的主檔與療程都會進主機，不是只有首波那一位；床號設定要排在填位址之前（第 5 節）</li>
 <li>Q-35、病人告知或防毒排除任何一項沒有答案，就停在位址之前，這次算 B 級（第 6 節）</li>
 <li><strong>1108 定：介接方式改變</strong>：照負責 IDH 系統的學長的要求，本系統改讀主機上獨立腳本存下來的檔、不自己打院方 API；1109 進院先放腳本，本系統的讀檔模式另排迭代。本冊 A-13「填位址」改成「啟用讀檔」，要等讀檔模式做完再寫；現況與建議見《<a href="../../notes/hospital-api-fetch-methods-status/">院方 API 的四種抓取方式之一</a>》</li>
+<li><strong>1111 開會定：下一次進院的目標是透析清單抓取腳本跑起來、本系統換版、實際上線，同一趟做完</strong>（第 0.3 節）；A-08 三班時間答了</li>
 </ul>
 <hr />
 <h2 id="0-先講結論">0. 先講結論<a class="headerlink" href="#0-先講結論" title="Permanent link">&para;</a></h2>
@@ -6335,6 +6386,43 @@
 <li><strong>床位只新增、不會自己消失</strong>：床號格式設錯，錯的床號會留在清單裡</li>
 </ul>
 <p>所以 A-01、A-02、A-03 都要排在填位址之前，床號設定（A-07）也是。</p>
+<h3 id="03-1111-開會下一次同一趟做完">0.3 1111 開會：下一次同一趟做完<a class="headerlink" href="#03-1111-開會下一次同一趟做完" title="Permanent link">&para;</a></h3>
+<p>之前的排法是兩趟：下一趟只做透析清單抓取腳本（<a href="../19-hospital-fetch/">第十九冊</a>從 B-16 接），本系統換版上線等腳本在院內穩定跑過之後再去。1111 開會改成<strong>同一趟</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>順序</th>
+<th>做什麼</th>
+<th>照哪裡</th>
+<th>沒做成的話</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>透析清單抓取腳本：B-16 前的檢查 → 跑一輪 → 裝排程 → 看三輪 → 教學長</td>
+<td>第十九冊 B-16～B-19、第十九冊之二第 6.3 節</td>
+<td>停在這裡，本系統不換版</td>
+</tr>
+<tr>
+<td>2</td>
+<td>本系統換到含迭代 32 的新 tag</td>
+<td>新 tag 出發前在開發機整輪重做第十七冊（O-02）；院內照第十一冊 W-19 換版</td>
+<td>退回 <code>v0.4.0</code>，腳本照跑</td>
+</tr>
+<tr>
+<td>3</td>
+<td>啟用讀檔、首波上線</td>
+<td>本冊第 5 節，第 7 步改成 A-13 的啟用讀檔</td>
+<td>A-01～A-03 任何一項沒答案就停在第 6 步，B 級</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>「透析清單抓取腳本已在院內穩定跑過」（A-13 第 1 條）改成<strong>當天 B-18 三輪都成功</strong>；之後幾天靠護理站的「院方資料同步」卡片看</li>
+<li>時間比只做腳本的約 30 分鐘長很多，而且第 5 節的時段要<strong>沒有透析</strong>、資訊室同仁在場；三件事湊不到同一個時段時怎麼分，出發前跟學長、資訊室一起約</li>
+<li>開發端出發前多兩件事：出新 tag（<code>v0.4.0</code> 之後第一次換版，含迭代 32；32.1 做完就一起帶，實作規格書 4.32.1），以及 A-12、A-14～A-16 照舊要做完</li>
+</ul>
 <hr />
 <h2 id="1-出發前要拿到的答案">1. 出發前要拿到的答案<a class="headerlink" href="#1-出發前要拿到的答案" title="Permanent link">&para;</a></h2>
 <table>
@@ -6392,7 +6480,7 @@
 <tr>
 <td>A-08</td>
 <td>護理長</td>
-<td>三班起訖時間（Q-34）：同步自動建立的療程算哪一班</td>
+<td>~~三班起訖時間（Q-34）：同步自動建立的療程算哪一班~~ <strong>1111 開會答</strong>：08:00～12:00、13:30～17:30、18:00～22:00，現在的分班界線分得對；「未更新」提示時段現場改成 8～23 時（實作規格書 4.32.1 第 1 項）。新的一題：四小時照班別還是照個別病人的開始時間（Q-34 第 4 題），答覆前照舊、不擋上線</td>
 <td>資料正確性</td>
 </tr>
 <tr>
@@ -6459,7 +6547,7 @@
 </blockquote>
 <p><strong>A-13 那份步驟至少要有</strong>：</p>
 <ol>
-<li>開始前條件：A-01～A-03 都有答案、時段沒有透析；透析清單抓取腳本已在院內穩定跑過（之二 K-1）。<strong>1111 學長答 <code>hb</code> 不用這邊處理（之二 A-5）</strong>：先只啟用透析清單，<code>HD_LAB_DIR</code> 留空</li>
+<li>開始前條件：A-01～A-03 都有答案、時段沒有透析；透析清單抓取腳本已在院內穩定跑過（之二 K-1；<strong>1111 開會改成當天第十九冊 B-18 三輪都成功</strong>，第 0.3 節）。<strong>1111 學長答 <code>hb</code> 不用這邊處理（之二 A-5）</strong>：先只啟用透析清單，<code>HD_LAB_DIR</code> 留空</li>
 <li>確認「院方床位轉床號的方式」是 <code>0</code>（第 3 節）</li>
 <li>（1111 改）抓取腳本 <code>config.json</code> 的 <code>status_file</code> 改成 <code>&lt;指定資料夾&gt;\fetch-status.json</code>（本系統只掛兩個資料夾，狀態檔要在資料夾裡；單一檔案不能掛，腳本先寫暫存檔再改名，容器會一直看到舊的）；設定目錄 <code>.env</code> 照<a href="../15a-env-hospital/">第十五冊之一</a> 1.12 填兩個資料夾與 <code>COMPOSE_FILE</code>（DEP-46：路徑不進 repo、不寫進公開文件）；<code>docker compose --env-file $cfg up -d</code>；再照第十五冊 V-30a 的讀檔檢查看一次</li>
 <li>系統管理「院方資料同步」卡片怎麼看算成功</li>
@@ -6723,7 +6811,7 @@
 <li>同步沒有接過真實 API，第 3 節是讀程式與探測輸出的結論</li>
 <li>第 11 章 26 條沒有逐條核對現況（A-15）</li>
 <li>病人知情同意的現況不知道，A-03 是待問，不是已知有缺</li>
-<li>下一次進院的日期未定</li>
+<li>下一次進院的日期未定；1111 開會定了同一趟做三件事（第 0.3 節），時段還沒約</li>
 </ul>
 <hr />
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
