@@ -4932,6 +4932,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#328-迭代-321三班時間" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §32.8 迭代 32.1：三班時間
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6200,6 +6211,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#328-迭代-321三班時間" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §32.8 迭代 32.1：三班時間
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6229,10 +6251,10 @@
 
 <h1 id="迭代-32-手動測試--院方資料改讀檔透析清單與檢驗資料">迭代 32 手動測試 — 院方資料改讀檔：透析清單與檢驗資料<a class="headerlink" href="#迭代-32-手動測試--院方資料改讀檔透析清單與檢驗資料" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.32 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 32 的部分。院方資料同步本身（病人、床位、療程、下機、四種數值）在《<a href="../iteration-15/">迭代 15 分冊</a>》；讀檔模式只換了「拿到回應」那一步。抓取腳本是私人 repo <code>hd-hospital-fetch</code>，留底檔與狀態檔的格式以它 README 的「契約」為準。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.32 節與 4.32.1（迭代 32.1 三班時間，§32.8）。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 32 的部分。院方資料同步本身（病人、床位、療程、下機、四種數值）在《<a href="../iteration-15/">迭代 15 分冊</a>》；讀檔模式只換了「拿到回應」那一步。抓取腳本是私人 repo <code>hd-hospital-fetch</code>，留底檔與狀態檔的格式以它 README 的「契約」為準。</p>
 </blockquote>
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
-<p>這一冊驗六件事（項次 <code>ap1</code>～<code>ap20</code>，自動化另跑 <code>npm run verify:iteration32</code> 與 <code>npm run verify:iteration32:api</code>）：</p>
+<p>這一冊驗七件事（項次 <code>ap1</code>～<code>ap24</code>，自動化另跑 <code>npm run verify:iteration32</code>、<code>npm run verify:iteration32:api</code>，32.1 再加 <code>npm run verify:iteration32-1</code> 與 <code>:api</code>）：</p>
 <ul>
 <li>設定二選一：透析清單資料夾與院方 API 的位址兩種都填，後端起不來；只填資料夾時不連院方</li>
 <li>讀檔：模擬院方 API 的寫檔模式寫留底，後端讀當天的段落、照舊同步；內容沒變不寫入</li>
@@ -6240,6 +6262,7 @@
 <li>檢驗資料：五種抽血數值讀進來、來源「院方檢驗」；「需要抽血數值的功能」關著時任何畫面都不出現</li>
 <li>探測工具只讀檢查兩個資料夾、只印結構；正式環境設定下讀到模擬標記檔整次作廢</li>
 <li>compose 唯讀掛載兩個資料夾（路徑有空白與中文）</li>
+<li>（32.1）「未更新」提示時段預設 8～23 時，舊的 0、24 換版時改掉；工作量熱圖的虛線在 12:45、17:45</li>
 </ul>
 <table>
 <thead>
@@ -6316,6 +6339,12 @@
 <td>🛠</td>
 <td>驗收第 3～10 條</td>
 </tr>
+<tr>
+<td>§32.8</td>
+<td>迭代 32.1：三班時間</td>
+<td>🛠 🖥</td>
+<td>4.32.1 第 1、2 項</td>
+</tr>
 </tbody>
 </table>
 <p><strong>前置</strong>：開一個空的資料夾當模擬留底（下面寫 <code>&lt;模擬資料夾&gt;</code>，路徑故意帶一個空白與中文），終端機一跑 <code>HOSPITAL_API_SIM_FILES_DIR=&lt;模擬資料夾&gt; npm run dev:hospital-sim</code>（模擬院方 API 照抓取腳本的契約每 3 分鐘寫一輪透析清單、啟動時寫一輪檢驗資料），根目錄 <code>.env</code> 加 <code>HOSPITAL_DIALYSIS_LIST_DIR=&lt;模擬資料夾&gt;/dialysis-list</code> 與 <code>HOSPITAL_LAB_DIR=&lt;模擬資料夾&gt;/lab</code>，再啟動後端。</p>
@@ -6334,8 +6363,8 @@
 </ul>
 <h2 id="323-狀態檔與提示時段">§32.3 狀態檔與提示時段<a class="headerlink" href="#323-狀態檔與提示時段" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap7</code> <strong>［開發機→護理端］</strong> 🛠 停掉模擬院方 API，把 <code>fetch-status.json</code> 的 <code>result</code> 改成 <code>"failed"</code>、<code>reason</code> 改成 <code>"院方伺服器回應狀態 503"</code>、<code>last_success_at</code> 改成 30 分鐘前，按「立即同步」。 → 卡片與簡易版床位圖上方：「院方資料已 30 分鐘未更新：抓取腳本最近一輪失敗：院方伺服器回應狀態 503……」。</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap8</code> <strong>［護理端］</strong> 營運參數表的「院方資料未更新提示的起始時刻」「結束時刻」改成不含現在的時段（例如現在 14 時，改成 15～16 時），理由填「測試」。 → 兩處的「未更新」提示都消失；卡片寫「提示時段：15 時到 16 時，現在不在提示時段內」。改回 0、24 → 卡片寫「提示時段：全天」，提示回來。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap7</code> <strong>［開發機→護理端］</strong> 🛠 停掉模擬院方 API，把 <code>fetch-status.json</code> 的 <code>result</code> 改成 <code>"failed"</code>、<code>reason</code> 改成 <code>"院方伺服器回應狀態 503"</code>、<code>last_success_at</code> 改成 30 分鐘前，按「立即同步」（32.1 起提示時段預設 8～23 時，23:00～08:00 做這一項先照 <code>ap8</code> 把時段改成 0、24）。 → 卡片與簡易版床位圖上方：「院方資料已 30 分鐘未更新：抓取腳本最近一輪失敗：院方伺服器回應狀態 503……」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap8</code> <strong>［護理端］</strong> 營運參數表的「院方資料未更新提示的起始時刻」「結束時刻」改成不含現在的時段（例如現在 14 時，改成 15～16 時），理由填「測試」。 → 兩處的「未更新」提示都消失；卡片寫「提示時段：15 時到 16 時，現在不在提示時段內」。改回 0、24 → 卡片寫「提示時段：全天」，提示回來。做完改回 8、23（32.1 的預設）。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap9</code> <strong>［開發機→護理端］</strong> 🛠 狀態檔改回 <code>"ok"</code>、<code>last_success_at</code> 改成 1 分鐘前，不動當月檔（模擬透析室一陣子沒有新量測），按「立即同步」。 → 不提示「未更新」，紀錄標「內容沒變」、沒有錯誤。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap10</code> <strong>［開發機→護理端］</strong> 🛠 刪掉 <code>fetch-status.json</code>，按「立即同步」。 → 成功，紀錄寫「看不到抓取腳本的狀態」；卡片「最後一次確定是新的」退回當月檔的修改時間。重開模擬院方 API 讓它補回狀態檔。</li>
 </ul>
@@ -6360,6 +6389,16 @@
 <h2 id="327-自動化驗收">§32.7 自動化驗收<a class="headerlink" href="#327-自動化驗收" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap20</code> <strong>［開發機］</strong> 🛠 跑 <code>npm run verify:iteration32</code>（不需要後端，九步：共用常數、設定、compose、讀檔只讀、同步、檢驗資料、護理站與探測工具與模擬、遷移匯出資料字典與本分冊，加上介面檢查、零院外連線與迭代 15 的驗收）與 <code>npm run verify:iteration32:api</code>（要 Prisma，不需要開發機的後端，九步：設定二選一、直接打 API 與兩種寫法的讀檔寫進資料庫完全相同、內容沒變與檔案沒被改、七種邊界情況、2 GB 的月份檔、狀態檔與提示時段、檢驗資料、模擬標記檔、路徑病歷號檢驗值不外洩）。 → 兩支都全部通過；<code>:api</code> 會在 repo 旁邊寫一個 2 GB 的暫存檔，跑完刪掉（<code>VERIFY_BIG_MB=0</code> 跳過這一步）。</li>
+</ul>
+<h2 id="328-迭代-321三班時間">§32.8 迭代 32.1：三班時間<a class="headerlink" href="#328-迭代-321三班時間" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>對應《實作規格書》4.32.1：「未更新」提示時段的預設值（第 1 項）、工作量歸班的界線（第 2 項）。療程的分班界線（12、17 時）照留；四小時怎麼算（第 4 項）等清冊 Q-34 第 4 題，這一版不動。遷移 <code>iteration32_1_stale_alert_hours</code>（<code>npm run prisma:deploy -w @hd/api</code>，後端要先關）。</p>
+</blockquote>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap21</code> <strong>［護理端］</strong> 🖥 全新環境（或已套 32.1 遷移的開發機）看營運參數表與「院方資料同步」卡。 → 「院方資料未更新提示的起始時刻」8 時、「結束時刻」23 時，說明寫第一班 08:00 開始、最後一班 22:00 結束，<strong>沒有「三班時間待 Q-34」</strong>；卡片寫「「未更新」提示時段：8 時到 23 時」，現在在 23:00～08:00 時多一句「現在不在提示時段內」。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap22</code> <strong>［開發機→護理端］</strong> 🛠 32.1 之前建的開發資料庫（兩個時刻還是 0、24）關後端、跑遷移、再啟動。 → 兩列變成 8、23，各有一筆系統寫的稽核「由 0 時 改為 8 時」「由 24 時 改為 23 時」，理由「版本更新：1111 迭代 32.1 三班時間……」；遷移前先把其中一個改成別的值（例如結束 22）再跑一次，那一個照留、沒有稽核。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap23</code> <strong>［護理端］</strong> 🖥 選單 → 成效與工作量 →「各班工作量」分頁的熱圖。 → 兩條虛線畫在 12 點、17 點那一格的<strong>中間</strong>（不是格子的左邊線），「午班」「晚班」標在虛線旁；圖下說明寫「虛線是各班工作量的分界（12:45、17:45……）」。「文書與審閱」那張圖：17:00～17:44 簽核的護理紀錄算在午班（開發機上可在 17:20 簽一筆再看）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap24</code> <strong>［開發機］</strong> 🛠 跑 <code>npm run verify:iteration32-1</code>（不需要後端，六步：三班時間與療程的界線、工作量的界線與用到的程式、提示時段的預設與邊界、遷移的寫法、四小時照舊、介面檢查與相關驗收）與 <code>npm run verify:iteration32-1:api</code>（要 Prisma、不必開後端，七步：兩種班別換算、全新資料庫套全部遷移、四種舊值重跑遷移）。 → 兩支都全部通過。</li>
 </ul>
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>

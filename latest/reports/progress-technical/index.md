@@ -4,17 +4,17 @@
 
 **報告日期**：2026-11-11
 
-**版本**：迭代 32 完成（1111；院方資料改讀檔：本系統只讀主機上兩支抓取腳本的資料夾、唯讀掛載，透析清單讀當天段落合起來照舊同步，檢驗資料第一次有來源、開關關著不出現；表 102、遷移 32、路由 228）；迭代 30.5 完成（1111；連點成畫點數由少到多與揭圖：遊戲模式 8～25 點、圖版面 `P-` 開頭 20 張、標準模式與 R1 不揭圖、練習期內不排標準模式；沒有遷移與新端點，表 101、遷移 31、路由 226 不變）；迭代 30.4 完成（1110；連點成畫 B 部分：標準版 A 點完接圓、方交替的 50 點，一支只做加法的遷移，表 101、遷移 31、路由 226 不變）；迭代 31 完成（master；連點成畫之三——常模對照：規則引擎第五項、常模表另開一張表、教育年數由護理端登記、真實病人擋在每一次查表，只對合成資料執行）；迭代 30 完成 A 部分（連點成畫之二——標準模式的時窗與固定版面 A1～A4、快照第 2 版、護理端跟自己比、五個營運參數；B 部分等 Q-40 第 2 題）；迭代 29 完成（連點成畫之一——遊戲模式、兩張新表、伺服器重算點擊、護理端只多「本月連點成畫 N 盤」；迭代 28 蒐集資料的完整取出——欄位的匯出分類與 `check:export`、院內主機上只讀的取出指令與一次性的 `data-export`、取出紀錄與系統管理唯讀頁；迭代 27.2 病人平板進度條寫出剩餘時間與結束時間、血壓單位；迭代 27.1 病人平板頂列固定一列、任務醒著才自動出現、`demo:patient` 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
+**版本**：迭代 32.1 完成（1111；三班時間：「未更新」提示時段預設 8～23 時、工作量歸班改照 12:45、17:45，療程的分班界線照留；一支只改值的遷移，表 102、遷移 33、路由 228）；迭代 32 完成（1111；院方資料改讀檔：本系統只讀主機上兩支抓取腳本的資料夾、唯讀掛載，透析清單讀當天段落合起來照舊同步，檢驗資料第一次有來源、開關關著不出現；表 102、遷移 32、路由 228）；迭代 30.5 完成（1111；連點成畫點數由少到多與揭圖：遊戲模式 8～25 點、圖版面 `P-` 開頭 20 張、標準模式與 R1 不揭圖、練習期內不排標準模式；沒有遷移與新端點，表 101、遷移 31、路由 226 不變）；迭代 30.4 完成（1110；連點成畫 B 部分：標準版 A 點完接圓、方交替的 50 點，一支只做加法的遷移，表 101、遷移 31、路由 226 不變）；迭代 31 完成（master；連點成畫之三——常模對照：規則引擎第五項、常模表另開一張表、教育年數由護理端登記、真實病人擋在每一次查表，只對合成資料執行）；迭代 30 完成 A 部分（連點成畫之二——標準模式的時窗與固定版面 A1～A4、快照第 2 版、護理端跟自己比、五個營運參數；B 部分等 Q-40 第 2 題）；迭代 29 完成（連點成畫之一——遊戲模式、兩張新表、伺服器重算點擊、護理端只多「本月連點成畫 N 盤」；迭代 28 蒐集資料的完整取出——欄位的匯出分類與 `check:export`、院內主機上只讀的取出指令與一次性的 `data-export`、取出紀錄與系統管理唯讀頁；迭代 27.2 病人平板進度條寫出剩餘時間與結束時間、血壓單位；迭代 27.1 病人平板頂列固定一列、任務醒著才自動出現、`demo:patient` 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
 
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 ## 摘要
 
-- 報告日期 1111，對應迭代 32 完成（master）；寫給接手或協作的工程師
+- 報告日期 1111，對應迭代 32.1 完成（master）；寫給接手或協作的工程師
 - 需求來源六份，衝突時以實作規格書為準（資料庫使用規範、部署規範優先權等同），動工前至少讀前三份（第 1 節）
 - 七條不可違反的約束：前端不碰資料庫、身分驗證自建、存取控制在後端、業務邏輯不嵌資料庫語法、測試資料虛構、零院外連線、模型呼叫一律經 `AiGatewayService`（第 3 節）
 - 迭代 32 完成時的規模：228 條路由、102 張表、163 種稽核動作、31 個權限碼、8 種角色、25 個功能開關、49 個營運參數（第 6 節「規模」）
-- 已完成範圍：迭代 24～32 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》
+- 已完成範圍：迭代 24～32.1 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》
 - 第 7 節高風險三項：1010 迭代 18 完成實作，對真實病人開啟仍要 Q-02、Q-03；1028 迭代 31 加第四項（連點成畫常模對照），另要 Q-40 第 1、3 題
 - 第 9 節已知粗糙處八項（例如重複病歷號回 500），授權判斷本身沒有問題
 - 第 12 節下一階段（第三次進院前的待辦）、第 13 節每次動工前的自我檢查
@@ -136,7 +136,7 @@ ______________________________________________________________________
 
 ## 4. 資料模型
 
-共 102 張表，32 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
+共 102 張表，33 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`、`iteration32_1_stale_alert_hours`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》。
 
 | 分類                                                                                                             | 表                                                                                                                                      | 加入於    |
 | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- |
@@ -701,7 +701,17 @@ ______________________________________________________________________
 - 透析清單的狀態檔要在透析清單資料夾裡：抓取腳本的 `status_file` 部署時要改（第十八冊之二 A-13）
 - Docker Desktop 上 `create_host_path: false` 沒有效、`COMPOSE_FILE=` 空白的一行會讓 compose 讀不到設定檔（1111 實測）
 - 後端路由 226 → 228、資料表 101 → 102、稽核動作 159 → 163、營運參數 46 → 49、遷移多一個；權限、角色、功能開關沒有增減
-- **1111 開會（只寫文件）**：三班是 08:00～12:00、13:30～17:30、18:00～22:00，`TREATMENT_SHIFT_START_HOURS` 的 12、17 分得對；提示時段預設值、分班界線、抓取腳本時段排成迭代 32.1（實作規格書 4.32.1，待排）；四小時照班別還是照開始時間待 Q-34 第 4 題，答「照班別」改的是 `plannedDialysisEndMs`。下一次進院同一趟把腳本跑起來、換新 tag、首波上線（第十八冊之二第 0.3 節），新 tag 出發前要整輪重做第十七冊
+- **1111 開會**：三班是 08:00～12:00、13:30～17:30、18:00～22:00，`TREATMENT_SHIFT_START_HOURS` 的 12、17 分得對；提示時段預設值、分班界線同一天做成迭代 32.1（下一小節），抓取腳本時段是《之四》T-15；四小時照班別還是照開始時間待 Q-34 第 4 題，答「照班別」改的是 `plannedDialysisEndMs`。下一次進院同一趟把腳本跑起來、換新 tag、首波上線（第十八冊之二第 0.3 節），新 tag 出發前要整輪重做第十七冊
+
+### 迭代 32.1（1111）：三班時間
+
+實作規格書 4.32.1（開發端判斷①～⑤、驗收現況）；1111 開會答 Q-34 第 2 題，同一天做。手動測試在《[迭代 32 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-32/index.md)》§32.8（`ap21`～`ap24`）。
+
+- 「未更新」提示時段預設 0～24 → **8～23 時**；遷移 `iteration32_1_stale_alert_hours` 只改還是 0、24 的值、各寫一筆系統稽核（照 27.1 的做法），院內主機還沒裝過 32，換版時後端啟動直接補 8、23，現場不必多一步
+- 分班界線**拆成兩套**（判斷①）：療程的開始時間照留 12、17 時（院方資料自動建立的療程、簡易版拖病人上平板，簡易版改用 `@hd/shared` 同一支）；工作量（簽核與審閱落在哪一班、熱圖的虛線）改照分鐘、以兩班空檔的中點 12:45、17:45 為界（`TREATMENT_SHIFT_WORK_START_MINUTES`、`taipeiMinuteOfDay`）
+- 三班時間寫成 `TREATMENT_SHIFT_TIMES` 一處，給第 4 項答「照班別」時用；第 4 項答覆前不動（`plannedDialysisEndMs` 照舊開始後四小時）
+- 新增 `verify:iteration32-1`（六步）、`verify:iteration32-1:api`（七步，要 Prisma、不必開後端）；迭代 32 的兩支腳本刻意改兩處（之一第二十九次），`verify:iteration32:api` 九步照樣通過
+- 路由、表、稽核動作、營運參數個數不變；遷移多一個（33）
 
 ### 規模
 
