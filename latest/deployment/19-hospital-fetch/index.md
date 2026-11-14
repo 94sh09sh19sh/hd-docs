@@ -4,9 +4,11 @@
 
 > **這一冊回答一件事：在醫院那台主機上，把抓取腳本 `hd-hospital-fetch` 放上去，讓它每 3 分鐘自己抓一次院方透析清單。** 本系統（容器、`.env`、平板）這次**完全不動**。
 >
+> **1114 學長答了《之二》**：第五次進院（1116）從 **B-14a** 接——整個 `API_Fetch` 搬到 C 槽（K-2 ①）、只換 `fetch_dialysis.py` 成 v0.3.0、`config.json` 改三處（新位置、狀態檔放進指定資料夾、只在 07:00～23:00 抓，F-6 ①），再做 B-15 起。同一趟本系統換版上線，順序在《[第十八冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/18b-go-live-prep/index.md)》第 0.3 節。
+>
 > 每一步都有「會看到」與「不對的話」。**「不對的話」寫「停」就是斷點：停下來，跟學長決定，不要自己往下做。**
 >
-> **公開範圍**：文件站是公開的。院方位址、指定資料夾的完整路徑、帳號一律不寫進這一冊，看私人 repo 的 `deploy/records/1108-hospital-api/values.md`；本冊用 `<指定資料夾>`、`<院方位址>`、`<腳本資料夾>` 代稱。
+> **公開範圍**：文件站是公開的。院方位址、指定資料夾的完整路徑、帳號一律不寫進這一冊，看私人 repo 的 `deploy/records/1108-hospital-api/values.md`；本冊用 `<指定資料夾>`、`<院方位址>`、`<腳本資料夾>` 代稱。**例外（1114）**：搬到 C 槽後的 `C:\API_Fetch\…` 是開發端提的通用位置，《之二》K-2 與腳本的設定範例本來就公開，直接寫；D 槽原本的路徑照舊不寫。
 
 ## 摘要
 
@@ -17,6 +19,7 @@
 - 下載與放好（B-09～B-11）：InPrivate（Chrome 叫無痕）視窗登入自己的 GitHub 下載，關視窗、解壓縮、解除下載標記
 - 轉碼（B-12～B-13）：歷史 txt 從 cp950 轉 UTF-8，先預演再實轉，隨時可還原
 - 試跑（B-14～B-16）：填設定、預演、跑一輪，看狀態檔與檔尾
+- **1114 加 B-14a～B-14c（第五次進院從這裡接）**：整個 `API_Fetch` 複製到 C 槽、比對後舊的改名留著；只換 `fetch_dialysis.py` 成 v0.3.0；`config.json` 改新位置、狀態檔放進指定資料夾、`fetch_hours` 07:00～23:00
 - 排程（B-17～B-19）：裝排程、看三輪、教學長怎麼停與怎麼看
 - 收尾（B-20～B-21）：記錄；退回步驟在第 3 節；出錯對照、一頁速查在《[第十九冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19a-hospital-fetch-reference/index.md)》
 - 檢驗資料（`hb`）：**1111 起不做**——學長答 A-5 不用這邊處理，B-19 做完直接接 B-20；《[第十九冊之三](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19c-hb-fetch/index.md)》保留為紀錄
@@ -24,11 +27,11 @@
 ## 0. 開始前先懂的五件事
 
 1. **這支腳本做什麼**：每 3 分鐘問院方 API「今天的透析清單」，把**新的或變了的列**附加到 `<指定資料夾>\YYYY-MM.txt`（一個月一個檔），再把這一輪的結果寫進狀態檔 `fetch-status.json`。同一筆資料不會重複寫
-1. **它會動到的檔**：只有三處——`<指定資料夾>` 裡的當月 txt（只附加、不改舊的）、`<腳本資料夾>` 裡的 `fetch-status.json` 與 `state\`。轉碼工具另外會在 `<指定資料夾>` 底下建一個 `_backup_日期-時間\` 備份
+1. **它會動到的檔**：只有三處——`<指定資料夾>` 裡的當月 txt（只附加、不改舊的）、狀態檔 `fetch-status.json`（1114 起放在 `<指定資料夾>` 裡，本系統要讀，B-14c）、`<腳本資料夾>` 裡的 `state\`。轉碼工具另外會在 `<指定資料夾>` 底下建一個 `_backup_日期-時間\` 備份
 1. **兩種跑法**：主機有 Python 3.8 以上就用 `.py`；沒有就用 `.exe`（學長決定）。本冊的指令寫 `.py` 版；用 `.exe` 的話，`py fetch_dialysis.py` 換成 `.\fetch_dialysis.exe`、`py transcode_history.py` 換成 `.\transcode_history.exe`，其餘照舊
 1. **怎麼開 PowerShell**：按「開始」→ 打 `powershell` →「Windows PowerShell」（**不要**選「以系統管理員身分執行」，也**不要**用 `Win+X` 再按 `A`——那是系統管理員；1109 之前每次進院都是這樣開的）。搜尋到之後直接按 Enter 是一般權限，`Ctrl+Shift+Enter` 才是系統管理員。指令從主機瀏覽器上的這一冊整行複製（程式碼框右上角有複製鈕）、到 PowerShell 按滑鼠右鍵貼上、按 Enter；用 `Alt+Tab` 在瀏覽器與 PowerShell 之間切換
 1. **結束碼**：每跑完一支，接著打 `$LASTEXITCODE` 看數字。`0` 是成功（或「跳過」），`1` 是失敗，`2` 是參數或設定錯
-1. **兩個變數**：B-06 設 `$dir`（指定資料夾）、B-08 設 `$sf`（腳本資料夾），之後的指令直接用，不用打路徑。PowerShell 視窗關掉就會不見；重開後先貼這一行，出現提示時貼上指定資料夾的路徑（從檔案總管網址列複製）：`$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"', "'"); $sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; cd -LiteralPath $sf`（腳本資料夾用 `C:\hd-hospital-fetch` 的話，`$sf =` 後面改成 `'C:\hd-hospital-fetch'`）
+1. **兩個變數**：B-06 設 `$dir`（指定資料夾）、B-08 設 `$sf`（腳本資料夾），之後的指令直接用，不用打路徑。PowerShell 視窗關掉就會不見；重開後先貼這一行，出現提示時貼上指定資料夾的路徑（從檔案總管網址列複製）：`$dir = (Read-Host '貼上指定資料夾的路徑').Trim().Trim('"', "'"); $sf = Join-Path (Split-Path -Parent $dir) 'hd-hospital-fetch'; cd -LiteralPath $sf`（腳本資料夾用 `C:\hd-hospital-fetch` 的話，`$sf =` 後面改成 `'C:\hd-hospital-fetch'`）。**B-14a 搬到 C 槽之後**，指定資料夾是 `C:\API_Fetch\IDH_interface`，直接貼：`$dir = 'C:\API_Fetch\IDH_interface'; $sf = 'C:\API_Fetch\hd-hospital-fetch'; cd -LiteralPath $sf`
 
 ## 1. 出發前
 
@@ -291,7 +294,93 @@ notepad config.json
 
 存檔（`Ctrl+S`）、關掉記事本。
 
-> **1111 補**：本系統之後讀檔時要讀得到狀態檔，屆時 `status_file` 要改指到 `<指定資料夾>` 裡——那一步排在本系統換版的時候（第十八冊之二 A-13 第 3 步），**這裡先不改**。
+> **1111 補**：本系統之後讀檔時要讀得到狀態檔，屆時 `status_file` 要改指到 `<指定資料夾>` 裡。**1114 改**：同一趟換版，提前到 B-14c 一起改。
+
+### B-14a 搬到 C 槽（1114 加，學長答 K-2 ①）
+
+1109 時 D 槽只剩 13 GB，估計 12 月中旬就滿（之二之一 K-2）。整個 `API_Fetch`（`IDH_interface`、`Hb_API_Fetch`、`hd-hospital-fetch`）**複製**到 `C:\API_Fetch`，比對一樣之後舊的改名留著，**不刪**；刪不刪由學長決定（B-20 記下）。腳本的 `state\` 跟著搬，搬完不會重寫整天的列。
+
+先確認排程還沒裝、沒有 Python 在跑（有的話停，跟學長確認）、C 槽還沒有 `API_Fetch`。`$dir` 這時還是 D 槽的指定資料夾，空的就照第 0 節第 6 點用 D 槽的路徑設：
+
+```
+Get-ScheduledTask -TaskName hd-hospital-fetch -ErrorAction SilentlyContinue
+Get-Process python*, py -ErrorAction SilentlyContinue
+$old = Split-Path -Parent $dir; $new = 'C:\API_Fetch'; $old; Test-Path -LiteralPath $new
+"C 槽可用 {0:N1} GB" -f ((Get-PSDrive C).Free/1GB)
+```
+
+- **會看到**：前兩行沒印東西；接著 D 槽的 `…\API_Fetch`、`False`；C 槽可用幾百 GB（1109 是 763 GB）
+- 第三行 `True`：C 槽已經有人放過，停，跟學長確認
+
+複製（約 8 GB，幾分鐘；結束碼 0～7 都是成功，8 以上是有檔沒複製到）：
+
+```
+robocopy $old $new /E /COPY:DAT /DCOPY:T /R:1 /W:1 /NFL /NDL /NP
+$LASTEXITCODE
+```
+
+- **會看到**：最後一段表格的「失敗」欄都是 `0`；`$LASTEXITCODE` 是 `1`（複製了檔）
+- **不對的話**：結束碼 8 以上或「失敗」不是 0 → 停，舊的完全沒動，照舊在 D 槽做也可以（學長決定）
+
+比對兩邊的檔數與大小：
+
+```
+foreach ($p in $old, $new) { $f = Get-ChildItem -LiteralPath $p -Recurse -File -Force; '{0} 個檔、{1:N0} 位元組' -f $f.Count, ($f | Measure-Object Length -Sum).Sum }
+```
+
+- **會看到**：兩行一模一樣
+- **不對的話**：不一樣 → 停，不改名，回報
+
+舊的改名（之後沒有東西會再寫到舊路徑），再換成新的位置：
+
+```
+Rename-Item -LiteralPath $old ('API_Fetch_搬到C槽_' + (Get-Date -Format 'MMdd'))
+$dir = 'C:\API_Fetch\IDH_interface'; $sf = 'C:\API_Fetch\hd-hospital-fetch'; cd -LiteralPath $sf; dir config.json
+```
+
+- **會看到**：`dir` 列出 `config.json`（1109 B-14 填的那一份）；提示字元變成 `PS C:\API_Fetch\hd-hospital-fetch>`
+- 改名出現紅字（存取被拒、檔案正在使用中）：關掉開在那個資料夾的檔案總管與記事本再試；還是不行就停
+- 學長的文件與 APP 組讀檔的路徑要跟著改成 C 槽，請學長轉告（B-20 記下）
+
+### B-14b 換成 v0.3.0（1114 加）
+
+主機上是 v0.1.0。v0.3.0 只改了 `fetch_dialysis.py`（加抓取時段、狀態檔多一欄），**只換這一個檔**，其他檔與 `config.json`、`state\` 不動。
+
+照 B-09 的做法（InPrivate／無痕視窗登入自己的 GitHub），網址改成 `https://github.com/94sh09sh19sh/hd-hospital-fetch/releases/tag/v0.3.0`，下載 `Source code (zip)` 到「下載」，關掉 InPrivate 視窗。接著：
+
+```
+$z = "$env:USERPROFILE\Downloads\hd-hospital-fetch-0.3.0.zip"; $tmp = Join-Path $env:TEMP 'hd-fetch-0.3.0'
+Expand-Archive -LiteralPath $z -DestinationPath $tmp -Force
+Copy-Item -LiteralPath (Join-Path $tmp 'hd-hospital-fetch-0.3.0\fetch_dialysis.py') -Destination $sf -Force
+Remove-Item -LiteralPath $tmp -Recurse -Force; Remove-Item -LiteralPath $z
+Unblock-File -LiteralPath (Join-Path $sf 'fetch_dialysis.py')
+py fetch_dialysis.py --version
+```
+
+- **會看到**：最後一行 `0.3.0`
+- **不對的話**：印出 `0.1.0` → 複製沒成功，從第一行再做一次；找不到 zip → 看「下載」裡的檔名（`hd-hospital-fetch-0.3.0 (1).zip` 之類），改 `$z`
+
+### B-14c 改設定三處（1114 加）
+
+```
+Set-Clipboard $dir.Replace('\', '\\')
+notepad config.json
+```
+
+| 欄位            | 改成                                                                                                                                                       |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"output_dir"`  | 引號中間原本的 D 槽路徑選起來、按 `Ctrl+V`（變成 `C:\\API_Fetch\\IDH_interface`）                                                                          |
+| `"status_file"` | `"C:\\API_Fetch\\IDH_interface\\fetch-status.json"`（本系統讀檔要在指定資料夾裡看得到狀態檔，第十八冊之二 A-13 第 3 步）                                   |
+| 新加一行        | 在最後一個欄位（`"lock_stale_seconds": 900`）後面加逗號，下一行加 `"fetch_hours": "07:00-23:00"`（學長答 F-6 ①：只在 07:00～23:00 抓，時段外不打院方 API） |
+
+存檔、關掉記事本，檢查：
+
+```
+Get-Content -Raw -Encoding UTF8 config.json | ConvertFrom-Json | Select-Object output_dir, status_file, fetch_hours, dedup, line_format
+```
+
+- **會看到**：`C:\API_Fetch\IDH_interface`、`C:\API_Fetch\IDH_interface\fetch-status.json`、`07:00-23:00`、`row`、`segment`
+- **不對的話**：紅字「無效的 JSON」→ 多半是少了逗號或反斜線只寫一個，回記事本對照上表改；`fetch_hours` 是空的 → 那一行沒存到
 
 ### B-15 預演一輪
 
@@ -300,6 +389,7 @@ py fetch_dialysis.py --dry-run
 ```
 
 - **會看到**：`2026-11-09 16:20:05 成功 回應 601 列、會寫入 601 列（預演，沒有寫任何檔）`（列數是範例；第一次跑，兩個數字一樣）
+- 1114 起（v0.3.0、設了 `fetch_hours`）：07:00 前或 23:00 後跑會印 `… 時段外 只在 07:00-23:00 抓，這一輪不打院方 API（預演）`，不是錯；病歷號有不是純數字的列時，會多印「病歷號不是純數字的 N 列（照樣保留）」，記下 N（B-20）
 - **不對的話**：照《[第十九冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19a-hospital-fetch-reference/index.md)》第 1 節「出錯對照」查；查不出來就停
 
 ### B-16 跑一輪、看結果
@@ -327,13 +417,12 @@ Get-Content -LiteralPath $m -Tail 6 -Encoding UTF8 | ForEach-Object { if ($_ -li
 
 - **會看到**：檔案的修改時間；接著最後幾行，`Date:` 行印原文，其他行只印字數（例如 `（96000 字）`、`（0 字）`）
 - 修改時間與最後一個 `Date:` 都在**幾分鐘內**：有別的程式在寫，停，跟學長確認是誰在寫、要不要先停掉
-- 時間是幾天前：等 5 分鐘再貼一次，修改時間沒變就往下
+- 時間是幾天前：等 5 分鐘再貼一次，修改時間沒變就往下（**1114 學長答 K-1**：月份檔是從正式在用的那台 IDH 主機搬過來的，這台沒有別的程式在寫；B-14a 搬到 C 槽後更不會有，這個檢查照做、只是確認）
 - 每段之間夾一行 `（0 字）`（空行）是舊檔的寫法，本腳本每段只寫 `Date:` 與 JSON 兩行，不夾空行；記下來（B-20），不影響往下做
 
 ```
 py fetch_dialysis.py --once
-$LASTEXITCODE
-Get-Content -Encoding UTF8 .\fetch-status.json
+$LASTEXITCODE Get-Content -Encoding UTF8 (Join-Path $dir 'fetch-status.json')
 ```
 
 - **會看到**：第一行 `… 成功 回應 601 列、寫入 601 列`；`$LASTEXITCODE` 是 `0`；狀態檔裡 `"result": "ok"`、`"written_rows"` 與 `"response_rows"` 一樣
@@ -372,7 +461,7 @@ powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -Exe .\fetch_dialysi
 已建立工作 hd-hospital-fetch
   帳號：<電腦名稱>\<帳號>（只在使用者登入時執行）
   頻率：每 3 分鐘，第一次在 1 分鐘後
-  執行：…pythonw.exe "C:\hd-hospital-fetch\fetch_dialysis.py" --once --config "C:\hd-hospital-fetch\config.json"
+  執行：…pythonw.exe "C:\API_Fetch\hd-hospital-fetch\fetch_dialysis.py" --once --config "C:\API_Fetch\hd-hospital-fetch\config.json"
   狀態：Ready
 看結果：狀態檔（設定檔的 status_file）每輪覆寫；或 Get-ScheduledTaskInfo -TaskName hd-hospital-fetch
 ```
@@ -385,8 +474,7 @@ powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -Exe .\fetch_dialysi
 每 3 分鐘打一次：
 
 ```
-Get-ScheduledTaskInfo -TaskName hd-hospital-fetch | Select-Object LastRunTime, LastTaskResult, NextRunTime
-Get-Content -Encoding UTF8 .\fetch-status.json
+Get-ScheduledTaskInfo -TaskName hd-hospital-fetch | Select-Object LastRunTime, LastTaskResult, NextRunTime Get-Content -Encoding UTF8 (Join-Path $dir 'fetch-status.json')
 ```
 
 - **會看到**：`LastRunTime` 每 3 分鐘往前跳、`LastTaskResult` 是 `0`；狀態檔的 `last_attempt_at` 跟著變、`result` 是 `ok`；`written_rows` 多半是 `0`，有新量測時是幾列
@@ -395,22 +483,23 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 
 ### B-19 教學長三件事
 
-| 要做的               | 指令（在 `<腳本資料夾>` 裡打）                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------------------------- |
-| 停掉                 | `powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1`                                               |
-| 改頻率（例：5 分鐘） | `powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -IntervalMinutes 5 -Force`                       |
-| 看最近一輪           | `Get-Content -Encoding UTF8 .\fetch-status.json`：`result`、`reason`、`last_success_at`（最後一次成功的時間） |
+| 要做的               | 指令（在 `<腳本資料夾>` 裡打）                                                                                                                                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 停掉                 | `powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1`                                                                                                                                                                |
+| 改頻率（例：5 分鐘） | `powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -IntervalMinutes 5 -Force`                                                                                                                                        |
+| 看最近一輪           | `Get-Content -Encoding UTF8 C:\API_Fetch\IDH_interface\fetch-status.json`（1114 起狀態檔在指定資料夾裡）：`result`、`reason`、`last_success_at`（最後一次成功的時間）。07:00 前、23:00 後不抓，狀態檔停在 22:5x 那一輪是正常的 |
 
 **接著直接做 B-20。** 檢驗資料（`hb`）1111 起不做（學長答 A-5 不用這邊處理），《[第十九冊之三](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19c-hb-fetch/index.md)》不必翻。
 
 ### B-20 記錄
 
-在手機上記，回去後寫進私人 repo 的 `deploy/records/1109-hospital-fetch/`：
+在手機上記，回去後寫進私人 repo 的 `deploy/records/`（1109 是 `1109-hospital-fetch/`，第五次另開 `MMDD-主題/`）：
 
 - 做到哪一步；每一步的「會看到」對不對
 - B-05 用 `.py` 還是 `.exe`、Python 版本；B-06 有沒有同步；B-08 的兩個位置
 - B-12 每個檔的編碼與大小；B-13 的備份資料夾名稱與還原指令
 - B-16 的回應列數；B-18 三輪的時間與 `written_rows`
+- 1114 起：B-14a 的檔數與位元組、舊資料夾改成什麼名字、學長說何時刪；B-14b 的 `--version`；狀態檔的 `non_numeric_id_rows`（不是 0 就記下數字，不記病歷號）
 - 每個斷點學長怎麼決定
 - B-09 用哪個 GitHub 帳號登入、有沒有要求兩步驟驗證、幾點關掉 InPrivate／無痕視窗
 - 不記：院方回應的內容、病人的姓名與病歷號
@@ -419,7 +508,8 @@ Get-Content -Encoding UTF8 .\fetch-status.json
 
 - InPrivate 視窗已關、「下載」資料夾裡沒有留下 zip 與 `.exe`；最後關掉開著這一冊的瀏覽器視窗（公開文件站，不留登入，留下瀏覽紀錄也無妨）；一般視窗如果登入過 GitHub，先登出
 - `Get-ScheduledTaskInfo -TaskName hd-hospital-fetch` 的 `LastTaskResult` 是 `0`
-- 本系統沒有動：`.env` 的院方位址維持空白（讀檔模式排第二次進院）
+- 本系統：1114 起同一趟換版上線，照第十八冊之二第 0.3 節；沒做成的話 `.env` 的兩個資料夾維持空白
+- B-14a 的舊資料夾（`API_Fetch_搬到C槽_MMDD`）還在 D 槽，學長決定何時刪（D 槽約 12 月中旬滿）
 - **不重開機**（同一台還有另一個專案，第十八冊之二 A-04）
 
 ### 中途收工（B-17 排程還沒裝就得走）

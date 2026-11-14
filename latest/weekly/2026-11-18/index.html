@@ -513,6 +513,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#1114-學長答覆與抓取腳本-v030" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1114 學長答覆與抓取腳本 v0.3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#文件" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6152,6 +6163,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#1114-學長答覆與抓取腳本-v030" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1114 學長答覆與抓取腳本 v0.3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#文件" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6229,6 +6251,8 @@
 <li><strong>病人一週三次</strong>（一三五或二四六），班別也固定，臨時有狀況或病人決定會變動；系統本來就照當天院方資料判斷哪天、哪一班，不必加固定班表</li>
 <li><strong>下一次進院的目標改了</strong>：同一趟把透析清單抓取腳本跑起來、本系統換版、實際上線（首波試用）；之前是只做腳本、本系統等腳本穩定之後再換</li>
 <li>跟著三班時間要改的設定排成<strong>迭代 32.1</strong>，<strong>1111 同一天做完</strong>：「未更新」提示時段預設 8～23 時（舊的 0、24 換版時遷移改掉）、工作量歸班改以 12:45、17:45 為界，療程的分班界線照留；四小時怎麼算等第 4 題；抓取腳本的時段排成《之四》T-15</li>
+<li><strong>1114 學長答了 15 題</strong>，給學長的問題只剩 D-1（<code>1A</code>～<code>3D</code> 與 <code>99</code>）：月份檔是從正式那台 IDH 主機搬來的、腳本與資料整個搬到 C 槽、只在 07:00～23:00 抓；學長另給去重交接文件</li>
+<li><strong>1114 抓取腳本 v0.3.0</strong>：只在時段內抓（T-15 完成）、狀態檔多記非數字病歷號的列數；去重維持「內容變了再寫」（結束體重下機後才回填，照學長文件跳過的話無法自動判定下機），第五次進院當面說明</li>
 </ul>
 <h2 id="完成內容">完成內容<a class="headerlink" href="#完成內容" title="Permanent link">&para;</a></h2>
 <h3 id="1111-開會三班時間與病人的班別">1111 開會：三班時間與病人的班別<a class="headerlink" href="#1111-開會三班時間與病人的班別" title="Permanent link">&para;</a></h3>
@@ -6340,6 +6364,42 @@
 </tr>
 </tbody>
 </table>
+<h3 id="1114-學長答覆與抓取腳本-v030">1114 學長答覆與抓取腳本 v0.3.0<a class="headerlink" href="#1114-學長答覆與抓取腳本-v030" title="Permanent link">&para;</a></h3>
+<p>說明：每題的答覆與處理在《<a href="../../notes/hospital-api-fetch-methods-questions-answered/">之二之一</a>》第 3.6 節；現場步驟在<a href="../../deployment/19-hospital-fetch/">第十九冊</a> B-14a～B-14c。</p>
+<table>
+<thead>
+<tr>
+<th>看什麼</th>
+<th>結論</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>下一次進院前要答的 5 題</td>
+<td>全答：K-1 是、K-2 搬 C 槽、K-7 學長跟醫師說、W-6 ①（附去重交接文件）、F-6 07:00～23:00</td>
+</tr>
+<tr>
+<td>讀檔之前與不急的 10 題</td>
+<td>K-3、K-4、F-2 都是迭代 32 已做的；B-2、D-2～D-5、E-4、C-16、H-2 確認現行設計不必改；只剩 D-1</td>
+</tr>
+<tr>
+<td>抓取腳本</td>
+<td>v0.3.0：<code>fetch_hours</code>、狀態檔 <code>non_numeric_id_rows</code>；測試 72 項全過（含對模擬院方 API 的 7 項）；主機上只換一個檔</td>
+</tr>
+<tr>
+<td>去重</td>
+<td>學長文件「鍵見過就跳過」，使用者定維持「內容變了再寫」：結束體重等整場共用欄下機後才回填既有列</td>
+</tr>
+<tr>
+<td>第五次進院多的事</td>
+<td>整個 <code>API_Fetch</code> 複製到 C 槽、比對、舊的改名留著；換 <code>fetch_dialysis.py</code>；<code>config.json</code> 改三處（新位置、狀態檔放進指定資料夾、時段）</td>
+</tr>
+<tr>
+<td>Q-35</td>
+<td>五題都有結論（H-2 不知，當成不會通知），第十八冊之二 A-02 不再擋</td>
+</tr>
+</tbody>
+</table>
 <h3 id="文件">文件<a class="headerlink" href="#文件" title="Permanent link">&para;</a></h3>
 <ul>
 <li>清冊 Q-34（第 2 題答覆、新增第 4 題、一週三次的補充）與開頭的總表</li>
@@ -6348,6 +6408,7 @@
 <li>部署手冊第十八冊之二（新增第 0.3 節、A-08、A-13 第 1 條）、第十九冊之二第 6.1 節、總覽</li>
 <li>《院方 API 之一》《之二之一》E-3／F-4、《之四》（開頭、第 1 與第 7 節、新增 T-15）、《之二》與《之二之二》（補 F-6 腳本抓取時段，下一次進院前要答的變 5 題）、《同院 IDH 系統參考調查》、介面設計基準的 Q-34 列</li>
 <li>兩份進度報告</li>
+<li>1114 學長答覆：《之二》《之二之一》（第 3.6 節）《之二之二》、《之一》第 3 節回填、《之四》（T-15 完成、第 4.2 節）、部署手冊第十九冊（B-14a～B-14c、狀態檔路徑）、第十九冊之一（v0.3.0 的三種訊息）、第十九冊之二第 6 節、第十八冊之二（摘要、第 0.3 節、A-02、A-07、A-13）、實作規格書 4.32／4.32.1、清冊 Q-35、兩份進度報告、首頁</li>
 <li>迭代 32.1：實作規格書 4.32.1 與相關各節、之一第二十九次、SRS FR-S15／S16、清冊 Q-34、資料字典（遷移 33 個、營運參數）、測試分冊 §32.8 與主手冊、第十八冊之二、《管理儀表板……的更新與修正》圖 7 與圖 12、介面設計基準的 Q-34 列、《之二之二》F-6 的處置</li>
 </ul>
 <h2 id="遇到的問題與處理">遇到的問題與處理<a class="headerlink" href="#遇到的問題與處理" title="Permanent link">&para;</a></h2>
@@ -6379,17 +6440,19 @@
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Q-34 第 4 題：四小時照班別還是照個別病人的開始時間（問醫師；問法「早班 08:20 才上機的病人，是 12:00 還是 12:20 下機？」）</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> 迭代 32.1 什麼時候做：1111 做完，跟 32 一起進下一次的 tag</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 抓取腳本的時段（建議 07:00～23:00）要學長同意：已補進《之二》F-6，下一次進院前要答的變 5 題</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> 抓取腳本的時段：1114 學長答 07:00～23:00，做成 v0.3.0</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 下一次進院的時段：三件事要沒有透析、資訊室同仁在場，跟學長、資訊室一起約</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 上線前照舊要有答案：防毒排除（A-01）、Q-35（A-02）、病人告知（A-03）；首波護理師、病人與床位（A-09）</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 1111 週報留下的：問學長 K-1、K-2、K-7、W-6</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> 1111 週報留下的：問學長 K-1、K-2、K-7、W-6——1114 都答了</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> D-1：<code>1A</code>～<code>3D</code> 與 <code>99</code> 是什麼（不擋首波）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 第五次進院當面跟學長說明：去重「內容變了再寫」與交接文件不同的原因；B-14a 舊資料夾何時刪、學長文件與 APP 組的路徑改 C 槽</li>
 </ul>
 <h2 id="下週規劃">下週規劃<a class="headerlink" href="#下週規劃" title="Permanent link">&para;</a></h2>
 <p><strong>首要目標：下一次進院把透析清單抓取腳本跑起來、本系統換版、實際上線。</strong></p>
 <ul>
 <li>出發前：出新 tag、開發機整輪重做第十七冊，第十八冊之二 A-12、A-14～A-16 做完</li>
-<li>使用者開口後做 T-15（迭代 32.1 已做完）</li>
-<li>約時段、問齊 A-01～A-03 與學長的 5 項（K-1、K-2、K-7、W-6、F-6）</li>
+<li>~~使用者開口後做 T-15~~ 1114 做完（v0.3.0）</li>
+<li>約時段、問齊 A-01、A-03（A-02 與學長的 5 項 1114 都有答案了）</li>
 </ul>
 <hr />
 <p>參考：<a href="../../">進度首頁</a></p>
