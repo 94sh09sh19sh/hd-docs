@@ -8,7 +8,7 @@
 
 ## 摘要
 
-- 第 1 節：透析清單抓取腳本的出錯對照，訊息原文綁 `hd-hospital-fetch` v0.1.0
+- 第 1 節：透析清單抓取腳本的出錯對照，訊息原文綁 `hd-hospital-fetch` v0.1.0；1114 補 v0.3.0 新的三種（時段外、`fetch_hours` 設錯、非數字病歷號）
 - 第 2 節：透析清單那支的一頁速查
 - **1111 起第 3 節不跑**：學長答 A-5 不用這邊處理 `hb`，I 組題目刪了，盤點沒有要回答的題；保留為紀錄
 - 第 3 節（1109 晚上加）：`hb` 現況盤點。`Hb_API_Fetch` 的檔不能帶出、不能拍，改在主機上跑只讀、只印統計的腳本（腳本整段在本節，不靠 Release）
@@ -28,6 +28,9 @@
 | `失敗 回應裡找不到 JSON 內容`、`回應的 JSON 無法解析`、`回應裡沒有 data_list 陣列` | 院方回的不是透析清單（維護頁、登入頁） | 停 |
 | `失敗 當月的留底檔不是 UTF-8，先用 transcode_history.py 轉檔` | 當月檔還是舊寫法 | 回第十九冊 B-12；當月檔轉不了就停 |
 | `跳過 上一輪還沒結束` | 另一輪正在跑 | 正常；等一下再看 |
+| `時段外 只在 07:00-23:00 抓，這一輪不打院方 API`（v0.3.0） | 現在不在 `fetch_hours` 的時段內；沒打院方 API、沒寫任何檔，結束碼 `0` | 正常；要現場試跑就等到 07:00 之後 |
+| `設定錯誤 fetch_hours 的格式是 "HH:MM-HH:MM"…`、`…開始要早於結束（不跨午夜）`、`…時刻要在 00:00～24:00 之間`（v0.3.0） | 第十九冊 B-14c 加的那一行寫錯 | 改成 `"fetch_hours": "07:00-23:00"`（半形冒號與減號） |
+| `成功 … 病歷號不是純數字的 N 列（照樣保留）`（v0.3.0） | 回應裡有病歷號帶英文字母的列（之二 B-2）；照樣寫進留底，只是計數 | 不是錯；記下 N（第十九冊 B-20），不記病歷號 |
 | `py` 說找不到指令 | 沒有 Python launcher | 換成 `python`，或用 `.exe` |
 | `找不到 raw_txt 的月份檔，停在這裡`（第 3 節盤點） | `$hb` 貼錯資料夾，或 `config.json` 的 `output_dir` 不是 `hospital_dataset` | 用 3.1 第二行的清單找 `raw_txt` 在哪，`$hb` 改成它上兩層的資料夾 |
 | Windows 跳出「Windows 已保護您的電腦」 | `.exe` 第一次執行 | 第十九冊 B-11 有做 `Unblock-File` 就不會出現；出現了按「其他資訊」→「仍要執行」，雜湊對過才可以 |
@@ -35,13 +38,12 @@
 ## 2. 一頁速查
 
 ```powershell
-cd C:\hd-hospital-fetch
-py transcode_history.py "<指定資料夾>"              # 轉碼預演
+cd C:\API_Fetch\hd-hospital-fetch                 # 1114 起搬到 C 槽（第十九冊 B-14a）py transcode_history.py "<指定資料夾>"              # 轉碼預演
 py transcode_history.py "<指定資料夾>" --apply      # 轉碼
 py fetch_dialysis.py --dry-run                     # 抓取預演，不寫檔
 py fetch_dialysis.py --once                        # 跑一輪
 $LASTEXITCODE                                      # 0 成功、1 失敗、2 設定錯
-Get-Content -Encoding UTF8 .\fetch-status.json     # 狀態
+Get-Content -Encoding UTF8 C:\API_Fetch\IDH_interface\fetch-status.json   # 狀態（1114 起在指定資料夾裡）py fetch_dialysis.py --version                     # 0.3.0
 powershell -ExecutionPolicy Bypass -File .\install-task.ps1      # 裝排程
 Get-ScheduledTaskInfo -TaskName hd-hospital-fetch                # 排程跑了沒
 powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1    # 停排程
