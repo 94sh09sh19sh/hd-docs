@@ -178,7 +178,7 @@ Get-ScheduledTaskInfo -TaskName hd-hospital-fetch | Select-Object LastRunTime, L
 Get-Content -Encoding UTF8 (Join-Path $dir 'fetch-status.json')
 ```
 
-**成功**：三次都是 `LastRunTime` 往前跳、`LastTaskResult` `0`、狀態檔 `last_attempt_at` 跟著變、`result` `ok`。**這一步過了，第一階段就成功了**，接著做第二十三冊。
+**成功**：三次都是 `LastRunTime` 往前跳、`LastTaskResult` `0`、狀態檔 `last_attempt_at` 跟著變、`result` `ok`。裝完馬上看會是 `1999/11/30` 與 `267011`（排程還沒跑過，狀態檔是 AF-09 手動那一輪），過了 `NextRunTime` 再看，從那一次起算三輪。**這一步過了，第一階段就成功了**，接著做第二十三冊。
 
 ### AF-12 教學長、記錄、收工
 
