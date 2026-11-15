@@ -6999,14 +6999,14 @@
 <span class="n">git</span> <span class="n">describe</span> <span class="p">-</span><span class="n">-tags</span>
 </code></pre></div>
 <ol>
-<li><code>notepad $cfg</code>：<code>HD_IMAGE_TAG</code> 改成 <code>&lt;新 tag&gt;</code>；照 <code>deploy\hospital.env.example</code> 的「院方資料：讀抓取腳本存下的檔」那一段補四行，<strong>都先留空</strong>。只貼這四行就夠，要連範本那一段的註解一起貼也可以；貼在 <code># --- 院方透析清單 API</code> 那一段的<strong>上面</strong>（跟範本同樣的位置），<code>HOSPITAL_API_BASE_URL</code>、<code>HD_SIMULATION_DEPLOYMENT</code> 已經有了，不要再貼一次：</li>
+<li><code>notepad $cfg</code>：<code>HD_IMAGE_TAG</code> 改成 <code>&lt;新 tag&gt;</code>；照 <code>deploy\hospital.env.example</code> 的「院方資料：讀抓取腳本存下的檔」那一段補四行，<strong>都先留空</strong>。<strong>只貼這四行，不要整段複製範本</strong>（<code>v0.5.0</code> 範本那一段的第 98 行是一行斷掉的註解「aw_txt 與 hb-status.json）」，貼進來 compose 就讀不到 <code>.env</code>，1116 模擬實測）；貼在 <code># --- 院方透析清單 API</code> 那一段的<strong>上面</strong>（跟範本同樣的位置），<code>HOSPITAL_API_BASE_URL</code>、<code>HD_SIMULATION_DEPLOYMENT</code> 已經有了，不要再貼一次：</li>
 </ol>
 <div class="highlight"><pre><span></span><code>HD_DIALYSIS_LIST_DIR=
 HD_LAB_DIR=
 # COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml
 HOSPITAL_LAB_FIELD_MAP=
 </code></pre></div>
-<p><code>HOSPITAL_API_BASE_URL</code> 維持空白。🧪 <code>HD_SHELL_SIGNING=dev</code>、<code>HD_SIMULATION_DEPLOYMENT</code> 照開發端填的，不動。
+<p><code>HOSPITAL_API_BASE_URL</code> 維持空白。🧪 <code>HD_SHELL_SIGNING=dev</code>、<code>HD_SIMULATION_DEPLOYMENT</code> 照開發端填的，不動。存檔後打 <code>docker compose --env-file $cfg config --quiet</code>，什麼都沒印才往下。
 3. 建置：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">build</span>
 <span class="n">docker</span> <span class="n">images</span> <span class="n">hd-tablet-care</span>

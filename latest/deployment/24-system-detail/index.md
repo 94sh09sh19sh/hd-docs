@@ -122,15 +122,16 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 
 ### SY-04 換版
 
-| 症狀                                           | 處置                                                                                                                                    |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `Permission denied (publickey)`                | 部署金鑰被拿掉了。`ssh -T github-hd-tablet-care` 看一下，打電話給開發端                                                                 |
-| `error: pathspec '<新 tag>' did not match`     | tag 沒推上去或打錯字                                                                                                                    |
-| `git describe` 後面有尾巴（例如 `-3-gabc123`） | 不在 tag 上，重打 `git checkout <新 tag>`                                                                                               |
-| `no such host`（建置時）                       | 再打一次 → 工作列 Docker 圖示右鍵 Restart → 找資訊室看 DNS                                                                              |
-| 每個 `docker compose` 都說「請設定 HD\_…」     | `.env` 少了必填的那一行，照範本補                                                                                                       |
-| `更新中止：後端服務還在執行`                   | 再打一次 `stop api`。**不要加 `--allow-running`**                                                                                       |
-| 其他任何「中止」                               | 資料庫沒被動到。整段抄下來，`HD_IMAGE_TAG` 改回 `v0.4.0`、`git checkout v0.4.0`、`docker compose --env-file $cfg up -d`，打電話給開發端 |
+| 症狀                                                                       | 處置                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Permission denied (publickey)`                                            | 部署金鑰被拿掉了。`ssh -T github-hd-tablet-care` 看一下，打電話給開發端                                                                                                                                              |
+| `error: pathspec '<新 tag>' did not match`                                 | tag 沒推上去或打錯字                                                                                                                                                                                                 |
+| `git describe` 後面有尾巴（例如 `-3-gabc123`）                             | 不在 tag 上，重打 `git checkout <新 tag>`                                                                                                                                                                            |
+| `no such host`（建置時）                                                   | 再打一次 → 工作列 Docker 圖示右鍵 Restart → 找資訊室看 DNS                                                                                                                                                           |
+| 每個 `docker compose` 都說「請設定 HD\_…」                                 | `.env` 少了必填的那一行，照範本補                                                                                                                                                                                    |
+| `failed to read …\.env: line N: unexpected character … in variable name …` | `.env` 第 N 行不是註解也不是「名稱=值」。最常見是整段複製了 `v0.5.0` 範本，帶進那一行斷掉的「aw_txt 與 hb-status.json）」（1116 模擬實測）。`notepad $cfg` 刪掉第 N 行（或在開頭加 `#`），再打 `config --quiet` 確認 |
+| `更新中止：後端服務還在執行`                                               | 再打一次 `stop api`。**不要加 `--allow-running`**                                                                                                                                                                    |
+| 其他任何「中止」                                                           | 資料庫沒被動到。整段抄下來，`HD_IMAGE_TAG` 改回 `v0.4.0`、`git checkout v0.4.0`、`docker compose --env-file $cfg up -d`，打電話給開發端                                                                              |
 
 - 3 個遷移（迭代 30.4 連點成畫、32 院方資料讀檔、32.1 未更新提示時段）都只做加法
 - `.env` 的四行先留空，是因為讀檔要等 SY-09 四條都過才開
