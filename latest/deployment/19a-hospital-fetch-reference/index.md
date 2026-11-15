@@ -2,6 +2,8 @@
 
 版本：v0.1　文件狀態：草案（1108 由第十九冊分出）　編號：沿用第十九冊的 `B-xx`
 
+> **1116 起，出錯對照與速查收進[第二十二冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/22-api-detail/index.md)第 3、6 節**；本冊保留為紀錄。
+
 上層手冊：《[第十九冊 · 院方 API 抓取腳本的安裝](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19-hospital-fetch/index.md)》
 
 > 照第十九冊做的時候，畫面上出現看不懂的訊息就查第 1 節；現場要一眼看完所有指令看第 2 節；`hb` 的現況要在主機上盤點看第 3 節。第 1、2 節的訊息原文來自 `hd-hospital-fetch` v0.1.0，腳本改版時回頭核對。
@@ -38,12 +40,14 @@
 ## 2. 一頁速查
 
 ```
-cd C:\API_Fetch\hd-hospital-fetch                 # 1114 起搬到 C 槽（第十九冊 B-14a）py transcode_history.py "<指定資料夾>"              # 轉碼預演
+cd C:\API_Fetch\hd-hospital-fetch                 # 1114 起搬到 C 槽（第十九冊 B-14a）
+py transcode_history.py "<指定資料夾>"              # 轉碼預演
 py transcode_history.py "<指定資料夾>" --apply      # 轉碼
 py fetch_dialysis.py --dry-run                     # 抓取預演，不寫檔
 py fetch_dialysis.py --once                        # 跑一輪
 $LASTEXITCODE                                      # 0 成功、1 失敗、2 設定錯
-Get-Content -Encoding UTF8 C:\API_Fetch\IDH_interface\fetch-status.json   # 狀態（1114 起在指定資料夾裡）py fetch_dialysis.py --version                     # 0.3.0
+Get-Content -Encoding UTF8 C:\API_Fetch\IDH_interface\fetch-status.json   # 狀態（1114 起在指定資料夾裡）
+py fetch_dialysis.py --version                     # 0.3.0
 powershell -ExecutionPolicy Bypass -File .\install-task.ps1      # 裝排程
 Get-ScheduledTaskInfo -TaskName hd-hospital-fetch                # 排程跑了沒
 powershell -ExecutionPolicy Bypass -File .\uninstall-task.ps1    # 停排程

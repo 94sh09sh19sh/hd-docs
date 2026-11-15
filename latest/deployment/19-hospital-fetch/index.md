@@ -2,6 +2,8 @@
 
 版本：v0.1　文件狀態：草案（1108 依《[院方 API 之三](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-monday-plan/index.md)》第 4 節與 `hd-hospital-fetch` v0.1.0 實際的輸出寫成）　編號：`B-xx`
 
+> **1116 起，第五次進院的抓取腳本改照[第二十一冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/21-api-quick/index.md)（簡易版）與[第二十二冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/22-api-detail/index.md)（詳細版）**，B-14a～B-21 都收進去了；本冊不必再翻，保留為 1109 照做的版本。
+>
 > **這一冊回答一件事：在醫院那台主機上，把抓取腳本 `hd-hospital-fetch` 放上去，讓它每 3 分鐘自己抓一次院方透析清單。** 本系統（容器、`.env`、平板）這次**完全不動**。
 >
 > **1114 學長答了《之二》**：第五次進院（1116）從 **B-14a** 接——整個 `API_Fetch` 搬到 C 槽（K-2 ①）、只換 `fetch_dialysis.py` 成 v0.3.0、`config.json` 改三處（新位置、狀態檔放進指定資料夾、只在 07:00～23:00 抓，F-6 ①），再做 B-15 起。同一趟本系統換版上線，順序在《[第十八冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/18b-go-live-prep/index.md)》第 0.3 節。
@@ -422,7 +424,8 @@ Get-Content -LiteralPath $m -Tail 6 -Encoding UTF8 | ForEach-Object { if ($_ -li
 
 ```
 py fetch_dialysis.py --once
-$LASTEXITCODE Get-Content -Encoding UTF8 (Join-Path $dir 'fetch-status.json')
+$LASTEXITCODE
+Get-Content -Encoding UTF8 (Join-Path $dir 'fetch-status.json')
 ```
 
 - **會看到**：第一行 `… 成功 回應 601 列、寫入 601 列`；`$LASTEXITCODE` 是 `0`；狀態檔裡 `"result": "ok"`、`"written_rows"` 與 `"response_rows"` 一樣
@@ -474,7 +477,8 @@ powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -Exe .\fetch_dialysi
 每 3 分鐘打一次：
 
 ```
-Get-ScheduledTaskInfo -TaskName hd-hospital-fetch | Select-Object LastRunTime, LastTaskResult, NextRunTime Get-Content -Encoding UTF8 (Join-Path $dir 'fetch-status.json')
+Get-ScheduledTaskInfo -TaskName hd-hospital-fetch | Select-Object LastRunTime, LastTaskResult, NextRunTime
+Get-Content -Encoding UTF8 (Join-Path $dir 'fetch-status.json')
 ```
 
 - **會看到**：`LastRunTime` 每 3 分鐘往前跳、`LastTaskResult` 是 `0`；狀態檔的 `last_attempt_at` 跟著變、`result` 是 `ok`；`written_rows` 多半是 `0`，有新量測時是幾列

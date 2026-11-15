@@ -6161,6 +6161,118 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-api-quick/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二十一冊 · 抓取腳本上線（簡易版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-api-detail/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二十二冊 · 抓取腳本上線（詳細版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-system-quick/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二十三冊 · 本系統換版上線（簡易版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-system-detail/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二十四冊 · 本系統換版上線（詳細版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -6666,6 +6778,7 @@
 <h1 id="第十九冊--院方-api-抓取腳本的安裝1109新手版">第十九冊 · 院方 API 抓取腳本的安裝（1109，新手版）<a class="headerlink" href="#第十九冊--院方-api-抓取腳本的安裝1109新手版" title="Permanent link">&para;</a></h1>
 <p>版本：v0.1　文件狀態：草案（1108 依《<a href="../../notes/hospital-api-fetch-methods-monday-plan/">院方 API 之三</a>》第 4 節與 <code>hd-hospital-fetch</code> v0.1.0 實際的輸出寫成）　編號：<code>B-xx</code></p>
 <blockquote>
+<p><strong>1116 起，第五次進院的抓取腳本改照<a href="../21-api-quick/">第二十一冊</a>（簡易版）與<a href="../22-api-detail/">第二十二冊</a>（詳細版）</strong>，B-14a～B-21 都收進去了；本冊不必再翻，保留為 1109 照做的版本。</p>
 <p><strong>這一冊回答一件事：在醫院那台主機上，把抓取腳本 <code>hd-hospital-fetch</code> 放上去，讓它每 3 分鐘自己抓一次院方透析清單。</strong> 本系統（容器、<code>.env</code>、平板）這次<strong>完全不動</strong>。</p>
 <p><strong>1114 學長答了《之二》</strong>：第五次進院（1116）從 <strong>B-14a</strong> 接——整個 <code>API_Fetch</code> 搬到 C 槽（K-2 ①）、只換 <code>fetch_dialysis.py</code> 成 v0.3.0、<code>config.json</code> 改三處（新位置、狀態檔放進指定資料夾、只在 07:00～23:00 抓，F-6 ①），再做 B-15 起。同一趟本系統換版上線，順序在《<a href="../18b-go-live-prep/">第十八冊之二</a>》第 0.3 節。</p>
 <p>每一步都有「會看到」與「不對的話」。<strong>「不對的話」寫「停」就是斷點：停下來，跟學長決定，不要自己往下做。</strong></p>
@@ -7098,7 +7211,8 @@
 <li>每段之間夾一行 <code>（0 字）</code>（空行）是舊檔的寫法，本腳本每段只寫 <code>Date:</code> 與 JSON 兩行，不夾空行；記下來（B-20），不影響往下做</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="n">fetch_dialysis</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-once</span>
-<span class="nv">$LASTEXITCODE</span> <span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="p">(</span><span class="nb">Join-Path</span> <span class="nv">$dir</span> <span class="s1">'fetch-status.json'</span><span class="p">)</span>
+<span class="nv">$LASTEXITCODE</span>
+<span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="p">(</span><span class="nb">Join-Path</span> <span class="nv">$dir</span> <span class="s1">'fetch-status.json'</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li><strong>會看到</strong>：第一行 <code>… 成功 回應 601 列、寫入 601 列</code>；<code>$LASTEXITCODE</code> 是 <code>0</code>；狀態檔裡 <code>"result": "ok"</code>、<code>"written_rows"</code> 與 <code>"response_rows"</code> 一樣</li>
@@ -7139,7 +7253,8 @@
 </ul>
 <h3 id="b-18-看三輪約-10-分鐘">B-18 看三輪（約 10 分鐘）<a class="headerlink" href="#b-18-看三輪約-10-分鐘" title="Permanent link">&para;</a></h3>
 <p>每 3 分鐘打一次：</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskName</span> <span class="n">hd-hospital-fetch</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">LastRunTime</span><span class="p">,</span> <span class="n">LastTaskResult</span><span class="p">,</span> <span class="n">NextRunTime</span> <span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="p">(</span><span class="nb">Join-Path</span> <span class="nv">$dir</span> <span class="s1">'fetch-status.json'</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskName</span> <span class="n">hd-hospital-fetch</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">LastRunTime</span><span class="p">,</span> <span class="n">LastTaskResult</span><span class="p">,</span> <span class="n">NextRunTime</span>
+<span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">UTF8</span> <span class="p">(</span><span class="nb">Join-Path</span> <span class="nv">$dir</span> <span class="s1">'fetch-status.json'</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li><strong>會看到</strong>：<code>LastRunTime</code> 每 3 分鐘往前跳、<code>LastTaskResult</code> 是 <code>0</code>；狀態檔的 <code>last_attempt_at</code> 跟著變、<code>result</code> 是 <code>ok</code>；<code>written_rows</code> 多半是 <code>0</code>，有新量測時是幾列</li>
