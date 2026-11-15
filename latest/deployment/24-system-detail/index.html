@@ -7215,6 +7215,7 @@
 <li>順便看第一階段的排程：<code>Get-ScheduledTaskInfo -TaskName hd-hospital-fetch</code> 的 <code>LastRunTime</code> 有往前跳（排程也是登入後才跑）</li>
 <li>🧪 開發機驗不出「沒人登入」的情形，所以只 Quit Docker Desktop；量到的分鐘數只當參考</li>
 <li>🧪 按了之後護理端沒閃紅框、<code>docker ps</code> 的 <code>Up</code> 時間沒有歸零：按到的是視窗的關閉鈕，不是通知區圖示的 Quit。重做一次</li>
+<li><strong>1116 模擬實測：Quit 之後再開，服務沒有自己回來</strong>（<code>docker ps -a</code> 全是 <code>Exited</code>）。Docker Desktop 在 Quit 時先逐一停掉容器、引擎再關（引擎只花 12 毫秒），容器被當成「手動停止」，<code>restart: unless-stopped</code> 就不會再啟動它。院內真的重新開機時會不會一樣還沒驗過；出現了就照上面手動 <code>up -d</code>、記下來，交開發端判斷要不要把 compose 的 <code>restart</code> 改成 <code>always</code></li>
 </ul>
 <h3 id="sy-08-密碼移交建帳號">SY-08 密碼移交、建帳號<a class="headerlink" href="#sy-08-密碼移交建帳號" title="Permanent link">&para;</a></h3>
 <ul>

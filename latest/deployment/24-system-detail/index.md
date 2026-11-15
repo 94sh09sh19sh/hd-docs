@@ -166,6 +166,7 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 - 順便看第一階段的排程：`Get-ScheduledTaskInfo -TaskName hd-hospital-fetch` 的 `LastRunTime` 有往前跳（排程也是登入後才跑）
 - 🧪 開發機驗不出「沒人登入」的情形，所以只 Quit Docker Desktop；量到的分鐘數只當參考
 - 🧪 按了之後護理端沒閃紅框、`docker ps` 的 `Up` 時間沒有歸零：按到的是視窗的關閉鈕，不是通知區圖示的 Quit。重做一次
+- **1116 模擬實測：Quit 之後再開，服務沒有自己回來**（`docker ps -a` 全是 `Exited`）。Docker Desktop 在 Quit 時先逐一停掉容器、引擎再關（引擎只花 12 毫秒），容器被當成「手動停止」，`restart: unless-stopped` 就不會再啟動它。院內真的重新開機時會不會一樣還沒驗過；出現了就照上面手動 `up -d`、記下來，交開發端判斷要不要把 compose 的 `restart` 改成 `always`
 
 ### SY-08 密碼移交、建帳號
 
