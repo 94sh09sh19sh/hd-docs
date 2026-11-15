@@ -6887,7 +6887,7 @@
 </tr>
 <tr>
 <td><strong>B 級</strong></td>
-<td>第一階段或換版成功，但停在 SY-09 之前或之後某一步（防毒、病人告知沒答案，床號對不上）</td>
+<td>第一階段或換版成功，但停在 SY-09 之前或之後某一步（病人告知沒答案，床號對不上）。防毒排除沒加不算（1116 改，見 SY-03）</td>
 </tr>
 <tr>
 <td><strong>C 級</strong></td>
@@ -6916,9 +6916,14 @@
 <td>B 級</td>
 </tr>
 <tr>
-<td>防毒排除沒加、病人告知沒答案</td>
+<td>病人告知沒答案</td>
 <td>不啟用讀檔，做到 SY-08</td>
 <td>B 級</td>
+</tr>
+<tr>
+<td>防毒排除當天加不了</td>
+<td><strong>照樣往下</strong>；交接紙寫誰、什麼時候加，以及 SY-03 那四種現象</td>
+<td>不影響等級</td>
 </tr>
 <tr>
 <td>第一輪床號或療程不對</td>
@@ -7056,11 +7061,54 @@
 </tr>
 <tr>
 <td>資訊室當天加不了</td>
-<td><strong>不啟用讀檔</strong>；換版照做，寫進交接紙的已知限制：誰、什麼時候加</td>
+<td><strong>照樣往下，讀檔照開</strong>（1116 改）；交接紙「防毒」那一列寫誰、什麼時候加，現象一欄照抄下表</td>
 </tr>
 </tbody>
 </table>
-<p>為什麼：資料庫所在的 Docker 資料夾被即時掃描，會造成間歇性、很難重現的錯誤，一個月後才爆開也沒人會聯想到今天。<strong>加上排除之前不得輸入真實病人資料。</strong></p>
+<p><strong>為什麼 1116 起不擋讀檔</strong>：</p>
+<ul>
+<li>資料庫放在 Docker 的具名資料卷裡，實體是 Docker 資料夾裡的一個虛擬磁碟檔（<code>ext4.vhdx</code>）。Defender 的即時掃描只看得到這一整個檔，看不到裡面的 <code>hd.db</code>、<code>-wal</code>、<code>-shm</code>。所以舊冊（第四冊 H-14、第六冊 X-14）講的「SQLite 被掃描鎖住、間歇性 <code>database is locked</code>」，在容器路線不會因為防毒發生</li>
+<li>這是照架構推的，<strong>沒有在開著即時掃描的主機上實測過</strong></li>
+<li>Defender 看得到的是主機上本系統的資料夾：<code>config</code>、<code>backups</code>、<code>export</code>、第一階段的 <code>C:\API_Fetch\IDH_interface</code>，以及換版時的 <code>repo</code></li>
+</ul>
+<p><strong>沒排除時可能看到的現象</strong>（交接紙照抄）：</p>
+<table>
+<thead>
+<tr>
+<th>在哪</th>
+<th>會看到</th>
+<th>傷不傷資料</th>
+<th>怎麼確認</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Docker 資料夾</td>
+<td>整體變慢，資訊室排的全機掃描時段特別明顯；開機後 Docker Desktop 比平常久才起來</td>
+<td>不傷</td>
+<td>問資訊室全機掃描排在幾點，對時間</td>
+</tr>
+<tr>
+<td><code>backups</code></td>
+<td>「系統管理 → 資料庫與備份」的備份歷程出現失敗，「最近一次成功備份」不是今天；極少數是備份檔被判成可疑、被隔離而不見</td>
+<td>資料庫不受影響，但那一天沒有可還原的備份</td>
+<td>Windows 安全性 → 病毒與威脅防護 → 保護歷程記錄，看有沒有那個檔</td>
+</tr>
+<tr>
+<td><code>C:\API_Fetch\IDH_interface</code></td>
+<td>抓取腳本寫檔時被佔用，「系統管理 → 院方資料同步」卡停在舊時間</td>
+<td>不會寫壞，只是沒更新</td>
+<td>第二十二冊抓取腳本那邊的紀錄</td>
+</tr>
+<tr>
+<td><code>repo</code>（換版時）</td>
+<td><code>git checkout</code> 或建置偶爾說檔案被佔用</td>
+<td>不傷</td>
+<td>重打一次就過</td>
+</tr>
+</tbody>
+</table>
+<p><strong>出現任何一種</strong>：請資訊室把 Docker 資料夾加進排除清單；是備份那一列，再加 <code>backups</code>。只排這兩個資料夾，不排整顆磁碟、不排 <code>node.exe</code>。看到 <code>database is locked</code> 不要先怪防毒：先看是不是換版、還原或資料取出的一次性容器還在跑（<code>docker compose --env-file $cfg ps -a</code>）。</p>
 <h3 id="sy-04-換版">SY-04 換版<a class="headerlink" href="#sy-04-換版" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7343,7 +7391,7 @@
 </tr>
 <tr>
 <td>防毒</td>
-<td>排除清單由＿＿於＿＿加好。<strong>沒加之前不得輸入真實病人資料</strong></td>
+<td>排除清單由＿＿於＿＿加好；沒加寫「未加，由＿＿於＿＿前加」。沒加之前看到這幾種現象，先請資訊室查排除清單：護理端整體變慢（尤其全機掃描時段）、「資料庫與備份」最近一次成功備份不是今天、「院方資料同步」卡停在舊時間</td>
 </tr>
 <tr>
 <td>磁碟</td>
