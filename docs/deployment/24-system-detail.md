@@ -189,12 +189,12 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 | 🏥 `模擬標記檔：有` | 掛到模擬的資料夾，核對路徑 |
 | 只有狀態檔「看不到」 | 第二十一冊 AF-06 的 `status_file` 沒改到指定資料夾裡 |
 | `api` 起不來，日誌說兩種都填 | `HOSPITAL_API_BASE_URL` 不是空白 |
-| `docker-compose.lab-files.yml 要配 HD_LAB_DIR` | `COMPOSE_FILE` 多了 `;docker-compose.lab-files.yml`（整段複製範本帶進來的）。整行改成第二十三冊 SY-10 那一行 |
+| `docker-compose.lab-files.yml 要配 HD_LAB_DIR` | `COMPOSE_FILE` 多了 `;docker-compose.lab-files.yml`（整段複製範本帶進來的）。照第二十三冊 SY-10 的方框整行改掉 |
 | compose 說讀不到設定檔 | `COMPOSE_FILE` 留成了空白的一行，或少了 `docker-compose.yml`；第一個一定是 `docker-compose.yml` |
 | 狀態檔「讀得到」但結果不是「成功」 | 抓取腳本最近一輪失敗。看第一階段的狀態檔 `reason`（第二十二冊第 3 節） |
 
 - 路徑有空白與中文照寫、不加引號；用檔案總管網址列複製貼上最不會錯
-- 🧪 第 2 段的 `docker compose cp` 是 1116 第一次這樣寫，沒有實測過。不對的話抄原文，改用 `docker ps` 找到 `api` 那個容器的名稱，再打 `docker cp <容器名稱>:/hospital-sim/dialysis-list "C:\hd-sim\院方 資料\透析清單"`，並記進紀錄
+- 🧪 B2 的 `docker compose cp` 是 1116 第一次這樣寫，沒有實測過。不對的話抄原文，改用 `docker ps` 找到 `api` 那個容器的名稱，再打 `docker cp <容器名稱>:/hospital-sim/dialysis-list "C:\hd-sim\院方 資料\透析清單"`，並記進紀錄
 - 🧪 為什麼練帶空白與中文的路徑：院內的指定資料夾路徑可能有，`.env` 與 compose 對這種路徑的處理只有實際掛一次才知道
 
 ### SY-11 第一輪怎麼驗

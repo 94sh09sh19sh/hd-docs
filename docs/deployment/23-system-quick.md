@@ -207,35 +207,68 @@ docker ps --format "{{.Names}}  {{.Image}}  {{.Status}}"
 
 ### SY-10 接上院方資料、讀檔檢查
 
-**🏥 做什麼**：
+**🏥 正式只做 A。🧪 模擬不做 A，改做 B1、B2。** 兩邊都是改 `.env` 的同五行（`HD_DIALYSIS_LIST_DIR`、`HD_LAB_DIR`、`COMPOSE_FILE`、`HOSPITAL_API_BASE_URL`、`HD_SIMULATION_DEPLOYMENT`），各自改成下面方框的樣子；其他行不動。
 
-1. `notepad $cfg`：`HD_DIALYSIS_LIST_DIR=` 後面填 `C:\API_Fetch\IDH_interface`（第一階段搬到 C 槽的指定資料夾；照寫、不加引號）；`HD_LAB_DIR=` 留空；`COMPOSE_FILE` 那一行**整行改成** `COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml`（開頭沒有 `# `；整段複製過範本的，那一行後面多一個 `;docker-compose.lab-files.yml`，要刪掉，1116 模擬實測）；`HOSPITAL_API_BASE_URL` 維持空白
-2. 重建、讀檔檢查：
+讀檔檢查（A、B1、B2 都用這一條）：
 
-   ```powershell
-   docker compose --env-file $cfg up -d
-   docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js
+```powershell
+docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js
+```
+
+#### A（🏥）接上抓取腳本的資料夾
+
+1. `notepad $cfg`，五行改成這樣（`COMPOSE_FILE` 開頭沒有 `# `，後面**沒有** `;docker-compose.lab-files.yml`；路徑照寫、不加引號）：
+
+   ```
+   HD_DIALYSIS_LIST_DIR=C:\API_Fetch\IDH_interface
+   HD_LAB_DIR=
+   COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml
+   HOSPITAL_API_BASE_URL=
+   HD_SIMULATION_DEPLOYMENT=
    ```
 
-**🏥 成功**：標題「院方資料讀檔檢查（只讀、只印結構……）」；「透析清單資料夾」寫「在、讀得到」「唯讀：是」「**模擬標記檔：沒有**」；狀態檔「讀得到」、結果「成功」；有當天段落數與列數；「檢驗資料資料夾」沒設定是正常的。**整段抄進紀錄**（工具不印路徑、姓名、病歷號）。日誌有「院方資料同步已啟用（讀透析清單資料夾）」。
+2. `docker compose --env-file $cfg up -d`，再跑讀檔檢查。
 
-**🧪 做什麼**（兩段，第二段練院內那種掛法）：
+**成功**：標題「院方資料讀檔檢查（只讀、只印結構……）」；「透析清單資料夾」寫「在、讀得到」「唯讀：是」「**模擬標記檔：沒有**」；狀態檔「讀得到」、結果「成功」；有當天段落數與列數；「檢驗資料資料夾」沒設定是正常的。**整段抄進紀錄**（工具不印路徑、姓名、病歷號）。日誌有「院方資料同步已啟用（讀透析清單資料夾）」。
 
-1. `notepad $cfg`：`COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml`、`HD_SIMULATION_DEPLOYMENT=yes`，`HD_DIALYSIS_LIST_DIR`、`HD_LAB_DIR`、`HOSPITAL_API_BASE_URL` 留空。然後：
+#### B1（🧪）接上模擬院方資料
 
-   ```powershell
-   docker compose --env-file $cfg --profile simulation up -d
+1. `notepad $cfg`，五行改成這樣：
+
+   ```
+   HD_DIALYSIS_LIST_DIR=
+   HD_LAB_DIR=
+   COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml
+   HOSPITAL_API_BASE_URL=
+   HD_SIMULATION_DEPLOYMENT=yes
    ```
 
-   等 3 分鐘，跑上面 🏥 第 2 步的第二條讀檔檢查。**成功**：「模擬標記檔：有」（模擬是對的）。
-2. 複製一份到**帶空白與中文的路徑**：
+2. `docker compose --env-file $cfg --profile simulation up -d`，等 3 分鐘，再跑讀檔檢查。
+
+**成功**：「模擬標記檔：有」（模擬是對的）。
+
+#### B2（🧪）練院內那種掛法：路徑帶空白與中文
+
+1. 把模擬的檔複製一份出來：
 
    ```powershell
    New-Item -ItemType Directory -Force "C:\hd-sim\院方 資料" | Out-Null
    docker compose --env-file $cfg cp api:/hospital-sim/dialysis-list "C:\hd-sim\院方 資料\透析清單"
    ```
 
-   `notepad $cfg`：`COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml`、`HD_DIALYSIS_LIST_DIR=C:\hd-sim\院方 資料\透析清單`（`HD_SIMULATION_DEPLOYMENT=yes` 留著），`docker compose --env-file $cfg up -d`，再跑讀檔檢查。**成功**：「在、讀得到」「唯讀：是」「模擬標記檔：有」。這份是複製出來的、不會再更新，之後出現「未更新」提示是正常的。
+2. `notepad $cfg`，五行改成這樣（跟 A 一樣的掛法，只是路徑換成上面那個、`HD_SIMULATION_DEPLOYMENT` 留 `yes`）：
+
+   ```
+   HD_DIALYSIS_LIST_DIR=C:\hd-sim\院方 資料\透析清單
+   HD_LAB_DIR=
+   COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml
+   HOSPITAL_API_BASE_URL=
+   HD_SIMULATION_DEPLOYMENT=yes
+   ```
+
+3. `docker compose --env-file $cfg up -d`，再跑讀檔檢查。
+
+**成功**：「在、讀得到」「唯讀：是」「模擬標記檔：有」。這份是複製出來的、不會再更新，之後出現「未更新」提示是正常的。
 
 ### SY-11 第一輪怎麼驗
 
