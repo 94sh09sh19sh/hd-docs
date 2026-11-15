@@ -27,6 +27,7 @@
 - 第 5 節模擬部署才做的：模擬院方 API 與 DEP-46 的阻擋、三支 `verify --live`、退回 `v0.3.0` 的演練
 - 第 6 節撤除乾淨；附錄是 I、J 與原冊的步驟對照
 - 全程約 6～8 小時，第 2～4 節同一天做完、中途不換 Wi-Fi
+- **1116 這一輪照第二十冊**（0.6 節）：重現 1029 離院時的 `v0.4.0`，換到 `v0.5.0`、練讀檔與退回 `v0.4.0`，約 4.5～5.5 小時
 
 ## 0. 讀之前
 
@@ -88,6 +89,37 @@
 - **一律從 GitHub 全新 clone 到 `C:\hd-sim`**，不准用平常寫程式的工作目錄，也不准複製它。
 - **只用虛構資料。**
 - 每一步開始與結束各記一次時間；錯誤訊息抄原文、抄到最後一行。
+
+### 0.6 1116 這一輪：照第二十冊演練 `v0.4.0` → `v0.5.0`
+
+下一次進院走的是[第二十冊](20-go-live.md)，不是第十八冊：院內主機已經是 1029 留下的 `v0.4.0`、位址已是 IP、登得進去。所以這一輪**重現的是 1029 離院時的主機**，第 3、4 節改拿第二十冊照做。`v0.5.0` 1116 已打（commit `8575505`，I-01 做完）；第 1、6 節照舊，其餘照下表改。**旁邊放的是印好的第二十冊**。
+
+| 原本 | 這一輪改成 |
+|---|---|
+| I-06 | 照做；多建一個 `C:\hd-sim\export` |
+| I-07 | `git checkout v0.4.0`（不是 `v0.3.0`） |
+| I-08 | 用 `v0.4.0` 的範本；`HD_IMAGE_TAG=v0.4.0`；三個位址**直接用 `<IP>` 而且填對**：`HD_PUBLIC_API_URL=http://<IP>:13000`、`CORS_ORIGINS=http://<IP>:18080`、`MDM_KIOSK_BASE_URL=https://<IP>:18081`；加 `HD_EXPORT_DIR=C:\hd-sim\export`；`HOSPITAL_API_BASE_URL`、`HD_SIMULATION_DEPLOYMENT` 留空。**不故意填錯** |
+| I-09～I-11 | 照做（建出來的是 `v0.4.0`；伺服器憑證是 `IP Address:<IP>`） |
+| I-12 | 改成確認重現了 1029：手機開 `http://<IP>:18080` **登得進去**；`docker ps` 是 `v0.4.0`。時間夠的話照第十八冊 J-27～J-29 把手機或暫用平板佈建起來，GO-13 才有東西看 |
+| 第 3、4 節 | 拿第二十冊照做 GO-02、GO-04～GO-09、GO-13、GO-14，代稱照 0.2 節換；**GO-03 跳過**（抓取腳本不在這一輪，第十九冊另外驗過）；GO-04 只看排除清單、不加；GO-08 照第 4 節 J-25 那一列的做法（Quit Docker Desktop 再開）；GO-10～GO-12 在下面的 I-13 做 |
+| I-13 | 改成下面三步 |
+| I-14 | 照做，`<新 tag>` 是 `v0.5.0` |
+| I-15 | 改成第二十冊附錄二：退回 `v0.4.0`，含把讀檔那兩行改回去；手機登得進去、版本是 `v0.4.0` 才算過 |
+
+**這一輪的 I-13：讀檔模式（＝第二十冊 GO-10～GO-12、附錄三；測試分冊 `ap17`）**
+
+1. 模擬讀檔：`.env` 寫 `COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml`、`HD_SIMULATION_DEPLOYMENT=yes`，`HD_DIALYSIS_LIST_DIR`、`HD_LAB_DIR`、`HOSPITAL_API_BASE_URL` 留空；`docker compose --env-file $cfg --profile simulation up -d`，等 3 分鐘，跑 GO-11 那一條讀檔檢查。**會看到**「模擬標記檔：有」（模擬部署是對的）；照 GO-12 看「院方資料同步」卡，最上面寫「目前接的是模擬院方 API」、床位圖出現模擬甲～模擬癸。
+2. 練院內那種掛法（**路徑故意帶空白與中文**）：
+   ```powershell
+   New-Item -ItemType Directory -Force "C:\hd-sim\院方 資料" | Out-Null
+   docker compose --env-file $cfg cp api:/hospital-sim/dialysis-list "C:\hd-sim\院方 資料\透析清單"
+   ```
+   `.env` 改成 `COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml`、`HD_DIALYSIS_LIST_DIR=C:\hd-sim\院方 資料\透析清單`（`HD_SIMULATION_DEPLOYMENT=yes` 留著），`up -d`，照 GO-11 讀檔檢查：「在、讀得到」「唯讀：是」「模擬標記檔：有」。資料夾是複製出來的、不會再更新，「未更新」提示出現是正常的。
+3. 驗院內的設定擋得住模擬：`HD_SIMULATION_DEPLOYMENT` 清空、`up -d api`，等一輪；卡片最新一列是「拒收（正式環境收到模擬資料）」，資料庫一筆都沒多。接著照第二十冊附錄三停用讀檔，卡片回到還沒設定資料夾。最後 `HD_SIMULATION_DEPLOYMENT` 改回 `yes`。
+
+> 第 2 步的 `docker compose cp` 是 1116 第一次這樣寫，沒有實測過；不對的話抄原文，改用 `docker cp` 加容器名稱，並記進紀錄。
+
+**時間**：第 1 節 30 分鐘、第 2 節 60～90 分鐘、第二十冊那一段 90～120 分鐘、第 5 節 60～75 分鐘、撤除 15 分鐘，合計約 4.5～5.5 小時。
 
 ---
 
