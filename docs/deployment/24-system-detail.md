@@ -259,6 +259,8 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 
 判定不過的那一項，修好之後從頭演練（開發端會把開發機重新準備成 1029 的樣子）。
 
+**例外（1116）**：`v0.5.0` 的第 4 項 SY-07 ✗（Quit 後服務不會自己回來），使用者定為已知限制照帶，院內重新開機時實測、寫進交接紙；下一個 tag 改 `restart` 之後要重驗。其餘十項都 ✓（《[部署演練紀錄](../notes/deployment-drills.md)》11.2）。
+
 ## 附錄一：交接紙
 
 **第一行寫：「首波試用：1 台平板、1 床、少數護理師，不是全單位上線」。** 不寫密碼、不寫 `.env` 的值。
