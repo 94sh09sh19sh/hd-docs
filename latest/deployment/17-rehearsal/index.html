@@ -5692,6 +5692,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#06-1116-這一輪照第二十冊演練-v040--v050" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6 1116 這一輪：照第二十冊演練 v0.4.0 → v0.5.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6478,6 +6489,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#06-1116-這一輪照第二十冊演練-v040--v050" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6 1116 這一輪：照第二十冊演練 v0.4.0 → v0.5.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6823,6 +6845,7 @@
 <li>第 5 節模擬部署才做的：模擬院方 API 與 DEP-46 的阻擋、三支 <code>verify --live</code>、退回 <code>v0.3.0</code> 的演練</li>
 <li>第 6 節撤除乾淨；附錄是 I、J 與原冊的步驟對照</li>
 <li>全程約 6～8 小時，第 2～4 節同一天做完、中途不換 Wi-Fi</li>
+<li><strong>1116 這一輪照第二十冊</strong>（0.6 節）：重現 1029 離院時的 <code>v0.4.0</code>，換到 <code>v0.5.0</code>、練讀檔與退回 <code>v0.4.0</code>，約 4.5～5.5 小時</li>
 </ul>
 <h2 id="0-讀之前">0. 讀之前<a class="headerlink" href="#0-讀之前" title="Permanent link">&para;</a></h2>
 <h3 id="01-這一輪要證明什麼">0.1 這一輪要證明什麼<a class="headerlink" href="#01-這一輪要證明什麼" title="Permanent link">&para;</a></h3>
@@ -6994,6 +7017,68 @@
 <li><strong>只用虛構資料。</strong></li>
 <li>每一步開始與結束各記一次時間；錯誤訊息抄原文、抄到最後一行。</li>
 </ul>
+<h3 id="06-1116-這一輪照第二十冊演練-v040--v050">0.6 1116 這一輪：照第二十冊演練 <code>v0.4.0</code> → <code>v0.5.0</code><a class="headerlink" href="#06-1116-這一輪照第二十冊演練-v040--v050" title="Permanent link">&para;</a></h3>
+<p>下一次進院走的是<a href="../20-go-live/">第二十冊</a>，不是第十八冊：院內主機已經是 1029 留下的 <code>v0.4.0</code>、位址已是 IP、登得進去。所以這一輪<strong>重現的是 1029 離院時的主機</strong>，第 3、4 節改拿第二十冊照做。<code>v0.5.0</code> 1116 已打（commit <code>8575505</code>，I-01 做完）；第 1、6 節照舊，其餘照下表改。<strong>旁邊放的是印好的第二十冊</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>原本</th>
+<th>這一輪改成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I-06</td>
+<td>照做；多建一個 <code>C:\hd-sim\export</code></td>
+</tr>
+<tr>
+<td>I-07</td>
+<td><code>git checkout v0.4.0</code>（不是 <code>v0.3.0</code>）</td>
+</tr>
+<tr>
+<td>I-08</td>
+<td>用 <code>v0.4.0</code> 的範本；<code>HD_IMAGE_TAG=v0.4.0</code>；三個位址<strong>直接用 <code>&lt;IP&gt;</code> 而且填對</strong>：<code>HD_PUBLIC_API_URL=http://&lt;IP&gt;:13000</code>、<code>CORS_ORIGINS=http://&lt;IP&gt;:18080</code>、<code>MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081</code>；加 <code>HD_EXPORT_DIR=C:\hd-sim\export</code>；<code>HOSPITAL_API_BASE_URL</code>、<code>HD_SIMULATION_DEPLOYMENT</code> 留空。<strong>不故意填錯</strong></td>
+</tr>
+<tr>
+<td>I-09～I-11</td>
+<td>照做（建出來的是 <code>v0.4.0</code>；伺服器憑證是 <code>IP Address:&lt;IP&gt;</code>）</td>
+</tr>
+<tr>
+<td>I-12</td>
+<td>改成確認重現了 1029：手機開 <code>http://&lt;IP&gt;:18080</code> <strong>登得進去</strong>；<code>docker ps</code> 是 <code>v0.4.0</code>。時間夠的話照第十八冊 J-27～J-29 把手機或暫用平板佈建起來，GO-13 才有東西看</td>
+</tr>
+<tr>
+<td>第 3、4 節</td>
+<td>拿第二十冊照做 GO-02、GO-04～GO-09、GO-13、GO-14，代稱照 0.2 節換；<strong>GO-03 跳過</strong>（抓取腳本不在這一輪，第十九冊另外驗過）；GO-04 只看排除清單、不加；GO-08 照第 4 節 J-25 那一列的做法（Quit Docker Desktop 再開）；GO-10～GO-12 在下面的 I-13 做</td>
+</tr>
+<tr>
+<td>I-13</td>
+<td>改成下面三步</td>
+</tr>
+<tr>
+<td>I-14</td>
+<td>照做，<code>&lt;新 tag&gt;</code> 是 <code>v0.5.0</code></td>
+</tr>
+<tr>
+<td>I-15</td>
+<td>改成第二十冊附錄二：退回 <code>v0.4.0</code>，含把讀檔那兩行改回去；手機登得進去、版本是 <code>v0.4.0</code> 才算過</td>
+</tr>
+</tbody>
+</table>
+<p><strong>這一輪的 I-13：讀檔模式（＝第二十冊 GO-10～GO-12、附錄三；測試分冊 <code>ap17</code>）</strong></p>
+<ol>
+<li>模擬讀檔：<code>.env</code> 寫 <code>COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml</code>、<code>HD_SIMULATION_DEPLOYMENT=yes</code>，<code>HD_DIALYSIS_LIST_DIR</code>、<code>HD_LAB_DIR</code>、<code>HOSPITAL_API_BASE_URL</code> 留空；<code>docker compose --env-file $cfg --profile simulation up -d</code>，等 3 分鐘，跑 GO-11 那一條讀檔檢查。<strong>會看到</strong>「模擬標記檔：有」（模擬部署是對的）；照 GO-12 看「院方資料同步」卡，最上面寫「目前接的是模擬院方 API」、床位圖出現模擬甲～模擬癸。</li>
+<li>練院內那種掛法（<strong>路徑故意帶空白與中文</strong>）：
+   <div class="highlight"><pre><span></span><code><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="s2">"C:\hd-sim\院方 資料"</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="nb">cp </span><span class="n">api</span><span class="p">:/</span><span class="n">hospital-sim</span><span class="p">/</span><span class="n">dialysis-list</span> <span class="s2">"C:\hd-sim\院方 資料\透析清單"</span>
+</code></pre></div>
+   <code>.env</code> 改成 <code>COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml</code>、<code>HD_DIALYSIS_LIST_DIR=C:\hd-sim\院方 資料\透析清單</code>（<code>HD_SIMULATION_DEPLOYMENT=yes</code> 留著），<code>up -d</code>，照 GO-11 讀檔檢查：「在、讀得到」「唯讀：是」「模擬標記檔：有」。資料夾是複製出來的、不會再更新，「未更新」提示出現是正常的。</li>
+<li>驗院內的設定擋得住模擬：<code>HD_SIMULATION_DEPLOYMENT</code> 清空、<code>up -d api</code>，等一輪；卡片最新一列是「拒收（正式環境收到模擬資料）」，資料庫一筆都沒多。接著照第二十冊附錄三停用讀檔，卡片回到還沒設定資料夾。最後 <code>HD_SIMULATION_DEPLOYMENT</code> 改回 <code>yes</code>。</li>
+</ol>
+<blockquote>
+<p>第 2 步的 <code>docker compose cp</code> 是 1116 第一次這樣寫，沒有實測過；不對的話抄原文，改用 <code>docker cp</code> 加容器名稱，並記進紀錄。</p>
+</blockquote>
+<p><strong>時間</strong>：第 1 節 30 分鐘、第 2 節 60～90 分鐘、第二十冊那一段 90～120 分鐘、第 5 節 60～75 分鐘、撤除 15 分鐘，合計約 4.5～5.5 小時。</p>
 <hr />
 <h2 id="1-準備">1. 準備<a class="headerlink" href="#1-準備" title="Permanent link">&para;</a></h2>
 <h3 id="i-01-選定要帶的版本打-tag推上-github">I-01 選定要帶的版本、打 tag、推上 GitHub<a class="headerlink" href="#i-01-選定要帶的版本打-tag推上-github" title="Permanent link">&para;</a></h3>
