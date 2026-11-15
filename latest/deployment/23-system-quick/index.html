@@ -7110,7 +7110,7 @@ HOSPITAL_LAB_FIELD_MAP=
 <h3 id="sy-10-接上院方資料讀檔檢查">SY-10 接上院方資料、讀檔檢查<a class="headerlink" href="#sy-10-接上院方資料讀檔檢查" title="Permanent link">&para;</a></h3>
 <p><strong>🏥 做什麼</strong>：</p>
 <ol>
-<li><code>notepad $cfg</code>：<code>HD_DIALYSIS_LIST_DIR=</code> 後面填 <code>C:\API_Fetch\IDH_interface</code>（第一階段搬到 C 槽的指定資料夾；照寫、不加引號）；<code>HD_LAB_DIR=</code> 留空；<code>COMPOSE_FILE</code> 那一行拿掉開頭的 <code>#</code>，變成 <code>COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml</code>；<code>HOSPITAL_API_BASE_URL</code> 維持空白</li>
+<li><code>notepad $cfg</code>：<code>HD_DIALYSIS_LIST_DIR=</code> 後面填 <code>C:\API_Fetch\IDH_interface</code>（第一階段搬到 C 槽的指定資料夾；照寫、不加引號）；<code>HD_LAB_DIR=</code> 留空；<code>COMPOSE_FILE</code> 那一行<strong>整行改成</strong> <code>COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml</code>（開頭沒有 <code>#</code>；整段複製過範本的，那一行後面多一個 <code>;docker-compose.lab-files.yml</code>，要刪掉，1116 模擬實測）；<code>HOSPITAL_API_BASE_URL</code> 維持空白</li>
 <li>重建、讀檔檢查：</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">up</span> <span class="n">-d</span>
