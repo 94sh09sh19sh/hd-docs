@@ -96,7 +96,7 @@ git checkout <新 tag>
 git describe --tags
 ```
 
-1. `notepad $cfg`：`HD_IMAGE_TAG` 改成 `<新 tag>`；照 `deploy\hospital.env.example` 的「院方資料：讀抓取腳本存下的檔」那一段補四行，**都先留空**：
+1. `notepad $cfg`：`HD_IMAGE_TAG` 改成 `<新 tag>`；照 `deploy\hospital.env.example` 的「院方資料：讀抓取腳本存下的檔」那一段補四行，**都先留空**。只貼這四行就夠，要連範本那一段的註解一起貼也可以；貼在 `# --- 院方透析清單 API` 那一段的**上面**（跟範本同樣的位置），`HOSPITAL_API_BASE_URL`、`HD_SIMULATION_DEPLOYMENT` 已經有了，不要再貼一次：
 
 ```
 HD_DIALYSIS_LIST_DIR=
