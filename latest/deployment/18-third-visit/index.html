@@ -6539,6 +6539,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-go-live/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第二十冊 · 第五次進院：抓取腳本、換版、首波上線
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -7454,7 +7482,7 @@
 <p>院內主機不是一台空機器：1001 已經把 <code>v0.3.0</code> 裝上去、三個服務還在跑，只是護理站登不進去（<a href="../15c-why-1001-failed/">第十五冊之三</a>）。所以這一次<strong>不是從零部署</strong>，是四件事接起來做：<strong>先抄現況 → 主機位址換成 IP、讓護理站登得進去 → 換到新版 → 備份還原、重新開機、探測院方 API</strong>。以前這四件事分散在第十五冊、之三、之四與第十一冊 W-19，這一冊把它們排成一條線，指令全部抄進來，<strong>現場只看這一冊就做得完</strong>。</p>
 <p><strong>出發前一定要先照<a href="../17-rehearsal/">第十七冊</a>在開發機上把這一冊從頭到尾演練一次</strong>（J-01）。這一冊沒有「🧪 模擬部署」方框：模擬部署要改做什麼，全部寫在第十七冊。</p>
 <p>指令抄自第十五冊、之三、之四與第十一冊，步驟標題後面註明出處（例如「＝T-07、V-17」），對照表在附錄一。<strong>兩邊不一致時以原冊為準</strong>，規則的真本是《<a href="../../requirements/deployment-spec/">部署規範</a>》。</p>
-<p><strong>公開範圍</strong>：文件站是公開的。這一冊一律用代稱，<strong>值只寫在《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 12 節（印出來的那一份）</strong>，不寫進任何會上站的文件、不拍照：</p>
+<p><strong>公開範圍</strong>：文件站是公開的。這一冊一律用代稱，<strong>值只寫在《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》第 12 節（印出來的那一份）</strong>，不寫進任何會上站的文件。<strong>可以拍照，照片只進私人 repo 的 <code>deploy/records/</code></strong>，離院前從手機刪掉（1029、1109 都這樣做；<code>.env</code> 的內容、密碼、病人資料的畫面仍然不拍）：</p>
 <table>
 <thead>
 <tr>
@@ -7482,7 +7510,7 @@
 <hr />
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>1029 已照這一冊進院一次，B 級部分成功</strong>：實際結果與這一冊要改的 13 處寫在<a href="../18a-third-visit-record/">第十八冊之一</a>；這一冊不改寫成紀錄，那 13 處改完回頭改這裡</li>
+<li><strong>1029 已照這一冊進院一次，B 級部分成功</strong>：實際結果與這一冊要改的 13 處寫在<a href="../18a-third-visit-record/">第十八冊之一</a>；這一冊不改寫成紀錄；那 13 處 1116 已改回這一冊（J-07、J-11、J-14、J-17～J-19、J-25～J-30 與 0.3 節），下一次照做的是第二十冊，這一冊的 J-22～J-25、J-30、附錄二被它引用</li>
 <li>第三次進院的完整步驟，編號 <code>J-xx</code>：主機上已經有 1001 裝的 <code>v0.3.0</code>，這一次是「接著做」，不是從零部署</li>
 <li>順序：出發前（第 1 節）→ 到場先看、先抄（第 2 節）→ 換成 IP、護理站登入（第 3 節）→ 換到新版（第 4 節）→ 備份、防毒、重新開機（第 5 節）→ 探測院方 API（第 6 節）→ 暫用平板（第 7 節，時間夠才做）→ 冒煙測試與交接（第 8 節）</li>
 <li><strong>先在 <code>v0.3.0</code> 上把登入修好，再換新版</strong>：兩件事分開，出錯時分得出是哪一件；新版出問題也退得回一個登得進去的舊版</li>
@@ -7599,7 +7627,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>合計約 5～6 小時，而且這是順利的版本。</strong> 實際時間以第十七冊演練時量到的為準，再多抓一小時。</p>
+<p><strong>合計約 5～6 小時，而且這是順利的版本。</strong> 實際時間以第十七冊演練時量到的為準，再多抓一小時。表裡的建置時間是沒有快取的估計；主機上有之前建置的快取時，每次建置一分鐘內就好（1029 實測 19.8 秒、不到一分鐘、29.2 秒）。</p>
 <p><strong>時間不夠時怎麼取捨</strong>：</p>
 <table>
 <thead>
@@ -8030,7 +8058,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>怎麼知道成功了</strong>：五樣都抄了。<strong>值本身只寫演練紀錄的紙本</strong>，不拍照（開頭「公開範圍」）。第 4 條只印指紋、到期日與位址，<strong>不會印出私鑰</strong>；私鑰只在金鑰資料卷與 <code>hd-keys-*.tar.gz</code> 裡。</p>
+<p><strong>怎麼知道成功了</strong>：五樣都抄了。<strong>值本身只寫演練紀錄的紙本</strong>；要拍照也可以，照片只進私人 repo（開頭「公開範圍」）。第 4 條只印指紋、到期日與位址，<strong>不會印出私鑰</strong>；私鑰只在金鑰資料卷與 <code>hd-keys-*.tar.gz</code> 裡。</p>
 <p><strong>怎麼看 1、2 兩條</strong>（看懂就寫，看不懂照抄就好，回去再判斷）：</p>
 <table>
 <thead>
@@ -8251,7 +8279,7 @@ MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">up</span> <span class="n">-d</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="nb">ps</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：<code>build</code> 最後出現 <code>Image hd-tablet-care:v0.3.0 Built</code>；<code>ps</code> 的 <code>api</code>、<code>nurse-web</code>、<code>patient-web</code> 都是 <code>Up</code>。記下結束時間。</p>
+<p><strong>怎麼知道成功了</strong>：<code>build</code> 最後出現 <code>Image hd-tablet-care:v0.3.0 Built</code>；<code>ps</code> 的 <code>api</code>、<code>nurse-web</code>、<code>patient-web</code> 都是 <code>Up</code>。記下結束時間。主機有 1001 留下的建置快取，<strong>一分鐘內就跑完是正常的</strong>（1029 實測 19.8 秒），看到 <code>Built</code> 就算有建。</p>
 <p>接著在主機上打這四條確認：</p>
 <div class="highlight"><pre><span></span><code><span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">http</span><span class="p">://</span><span class="n">localhost</span><span class="p">:</span><span class="n">13000</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">health</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">nurse-web</span> <span class="n">grep</span> <span class="n">-rhoE</span> <span class="s1">'https?://[A-Za-z0-9.-]+:[0-9]+'</span> <span class="n">apps</span><span class="p">/</span><span class="n">nurse-pwa</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">assets</span>
@@ -8459,6 +8487,9 @@ MDM_KIOSK_BASE_URL=https://&lt;IP&gt;:18081
 <h3 id="j-14-在護理站的電腦登入t-12v-17-第四段">J-14 在護理站的電腦登入（＝T-12、V-17 第四段）<a class="headerlink" href="#j-14-在護理站的電腦登入t-12v-17-第四段" title="Permanent link">&para;</a></h3>
 <p><strong>這一步過了，這一次進院就至少是 B 級。</strong></p>
 <p><strong>做什麼</strong>：<strong>護理站的電腦</strong>開 <code>http://&lt;IP&gt;:18080</code>，用護理長剛改好的密碼登入（請護理長自己輸入）。</p>
+<blockquote>
+<p>護理站的電腦<strong>要 Windows 密碼才進得去，螢幕也會休眠</strong>，休眠後要重新輸入（1029 實測）。開發端不知道這個密碼：先找好會在場、能幫忙輸入的護理師，並問清楚休眠多久，冒煙測試（J-30）也要用這一台。</p>
+</blockquote>
 <p><strong>怎麼知道成功了</strong>：登入成功，看得到護理端的畫面。<strong>記下時間</strong>，演練紀錄寫「護理站登入成功，＿點＿分」。</p>
 <p>做完之後：</p>
 <ol>
@@ -8656,7 +8687,7 @@ HD_SIMULATION_DEPLOYMENT=
 <p><strong>做什麼</strong>（記下開始時間）</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">build</span>
 </code></pre></div>
-<p>約十分鐘，畫面一直捲動是正常的。</p>
+<p>主機上有之前建置的快取時<strong>一分鐘內</strong>就好（1029 實測不到一分鐘）；沒有快取約十分鐘，畫面一直捲動是正常的。</p>
 <p><strong>怎麼知道成功了</strong>：最後出現 <code>Image hd-tablet-care:&lt;新 tag&gt; Built</code>。再打：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">images</span> <span class="n">hd-tablet-care</span>
 </code></pre></div>
@@ -8689,10 +8720,15 @@ HD_SIMULATION_DEPLOYMENT=
 <p>到這裡為止，<strong>服務還是 <code>v0.3.0</code> 在跑</strong>，護理站照樣用得了。</p>
 <hr />
 <h3 id="j-18-停後端更新資料庫w-19">J-18 停後端、更新資料庫（＝W-19）<a class="headerlink" href="#j-18-停後端更新資料庫w-19" title="Permanent link">&para;</a></h3>
-<p><strong>做什麼</strong>（兩行，第二行是一整行，不要斷開）</p>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">stop</span> <span class="n">api</span>
-<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="n">db-update</span><span class="p">.</span><span class="n">mjs</span> <span class="p">-</span><span class="n">-note</span> <span class="s2">"v0.3.0 → &lt;新 tag&gt;（第三次進院）"</span>
+<blockquote>
+<p>⚠️ <strong>先確認現在沒有透析、已經跟護理站講過。</strong> 1029 在治療中停了後端、沒先講（第十八冊之一 O-08）；系統開始使用之後，這一步停的是護理站正在看的畫面。</p>
+</blockquote>
+<p><strong>做什麼</strong>（三行，第三行是一整行，不要斷開）</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$tag</span> <span class="p">=</span> <span class="n">git</span> <span class="n">describe</span> <span class="p">-</span><span class="n">-tags</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">stop</span> <span class="n">api</span>
+<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">scripts</span><span class="p">/</span><span class="n">db-update</span><span class="p">.</span><span class="n">mjs</span> <span class="p">-</span><span class="n">-note</span> <span class="s2">"v0.3.0 → </span><span class="p">$(</span><span class="nv">$tag</span><span class="p">)</span><span class="s2">（第三次進院）"</span>
 </code></pre></div>
+<p>第一行把 J-15 確認過的版本存進 <code>$tag</code>，第三行的說明就自動帶上，<strong>不必手改</strong>。1029 照抄成字面的 <code>&lt;新 tag&gt;</code>（O-13 第 1 列）。打 <code>$tag</code> 看一下，應該正好是 <code>&lt;新 tag&gt;</code>。</p>
 <p>這一條一次做完五件事，每一件印一段 <code>[1]</code>～<code>[5]</code>：確認後端已停、開更新紀錄、<strong>更新前備份</strong>、<strong>驗證備份還原得起來</strong>、套用遷移。任何一關沒過就停，資料庫不會被動到。</p>
 <p><strong>怎麼知道成功了</strong>：最後印出「<strong>更新完成。接下來的三件事是人要做的</strong>」。往上找第 3 段，<strong>把更新前備份的檔名（<code>hd-before-update-&lt;時間&gt;.db</code>）與 SHA-256 抄下來</strong>——附錄二退回時要用。</p>
 <table>
@@ -8765,7 +8801,7 @@ HD_SIMULATION_DEPLOYMENT=
 <ol>
 <li>按 Ctrl＋F5 強制重新整理（舊版的網頁還留在瀏覽器裡）。</li>
 <li>用護理長的新密碼再登入一次。</li>
-<li>護理端 → <strong>系統管理</strong> → 「<strong>版本更新紀錄</strong>」：多了一筆，說明是 <code>v0.3.0 → &lt;新 tag&gt;（第三次進院）</code>。</li>
+<li>護理端 → <strong>系統管理</strong> → 「<strong>版本更新紀錄</strong>」：多了一筆。這張表<strong>沒有說明欄</strong>，版本欄寫的是 <code>apps/api/package.json</code> 的號碼，不是 git tag：主機第一次更新顯示 <code>— → 0.1.0</code>，之後是 <code>0.1.0 → 0.1.0</code>，都正常（1029 實測，第十八冊之一 O-12）。<code>--note</code> 的說明在<strong>稽核軌跡</strong>：用途選「系統維運」、動作選「版本更新完成」，那一筆寫著 <code>v0.3.0 → &lt;新 tag&gt;（第三次進院）</code>。要對版本，看第一條 <code>docker ps</code> 的映像檔名稱。</li>
 </ol>
 <p>新版第一次啟動時會<strong>自己</strong>補進一些東西：隨版本帶入的衛教草稿（待核准，病人端看不到）、四條判斷規則的草稿、記憶相簿的預設圖卡、指標定義的變更紀錄。<strong>都不必處理</strong>。</p>
 <blockquote>
@@ -9025,7 +9061,7 @@ HD_SIMULATION_DEPLOYMENT=
 <p><strong>做什麼</strong></p>
 <ol>
 <li>先請護理站把護理端開著，<strong>看著它</strong>。</li>
-<li>主機重新開機 → 以平常的帳號（Administrator）登入 → <strong>之後什麼都不碰</strong>，連 Docker Desktop 都不要點，等三分鐘。</li>
+<li>主機重新開機 → 以<strong>平常登入的那個帳號</strong>登入（1029 看到不是 Administrator，是另一個本機帳號；由知道密碼的人輸入）→ <strong>之後什麼都不碰</strong>，連 Docker Desktop 都不要點，等三分鐘。</li>
 <li>開一個新的 PowerShell，輸入開工三行（J-04），再打：</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="p">-</span><span class="n">-format</span> <span class="s2">"{{.Names}}  {{.Image}}  {{.Status}}"</span>
@@ -9068,7 +9104,7 @@ HD_SIMULATION_DEPLOYMENT=
 <div class="highlight"><pre><span></span><code><span class="nv">$u</span> <span class="p">=</span> <span class="nb">Read-Host</span> <span class="s1">'院方透析清單 API 的位址（含 dialysislist.php，不含 ?date=）'</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">-e</span> <span class="n">HOSPITAL_API_BASE_URL</span><span class="p">=</span><span class="nv">$u</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">hospital-api-probe</span><span class="p">.</span><span class="n">js</span>
 </code></pre></div>
-<p><strong>怎麼知道成功了</strong>：印出「連線：成功」「模擬標頭：沒有」「解析：成功，data_list 共 N 列」，接著是每一欄的型態分布與幾段統計，最後一行「以上可以整段抄進演練紀錄」。<strong>整段抄進演練紀錄</strong>：工具只印結構（型態、欄數、筆數、床位的樣式），<strong>不印任何病人的值，也不印位址</strong>。</p>
+<p><strong>怎麼知道成功了</strong>：印出「連線：成功」「模擬標頭：沒有」「解析：成功，data_list 共 N 列」，接著是每一欄的型態分布與幾段統計，最後一行「以上可以整段抄進演練紀錄」。中間有一行「開頭：第一個「{」之前有 25 個字元，是 <code>&lt;meta&gt;</code> 標籤」<strong>是正常的</strong>：院方的回應在 JSON 前面夾了一段 HTML，工具與同步都從第一個 <code>{</code> 開始解析（1029 實測，第十八冊之二第 3 節）。<strong>整段抄進演練紀錄</strong>：工具只印結構（型態、欄數、筆數、床位的樣式），<strong>不印任何病人的值，也不印位址</strong>。</p>
 <table>
 <thead>
 <tr>
@@ -9117,7 +9153,7 @@ HD_SIMULATION_DEPLOYMENT=
 <ol>
 <li><strong>不要原廠重設</strong>（重設會把 WebView 退回 2023 年的版本，院內沒辦法再更新）。</li>
 <li>設定 → 開發人員選項 → <strong>USB 偵錯關掉</strong>（出發前沒關的話）。</li>
-<li>字型大小：照醫師的答覆。醫師說可以調，就到「設定 → 顯示 → 字型大小與樣式」調回預設；醫師說不調，維持 1.1，<strong>記下來</strong>（病人端可能被放大 10%，J-29 時看有沒有被擠壞）。</li>
+<li>字型大小：照醫師的答覆。醫師說可以調，就到「設定 → <strong>顯示螢幕</strong> → <strong>字體</strong>大小與樣式 → 字型大小」調回預設（One UI 5.1.1 的實際路徑，1029）；醫師說不調，維持 1.1，<strong>記下來</strong>（病人端可能被放大 10%，J-29 時看有沒有被擠壞）。</li>
 <li>連上<strong>院內給平板用的 Wi-Fi</strong>，瀏覽器開 <code>http://&lt;IP&gt;:18081/shell/</code>。</li>
 </ol>
 <p><strong>怎麼知道成功了</strong>：看得到下載頁；下載頁上寫的主機位址是 <code>https://&lt;IP&gt;:18081</code>。最下面「版本資訊」的<strong>三個 SHA-256 抄下來</strong>（交接要用）。</p>
@@ -9148,8 +9184,8 @@ HD_SIMULATION_DEPLOYMENT=
 <p><strong>做什麼</strong></p>
 <ol>
 <li>護理站的電腦：護理端 → <strong>新增裝置</strong> → <strong>註冊新平板</strong>。畫面出現一個<strong>佈建 QR code</strong> 與一行網址。<strong>這兩樣只顯示一次</strong>，這個畫面先不要關，做完 J-29 再離開。網址要以 <code>https://&lt;IP&gt;:18081</code> 開頭；不是的話 <code>.env</code> 的 <code>MDM_KIOSK_BASE_URL</code> 不對，回 J-10。</li>
-<li>平板：設定裝置 PIN；關閉「新增使用者」。</li>
-<li>平板：設定 → 安全性（或在設定裡搜尋「固定」）→ <strong>螢幕固定</strong>：開啟，勾「解除固定前要求 PIN」。</li>
+<li>平板：設定裝置 PIN。「關閉新增使用者」在 One UI 5.1.1 的設定裡<strong>找不到</strong>（1029），找不到就跳過：平板只有一個使用者，解除螢幕固定要 PIN，佈建不受影響。</li>
+<li>平板：設定 → <strong>安全性與隱私權</strong> → 其他安全性設定 → <strong>釘選應用程式</strong>：開啟，勾「解除固定前要求 PIN」（One UI 5.1.1 的實際路徑，1029；在設定裡搜尋「固定」不一定找得到）。</li>
 <li>平板瀏覽器開 <code>http://&lt;IP&gt;:18081/shell/</code> → 「下載 App」→ 安裝。問是否允許瀏覽器安裝不明來源的 App 時，允許。</li>
 </ol>
 <p><strong>怎麼知道成功了</strong>：平板上多了「透析照護平板」這個 App。</p>
@@ -9175,10 +9211,10 @@ HD_SIMULATION_DEPLOYMENT=
 <h3 id="j-29-第一次開啟並釘住v-28">J-29 第一次開啟並釘住（＝V-28）<a class="headerlink" href="#j-29-第一次開啟並釘住v-28" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong></p>
 <ol>
-<li>開「透析照護平板」→「<strong>掃描 QR code</strong>」→ 允許相機 → 對準 J-28 畫面上的 QR code。三欄自動填好，<strong>核對序號與平板背面貼的標籤一致</strong>（沒貼就現在貼一張，寫序號）。</li>
+<li>開「透析照護平板」→「<strong>掃描 QR code</strong>」→ 允許相機 → 對準 J-28 畫面上的 QR code。第一次開 App 會先跳三星的全螢幕手勢提示，按「確定」。三欄自動填好，<strong>核對序號與平板背面貼的標籤一致</strong>（沒貼就現在貼一張，寫序號）。</li>
 <li>「儲存並啟動」→ 系統問「要固定這個應用程式嗎」→「確定」。</li>
 <li>護理端 → 新增裝置，等 15～30 秒。</li>
-<li>平板<strong>解除一次固定</strong>（輸入 PIN），30 秒內護理端要變成「已跳出」。</li>
+<li>平板<strong>解除一次固定</strong>，30 秒內護理端要變成「已跳出」。解除的方法：手勢導覽是從螢幕底部往上滑並停住；三鍵導覽是同時長按「上一頁」與「多工」。接著會到鎖定畫面，輸入 PIN（1029 實測）。</li>
 <li>釘回去：按多工鍵把「透析照護平板」從多工畫面滑掉，再從桌面開啟 → 系統再問「要固定嗎」→「確定」。15～30 秒內護理端回到「固定中」。（沒跳出確認框就重新開機，App 開機後會自己起來並詢問）</li>
 </ol>
 <p><strong>怎麼知道成功了</strong></p>
@@ -9230,7 +9266,7 @@ HD_SIMULATION_DEPLOYMENT=
 <hr />
 <h2 id="8-收尾">8. 收尾<a class="headerlink" href="#8-收尾" title="Permanent link">&para;</a></h2>
 <h3 id="j-30-冒煙測試在護理站的電腦">J-30 冒煙測試（在護理站的電腦）<a class="headerlink" href="#j-30-冒煙測試在護理站的電腦" title="Permanent link">&para;</a></h3>
-<p><strong>不輸入任何真實病人資料、不開任何功能開關。</strong> 在護理站的電腦上走一次：</p>
+<p><strong>不輸入任何真實病人資料、不開任何功能開關。</strong> 在<strong>護理站的電腦</strong>上走一次，不是在部署主機上（1029 在主機上做，第十八冊之一 O-07）。護理站的電腦要 Windows 密碼、會休眠，同 J-14。第 1 列要先有護理長的帳號：還沒建的話，先用管理者在「系統管理」替護理長建好，再登出換人；建不了就用管理者做、在這一列寫明。</p>
 <table>
 <thead>
 <tr>
