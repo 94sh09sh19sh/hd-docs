@@ -165,6 +165,7 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 - 三分鐘後服務沒回來：記下 Docker Desktop 有沒有隨登入起來、SY-02 抄的「Start Docker Desktop when you sign in」有沒有勾；手動開 Docker Desktop、等變綠、`docker compose --env-file $cfg up -d`。**不要改院方的登入或開機設定**，寫進交接紙的已知限制，交資訊室決定
 - 順便看第一階段的排程：`Get-ScheduledTaskInfo -TaskName hd-hospital-fetch` 的 `LastRunTime` 有往前跳（排程也是登入後才跑）
 - 🧪 開發機驗不出「沒人登入」的情形，所以只 Quit Docker Desktop；量到的分鐘數只當參考
+- 🧪 按了之後護理端沒閃紅框、`docker ps` 的 `Up` 時間沒有歸零：按到的是視窗的關閉鈕，不是通知區圖示的 Quit。重做一次
 
 ### SY-08 密碼移交、建帳號
 

@@ -7033,7 +7033,7 @@ HOSPITAL_LAB_FIELD_MAP=
 <li>系統管理 → 營運參數與選項清單：營運參數表裡「院方資料未更新提示的起始時刻」是 <code>8</code>、「結束時刻」是 <code>23</code>（迭代 32.1 的預設，不必改）；「院方床位轉床號的方式」是 <code>0</code>（不是就改回 <code>0</code>）。下面的「院方資料同步」卡寫「還沒有設定院方資料的來源……」（提示時段那一行要到 SY-10 接上資料夾後才出現，1116 模擬實測）</li>
 <li>功能開關全部關掉。從零建置或換版後有兩項預設是開的：「本次透析」面板、現有功能的小幅遊戲化，<strong>這兩項也關</strong>（DEP-29：面板等 SY-11 對真實資料驗過才開；遊戲化等長者、社工、護理部看過才開。1116 模擬實測）</li>
 </ol>
-<p><strong>成功</strong>：<code>api</code>、<code>nurse-web</code>、<code>patient-web</code> 是 <code>hd-tablet-care:&lt;新 tag&gt;</code>、<code>Up</code>；health 是 <code>{"status":"ok",…}</code>；放行檢查印出 <code>Access-Control-Allow-Origin: http://&lt;IP&gt;:18080</code>；日誌有「已連線至 SQLite」帶 <code>synchronous=FULL</code>、「伺服器時區」<code>Asia/Taipei</code>，沒有紅色 <code>ERROR</code>（🏥 版本標記寫「（正式環境設定）」）；登得進去、三項都對。「版本更新紀錄」的版本欄是 <code>0.1.0 → 0.1.0</code>，正常。</p>
+<p><strong>成功</strong>：<code>api</code>、<code>nurse-web</code>、<code>patient-web</code> 是 <code>hd-tablet-care:&lt;新 tag&gt;</code>、<code>Up</code>（<code>ai-gateway</code> 仍是 <code>v0.4.0</code>，正常：兩版之間閘道沒改、AI 關著，SY-04 不建它）；health 是 <code>{"status":"ok",…}</code>；放行檢查印出 <code>Access-Control-Allow-Origin: http://&lt;IP&gt;:18080</code>；日誌有「已連線至 SQLite」帶 <code>synchronous=FULL</code>、「伺服器時區」<code>Asia/Taipei</code>，沒有紅色 <code>ERROR</code>（🏥 版本標記寫「（正式環境設定）」）；登得進去、三項都對。「版本更新紀錄」的版本欄是 <code>0.1.0 → 0.1.0</code>，正常。</p>
 <h3 id="sy-06-備份一次證明還原得回來">SY-06 備份一次、證明還原得回來<a class="headerlink" href="#sy-06-備份一次證明還原得回來" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong>：</p>
 <ol>
@@ -7056,7 +7056,7 @@ HOSPITAL_LAB_FIELD_MAP=
 <p><strong>做什麼</strong>：</p>
 <ul>
 <li>🏥 院方准了、挑好時段才做（同機另一個專案會一起中斷）。請護理站開著護理端看著它，記下開始時間 → 主機重新開機 → 以<strong>平常登入的帳號</strong>登入（知道密碼的人輸入）→ <strong>什麼都不碰</strong>，等三分鐘 → 開新的 PowerShell、開工三行</li>
-<li>🧪 工作列 Docker 圖示按右鍵 → <strong>Quit Docker Desktop</strong> → 從開始選單再開 → 等三分鐘</li>
+<li>🧪 工作列右下角通知區的 Docker 鯨魚圖示（藏在 <code>^</code> 裡就先點 <code>^</code>）按右鍵 → <strong>Quit Docker Desktop</strong> → 從開始選單再開 → 等三分鐘。<strong>關掉 Docker Desktop 的視窗不算</strong>：視窗關了引擎照跑，服務不會中斷（1116 模擬實測）</li>
 </ul>
 <p>接著：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="nb">ps </span><span class="p">-</span><span class="n">-format</span> <span class="s2">"{{.Names}}  {{.Image}}  {{.Status}}"</span>

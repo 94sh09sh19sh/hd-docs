@@ -140,7 +140,7 @@ curl.exe -s -i -H "Origin: http://<IP>:18080" http://<IP>:13000/api/health | Sel
 1. 系統管理 → 營運參數與選項清單：營運參數表裡「院方資料未更新提示的起始時刻」是 `8`、「結束時刻」是 `23`（迭代 32.1 的預設，不必改）；「院方床位轉床號的方式」是 `0`（不是就改回 `0`）。下面的「院方資料同步」卡寫「還沒有設定院方資料的來源……」（提示時段那一行要到 SY-10 接上資料夾後才出現，1116 模擬實測）
 1. 功能開關全部關掉。從零建置或換版後有兩項預設是開的：「本次透析」面板、現有功能的小幅遊戲化，**這兩項也關**（DEP-29：面板等 SY-11 對真實資料驗過才開；遊戲化等長者、社工、護理部看過才開。1116 模擬實測）
 
-**成功**：`api`、`nurse-web`、`patient-web` 是 `hd-tablet-care:<新 tag>`、`Up`；health 是 `{"status":"ok",…}`；放行檢查印出 `Access-Control-Allow-Origin: http://<IP>:18080`；日誌有「已連線至 SQLite」帶 `synchronous=FULL`、「伺服器時區」`Asia/Taipei`，沒有紅色 `ERROR`（🏥 版本標記寫「（正式環境設定）」）；登得進去、三項都對。「版本更新紀錄」的版本欄是 `0.1.0 → 0.1.0`，正常。
+**成功**：`api`、`nurse-web`、`patient-web` 是 `hd-tablet-care:<新 tag>`、`Up`（`ai-gateway` 仍是 `v0.4.0`，正常：兩版之間閘道沒改、AI 關著，SY-04 不建它）；health 是 `{"status":"ok",…}`；放行檢查印出 `Access-Control-Allow-Origin: http://<IP>:18080`；日誌有「已連線至 SQLite」帶 `synchronous=FULL`、「伺服器時區」`Asia/Taipei`，沒有紅色 `ERROR`（🏥 版本標記寫「（正式環境設定）」）；登得進去、三項都對。「版本更新紀錄」的版本欄是 `0.1.0 → 0.1.0`，正常。
 
 ### SY-06 備份一次、證明還原得回來
 
@@ -169,7 +169,7 @@ docker compose --env-file $cfg run --rm --no-deps --entrypoint rm api /data/rest
 **做什麼**：
 
 - 🏥 院方准了、挑好時段才做（同機另一個專案會一起中斷）。請護理站開著護理端看著它，記下開始時間 → 主機重新開機 → 以**平常登入的帳號**登入（知道密碼的人輸入）→ **什麼都不碰**，等三分鐘 → 開新的 PowerShell、開工三行
-- 🧪 工作列 Docker 圖示按右鍵 → **Quit Docker Desktop** → 從開始選單再開 → 等三分鐘
+- 🧪 工作列右下角通知區的 Docker 鯨魚圖示（藏在 `^` 裡就先點 `^`）按右鍵 → **Quit Docker Desktop** → 從開始選單再開 → 等三分鐘。**關掉 Docker Desktop 的視窗不算**：視窗關了引擎照跑，服務不會中斷（1116 模擬實測）
 
 接著：
 
