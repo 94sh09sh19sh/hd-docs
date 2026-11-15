@@ -96,7 +96,7 @@ Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
    git describe --tags
    ```
 
-2. `notepad $cfg`：`HD_IMAGE_TAG` 改成 `<新 tag>`；照 `deploy\hospital.env.example` 的「院方資料：讀抓取腳本存下的檔」那一段補四行，**都先留空**。只貼這四行就夠，要連範本那一段的註解一起貼也可以；貼在 `# --- 院方透析清單 API` 那一段的**上面**（跟範本同樣的位置），`HOSPITAL_API_BASE_URL`、`HD_SIMULATION_DEPLOYMENT` 已經有了，不要再貼一次：
+2. `notepad $cfg`：`HD_IMAGE_TAG` 改成 `<新 tag>`；照 `deploy\hospital.env.example` 的「院方資料：讀抓取腳本存下的檔」那一段補四行，**都先留空**。**只貼這四行，不要整段複製範本**（`v0.5.0` 範本那一段的第 98 行是一行斷掉的註解「aw_txt 與 hb-status.json）」，貼進來 compose 就讀不到 `.env`，1116 模擬實測）；貼在 `# --- 院方透析清單 API` 那一段的**上面**（跟範本同樣的位置），`HOSPITAL_API_BASE_URL`、`HD_SIMULATION_DEPLOYMENT` 已經有了，不要再貼一次：
 
    ```
    HD_DIALYSIS_LIST_DIR=
@@ -105,7 +105,7 @@ Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
    HOSPITAL_LAB_FIELD_MAP=
    ```
 
-   `HOSPITAL_API_BASE_URL` 維持空白。🧪 `HD_SHELL_SIGNING=dev`、`HD_SIMULATION_DEPLOYMENT` 照開發端填的，不動。
+   `HOSPITAL_API_BASE_URL` 維持空白。🧪 `HD_SHELL_SIGNING=dev`、`HD_SIMULATION_DEPLOYMENT` 照開發端填的，不動。存檔後打 `docker compose --env-file $cfg config --quiet`，什麼都沒印才往下。
 3. 建置：
 
    ```powershell
