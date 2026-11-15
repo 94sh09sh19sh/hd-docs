@@ -189,6 +189,7 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 | 🏥 `模擬標記檔：有` | 掛到模擬的資料夾，核對路徑 |
 | 只有狀態檔「看不到」 | 第二十一冊 AF-06 的 `status_file` 沒改到指定資料夾裡 |
 | `api` 起不來，日誌說兩種都填 | `HOSPITAL_API_BASE_URL` 不是空白 |
+| `docker-compose.lab-files.yml 要配 HD_LAB_DIR` | `COMPOSE_FILE` 多了 `;docker-compose.lab-files.yml`（整段複製範本帶進來的）。整行改成第二十三冊 SY-10 那一行 |
 | compose 說讀不到設定檔 | `COMPOSE_FILE` 留成了空白的一行，或少了 `docker-compose.yml`；第一個一定是 `docker-compose.yml` |
 | 狀態檔「讀得到」但結果不是「成功」 | 抓取腳本最近一輪失敗。看第一階段的狀態檔 `reason`（第二十二冊第 3 節） |
 

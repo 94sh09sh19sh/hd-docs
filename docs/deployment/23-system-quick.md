@@ -209,7 +209,7 @@ docker ps --format "{{.Names}}  {{.Image}}  {{.Status}}"
 
 **🏥 做什麼**：
 
-1. `notepad $cfg`：`HD_DIALYSIS_LIST_DIR=` 後面填 `C:\API_Fetch\IDH_interface`（第一階段搬到 C 槽的指定資料夾；照寫、不加引號）；`HD_LAB_DIR=` 留空；`COMPOSE_FILE` 那一行拿掉開頭的 `# `，變成 `COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml`；`HOSPITAL_API_BASE_URL` 維持空白
+1. `notepad $cfg`：`HD_DIALYSIS_LIST_DIR=` 後面填 `C:\API_Fetch\IDH_interface`（第一階段搬到 C 槽的指定資料夾；照寫、不加引號）；`HD_LAB_DIR=` 留空；`COMPOSE_FILE` 那一行**整行改成** `COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml`（開頭沒有 `# `；整段複製過範本的，那一行後面多一個 `;docker-compose.lab-files.yml`，要刪掉，1116 模擬實測）；`HOSPITAL_API_BASE_URL` 維持空白
 2. 重建、讀檔檢查：
 
    ```powershell
