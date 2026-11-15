@@ -7108,27 +7108,58 @@ HOSPITAL_LAB_FIELD_MAP=
 <p>🏥 <strong>一啟用，當天清單上所有病人的主檔與療程都會進主機</strong>，護理端會看到整個透析室，不是只有首波那一位。先讓首波護理師知道。</p>
 </blockquote>
 <h3 id="sy-10-接上院方資料讀檔檢查">SY-10 接上院方資料、讀檔檢查<a class="headerlink" href="#sy-10-接上院方資料讀檔檢查" title="Permanent link">&para;</a></h3>
-<p><strong>🏥 做什麼</strong>：</p>
-<ol>
-<li><code>notepad $cfg</code>：<code>HD_DIALYSIS_LIST_DIR=</code> 後面填 <code>C:\API_Fetch\IDH_interface</code>（第一階段搬到 C 槽的指定資料夾；照寫、不加引號）；<code>HD_LAB_DIR=</code> 留空；<code>COMPOSE_FILE</code> 那一行<strong>整行改成</strong> <code>COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml</code>（開頭沒有 <code>#</code>；整段複製過範本的，那一行後面多一個 <code>;docker-compose.lab-files.yml</code>，要刪掉，1116 模擬實測）；<code>HOSPITAL_API_BASE_URL</code> 維持空白</li>
-<li>重建、讀檔檢查：</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">up</span> <span class="n">-d</span>
-<span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">hospital-api-probe</span><span class="p">.</span><span class="n">js</span>
+<p><strong>🏥 正式只做 A。🧪 模擬不做 A，改做 B1、B2。</strong> 兩邊都是改 <code>.env</code> 的同五行（<code>HD_DIALYSIS_LIST_DIR</code>、<code>HD_LAB_DIR</code>、<code>COMPOSE_FILE</code>、<code>HOSPITAL_API_BASE_URL</code>、<code>HD_SIMULATION_DEPLOYMENT</code>），各自改成下面方框的樣子；其他行不動。</p>
+<p>讀檔檢查（A、B1、B2 都用這一條）：</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">api</span> <span class="n">node</span> <span class="n">apps</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">dist</span><span class="p">/</span><span class="n">hospital-api-probe</span><span class="p">.</span><span class="n">js</span>
 </code></pre></div>
-<p><strong>🏥 成功</strong>：標題「院方資料讀檔檢查（只讀、只印結構……）」；「透析清單資料夾」寫「在、讀得到」「唯讀：是」「<strong>模擬標記檔：沒有</strong>」；狀態檔「讀得到」、結果「成功」；有當天段落數與列數；「檢驗資料資料夾」沒設定是正常的。<strong>整段抄進紀錄</strong>（工具不印路徑、姓名、病歷號）。日誌有「院方資料同步已啟用（讀透析清單資料夾）」。</p>
-<p><strong>🧪 做什麼</strong>（兩段，第二段練院內那種掛法）：</p>
+<h4 id="a接上抓取腳本的資料夾">A（🏥）接上抓取腳本的資料夾<a class="headerlink" href="#a接上抓取腳本的資料夾" title="Permanent link">&para;</a></h4>
 <ol>
-<li><code>notepad $cfg</code>：<code>COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml</code>、<code>HD_SIMULATION_DEPLOYMENT=yes</code>，<code>HD_DIALYSIS_LIST_DIR</code>、<code>HD_LAB_DIR</code>、<code>HOSPITAL_API_BASE_URL</code> 留空。然後：</li>
+<li><code>notepad $cfg</code>，五行改成這樣（<code>COMPOSE_FILE</code> 開頭沒有 <code>#</code>，後面<strong>沒有</strong> <code>;docker-compose.lab-files.yml</code>；路徑照寫、不加引號）：</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="p">-</span><span class="n">-profile</span> <span class="n">simulation</span> <span class="n">up</span> <span class="n">-d</span>
+<div class="highlight"><pre><span></span><code>HD_DIALYSIS_LIST_DIR=C:\API_Fetch\IDH_interface
+HD_LAB_DIR=
+COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml
+HOSPITAL_API_BASE_URL=
+HD_SIMULATION_DEPLOYMENT=
 </code></pre></div>
-<p>等 3 分鐘，跑上面 🏥 第 2 步的第二條讀檔檢查。<strong>成功</strong>：「模擬標記檔：有」（模擬是對的）。
-2. 複製一份到<strong>帶空白與中文的路徑</strong>：</p>
+<ol>
+<li><code>docker compose --env-file $cfg up -d</code>，再跑讀檔檢查。</li>
+</ol>
+<p><strong>成功</strong>：標題「院方資料讀檔檢查（只讀、只印結構……）」；「透析清單資料夾」寫「在、讀得到」「唯讀：是」「<strong>模擬標記檔：沒有</strong>」；狀態檔「讀得到」、結果「成功」；有當天段落數與列數；「檢驗資料資料夾」沒設定是正常的。<strong>整段抄進紀錄</strong>（工具不印路徑、姓名、病歷號）。日誌有「院方資料同步已啟用（讀透析清單資料夾）」。</p>
+<h4 id="b1接上模擬院方資料">B1（🧪）接上模擬院方資料<a class="headerlink" href="#b1接上模擬院方資料" title="Permanent link">&para;</a></h4>
+<ol>
+<li><code>notepad $cfg</code>，五行改成這樣：</li>
+</ol>
+<div class="highlight"><pre><span></span><code>HD_DIALYSIS_LIST_DIR=
+HD_LAB_DIR=
+COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml
+HOSPITAL_API_BASE_URL=
+HD_SIMULATION_DEPLOYMENT=yes
+</code></pre></div>
+<ol>
+<li><code>docker compose --env-file $cfg --profile simulation up -d</code>，等 3 分鐘，再跑讀檔檢查。</li>
+</ol>
+<p><strong>成功</strong>：「模擬標記檔：有」（模擬是對的）。</p>
+<h4 id="b2練院內那種掛法路徑帶空白與中文">B2（🧪）練院內那種掛法：路徑帶空白與中文<a class="headerlink" href="#b2練院內那種掛法路徑帶空白與中文" title="Permanent link">&para;</a></h4>
+<ol>
+<li>把模擬的檔複製一份出來：</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="s2">"C:\hd-sim\院方 資料"</span> <span class="p">|</span> <span class="nb">Out-Null</span>
 <span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="nb">cp </span><span class="n">api</span><span class="p">:/</span><span class="n">hospital-sim</span><span class="p">/</span><span class="n">dialysis-list</span> <span class="s2">"C:\hd-sim\院方 資料\透析清單"</span>
 </code></pre></div>
-<p><code>notepad $cfg</code>：<code>COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml</code>、<code>HD_DIALYSIS_LIST_DIR=C:\hd-sim\院方 資料\透析清單</code>（<code>HD_SIMULATION_DEPLOYMENT=yes</code> 留著），<code>docker compose --env-file $cfg up -d</code>，再跑讀檔檢查。<strong>成功</strong>：「在、讀得到」「唯讀：是」「模擬標記檔：有」。這份是複製出來的、不會再更新，之後出現「未更新」提示是正常的。</p>
+<ol>
+<li><code>notepad $cfg</code>，五行改成這樣（跟 A 一樣的掛法，只是路徑換成上面那個、<code>HD_SIMULATION_DEPLOYMENT</code> 留 <code>yes</code>）：</li>
+</ol>
+<div class="highlight"><pre><span></span><code>HD_DIALYSIS_LIST_DIR=C:\hd-sim\院方 資料\透析清單
+HD_LAB_DIR=
+COMPOSE_FILE=docker-compose.yml;docker-compose.dialysis-files.yml
+HOSPITAL_API_BASE_URL=
+HD_SIMULATION_DEPLOYMENT=yes
+</code></pre></div>
+<ol>
+<li><code>docker compose --env-file $cfg up -d</code>，再跑讀檔檢查。</li>
+</ol>
+<p><strong>成功</strong>：「在、讀得到」「唯讀：是」「模擬標記檔：有」。這份是複製出來的、不會再更新，之後出現「未更新」提示是正常的。</p>
 <h3 id="sy-11-第一輪怎麼驗">SY-11 第一輪怎麼驗<a class="headerlink" href="#sy-11-第一輪怎麼驗" title="Permanent link">&para;</a></h3>
 <p><strong>做什麼</strong>（護理站的電腦／🧪 手機）：</p>
 <ol>
