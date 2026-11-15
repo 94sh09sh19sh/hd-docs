@@ -8901,7 +8901,19 @@ database is locked
 </tr>
 <tr>
 <td>SY-11</td>
-<td>通過；模擬每輪 1 筆「格式不符」是模擬辛，故意的</td>
+<td>通過；模擬每輪 1 筆「格式不符」是模擬資料故意放的</td>
+</tr>
+<tr>
+<td>SY-12</td>
+<td>通過（手機平板顯示面板）</td>
+</tr>
+<tr>
+<td>SY-13</td>
+<td>通過</td>
+</tr>
+<tr>
+<td>SY-14</td>
+<td>交接紙從頭讀一遍，沒有圈起來、還沒改回文件的地方</td>
 </tr>
 <tr>
 <td>SY-M1</td>
@@ -8913,11 +8925,15 @@ database is locked
 </tr>
 <tr>
 <td>SY-M3</td>
-<td>使用者回報演練全部做完，細節未回填</td>
+<td>通過：<code>完整性檢查：ok</code>、三個服務是 <code>v0.4.0</code>、手機重開分頁後登得進去</td>
 </tr>
 <tr>
 <td>撤除</td>
-<td>開發端做（見下）</td>
+<td>開發端做完：沒有容器、映像檔、資料卷，<code>C:\hd-sim</code>、模擬的 D 槽、<code>hd-hospital-fetch</code> 排程都不在，沒有留下防火牆規則，有線網路改回「公用」（1116 06:20 查）</td>
+</tr>
+<tr>
+<td>補跑</td>
+<td>回歸卡在午夜的 15／16／25:api，06:07 對著模擬院方 API 補跑全過（12／8／8 步）；<code>check:egress</code> 0 筆</td>
 </tr>
 </tbody>
 </table>
@@ -8978,7 +8994,7 @@ database is locked
 <li>院內真的重新開機時服務會不會自己回來：這一趟院方准就實測；下一個 tag 考慮把 compose 的 <code>restart</code> 改成 <code>always</code></li>
 <li><code>verify:iteration11</code> 的繫結掛載檢查還不認得「院方資料資料夾，唯讀」這個例外，讀檔開著時一定 ✗</li>
 </ul>
-<p><strong>判定</strong>：<code>v0.5.0</code> <strong>可以</strong>帶進院，11 月 16 日。SY-07 ✗ 是使用者 1116 定的已知限制（照帶，院內實測）；SY-M2 的兩個 ✗ 是誤判。</p>
+<p><strong>判定</strong>：<code>v0.5.0</code> <strong>可以</strong>帶進院，11 月 16 日。SY-07 ✗ 是使用者 1116 定的已知限制（照帶，院內實測）；SY-M2 的兩個 ✗ 是誤判。SY-M4 其餘十項（含第 11 項紙本圈起來的地方）都 ✓。第五次進院排在 1116 14:00，出發前檢查見《<a href="../../deployment/18b-go-live-prep/">第十八冊之二</a>》第 9 節。</p>
 <hr />
 <h2 id="12-第三次進院部署手冊第十八冊">12. 第三次進院（部署手冊第十八冊）<a class="headerlink" href="#12-第三次進院部署手冊第十八冊" title="Permanent link">&para;</a></h2>
 <p><strong>空白表格，印出來帶進院、現場填。</strong> 步驟看《<a href="../../deployment/18-third-visit/">部署手冊第十八冊</a>》。<code>&lt;IP&gt;</code>、密碼、<code>.env</code> 的值<strong>只寫在紙本上</strong>，不打進這份文件；回來後要上站的只有結論與錯誤原文，詳細寫成一本第三次進院紀錄（第十八冊 J-33）。</p>
