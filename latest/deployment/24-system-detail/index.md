@@ -2,7 +2,7 @@
 
 版本：v0.1　文件狀態：草案（1116 由第二十冊、第十八冊與第十七冊 0.6 節整理）　編號：沿用第二十三冊的 `SY-xx`
 
-上層手冊：《[第二十三冊 · 本系統換版上線（簡易版）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/23-system-quick/index.md)》
+上層手冊：《[第二十三冊 · 本系統換版上線（簡易版）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/23-system-quick/index.md)》　1116 照做的紀錄：《[第二十四冊之一 · 第五次進院紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/24a-fifth-visit-record/index.md)》
 
 > **照第二十三冊做，畫面跟「成功」不一樣時翻這一冊同一個編號。** 這裡寫：什麼時候停手、時間怎麼排、每一步的出錯處置、登不進去怎麼查、平板重新佈建、交接紙。
 >
