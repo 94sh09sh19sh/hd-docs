@@ -101,7 +101,7 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 |---|---|
 | `Must be an administrator to view exclusions` | 不是系統管理員身分，重開一個（開始 → 打 `powershell` → `Ctrl+Shift+Enter`） |
 | `Invalid namespace` | 這台是 Windows Server，改打 `Get-MpComputerStatus`，看 `AMRunningMode`、`AntivirusEnabled` |
-| 資訊室當天加不了 | **照樣往下，讀檔照開**（1116 改）；交接紙「防毒」那一列寫誰、什麼時候加，現象一欄照抄下表 |
+| 資訊室當天加不了 | **照樣往下，讀檔照開**（1116 改）；不加也能跑，出現下表的現象再加。交接紙「防毒」那一列寫「未加」，現象照抄下表 |
 
 **為什麼 1116 起不擋讀檔**：
 
@@ -279,7 +279,7 @@ Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Se
 | 啟停 | 在 `C:\hd\hd-tablet-care\repo` 底下打 `docker compose --env-file C:\hd\hd-tablet-care\config\.env stop`（停）／`up -d`（啟） |
 | 斷電之後 | 護理端每個畫面閃紅框、平板顯示請按床邊呼叫鈴 → 到主機開機、以平常的帳號登入 → **什麼都不碰，等三分鐘**（SY-07 量到的是＿分鐘；沒測寫「未測」）→ 紅框消失就好了 |
 | 備份 | 每天 03:00 自動備份到 `backups`；由＿＿每＿＿送往另一台機器；今天的備份檔名＿＿ |
-| 防毒 | 排除清單由＿＿於＿＿加好；沒加寫「未加，由＿＿於＿＿前加」。沒加之前看到這幾種現象，先請資訊室查排除清單：護理端整體變慢（尤其全機掃描時段）、「資料庫與備份」最近一次成功備份不是今天、「院方資料同步」卡停在舊時間 |
+| 防毒 | 排除清單由＿＿於＿＿加好；沒加寫「未加，出現下列現象再加」（1116 定）。看到這幾種現象，請資訊室把 Docker 資料夾（備份出問題再加 `backups`）加進排除清單：護理端整體變慢（尤其全機掃描時段）、「資料庫與備份」最近一次成功備份不是今天、「院方資料同步」卡停在舊時間 |
 | 磁碟 | 剩＿＿GB 就通知；監看人＿＿ |
 | 外殼 | 下載頁的三個 SHA-256（1029 抄的）；平板 `TB-00` 在＿床 |
 | 功能開關 | 「本次透析」面板 SY-11 驗過才開（沒啟用讀檔就關著）；遊戲化、獎勵制度、跑馬燈、三項高風險判斷、AI、需要抽血數值的功能都關著；要開先讓護理部、社工、長者看過 |
