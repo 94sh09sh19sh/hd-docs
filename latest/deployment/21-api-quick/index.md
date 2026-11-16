@@ -52,7 +52,7 @@ whoami
 
 ### AF-03 看現況：排程沒裝、沒有 Python 在跑、C 槽還沒有
 
-**做什麼**：🏥 照貼，出現提示時貼上 D 槽 `API_Fetch` 的路徑；🧪 第一行改貼 `$old = 'C:\hd-sim-fetch\D槽\API_Fetch'; $new = 'C:\hd-sim-fetch\API_Fetch'`。
+**做什麼**：🏥 第一行**原樣貼、引號裡的字不要改**，按 Enter 後畫面出現「貼上 D 槽 API_Fetch 的路徑:」才貼路徑再按 Enter；其餘照貼；🧪 第一行改貼 `$old = 'C:\hd-sim-fetch\D槽\API_Fetch'; $new = 'C:\hd-sim-fetch\API_Fetch'`。
 
 ```
 $old = (Read-Host '貼上 D 槽 API_Fetch 的路徑').Trim().Trim('"', "'"); $new = 'C:\API_Fetch'
