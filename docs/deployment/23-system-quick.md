@@ -217,7 +217,7 @@ docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe
 
 #### A（🏥）接上抓取腳本的資料夾
 
-1. `notepad $cfg`，五行改成這樣（`COMPOSE_FILE` 開頭沒有 `# `，後面**沒有** `;docker-compose.lab-files.yml`；路徑照寫、不加引號）：
+1. `notepad $cfg`，五行改成這樣（`COMPOSE_FILE` 開頭沒有 `# `，後面**沒有** `;docker-compose.lab-files.yml`；路徑照寫、不加引號；院內 `.env` 本來就沒有後兩行的話不用補，沒寫等於空白，見 SY-04）：
 
    ```
    HD_DIALYSIS_LIST_DIR=C:\API_Fetch\IDH_interface
