@@ -1,8 +1,8 @@
-# 院方 API 的四種抓取方式之二：1108 給學長的問題清單
+# 院方 API 介接之二：1108 給學長的問題清單
 
 給學長直接作答用。每題為什麼要問、估算與細節在補充版《[之二之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-detail/index.md)》，題號相同；已答的在《[之二之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-answered/index.md)》。
 
-上層文件：《[院方 API 的四種抓取方式](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods/index.md)》　前一份：《[之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-status/index.md)》　下一份：《[之三](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-monday-plan/index.md)》
+上層文件：《[院方 API 介接](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods/index.md)》　前一份：《[之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-status/index.md)》　下一份：《[之三](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-monday-plan/index.md)》
 
 **回法**：題號＋選項就好，例如「K-2 ①、K-7 要」。標「建議」的是這邊的預設，沒意見就照建議。
 

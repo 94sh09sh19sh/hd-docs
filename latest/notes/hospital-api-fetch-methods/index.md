@@ -1,13 +1,14 @@
-# 院方 API 的四種抓取方式
+# 院方 API 介接
 
-版本：v0.1　文件狀態：草案（2026-11-08 開立）　適用讀者：FDE 工程團隊、使用者本人
+版本：v0.1　文件狀態：草案（2026-11-08 開立；1116 由「院方 API 的四種抓取方式」改名）　適用讀者：FDE 工程團隊、使用者本人
 
-子文件：《[之一：1107 學長答覆後的現況與應對](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-status/index.md)》（介接方式要改、週一進院前後要做什麼）、《[之二：1108 給學長的問題清單](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》、《[之四：下一次進院的工作規劃（兩支都跑起來）](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-next-visit-plan/index.md)》、《[之五：給 APP 組的讀檔說明](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-app-team/index.md)》
+子文件：《[之一：1107 學長答覆後的現況與應對](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-status/index.md)》（介接方式要改、週一進院前後要做什麼）、《[之二：1108 給學長的問題清單](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》、《[之三：1109 進院前的工作規劃](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-monday-plan/index.md)》、《[之四：下一次進院的工作規劃（兩支都跑起來）](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-next-visit-plan/index.md)》、《[之五：給 APP 組的讀檔說明](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-app-team/index.md)》
 
 ______________________________________________________________________
 
 ## 摘要
 
+- **1116 改名**：這一系列已從「四種抓取方式的比較」長成整個院方 API 介接的紀錄（學長答覆、問題清單、進院規劃、給 APP 組的說明），標題改成「院方 API 介接」；檔名不變，舊連結照樣有效。本頁第 0～4 節仍是 1108 的四種方式比較
 - 讀院方透析清單 API 的程式目前有四份：學長 Google Drive 共享的 `API_script` 版、成大版、斗六版、本系統（迭代 15）
 - 前三份都是 IDH 系統的 `scripts/fetch_API.py`，對院方送出的請求一樣（`GET ?date=今天`），差在**什麼時候抓、失敗怎麼辦、抓完存在哪**
 - 成大版與 `API_script` 版**只在有人開著儀表板時才抓**；斗六版改成 `django-crontab` 每 5 分鐘，但仍要整個 Django 專案在；本系統是後端自己排程、預設每 3 分鐘

@@ -1,8 +1,8 @@
-# 院方 API 的四種抓取方式之五：給 APP 組的讀檔說明
+# 院方 API 介接之五：給 APP 組的讀檔說明
 
 版本：v0.1　文件狀態：草案（2026-11-16 開立）　適用讀者：APP 組、負責 IDH 系統的學長
 
-上層文件：《[院方 API 的四種抓取方式](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods/index.md)》　前一份：《[之四](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-next-visit-plan/index.md)》
+上層文件：《[院方 API 介接](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods/index.md)》　前一份：《[之四](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-next-visit-plan/index.md)》
 
 ______________________________________________________________________
 
