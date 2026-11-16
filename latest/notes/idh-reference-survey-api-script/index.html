@@ -6676,7 +6676,7 @@
 <li><code>hb_online_v2.py</code> 照病人逐一查檢驗資料。1109 補齊後確認：<strong>程式是為另一支 API 寫的</strong>，路徑把病歷號與起迄日串在一起，不是 <code>dialysislist.php</code> 的 <code>?date=</code>；每次回一筆、88 欄，<strong>有血紅素、白蛋白、BUN、Kt/V、URR</strong>（第 4.3、4.5 節）</li>
 <li>但 <code>config.json</code> 只是範本，主機換成佔位字，<strong>真正的端點仍不知道</strong>；病人清單 <code>active_patients.txt</code> 與一份回應樣本也還沒拿到（第 9 節）</li>
 <li>透析清單 API 的 51 欄沒有抽血數值，1004 讀程式、1029 院內探測都確認過；第三次進院只探測這一支，沒人查過檢驗資料從哪來（第 5 節）</li>
-<li>本系統一填 <code>HOSPITAL_API_BASE_URL</code>，打的就是<strong>與 IDH 系統同一台、同一支</strong>的透析清單 API，每 3 分鐘一次；現在院內主機的位址是空的，還沒在打（第 7 節）</li>
+<li>本系統一填 <code>HOSPITAL_API_BASE_URL</code>，打的就是<strong>與 IDH 系統同一台、同一支</strong>的透析清單 API，每 3 分鐘一次；院內主機的位址一直是空的、沒在打，<strong>1116 起 <code>v0.5.0</code> 改讀獨立腳本存的檔</strong>，以後也不填（第 7 節）</li>
 <li>「需要抽血數值的功能」與劑量調整參考照舊關閉：欄位對得上了，但端點、核准與樣本都還沒有（第 8 節）</li>
 <li><strong>1111 學長答 <code>hb</code> 不用這邊處理</strong>（院方 API 之二 A-5）：這邊不裝、不改寫，第 9 節要取得的東西不再追；本系統院內先不讀檢驗資料</li>
 </ul>
@@ -7139,7 +7139,7 @@
 <tbody>
 <tr>
 <td>現在</td>
-<td>院內主機 <code>v0.4.0</code>，<code>HOSPITAL_API_BASE_URL</code> 空白，<strong>沒在打</strong>；只有 1029 探測時打過一次</td>
+<td>院內主機 1116 起 <code>v0.5.0</code>，<code>HOSPITAL_API_BASE_URL</code> 空白，<strong>沒在打</strong>，改讀 <code>C:\API_Fetch\IDH_interface</code> 的檔（迭代 32）；只有 1029 探測時打過一次</td>
 </tr>
 <tr>
 <td>位址一填</td>
