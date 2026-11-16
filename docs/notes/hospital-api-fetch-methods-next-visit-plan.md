@@ -1,8 +1,8 @@
-# 院方 API 的四種抓取方式之四：下一次進院的工作規劃（兩支都跑起來）
+# 院方 API 介接之四：下一次進院的工作規劃（兩支都跑起來）
 
 版本：v0.1　文件狀態：草案（2026-11-09 開立）　適用讀者：使用者本人、接手做事的 agent、負責 IDH 系統的學長
 
-上層文件：《[院方 API 的四種抓取方式](hospital-api-fetch-methods.md)》　前一份：《[之三：1109 進院前的工作規劃](hospital-api-fetch-methods-monday-plan.md)》　問題清單：《[之二](hospital-api-fetch-methods-questions.md)》　下一份：《[之五：給 APP 組的讀檔說明](hospital-api-fetch-methods-app-team.md)》
+上層文件：《[院方 API 介接](hospital-api-fetch-methods.md)》　前一份：《[之三：1109 進院前的工作規劃](hospital-api-fetch-methods-monday-plan.md)》　問題清單：《[之二](hospital-api-fetch-methods-questions.md)》　下一份：《[之五：給 APP 組的讀檔說明](hospital-api-fetch-methods-app-team.md)》
 
 ---
 

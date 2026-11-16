@@ -1,8 +1,8 @@
-# 院方 API 的四種抓取方式之一：1107 學長答覆後的現況與應對
+# 院方 API 介接之一：1107 學長答覆後的現況與應對
 
 版本：v0.1　文件狀態：草案（2026-11-08 開立）　適用讀者：FDE 工程團隊、使用者本人
 
-上層文件：《[院方 API 的四種抓取方式](hospital-api-fetch-methods.md)》　下一份：《[之二：1108 給學長的問題清單](hospital-api-fetch-methods-questions.md)》　週一工作規劃：《[之三](hospital-api-fetch-methods-monday-plan.md)》
+上層文件：《[院方 API 介接](hospital-api-fetch-methods.md)》　下一份：《[之二：1108 給學長的問題清單](hospital-api-fetch-methods-questions.md)》　週一工作規劃：《[之三](hospital-api-fetch-methods-monday-plan.md)》
 
 ---
 

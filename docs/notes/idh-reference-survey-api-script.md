@@ -27,7 +27,7 @@
 | `config.json` | `hb_online_v2.py` 的設定範本，位址是佔位字 | 同上 |
 | `API raw data address.docx` | 只有兩行：`IDH_interface`、`Hb_API_Fetch` 兩個資料夾在某台電腦 OneDrive「Old data」底下的路徑 | — |
 
-- 位置：`lab_project/API_script/`，在專案 repo 外，與 `ref_project/` 同層；前三個檔的時間是 1106 下午（1108 起移到 `lab_project/old_API_ref/API_script/`；來源是學長以連結共享給使用者帳號的 Google Drive 資料夾，四種抓取方式的比較見《[院方 API 的四種抓取方式](hospital-api-fetch-methods.md)》）
+- 位置：`lab_project/API_script/`，在專案 repo 外，與 `ref_project/` 同層；前三個檔的時間是 1106 下午（1108 起移到 `lab_project/old_API_ref/API_script/`；來源是學長以連結共享給使用者帳號的 Google Drive 資料夾，四種抓取方式的比較見《[院方 API 介接](hospital-api-fetch-methods.md)》）
 - Word 檔只寫路徑，沒有說明用途、作者與 API 位址
 - 1109 進院知道：Word 檔寫的那台電腦就是本系統的部署主機，`Hb_API_Fetch` 底下已經有 `hospital_dataset\raw_txt` 與月份檔（《[第十九冊之二](../deployment/19b-fourth-visit-record.md)》BR-08）
 
@@ -198,7 +198,7 @@ interface/views.py 的 corn_job()（成大版第 1018 行；斗六版同樣在 v
 
 所以《[部署手冊第十八冊之二](../deployment/18b-go-live-prep.md)》把 Q-35（向資訊室報備）、病人告知、床號設定都排在填位址之前。
 
-> **1107 起預定改變**：負責 IDH 系統的學長要求本系統不自己打這支 API，改讀主機上獨立腳本存下來的檔（APP 組也讀同一份）。上表是「直接打」的情況；改法與還沒定的事見《[院方 API 的四種抓取方式之一](hospital-api-fetch-methods-status.md)》。
+> **1107 起預定改變**：負責 IDH 系統的學長要求本系統不自己打這支 API，改讀主機上獨立腳本存下來的檔（APP 組也讀同一份）。上表是「直接打」的情況；改法與還沒定的事見《[院方 API 介接之一](hospital-api-fetch-methods-status.md)》。
 
 ## 8. 對本專案的意義
 
