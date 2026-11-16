@@ -22,7 +22,7 @@ ______________________________________________________________________
 1116 原訂現場當面講，當天沒講到，改成這裡＋訊息告知。
 
 - 抓取腳本已搬到 C 槽：`C:\API_Fetch\hd-hospital-fetch`，每 3 分鐘、只在 07:00～23:00 抓；D 槽舊資料夾 1116 已刪。停、改頻率、看最近一輪的三個指令在部署手冊《[第二十一冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/21-api-quick/index.md)》AF-12 第 1 項
-- APP 組讀檔的路徑改成 `C:\API_Fetch\IDH_interface`；`Hb_API_Fetch` 也一起在 C 槽，內容沒動
+- APP 組讀檔的路徑改成 `C:\API_Fetch\IDH_interface`；`Hb_API_Fetch` 也一起在 C 槽，內容沒動。給 APP 組的讀檔說明在《[之五](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-app-team/index.md)》
 - W-6 學長給的去重交接文件，有一處腳本沒照做：同一筆紀錄（同一人、同一場、同一個紀錄時間）內容變了，腳本會再寫一次、讀的人以後面的為準。原因是結束體重、結束血壓、實際脫水量下機後才回填到同一場已經寫過的每一列，照「見過就跳過」的話留底永遠沒有結束體重。APP 組讀檔時同一個鍵以後面的為準
 
 ## 3. 檢驗資料（`hb`）：不必答

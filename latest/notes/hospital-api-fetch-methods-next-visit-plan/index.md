@@ -2,7 +2,7 @@
 
 版本：v0.1　文件狀態：草案（2026-11-09 開立）　適用讀者：使用者本人、接手做事的 agent、負責 IDH 系統的學長
 
-上層文件：《[院方 API 的四種抓取方式](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods/index.md)》　前一份：《[之三：1109 進院前的工作規劃](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-monday-plan/index.md)》　問題清單：《[之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》
+上層文件：《[院方 API 的四種抓取方式](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods/index.md)》　前一份：《[之三：1109 進院前的工作規劃](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-monday-plan/index.md)》　問題清單：《[之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》　下一份：《[之五：給 APP 組的讀檔說明](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-app-team/index.md)》
 
 ______________________________________________________________________
 
