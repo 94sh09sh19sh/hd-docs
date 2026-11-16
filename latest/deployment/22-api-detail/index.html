@@ -6680,7 +6680,7 @@
 <ul>
 <li>robocopy 的結束碼 <code>0</code>～<code>7</code> 都是成功（<code>1</code>＝有複製檔），<code>8</code> 以上是有檔沒複製到 → <strong>停</strong>；舊的完全沒動，照舊在 D 槽做也可以（學長決定；那就跳過改名，<code>$new</code> 用 D 槽的 <code>API_Fetch</code> 路徑，AF-06 的 <code>status_file</code> 也寫 D 槽）</li>
 <li>兩行的檔數或位元組不一樣：<strong>停</strong>，不改名，回報</li>
-<li>改名出現紅字（存取被拒、檔案正在使用中）：關掉開在那個資料夾的檔案總管與記事本再試；還是不行就停</li>
+<li>改名出現紅字（<code>拒絕存取路徑</code>、檔案正在使用中；1116 現場遇到）：複製已經成功，資料沒事，只差改名。依序試：① 關掉所有檔案總管視窗、記事本、編輯器，等一分鐘（防毒可能還在掃剛讀過的檔）再貼一次改名那行；② 查有沒有程式開著它：<code>Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*API_Fetch*' } | Select-Object ProcessId, Name, CommandLine</code>，有印出就問學長那是什麼，認不出的不要自己停；③ 在檔案總管對 D 槽的 <code>API_Fetch</code> 按右鍵 →「重新命名」，打 <code>API_Fetch_搬到C槽_MMDD</code>，失敗時的對話框會寫是哪個程式開著它。三樣都不行就停，問學長要不要<strong>跳過改名</strong>：跳過的話照樣用 C 槽往下做，D 槽那份留著不動；AF-12 一定要講清楚 D 槽那份從今天起不再更新，學長的文件與 APP 組讀檔一律改 C 槽（改名本來就是為了讓還指著舊路徑的東西出錯被發現，跳過就只能靠口頭交代）</li>
 <li>為什麼改名不刪：學長的其他東西可能還指著舊路徑，改名之後一用就會發現；刪不刪學長決定</li>
 <li>搬的是整個 <code>API_Fetch</code>（<code>IDH_interface</code>、<code>Hb_API_Fetch</code>、<code>hd-hospital-fetch</code>），<code>hb</code> 雖然不做，資料一起搬。學長的 <code>hb_online_v2.py</code> 與它的資料都在 <code>Hb_API_Fetch</code> 裡，跟著搬過去、不改內容；它的 <code>output_dir</code> 是相對路徑，學長之後在 C 槽的 <code>Hb_API_Fetch</code> 裡跑就好（AF-12 跟學長講路徑改了時一起講）。AF-03 最後一行有印出排程就不能直接搬</li>
 </ul>
