@@ -59,7 +59,8 @@ $old = (Read-Host '貼上 D 槽 API_Fetch 的路徑').Trim().Trim('"', "'"); $ne
 Get-ScheduledTask -TaskName hd-hospital-fetch -ErrorAction SilentlyContinue
 Get-Process python*, py -ErrorAction SilentlyContinue
 Test-Path -LiteralPath "$old\hd-hospital-fetch\config.json"; Test-Path -LiteralPath $new
-"C 槽可用 {0:N1} GB" -f ((Get-PSDrive C).Free/1GB) Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { ($_.Actions | Out-String) -match 'API_Fetch|online' } | Select-Object TaskName, State
+"C 槽可用 {0:N1} GB" -f ((Get-PSDrive C).Free/1GB)
+Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { ($_.Actions | Out-String) -match 'API_Fetch|online' } | Select-Object TaskName, State
 ```
 
 **成功**：第二、三行沒印東西；接著 `True`、`False`；C 槽有幾百 GB（🏥 1109 是 763 GB）；最後一行沒印東西（沒有別的排程指著 `API_Fetch`，含學長 `Hb_API_Fetch` 裡的 `hb_online_v2.py`）。
