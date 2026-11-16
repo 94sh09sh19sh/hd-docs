@@ -16,6 +16,7 @@
 - 三份 Python 寫檔都沒指定編碼，在 Windows 上預設是 big5（cp950），姓名有罕用字時整次抓取丟失（第 4 節）
 - 本系統的介接是照這三份重寫的，不是改寫；與 `fetch_API.py` 的逐項差異在第 1、2.4 節
 - 1107 學長要求改成「主機上的獨立腳本抓、存成檔，本系統改讀檔」，怎麼做寫在子文件
+- **1116 第五次進院照做完**：`hd-hospital-fetch` v0.3.0 在 `C:\API_Fetch` 每 3 分鐘抓（07:00～23:00）；本系統換 `v0.5.0` 讀 `C:\API_Fetch\IDH_interface` 的檔，不打院方 API。現場紀錄在《[第二十四冊之一](../deployment/24a-fifth-visit-record.md)》
 
 ## 0. 四種方式從哪來
 
@@ -24,7 +25,7 @@
 | 1 | `API_script` 版 | 學長以連結與使用者的帳號共享 Google Drive 資料夾，1108 時只有三個檔：`fetch_API.py`、`hb_online_v2.py`、`API raw data address.docx`（1108 晚上學長再放上 `hb` 用的 `collector_common.py`、`config.json`）；已全部下載到 repo 外的 `old_API_ref/API_script/`（另有使用者自己存的 `link.txt`，只記連結） | 1107 學長說：**應該是舊版本，可能上傳錯了**（子文件第 2 節） |
 | 2 | 成大版 | 采綾學姊給的 IDH 系統 repo，`RyanJ` 分支，clone 在 `ref_project/成大醫院IDH系統_RyanJ/` | 學長說主機上裝的「都是成大 IDH」 |
 | 3 | 斗六版 | 使用者先前取得的斗六分院 IDH 系統，`ref_project/斗六分院IDH系統的code/` | 斗六那一台主機，與本院區無關；學長說「斗六搬過來也要改」 |
-| 4 | 本系統 | `apps/api/src/modules/hospital-sync/`（迭代 15，TypeScript） | 院內主機 `v0.4.0`，位址空白、**沒在打**；只有 1029 探測打過一次 |
+| 4 | 本系統 | `apps/api/src/modules/hospital-sync/`（迭代 15，TypeScript） | 院內主機 1116 起 `v0.5.0`，**讀獨立腳本存的檔**（迭代 32），位址空白、不打院方 API；只有 1029 探測打過一次 |
 
 不算在內的：`hb_online_v2.py` 是照病人逐一查檢驗資料的另一支收集程式，打的是另一支 API、不是透析清單（1109 補齊程式後確認），見《[同院 IDH 系統參考調查之一](idh-reference-survey-api-script.md)》第 4 節。
 
