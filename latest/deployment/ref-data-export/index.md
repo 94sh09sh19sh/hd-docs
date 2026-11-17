@@ -53,7 +53,7 @@ ______________________________________________________________________
 
 ### 0.4 開工三行
 
-每一次開 PowerShell 先打（與[《從零部署本系統》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md) V-09 相同）：
+每一次開 PowerShell 先打（與[《從零部署本系統》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-3/index.md) V-09 相同）：
 
 ```
 $root = "C:\hd\hd-tablet-care"
@@ -98,10 +98,10 @@ docker compose --env-file $cfg --profile export run --rm data-export --list
 
 **會怎麼壞**：
 
-| 看到                                  | 原因                    | 處理                                                                                                           |
-| ------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL 指向的資料庫檔案不存在` | 資料卷沒建或名字不對    | [《從零部署本系統》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md) V-13 |
-| `no such service: data-export`        | 這一版 tag 比迭代 28 舊 | 先照[《本系統換版與退回》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-upgrade/index.md)換版  |
+| 看到                                  | 原因                    | 處理                                                                                                             |
+| ------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL 指向的資料庫檔案不存在` | 資料卷沒建或名字不對    | [《從零部署本系統》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-4/index.md) V-13 |
+| `no such service: data-export`        | 這一版 tag 比迭代 28 舊 | 先照[《本系統換版與退回》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-upgrade/index.md)換版    |
 
 ### U-03 選範圍與等級，取出
 

@@ -698,10 +698,10 @@ ______________________________________________________________________
 - **1111 稍晚學長答 `hb` 不用這邊處理**（院方 API 之二 A-5）：檢驗資料那一半（`HospitalLabSyncService`、`docker-compose.lab-files.yml`）程式照留、院內不掛，`HD_LAB_DIR` 留空；之後要讀先重問 I-9、I-12、I-13
 - **合段落有一條契約沒寫的規則**（判斷①）：病人開始之後，舊段落裡沒有紀錄時間的預排列拿掉；開始時間在已經有紀錄之後才改的情形沒處理
 - 讀檔模式的「資料多舊」來自抓取紀錄的 `script_last_success_at`，不是本系統讀成功的時間；看不到狀態檔時退回當月檔的修改時間
-- 透析清單的狀態檔要在透析清單資料夾裡：抓取腳本的 `status_file` 部署時要改（第五次進院任務二之二 A-13）
+- 透析清單的狀態檔要在透析清單資料夾裡：抓取腳本的 `status_file` 部署時要改（第五次進院任務二之三 A-13）
 - Docker Desktop 上 `create_host_path: false` 沒有效、`COMPOSE_FILE=` 空白的一行會讓 compose 讀不到設定檔（1111 實測）
 - 後端路由 226 → 228、資料表 101 → 102、稽核動作 159 → 163、營運參數 46 → 49、遷移多一個；權限、角色、功能開關沒有增減
-- **1111 開會**：三班是 08:00～12:00、13:30～17:30、18:00～22:00，`TREATMENT_SHIFT_START_HOURS` 的 12、17 分得對；提示時段預設值、分班界線同一天做成迭代 32.1（下一小節），抓取腳本時段是《之四》T-15；四小時照班別還是照開始時間待 Q-34 第 4 題，答「照班別」改的是 `plannedDialysisEndMs`。下一次進院同一趟把腳本跑起來、換新 tag、首波上線（第五次進院任務二之二第 0.3 節），新 tag 出發前要整輪重做第三次進院之二
+- **1111 開會**：三班是 08:00～12:00、13:30～17:30、18:00～22:00，`TREATMENT_SHIFT_START_HOURS` 的 12、17 分得對；提示時段預設值、分班界線同一天做成迭代 32.1（下一小節），抓取腳本時段是《之四》T-15；四小時照班別還是照開始時間待 Q-34 第 4 題，答「照班別」改的是 `plannedDialysisEndMs`。下一次進院同一趟把腳本跑起來、換新 tag、首波上線（第五次進院任務二之三第 0.3 節），新 tag 出發前要整輪重做第三次進院之七～之九
 - **1114 學長答《院方 API 之二》15 題**（之二之一第 3.6 節）：F-6 只在 07:00～23:00 抓——T-15 做成 `hd-hospital-fetch` v0.3.0 的 `fetch_hours`（時段外不打院方 API、不寫狀態檔，結束碼 0），狀態檔另加 `non_numeric_id_rows`，測試 72 項；K-2 整個 `API_Fetch` 搬到 C 槽、狀態檔改放指定資料夾（第四次進院 B-14a～B-14c）。學長的去重交接文件是「鍵見過就跳過」，腳本維持「內容變了再寫、讀的人以後面為準」：結束體重、結束血壓、實際脫水量、結束時間是整場共用欄、下機後才回填既有列（1029 探測進行中 34 場全空），跳過的話 `mergeDialysisSegments()` 永遠拿不到結束體重。本系統的程式不必改：K-3、K-4、F-2 的答案都是迭代 32 已經做的
 
 ### 迭代 32.1（1111）：三班時間
@@ -879,7 +879,7 @@ npm run dev                 # api:3000 · nurse:5173 · patient:5174
 
 既有的 `API_PORT` 在正式環境的行為也變了：**開發機留空照舊用 3000，正式環境留空即拒絕啟動**（DEP-37 第 2 項）。
 
-**迭代 11 起院內部署另有一份範本** `deploy/hospital.env.example`，只列 compose 要代換的變數（`HD_IMAGE_TAG`、`HD_BACKUP_DIR`、`HD_CONFIG_DIR`、三個 `HD_*_PORT`、`HD_PUBLIC_API_URL`、`MDM_KIOSK_BASE_URL`、`HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING` 等），逐項填法見部署手冊《`.env` 怎麼填》（1001 起取代第二次進院之二）；迭代 15 多了 `HOSPITAL_API_BASE_URL` 與 `HD_SIMULATION_DEPLOYMENT` 兩個。**compose 不整份倒進容器**（DEP-13），容器要什麼在 `docker-compose.yml` 明寫；`UPDATE_PROBE_URL` 由 compose 直接給 `db:update`。迭代 12 新增 `KIOSK_SHELL_MIN_VERSION`（最低可用外殼版本，留空用程式預設）；`MDM_KIOSK_BASE_URL` 在正式環境**必須是 `https://`**（迭代 14.1 的佈建 QR code 就是它）。迭代 13 起 `LLM_ENDPOINT` 指向 AI 閘道、`LLM_MODEL_ID` 留空，`LLM_TIMEOUT_SECONDS` 要比閘道 `config.yaml` 的逾時大。迭代 15 新增 `HOSPITAL_API_BASE_URL`（院方 API 的端點，**空白就是不抓**，簡易版照人工流程；院內的值不進 repo、不寫進任何文件）與 `SIMULATION_DEPLOYMENT`（compose 由 `HD_SIMULATION_DEPLOYMENT` 帶入，模擬部署填 `yes` 才准位址指向模擬院方 API）。抓取頻率是營運參數，不在 `.env`。迭代 16、17 沒有新增環境變數：跑馬燈的速度與間隔都是營運參數。
+**迭代 11 起院內部署另有一份範本** `deploy/hospital.env.example`，只列 compose 要代換的變數（`HD_IMAGE_TAG`、`HD_BACKUP_DIR`、`HD_CONFIG_DIR`、三個 `HD_*_PORT`、`HD_PUBLIC_API_URL`、`MDM_KIOSK_BASE_URL`、`HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING` 等），逐項填法見部署手冊《`.env` 怎麼填》（1001 起取代第二次進院之七、之八）；迭代 15 多了 `HOSPITAL_API_BASE_URL` 與 `HD_SIMULATION_DEPLOYMENT` 兩個。**compose 不整份倒進容器**（DEP-13），容器要什麼在 `docker-compose.yml` 明寫；`UPDATE_PROBE_URL` 由 compose 直接給 `db:update`。迭代 12 新增 `KIOSK_SHELL_MIN_VERSION`（最低可用外殼版本，留空用程式預設）；`MDM_KIOSK_BASE_URL` 在正式環境**必須是 `https://`**（迭代 14.1 的佈建 QR code 就是它）。迭代 13 起 `LLM_ENDPOINT` 指向 AI 閘道、`LLM_MODEL_ID` 留空，`LLM_TIMEOUT_SECONDS` 要比閘道 `config.yaml` 的逾時大。迭代 15 新增 `HOSPITAL_API_BASE_URL`（院方 API 的端點，**空白就是不抓**，簡易版照人工流程；院內的值不進 repo、不寫進任何文件）與 `SIMULATION_DEPLOYMENT`（compose 由 `HD_SIMULATION_DEPLOYMENT` 帶入，模擬部署填 `yes` 才准位址指向模擬院方 API）。抓取頻率是營運參數，不在 `.env`。迭代 16、17 沒有新增環境變數：跑馬燈的速度與間隔都是營運參數。
 
 > 資料庫檔案與 `BACKUP_DIR` 必須在**專案目錄外的本機磁碟**。相對路徑、專案目錄內、網路路徑、雲端同步資料夾，後端與 seed 一律拒絕啟動。後端是唯一的寫入者：跑 `prisma:migrate`、`db:seed`、`db:restore` 或任何資料修補腳本前，**先停掉後端**。
 

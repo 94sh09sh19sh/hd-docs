@@ -1,21 +1,22 @@
-# 第三次進院（1029）· 接手 v0.3.0、換成 IP、換版之二：開發機才做的演練
+# 第三次進院（1029）· 接手 v0.3.0、換成 IP、換版之七：開發機才做的演練（第 0 節、I-01～I-05）
 
 上層文件：《[第三次進院（1029）· 接手 v0.3.0、換成 IP、換版](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-3-system/index.md)》
 
 > - 狀態：**已照做 1029（第一輪），凍結**。第一輪做到 J-30，I-13～I-15 沒做，判定 `v0.4.0` **還不能**帶進院；結果見《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 11.1 節與《[第三次進院紀錄（1029，部分成功）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/record-3-1029/index.md)》O-02（沒補演練就帶進院）
-> - 從哪幾份舊冊改寫（1117）：第十七冊（1028 新增、1111 首次定版）第 0 節（0.6 節除外）、第 1、2、5、6 節與附錄；第 3、4 節（每一步的模擬差異）改寫進主文件與《[…之一：詳細版](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-3-system-detail/index.md)》各步的 🧪；0.6 節（1116 那一輪照當時的第二十冊演練 `v0.4.0` → `v0.5.0`）收在《[第五次進院（1116）任務二 · 本系統換版上線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-5-system/index.md)》
+> - 從哪幾份舊冊改寫（1117）：第十七冊（1028 新增、1111 首次定版）第 0 節（0.6 節除外）、第 1、2、5、6 節與附錄；第 3、4 節（每一步的模擬差異）改寫進主文件與《[…之一～之六：詳細版](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-3-system-detail/index.md)》各步的 🧪；0.6 節（1116 那一輪照當時的第二十冊演練 `v0.4.0` → `v0.5.0`）收在《[第五次進院（1116）任務二 · 本系統換版上線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-5-system/index.md)》
 > - 編號：`I-xx`（沿用第十七冊）；中間照做的是主文件的 `J-xx`
 > - 1116 起，進院前的開發機演練改照那一趟進院冊主文件的 🧪 行做（1116 是《[第五次進院（1116）任務一 · 抓取腳本上線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-5-api/index.md)》與《第五次進院（1116）任務二 · 本系統換版上線》），開發機由開發端先準備成主機的樣子；這一冊保留為第三次進院前的紀錄
 
+開發機演練共三份（之七～之九），這一份是第 0、1 節；第 2～4 節在《[…之八：開發機才做的演練（I-06～I-12、照主文件做 J-04～J-30）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-3-system-rehearsal-2/index.md)》，第 5、6 節與附錄在《[…之九：開發機才做的演練（I-13～I-17、附錄）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-3-system-rehearsal-3/index.md)》；詳細版是之一～之六。
+
 ## 摘要
 
-- 第三次進院前，在開發機上把主文件整趟演練一次；編號 `I-xx`，沒通過的 tag 不准帶進院
-- 第 1 節準備：打 tag、確認工具、部署金鑰、查開發機的名稱與 IP
-- 第 2 節**重現 1001**：裝 `v0.3.0`、位址用名稱、放行名單故意填錯，親眼看到 `Failed to fetch`
-- 第 3、4 節**照主文件做 J-04～J-30**：每一步的模擬差異寫在那一步的 🧪，指令以詳細版為準
-- 第 5 節模擬部署才做的：模擬院方 API 與 DEP-46 的阻擋、三支 `verify --live`、退回 `v0.3.0` 的演練、十項判定
-- 第 6 節撤除乾淨；附錄是 I、J 與原冊的步驟對照
-- 全程約 6～8 小時，第 2 節到 J-29 同一天做完、中途不換 Wi-Fi
+- 第三次進院前，在開發機上把主文件整趟演練一次；編號 `I-xx`，沒通過 I-16 判定的 tag 不准帶進院
+- 這一份是第 0 節讀之前與第 1 節準備（I-01～I-05）
+- 0.1 節這一輪要證明的七件事；0.2 節第 3、4 節拿印好的詳細版照做 J-04～J-30，指令以詳細版為準
+- 0.3 節要準備的東西、0.4 節要花多久、0.5 節規矩（只用 Git 與 Docker、一律全新 clone、只用虛構資料）
+- 第 1 節準備：打 tag、確認工具、確認沒有上一輪留下的東西、兩把部署金鑰、查開發機的名稱與 IP
+- 全程約 6～8 小時，第 2 節到 J-29 同一天做完、中途不換 Wi-Fi、開發機不睡眠
 
 > **這一冊給誰**：第三次進院之前，要在自己的開發機上先把整趟演練一次的人。沒做過模擬部署、沒碰過 Docker 也看得懂。**做的時候，旁邊放一份印好的詳細版。**
 >
@@ -58,7 +59,7 @@ ______________________________________________________________________
 
 | 東西                                                        | 備註                                                                                                                                                                                    |
 | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 開發機（Windows），裝好 Git for Windows 與 Docker Desktop   | 沒裝的話照《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md)》V-04 的方框裝，裝完重新開機                                          |
+| 開發機（Windows），裝好 Git for Windows 與 Docker Desktop   | 沒裝的話照《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-2/index.md)》V-04 的方框裝，裝完重新開機                                        |
 | 印好的詳細版                                                | 第 3、4 節照它做                                                                                                                                                                        |
 | 印好的演練紀錄第 11 節                                      | 邊做邊填                                                                                                                                                                                |
 | 一支 Android 手機，或醫師給的暫用平板（Galaxy Tab S6 Lite） | 用暫用平板最好：J-29 能順便看字型大小 1.1 會不會撐破畫面（[暫用平板紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/interim-tablet/index.md)第 6 節第 1 項）。**不要原廠重設** |
@@ -116,10 +117,10 @@ git show <新 tag>:services/shell-builder/shell.pin
 
 **怎麼知道成功了**：`ls-remote` 的清單看得到 `<新 tag>` 與 `v0.3.0`；`shell.pin` 是 `SHELL_TAG=v0.3.0`（外殼不換版）。把 `<新 tag>` 與 `git rev-parse <新 tag>` 的 commit 寫進紀錄。1029 第一輪是 `v0.4.0`（`514461a`）。
 
-| 症狀                      | 處置                                                                                                                                                                |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `shell.pin` 不是 `v0.3.0` | 外殼換版了，主文件沒有寫外殼更新的步驟。先停下來，補上《[平板與外殼 App](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-tablet/index.md)》Y-14 再演練 |
-| 演練到一半發現程式要修    | 修好、跑過驗收，**打下一個 tag**（例如 `v0.4.1`），從 I-03 重新演練。**推上去的 tag 不要移動或刪掉重打**：院內與紀錄都靠 tag 名字對版本                             |
+| 症狀                      | 處置                                                                                                                                                                  |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shell.pin` 不是 `v0.3.0` | 外殼換版了，主文件沒有寫外殼更新的步驟。先停下來，補上《[平板與外殼 App](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-tablet-2/index.md)》Y-14 再演練 |
+| 演練到一半發現程式要修    | 修好、跑過驗收，**打下一個 tag**（例如 `v0.4.1`），從 I-03 重新演練。**推上去的 tag 不要移動或刪掉重打**：院內與紀錄都靠 tag 名字對版本                               |
 
 ______________________________________________________________________
 
@@ -260,389 +261,7 @@ Resolve-DnsName (hostname) | Select-Object Name, IPAddress
 
 ______________________________________________________________________
 
-## 2. 把開發機變成「1001 離院時的院內主機」
-
-這一節在開發機上重做一次 1001 那天的部署：`v0.3.0`、位址用名稱、**放行名單填錯**。做完之後，開發機會和院內主機一樣：三個服務在跑、護理端登不進去。
-
-### I-06 建資料夾、開工三行（＝V-09）
-
-**做什麼**
-
-```
-$root = "C:\hd-sim"
-$cfg  = "$root\config\.env"
-New-Item -ItemType Directory -Force "$root\config", "$root\backups" | Out-Null
-Get-ChildItem $root
-```
-
-**怎麼知道成功了**：列出 `backups`、`config` 兩個資料夾。
-
-> ⚠️ PowerShell 關掉再開，要重打 `$root`、`$cfg` 兩行，I-07 之後再加 `cd $root\repo`（就是主文件 J-04 的開工三行，只是根目錄換成 `C:\hd-sim`）。
-
-______________________________________________________________________
-
-### I-07 clone，切到 `v0.3.0`（＝V-11）
-
-**做什麼**
-
-```
-git clone git@github-hd-tablet-care:94sh09sh19sh/hd-tablet-care.git $root\repo
-git clone git@github-hd-kiosk-shell:94sh09sh19sh/hd-kiosk-shell.git $root\hd-kiosk-shell
-cd $root\repo
-git checkout v0.3.0
-git describe --tags
-```
-
-**怎麼知道成功了**：最後一行正好是 `v0.3.0`。一大段 `detached HEAD` 是正常的。
-
-| 症狀                                | 處置                                                                                    |
-| ----------------------------------- | --------------------------------------------------------------------------------------- |
-| `destination path … already exists` | 上一輪沒撤除乾淨，回 I-03                                                               |
-| `Connection reset by … port 22`     | 網路切斷連線。刪掉殘留的資料夾（`Remove-Item -Recurse -Force $root\repo`）再 clone 一次 |
-
-______________________________________________________________________
-
-### I-08 照 1001 的樣子填 `v0.3.0` 的 `.env`
-
-**做什麼**
-
-```
-Copy-Item $root\repo\deploy\hospital.env.example $cfg
-notepad $cfg
-```
-
-這是 `v0.3.0` 的範本，**沒有** `HD_EXPORT_DIR` 與院方 API 那兩行——院內那一份也沒有，J-16 才補。照下面填（`<名稱>` 換成 I-05 的電腦名稱，三處都是；`JWT_SECRET` 用下一段的指令產生）：
-
-```
-HD_IMAGE_TAG=v0.3.0
-
-HD_BACKUP_DIR=C:\hd-sim\backups
-HD_CONFIG_DIR=C:\hd-sim\config
-
-HD_API_PORT=13000
-HD_NURSE_PORT=18080
-HD_PATIENT_PORT=18081
-
-HD_PUBLIC_API_URL=http://<名稱>:13000
-CORS_ORIGINS=http://hd-server:18080
-MDM_KIOSK_BASE_URL=https://<名稱>:18081
-
-HD_SHELL_SRC_DIR=C:\hd-sim\hd-kiosk-shell
-HD_SHELL_SIGNING=dev
-KIOSK_SHELL_MIN_VERSION=
-
-JWT_SECRET=<這一輪產生的那一串>
-JWT_EXPIRES_IN=8h
-
-SUPER_ADMIN_WORK_ID=sim-admin
-SUPER_ADMIN_INITIAL_PASSWORD=Sim-Init-2026
-SUPER_ADMIN_DISPLAY_NAME=模擬部署管理員
-```
-
-其餘各行（備份時間、AI、營運參數）**維持範本的值**。`.env` 各格的意思見《[`.env` 怎麼填之一：開發機演練](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-env-simulation/index.md)》。
-
-產生 `JWT_SECRET`（與院內同一行 PowerShell，不用 Node.js）：
-
-```
-$b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
-```
-
-> 💡 **`CORS_ORIGINS=http://hd-server:18080` 是故意填錯的**：照抄了舊範例的 `hd-server`，就是出發前推測 1001 最可能的原因（《[第二次進院紀錄（1001）之一：為什麼登不進去](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/record-2-1001-login/index.md)》的可能 A）。這一輪要親眼看到這個錯怎麼出現、J-09～J-14 怎麼把它修好。（1029 院內抄到的名單其實是對的，見紀錄 O-01；演練照樣用這個錯來練修法。）
->
-> ⚠️ **`HD_SHELL_SIGNING` 一定是 `dev`**，院內才是 `hospital`。忘了改、已經跑過 `shell-builder` 的話，只能撤除重來（I-17）。
-
-**怎麼知道成功了**
-
-```
-docker compose --env-file $cfg config --quiet
-Select-String -Path $cfg -Pattern '^(HD_IMAGE_TAG|HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BASE_URL|HD_SHELL_SIGNING)='
-```
-
-第一條什麼都沒印；第二條五行，與上面一致（`CORS_ORIGINS` 是 `hd-server`，其他兩個位址是 `<名稱>`）。
-
-______________________________________________________________________
-
-### I-09 建資料卷、建置、建資料庫、啟動（＝V-13～V-16）
-
-**做什麼**（記下開始時間；第四條是一整行）
-
-```
-docker volume create hd-tablet-care-data
-docker volume create hd-tablet-care-keys
-docker compose --env-file $cfg build
-docker compose --env-file $cfg run --rm --no-deps api node apps/api/scripts/prisma-cli.mjs migrate deploy --schema apps/api/prisma/schema.prisma
-docker compose --env-file $cfg up -d
-docker compose --env-file $cfg ps
-curl.exe -s http://localhost:13000/api/health
-```
-
-**怎麼知道成功了**：建置最後 `Image hd-tablet-care:v0.3.0 Built`；建資料庫最後 `All migrations have been successfully applied.`；`ps` 三個服務 `Up`；health 是 `{"status":"ok",…}`。記下結束時間。
-
-| 症狀                    | 處置                                                                   |
-| ----------------------- | ---------------------------------------------------------------------- |
-| `no such host`          | 再打一次                                                               |
-| `api` 一直 `Restarting` | `docker compose --env-file $cfg logs api --tail 30` 看是哪一條設定被拒 |
-
-______________________________________________________________________
-
-### I-10 外殼：建 `shell-builder`、建 APK、備份金鑰、病人端改走 HTTPS（＝V-21～V-24）
-
-**做什麼**（記下開始時間；第一條第一次約 30 分鐘）
-
-```
-docker compose --env-file $cfg --profile shell build shell-builder
-docker compose --env-file $cfg --profile shell run --rm shell-builder
-docker compose --env-file $cfg --profile shell run --rm shell-builder keys-backup
-docker compose --env-file $cfg restart patient-web
-docker compose --env-file $cfg --profile shell run --rm shell-builder keys-info
-```
-
-**怎麼知道成功了**
-
-| 看什麼         | 應該是                                                                                                  |
-| -------------- | ------------------------------------------------------------------------------------------------------- |
-| 第一條最後幾行 | 「✓ 外殼 v0.3.0（…，契約第 1 版）已準備好，相依已下載」                                                 |
-| 第二條         | 「這一次新產生：院內 CA 伺服器憑證（`<名稱>`） APK 簽章金鑰（開發用）」，接著 APK 檔名與三個 SHA-256    |
-| 第三條         | 「已備份：備份目錄/keys/hd-keys-\<時間>.tar.gz」——這一份就是模擬的「1001 那份金鑰備份」，**檔名抄下來** |
-| `keys-info`    | 「伺服器憑證」那一行是 `DNS:<名稱>`                                                                     |
-
-記下結束時間。
-
-______________________________________________________________________
-
-### I-11 AI 閘道（舊版）（＝V-29、V-30）
-
-1001 有沒有做這一步沒記到。這裡**做**，因為這是比較難的情形：J-20 要把一個舊版閘道換成新版。
-
-**做什麼**
-
-```
-New-Item -ItemType Directory -Force $root\config\ai-gateway | Out-Null
-Copy-Item services\ai-gateway\config.hospital.example.yaml $root\config\ai-gateway\config.yaml
-docker compose --env-file $cfg --profile ai build ai-gateway
-docker compose --env-file $cfg --profile ai up -d ai-gateway
-docker compose --env-file $cfg exec -T api node -e "fetch('http://ai-gateway:8000/health').then(async r=>console.log(r.status, await r.text()))"
-```
-
-**怎麼知道成功了**：建置最後 `全部通過`；最後一條印出 `503 {"status":"error","config":"error","detail":"base_url 尚未填寫（推論端點的位址）"}`。
-
-______________________________________________________________________
-
-### I-12 確認重現了 1001
-
-**做什麼**
-
-1. 開發機的瀏覽器開 `http://<名稱>:18080`，用 `sim-admin` / `Sim-Init-2026` 登入。
-1. 在 PowerShell 打放行檢查：
-
-```
-curl.exe -s -i -H "Origin: http://<名稱>:18080" http://<名稱>:13000/api/health | Select-String Access-Control-Allow-Origin
-```
-
-**怎麼知道成功了**：
-
-| 看什麼   | 應該是                               |
-| -------- | ------------------------------------ |
-| 登入     | 登入鈕下面出現 **`Failed to fetch`** |
-| 放行檢查 | **什麼都沒印**                       |
-
-兩個都看到了，開發機就是「1001 離院時的院內主機」。**記下這一刻的時間**，然後**把 PowerShell 關掉**（院內到場時也是開一個新的視窗）。
-
-| 症狀         | 處置                                                                                                   |
-| ------------ | ------------------------------------------------------------------------------------------------------ |
-| 竟然登得進去 | `CORS_ORIGINS` 沒有照 I-08 填成 `hd-server`，或瀏覽器用了 `localhost` 以外的寫法剛好對上。回 I-08 檢查 |
-
-______________________________________________________________________
-
-## 3、4. 照主文件做 J-04～J-30
-
-**從這裡開始，翻開印好的詳細版，從 J-04 一步一步照做到 J-30。** 每一步模擬部署要改的地方與要記下、要確認的東西，寫在那一步的 🧪：主文件是一行，詳細版的「🧪 開發機演練」是完整的；寫「照做」的，就是一字不差照打（`$root` 換成 `C:\hd-sim`）。
-
-- J-01～J-03 跳過（J-01 就是 I-01；J-02 的問題清單照樣在出發前寄）
-- J-08 之前，先照詳細版 J-08 的 🧪 開三條只對私人網路的防火牆規則、把 Wi-Fi 設成「私人」（I-17 撤除時刪規則）
-- J-13 之後與 J-29 之後各多做一件（寫在那兩步的 🧪）
-- J-31～J-33 跳過；J-30 做完回到第 5 節
-
-______________________________________________________________________
-
-## 5. 模擬部署才做的驗收
-
-### I-13 模擬院方 API 接上去，並驗院內的設定擋得住它（＝V-30a 方框、部署規範第 9 章第 8 項）
-
-**做什麼**
-
-1. 讓後端真的去抓模擬院方 API：
-
-```
-notepad $cfg
-```
-
-最後那兩行改成：
-
-```
-HOSPITAL_API_BASE_URL=http://hospital-api-sim:8090/dialysislist.php
-HD_SIMULATION_DEPLOYMENT=yes
-```
-
-存檔，然後：
-
-```
-docker compose --env-file $cfg --profile simulation up -d
-docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe.js
-```
-
-1. 手機開護理端簡易版，**什麼都不碰**，等三分鐘。
-1. 驗「院內的設定擋得住模擬」：`.env` 的 `HD_SIMULATION_DEPLOYMENT=yes` **清空**（等號後面什麼都不留），存檔，然後：
-
-```
-docker compose --env-file $cfg up -d api
-docker compose --env-file $cfg logs --tail 20 api
-```
-
-1. 改回原樣：`HOSPITAL_API_BASE_URL` 與 `HD_SIMULATION_DEPLOYMENT` **兩行都清空**（和院內一樣），存檔，然後：
-
-```
-docker compose --env-file $cfg up -d api
-docker compose --env-file $cfg --profile simulation stop hospital-api-sim
-curl.exe -s http://localhost:13000/api/health
-```
-
-**怎麼知道成功了**
-
-| 哪一步 | 應該是                                                         |
-| ------ | -------------------------------------------------------------- |
-| 1      | 探測印出「模擬標頭：有」，用的是 `.env` 裡的位址，所以沒問位址 |
-| 2      | 床位圖上出現 A1、A2… 與「模擬甲」等虛構病人                    |
-| 3      | 日誌寫**拒絕啟動**，並指出 **DEP-46**                          |
-| 4      | health 正常；院方 API 的兩行都是空白                           |
-
-> 💡 第 3 步就是院內那一道保險：院內主機的 `HD_SIMULATION_DEPLOYMENT` 永遠空白，萬一有人把模擬部署的位址抄過去，後端會拒絕啟動，而不是把假病人寫進院內的資料庫。
-
-______________________________________________________________________
-
-### I-14 跑三支驗收（＝V-31、《從零部署本系統之一：容器路線的原冊》的開發機實測）
-
-**這一步是驗收，不是部署步驟**，也是整輪唯一准用 Node.js 的地方。在**平常寫程式的工作目錄**（不是 `C:\hd-sim\repo`），先切到同一個 tag 再跑：
-
-```
-git switch --detach <新 tag>
-npm run verify:iteration11 -- --live --env-file C:\hd-sim\config\.env
-npm run verify:iteration12 -- --live --env-file C:\hd-sim\config\.env
-npm run verify:iteration13 -- --live --env-file C:\hd-sim\config\.env
-git switch master
-```
-
-**怎麼知道成功了**：三支都全部 ✓。第一支會執行 `down -v` 再 `up -d`，驗證「資料卷不會被 `-v` 刪掉」，**這是刻意的**。
-
-| 症狀     | 處置                                                                                                                                                   |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 某一項 ✗ | 抄下原文。是驗收腳本跟不上新版（例如沒料到 `HD_EXPORT_DIR`），還是新版真的有問題？前者修腳本、後者修程式，**兩種都要打新 tag 重新演練**（I-01 那一列） |
-
-______________________________________________________________________
-
-### I-15 退回 `v0.3.0` 演練（＝詳細版附錄二、W-20）
-
-院內要是新版出問題，靠的就是詳細版附錄二。這裡照它真的退一次。
-
-**做什麼**：翻到詳細版**附錄二**，照做。`<備份檔名>`、`<雜湊>` 用 J-18 抄的那一份。
-
-**怎麼知道成功了**
-
-| 看什麼                                     | 應該是                                                                                                                            |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| 還原輸出                                   | `完整性檢查：ok`、`還原的就是 DATABASE_URL 指向的正本`                                                                            |
-| `docker ps`                                | 三個服務的映像檔是 `hd-tablet-care:v0.3.0`                                                                                        |
-| 手機開 `http://<IP>:18080`，重新整理後登入 | **登得進去**——證明詳細版說的「J-11 已經用 `<IP>` 重建過 `v0.3.0` 的網頁，所以舊版也登得進去」是真的                               |
-| 護理端「新增裝置」                         | J-28 註冊的那台平板不見了（它是更新之後才註冊的，跟著資料一起退回去了）。**這是對的**，正好說明「更新之後寫進去的資料會一起消失」 |
-
-| 症狀                            | 處置                                                                                                            |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| 舊版登不進去，`Failed to fetch` | 詳細版附錄二寫錯了（舊版的網頁裡可能還是 `<名稱>`）。抄下 J-11 那條 `grep` 的結果，**回去改詳細版**，再演練一次 |
-
-______________________________________________________________________
-
-### I-16 寫紀錄、判定能不能帶進院
-
-**做什麼**：把演練紀錄第 11 節填完，逐項對照下表。
-
-| #   | 判定條件                                                      |
-| --- | ------------------------------------------------------------- |
-| 1   | I-12 重現了 1001（`Failed to fetch`、放行檢查空的）           |
-| 2   | J-07 判得出「可能 A」                                         |
-| 3   | J-14 手機登得進去                                             |
-| 4   | J-18 套用 19 個遷移、`更新完成`                               |
-| 5   | J-19 新版登得進去、資料（帳號密碼）留住了                     |
-| 6   | J-26 探測工具跑得動；I-13 擋得住模擬                          |
-| 7   | J-29 平板釘住、護理端看得到                                   |
-| 8   | I-14 三支全部 ✓                                               |
-| 9   | I-15 退回 `v0.3.0` 之後登得進去                               |
-| 10  | 詳細版紙本上圈起來的地方都改回文件了（含詳細版 0.3 節的時間） |
-
-**怎麼知道成功了**：十項都 ✓，紀錄最後一行寫「`<新 tag>` 可以帶進院，＿月＿日」。**有一項 ✗ 就不能帶**：修好、打新 tag、重新演練。
-
-1029 第一輪：第 6 項的 I-13 那一半、第 8、9 項沒做，判定 `v0.4.0` 還不能帶進院（演練紀錄 11.1 節）。
-
-______________________________________________________________________
-
-## 6. 撤除
-
-### I-17 撤除乾淨（＝V-32）
-
-模擬部署做完**一定要撤除**，下一輪才又是從零；也免得開發機一直有服務佔著埠。
-
-**做什麼**
-
-```
-cd C:\hd-sim\repo
-docker compose --env-file C:\hd-sim\config\.env --profile ai --profile shell --profile simulation down
-docker volume rm hd-tablet-care-data hd-tablet-care-keys
-docker images "hd-tablet-care*" --format "{{.Repository}}:{{.Tag}}" | ForEach-Object { docker rmi $_ }
-cd C:\
-Remove-Item -Recurse -Force C:\hd-sim
-```
-
-再開一個**系統管理員身分**的 PowerShell，刪掉 J-08 之前開的防火牆規則：
-
-```
-Get-NetFirewallRule -DisplayName "hd-sim *" -ErrorAction SilentlyContinue | Remove-NetFirewallRule
-```
-
-平板或手機上：
-
-1. 解除固定（輸入 PIN），把「透析照護平板」**解除安裝**。這是開發用金鑰簽的版本，留著的話院內裝院內版時會「套件與現有套件衝突」。
-1. 用的是暫用平板的話：**不要原廠重設**；PIN 與螢幕固定可以留著（院內 J-28 本來就要設）；開發用的 Wi-Fi 可以「忘記」。
-
-**怎麼知道成功了**
-
-```
-docker volume ls --filter name=hd-tablet-care
-docker images "hd-tablet-care*"
-Test-Path C:\hd-sim
-```
-
-前兩條只有標題列，第三條 `False`。
-
-部署金鑰與 `$HOME\.ssh\config` 那兩段**留著**，下一輪繼續用；兩個基底映像（`node`、`eclipse-temurin`）也可以留著。
-
-> ⚠️ **撤除只准在模擬部署做。** 院內主機的撤除會刪掉整個透析中心的紀錄，要院方書面同意，照《[備份、還原與關服務](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-backup-shutdown/index.md)》。
-
-______________________________________________________________________
-
-## 附錄：步驟對照
-
-| 本冊 | 對應                                    | 本冊       | 對應                                                 |
-| ---- | --------------------------------------- | ---------- | ---------------------------------------------------- |
-| I-01 | V-03、W-01、W-02                        | I-10       | V-21～V-24                                           |
-| I-02 | V-04、V-06                              | I-11       | V-29、V-30                                           |
-| I-03 | V-13 方框、V-32                         | I-12       | 《第二次進院紀錄（1001）之一》的 1001 經過與直接原因 |
-| I-04 | V-10、V-20                              | 第 3、4 節 | 主文件與詳細版 J-04～J-30                            |
-| I-05 | V-08                                    | I-13       | V-30a 方框                                           |
-| I-06 | V-09                                    | I-14       | V-31                                                 |
-| I-07 | V-11、V-20                              | I-15       | 詳細版附錄二、W-20                                   |
-| I-08 | V-12、《`.env` 怎麼填之一：開發機演練》 | I-16       | 《從零部署本系統之一：容器路線的原冊》的開發機實測   |
-| I-09 | V-13～V-16                              | I-17       | V-32                                                 |
-
-`V-xx` 在《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md)》、`W-xx` 在《[從零部署本系統之一：容器路線的原冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-detail/index.md)》（W-20 在《[本系統換版與退回](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-upgrade/index.md)》）、`J-xx` 是主文件的步驟。
+下一份：《[…之八：開發機才做的演練（I-06～I-12、照主文件做 J-04～J-30）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-3-system-rehearsal-2/index.md)》；主文件：《[第三次進院（1029）· 接手 v0.3.0、換成 IP、換版](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-3-system/index.md)》
 
 ## 版本歷程
 

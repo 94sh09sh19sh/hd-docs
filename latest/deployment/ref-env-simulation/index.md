@@ -1,14 +1,16 @@
-# `.env` 怎麼填之一：開發機演練
+# `.env` 怎麼填之一：開發機演練（第 0～1 節）
 
 上層文件：《[`.env` 怎麼填](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-env/index.md)》
 
-> **狀態：現行（常備參考）。** 這一份只做一件事：**🧪 開發機演練（模擬部署）時，開發機上那一份 `.env`，每一行要填什麼**。接在《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md)》V-12。🏥 院內的填法看上層。
+> **狀態：現行（常備參考）。** 這一份只做一件事：**🧪 開發機演練（模擬部署）時，開發機上那一份 `.env`，每一行要填什麼**。接在《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-4/index.md)》V-12。🏥 院內的填法看上層。
 >
 > **從哪幾份舊冊改寫（1117）**：第十五冊之二全部，逐項對到 `v0.5.0` 的 `deploy\hospital.env.example`（模擬讀檔改成主要做法、讀檔四行與 `COMPOSE_FILE` 寫進「填好的樣子」、差異總表補上讀檔那幾列）。
 >
 > **編號**：沒有步驟編號；節號沿用第十五冊之二（1.1～1.10），差異總表在第 5 節。
+>
+> **分成兩份**（1118 拆，每份 300 行內）：本份是第 0～1 節（開始之前、逐項填）；《[`.env` 怎麼填之二：開發機演練（第 2～5 節）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-env-simulation-2/index.md)》是第 2～5 節（填好的樣子、填完之後核對、開發機的 IP 變了、與院內的差異總表）。
 
-模擬部署的意思是：在自己的開發機上，用與院內**一字不差的指令**從零部署一次（《[部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)》DEP-22，《[從零部署本系統之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-detail/index.md)》第 7 節）。所以 `.env` 用的是**同一份範本、同一批變數**，只是值換成開發機的。
+模擬部署的意思是：在自己的開發機上，用與院內**一字不差的指令**從零部署一次（《[部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)》DEP-22，《[從零部署本系統之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-detail-2/index.md)》第 7 節）。所以 `.env` 用的是**同一份範本、同一批變數**，只是值換成開發機的。
 
 1001 起與第十四冊之二最大的不同：
 
@@ -23,11 +25,11 @@
 ## 摘要
 
 - 🧪 開發機那一份 `.env` 每一行要填什麼；同一份範本、同一批變數，值換成開發機的
-- 三個位址用開發機 Wi-Fi 網卡的區網 IP（用 `localhost` 永遠練不到 1001 卡住的登入問題）
+- 三個位址用開發機 Wi-Fi 網卡的區網 IP（用 `localhost` 永遠練不到 1001 卡住的登入問題）；先查好 tag 與 IP（0.3 節）
 - 與院內不同、一定要改的：根目錄 `C:\hd-sim`、`HD_SHELL_SIGNING=dev`、`HD_SIMULATION_DEPLOYMENT=yes`、`SUPER_ADMIN_*` 用虛構值
 - 院方資料（1.9）：主要做法是模擬讀檔（`docker-compose.hospital-files-sim.yml`），跟院內同一條路；直接打模擬院方 API 是舊做法，仍可用
 - `v0.5.0` 範本第 98 行斷掉的註解一樣要刪（上層 0.1 節）
-- 第 2～3 節填好的樣子、填完核對；第 4 節開發機的 IP 變了；第 5 節與院內的差異總表
+- 填好的樣子、核對、開發機的 IP 變了、與院內的差異總表在之二
 
 ## 0. 開始之前
 
@@ -39,7 +41,7 @@
 | `C:\hd-sim\config\.env`                      | 這次模擬部署的**設定**      | **要填的就是這一份**                                                                               |
 | 你平常開發的工作目錄裡的 `.env`              | 日常開發（`npm run dev`）用 | **不要碰，也不要拿來抄**。變數名稱不同，而且它的 `LLM_PROVIDER=lab` 之類的值在這裡會讓後端拒絕啟動 |
 
-開檔的指令（V-12，先輸入《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md)》V-09 的開工三行，`$root` 是 `C:\hd-sim`）：
+開檔的指令（V-12，先輸入《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-3/index.md)》V-09 的開工三行，`$root` 是 `C:\hd-sim`）：
 
 ```
 Copy-Item $root\repo\deploy\hospital.env.example $cfg
@@ -56,7 +58,7 @@ notepad $cfg
 
 模擬部署的值幾乎都是固定的，只有兩件要自己查：
 
-**一、要測的 tag**：《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md)》V-03 準備的那一個，也就是 V-11 `git describe --tags` 印出來的。
+**一、要測的 tag**：《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-2/index.md)》V-03 準備的那一個，也就是 V-11 `git describe --tags` 印出來的。
 
 **二、開發機的區網 IP**——這就是模擬部署的 `<主機>`（V-08），三個位址都用它：
 
@@ -91,7 +93,7 @@ ______________________________________________________________________
 | `HD_CONFIG_DIR` | `C:\hd-sim\config`        | ✓ 同上                                                                                                                                         |
 | `HD_EXPORT_DIR` | `C:\hd-sim\export`        | ✓ 同上；與備份資料夾分開（1027 迭代 28 起，《[取出資料](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-data-export/index.md)》） |
 
-- 要測更新演練時，會另打一個測試 tag（《[從零部署本系統之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-detail/index.md)》第 7 節），那時照《[本系統換版與退回](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-upgrade/index.md)》W-19 把 `HD_IMAGE_TAG` 改成測試 tag。
+- 要測更新演練時，會另打一個測試 tag（《[從零部署本系統之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-detail-2/index.md)》第 7 節），那時照《[本系統換版與退回](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-upgrade/index.md)》W-19 把 `HD_IMAGE_TAG` 改成測試 tag。
 - 目錄一樣**不要放在 OneDrive 或 `C:\Users\<帳號>\` 底下的桌面／文件／下載**。模擬部署要練的就是院內那套規矩。
 
 ### 1.2 連接埠
@@ -196,7 +198,7 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 
 - **A**：改完 `docker compose --env-file $cfg --profile simulation up -d`，等 3 分鐘再跑讀檔檢查，「模擬標記檔：有」是對的。`HD_DIALYSIS_LIST_DIR`、`HD_LAB_DIR` 留空（那是院內的主機路徑，模擬的路徑由 `docker-compose.hospital-files-sim.yml` 自己帶）
 - **B**：先做過 A，再把模擬的檔複製到帶空白與中文的資料夾、照院內的掛法掛一次（指令在《[讀檔：啟用、檢查、停用](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-dialysis-files/index.md)》，1116 演練的 SY-10 B2）。讀檔檢查要「在、讀得到」「唯讀：是」「模擬標記檔：有」。這份是複製出來的、不會再更新，之後出現「未更新」提示是正常的
-- **C**：1005～1109 的做法，院內已不用，留給對照舊紀錄與練直接探測（《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md)》V-30a 的舊做法一節）
+- **C**：1005～1109 的做法，院內已不用，留給對照舊紀錄與練直接探測（《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-6/index.md)》V-30a 的舊做法一節）
 - 不管哪一種，compose 都把後端固定成正式環境設定；**沒有 `HD_SIMULATION_DEPLOYMENT=yes`**，C 是後端拒絕啟動（指出 DEP-46），A、B 是同步時整次作廢（「院方資料同步」卡最新一列「拒收（正式環境收到模擬資料）」、資料庫一筆都沒多）。院內就是靠這一條擋住抄錯的設定，演練會故意清空它驗一次（SY-M1）
 - `HOSPITAL_API_BASE_URL` 與 `HD_DIALYSIS_LIST_DIR` 兩個都填，後端拒絕啟動——與院內一樣
 
@@ -208,127 +210,9 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 
 ______________________________________________________________________
 
-## 2. 填好的樣子
-
-只有四處要換成你自己的：`HD_IMAGE_TAG`、三個位址裡的 IP（同一個）、`JWT_SECRET`。其餘照抄即可。下面是\*\*已接上模擬讀檔（1.9 的 A）\*\*的樣子；V-12 剛填時，`COMPOSE_FILE` 那一行先維持範本的註解：
-
-```
-HD_IMAGE_TAG=v0.5.0
-
-HD_BACKUP_DIR=C:\hd-sim\backups
-HD_CONFIG_DIR=C:\hd-sim\config
-HD_EXPORT_DIR=C:\hd-sim\export
-
-HD_API_PORT=13000
-HD_NURSE_PORT=18080
-HD_PATIENT_PORT=18081
-
-HD_PUBLIC_API_URL=http://192.0.2.23:13000
-CORS_ORIGINS=http://192.0.2.23:18080
-MDM_KIOSK_BASE_URL=https://192.0.2.23:18081
-
-HD_SHELL_SRC_DIR=C:\hd-sim\hd-kiosk-shell
-HD_SHELL_SIGNING=dev
-KIOSK_SHELL_MIN_VERSION=
-
-JWT_SECRET=<這一輪產生的那一串>
-JWT_EXPIRES_IN=8h
-
-SUPER_ADMIN_WORK_ID=sim-admin
-SUPER_ADMIN_INITIAL_PASSWORD=Sim-Init-2026
-SUPER_ADMIN_DISPLAY_NAME=模擬部署管理員
-
-BACKUP_DAILY_AT=03:00
-DB_DISK_MIN_FREE_MB=1024
-
-LLM_PROVIDER=mock
-LLM_ENDPOINT=
-LLM_API_KEY=
-LLM_MODEL_ID=
-LLM_TIMEOUT_SECONDS=150
-LLM_HEALTH_TIMEOUT_SECONDS=5
-
-HD_DIALYSIS_LIST_DIR=
-HD_LAB_DIR=
-COMPOSE_FILE=docker-compose.yml;docker-compose.hospital-files-sim.yml
-HOSPITAL_LAB_FIELD_MAP=
-
-HOSPITAL_API_BASE_URL=
-HD_SIMULATION_DEPLOYMENT=yes
-
-BINDING_MAX_HOURS=6
-BINDING_EXPIRY_SWEEP_SECONDS=60
-SYMPTOM_TREND_WINDOW_DAYS=30
-SYMPTOM_TREND_REPORT_LIMIT=10
-DEVICE_ONLINE_THRESHOLD_SECONDS=90
-REALTIME_HEARTBEAT_SECONDS=20
-```
-
 ______________________________________________________________________
 
-## 3. 填完之後核對
-
-與院內用同樣的三條（上層第 3 節）：
-
-```
-docker compose --env-file $cfg config --quiet
-Select-String -Path $cfg -Pattern '^[^#].*(<|>|hd-server|localhost)'
-Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BASE_URL)='
-```
-
-前兩條什麼都沒印出來才算過（第二條只看不是 `#` 開頭的行）；第三條印出三行，IP 都相同。第一條印出 `failed to read …\.env: line N: …` 就是 0.1 節那一行斷掉的註解還在。再用眼睛核對：
-
-- `HD_IMAGE_TAG` 與 `git describe --tags` 相同
-- 三個目錄都在 `C:\hd-sim\` 底下
-- 三個埠是 `13000`、`18080`、`18081`（或你 V-07 換過的），而且與位址裡的埠對得上
-- 三個位址都是 **Wi-Fi 那張網卡的 IP**，一字不差；`MDM_KIOSK_BASE_URL` 是 **`https://`**
-- **`HD_SHELL_SIGNING=dev`**
-- `LLM_PROVIDER=mock`
-- **`HD_SIMULATION_DEPLOYMENT=yes`**；院方資料那六行是 1.9 表上同一欄的樣子（A：`COMPOSE_FILE` 帶 `docker-compose.hospital-files-sim.yml`、`HOSPITAL_API_BASE_URL` 空白；C：`HOSPITAL_API_BASE_URL` 指向 `hospital-api-sim`）
-- `HD_LAB_DIR` 空白，`COMPOSE_FILE` 裡沒有 `docker-compose.lab-files.yml`
-- **沒有** `HIGH_RISK_WRITTEN_CONFIRMATION` 這一行（1010 迭代 18.1 起拿掉）
-- 整份沒有任何一個值加了引號
-
-______________________________________________________________________
-
-## 4. 開發機的 IP 變了
-
-換了 Wi-Fi、隔天重新連線，IP 都可能變。症狀是護理端登入 `Failed to fetch`、手機開不到下載頁，或外殼一片空白。
-
-| 情況                 | 做什麼                                                                                                                                                                                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 還在同一輪模擬部署中 | 三個位址的 IP 一起改 → `docker compose --env-file $cfg build` → `up -d`（`HD_PUBLIC_API_URL` 寫在網頁檔案裡，要重建）→ 重跑 `shell-builder`（V-22，它發現位址變了會重簽伺服器憑證）→ `restart patient-web`（V-24）→ 手機上的 App「清除資料」，重新註冊、佈建 |
-| 這一輪已經做完       | 不必管，V-32 撤除就好。下一輪重新查 IP 再填                                                                                                                                                                                                                  |
-
-這一段在院內**不該發生**：院內的位址擇一之後就不再換（V-08）。模擬部署碰到一次，正好體會為什麼——改一個 IP，要重建網頁、重簽憑證、每一台平板重新佈建。
-
-______________________________________________________________________
-
-## 5. 與院內的差異總表（🧪／🏥）
-
-帶進院之前再看一次這張表：**🧪 那一欄的每一個值，都不可以出現在院內那份 `.env` 裡**——只有三個埠例外，兩邊剛好相同；空白的幾項兩邊也相同。
-
-| 變數                                                                  | 🏥 院內正式主機                                                                       | 🧪 開發機演練                                                                   |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_EXPORT_DIR`、`HD_SHELL_SRC_DIR` | `C:\hd\hd-tablet-care\…`（1001 起院內實際用的；`HD_EXPORT_DIR` 1027 起才有）          | `C:\hd-sim\…`                                                                   |
-| 三個埠                                                                | `13000`、`18080`、`18081`（0930 資訊室確認）                                          | 相同（例外）                                                                    |
-| 三個位址的主機                                                        | V-08 定的院內固定 IP（1029 起）                                                       | 開發機的 Wi-Fi IP                                                               |
-| `HD_SHELL_SIGNING`                                                    | **`hospital`**                                                                        | **`dev`**                                                                       |
-| `HD_DIALYSIS_LIST_DIR`（1111）                                        | 從零部署時空白；啟用讀檔後 `C:\API_Fetch\IDH_interface`（1116 起院內現況）            | 空白（1.9 的 A）；練院內那種路徑時 `C:\hd-sim\…`（B）                           |
-| `HD_LAB_DIR`、`HOSPITAL_LAB_FIELD_MAP`（1111）                        | 空白（`hb` 先不讀）                                                                   | 空白                                                                            |
-| `COMPOSE_FILE`（1111）                                                | 從零部署時維持註解；啟用讀檔後 `docker-compose.yml;docker-compose.dialysis-files.yml` | `docker-compose.yml;docker-compose.hospital-files-sim.yml`（A）；B 與院內同一種 |
-| `HOSPITAL_API_BASE_URL`（1005）                                       | **一律空白**（1110 起不打院方 API；1005～1109 是「只探測、探測過報備過才填」）        | 空白（A、B）；舊做法 C 是 `http://hospital-api-sim:8090/dialysislist.php`       |
-| `HD_SIMULATION_DEPLOYMENT`（1005）                                    | **永遠空白**                                                                          | **`yes`**                                                                       |
-| ~~`HIGH_RISK_WRITTEN_CONFIRMATION`（1010）~~                          | 18.1 起不在設定檔：書面確認拿到後在系統管理登記                                       | 18.1 起不在設定檔：**永遠不登記**                                               |
-| `JWT_SECRET`                                                          | 院內當場產生                                                                          | 每一輪各自產生                                                                  |
-| `SUPER_ADMIN_*`                                                       | 護理長給的工號與名字、臨時密碼                                                        | `sim-admin` 之類的虛構值                                                        |
-| 其他                                                                  | 相同                                                                                  | 相同                                                                            |
-
-兩邊**形狀相同**的地方也值得記住：三個位址都是「同一個別人連得到的主機」，護理端都用 `http://<主機>:18080` 開，都不用 `localhost`；讀檔都是唯讀掛一個資料夾、都用讀檔檢查驗。
-
-> ⚠️ **不要把模擬部署的 `.env` 複製到院內再改。** 從院內主機上的範本重新複製、照上層一項一項填（院內主機上已經有一份就照上層第 6 節核對）。抄過去最常漏改的是 `HD_SHELL_SIGNING`，而它一旦讓院內主機產生了開發用金鑰，就要撤掉資料卷重來；其次是 `HD_SIMULATION_DEPLOYMENT=yes`，留著它院內就擋不住模擬資料。
-
-______________________________________________________________________
+下一份：《[`.env` 怎麼填之二：開發機演練（第 2～5 節）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-env-simulation-2/index.md)》｜[部署手冊目錄](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)
 
 ## 版本歷程
 

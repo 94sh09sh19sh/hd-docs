@@ -4,7 +4,7 @@
 >
 > 1117 由舊第二十三冊附錄二（停用讀檔）、第二十四冊附錄二（停用之後已寫進主機的資料）、第二十冊附錄三（停用讀檔）、第二十三、二十四冊 SY-09～SY-11 裡之後還會用到的檢查，與第十五冊 V-30a 的讀檔檢查改寫；以 `apps/api` 的讀檔程式、`docker-compose.dialysis-files.yml`、`deploy/hospital.env.example`（master）核對。
 >
-> 編號 `DF-xx` 是這一份新給的；舊冊的 `SY-09`～`SY-11` 照舊是第五次進院那一趟的步驟，在《[第五次進院（1116）任務二 · 本系統換版上線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-5-system/index.md)》。
+> 編號 `DF-xx` 是這一份新給的；舊冊的 `SY-09`～`SY-11` 照舊是第五次進院那一趟的步驟，在《[第五次進院（1116）任務二 · 本系統換版上線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-5-system-2/index.md)》。
 >
 > **公開範圍**：指定資料夾以外的院內路徑、病人的值不寫；讀檔檢查只印結構與統計，整段可以抄進紀錄。現場值記在私人 repo 的 deploy/records//。
 
@@ -84,7 +84,7 @@ HOSPITAL_API_BASE_URL=
 HD_SIMULATION_DEPLOYMENT=yes
 ```
 
-🧪 這一組要用 `docker compose --env-file $cfg --profile simulation up -d` 起，等 3 分鐘再做 DF-03。練院內那種掛法（路徑帶空白與中文、複製一份模擬的檔出來）的步驟是第五次進院演練的 SY-10 B2，在《[第五次進院（1116）任務二 · 本系統換版上線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-5-system/index.md)》。
+🧪 這一組要用 `docker compose --env-file $cfg --profile simulation up -d` 起，等 3 分鐘再做 DF-03。練院內那種掛法（路徑帶空白與中文、複製一份模擬的檔出來）的步驟是第五次進院演練的 SY-10 B2，在《[第五次進院（1116）任務二 · 本系統換版上線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-5-system-2/index.md)》。
 
 ### DF-03 套用、讀檔檢查
 

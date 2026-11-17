@@ -2,12 +2,20 @@
 
 > - 狀態：**已照做 0922，凍結**，C 級失敗，結果見《[第一次進院紀錄（0922，失敗）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/record-1-0922/index.md)》；安裝包路線 0926 撤除，這一趟的做法是歷史，現行做法看《[從零部署本系統](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md)》
 > - 1117 由舊的第四冊（不含 H-08～H-13 的安裝步驟）、第九冊與舊總覽第 1、4 節（當時的已知空白與時程）改寫
-> - 編號：沿用 `H-xx`（進院當天）與 `D-xx`（git clone＋Docker 路線）；🧪 對應的開發端彩排是 `R-xx`，在《[安裝包路線之一：建置與開發端彩排](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-build/index.md)》
+> - 編號：沿用 `H-xx`（進院當天）與 `D-xx`（git clone＋Docker 路線）；🧪 對應的開發端彩排是 `R-xx`，在《[安裝包路線之三～之五：建置與開發端彩排](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-build-3/index.md)》
 
-子文件：
+這一套分成主文件兩份、子文件八份，第 1 份（本份）就是索引：
 
-- 《[之一：進院當天詳細版](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-onsite/index.md)》（`H-xx`）
-- 《[之二：git clone＋Docker 路線詳細版](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-docker/index.md)》（`D-xx`）
+- 主文件第 1 份（本份）：第 0～5 節，進院前 D-01～D-04、進院當天 H-01～H-07、路線分岔 H-08～H-13
+- 主文件《[第 2 份](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-2/index.md)》：第 6～9 節，容器路線 D-05～D-26、回到 H 的 H-14～H-24、隨時可以停手
+- 《[之一：進院當天詳細版（H-01～H-13）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-onsite/index.md)》：當天的形狀、出門前、抵達、進到主機前面、路線 A 與路線 B 的指路
+- 《[之二：進院當天詳細版（H-14～H-15）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-onsite-2/index.md)》：Windows 五件事（含自己做的時候）、防火牆與從護理站連進來
+- 《[之三：進院當天詳細版（H-16～H-24）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-onsite-3/index.md)》：驗證、交接、離院前、隨時可以停手
+- 《[之四：git clone＋Docker 路線詳細版（第 0 節、D-01～D-04）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-docker/index.md)》：規則哪些變、東西放哪、0921 開發端演練、進院前四步
+- 《[之五：git clone＋Docker 路線詳細版（D-05～D-12）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-docker-2/index.md)》：進院當天先確認 Docker 這一層、取得程式碼
+- 《[之六：git clone＋Docker 路線詳細版（D-13～D-18）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-docker-3/index.md)》：建置映像檔、設定與資料
+- 《[之七：git clone＋Docker 路線詳細版（D-19～D-27）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-docker-4/index.md)》：啟動與驗證、收掉連線與憑證、回到進院當天詳細版
+- 《[之八：git clone＋Docker 路線詳細版（第 9～12 節）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-docker-5/index.md)》：關服務、之後的更新回退與還原、疑難排解、離院前多五條
 
 這是簡易版：每一步只寫做什麼、怎樣算成功；為什麼、完整指令、出錯處置在子文件同一個編號底下。
 
@@ -49,20 +57,20 @@
 
 ## 2. 時程：從當時到進院
 
-| 時點         | 做什麼                                                                                      | 在哪                                                                                                                                          |
-| ------------ | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **D-14**     | 把 Q-27 與 Q-29 的問題清單寄給資訊室（**不要等到現場才問**）；容器路線的 9 題一起寄（D-03） | H-03、H-04                                                                                                                                    |
-| **D-10**     | 決定主機位址（DNS 名稱或 IP）→ 產生院內 CA 與伺服器憑證                                     | K-01～K-02，《[安裝包路線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer/index.md)》                                 |
-| **D-7**      | 編譯外殼 App、建立 keystore、模擬器跑通                                                     | K-03～K-05，《安裝包路線》                                                                                                                    |
-| **D-3**      | 建置安裝包、驗收五項、開發端掃毒                                                            | 《[安裝包路線之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-build/index.md)》P-xx                               |
-| **D-2**      | **在一台乾淨機器上完整演練一次**（這一步不能省）                                            | 《安裝包路線之一》R-xx；容器路線 D-02                                                                                                         |
-| **D-1**      | 打包實體物品、列印紙本、隨身碟備妥                                                          | C-01～C-04（隨身碟在《安裝包路線》，其餘在《[進院通則](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-visit-rules/index.md)》） |
-| **D 日**     | 進院                                                                                        | 本冊第 4～8 節                                                                                                                                |
-| **D+0 晚上** | **當天就把紀錄補完**，趁記憶還熱                                                            | H-24（舊總覽寫成 H-19，是筆誤）                                                                                                               |
+| 時點         | 做什麼                                                                                      | 在哪                                                                                                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **D-14**     | 把 Q-27 與 Q-29 的問題清單寄給資訊室（**不要等到現場才問**）；容器路線的 9 題一起寄（D-03） | H-03、H-04                                                                                                                                                                                                         |
+| **D-10**     | 決定主機位址（DNS 名稱或 IP）→ 產生院內 CA 與伺服器憑證                                     | K-01～K-02，《[安裝包路線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer/index.md)》                                                                                                      |
+| **D-7**      | 編譯外殼 App、建立 keystore、模擬器跑通                                                     | K-03～K-05，《安裝包路線》                                                                                                                                                                                         |
+| **D-3**      | 建置安裝包、驗收五項、開發端掃毒                                                            | 《[安裝包路線之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-build/index.md)》《[之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-build-2/index.md)》P-xx |
+| **D-2**      | **在一台乾淨機器上完整演練一次**（這一步不能省）                                            | 《安裝包路線之三～之五》R-xx；容器路線 D-02                                                                                                                                                                        |
+| **D-1**      | 打包實體物品、列印紙本、隨身碟備妥                                                          | C-01～C-04（隨身碟在《安裝包路線》，其餘在《[進院通則](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-visit-rules/index.md)》）                                                                      |
+| **D 日**     | 進院                                                                                        | 本冊第 4～8 節                                                                                                                                                                                                     |
+| **D+0 晚上** | **當天就把紀錄補完**，趁記憶還熱                                                            | H-24（舊總覽寫成 H-19，是筆誤）                                                                                                                                                                                    |
 
 > **0926 起上表作廢**，時程改成：D-14 寄出《容器路線的原冊》W-03 的問題清單 → D-3 要交的 tag 在開發機從零實測（W-01、《容器路線的原冊》第 7 節）→ D-2 確認 tag 在 GitHub 上（W-02）→ D 日照《容器路線的原冊》W-04 起。平板那幾列等迭代 12 改寫（0927 改寫成今天的《[平板與外殼 App](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-tablet/index.md)》）。
 
-**D-2 那次演練是整條時程裡最不該省的一步。** 理由在《安裝包路線之一》R-xx 開頭：迭代 10 的兩個缺陷，都是把安裝包真的跑起來才現形的，靜態檢查一個都抓不到。
+**D-2 那次演練是整條時程裡最不該省的一步。** 理由在《安裝包路線之三》R-xx 開頭：迭代 10 的兩個缺陷，都是把安裝包真的跑起來才現形的，靜態檢查一個都抓不到。
 
 0922 教訓（F-05、F-19）：院方有可能臨時改要求，進院前就要把容器路線 D-01～D-04 的準備做完，不管用不用得到。
 
@@ -78,7 +86,7 @@
 
 - **做什麼**：🧪 乾淨的 Windows 機器（R-01 的標準）裝好 Docker Desktop，從 D-11 做到 D-23，全程計時
 - **成功**：三個容器 `Up`、存活檢查 200；另一台電腦登得進護理端；重新開機一次看 D-26 的結果
-- 🧪 R-xx 是安裝包路線的同一件事：R-01 乾淨機器 → R-02 斷網 → R-03 隨身碟 → R-04、R-05 雜湊與驗收五項 → R-06～R-09 目錄、帳號、`.env`、時區 → R-10～R-16 遷移、服務、另一台機器連入、權限、重新開機 → R-17、R-18 冒煙 → R-19～R-21 更新與回退 → R-22～R-24 耗時、紀錄、留著機器（《[安裝包路線之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-build/index.md)》）
+- 🧪 R-xx 是安裝包路線的同一件事：R-01 乾淨機器 → R-02 斷網 → R-03 隨身碟 → R-04、R-05 雜湊與驗收五項 → R-06～R-09 目錄、帳號、`.env`、時區 → R-10～R-16 遷移、服務、另一台機器連入、權限、重新開機 → R-17、R-18 冒煙 → R-19～R-21 更新與回退 → R-22～R-24 耗時、紀錄、留著機器（《[安裝包路線之三～之五](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-build-3/index.md)》）
 
 ### D-03 把 Docker 的問題清單事先寄給資訊室
 
@@ -141,7 +149,7 @@
 
 - **做什麼**：`git clone`、`npm install`，每一步計時、抄錯誤原文（步驟在《[安裝包路線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer/index.md)》）
 - **成功**：每一步都失敗，錯誤原文與耗時都抄下來
-- 岔路：`git clone` 成功 → 《[安裝包路線之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-git-clone/index.md)》G-01；**院方指定 clone 之後用 Docker 部署 → 第 6 節 D-05**
+- 岔路：`git clone` 成功 → 《[安裝包路線之六](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer-git-clone/index.md)》G-01；**院方指定 clone 之後用 Docker 部署 → 第 6 節 D-05**
 - 🧪 R-02 斷網，彩排不做路線 A
 - 0922 實際：院方當天要求以容器部署，走第 6 節；主機連得到院外，路線 A 的前提不成立（F-07）
 
@@ -152,210 +160,7 @@
 - 🧪 R-04、R-08、R-10、R-07、R-11、R-12
 - 0922 實際：沒走這一段
 
-## 6. 容器路線（院方要求容器時，取代 H-08～H-13）
-
-全部指令都在**主機的 PowerShell** 下，不要自己先開任何容器（0922 的教訓，F-01）。
-
-### D-05 開場時說清楚這條路線的代價
-
-- **做什麼**：對資訊室講三句話：建置要在這台機器上做所以要開一段對外連線、資料庫在 Docker 資料卷裡看不到、重新開機後要有人登入 Windows 系統才會回來
-- **成功**：對方對第三句給出明確答案，不是「應該沒問題」
-- 🧪 D-02 從 D-11 做起，D-05～D-10 不做
-- 0922 實際：沒做（F-06）
-
-### D-06 取得書面例外
-
-- **做什麼**：照 G-09 那張表加五列（部署形態、例外條款 DEP-11 與 DEP-04、允許連線的來源、Docker 授權、重新開機後的啟動方式）請對方簽名
-- **成功**：手上有一張簽了名的紙
-- 0922 實際：沒有
-
-### D-07 確認 Docker 可以用
-
-- **做什麼**：`docker version`、`docker info`、`docker compose version`、`wsl --status`
-- **成功**：Client 與 Server 都有版本；`OSType` 是 `linux`；Compose v2 以上；WSL 預設版本 2
-- 🏥 0922：Docker Desktop 4.67.0、Engine 29.3.1、Compose `v5.1.1`
-
-### D-08 Docker Desktop 的四項設定，以及防毒排除
-
-- **做什麼**：登入時自動啟動打勾、使用統計不勾、自動更新不勾、虛擬磁碟位置改到本系統自己的路徑；請資訊室把虛擬磁碟目錄加入防毒排除
-- **成功**：四項都是該有的值並抄下；防毒排除清單看得到那個目錄
-- 🏥 同機有別的專案在用 Docker 時，第 4 項不要動；從 Microsoft Store 裝的，更新由市集決定（0922 就是，F-16）
-
-### D-09 確認誰能下 docker 指令
-
-- **做什麼**：`Get-LocalGroupMember -Group "docker-users"`
-- **成功**：名單只有系統管理員與負責這個系統的人，寫進交接
-
-### D-10 對外連線實測
-
-- **做什麼**：資訊室開好連線後，對 `github.com`、三個 Docker Hub 網域、`deb.debian.org`（埠 80）、`registry.npmjs.org`、`binaries.prisma.sh` 逐一 `Test-NetConnection`
-- **成功**：七個 `TcpTestSucceeded` 都是 `True`
-- 🧪 開發機本來就連得出去
-
-### D-11 clone 到固定目錄
-
-- **做什麼**：`C:\hd` 底下 `git -c credential.helper= clone`，密碼貼 D-04 的權杖
-- **成功**：`C:\hd\hd-tablet-care\` 裡看得到 `Dockerfile` 與 `docker-compose.yml`
-
-### D-12 切到交付單上的那一版
-
-- **做什麼**：`git checkout <交付單上的 commit>`，看 `git log -1`、`git status --short`、`git remote -v`
-- **成功**：commit 與交付單一字不差、沒有變更、網址裡沒有權杖
-
-### D-13 決定位址與三個連接埠
-
-- **做什麼**：定主機位址（護理站與平板連得到的那一個）與 `HD_API_PORT`、`HD_NURSE_PORT`、`HD_PATIENT_PORT`，確認三個埠沒人用
-- **成功**：四個值抄下；查埠那行什麼都沒印
-- 🏥 0922：3000、9000 已被佔用，後端埠要另挑（F-03）
-
-### D-14 建置
-
-- **做什麼**：`docker build --build-arg VITE_API_BASE_URL=http://<主機位址>:<HD_API_PORT> -t hd-tablet-care:<版本>-<commit 前 7 碼> .`，預留 30 分鐘
-- **成功**：最後出現 `naming to docker.io/library/hd-tablet-care:<標籤> done`，整段沒有 `prisma:warn`
-- 🧪 開發機有快取約 1～2 分鐘
-
-### D-15 確認映像檔，以及位址寫對了
-
-- **做什麼**：`docker image ls hd-tablet-care`，在映像檔裡 grep 主機位址
-- **成功**：列出剛才的標籤；grep 印出兩個檔名（`nurse-pwa`、`patient-pwa` 各一）
-
-### D-16 建立 `.env`
-
-- **做什麼**：`.env.example` 複製成 `.env`，只填映像檔標籤、備份目錄、三個埠、`CORS_ORIGINS`、`MDM_KIOSK_BASE_URL`、`JWT_SECRET`（在主機上產生）、`SUPER_ADMIN_*`
-- **成功**：`docker compose config --quiet` 沒有任何輸出
-
-### D-17 建立資料卷與備份目錄
-
-- **做什麼**：`docker volume create hd-tablet-care-data`，建備份目錄
-- **成功**：`docker volume inspect` 印出 `hd-tablet-care-data local`
-- 🏥 0922 主機 D 槽只剩約 4.6%、E 槽是 RAM 磁碟，備份目錄不能照例子放 D 槽
-
-### D-18 套用既有遷移
-
-- **做什麼**：`docker compose run --rm --no-deps api node apps/api/scripts/prisma-cli.mjs migrate deploy ...`，在啟動之前做
-- **成功**：最後一行 `All migrations have been successfully applied.`；再跑一次是 `No pending migrations to apply.`
-
-### D-19 啟動
-
-- **做什麼**：`docker compose up -d`、`docker compose ps`、存活檢查、看 `api` 紀錄檔
-- **成功**：三個容器過一分鐘仍是 `Up`；存活檢查 200；紀錄檔有 `後端服務已啟動` 與 `伺服器時區：Asia/Taipei`
-
-### D-20 看一眼資料庫的四項設定
-
-- **做什麼**：主機上開護理端，管理者登入改密碼，看系統設定 → 資料庫狀態
-- **成功**：`WAL`、foreign keys 開、busy timeout `5000`、synchronous `FULL`、備份每日 `03:00`
-
-### D-21 從護理站連進來
-
-- **做什麼**：資訊室開三個埠的輸入規則，在護理站電腦開護理端登入，走一次 H-16 主線
-- **成功**：護理站登得進去、主線走得完
-- 🧪 用另一台電腦連（R-13 同一件事）；0921 開發機演練沒驗到這一項
-
-### D-22 常駐：確認它會自己回來
-
-- **做什麼**：`docker compose restart`，再看 `ps` 與存活檢查
-- **成功**：三個都回到 `Up`，存活檢查 200
-
-### D-23 備份並驗證還原得起來
-
-- **做什麼**：停 `api`，跑 `db-update.mjs --note "首次部署備份驗證"`，再啟動；護理端按一次立即備份；複製一份到院內另一台機器核對雜湊
-- **成功**：輸出有 `[3] 更新前備份`、`[4] 驗證備份還原得起來`（`完整性檢查 ok`）、`更新完成`；備份目錄有 `hd-before-update-*.db` 與 `hd-backup-*.db`
-- 🧪 D-02 演練做到這一步為止
-
-### D-24 關閉對外連線，並當場確認
-
-- **做什麼**：請資訊室關連線，自己對四個網域 `Test-NetConnection`，再 `docker compose restart` 看存活檢查
-- **成功**：四個都是 `False`；重新啟動後存活檢查仍是 200
-- 🧪 不在 D-02 範圍；0921 開發機演練沒驗到
-
-### D-25 清掉憑證
-
-- **做什麼**：查 `git remote -v`、Git 的 credential 設定、`cmdkey /list`，有就刪；clone 目錄不刪；回院外當天作廢權杖
-- **成功**：網址沒有權杖、後兩行沒有 `git` 項次、交付單上的權杖已劃掉
-
-### D-26 重新開機測試
-
-- **做什麼**：非透析時段請資訊室重新開機，不碰任何東西，等 2 分鐘看 `docker compose ps`（WSL2 的 Docker Engine 則不登入，從另一台電腦開護理端）
-- **成功**：沒人手動啟動任何東西，三個容器自己回到 `Up`，護理站連得進來
-- 🧪 D-02 要重新開機一次；0921 開發機演練沒驗到
-
-## 7. 回到 H：主機設定與驗證
-
-容器路線從這裡回 H，差異照 D-27（《[git clone＋Docker 路線詳細版](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-docker/index.md)》）。
-
-### H-14 Windows 五件事（需要資訊室）
-
-- **做什麼**：資料庫目錄加防毒排除、確認不在雲端同步資料夾、不是網路磁碟機、關閉自動休眠、更新的重新啟動時段不落在透析班次；寫下誰設、誰保管、改動前知會誰
-- **成功**：五項都當場看到結果並抄下；資訊室交權限給你時照詳細版「自己做的時候」逐項跑檢查指令
-- 🏥 容器路線：防毒排除換成虛擬磁碟目錄加備份目錄，雲端與網路磁碟檢查看備份目錄與虛擬磁碟目錄（D-27）
-- 🧪 R-06 只決定三個目錄，沒有資訊室
-
-### H-15 防火牆與從護理站連進來
-
-- **做什麼**：請資訊室開三個埠的輸入規則，到護理站電腦開護理端
-- **成功**：護理站電腦上看得到登入畫面而且登得進去
-- 🧪 R-13 從另一台電腦連；容器路線已在 D-21 做完
-
-### H-16 冒煙測試
-
-- **做什麼**：護理站走一次主線：登入 → 強制改密碼 → 建病人 → 建排班 → 指派平板 → 解除綁定 → 稽核查得到
-- **成功**：每一步都如《[完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md)》§02、§03
-- 🧪 R-17（多一步病人端顯示）、R-18 病人端斷網；容器路線已在 D-21 做完
-
-### H-17 備份與還原實測
-
-- **做什麼**：備份一次、還原到另一個檔案、確認最終落點是院內另一台機器
-- **成功**：還原後雜湊相符、完整性檢查 ok、筆數對得上
-- 🧪 R-19～R-21 更新與回退各做一次；🏥 容器路線 D-23 做了還原驗證，真的還原一次見詳細版第 10 節
-
-### H-18 常駐總覽螢幕
-
-- **做什麼**：在指定位置的螢幕開護理端總覽
-- **成功**：總覽顯示正常、不會進入休眠
-- 🧪 彩排沒有這一步
-
-### H-19 平板（這次多半跳過）
-
-- **做什麼**：平板到位且 APK 備妥時只佈建兩三台（K-10～K-16；側載 K-12 在《[安裝包路線](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-installer/index.md)》，其餘在《[平板與外殼 App](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-tablet/index.md)》）；沒到位就改成情報蒐集，並用手機在每個床位測一次 Wi-Fi 訊號
-- **成功**：佈建的平板連得上；或每個床位的訊號都記下
-- 🧪 彩排用另一台裝置開病人端代替平板（R-17、R-18）
-
-## 8. 交接與離院
-
-### H-20 現場教學
-
-- **做什麼**：護理長 10 分鐘、值班護理師 5 分鐘、資訊室 5 分鐘
-- **成功**：講完當場讓對方自己做一次，做得出來
-- 🧪 彩排沒有這一步
-
-### H-21 交接文件
-
-- **做什麼**：當場寫、當場交：安裝位置、服務、連接埠、帳號、首波關閉的功能、環境設定誰設的、聯絡方式、已知限制；第一行寫「首波試用、不是全單位上線」
-- **成功**：交付並有人簽收
-- 🏥 容器路線多寫 clone 目錄、映像檔標籤、`docker-users` 名單、重新開機後的啟動方式
-
-### H-22 收尾清單
-
-- **做什麼**：離院前 30 分鐘逐項勾：服務啟動、護理站登入過、備份還原成功、規範第 9 章 26 條都有結果、交接簽收、H-04 每題有答案、筆記本每頁有時間與編號、沒有病人資料
-- **成功**：八項都勾
-- 🏥 容器路線再加五條：對外連線已關（D-24）、權杖已清（D-25）、`docker-users` 名單進交接、重新開機測試有結果或約好誰代看、交接寫明資料卷與不得執行的三個指令
-
-### H-23 清除隨身碟
-
-- **做什麼**：當場格式化隨身碟
-- **成功**：部署紀錄寫「已清除」、時間與執行者
-- 🏥 容器路線隨身碟可能沒用上，仍然要當場清除並寫明
-
-### H-24 當天晚上就寫紀錄
-
-- **做什麼**：回到開發機，當天把筆記本打進《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》
-- **成功**：§1.3、§2.3、§3.2、§4.2／§5.2、§6.1 該填的都填了；容器路線「交付形態」寫「git clone ＋ Docker」，D-14 的建置時間有記
-- 🧪 R-22 耗時表、R-23 演練紀錄 §3.2
-- 0922 實際：錯誤原文與耗時都沒記到（《第一次進院紀錄》1.2）
-
-## 9. 隨時可以停手
-
-停手的情形與停手時做的三件事在《[進院通則](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-visit-rules/index.md)》；服務已啟動就照《[備份、還原與關服務](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-backup-shutdown/index.md)》做到「停用」。
+下一份：《[第一次進院（0922）· 部署本系統（第 2 份，D-05～D-26、H-14～H-24）](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-1-system-2/index.md)》
 
 ## 版本歷程
 
