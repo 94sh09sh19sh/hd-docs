@@ -17,7 +17,7 @@
 - 三份 Python 寫檔都沒指定編碼，在 Windows 上預設是 big5（cp950），姓名有罕用字時整次抓取丟失（第 4 節）
 - 本系統的介接是照這三份重寫的，不是改寫；與 `fetch_API.py` 的逐項差異在第 1、2.4 節
 - 1107 學長要求改成「主機上的獨立腳本抓、存成檔，本系統改讀檔」，怎麼做寫在子文件
-- **1116 第五次進院照做完**：`hd-hospital-fetch` v0.3.0 在 `C:\API_Fetch` 每 3 分鐘抓（07:00～23:00）；本系統換 `v0.5.0` 讀 `C:\API_Fetch\IDH_interface` 的檔，不打院方 API。現場紀錄在《[第二十四冊之一](../deployment/24a-fifth-visit-record.md)》
+- **1116 第五次進院照做完**：`hd-hospital-fetch` v0.3.0 在 `C:\API_Fetch` 每 3 分鐘抓（07:00～23:00）；本系統換 `v0.5.0` 讀 `C:\API_Fetch\IDH_interface` 的檔，不打院方 API。現場紀錄在《[第五次進院紀錄](../deployment/record-5-1116.md)》
 
 ## 0. 四種方式從哪來
 
