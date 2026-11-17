@@ -1,0 +1,143 @@
+# 第二次進院（1001）· 從零部署本系統之六：詳細版（附錄：查防毒排除清單、登不進去）
+
+上層文件：[《第二次進院（1001）· 從零部署本系統》](visit-2-system.md)
+
+> 狀態：**已照做 1001，凍結**（結果見[《第二次進院紀錄（1001，部分成功）》](record-2-1001.md)）；1117 由舊的第十四冊改寫；編號與主文件相同（`N-xx`），每一步開頭的「對應」是沿用的原步驟（`W-xx`、`Y-xx`、`Z-xx` 在哪一份，見[《之一》](visit-2-system-detail.md)開頭）
+
+## 摘要
+
+- 兩個附錄都是 1001 在現場寫進詳細版、當天照著查的版本
+- 查防毒軟體與排除清單（N-05，只看不改）：主機裝了哪些防毒、排除清單裡有什麼、對照、可能怎麼壞；之後從零部署照《從零部署本系統》V-05
+- 護理端頁面開得起來卻登不進去（N-16）：先認清用哪個網址開、看登入鈕下面的訊息、在主機上查三樣、網頁裡寫死的後端位址
+- 1001 就卡在登不進去，白話分析在[《第二次進院紀錄（1001）之一：為什麼登不進去》](record-2-1001-login.md)
+- 步驟本身在《之一》～《之五》
+
+## 附錄：查防毒軟體與排除清單（只看不改）
+
+1001 在現場寫進這一冊、當天照著查的版本（紀錄 M-05）。之後從零部署照[《從零部署本系統》](ref-fresh-install-2.md) V-05。
+
+N-05 要請資訊室把 Docker 的資料夾加入防毒排除清單。開口之前，先在主機上查清楚兩件事：**跑的是哪一套防毒**、**排除清單裡已經有什麼**。下面的指令**只看不改**；要不要加入排除、怎麼加，一律由資訊室決定。
+
+### 第 1 步：主機上裝了哪些防毒軟體
+
+**做什麼**
+
+```powershell
+Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct |
+  Select-Object displayName, productState, @{n='hex';e={'{0:X6}' -f $_.productState}}
+```
+
+**怎麼看**：每一套防毒軟體列成一行，看 `hex` 那一欄**中間兩碼**：
+
+| 中間兩碼 | 意思 |
+|---|---|
+| `10` 或 `11` | **正在運作**，排除要在這一套裡做 |
+| `00` 或 `01` | 裝了但沒在運作，通常是裝了第三方防毒之後被關掉的 Windows Defender |
+
+例：`061100` 是正在運作，`060100` 是已關閉。
+
+### 第 2 步：排除清單裡有什麼
+
+**正在運作的是 Windows Defender**（`displayName` 為 `Windows Defender` 或 `Microsoft Defender Antivirus`）：
+
+```powershell
+Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
+```
+
+印出的每一行是一個排除的路徑；**什麼都沒印出來**，就是目前沒有任何排除路徑。
+
+**正在運作的是第三方防毒**（趨勢、賽門鐵克等）：PowerShell 看不到它的排除清單，要開它自己的主控台看。院內多半由資訊室集中管理，主機上看不到或是灰的，就直接問資訊室。
+
+### 第 3 步：對照
+
+拿第 2 步的結果，對 N-05 第 4 項抄下的 **Disk image location**：
+
+- 清單裡有那個路徑，或它的上層資料夾 → 這一項已經做好，演練紀錄寫「已在排除清單」。
+- 沒有 → 演練紀錄寫「防毒＝＿＿，排除清單未含 Docker 的資料夾」，交給資訊室。
+
+### 可能怎麼壞
+
+| 症狀 | 原因 | 處置 |
+|---|---|---|
+| 第 1 步說 `Invalid namespace` | 這台是 Windows Server，沒有這個查詢介面 | 改跑 `Get-MpComputerStatus`，看 `AMRunningMode` 與 `AntivirusEnabled` 兩欄；其他防毒問資訊室 |
+| 第 1 步什麼都沒印出來 | 沒有任何防毒向 Windows 登記 | 記下來，問資訊室主機上是不是真的沒有防毒 |
+| 第 2 步印出 `N/A: Must be an administrator to view exclusions` | PowerShell 不是系統管理員身分 | 開始選單對「Windows PowerShell」按右鍵 →「以系統管理員身分執行」，再跑一次 |
+| 第 2 步出現 `0x800106ba` 之類的錯誤 | Defender 沒在運作，正在運作的是第三方防毒 | 回第 1 步確認是哪一套，照第三方防毒的方式處理 |
+
+🧪 照 N-05 的規定，防毒排除不必做；想先熟悉指令可以在開發機上跑一次，同樣只看不改。
+
+---
+
+## 附錄：護理端頁面開得起來卻登不進去
+
+1001 在現場寫進這一冊、當天照著打三條指令的版本（紀錄 M-01）。現行的查法在[《護理站登不進去與主機位址》](ref-login.md)。
+
+N-16 用瀏覽器開護理端，登入頁出得來，按下登入卻失敗。下面的 `<主機>` 是 `.env` 裡 `HD_PUBLIC_API_URL`、`CORS_ORIGINS` 用的那個名稱或 IP。[《之七》](visit-2-system-env.md)的範例寫 `hd-server`，**那只是範例**，要換成資訊室給的、護理站連得到的那一個。
+
+### 先認清：用哪個網址開
+
+登入時，網頁會連建置時寫進去的後端位址（`HD_PUBLIC_API_URL`）；後端只接受 `CORS_ORIGINS` 列出的來源，**主機名稱與埠要和網址列一字不差**。
+
+| 開的網址 | 登得進去嗎 |
+|---|---|
+| `http://<主機>:<護理端埠>` | 可以。在主機上開也一樣，網頁連後端時會連回主機自己 |
+| `http://localhost:<護理端埠>` | **🏥 登不進去**：網址列是 `localhost`，`CORS_ORIGINS` 寫的是 `<主機>`，後端不放行。改用上一列的網址開 |
+
+在主機上開得起來，**不代表護理站也開得起來**：連自己不經過防火牆。真正要驗的是在護理站的電腦開、登入成功。
+
+真的需要在主機上用 `localhost` 開的話，`CORS_ORIGINS` 可以用逗號列兩個來源：`http://<主機>:<護理端埠>,http://localhost:<護理端埠>`，改完 `up -d` 即可，不必再 `build`。
+
+### 第 1 步：看登入鈕下面的訊息
+
+| 訊息 | 意思 | 接著 |
+|---|---|---|
+| `工作ID 或密碼錯誤` | 有連到後端，帳號或密碼不對 | 用 `.env` 的 `SUPER_ADMIN_WORK_ID`、`SUPER_ADMIN_INITIAL_PASSWORD`。第一個帳號**只在資料庫還沒有任何使用者時建立**，事後改 `.env` 不會改到已建立的帳號 |
+| `Failed to fetch` | 瀏覽器沒拿到後端的回應：後端位址錯，或被 CORS 擋掉 | 第 2 步 |
+
+### 第 2 步：在主機上查三樣
+
+**做什麼**（`<主機>`、`<後端埠>`、`<護理端埠>` 換成你的）
+
+```powershell
+Select-String -Path $cfg -Pattern '^(CORS_ORIGINS|HD_PUBLIC_API_URL)='
+curl.exe -s http://<主機>:<後端埠>/api/health
+curl.exe -s -i -H "Origin: http://<主機>:<護理端埠>" http://<主機>:<後端埠>/api/health | Select-String Access-Control-Allow-Origin
+```
+
+**怎麼看**
+
+| 結果 | 意思 | 處置 |
+|---|---|---|
+| 第一條的 `CORS_ORIGINS` 不是瀏覽器網址列上的那個來源 | CORS 寫錯 | 改 `.env`，`docker compose --env-file $cfg up -d` |
+| 第二條沒有 `{"status":"ok",…}` | `<主機>:<後端埠>` 連不到後端 | `docker compose --env-file $cfg logs api --tail 30` 看原因；主機名稱查不到時，先 `Resolve-DnsName <主機>` |
+| 第三條什麼都沒印出來 | 後端沒放行這個來源 | `.env` 看起來對的話，多半是改完還沒 `up -d` |
+| 三條都正常 | 網頁裡寫死的後端位址是舊的 | 第 3 步 |
+
+### 第 3 步：網頁裡寫死的後端位址
+
+`HD_PUBLIC_API_URL` 是**建置時**寫進網頁檔案的。先 `build`、之後才改 `.env` 的位址，只 `up -d` 不會更新。
+
+**做什麼**：瀏覽器按 F12 → Network，再按一次登入，看請求送去哪個網址。
+
+- 是 `http://<主機>:<後端埠>/api/…` → 位址沒問題，回第 2 步再對一次。
+- 不是 → 再 `build` 一次：
+
+  ```powershell
+  docker compose --env-file $cfg build
+  docker compose --env-file $cfg up -d
+  ```
+
+  做完瀏覽器按 Ctrl＋F5 重新整理，再登入一次。
+
+🧪 `<主機>` 就是 `localhost`，網址是 `http://localhost:18080`、後端 `http://localhost:13000`（照《之七》）。
+
+---
+
+上一份：[《第二次進院（1001）· 從零部署本系統之五：詳細版（N-28～N-31、日常、停手條件、編號對照）》](visit-2-system-detail-5.md)
+
+## 版本歷程
+
+| 定版 | 日期 | 異動 |
+|---|---|---|
+
+[← 回部署手冊目錄](index.md)

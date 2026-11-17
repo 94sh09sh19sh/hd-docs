@@ -1,9 +1,9 @@
-# 第二次進院（1001）· 從零部署本系統之二：`.env` 怎麼填
+# 第二次進院（1001）· 從零部署本系統之七：`.env` 怎麼填（開始之前、逐項填）
 
 上層文件：[《第二次進院（1001）· 從零部署本系統》](visit-2-system.md)
 
 > - 狀態：**已照做 1001，凍結**。這是 1001 照著填的那一版（當時的 tag 是 `v0.3.0`）；之後範本又多了幾項（例如 `HD_EXPORT_DIR`、讀檔的資料夾），現行填法：🏥 照[《`.env` 怎麼填》](ref-env.md)、🧪 照[《`.env` 怎麼填之一：開發機演練》](ref-env-simulation.md)
-> - 1117 由舊的第十四冊之一（實際部署）、之二（模擬部署）併成一份；🏥 院內正式主機、🧪 開發機演練每一項分開寫
+> - 1117 由舊的第十四冊之一（實際部署）、之二（模擬部署）併成一份；🏥 院內正式主機、🧪 開發機演練每一項分開寫；拆成《之七》《之八》兩份
 > - 沒有步驟編號，接在 N-11（＝W-11、Y-03）
 
 ## 摘要
@@ -12,8 +12,9 @@
 - 變數的真本是 repo 裡的 `deploy\hospital.env.example`（每一項上面都有註解），規則的真本是《[部署規範](../requirements/deployment-spec.md)》v3.0；本冊與範本不一致時以範本為準
 - 🏥 範例的 `hd-server` **不是院內主機的名字**；1001 實際的根目錄是 `C:\hd\hd-tablet-care`，不是範例的 `D:\hd-tablet-care`
 - 🧪 這一版的護理端位址用 `localhost`；後來改成開發機的區網 IP，因為 1001 院內卡住的登入問題，用 `localhost` 模擬部署永遠練不到（紀錄 M-12 第 13 項）
-- 第 0 節三份很像的檔案、寫法規矩、要先拿到的答案；第 1～3 節逐項填、填好的樣子、核對
-- 第 4～7 節：🏥 日後改值、🧪 開發機 IP 變了、兩邊差異總表、🏥 檔案保管
+- 第 0 節：三份很像的檔案、寫法的四條規矩、🏥 進院前要先拿到的答案、🧪 要先查好的兩件事
+- 第 1 節逐項填：版本、主機目錄、連接埠、位址、外殼 App、身分驗證、備份與磁碟、AI、其他營運參數
+- 填好的樣子、核對、日後修改、差異總表與保管在《之八》
 
 ## 0. 開始之前
 
@@ -158,7 +159,7 @@ ipconfig
 - `HD_SHELL_SRC_DIR` 還沒 clone 也要**先填好路徑**：每一條 `docker compose` 指令都會檢查它有沒有填。
 - 🏥 `HD_SHELL_SIGNING`：院內主機一律 `hospital`。金鑰第一次產生時會記下它，**之後填別的值 `shell-builder` 會拒絕執行**。看到「這個金鑰資料卷是『dev』用的」就是有人把模擬部署的設定搬過來了——**停手**。
 - 🧪 `HD_SHELL_SIGNING=dev` 讓 `shell-builder` 產生「開發用」的簽章金鑰，N-21 會印出「APK 簽章金鑰（開發用）」。這把金鑰簽出來的 APK 與院內版**不能互相覆蓋安裝**，這正是要的效果：開發用的東西不會混進院內。忘了改、留著 `hospital` 跑下去的話，資料卷會記成院內用。撤除重來即可（N-31），**不要事後才改成 `dev`**——`shell-builder` 會拒絕。
-- `KIOSK_SHELL_MIN_VERSION`：留空就用程式內建的預設值。等所有平板都換上新版外殼才調高（[《平板與外殼 App》](ref-tablet.md) Y-15）。
+- `KIOSK_SHELL_MIN_VERSION`：留空就用程式內建的預設值。等所有平板都換上新版外殼才調高（[《平板與外殼 App》](ref-tablet-2.md) Y-15）。
 
 ### 1.6 身分驗證
 
@@ -219,194 +220,7 @@ $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create
 
 ---
 
-## 2. 填好的樣子
-
-### 2.1 🏥 院內主機
-
-以 0.3 節的範例假設填完，會像這樣（說明行省略）。**你的值要換成自己的**：
-
-```
-HD_IMAGE_TAG=v0.2.0
-
-HD_BACKUP_DIR=D:\hd-tablet-care\backups
-HD_CONFIG_DIR=D:\hd-tablet-care\config
-
-HD_API_PORT=13000
-HD_NURSE_PORT=18080
-HD_PATIENT_PORT=18081
-
-HD_PUBLIC_API_URL=http://hd-server:13000
-CORS_ORIGINS=http://hd-server:18080
-MDM_KIOSK_BASE_URL=https://hd-server:18081
-
-HD_SHELL_SRC_DIR=D:\hd-tablet-care\hd-kiosk-shell
-HD_SHELL_SIGNING=hospital
-KIOSK_SHELL_MIN_VERSION=
-
-JWT_SECRET=<N-11 當場產生的那一串>
-JWT_EXPIRES_IN=8h
-
-SUPER_ADMIN_WORK_ID=<護理長給的工號>
-SUPER_ADMIN_INITIAL_PASSWORD=<臨時密碼>
-SUPER_ADMIN_DISPLAY_NAME=<護理長給的名字>
-
-BACKUP_DAILY_AT=03:00
-DB_DISK_MIN_FREE_MB=1024
-
-LLM_PROVIDER=mock
-LLM_ENDPOINT=
-LLM_API_KEY=
-LLM_MODEL_ID=
-LLM_TIMEOUT_SECONDS=150
-LLM_HEALTH_TIMEOUT_SECONDS=5
-
-BINDING_MAX_HOURS=6
-BINDING_EXPIRY_SWEEP_SECONDS=60
-SYMPTOM_TREND_WINDOW_DAYS=30
-SYMPTOM_TREND_REPORT_LIMIT=10
-DEVICE_ONLINE_THRESHOLD_SECONDS=90
-REALTIME_HEARTBEAT_SECONDS=20
-```
-
-### 2.2 🧪 開發機
-
-只有三處要換成你自己的：`HD_IMAGE_TAG`、`MDM_KIOSK_BASE_URL` 裡的 IP、`JWT_SECRET`。其餘照抄即可：
-
-```
-HD_IMAGE_TAG=v0.2.0
-
-HD_BACKUP_DIR=C:\hd-sim\backups
-HD_CONFIG_DIR=C:\hd-sim\config
-
-HD_API_PORT=13000
-HD_NURSE_PORT=18080
-HD_PATIENT_PORT=18081
-
-HD_PUBLIC_API_URL=http://localhost:13000
-CORS_ORIGINS=http://localhost:18080
-MDM_KIOSK_BASE_URL=https://192.168.1.23:18081
-
-HD_SHELL_SRC_DIR=C:\hd-sim\hd-kiosk-shell
-HD_SHELL_SIGNING=dev
-KIOSK_SHELL_MIN_VERSION=
-
-JWT_SECRET=<這一輪產生的那一串>
-JWT_EXPIRES_IN=8h
-
-SUPER_ADMIN_WORK_ID=sim-admin
-SUPER_ADMIN_INITIAL_PASSWORD=Sim-Init-2026
-SUPER_ADMIN_DISPLAY_NAME=模擬部署管理員
-
-BACKUP_DAILY_AT=03:00
-DB_DISK_MIN_FREE_MB=1024
-
-LLM_PROVIDER=mock
-LLM_ENDPOINT=
-LLM_API_KEY=
-LLM_MODEL_ID=
-LLM_TIMEOUT_SECONDS=150
-LLM_HEALTH_TIMEOUT_SECONDS=5
-
-BINDING_MAX_HOURS=6
-BINDING_EXPIRY_SWEEP_SECONDS=60
-SYMPTOM_TREND_WINDOW_DAYS=30
-SYMPTOM_TREND_REPORT_LIMIT=10
-DEVICE_ONLINE_THRESHOLD_SECONDS=90
-REALTIME_HEARTBEAT_SECONDS=20
-```
-
----
-
-## 3. 填完之後核對
-
-**先讓 compose 檢查一次**（在 `$root\repo` 底下）：
-
-```powershell
-docker compose --env-file $cfg config --quiet
-```
-
-什麼都沒印出來才算過。印出 `required variable … is missing a value: 請設定 …` 就照冒號後面補。
-
-**再用眼睛核對一次**
-
-🏥 院內主機：
-
-- [ ] `HD_IMAGE_TAG` 與 `git describe --tags` 相同
-- [ ] 三個埠是資訊室**登記過**的，而且與位址裡的埠對得上
-- [ ] `HD_PUBLIC_API_URL`、`CORS_ORIGINS` 是 `http://`，主機是**護理站**連得到的那個
-- [ ] `MDM_KIOSK_BASE_URL` 是 **`https://`**，主機是**平板**連得到的那個，不是 `localhost`
-- [ ] `HD_SHELL_SIGNING=hospital`
-- [ ] `JWT_SECRET` 是這次新產生的
-- [ ] `LLM_PROVIDER=mock`
-- [ ] 整份沒有任何一個值加了引號
-
-🧪 開發機：
-
-- [ ] `HD_IMAGE_TAG` 與 `git describe --tags` 相同
-- [ ] 三個目錄都在 `C:\hd-sim\` 底下
-- [ ] 三個埠是 `13000`、`18080`、`18081`（或你 N-07 換過的），而且與位址裡的埠對得上
-- [ ] `MDM_KIOSK_BASE_URL` 是 **`https://`＋Wi-Fi 那張網卡的 IP**，不是 `localhost`
-- [ ] **`HD_SHELL_SIGNING=dev`**
-- [ ] `LLM_PROVIDER=mock`
-- [ ] 整份沒有任何一個值加了引號
-
----
-
-## 4. 🏥 日後改了某一項，要做什麼
-
-改 `.env` 本身不會生效，要看改的是哪一項：
-
-| 改了 | 要做什麼 |
-|---|---|
-| `CORS_ORIGINS`、`JWT_*`、`SUPER_ADMIN_*`、`BACKUP_DAILY_AT`、`DB_DISK_MIN_FREE_MB`、`KIOSK_SHELL_MIN_VERSION`、`LLM_*`、其他營運參數 | `docker compose --env-file $cfg up -d`（compose 會自己重建設定有變的容器） |
-| 三個埠 | 先向資訊室登記 → `up -d`；位址裡的埠也要一起改 |
-| `HD_PUBLIC_API_URL` | `docker compose --env-file $cfg build` 再 `up -d`——**它寫在網頁檔案裡，不重建沒用** |
-| `MDM_KIOSK_BASE_URL` | **原則上不改。** 非改不可時：`up -d api` → 重跑 `shell-builder`（它會重簽伺服器憑證，N-21）→ `restart patient-web`（N-23）→ **每一台平板清除資料、重新佈建**（1029 從名稱換成 IP 就是這樣做的，現行做法在[《護理站登不進去與主機位址》](ref-login.md)） |
-| `HD_IMAGE_TAG` | 只在更新、回退時改，照[《本系統換版與退回》](ref-upgrade.md) W-19、W-20，不要單獨改 |
-| `HD_SHELL_SIGNING` | **不准改** |
-| `HD_BACKUP_DIR`、`HD_CONFIG_DIR` | `up -d`。舊資料夾裡的備份要先搬過去，並知會負責把備份送往另一台機器的人 |
-
----
-
-## 5. 🧪 開發機的 IP 變了
-
-換了 Wi-Fi、隔天重新連線，IP 都可能變。症狀是手機開不到下載頁，或外殼一片空白。
-
-| 情況 | 做什麼 |
-|---|---|
-| 還在同一輪模擬部署中 | 改 `MDM_KIOSK_BASE_URL` 的 IP → `docker compose --env-file $cfg up -d api` → 重跑 `shell-builder`（N-21，它發現位址變了會重簽伺服器憑證）→ `restart patient-web`（N-23）→ 手機上的 App「清除資料」，重新註冊、佈建 |
-| 這一輪已經做完 | 不必管，N-31 撤除就好。下一輪重新查 IP 再填 |
-
-這一段在實際部署**不該發生**：院內的位址擇一之後就不再換（0.3 節）。模擬部署碰到一次，正好體會為什麼。
-
----
-
-## 6. 🏥／🧪 差異總表
-
-帶進院之前再看一次這張表：**🧪 那一欄的每一個值，都不可以出現在院內那份 `.env` 裡**——只有三個埠例外，兩邊剛好相同。
-
-| 變數 | 🏥 實際部署 | 🧪 模擬部署 |
-|---|---|---|
-| `HD_BACKUP_DIR`、`HD_CONFIG_DIR`、`HD_SHELL_SRC_DIR` | `D:\hd-tablet-care\…`（依資訊室指定的磁碟；1001 實際是 `C:\hd\hd-tablet-care\…`） | `C:\hd-sim\…` |
-| 三個埠 | `13000`、`18080`、`18081`（0930 資訊室確認） | 相同（例外） |
-| `HD_PUBLIC_API_URL`、`CORS_ORIGINS` | 護理站連得到的主機名稱或 IP | `localhost` |
-| `MDM_KIOSK_BASE_URL` | `https://<平板連得到的主機>:<病人端埠>` | `https://<開發機區網 IP>:18081` |
-| `HD_SHELL_SIGNING` | **`hospital`** | **`dev`** |
-| `JWT_SECRET` | 院內當場產生 | 每一輪各自產生 |
-| `SUPER_ADMIN_*` | 護理長給的工號與名字、臨時密碼 | `sim-admin` 之類的虛構值 |
-| 其他 | 相同 | 相同 |
-
-> ⚠️ **不要把模擬部署的 `.env` 複製到院內再改。** 從院內主機上的範本重新複製、照本冊 🏥 那幾欄一項一項填。抄過去最常漏改的是 `HD_SHELL_SIGNING`，而它一旦讓院內主機產生了開發用金鑰，就要撤掉資料卷重來。
-
----
-
-## 7. 🏥 這份檔案的保管
-
-這份 `.env` 裡有登入簽章金鑰與初始密碼（DEP-13）：
-
-- **只存在院內主機的設定目錄**，不提交到任何 repo、不寄出、不拍照、不複製到隨身碟或開發機。
-- 需要記錄時，只記「填了哪些**變數**、由誰決定」，**不記值**。演練紀錄與交接文件都照這個原則。
-- 交接文件寫明設定目錄的位置，讓資訊室知道它在哪、不能刪。
+下一份：[《第二次進院（1001）· 從零部署本系統之八：`.env` 怎麼填（填好的樣子、核對、日後修改、保管）》](visit-2-system-env-2.md)
 
 ## 版本歷程
 

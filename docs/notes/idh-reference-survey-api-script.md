@@ -29,7 +29,7 @@
 
 - 位置：`lab_project/API_script/`，在專案 repo 外，與 `ref_project/` 同層；前三個檔的時間是 1106 下午（1108 起移到 `lab_project/old_API_ref/API_script/`；來源是學長以連結共享給使用者帳號的 Google Drive 資料夾，四種抓取方式的比較見《[院方 API 介接](hospital-api-fetch-methods.md)》）
 - Word 檔只寫路徑，沒有說明用途、作者與 API 位址
-- 1109 進院知道：Word 檔寫的那台電腦就是本系統的部署主機，`Hb_API_Fetch` 底下已經有 `hospital_dataset\raw_txt` 與月份檔（《[第四次進院紀錄](../deployment/record-4-1109.md)》BR-08）
+- 1109 進院知道：Word 檔寫的那台電腦就是本系統的部署主機，`Hb_API_Fetch` 底下已經有 `hospital_dataset\raw_txt` 與月份檔（《[第四次進院紀錄](../deployment/record-4-1109-2.md)》BR-08）
 
 ## 2. 跟 `ref_project/` 的關係
 
@@ -67,7 +67,7 @@ interface/views.py 的 corn_job()（成大版第 1018 行；斗六版同樣在 v
 
 - 留底寫法最簡陋、沒有逾時、沒有除錯輸出，**看起來比成大版更早**，不是更新的版本
 - 51 欄的欄名清單與成大版相同，上層文件第 3 節的位置表不用改
-- 「床位數字開頭整列丟掉」再確認一次：IDH 系統看不到 `9A`、`99` 這類床。本系統不跟著丟，處理以部署手冊《[第五次進院任務二之二：上線準備清單](../deployment/visit-5-system-prep.md)》第 3 節為準
+- 「床位數字開頭整列丟掉」再確認一次：IDH 系統看不到 `9A`、`99` 這類床。本系統不跟著丟，處理以部署手冊《[第五次進院任務二之三：上線準備清單](../deployment/visit-5-system-prep.md)》第 3 節為準
 
 ### 3.2 它做什麼、靠什麼
 
@@ -196,7 +196,7 @@ interface/views.py 的 corn_job()（成大版第 1018 行；斗六版同樣在 v
 | 現在 | 院內主機 1116 起 `v0.5.0`，`HOSPITAL_API_BASE_URL` 空白，**沒在打**，改讀 `C:\API_Fetch\IDH_interface` 的檔（迭代 32）；只有 1029 探測時打過一次 |
 | 位址一填 | 每 3 分鐘打一次，與 IDH 系統的頻率差不多，院方那台的負載約多一倍；每次都把當天**全中心**的病人寫進本系統主機，不是只有首波那一位 |
 
-所以部署手冊《[第五次進院任務二之二：上線準備清單](../deployment/visit-5-system-prep.md)》把 Q-35（向資訊室報備）、病人告知、床號設定都排在填位址之前。
+所以部署手冊《[第五次進院任務二之三：上線準備清單](../deployment/visit-5-system-prep.md)》把 Q-35（向資訊室報備）、病人告知、床號設定都排在填位址之前。
 
 > **1107 起預定改變**：負責 IDH 系統的學長要求本系統不自己打這支 API，改讀主機上獨立腳本存下來的檔（APP 組也讀同一份）。上表是「直接打」的情況；改法與還沒定的事見《[院方 API 介接之一](hospital-api-fetch-methods-status.md)》。
 

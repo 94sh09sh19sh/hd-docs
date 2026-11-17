@@ -53,7 +53,7 @@
 
 ### 0.4 開工三行
 
-每一次開 PowerShell 先打（與[《從零部署本系統》](ref-fresh-install.md) V-09 相同）：
+每一次開 PowerShell 先打（與[《從零部署本系統》](ref-fresh-install-3.md) V-09 相同）：
 
 ```powershell
 $root = "C:\hd\hd-tablet-care"
@@ -100,7 +100,7 @@ docker compose --env-file $cfg --profile export run --rm data-export --list
 
 | 看到 | 原因 | 處理 |
 |---|---|---|
-| `DATABASE_URL 指向的資料庫檔案不存在` | 資料卷沒建或名字不對 | [《從零部署本系統》](ref-fresh-install.md) V-13 |
+| `DATABASE_URL 指向的資料庫檔案不存在` | 資料卷沒建或名字不對 | [《從零部署本系統》](ref-fresh-install-4.md) V-13 |
 | `no such service: data-export` | 這一版 tag 比迭代 28 舊 | 先照[《本系統換版與退回》](ref-upgrade.md)換版 |
 
 ### U-03 選範圍與等級，取出

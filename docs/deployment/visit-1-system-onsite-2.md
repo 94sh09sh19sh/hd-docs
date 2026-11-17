@@ -1,0 +1,234 @@
+# 第一次進院（0922）· 部署本系統之二：進院當天詳細版（H-14～H-15）
+
+上層文件：《[第一次進院（0922）· 部署本系統](visit-1-system.md)》
+
+> - 狀態：**已照做 0922，凍結**，結果見《[第一次進院紀錄（0922，失敗）](record-1-0922.md)》；安裝包路線 0926 撤除，H-08～H-13 的安裝步驟收在《[安裝包路線](ref-installer-3.md)》，本冊是歷史
+> - 1117 由舊的第四冊改寫（0923 定版，當時「要印出來帶進去」）
+> - 編號：`H-xx`
+
+接在《[之一：進院當天詳細版（H-01～H-13）](visit-1-system-onsite.md)》H-13 後面；每一步寫成**做什麼**、**怎麼知道成功了**、**可能怎麼壞、怎麼處理**。
+
+## 摘要
+
+- 第 6 節主機的環境設定：H-14 Windows 五件事（防毒排除、不在雲端同步資料夾、不是網路磁碟機、關閉自動休眠、更新的重新啟動時段不落在透析班次），H-15 防火牆與從護理站連進來
+- 五件事都要寫下誰設的、誰保管、改動前要知會誰（DEP-21）
+- 「H-14 自己做的時候」：資訊室把系統管理員權限交給你時，①～⑤ 每一項的指令、成功判準、有沒有被群組原則蓋掉的檢查
+- 容器路線：H-14 第 1 項換成虛擬磁碟目錄加備份目錄、第 2、3 項看備份目錄與虛擬磁碟目錄（D-27）；H-15 已在 D-21 做完
+- 1116 起容器路線防毒排除加不了不再停手；H-14 表裡的停手處置是安裝包路線當時的
+- H-15 最可能卡死的一點：PWA 裡的 API 位址是 localhost
+
+## 6. 主機的環境設定
+
+### H-14 Windows 五件事（**需要資訊室**）
+
+| # | 要做的事 | 怎麼確認 | 不做會怎樣 |
+|---|---|---|---|
+| 1 | **資料庫目錄加入防毒排除清單** | 請對方開啟防毒主控台，**當場看到那條規則** | 即時掃描會在 SQLite 寫入時開啟同一個檔案，造成**間歇性、不固定重現**的鎖定失敗。這是最難查的一類錯誤 |
+| 2 | **確認資料庫目錄不在雲端同步資料夾底下** | 看該路徑有沒有同步圖示；`Get-Item <路徑> \| Select-Object FullName` 確認實體位置 | 醫院電腦常把「文件」重新導向到雲端，而路徑上看不出來。那等於把資料庫送出院外，同時毀掉檔案鎖 |
+| 3 | **確認不是對應網路磁碟機的代號** | `net use` 看有沒有那個代號 | 看起來像本機，行為是網路檔案系統 |
+| 4 | 關閉自動休眠 | `powercfg /change standby-timeout-ac 0` | 半夜備份跑不到、平板連不上 |
+| 5 | 確認系統更新的重新啟動時段不落在透析班次 | 群組原則或 Windows Update 設定 | 更新重新啟動落在治療中，病人端整區斷線 |
+
+**這五件事都要寫下「是誰設的、由誰保管、改動前要知會誰」。** 主機是共用的，別的專案的維運人員一樣改得動，而改掉之後本系統不會收到任何通知。依據是《[部署規範](../requirements/deployment-spec.md)》DEP-21，對應 26 條清單第 3、4、10 條。
+
+容器路線（0922）：第 1 項換成 Docker 虛擬磁碟目錄加備份目錄、第 2、3 項看備份目錄與虛擬磁碟目錄，見《git clone＋Docker 路線詳細版》D-27。
+
+**可能怎麼壞、怎麼處理**
+
+| 症狀 | 處置 |
+|---|---|
+| 防毒排除清單今天加不了（要走申請） | **停手或降級**：可以先把服務跑起來驗證，但**不要讓護理師開始輸入真實資料**，直到排除清單生效 |
+| 對方說「排除清單不安全，不能加」 | 說明範圍只有一個資料夾，且該資料夾只有服務帳號寫得進去。談不成就記下來，回去評估別的做法 |
+
+> 1116 起容器路線的看法不同：資料庫在 Docker 的虛擬磁碟裡，Defender 看不到 SQLite 的檔，防毒排除加不了不再停手（照架構推論，未實測），見《[進院通則](ref-visit-rules.md)》。上表是安裝包路線（資料庫是主機上的檔案）當時的處置。
+
+#### H-14 自己做的時候（資訊室把系統管理員權限交給你）
+
+**動手之前先確認兩件事**，任何一件不成立就不要自己改，回到上面那張表請資訊室做：
+
+1. 資訊室**明確同意**你自己改這五項，並記下是誰同意的。
+2. 這幾項設定**有沒有被群組原則集中管理**。有的話，本機改了會在下次套用原則時被蓋回去，而你改的當下看起來完全正常。每一項底下都有一行檢查指令。
+
+以下指令一律在**以系統管理員身分開啟的 PowerShell** 裡執行。先把資料目錄指定好，後面都會用到：
+
+```powershell
+$dataDir = "<資料目錄>"      # 與 H-13 的 -DataDir 同一個值，例如 D:\hd-care\data
+```
+
+##### ① 資料庫目錄加入防毒排除清單
+
+**先看主機上是哪一套防毒在當家**：
+
+```powershell
+Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntiVirusProduct | Select-Object displayName
+Get-MpComputerStatus | Select-Object AMRunningMode, RealTimeProtectionEnabled
+```
+
+| 看到的結果 | 代表 | 怎麼做 |
+|---|---|---|
+| 只有 Windows Defender（Microsoft Defender），`AMRunningMode` 是 `Normal` | Defender 是主要防毒 | 照下面的指令加 |
+| 出現其他產品（趨勢、賽門鐵克、卡巴斯基等），或 Defender 是 `Passive Mode` | 第三方防毒在當家，Defender 加了也沒用 | 這類產品幾乎都由**中央主控台**統一派送設定，裝在本機的那一端通常鎖住、改不了。**這一項只能請資訊室從主控台加**，你做不到 |
+
+**Defender 的做法**：
+
+```powershell
+Add-MpPreference -ExclusionPath $dataDir
+```
+
+- 排除的是**整個資料夾**，不是資料庫那一個檔案。SQLite 寫入時會在旁邊產生 `-wal`、`-shm` 等暫存檔，只排除主檔等於沒排除。
+- **只排除資料目錄**，不要排除整顆磁碟、不要排除安裝包目錄、不要排除 `node.exe`。
+
+**怎麼知道成功了**
+
+```powershell
+(Get-MpPreference).ExclusionPath
+```
+
+清單裡看得到 `$dataDir` 那一行。
+
+**確認沒有被集中管理蓋掉**：
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -ErrorAction SilentlyContinue
+```
+
+什麼都沒印出來，代表沒有群組原則管 Defender，本機設定會留著。印出了 `DisableLocalAdminMerge` 且值為 `1`，代表**本機加的排除會被忽略**，一定要資訊室從群組原則加。隔天回來再跑一次 `(Get-MpPreference).ExclusionPath`，那一行還在才算數。
+
+##### ② 確認資料庫目錄不在雲端同步資料夾底下
+
+**選路徑的原則**：直接放在磁碟根目錄底下的專屬資料夾（例如 `D:\hd-care\data`）， **不要放在 `C:\Users\` 底下的任何地方**——「文件」「桌面」最常被重新導向到 OneDrive。
+
+**檢查**：
+
+```powershell
+$env:OneDrive; $env:OneDriveCommercial
+Get-Item $dataDir | Select-Object FullName, LinkType, Target, Attributes
+Get-Process | Where-Object { $_.Name -match 'OneDrive|GoogleDrive|Dropbox|Synology|Nextcloud|Box' } | Select-Object Name
+```
+
+**怎麼知道成功了**
+
+| 檢查 | 要看到 |
+|---|---|
+| 第一行印出的 OneDrive 路徑 | `$dataDir` **不在**那個路徑底下（沒印出任何東西也算通過） |
+| `LinkType`、`Target` | **都是空的**。有值代表這個資料夾是捷徑或連結，實際位置在別處，要順著 `Target` 再查一次 |
+| `Attributes` | **沒有** `ReparsePoint` |
+| 第三行 | 有同步軟體在跑的話，開啟它的設定，確認同步範圍不含 `$dataDir` 所在的磁碟或資料夾 |
+| 檔案總管 | 開啟 `$dataDir`，**狀態欄沒有雲朵或綠色勾勾圖示** |
+
+##### ③ 確認不是對應網路磁碟機的代號
+
+```powershell
+$drive = Split-Path $dataDir -Qualifier
+Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$drive'" | Select-Object DeviceID, DriveType, ProviderName
+subst
+Get-Partition -DriveLetter $drive.TrimEnd(':') | Get-Disk | Select-Object FriendlyName, BusType
+```
+
+**怎麼知道成功了**
+
+| 檢查 | 要看到 | 看到別的代表 |
+|---|---|---|
+| `DriveType` | `3`（本機固定磁碟） | `4` 是網路磁碟機、`2` 是抽取式磁碟，**都不行** |
+| `ProviderName` | 空的 | 印出 `\\伺服器\分享` 就是網路磁碟機 |
+| `subst` | 沒有列出這個代號 | 列出來的話，這個代號是別的資料夾的替身，要照實際路徑重查 |
+| `BusType` | `NVMe`、`SATA`、`RAID` 之類 | `USB` 是外接碟、`iSCSI` 是走網路的儲存設備，**都不行** |
+| `$dataDir` 本身 | 以磁碟代號開頭 | 以 `\\` 開頭是網路路徑，**直接換路徑** |
+
+另外注意：網路磁碟機的對應是**跟著登入者走的**。你看得到的 `Z:`，服務帳號看不到；就算硬要用，服務一啟動就會找不到路徑。
+
+##### ④ 關閉自動休眠
+
+```powershell
+powercfg /change standby-timeout-ac 0
+powercfg /change hibernate-timeout-ac 0
+```
+
+螢幕關閉不影響服務，**不用動** `monitor-timeout`。
+
+**怎麼知道成功了**
+
+```powershell
+powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE
+powercfg /query SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE
+```
+
+兩段輸出裡「目前的 AC 電源設定索引」都是 `0x00000000`。
+
+**確認沒有被集中管理蓋掉**：
+
+```powershell
+Get-ChildItem "HKLM:\SOFTWARE\Policies\Microsoft\Power" -ErrorAction SilentlyContinue
+```
+
+什麼都沒印出來才代表本機設定會留著。有東西的話，電源設定由群組原則控制，要請資訊室改。 **隔天回來再跑一次查詢**，值還是 `0` 才算數。
+
+##### ⑤ 系統更新的重新啟動時段不落在透析班次
+
+先要有透析班次的起訖時間（Q-27 第 7 題、情報蒐集表 `C-20`），例如 `06:00–23:00`。
+
+**先看更新是不是被集中管理**：
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -ErrorAction SilentlyContinue
+Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction SilentlyContinue
+```
+
+| 看到的結果 | 代表 | 怎麼做 |
+|---|---|---|
+| 兩行都沒印出東西 | 更新由這台機器自己決定 | 照下面設「使用時段」 |
+| 印出 `WUServer`、`AUOptions`、`ScheduledInstallTime` 等值 | 院方用群組原則或 WSUS 統一管更新，**本機設定會被蓋掉** | 把這些值抄下來，請資訊室把這台的安裝與重新啟動時間排在透析班次以外。**你做不到** |
+
+**沒有集中管理時的做法**：
+
+1. 設定 → Windows Update → 進階選項 → **使用時段**。
+2. 選「手動」，把開始與結束時間設成涵蓋整段透析班次。
+3. 有「根據活動自動調整」的選項就**關掉**，否則 Windows 會自己改掉你設的時間。
+
+**使用時段最長只能設 18 小時。** 班次加前後準備超過 18 小時，就蓋不住整段，要請資訊室改用群組原則排定安裝時間。「暫停更新」不是解法，它只是把問題往後推。
+
+**怎麼知道成功了**
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" | Select-Object ActiveHoursStart, ActiveHoursEnd
+```
+
+兩個數字是小時（`6` 代表 06:00、`23` 代表 23:00），跟你設的一致。
+
+##### 自己做完之後
+
+| 要做 | 為什麼 |
+|---|---|
+| 五項的檢查輸出**抄在部署紀錄上**，寫明「由誰設、何時設、資訊室哪一位同意」 | 日後設定被改掉時，才分得出是誰動的、原本是什麼 |
+| 在交接文件寫下「這五項改動前要知會誰」 | 主機是共用的，別的專案的人不會知道這五項跟本系統有關 |
+| **隔天或下次進院時**，把 ①④⑤ 的檢查指令再跑一次 | 群組原則通常在重新開機或每 90 分鐘左右重新套用，當下看起來成功不代表會留著 |
+
+### H-15 防火牆與從護理站連進來
+
+**做什麼**
+
+請資訊室開三個埠的輸入規則，然後**到護理站那台電腦上**開護理端網址。
+
+**怎麼知道成功了**
+
+**在護理站的電腦上**看得到登入畫面，**而且登得進去**。
+
+**可能怎麼壞、怎麼處理**
+
+| 症狀 | 原因 | 處置 |
+|---|---|---|
+| 畫面出得來但登入沒反應 | **PWA 裡的 API 位址是 localhost** | 見《[安裝包路線之四](ref-installer-build-4.md)》R-08 的警告框（位址必須在建置安裝包之前就知道）。**這是今天最可能卡死的一點**：唯一的當場補救是帶開發機進來重新產生安裝包 |
+| 主控台出現 CORS 錯誤 | `CORS_ORIGINS` 沒填對 | 改 `.env`，重新啟動服務 |
+| 完全連不上 | 防火牆或網段隔離 | 先在主機上 `curl.exe http://localhost:<API_PORT>/api/health` 確認服務本身活著，再談網路 |
+| 護理站電腦的瀏覽器太舊 | 醫院電腦常見 | 記下瀏覽器與版本。**這是要帶回來的情報之一** |
+
+🧪 彩排對應 R-13：用另一台電腦連，整個連不上時在演練機上先練一次開輸入規則（指令在《安裝包路線之五》R-13）。容器路線這一步已在 D-21 做完。
+
+上一份：《[之一：進院當天詳細版（H-01～H-13）](visit-1-system-onsite.md)》｜下一份：《[之三：進院當天詳細版（H-16～H-24）](visit-1-system-onsite-3.md)》
+
+## 版本歷程
+
+| 定版 | 日期 | 異動 |
+|---|---|---|
+
+[← 回部署手冊目錄](index.md)
