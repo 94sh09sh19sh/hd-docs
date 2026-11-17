@@ -580,7 +580,7 @@ ______________________________________________________________________
 
 ## 20. 研究與後續計畫的資料取出（1026 新增，1027 迭代 28 實作）
 
-院方要求系統蒐集的資訊日後要全部取得出來，供後續計畫做資料分析與模型訓練（SRS FR-S19；實作規格書 4.28，1027 實作；院內的步驟在部署手冊[第十六冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/16-data-export/index.md)）。規劃全文在《[蒐集資料的完整取出](https://94sh09sh19sh.github.io/hd-docs/latest/notes/data-extraction-plan/index.md)》。
+院方要求系統蒐集的資訊日後要全部取得出來，供後續計畫做資料分析與模型訓練（SRS FR-S19；實作規格書 4.28，1027 實作；院內的步驟在部署手冊[《取出資料》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-data-export/index.md)）。規劃全文在《[蒐集資料的完整取出](https://94sh09sh19sh.github.io/hd-docs/latest/notes/data-extraction-plan/index.md)》。
 
 ### 20.1 與其他條的關係
 

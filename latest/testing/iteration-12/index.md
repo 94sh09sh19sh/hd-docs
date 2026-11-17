@@ -2,7 +2,7 @@
 
 > 《[完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md)》的分冊之一，對應《實作規格書》4.10 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 12 的部分。操作端色籤（**護理端**／**病人端**／**終端機**／**資料庫**）的意思見主手冊 §00；本冊另加 **［手機］**。
 
-**這一冊驗的是「外殼與系統只靠一份契約對得起來」。** 外殼的原始碼搬到另一個私人 repo（`hd-kiosk-shell`）， APK 由 `shell-builder` 在主機上建置與簽章，開發手機從病人端的院內下載頁安裝。契約本身見《[病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md)》，步驟見《[部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)》第十二冊。
+**這一冊驗的是「外殼與系統只靠一份契約對得起來」。** 外殼的原始碼搬到另一個私人 repo（`hd-kiosk-shell`）， APK 由 `shell-builder` 在主機上建置與簽章，開發手機從病人端的院內下載頁安裝。契約本身見《[病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md)》，步驟見部署手冊《[平板與外殼 App](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-tablet/index.md)》。
 
 | 標記                              | 意思                                               |
 | --------------------------------- | -------------------------------------------------- |
@@ -38,10 +38,10 @@
 | 要準備的                                                                                                                             | 本冊哪裡會用到 | 怎麼弄出來                                                                                        |
 | ------------------------------------------------------------------------------------------------------------------------------------ | -------------- | ------------------------------------------------------------------------------------------------- |
 | 迭代 11 分冊 §11.3 那一套部署實測（暫存目錄、三個埠、兩個資料卷）                                                                    | §12.3 起       | [迭代 11 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-11/index.md) §11.3 |
-| 外殼 repo 的 clone，`git fetch --tags` 過                                                                                            | §12.3          | 第十二冊 Y-02                                                                                     |
-| 暫存 `config\.env` 補上 `HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING=dev`，`MDM_KIOSK_BASE_URL` 改成 `https://<開發機的區網 IP>:<病人端埠>` | §12.3          | 第十二冊 Y-03                                                                                     |
+| 外殼 repo 的 clone，`git fetch --tags` 過                                                                                            | §12.3          | 《平板與外殼 App》Y-02                                                                            |
+| 暫存 `config\.env` 補上 `HD_SHELL_SRC_DIR`、`HD_SHELL_SIGNING=dev`，`MDM_KIOSK_BASE_URL` 改成 `https://<開發機的區網 IP>:<病人端埠>` | §12.3          | 《平板與外殼 App》Y-03                                                                            |
 | 開發手機：Android 5.0 以上、與開發機同一個 Wi-Fi、設好螢幕鎖定 PIN                                                                   | §12.5 起       | —                                                                                                 |
-| Windows 防火牆允許病人端埠的連入（私人網路）                                                                                         | §12.5          | 第十二冊 Y-08                                                                                     |
+| Windows 防火牆允許病人端埠的連入（私人網路）                                                                                         | §12.5          | 《平板與外殼 App》Y-08                                                                            |
 
 > **全程用 PowerShell。** 與迭代 11 分冊同一個理由：Git Bash 會改寫以 `/` 開頭的參數。
 

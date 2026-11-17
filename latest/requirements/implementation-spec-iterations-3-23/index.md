@@ -486,7 +486,7 @@ ______________________________________________________________________
 
 ### 4.9 迭代 11：部署改為 Docker ＋ git clone（0926 新增，本週）
 
-> **2026-09-26 完成實作與開發機實測。** 驗收六條在開發機上全部走過：從 GitHub 全新 clone、全新資料卷、只用 Git 與 Docker 從零部署；`verify:iteration11 --live` 驗 `down -v` 之後資料還在、繫結掛載只有兩個、正式環境設定拒絕 `lab`；更新（新 tag、備份並驗證還原、套用一個新遷移）與回退（舊 tag、舊映像檔、還原備份）各一次。結果見《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 8 節，步驟見《[部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)》第十一冊，手動測試見[迭代 11 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-11/index.md)（`u1`–`u43`）。
+> **2026-09-26 完成實作與開發機實測。** 驗收六條在開發機上全部走過：從 GitHub 全新 clone、全新資料卷、只用 Git 與 Docker 從零部署；`verify:iteration11 --live` 驗 `down -v` 之後資料還在、繫結掛載只有兩個、正式環境設定拒絕 `lab`；更新（新 tag、備份並驗證還原、套用一個新遷移）與回退（舊 tag、舊映像檔、還原備份）各一次。結果見《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 8 節，步驟見部署手冊《[從零部署本系統之一：容器路線的原冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install-detail/index.md)》，手動測試見[迭代 11 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-11/index.md)（`u1`–`u43`）。
 >
 > **實測抓到兩個缺陷，都只有在容器裡跑才會現形**：
 >
@@ -531,7 +531,7 @@ ______________________________________________________________________
 
 ### 4.10 迭代 12：外殼 App 獨立 repo 與整合（0926 新增，本週）
 
-> **2026-09-27 完成實作與開發機上的建置實測。** 外殼搬到私人 repo `hd-kiosk-shell`（`git subtree split`，保留歷史），本 repo 刪除 `apps/kiosk-shell/` 與 `make-hospital-ca.mjs`；契約定為第 1 版（《[病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md)》＋`packages/shared/src/kiosk-shell.ts`），外殼 `v0.2.0` 實作它，本系統以 `services/shell-builder/shell.pin` 釘住。步驟見《[部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)》第十二冊，手動測試見[迭代 12 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-12/index.md)（`v1`–`v48`），開發機實測結果見《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 9 節。
+> **2026-09-27 完成實作與開發機上的建置實測。** 外殼搬到私人 repo `hd-kiosk-shell`（`git subtree split`，保留歷史），本 repo 刪除 `apps/kiosk-shell/` 與 `make-hospital-ca.mjs`；契約定為第 1 版（《[病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md)》＋`packages/shared/src/kiosk-shell.ts`），外殼 `v0.2.0` 實作它，本系統以 `services/shell-builder/shell.pin` 釘住。步驟見部署手冊《[平板與外殼 App](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-tablet/index.md)》，手動測試見[迭代 12 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-12/index.md)（`v1`–`v48`），開發機實測結果見《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 9 節。
 >
 > | 驗收                                                      | 狀態                                                                             |
 > | --------------------------------------------------------- | -------------------------------------------------------------------------------- |
@@ -580,7 +580,7 @@ ______________________________________________________________________
 
 ### 4.11 迭代 13：AI 閘道與實驗室實際測試（0926 新增，本週）
 
-> **2026-09-27 完成實作與開發機上的本機實測；實驗室上的真模型實測待連線。** 閘道在 `services/ai-gateway`（FastAPI ＋ LangChain，`config.yaml` ＋ `llm_factory`），映像檔建置的最後一步是它自己的自我測試（內建假推論端點，不需要網路）。步驟見《[部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md)》第十三冊，手動測試見[迭代 13 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-13/index.md)（`w1`–`w47`），實測結果見《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 10 節。
+> **2026-09-27 完成實作與開發機上的本機實測；實驗室上的真模型實測待連線。** 閘道在 `services/ai-gateway`（FastAPI ＋ LangChain，`config.yaml` ＋ `llm_factory`），映像檔建置的最後一步是它自己的自我測試（內建假推論端點，不需要網路）。步驟見部署手冊《[AI 閘道](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-ai-gateway/index.md)》，手動測試見[迭代 13 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-13/index.md)（`w1`–`w47`），實測結果見《[部署演練紀錄](https://94sh09sh19sh.github.io/hd-docs/latest/notes/deployment-drills/index.md)》第 10 節。
 >
 > | 驗收                                                   | 狀態                                                                                           |
 > | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
@@ -590,7 +590,7 @@ ______________________________________________________________________
 > | 4. `provider` 在規範的兩種方法之間切換                 | ✓ 本機（`ollama`、`openai` 兩種都跑通）；實驗室再驗一次                                        |
 > | 5. 閘道停掉時 AI 暫時無法使用，主線完全正常            | ✓ 本機                                                                                         |
 > | 6. repo 與文件裡搜不到實驗室的連線資訊                 | 工具已備（`verify:iteration13 --secrets`，逐字比對檔案、歷史與提交訊息）；**連線資訊到手後跑** |
-> | 7. 實驗室個人資料夾以外沒有留下檔案                    | 待測（第十三冊 Z-14）                                                                          |
+> | 7. 實驗室個人資料夾以外沒有留下檔案                    | 待測（《AI 閘道》Z-14）                                                                        |
 >
 > **與原定計畫不同、或規格沒寫到而補上的四處**：
 >
@@ -857,7 +857,7 @@ ______________________________________________________________________
 
 **1005 迭代 15 實作結果**：
 
-1. **探測工具**（`npm run probe:hospital-api`；院內主機在 `api` 容器裡 `node apps/api/dist/hospital-api-probe.js`）：打一次 `?date=今天`，印出連線結果、開頭有沒有 `<meta>`、每列欄數、依病歷號＋開始時間分組的透析次數與格式不符的原因、51 欄各自的型態分布、床位的格式樣式、姓名欄有沒有「〇」、透析進行中的列結束時間與結束體重長什麼樣、**本系統用到的數字欄的數值大小分布** （只分 0、0～10、10～1000、1000 以上幾段，用來判斷累積量是公升還是毫升）。**不印任何一個值、不印位址、不寫任何檔案**。指令寫進部署手冊[第十五冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/15-from-zero/index.md) V-30a；位址當場輸入，不寫進 `.env`——探測不等於啟用。
+1. **探測工具**（`npm run probe:hospital-api`；院內主機在 `api` 容器裡 `node apps/api/dist/hospital-api-probe.js`）：打一次 `?date=今天`，印出連線結果、開頭有沒有 `<meta>`、每列欄數、依病歷號＋開始時間分組的透析次數與格式不符的原因、51 欄各自的型態分布、床位的格式樣式、姓名欄有沒有「〇」、透析進行中的列結束時間與結束體重長什麼樣、**本系統用到的數字欄的數值大小分布** （只分 0、0～10、10～1000、1000 以上幾段，用來判斷累積量是公升還是毫升）。**不印任何一個值、不印位址、不寫任何檔案**。指令寫進部署手冊[《從零部署本系統》](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fresh-install/index.md) V-30a；位址當場輸入，不寫進 `.env`——探測不等於啟用。
 1. **模擬院方 API**（`hospital-api-sim`，`apps/api/src/hospital-api-sim.ts`，同一個映像檔、`simulation` 設定檔）： 12 位虛構病人分三組——快結束、進行中、還沒開始，**以服務啟動的時間為準排**，開發機什麼時候開都看得到三種； `HOSPITAL_API_SIM_SCHEDULE=fixed` 改照透析室鐘點。邊界值照 3.5 放：字串數字、空字串、理想體重 0、透析中結束時間空白與已填預排值各半、一位病人每列少兩欄。每一列的「透析器」欄有一串標記字（驗收第 8 條用）。驗收腳本可以把它切成「原樣回傳指定的列」或「停掉（503）」。
 1. **抓取、解析、去重、逾時與重試**（`modules/hospital-sync/`）：30 秒逾時、失敗再試 3 次；從第一個 `{` 開始解析；每一欄都容許數字與字串，十進位一律以字串換成整數最小單位（多出的小數位四捨五入，例如體重 62.45 kg 存 62.5——那是顯示精度，不是格式錯誤）。 **一位病人的一次透析是全有或全無的單位**：少欄、數字欄寫了文字、時間格式不對，那一次透析整個不寫入、寫一筆稽核（原因不含欄位值），其他病人照常。原始回應不存，`hospital_api_fetch_runs` 只記時間、筆數、結果、內容雜湊與錯誤原因（錯誤原因不含位址）。四個營運參數：抓取頻率（3 分鐘）、未更新提示門檻（10 分鐘）、待確認下機門檻（60 分鐘）、床號正規化（0 原樣／1 改字母在前／2 改數字在前，預設 0）。
 1. **病人、床位、療程**全部走**與護理師拖曳相同的服務**（`ScheduleService.create`、`BindingService.create`、`DevicesService.setBed`、 `ClinicalDataImportService.import`），操作者是「院方資料同步」：
@@ -879,7 +879,7 @@ ______________________________________________________________________
 | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
 | **沒接院方 API 的環境，簡易版照迭代 14 的人工流程**（1006 迭代 17.1 起改成兩種環境都是「病人拖到平板」，使用者決定） | 位址空白就是不抓（3.5），那時沒有任何事能由 API 判斷；拿掉新增病人，護理師只能切到專業版。接了才換成配平板                                                                 | `simple/Workbench.tsx` 的 `hospitalApi`                      |
 | **代表「院方資料同步」的是一個登入不了的系統帳號**                                                                   | 療程、綁定、匯入批次的建立者都是必填的護理師外鍵；改成可空要重建資料表（減法）。帳號狀態停用、密碼丟掉、帳號清單與「有沒有使用者」都不算它；畫面與稽核顯示「院方資料同步」 | 共用常數 `HOSPITAL_SYNC_WORK_ID`、《資料庫使用規範》第 13 條 |
-| **模擬部署以 `HD_SIMULATION_DEPLOYMENT=yes` 明示**                                                                   | compose 把後端固定成正式環境設定，模擬部署也一樣；不明示就連模擬部署都用不了模擬院方 API。院內主機一律留空，留空時指向模擬就拒絕啟動                                       | 部署規範 DEP-46、第十五冊之一、之二                          |
+| **模擬部署以 `HD_SIMULATION_DEPLOYMENT=yes` 明示**                                                                   | compose 把後端固定成正式環境設定，模擬部署也一樣；不明示就連模擬部署都用不了模擬院方 API。院內主機一律留空，留空時指向模擬就拒絕啟動                                       | 部署規範 DEP-46、《`.env` 怎麼填》與之一                     |
 | **床位圖排不下就捲動**，床位格最矮 196px                                                                             | 1005 床數不設上限（同院 IDH 系統是 41 床）；不設最矮高度，41 床會把格子壓到放不下內容。1366×768 一次看 15 床（與迭代 14 同密度），1920×1080 約 40 床；整頁仍不捲           | 《介面設計基準》3.5、`design-tokens.css` 的 `--bed-min-h`    |
 | **院方的開始時間跨過班別界線時，換班別不另建**                                                                       | 預排值與實際值可能跨過 12 點或 17 點；同一次透析不該變成兩筆療程。只動院方帶進來、還沒開始、護理師沒碰過的那一筆                                                           | `hospital-sync.service.ts`                                   |
 | **累積量（第 46 欄）當公升讀**                                                                                       | 與其他容量欄同單位；探測工具印出它的數值大小分布，第三次進院看一次就知道對不對，錯了改一行換算                                                                             | 《資料字典》`dialysis_vital_records`                         |

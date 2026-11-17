@@ -38,7 +38,7 @@ ______________________________________________________________________
 
 ### 部署手冊第十九冊與 1109 第四次進院（第十九冊之二）
 
-說明：步驟在[第十九冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19-hospital-fetch/index.md)（`B-01`～`B-21`）、[第十九冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19a-hospital-fetch-reference/index.md)；當天紀錄在[第十九冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19b-fourth-visit-record/index.md)（發現 `BR-01`～`BR-13`）。
+說明：步驟在[第十九冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/visit-4-api/index.md)（`B-01`～`B-21`）、[第十九冊之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-fetch-script/index.md)；當天紀錄在[第十九冊之二](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/record-4-1109/index.md)（發現 `BR-01`～`BR-13`）。
 
 | 看什麼   | 值                                                                                                                           |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -50,7 +50,7 @@ ______________________________________________________________________
 
 ### 檢驗資料（hb）的腳本與手冊（第十九冊之三，1110）
 
-說明：規劃在《[院方 API 之四](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-next-visit-plan/index.md)》，步驟在[第十九冊之三](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/19c-hb-fetch/index.md)（`BH-01`～`BH-10`）。
+說明：規劃在《[院方 API 之四](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-next-visit-plan/index.md)》，步驟在[第十九冊之三](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-hb-fetch/index.md)（`BH-01`～`BH-10`）。
 
 | 看什麼    | 值                                                                                             |
 | --------- | ---------------------------------------------------------------------------------------------- |

@@ -50,7 +50,7 @@ ______________________________________________________________________
 
 ### 迭代 28：蒐集資料的完整取出
 
-說明：規劃在《[蒐集資料的完整取出](https://94sh09sh19sh.github.io/hd-docs/latest/notes/data-extraction-plan/index.md)》（與規劃不同的地方在它第 11 節），實作、開發端判斷與驗收現況在《[實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)》4.28，院內的步驟在部署手冊[第十六冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/16-data-export/index.md)，手動測試在《[迭代 28 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-28/index.md)》（`al1`～`al24`）。
+說明：規劃在《[蒐集資料的完整取出](https://94sh09sh19sh.github.io/hd-docs/latest/notes/data-extraction-plan/index.md)》（與規劃不同的地方在它第 11 節），實作、開發端判斷與驗收現況在《[實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)》4.28，院內的步驟在部署手冊[第十六冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-data-export/index.md)，手動測試在《[迭代 28 分冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/iteration-28/index.md)》（`al1`～`al24`）。
 
 | 量測                    | 值                                                                                                                                                                                                                                                                                                                                     |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
