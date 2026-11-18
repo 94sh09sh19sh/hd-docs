@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1118 — 三班時間答了；第五次進院讓抓取腳本與本系統 v0.5.0 讀檔上線（B 級），平板到床與交接院外補
+    1118 — 系統在醫院開始讀院方透析資料（第五次進院 B 級）、三班時間答了；平板到床與交接院外補
   
 
     
@@ -719,6 +719,89 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_13" id="__nav_2_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    週報子文件
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    週報子文件
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2026-11-18-detail/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1118 週報之一：細節與過程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -9635,6 +9718,7 @@
 <li>舊站 HackMD 只在你明確開口時才同步</li>
 <li>「踩過的坑」是一張症狀、原因、解法對照表，出事先查這裡</li>
 <li>新增文件、子文件、分冊、截圖、改介面基準、改維護流程各有固定做法（「什麼時候不只是加一篇週報」）</li>
+<li>週報分主文件與子文件（2026-11-18 起）：主文件只寫醫師在意的最多五件事，其餘進子文件（「週三：收成定版」第 1 步）</li>
 <li>md 格式照全域省 token 規則：一段一行、表格不補空白、長文件開頭要有摘要（2026-10-23 起）</li>
 <li>首頁只有四塊、兩張表列序固定，不准長回去</li>
 <li>定版日多跑 <code>npm run docs:readership</code>：這週哪些頁面被看見、看了幾次、什麼時候看、看了多久，寫成站上的《文件閱讀統計》，可一鍵切換含不含自己（2026-10-26 起；收集端 2026-11-09 已照「一次性設定」第 4 項建好）</li>
@@ -9794,8 +9878,16 @@ npm<span class="w"> </span>run<span class="w"> </span>docs:sync
 <h3 id="週三收成定版">週三：收成定版<a class="headerlink" href="#週三收成定版" title="Permanent link">&para;</a></h3>
 <h4 id="1-開一份新的週報">1. 開一份新的週報<a class="headerlink" href="#1-開一份新的週報" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>docs/weekly/_template.md<span class="w"> </span>docs/weekly/2026-09-16.md
+cp<span class="w"> </span>docs/weekly/_template-detail.md<span class="w"> </span>docs/weekly/2026-09-16-detail.md
 </code></pre></div>
 <p>檔名用<strong>該週開會日（星期三）的 ISO 日期</strong>。開會日就是報告日，這樣檔案列表的排序就是時間序。內容照範本填。第一行 <code># MMDD 週報 — 一句話標題</code> 很重要，它會成為站上那一頁的標題。</p>
+<p><strong>週報分主文件與子文件（2026-11-18 起）。</strong> 週報是開會的簡報，也是醫師週中確認進度用的；1118 之前一份寫到底，什麼都往裡塞，醫師要找的那幾件事被文件重寫、問答過程、段落清單淹掉。現在：</p>
+<ul>
+<li>主文件（<code>2026-11-25.md</code>，範本 <code>_template.md</code>）只寫醫師會在意的事，<strong>摘要最多五件、最重要的在上、一件一句話</strong>，完成內容第 N 節對應摘要第 N 條；待決事項與下週規劃照舊留在主文件</li>
+<li>子文件（<code>2026-11-25-detail.md</code>，範本 <code>_template-detail.md</code>）放其他全部：各件事的細節、文件重寫、週中問答、試過又放棄的路線、遇到的問題、文件異動、commit 明細</li>
+<li>子文件不在自動產生的側欄裡，要手動加到 <code>nav</code>「每週紀錄 → 週報子文件」</li>
+<li>判斷「醫師會不會在意」的清單在 skill <code>hd-docs</code> 的 <code>references/weekly-and-freeze.md</code>「週報怎麼寫」；1111 以前的週報不回頭拆</li>
+</ul>
 <h4 id="2-首頁收尾">2. 首頁收尾<a class="headerlink" href="#2-首頁收尾" title="Permanent link">&para;</a></h4>
 <p>開啟 <code>docs/index.md</code>，「最近三週」最上方插入一段（新的排在上面；週中已開草稿就跳過），檔案裡有註解標出插入點：</p>
 <div class="highlight"><pre><span></span><code><span class="gu">### [0916 — 一句話標題](weekly/2026-09-16.md)</span>
