@@ -166,7 +166,7 @@ docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe
 docker compose --env-file $cfg exec -T api node -e "const f=require('./apps/api/dist/modules/hospital-sync/hospital-files.js'),p=require('./apps/api/dist/modules/hospital-sync/hospital-api.format.js');(async()=>{const d=await f.readDialysisDay(process.env.HOSPITAL_DIALYSIS_LIST_DIR,p.hospitalLocalDate(new Date()));const v=p.validateRows(f.mergeDialysisSegments(d.segments)).dialyses.map(x=>x.ufTargetMl).filter(x=>x!==null);console.log('dialyses',v.length,'negative',v.filter(x=>x<0).length,'over8000',v.filter(x=>x>8000).length,'min',Math.min(...v),'max',Math.max(...v))})()"
 ```
 
-`dialyses` 是今天有目標脫水量的透析次數，`negative`、`over8000` 是超出範圍的次數，`min`、`max` 單位 mL。整行抄進紀錄，回開發端看要不要改範圍；首波那一位若被擋，「本次透析」面板先不開（或指派前先確認他不在被擋的那幾次裡）。1116 院內結果：`dialyses 96 negative 0 over8000 3 min 500 max 74600`——74.6 公升不可能是脫水量，像是院方那幾筆把體重（74.6 公斤）填進目標脫水量欄；範圍檢查擋得對，不必改程式。**1118 醫師說明是護理師填錯**，建議不要擋（顯示錯的值有助於病人提醒更正），要不要放行由開發端判斷（院方 API《[之二之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-answered/index.md)》E-5、《院內主機現況》ST-34），定之前照舊擋；稽核要不要改成「同一次透析同一個原因只記一次」是開發端的候選改動，先問使用者
+`dialyses` 是今天有目標脫水量的透析次數，`negative`、`over8000` 是超出範圍的次數，`min`、`max` 單位 mL。整行抄進紀錄，回開發端看要不要改範圍；首波那一位若被擋，「本次透析」面板先不開（或指派前先確認他不在被擋的那幾次裡）。1116 院內結果：`dialyses 96 negative 0 over8000 3 min 500 max 74600`——74.6 公升不可能是脫水量，像是院方那幾筆把體重（74.6 公斤）填進目標脫水量欄；範圍檢查擋得對，不必改程式。**1118 醫師說明是護理師填錯**，建議不要擋（顯示錯的值有助於病人提醒更正），1120 使用者定放行、排成迭代 32.2（院方 API《[之二之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-answered/index.md)》E-5、《院內主機現況》ST-34）；含 32.2 的版本換上之前照舊擋；稽核要不要改成「同一次透析同一個原因只記一次」是開發端的候選改動，先問使用者
 
 ### DF-07 時間有沒有往前跳
 

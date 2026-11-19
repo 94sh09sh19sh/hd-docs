@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1125 — 1118 開會答了四小時、床位代號與病人告知；目標脫水量填錯要不要放行待定
+    1125 — 1118 開會答了四小時、床位代號與病人告知；目標脫水量填錯照醫師建議改成放行
   
 
     
@@ -10191,7 +10191,7 @@ HD_SIMULATION_DEPLOYMENT=yes
 </ul>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="n">exec</span> <span class="n">-T</span> <span class="n">api</span> <span class="n">node</span> <span class="n">-e</span> <span class="s2">"const f=require('./apps/api/dist/modules/hospital-sync/hospital-files.js'),p=require('./apps/api/dist/modules/hospital-sync/hospital-api.format.js');(async()=&gt;{const d=await f.readDialysisDay(process.env.HOSPITAL_DIALYSIS_LIST_DIR,p.hospitalLocalDate(new Date()));const v=p.validateRows(f.mergeDialysisSegments(d.segments)).dialyses.map(x=&gt;x.ufTargetMl).filter(x=&gt;x!==null);console.log('dialyses',v.length,'negative',v.filter(x=&gt;x&lt;0).length,'over8000',v.filter(x=&gt;x&gt;8000).length,'min',Math.min(...v),'max',Math.max(...v))})()"</span>
 </code></pre></div>
-<p><code>dialyses</code> 是今天有目標脫水量的透析次數，<code>negative</code>、<code>over8000</code> 是超出範圍的次數，<code>min</code>、<code>max</code> 單位 mL。整行抄進紀錄，回開發端看要不要改範圍；首波那一位若被擋，「本次透析」面板先不開（或指派前先確認他不在被擋的那幾次裡）。1116 院內結果：<code>dialyses 96 negative 0 over8000 3 min 500 max 74600</code>——74.6 公升不可能是脫水量，像是院方那幾筆把體重（74.6 公斤）填進目標脫水量欄；範圍檢查擋得對，不必改程式。<strong>1118 醫師說明是護理師填錯</strong>，建議不要擋（顯示錯的值有助於病人提醒更正），要不要放行由開發端判斷（院方 API《<a href="../../notes/hospital-api-fetch-methods-questions-answered/">之二之一</a>》E-5、《院內主機現況》ST-34），定之前照舊擋；稽核要不要改成「同一次透析同一個原因只記一次」是開發端的候選改動，先問使用者</p>
+<p><code>dialyses</code> 是今天有目標脫水量的透析次數，<code>negative</code>、<code>over8000</code> 是超出範圍的次數，<code>min</code>、<code>max</code> 單位 mL。整行抄進紀錄，回開發端看要不要改範圍；首波那一位若被擋，「本次透析」面板先不開（或指派前先確認他不在被擋的那幾次裡）。1116 院內結果：<code>dialyses 96 negative 0 over8000 3 min 500 max 74600</code>——74.6 公升不可能是脫水量，像是院方那幾筆把體重（74.6 公斤）填進目標脫水量欄；範圍檢查擋得對，不必改程式。<strong>1118 醫師說明是護理師填錯</strong>，建議不要擋（顯示錯的值有助於病人提醒更正），1120 使用者定放行、排成迭代 32.2（院方 API《<a href="../../notes/hospital-api-fetch-methods-questions-answered/">之二之一</a>》E-5、《院內主機現況》ST-34）；含 32.2 的版本換上之前照舊擋；稽核要不要改成「同一次透析同一個原因只記一次」是開發端的候選改動，先問使用者</p>
 <h3 id="df-07-時間有沒有往前跳">DF-07 時間有沒有往前跳<a class="headerlink" href="#df-07-時間有沒有往前跳" title="Permanent link">&para;</a></h3>
 <p>等 3 分鐘，卡片表格最上面一列的時間往前跳就是在讀。</p>
 <ul>
