@@ -230,5 +230,6 @@ Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" | Select-O
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1118 | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《第一次進院（0922）· 部署本系統之一：進院當天詳細版》拆出，內容與步驟編號不動 |
 
 [← 回部署手冊目錄](index.md)

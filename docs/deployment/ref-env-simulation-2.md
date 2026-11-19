@@ -142,5 +142,6 @@ Select-String -Path $cfg -Pattern '^(HD_PUBLIC_API_URL|CORS_ORIGINS|MDM_KIOSK_BA
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
+| 1118 | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《`.env` 怎麼填之一：開發機演練》拆出，內容與步驟編號不動 |
 
 [← 回部署手冊目錄](index.md)
