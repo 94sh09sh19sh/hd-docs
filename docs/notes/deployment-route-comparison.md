@@ -220,7 +220,7 @@ git clone → docker build（下載基底映像、npm 套件、Prisma 引擎）�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 部署手冊 1117 重寫、1118 拆檔，舊冊號的稱呼與連結改指到內容現在所在的那一份 |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/notes/deployment-route-comparison/) | 2026-11-18 | 部署手冊 1117 重寫、1118 拆檔，舊冊號的稱呼與連結改指到內容現在所在的那一份 |
 | [0930](https://94sh09sh19sh.github.io/hd-docs/0930/notes/deployment-route-comparison/) | 2026-09-30 | 改為歷史紀錄：0926 院方確定要容器、程式以 git clone 取得，離線安裝包撤除；保留當時的比較，不再更新 |
 | [0923](https://94sh09sh19sh.github.io/hd-docs/0923/notes/deployment-route-comparison/) | 2026-09-23 | 首次定版。0922 院方要求容器後撰寫：離線安裝包與容器逐項比較，不用容器也能與同機其他專案隔離的理由，以及要問院方的問題 |
 

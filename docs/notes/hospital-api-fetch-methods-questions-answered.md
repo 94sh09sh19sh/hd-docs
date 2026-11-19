@@ -171,7 +171,7 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 系列 1116 改名為「院方 API 介接」；加 1114 學長答的 15 題（第 3.6 節），去重「內容變了再寫」維持；部署手冊 1117 重寫、1118 拆檔，舊冊號的稱呼與連結改指到內容現在所在的那一份 |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/notes/hospital-api-fetch-methods-questions-answered/) | 2026-11-18 | 系列 1116 改名為「院方 API 介接」；加 1114 學長答的 15 題（第 3.6 節），去重「內容變了再寫」維持；部署手冊 1117 重寫、1118 拆檔，舊冊號的稱呼與連結改指到內容現在所在的那一份 |
 | [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/hospital-api-fetch-methods-questions-answered/) | 2026-11-11 | 首次定版。給學長的問題中已答覆的題目（題號不變）：1109 現場看到答案的 W-1、W-3、W-4、A-1、A-3、G-1，1111 使用者先答的 13 題與 A-5 |
 
 [← 回上層文件](hospital-api-fetch-methods-questions.md)

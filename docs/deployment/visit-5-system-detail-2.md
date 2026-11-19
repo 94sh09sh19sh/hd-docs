@@ -201,6 +201,6 @@ docker compose --env-file $cfg exec -T api node -e "const f=require('./apps/api/
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《第五次進院（1116）任務二 · 本系統換版上線之一：詳細版》拆出，內容與步驟編號不動 |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/deployment/visit-5-system-detail-2/) | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《第五次進院（1116）任務二 · 本系統換版上線之一：詳細版》拆出，內容與步驟編號不動 |
 
 [← 回部署手冊目錄](index.md)

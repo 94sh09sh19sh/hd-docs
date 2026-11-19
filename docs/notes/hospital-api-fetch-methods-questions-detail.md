@@ -148,7 +148,7 @@ H 組全部答了：H-1 1111 使用者答；**H-2 1114 學長答「不知」**�
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 系列 1116 改名為「院方 API 介接」；1111 開會後補 F-6 抓取時段，1114 學長答 15 題後只剩 D-1，1116 第五次進院後加 E-5（目標脫水量超過 8000 mL） |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/notes/hospital-api-fetch-methods-questions-detail/) | 2026-11-18 | 系列 1116 改名為「院方 API 介接」；1111 開會後補 F-6 抓取時段，1114 學長答 15 題後只剩 D-1，1116 第五次進院後加 E-5（目標脫水量超過 8000 mL） |
 | [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/hospital-api-fetch-methods-questions-detail/) | 2026-11-11 | 首次定版。給學長的問題清單補充版：各題的理由與估算，題號與之二相同 |
 
 [← 回正式版](hospital-api-fetch-methods-questions.md)　[← 回進度首頁](../index.md)

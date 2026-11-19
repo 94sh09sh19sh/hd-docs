@@ -220,6 +220,6 @@ docker compose --env-file $cfg exec -T -e HOSPITAL_API_BASE_URL=$u api node apps
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《第三次進院（1029）· 接手 v0.3.0、換成 IP、換版》拆出，內容與步驟編號不動 |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/deployment/visit-3-system-2/) | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《第三次進院（1029）· 接手 v0.3.0、換成 IP、換版》拆出，內容與步驟編號不動 |
 
 [← 回部署手冊目錄](index.md)

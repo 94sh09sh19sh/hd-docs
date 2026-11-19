@@ -198,6 +198,6 @@ docker compose run --rm --no-deps api node apps/api/scripts/prisma-cli.mjs migra
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《第一次進院（0922）· 部署本系統之四：git clone＋Docker 路線詳細版》拆出，內容與步驟編號不動 |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/deployment/visit-1-system-docker-3/) | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《第一次進院（0922）· 部署本系統之四：git clone＋Docker 路線詳細版》拆出，內容與步驟編號不動 |
 
 [← 回部署手冊目錄](index.md)

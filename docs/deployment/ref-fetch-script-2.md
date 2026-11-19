@@ -195,6 +195,6 @@ py transcode_history.py --restore "<指定資料夾>\_backup_YYYYMMDD-HHMM"
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《院方 API 抓取腳本的維運》拆出，內容與步驟編號不動 |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/deployment/ref-fetch-script-2/) | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《院方 API 抓取腳本的維運》拆出，內容與步驟編號不動 |
 
 [← 回部署手冊目錄](index.md)

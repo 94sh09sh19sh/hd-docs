@@ -225,6 +225,6 @@ docker compose --env-file $cfg --profile ai stop ai-gateway
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1118 | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《AI 閘道》拆出，內容與步驟編號不動 |
+| [1118](https://94sh09sh19sh.github.io/hd-docs/1118/deployment/ref-ai-gateway-3/) | 2026-11-18 | 首次定版。1118 照每份約 300 行的上限由《AI 閘道》拆出，內容與步驟編號不動 |
 
 [← 回部署手冊目錄](index.md)
