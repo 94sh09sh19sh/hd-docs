@@ -1,6 +1,6 @@
 # 血液透析中心平板照護輔助系統 — 進度首頁
 
-**本週定版**：1111｜**1118 修訂中**
+**本週定版**：1118
 
 > 每週三開會日定版一次。下方連結**永遠指向現行版**，網址不變；日期標的是它最後一次定版的週次。
 
@@ -8,7 +8,7 @@ ______________________________________________________________________
 
 ## 最近三週
 
-### [1118 — 系統在醫院開始讀院方透析資料（第五次進院 B 級）、三班時間答了；平板到床與交接院外補](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-11-18/index.md) · 修訂中
+### [1118 — 系統在醫院開始讀院方透析資料（第五次進院 B 級）、三班時間答了；平板到床與交接院外補](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-11-18/index.md)
 
 進度：
 
@@ -44,29 +44,29 @@ ______________________________________________________________________
 
 ## 實作文件
 
-| 我是                               | 看這份                                                                                                                                                                                                                                                                                                                                                                                                             | 本週定版      |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
-| 醫師、護理部、法規承辦人           | [臨床端進度報告](https://94sh09sh19sh.github.io/hd-docs/latest/reports/progress-clinical/index.md)                                                                                                                                                                                                                                                                                                                 | 1111 · 修訂中 |
-| 接手或協作的工程師                 | [技術端進度報告](https://94sh09sh19sh.github.io/hd-docs/latest/reports/progress-technical/index.md)                                                                                                                                                                                                                                                                                                                | 1111 · 修訂中 |
-| 要看系統實體與邏輯長什麼樣         | [架構圖](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/architecture-diagrams/index.md)                                                                                                                                                                                                                                                                                                                | 1111 · 修訂中 |
-| 要查資料庫蒐集了哪些資料           | [資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md) — 101 張表 1025 個欄位逐欄說明                                                                                                                                                                                                                                                                                        | 1111 · 修訂中 |
-| 沒有技術背景，想聽懂會議上那些詞   | [這套系統是用什麼蓋的](https://94sh09sh19sh.github.io/hd-docs/latest/reference/tech-stack-explained/index.md)                                                                                                                                                                                                                                                                                                      | 1028 · 修訂中 |
-| 要改外殼 App，或查它與系統怎麼對接 | [病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md) — 外殼在另一個私人 repo，兩邊只靠這一份帶版本號的契約對齊                                                                                                                                                                                                                                             | 1007          |
-| 要動手驗收                         | [完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md) — 主手冊加迭代 3～32 四十六本分冊，1632 項逐條驗證                                                                                                                                                                                                                                                            | 1111 · 修訂中 |
-| 要進醫院部署                       | [部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md) — 目錄分三類：**演練並進院**（一次進院一個任務一冊，主文件簡易版只寫做什麼與怎樣算成功、子文件詳細版；開發機演練與院內正式主機的差異逐步標出）、**離院紀錄**（一次進院一冊，0922 失敗到 1116 讀檔上線五次）、**常備參考**（按未來參考價值排；院內主機現況與未完成事項排第一，安裝包路線排最後）；1117 整套重寫，舊冊號對照在目錄最後 | 1111 · 修訂中 |
+| 我是                               | 看這份                                                                                                                                                                                                                                                                                                                                                                                                             | 本週定版 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| 醫師、護理部、法規承辦人           | [臨床端進度報告](https://94sh09sh19sh.github.io/hd-docs/latest/reports/progress-clinical/index.md)                                                                                                                                                                                                                                                                                                                 | 1118     |
+| 接手或協作的工程師                 | [技術端進度報告](https://94sh09sh19sh.github.io/hd-docs/latest/reports/progress-technical/index.md)                                                                                                                                                                                                                                                                                                                | 1118     |
+| 要看系統實體與邏輯長什麼樣         | [架構圖](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/architecture-diagrams/index.md)                                                                                                                                                                                                                                                                                                                | 1118     |
+| 要查資料庫蒐集了哪些資料           | [資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md) — 102 張表 1065 個欄位逐欄說明                                                                                                                                                                                                                                                                                        | 1118     |
+| 沒有技術背景，想聽懂會議上那些詞   | [這套系統是用什麼蓋的](https://94sh09sh19sh.github.io/hd-docs/latest/reference/tech-stack-explained/index.md)                                                                                                                                                                                                                                                                                                      | 1118     |
+| 要改外殼 App，或查它與系統怎麼對接 | [病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md) — 外殼在另一個私人 repo，兩邊只靠這一份帶版本號的契約對齊                                                                                                                                                                                                                                             | 1007     |
+| 要動手驗收                         | [完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md) — 主手冊加迭代 3～32 四十六本分冊，1632 項逐條驗證                                                                                                                                                                                                                                                            | 1118     |
+| 要進醫院部署                       | [部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md) — 目錄分三類：**演練並進院**（一次進院一個任務一冊，主文件簡易版只寫做什麼與怎樣算成功、子文件詳細版；開發機演練與院內正式主機的差異逐步標出）、**離院紀錄**（一次進院一冊，0922 失敗到 1116 讀檔上線五次）、**常備參考**（按未來參考價值排；院內主機現況與未完成事項排第一，安裝包路線排最後）；1117 整套重寫，舊冊號對照在目錄最後 | 1118     |
 
 ## 需求文件
 
 前五份**由來龍去脈往下讀到實作與部署細節**，第六份是進行中的問題總表；**優先權另有一套，衝突時的裁決順序看「角色」欄**：
 
-| 文件                                                                                                     | 角色                                               | 本週定版      |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------- |
-| [FDE 數位化評估報告](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/fde-assessment/index.md) | 背景脈絡與選型理由                                 | 1007          |
-| [軟體需求規格書（SRS）](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)         | 功能需求來源（FR 編號出處）                        | 1111 · 修訂中 |
-| [資料庫使用規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)    | 資料治理強制規則，優先權等同實作規格書             | 1028 · 修訂中 |
-| [實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)    | 範圍與技術選型，**衝突時以此為準**                 | 1111 · 修訂中 |
-| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1111 · 修訂中 |
-| [尚待確認事項清冊](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)   | 卡住進度的問題總表，其餘文件不再各自維護           | 1111 · 修訂中 |
+| 文件                                                                                                     | 角色                                               | 本週定版 |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | -------- |
+| [FDE 數位化評估報告](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/fde-assessment/index.md) | 背景脈絡與選型理由                                 | 1007     |
+| [軟體需求規格書（SRS）](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)         | 功能需求來源（FR 編號出處）                        | 1118     |
+| [資料庫使用規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)    | 資料治理強制規則，優先權等同實作規格書             | 1118     |
+| [實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)    | 範圍與技術選型，**衝突時以此為準**                 | 1118     |
+| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1118     |
+| [尚待確認事項清冊](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)   | 卡住進度的問題總表，其餘文件不再各自維護           | 1118     |
 
 每份文件末尾都有「版本歷程」，記錄歷次定版與異動摘要；要回頭對帳哪一版談定了什麼，從那裡找。
 
