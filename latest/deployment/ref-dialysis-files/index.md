@@ -54,7 +54,7 @@
 
 - **時段**：首波還沒開始用時，透析時段也可以啟用（DEP-32 1116 例外）——沒有人靠這套系統，斷線一分鐘、療程一口氣同步進來都不影響照護，在透析時段做反而能對正在透析的床；挑護理師不忙的時候。**首波開始用之後**，再改設定或更新就照舊排非透析時段
 - **為什麼是分界線**：讀檔一開，每 3 分鐘就把當天清單上**所有病人**的主檔、床位、療程寫進資料庫，護理端會看到整個透析室，不是只有首波那一位；床位只新增、不會自己消失。停用不會刪掉已寫進去的（DF-10）。先讓首波護理師知道
-- **床號轉換維持 `0`**（原樣顯示）：設成 `1` 會把 `1A` 轉成 `A1`，兩床的病人併成一床；`1A`～`3D` 與 `99` 的對應還在問學長（院方 API《[之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》D-1），先不改
+- **床號轉換維持 `0`**（原樣顯示）：設成 `1` 會把 `1A` 轉成 `A1`，兩床的病人併成一床。1118 醫師說明 `1A`～`3D` 是 8 樓住院、`99` 是急診、`A`～`D` 開頭是透析門診（院方 API《[之二之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-answered/index.md)》D-1），床號原樣就對，不改
 
 ### DF-02 改 `.env` 五行
 
@@ -166,7 +166,7 @@ docker compose --env-file $cfg exec -T api node apps/api/dist/hospital-api-probe
 docker compose --env-file $cfg exec -T api node -e "const f=require('./apps/api/dist/modules/hospital-sync/hospital-files.js'),p=require('./apps/api/dist/modules/hospital-sync/hospital-api.format.js');(async()=>{const d=await f.readDialysisDay(process.env.HOSPITAL_DIALYSIS_LIST_DIR,p.hospitalLocalDate(new Date()));const v=p.validateRows(f.mergeDialysisSegments(d.segments)).dialyses.map(x=>x.ufTargetMl).filter(x=>x!==null);console.log('dialyses',v.length,'negative',v.filter(x=>x<0).length,'over8000',v.filter(x=>x>8000).length,'min',Math.min(...v),'max',Math.max(...v))})()"
 ```
 
-`dialyses` 是今天有目標脫水量的透析次數，`negative`、`over8000` 是超出範圍的次數，`min`、`max` 單位 mL。整行抄進紀錄，回開發端看要不要改範圍；首波那一位若被擋，「本次透析」面板先不開（或指派前先確認他不在被擋的那幾次裡）。1116 院內結果：`dialyses 96 negative 0 over8000 3 min 500 max 74600`——74.6 公升不可能是脫水量，像是院方那幾筆把體重（74.6 公斤）填進目標脫水量欄；範圍檢查擋得對，不必改程式。已請學長確認（院方 API《[之二](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions/index.md)》E-5）；稽核要不要改成「同一次透析同一個原因只記一次」是開發端的候選改動，先問使用者
+`dialyses` 是今天有目標脫水量的透析次數，`negative`、`over8000` 是超出範圍的次數，`min`、`max` 單位 mL。整行抄進紀錄，回開發端看要不要改範圍；首波那一位若被擋，「本次透析」面板先不開（或指派前先確認他不在被擋的那幾次裡）。1116 院內結果：`dialyses 96 negative 0 over8000 3 min 500 max 74600`——74.6 公升不可能是脫水量，像是院方那幾筆把體重（74.6 公斤）填進目標脫水量欄；範圍檢查擋得對，不必改程式。**1118 醫師說明是護理師填錯**，建議不要擋（顯示錯的值有助於病人提醒更正），要不要放行由開發端判斷（院方 API《[之二之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/hospital-api-fetch-methods-questions-answered/index.md)》E-5、《院內主機現況》ST-34），定之前照舊擋；稽核要不要改成「同一次透析同一個原因只記一次」是開發端的候選改動，先問使用者
 
 ### DF-07 時間有沒有往前跳
 
