@@ -5177,6 +5177,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#3210-迭代-323維運小修正" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §32.10 迭代 32.3：維運小修正
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9803,6 +9814,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#3210-迭代-323維運小修正" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §32.10 迭代 32.3：維運小修正
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9832,10 +9854,10 @@
 
 <h1 id="迭代-32-手動測試--院方資料改讀檔透析清單與檢驗資料">迭代 32 手動測試 — 院方資料改讀檔：透析清單與檢驗資料<a class="headerlink" href="#迭代-32-手動測試--院方資料改讀檔透析清單與檢驗資料" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.32 節、4.32.1（迭代 32.1 三班時間，§32.8）與 4.32.2（迭代 32.2 院方數值放行，§32.9）。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 32 的部分。院方資料同步本身（病人、床位、療程、下機、四種數值）在《<a href="../iteration-15/">迭代 15 分冊</a>》；讀檔模式只換了「拿到回應」那一步。抓取腳本是私人 repo <code>hd-hospital-fetch</code>，留底檔與狀態檔的格式以它 README 的「契約」為準。</p>
+<p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.32 節、4.32.1（迭代 32.1 三班時間，§32.8）、4.32.2（迭代 32.2 院方數值放行，§32.9）與 4.32.3（迭代 32.3 維運小修正，§32.10）。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 32 的部分。院方資料同步本身（病人、床位、療程、下機、四種數值）在《<a href="../iteration-15/">迭代 15 分冊</a>》；讀檔模式只換了「拿到回應」那一步。抓取腳本是私人 repo <code>hd-hospital-fetch</code>，留底檔與狀態檔的格式以它 README 的「契約」為準。</p>
 </blockquote>
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
-<p>這一冊驗八件事（項次 <code>ap1</code>～<code>ap28</code>，自動化另跑 <code>npm run verify:iteration32</code>、<code>npm run verify:iteration32:api</code>，32.1、32.2 再各加 <code>npm run verify:iteration32-1</code>、<code>npm run verify:iteration32-2</code> 與 <code>:api</code>）：</p>
+<p>這一冊驗九件事（項次 <code>ap1</code>～<code>ap33</code>，自動化另跑 <code>npm run verify:iteration32</code>、<code>npm run verify:iteration32:api</code>，32.1、32.2、32.3 再各加 <code>npm run verify:iteration32-1</code>、<code>npm run verify:iteration32-2</code>、<code>npm run verify:iteration32-3</code> 與 <code>:api</code>）：</p>
 <ul>
 <li>設定二選一：透析清單資料夾與院方 API 的位址兩種都填，後端起不來；只填資料夾時不連院方</li>
 <li>讀檔：模擬院方 API 的寫檔模式寫留底，後端讀當天的段落、照舊同步；內容沒變不寫入</li>
@@ -9845,6 +9867,7 @@
 <li>compose 唯讀掛載兩個資料夾（路徑有空白與中文）</li>
 <li>（32.1）「未更新」提示時段預設 8～23 時，舊的 0、24 換版時改掉；工作量熱圖的虛線在 12:45、17:45</li>
 <li>（32.2）院方的理想體重、目標脫水量、結束體重、實際脫水量超出常見範圍照寫、照常顯示，只擋負數與讀不懂的值，四個值分開判斷；人工輸入照舊擋</li>
+<li>（32.3）被擋的值同一次療程、同一欄、同一個值與原因只記一筆稽核；<code>db-update</code> 分開印能登入的帳號與系統帳號；部署範本與 compose 的註解改成現行寫法</li>
 </ul>
 <table>
 <thead>
@@ -9933,6 +9956,12 @@
 <td>🛠 🖥</td>
 <td>4.32.2 第 1～4 項</td>
 </tr>
+<tr>
+<td>§32.10</td>
+<td>迭代 32.3：維運小修正</td>
+<td>🛠 🖥</td>
+<td>4.32.3 第 1～3 列</td>
+</tr>
 </tbody>
 </table>
 <p><strong>前置</strong>：開一個空的資料夾當模擬留底（下面寫 <code>&lt;模擬資料夾&gt;</code>，路徑故意帶一個空白與中文），終端機一跑 <code>HOSPITAL_API_SIM_FILES_DIR=&lt;模擬資料夾&gt; npm run dev:hospital-sim</code>（模擬院方 API 照抓取腳本的契約每 3 分鐘寫一輪透析清單、啟動時寫一輪檢驗資料），根目錄 <code>.env</code> 加 <code>HOSPITAL_DIALYSIS_LIST_DIR=&lt;模擬資料夾&gt;/dialysis-list</code> 與 <code>HOSPITAL_LAB_DIR=&lt;模擬資料夾&gt;/lab</code>，再啟動後端。</p>
@@ -9997,6 +10026,17 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap26</code> <strong>［開發機→平板→護理端］</strong> 🛠 同一欄改成 <code>-1.2</code>，按「立即同步」。 → 成功；面板的目標脫水量照舊是上一個值（74.6，負數沒寫進去），理想體重照舊；稽核軌跡多一筆「院方 API：整批未寫入，共 1 處問題。第 1 列 value：目標脫水量是負數」，句子裡<strong>沒有</strong> -1.2 這個值。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap27</code> <strong>［護理端］</strong> 選單 →「臨床數值」→ 人工輸入，模擬甲、目標脫水量 <code>74600</code>。 → 被擋：「目標脫水量 74600 超出可接受的輸入範圍 0～8000 mL（請確認是否漏打或多打小數點）」，什麼都沒寫進去（人工輸入照舊擋）。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap28</code> <strong>［開發機］</strong> 🛠 跑 <code>npm run verify:iteration32-2</code>（不需要後端，五步：只擋負數與讀不懂的值、四個值分開送、人工輸入與檔案匯入照舊、讀到 0 與用到這四個值的地方、介面檢查與 32、32.1 的驗收）與 <code>npm run verify:iteration32-2:api</code>（要 Prisma、不必開後端，五步：接假的院方 API 兩輪、被擋的稽核、病人端面板 74.6、下機的四個值、人工輸入照舊擋）。 → 兩支都全部通過。</li>
+</ul>
+<h2 id="3210-迭代-323維運小修正">§32.10 迭代 32.3：維運小修正<a class="headerlink" href="#3210-迭代-323維運小修正" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>對應《實作規格書》4.32.3：院方數值被擋的稽核只記一次、<code>db-update</code> 分開印帳號數、部署檔的註解。沒有遷移。改值的做法與 §32.9 相同（模擬院方 API 先停掉）。</p>
+</blockquote>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap29</code> <strong>［開發機→護理端］</strong> 🛠 接著 <code>ap26</code>（模擬甲的目標脫水量 <code>-1.2</code>），再按三次「立即同步」。 → 三次都成功；稽核軌跡被拒的那一筆<strong>還是只有 <code>ap26</code> 那一筆</strong>，沒有每按一次多一筆。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap30</code> <strong>［開發機→護理端］</strong> 🛠 同一欄改成 <code>-2</code>，按兩次「立即同步」。 → 稽核軌跡多<strong>一</strong>筆「目標脫水量是負數」（值變了才再記），第二次不再多。再改成 <code>2.4</code> 按一次：臨床數值寫進 2400 mL，稽核不多；最後改回 <code>-2</code> 按一次：又多一筆（改對過再填錯照樣記）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap31</code> <strong>［開發機］</strong> 🛠 跑 <code>VERIFY_KEEP=1 npm run verify:iteration32-3:api</code>，留下 repo 旁邊的 <code>hd-verify-iteration32-3-&lt;時間&gt;</code>；在 <code>apps/api</code> 執行 <code>DATABASE_URL=file:&lt;那個資料夾&gt;/hd.db BACKUP_DIR=&lt;那個資料夾&gt;/upd-backups API_PORT=3999 node scripts/db-update.mjs</code>（路徑用 <code>C:/…</code> 的正斜線寫法，先建好 <code>upd-backups</code>）。 → 第 4 步印三行：<code>完整性檢查 ok；病人 2、綁定 0、求助 0、稽核紀錄 N</code>、<code>能登入的帳號 1</code>、<code>系統帳號 2</code>；<strong>沒有</strong>「護理端帳號」；更新完成。跑完刪掉那個資料夾。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap32</code> <strong>［開發機］</strong> 看 <code>deploy/hospital.env.example</code> 與 <code>docker-compose.yml</code> 的註解。 → 例子寫 <code>&lt;主機&gt;</code>，沒有 <code>hd-server</code>；開發機部署實測寫「區網 IP」；產生 <code>JWT_SECRET</code> 是一行 PowerShell，沒有 <code>docker run node:20</code>。設定值一行都沒變（<code>verify:iteration32-3</code> 會比對）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>ap33</code> <strong>［開發機］</strong> 🛠 跑 <code>npm run verify:iteration32-3</code>（不需要後端，四步：稽核去重的寫法、<code>db-update</code> 的帳號數、兩個部署檔只改註解、零院外連線與 32、32.1、32.2 的驗收）與 <code>npm run verify:iteration32-3:api</code>（要 Prisma、不必開後端，六步：連讀三次只有一筆、值變了、原因變了、下機時另一欄、改對再填錯、稽核不寫值）。 → 兩支都全部通過。</li>
 </ul>
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>
