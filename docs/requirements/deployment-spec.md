@@ -320,7 +320,7 @@ git clone 下來的原始碼（主機上，本系統自己的目錄）
 | `model` | 優先用對方已常駐的模型，不另外要；要換先跟對方協調，否則雙方都要等冷啟動 |
 | 併發與逾時 | 背景佇列維持一次一件、不調高；逾時先照範本實測，不夠兩個一起加大（後端比閘道大） |
 | 先問 | 實際位址、能不能共用、換模型停機會不會通知、常駐模型與 Ollama 設定、主機有沒有 GPU（清冊 Q-07 第 6～10 題）；問到之前院內範本照舊留空 |
-| 語音 | Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，DEP-16 的例外待使用者定、其餘待清冊 Q-41 |
+| 語音 | Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，DEP-16 的例外待使用者定、其餘待清冊 Q-41。**1124 迭代 34**：語音閘道 `services/speech-gateway` 已做（compose 的 `ai` profile、不開埠、**不含模型**，切句先不放閘道）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 `speech-gateway/config.yaml`，公開位址判設定有誤；後端 `SPEECH_GATEWAY_URL` 只准院內位址；`check:egress` 掃語音閘道。院內範本 `config.hospital.example.yaml` 留空等 Q-07；DEP-16 例外的條文等使用者定了才寫（實作規格書 4.34 最後） |
 
 **正式 GPU API 若不是 Ollama**：規範的方法二（OpenAI 相容介面）涵蓋大多數推論伺服器，`config.yaml` 的 `provider` 改成相容介面那一種即可；若連相容介面都不是，改的是閘道的 `llm_factory`，仍然不動後端。
 

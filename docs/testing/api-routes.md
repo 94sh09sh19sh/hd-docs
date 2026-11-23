@@ -9,14 +9,14 @@
 ## 摘要
 
 - 主手冊 §09 路由表的永久收入（1015 起），往後只在本頁維護
-- 目前 230 條，逐條對齊後端啟動時印出的清單（數 `Mapped {` 的行數）；迭代 33 加 2 條（平板改同一則求助、開了又關）
+- 目前 236 條，逐條對齊後端啟動時印出的清單（數 `Mapped {` 的行數）；迭代 34 加 6 條（按住說話三支、錄音同意三支）
 - 每一列寫方法與路徑、需要的權限、說明；拿掉的端點加刪除線並註明哪個迭代拿掉
 - 新迭代加了端點就補列；數字一改，本頁說明、主手冊檔頭與 §09 第一段三處一起改
 - 怎麼帶憑證與 `h1`、`h2` 兩項仍在主手冊 §09
 
 ---
 
-> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)～[迭代 33](iteration-33.md) 各分冊（索引見[主手冊 §13](manual-test-guide.md#13--迭代-3-33-分冊)）。本表逐條對齊後端啟動時印出的路由清單（目前 230 條；1124 迭代 33 加 2 條（`PATCH /device/help-requests/:id`、`POST /device/help-requests/dismissed`），照原始碼的路由裝飾器整份重數 230（同一個數法在迭代 33 之前是 228，與上一次的清單一致），同日迭代 32.2、32.3 沒有動到路由；1111 迭代 32 加 2 條（`/hospital-sync/lab-runs`、`/hospital-sync/lab-run`），同日迭代 32.1 沒有動到路由；1028 迭代 31 加 2 條（`/rules/norm-profile/:patientId`），照清單重數過（`Mapped {` 226 行），與表一致；1028 迭代 30 沒有動到路由；1027 迭代 29 加 2 條（`/device/games/connect-dots`），照清單重數過（`Mapped {` 224 行），與表一致；1027 迭代 28 加 1 條（`/ops/exports`），照清單重數過（`Mapped {` 222 行），與表一致；1018 迭代 27 沒有動到後端的路由，沒有增減；1018 迭代 26.3 加 6 條（`/handlers`）、26.2 加 1 條（可列印版），照清單重數過（`Mapped {` 221 行），與表一致；1018 迭代 25 加 4 條、照清單重數過（`Mapped {` 214 行），與表一致；1018 迭代 24.4 加 1 條、照清單重數過（`Mapped {` 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（`Mapped {` 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（`Mapped {` 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（`Mapped {` 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；**1010 迭代 18.1 收尾時照清單重數一次**：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。
+> 表中各迭代的操作步驟分別在[迭代 3](iteration-3.md)～[迭代 34](iteration-34.md) 各分冊（索引見[主手冊 §13](manual-test-guide.md#13--迭代-3-34-分冊)）。本表逐條對齊後端啟動時印出的路由清單（目前 236 條；1124 迭代 34 加 6 條（`/device/help-requests/:id/voice` 三支、`/speech-consents` 三支），照 `demo:patient` 後端啟動時印出的清單重數（`Mapped {` 236 行），與表一致；1124 迭代 33 加 2 條（`PATCH /device/help-requests/:id`、`POST /device/help-requests/dismissed`），照原始碼的路由裝飾器整份重數 230（同一個數法在迭代 33 之前是 228，與上一次的清單一致），同日迭代 32.2、32.3 沒有動到路由；1111 迭代 32 加 2 條（`/hospital-sync/lab-runs`、`/hospital-sync/lab-run`），同日迭代 32.1 沒有動到路由；1028 迭代 31 加 2 條（`/rules/norm-profile/:patientId`），照清單重數過（`Mapped {` 226 行），與表一致；1028 迭代 30 沒有動到路由；1027 迭代 29 加 2 條（`/device/games/connect-dots`），照清單重數過（`Mapped {` 224 行），與表一致；1027 迭代 28 加 1 條（`/ops/exports`），照清單重數過（`Mapped {` 222 行），與表一致；1018 迭代 27 沒有動到後端的路由，沒有增減；1018 迭代 26.3 加 6 條（`/handlers`）、26.2 加 1 條（可列印版），照清單重數過（`Mapped {` 221 行），與表一致；1018 迭代 25 加 4 條、照清單重數過（`Mapped {` 214 行），與表一致；1018 迭代 24.4 加 1 條、照清單重數過（`Mapped {` 210 行），與表一致；1011 迭代 23 加 6 條、照清單重數過（`Mapped {` 209 行），與表一致；1011 迭代 22 加 6 條、照清單重數過（`Mapped {` 203 行），與表一致；1010 迭代 21 加 8 條、照清單重數過（`Mapped {` 197 行），與表一致；迭代 20 加 8 條；迭代 19 加 23 條；迭代 18.1 加一條、迭代 18 加九條、迭代 17.8 加兩條；**1010 迭代 18.1 收尾時照清單重數一次**：之前寫的 146 條少算了 11 條，表裡也漏列迭代 15 的「確認下機」，已補上；1005 補齊迭代 10～17 新增的 22 條，1006 迭代 17.1 拿掉一條）；日後新增端點時，以那份清單為準回頭補這張表。
 
 | 方法／路徑 | 需要的權限 | 說明 |
 |---|---|---|
@@ -55,6 +55,9 @@
 | `GET /api/device/help-requests/mine` | 裝置＋Token | 本次綁定的求助狀態 |
 | `PATCH /api/device/help-requests/:id` | 裝置＋Token | 迭代 33：送出之後改同一則（類別、急迫度、說明）；只改這次綁定、還沒結案的 |
 | `POST /api/device/help-requests/dismissed` | 裝置＋Token | 迭代 33：倒數期間按回首頁（開了又關），只記一筆稽核、回 204 |
+| `POST /api/device/help-requests/:id/voice` | 裝置＋Token | 迭代 34：按下「按住說話」（`clientId` 重送不重複）；擋開關、倒數、錄音同意、「其他」、這次綁定沒結案的、三次用完 |
+| `POST /api/device/help-requests/:id/voice/:recordingId/chunks` | 裝置＋Token | 迭代 34：一秒一段的原音（base64 的 16 kHz 16 位元 PCM，最多 32000 位元組）；同一個序號只存一次 |
+| `POST /api/device/help-requests/:id/voice/:recordingId/finish` | 裝置＋Token | 迭代 34：放開；少收的段回 409 與 `missing`，收齊了送語音閘道轉寫、接進同一則的說明；重送照上一次的結果回 |
 | `GET /api/symptom-reports/treatment-session/:treatmentSessionId` | patient:monitor | 某次療程的所有回報 |
 | `GET /api/symptom-reports/trend/:patientId` | patient:monitor | 症狀趨勢摘要 |
 | `GET /api/help-requests?status=` | patient:monitor | 通報清單（含趨勢摘要） |
@@ -231,6 +234,9 @@
 | `GET /api/device/games/mahjong` | 平板（Session Token） | （迭代 22）麻將的存檔（還沒消完的那一桌、序號）與當下這一次療程的今日牌局識別；「麻將連連看」關著時 404；存檔格式不對 422 |
 | `POST /api/device/games/mahjong/events` | 平板（Session Token） | （迭代 22）開桌、消一對、點錯、提示（一次最多 50 步）：照序號套用、`clientId` 去重；序號接不上回 `conflict`；每一步寫 `game_events`（「狀態評估彙整」關著時照樣寫） |
 | `GET /api/device/games/mahjong/daily-peers` | 平板（Session Token） | （迭代 22）今日牌局的人數句：照最低人數門檻，湊不到改這星期，再湊不到回 `null`；要「麻將連連看」與「病人之間的互動」都開著 |
+| `GET /api/speech-consents` | help-request:handle | （迭代 34）每位病人的錄音同意（有效的那一份、最近一次撤回） |
+| `POST /api/speech-consents/:patientId` | help-request:handle | （迭代 34）登記病人的錄音同意（簽的時間、同意書編號選填）；已有有效的回 409；記稽核 |
+| `POST /api/speech-consents/:patientId/withdraw` | help-request:handle | （迭代 34）登記撤回；已收的原音不刪（照同意書處理）；記稽核 |
 | `GET /api/patient-detail/patients` | patient-detail:read | （迭代 22）選病人用的清單（姓名、病歷號）；社工、醫師也可以；相關的遊戲化開關都關著時 404 |
 | `GET /api/patient-detail/patients/:patientId` | patient-detail:read | （迭代 22）病人詳細資訊與「最近幾次有沒有玩」；**每一次調閱寫稽核**（`PATIENT_DETAIL_VIEWED`） |
 | `GET /api/patient-detail/patients/:patientId/game-trends` | patient-detail:read | （迭代 22）狀態評估彙整（讀的時候由固定算式算）；**每一次調閱寫稽核**（`GAME_TREND_VIEWED`）；「狀態評估彙整」關著時 404 |
