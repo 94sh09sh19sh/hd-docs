@@ -11054,6 +11054,41 @@
 </tbody>
 </table>
 <p><strong>DEP-24｜AI 必須可以整個關掉，而且關掉之後系統要能完整運作。</strong>（保留）首波部署 AI 功能預設為關（DEP-29），<code>ai-gateway</code> 可以根本不啟動。</p>
+<p><strong>1123 線索：同一台主機上另一套系統用的是院內的 Ollama</strong>（《<a href="../../notes/ai-endpoint-reference-survey/">同主機 RAG 系統參考調查</a>》）。若本系統的端點就是那一個：</p>
+<table>
+<thead>
+<tr>
+<th>項次</th>
+<th>規則</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>要改什麼</td>
+<td>照上表：<code>config.yaml</code> 填 <code>provider: ollama</code>、<code>base_url</code>、<code>model</code>，後端 <code>LLM_PROVIDER=onprem</code>，compose 加 <code>--profile ai</code>。<strong>不改程式</strong></td>
+</tr>
+<tr>
+<td><code>base_url</code></td>
+<td>Ollama 在同一台主機：<code>http://host.docker.internal:11434</code>（容器裡的 <code>127.0.0.1</code> 是容器自己；只聽主機本機介面時轉不轉得過去要實測）；在別台：那台的院內位址，<strong>只寫進主機設定目錄與私人紀錄</strong></td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>優先用對方已常駐的模型，不另外要；要換先跟對方協調，否則雙方都要等冷啟動</td>
+</tr>
+<tr>
+<td>併發與逾時</td>
+<td>背景佇列維持一次一件、不調高；逾時先照範本實測，不夠兩個一起加大（後端比閘道大）</td>
+</tr>
+<tr>
+<td>先問</td>
+<td>實際位址、能不能共用、換模型停機會不會通知、常駐模型與 Ollama 設定、主機有沒有 GPU（清冊 Q-07 第 6～10 題）；問到之前院內範本照舊留空</td>
+</tr>
+<tr>
+<td>語音</td>
+<td>Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，DEP-16 的例外待使用者定、其餘待清冊 Q-41</td>
+</tr>
+</tbody>
+</table>
 <p><strong>正式 GPU API 若不是 Ollama</strong>：規範的方法二（OpenAI 相容介面）涵蓋大多數推論伺服器，<code>config.yaml</code> 的 <code>provider</code> 改成相容介面那一種即可；若連相容介面都不是，改的是閘道的 <code>llm_factory</code>，仍然不動後端。</p>
 <h3 id="54-閘道的設定檔放哪裡怎麼生效0927迭代-13">5.4 閘道的設定檔放哪裡、怎麼生效（0927，迭代 13）<a class="headerlink" href="#54-閘道的設定檔放哪裡怎麼生效0927迭代-13" title="Permanent link">&para;</a></h3>
 <table>
@@ -11558,8 +11593,8 @@
 </tr>
 <tr>
 <td>24</td>
-<td>院方臨床資料 API 可連線，抓取失敗時輪播第三層顯示上次成功的值。<strong>1005 改寫</strong>：主機的 <code>api</code> 容器連得到院方 API（探測工具通過）；抓取失敗時面板顯示上次成功的值，護理端出現未更新提示；設定不是指向模擬</td>
-<td>FR-S05、FR-S16、DEP-46</td>
+<td>院方臨床資料 API 可連線，抓取失敗時輪播第三層顯示上次成功的值。<strong>1005 改寫</strong>：主機的 <code>api</code> 容器連得到院方 API（探測工具通過）；抓取失敗時面板顯示上次成功的值，護理端出現未更新提示；設定不是指向模擬。<strong>1123 改寫（1108 起改讀檔，迭代 32）</strong>：主機上的抓取腳本照固定頻率寫出留底檔，<code>api</code> 讀得到兩個資料夾（讀檔檢查通過、「院方資料同步」卡有新的一列）；檔案沒更新時面板顯示上次成功的值，護理端在透析時段出現未更新提示；設定是讀檔模式、不是指向模擬</td>
+<td>FR-S05、FR-S15、FR-S16、DEP-46</td>
 </tr>
 <tr>
 <td>25</td>
@@ -11619,6 +11654,10 @@
 <tr>
 <td>Q-39</td>
 <td>資料取出的核准流程、完整級能不能離開主機、匯出檔在主機上留多久（1026 新增；DEP-47）</td>
+</tr>
+<tr>
+<td>Q-41</td>
+<td>求助錄音：送 AI 前遮名夠不夠、同意怎麼取得、台語詞庫（1123 新增；語音閘道算不算 DEP-16 的例外由使用者定，5.3 的 1123 段落）</td>
 </tr>
 </tbody>
 </table>

@@ -925,10 +925,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-文件異動" class="md-nav__link">
+  <a href="#5-求助的錄音ai-推論端點護理師回饋" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. 文件異動
+        5. 求助的錄音、AI 推論端點、護理師回饋
       
     </span>
   </a>
@@ -936,10 +936,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-對應-commit" class="md-nav__link">
+  <a href="#6-文件異動" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. 對應 commit
+        6. 文件異動
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-對應-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 對應 commit
       
     </span>
   </a>
@@ -9684,10 +9695,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-文件異動" class="md-nav__link">
+  <a href="#5-求助的錄音ai-推論端點護理師回饋" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. 文件異動
+        5. 求助的錄音、AI 推論端點、護理師回饋
       
     </span>
   </a>
@@ -9695,10 +9706,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-對應-commit" class="md-nav__link">
+  <a href="#6-文件異動" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. 對應 commit
+        6. 文件異動
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-對應-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 對應 commit
       
     </span>
   </a>
@@ -9725,7 +9747,7 @@
 <h1 id="1125-週報之一細節與過程">1125 週報之一：細節與過程<a class="headerlink" href="#1125-週報之一細節與過程" title="Permanent link">&para;</a></h1>
 <p>上層文件：《<a href="../2026-11-25/">1125 週報</a>》</p>
 <blockquote>
-<p>主文件只寫醫師需要知道的事；這一份放主文件放不下的細節。第 1～4 節對應主文件完成內容的同號節，之後是文件異動、對應 commit。</p>
+<p>主文件只寫醫師需要知道的事；這一份放主文件放不下的細節。第 1～5 節對應主文件完成內容的同號節，之後是文件異動、對應 commit。</p>
 </blockquote>
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9733,6 +9755,7 @@
 <li>原本問學長的院方 API 介接之二 D-1、E-5 由醫師答了，《之二》沒有還沒答的題目</li>
 <li>新的兩題：清冊 Q-34 第 5 題（下機手動還是自動，沒問到）、第 6 題（<code>E</code> 開頭是不是急診）</li>
 <li>目標脫水量要不要放行是開發端的判斷，選項寫在實作規格書 0.11；1120 使用者照建議定 ②，排成迭代 32.2（只寫文件，程式等使用者開口）</li>
+<li>1123 使用者要求把三份研究（求助的語音說明、同主機 RAG 系統參考調查、護理師回饋）與一批小修正寫進需求文件：需求 85 → 91 條，排成迭代 32.3、33～35，只寫文件</li>
 <li>這週只改文件，程式沒動</li>
 </ul>
 <h2 id="1-床位代號">1. 床位代號<a class="headerlink" href="#1-床位代號" title="Permanent link">&para;</a></h2>
@@ -9767,7 +9790,16 @@
 <li>清冊 Q-06 第 2 題的首波那一半結案；AI 對真實資料啟用仍要 Q-06 其餘各題</li>
 <li>院內主機現況 ST-20 結案</li>
 </ul>
-<h2 id="5-文件異動">5. 文件異動<a class="headerlink" href="#5-文件異動" title="Permanent link">&para;</a></h2>
+<h2 id="5-求助的錄音ai-推論端點護理師回饋">5. 求助的錄音、AI 推論端點、護理師回饋<a class="headerlink" href="#5-求助的錄音ai-推論端點護理師回饋" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>求助一點送出與倒數</strong>（SRS FR-P06 改寫、附錄 C.2 加 <code>SX_UNSPECIFIED</code>）：語音說明第 2 節的設計原樣寫進需求；倒數 8 秒是營運參數（5～15），還沒選的預設緊急；排成迭代 33，沒有相依</li>
+<li><strong>錄音</strong>（新增 FR-P20、P21、N22、S20、S21）：按住說話排成迭代 34、床邊對話排成迭代 35；語音說明第 8 節第 4、5 階段（推估到床邊的「寫入」、長期研究）不排。新的服務「語音閘道」放在 compose 的 <code>ai</code> profile；原音、逐字稿不刪（1110 醫師）；鏡頭第一版不開，SRS 不寫鏡頭條文</li>
+<li><strong>AI 推論端點</strong>（FR-S13 補、實作規格書 3.4、部署規範 5.3）：不排迭代；問到 Q-07 第 6～10 題才改閘道的院內範本</li>
+<li><strong>護理師回饋</strong>（新增 FR-N23 意見入口）：候選、不給迭代編號；《護理師回饋》第 8 節四題進清冊 Q-42</li>
+<li><strong>小修正</strong>（院內主機現況 10.5）：ST-21 稽核去重、ST-22 <code>db-update</code> 帳號數分開印、ST-30 過時註解排成迭代 32.3；ST-23 剪貼簿讀路徑寫進文件維護規則（不是程式）；ST-26 部署規範第 24 條已改成讀檔；ST-24 <code>restart: always</code> 與 ST-34 院方數值放行照舊</li>
+<li>由使用者定、不進清冊的：語音閘道算不算 DEP-16 的例外（語音說明 9.2 第 4 題，建議算例外）、CPU 夠不夠（第 7 題）、系統內意見入口排不排</li>
+</ul>
+<h2 id="6-文件異動">6. 文件異動<a class="headerlink" href="#6-文件異動" title="Permanent link">&para;</a></h2>
 <ul>
 <li>清冊：Q-34（狀態、第 4 題答、第 5、6 題新增、1118 開會答覆表、各組一句話）、Q-06 第 2 題、Q-09 加 1118 醫師說明</li>
 <li>實作規格書：新增 0.11；0.10 第 2 列與 4.32.1 第 4 項標已答；1120 新增 4.32.2（迭代 32.2）與迭代總表、驗收現況表各一列</li>
@@ -9776,9 +9808,14 @@
 <li>院方 API 介接：之二（沒有還沒答的題目）、之二之一（新增 3.7 節）、之二之二（總表與 D、E 組）、之一（摘要與 1118 回填）、之五（已知的資料狀況）</li>
 <li>其他一句話引用：同院 IDH 系統參考調查、介面設計基準、臨床與技術進度報告、迭代 32 測試分冊</li>
 <li>私人 repo：<code>deploy/records/1114-senior-answers/README.md</code> 補「1118 更新」</li>
-<li>第五次進院的上線準備清單與紀錄已凍結，不改</li>
+<li>
+<p>第五次進院的上線準備清單與紀錄已凍結，不改</p>
+</li>
+<li>
+<p>1123：SRS 0.11 與 FR-P06、P20、P21、N05、N10、N22、N23、M05、S08、S13、S20、S21、附錄 C.2；實作規格書 0.12、1.2、3.4、迭代總表、4.32.3、4.33～4.35；部署規範 5.3、第 11 章第 24 條、第 12 章；資料庫使用規範 8.2；清冊 Q-07、新增 Q-41、Q-42；院內主機現況 ST-21～ST-23、ST-26、ST-30；語音說明、同主機 RAG 系統參考調查、護理師回饋三份的狀態；<code>hd-docs</code> 部署手冊規則加剪貼簿讀路徑</p>
+</li>
 </ul>
-<h2 id="6-對應-commit">6. 對應 commit<a class="headerlink" href="#6-對應-commit" title="Permanent link">&para;</a></h2>
+<h2 id="7-對應-commit">7. 對應 commit<a class="headerlink" href="#7-對應-commit" title="Permanent link">&para;</a></h2>
 <ul>
 <li>定版前補</li>
 </ul>

@@ -16,6 +16,7 @@ ______________________________________________________________________
 - **那 3 次目標脫水量是護理師填錯，照醫師建議改成不擋**：院方的值照樣顯示；程式還沒改，換版前照舊不採用
 - **四小時照病人上機時間算，系統不必改**；**新的一題：下機是護理師手動還是機器自動**
 - **病人告知已完成**
+- **求助的錄音、AI 推論端點、護理師回饋寫進規格，程式都還沒改**；**請醫師答回饋怎麼收的四題**
 
 ### [1118 — 系統在醫院開始讀院方透析資料（第五次進院 B 級）、三班時間答了；平板到床與交接院外補](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-11-18/index.md)
 
@@ -63,9 +64,9 @@ ______________________________________________________________________
 | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------- |
 | [FDE 數位化評估報告](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/fde-assessment/index.md) | 背景脈絡與選型理由                                 | 1007          |
 | [軟體需求規格書（SRS）](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)         | 功能需求來源（FR 編號出處）                        | 1118 · 修訂中 |
-| [資料庫使用規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)    | 資料治理強制規則，優先權等同實作規格書             | 1118          |
+| [資料庫使用規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)    | 資料治理強制規則，優先權等同實作規格書             | 1118 · 修訂中 |
 | [實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)    | 範圍與技術選型，**衝突時以此為準**                 | 1118 · 修訂中 |
-| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1118          |
+| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1118 · 修訂中 |
 | [尚待確認事項清冊](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)   | 卡住進度的問題總表，其餘文件不再各自維護           | 1118 · 修訂中 |
 
 每份文件末尾都有「版本歷程」，記錄歷次定版與異動摘要；要回頭對帳哪一版談定了什麼，從那裡找。
