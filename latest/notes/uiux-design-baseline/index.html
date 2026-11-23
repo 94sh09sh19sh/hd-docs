@@ -5602,6 +5602,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 33 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -10979,6 +11007,7 @@
 <li><strong>遊戲圖示</strong>（1010 迭代 21，FR-P14 補）：基本資訊區多一個 <code>gamepad-2</code>（一般色的框，與還沒做的任務的注意色分得開），<strong>至少一款遊戲的開關開著才出現</strong>；這是首頁唯一新增的入口，三區不變</li>
 <li><strong>內容多到一頁放不下時分頁，不捲動</strong>（M-4）。衛教內文以欄分頁（<code>PagedText</code>），版面尺寸變了自動重算頁數</li>
 <li><strong>求助的類別也一樣</strong>（0929，迭代 14.2）：依畫面實際大小分頁，一個框放不完就接到下一頁，框照樣分開畫（M-2）；每一格同高，一頁放幾列才算得出來。只做到「不捲動」而不分頁，結果是放不下的類別被切掉、病人看不到</li>
+<li><strong>求助一點送出與倒數</strong>（1124，迭代 33，FR-P06 1123 改寫；開關「求助倒數自動送出」預設關，關著時與上一條完全一樣）：類別頁上方一列是倒數——一個圓圈（<code>--icon-option</code> 大小、線寬 6、一般色 <code>--c-accent</code>、底圈 <code>--c-line</code>）加一句 <code>--t-lead</code>「還沒選也沒關係，N 秒後會自動通知護理站」；<strong>圈一秒短一格，沒有轉場、動畫、閃爍與聲音，也不是紅色</strong>（紅色只給求助），不能點。點一個類別就送出，換到「已經通知護理站」（完成色加 <code>circle-check</code>）＋類別＋三顆急迫度，<strong>現在那一級框線加粗到 6px、圓點換成勾</strong>（形狀不同，不只靠顏色）；三顆照樣可以點，改的是同一則。倒數跑完送出「病人還沒選」，類別格照留、上方那一列換成「已經通知護理站」。這一列佔掉的高度由類別分頁自己量，放不下就多一頁，不捲動</li>
 <li><strong>「其他」那一框（如廁、環境、口渴、機器）是功能開關，預設關閉</strong>（0929）：關閉時只剩「不舒服」一框，組尾接非臨床組的「其他，請有人過來一下」。按鈕少一半；要上廁所、機器在叫，仍然有一顆送得出去</li>
 <li>為什麼時點是營運參數不是寫死：~~療程長度因人而異，四小時是常態不是規定~~，護理部要能改。<strong>1007 更正</strong>：本透析中心透析一律四小時，是院方硬性規定；時點照舊是營運參數（問卷與衛教要在第幾分鐘出現是另一件事），療程一律在開始後四小時結束，院方資料有沒有預計結束時間都一樣（迭代 17.5）</li>
 </ul>
@@ -12606,6 +12635,11 @@
 <td>2.4 姓名與現在時間（1007 迭代 17.4）</td>
 <td><code>HomeScreen.tsx</code> 的 <code>.home-name</code>、<code>.home-now</code>；<code>clock.ts</code></td>
 <td><code>verify:iteration17-4</code>：姓名來自綁定狀態且只出現一次、首頁資料與等待配對的回應沒有病人欄位、時間靠右不加圖示、病人端沒有直放的樣式（迭代 27 改，原本驗直放第一列是床號姓名時間）</td>
+</tr>
+<tr>
+<td>2.4 求助一點送出與倒數（1124 迭代 33）</td>
+<td><code>@hd/shared</code> 的 <code>help-countdown.ts</code>；<code>tasks/HelpTask.tsx</code> 的 <code>HelpCountdown</code>、<code>styles.css</code> 的 <code>.help-countdown</code>、<code>.severity-current</code></td>
+<td><code>verify:iteration33</code>：狀態機實際走一次（送出、更新同一則、還沒選、開了又關、失敗不重送）、開關關著照舊、倒數圈沒有動畫與紅色、現在那一級形狀不同、新字在自帶字型裡</td>
 </tr>
 <tr>
 <td>4.10 病人平板固定橫放（1018 迭代 27）</td>
