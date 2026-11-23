@@ -184,7 +184,7 @@
 | 4 | 端點上裝了哪些模型、哪個是常駐的？Ollama 的常駐時間（`OLLAMA_KEEP_ALIVE`）、同時載入數（`OLLAMA_MAX_LOADED_MODELS`）、同時處理數（`OLLAMA_NUM_PARALLEL`）怎麼設？ | `model` 選哪個、冷啟動多久 | 用對方常駐的 `gpt-oss:20b` |
 | 5 | 這台主機有沒有 GPU？ | 語音閘道能不能放在主機上 | — |
 
-這些題目要不要併進《[待確認事項清冊](../requirements/open-questions.md)》的 Q-07 或另開一題，跟需求文件一起改時決定。
+~~這些題目要不要併進《[待確認事項清冊](../requirements/open-questions.md)》的 Q-07 或另開一題，跟需求文件一起改時決定。~~ **1123 併進 Q-07 第 6～10 題**；SRS FR-S13、實作規格書 3.4、《部署規範》5.3 同日補上本文件的結論。院內範本 `config.hospital.example.yaml` 照第 5.1 節等問到再改。
 
 ## 7. 公開文件的界線
 
