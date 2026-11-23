@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 102 張表、1065 個欄位、33 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`、`iteration32_1_stale_alert_hours`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 102 張表、1068 個欄位、34 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`、`iteration32_1_stale_alert_hours`、`iteration33_help_countdown`）
 
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`、`packages/shared/src/connect-dots.ts`、`packages/shared/src/performance.ts`、`packages/shared/src/data-export.ts`（匯出分類）
 
@@ -8,7 +8,7 @@
 
 ## 摘要
 
-- 目前資料庫實際蒐集的全部資料：102 張表、1065 個欄位、33 個遷移（迭代 27.1 與 32.1 的兩個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
+- 目前資料庫實際蒐集的全部資料：102 張表、1068 個欄位、34 個遷移（迭代 27.1 與 32.1 的兩個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
 - 每個欄位兩欄說明：給人看的（在真實世界是什麼、為什麼蒐集）、給 Agent 的（合法值、誰填、動了會踩到什麼）；1027 起每欄多一格「匯出分類」（研究用資料取出時怎麼處理，第三十一章）
 - 第一～五章是核心：帳號與憑證、主檔、排班與綁定、病人自述內容、稽核軌跡
 - 第六章起依迭代分章，從迭代 3 的系統治理一路到第三十二章迭代 29、30 的連點成畫；迭代 31 的常模對照寫在第二十一章（規則引擎）與第二章（病人的教育年數）
@@ -340,7 +340,7 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 
 ---
 
-### `help_requests` — 求助按鈕與緊急通報（25 欄）
+### `help_requests` — 求助按鈕與緊急通報（28 欄）
 
 **蒐集的意義**：FR-P06（病人端求助）與 FR-N03（護理端緊急通報）是同一件事的兩端，因此共用同一筆紀錄，完整記錄從「病人按下」到「護理師處理完成」的生命週期。蒐集的重點包含**兩個時間戳的差**（按下 vs 收到）— 那是 SRS 第 6 章「五秒內送達」這條非功能需求的量測依據。
 
@@ -373,6 +373,9 @@ SQLite 沒有嚴格型別（未使用 STRICT 表），欄位可以塞進任何�
 | `resolution_note` | `TEXT?` | 護理師填寫的補充說明 | 自由文字，**選填**。⛔ 這**不是**正式護理記錄——正式記錄在迭代 4 的 `nursing_records`。⛔ 迭代 5 起它也**不能單獨用來結案**：`handling_method_code`、`outcome_code`、`follow_up_required` 三欄缺一不可，只填這一欄會被擋下（FR-N10）。理由不是刁難忙碌的護理師，而是沒有結構化欄位，求助資料就只能拿來數件數，「哪一類處置最常見、哪一類最常無法處理」全都問不出來 | 自由文字 |
 | `created_at` | `TS` | 紀錄建立時間 | 見共通欄位 | 一般 |
 | `updated_at` | `TS` | 最後狀態變更時間 | 見共通欄位。本類三張表中**只有這張有** — 因為通報的狀態會隨處理流程改變 | 一般 |
+| `opened_at` | `TS?` | 病人開啟求助畫面的時間（迭代 33，FR-P06 1123） | 平板帶來，比送出晚或早一小時以上的不記。與 `category_chosen_at` 相減是「開啟到點類別的秒數」，工作量取第 90 百分位調倒數。迭代 33 之前與平板沒帶的為空 | 一般 |
+| `category_chosen_at` | `TS?` | 病人點類別的時間（迭代 33） | 一點就送出時與送出同時；倒數跑完自動送出的「還沒選」先是空的，病人之後點了類別由 `PATCH /device/help-requests/:id` 補上，**只記第一次** | 一般 |
+| `auto_raised` | `BOOL` | 是不是倒數跑完自動送出的「病人還沒選」（迭代 33） | 預設 `false`。之後病人點了類別、`category` 換掉，這一欄照樣是 `true`——工作量的「還沒選的比例」數的是它。`category` 為 `SX_UNSPECIFIED` 時必為 `true`；那個代號是系統類別，不在 `help_categories` | 一般 |
 
 **索引**：`client_request_id`（唯一）、`(status, severity)`、`(patient_id, raised_at)`、`(patient_id, category, raised_at)`、`treatment_session_id`、`device_binding_id` **`(patient_id, category, raised_at)` 是給 FR-N11 用的**：同一病人、同一類別、在設定期間內的前一次求助，通報畫面要顯示它當初的處理方式。期間長度取自 `operational_settings`，不寫死（暫定 72 小時，Q-13 第 6 題）。
 

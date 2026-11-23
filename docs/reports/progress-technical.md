@@ -4,16 +4,16 @@
 
 **報告日期**：2026-11-24
 
-**版本**：迭代 32.3 完成（1124；維運小修正：院方數值被擋的稽核同一次療程、同一欄、同一個值與原因只記一次，`db-update` 分開印能登入的帳號與系統帳號，部署範本與 compose 只改註解；沒有遷移，表 102、遷移 33、路由 228）；迭代 32.2 完成（1124；院方的理想體重、目標脫水量、結束體重、實際脫水量超出常見範圍照寫，只擋負數與讀不懂的值，四個值分開判斷；沒有遷移，表 102、遷移 33、路由 228）；迭代 32.1 完成（1111；三班時間：「未更新」提示時段預設 8～23 時、工作量歸班改照 12:45、17:45，療程的分班界線照留；一支只改值的遷移，表 102、遷移 33、路由 228）；迭代 32 完成（1111；院方資料改讀檔：本系統只讀主機上兩支抓取腳本的資料夾、唯讀掛載，透析清單讀當天段落合起來照舊同步，檢驗資料第一次有來源、開關關著不出現；表 102、遷移 32、路由 228）；迭代 30.5 完成（1111；連點成畫點數由少到多與揭圖：遊戲模式 8～25 點、圖版面 `P-` 開頭 20 張、標準模式與 R1 不揭圖、練習期內不排標準模式；沒有遷移與新端點，表 101、遷移 31、路由 226 不變）；迭代 30.4 完成（1110；連點成畫 B 部分：標準版 A 點完接圓、方交替的 50 點，一支只做加法的遷移，表 101、遷移 31、路由 226 不變）；迭代 31 完成（master；連點成畫之三——常模對照：規則引擎第五項、常模表另開一張表、教育年數由護理端登記、真實病人擋在每一次查表，只對合成資料執行）；迭代 30 完成 A 部分（連點成畫之二——標準模式的時窗與固定版面 A1～A4、快照第 2 版、護理端跟自己比、五個營運參數；B 部分等 Q-40 第 2 題）；迭代 29 完成（連點成畫之一——遊戲模式、兩張新表、伺服器重算點擊、護理端只多「本月連點成畫 N 盤」；迭代 28 蒐集資料的完整取出——欄位的匯出分類與 `check:export`、院內主機上只讀的取出指令與一次性的 `data-export`、取出紀錄與系統管理唯讀頁；迭代 27.2 病人平板進度條寫出剩餘時間與結束時間、血壓單位；迭代 27.1 病人平板頂列固定一列、任務醒著才自動出現、`demo:patient` 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
+**版本**：迭代 33 完成（1124；求助一點送出與倒數自動送出：類別一點就送出、改急迫度與類別都更新同一則，倒數跑完送出系統類別「病人還沒選」（緊急），倒數期間回首頁只記稽核；開關預設關、營運參數 8 秒（5～15）；`help_requests` 加三欄的一支遷移，表 102、遷移 34、路由 230）；迭代 32.3 完成（1124；維運小修正：院方數值被擋的稽核同一次療程、同一欄、同一個值與原因只記一次，`db-update` 分開印能登入的帳號與系統帳號，部署範本與 compose 只改註解；沒有遷移，表 102、遷移 33、路由 228）；迭代 32.2 完成（1124；院方的理想體重、目標脫水量、結束體重、實際脫水量超出常見範圍照寫，只擋負數與讀不懂的值，四個值分開判斷；沒有遷移，表 102、遷移 33、路由 228）；迭代 32.1 完成（1111；三班時間：「未更新」提示時段預設 8～23 時、工作量歸班改照 12:45、17:45，療程的分班界線照留；一支只改值的遷移，表 102、遷移 33、路由 228）；迭代 32 完成（1111；院方資料改讀檔：本系統只讀主機上兩支抓取腳本的資料夾、唯讀掛載，透析清單讀當天段落合起來照舊同步，檢驗資料第一次有來源、開關關著不出現；表 102、遷移 32、路由 228）；迭代 30.5 完成（1111；連點成畫點數由少到多與揭圖：遊戲模式 8～25 點、圖版面 `P-` 開頭 20 張、標準模式與 R1 不揭圖、練習期內不排標準模式；沒有遷移與新端點，表 101、遷移 31、路由 226 不變）；迭代 30.4 完成（1110；連點成畫 B 部分：標準版 A 點完接圓、方交替的 50 點，一支只做加法的遷移，表 101、遷移 31、路由 226 不變）；迭代 31 完成（master；連點成畫之三——常模對照：規則引擎第五項、常模表另開一張表、教育年數由護理端登記、真實病人擋在每一次查表，只對合成資料執行）；迭代 30 完成 A 部分（連點成畫之二——標準模式的時窗與固定版面 A1～A4、快照第 2 版、護理端跟自己比、五個營運參數；B 部分等 Q-40 第 2 題）；迭代 29 完成（連點成畫之一——遊戲模式、兩張新表、伺服器重算點擊、護理端只多「本月連點成畫 N 盤」；迭代 28 蒐集資料的完整取出——欄位的匯出分類與 `check:export`、院內主機上只讀的取出指令與一次性的 `data-export`、取出紀錄與系統管理唯讀頁；迭代 27.2 病人平板進度條寫出剩餘時間與結束時間、血壓單位；迭代 27.1 病人平板頂列固定一列、任務醒著才自動出現、`demo:patient` 午夜前後照常跑；迭代 27 病人平板固定橫放、麻將放寬到 4×12；迭代 26 管理儀表板的資料補齊與圖、對外報表的修正、處理者指名與「獎勵制度」開關）
 
 **Repo**：`94sh09sh19sh/hd-tablet-care`
 
 ## 摘要
 
-- 報告日期 1124，對應迭代 32.3 完成（master）；寫給接手或協作的工程師
+- 報告日期 1124，對應迭代 33 完成（master）；寫給接手或協作的工程師
 - 需求來源六份，衝突時以實作規格書為準（資料庫使用規範、部署規範優先權等同），動工前至少讀前三份（第 1 節）
 - 七條不可違反的約束：前端不碰資料庫、身分驗證自建、存取控制在後端、業務邏輯不嵌資料庫語法、測試資料虛構、零院外連線、模型呼叫一律經 `AiGatewayService`（第 3 節）
-- 迭代 32 完成時的規模：228 條路由、102 張表、163 種稽核動作、31 個權限碼、8 種角色、25 個功能開關、49 個營運參數（第 6 節「規模」）
+- 迭代 33 完成時的規模：230 條路由、102 張表、165 種稽核動作、31 個權限碼、8 種角色、26 個功能開關、50 個營運參數（第 6 節「規模」）
 - 已完成範圍：迭代 24～32.3 在第 6 節，迭代 1～23 收進子文件《技術端進度報告之一》
 - 第 7 節高風險三項：1010 迭代 18 完成實作，對真實病人開啟仍要 Q-02、Q-03；1028 迭代 31 加第四項（連點成畫常模對照），另要 Q-40 第 1、3 題
 - 第 9 節已知粗糙處八項（例如重複病歷號回 500），授權判斷本身沒有問題
@@ -136,7 +136,7 @@ npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript�
 
 ## 4. 資料模型
 
-共 102 張表，33 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`、`iteration32_1_stale_alert_hours`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
+共 102 張表，34 個 migration：`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`、`iteration32_1_stale_alert_hours`、`iteration33_help_countdown`（前五個是 SQLite 遷移時整組重建的，舊資料依《資料庫使用規範》第 15 條不搬；迭代 7 起一律只做加法，`check:migration` 把關）。逐欄說明見《[資料字典](../reference/data-dictionary.md)》。
 
 | 分類 | 表 | 加入於 |
 |---|---|---|
@@ -713,6 +713,18 @@ npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript�
 - 新增 `verify:iteration32-2`（五步）、`verify:iteration32-2:api`（五步，接假的院方 API、要 Prisma、不必開後端）；`verify:iteration32`、`32-1`、`verify:iteration32:api` 照樣通過
 - 路由、表、稽核動作、營運參數、遷移個數都不變
 
+### 迭代 33（1124）：求助一點送出與倒數自動送出
+
+實作規格書 4.33（做法、驗收現況）；SRS FR-P06 1123 改寫、附錄 C.2 的 `SX_UNSPECIFIED`、FR-M05 1123 補，1124 使用者開口才做。手動測試在《[迭代 33 分冊](../testing/iteration-33.md)》（`aq1`～`aq18`）。
+
+- 狀態機在 `@hd/shared` 的 `help-countdown.ts`（純函式）：`helpFlowOnPick`／`OnSeverity`／`OnTick`／`OnHome` 回送出、更新、開了又關或不做；`HelpTask.tsx` 只照它做，秒數是 null 時整段不走（迭代 14.2 的流程原樣）
+- 「病人還沒選」是 `HELP_CATEGORY_UNSPECIFIED`（臨床組、緊急），不進 `help_categories`：`ContentLabelSnapshot` 與 `PerformanceRepository.helpCategories()` 補上它，`RESERVED_HELP_CATEGORY_CODES` 擋護理部建同一個代號；送出「還沒選」不看開關（平板可能停在切換前的畫面）
+- 開關 `HELP_COUNTDOWN`（病人端畫面那一組、預設關、隨時可開）、營運參數 `HELP_COUNTDOWN_SECONDS`（8、5～15）；首頁 `behaviour.helpCountdownSeconds`，關著是 null
+- 端點兩條：`PATCH /device/help-requests/:id`（`updateOpenByPatient` 把「還沒結案」寫在同一個 UPDATE 的條件裡；換類別沒帶急迫度用新類別的預設；分派重算；點類別的時間只記第一次）、`POST /device/help-requests/dismissed`（只記稽核、回 204）。更新推 `refreshTreatmentSession`、不推 `HELP_REQUEST`（總覽螢幕以 id 判斷新通報，不重響）
+- 遷移 `iteration33_help_countdown`：`help_requests` 加 `opened_at`、`category_chosen_at`、`auto_raised`，只做加法；匯出分類「一般」；稽核動作加兩種（病人改同一則、開了又關）
+- 護理端：`pruneAlerts` 在狀態推送時把頂端橫幅換成最新的那一份；緊急通報頁件數不變、內容變了也重拉；工作量 `unspecified`（開關開著才有，`unspecifiedMonths` 每月一列）與 `UnspecifiedCard`（百分比堆疊＋看表格）
+- 新增 `verify:iteration33`（八步，不需要後端）、`verify:iteration33:api`（八步，自己起後端接假院方 API、要 Prisma）；`demo:patient` 上用無頭 Chrome 截 1280×800 六張
+
 ### 迭代 32.3（1124）：維運小修正
 
 實作規格書 4.32.3（做法、驗收現況）；院內主機現況 ST-21、ST-22、ST-30，1123 寫進需求文件、1124 使用者開口才做。手動測試在《[迭代 32 分冊](../testing/iteration-32.md)》§32.10（`ap29`～`ap33`）。
@@ -725,15 +737,15 @@ npm workspaces monorepo，另有兩個容器服務。約 58,500 行 TypeScript�
 
 ### 規模
 
-| 量測 | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 | 迭代 17 完成 | 迭代 18.1 完成 | 迭代 19 完成 | 迭代 21 完成 | 迭代 22 完成 | 迭代 23 完成 | 迭代 24 完成 | 迭代 25 完成 | 迭代 26 完成 | 迭代 28 完成 | 迭代 29 完成 | 迭代 30 完成 | 迭代 31 完成 | 迭代 32 完成 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| API 路由 | 43 | 78 | 90 | 107 | 109 | 116 | 117 | 124 | 136 | 158 | 181 | 197 | 203 | 209 | 210 | 214 | 221 | 222 | 224 | 224 | 226 | 228 |
-| 資料表 | 10 | 29 | 36 | 39 | 40 | 54 | 54 | 56 | 58 | 67 | 77 | 86 | 86 | 90 | 91 | 92 | 97 | 98 | 100 | 100 | 101 | 102 |
-| 稽核動作 | 32 | 52 | 66 | 68 | 74 | 82 | 84 | 90 | 109 | 121 | 141 | 145 | 147 | 150 | 150 | 151 | 157 | 158 | 158 | 158 | 159 | 163 |
-| 權限碼 | 9 | 17 | 20 | 21 | 21 | 23 | 23 | 23 | 23 | 23 | 30 | 30 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 |
-| 角色 | 3 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 |
-| 功能開關 | — | 10 | 10 | 10 | 10 | 11 | 11 | 12 | 12 | 14 | 14 | 20 | 22 | 23 | 23 | 23 | 23 | 23 | 24 | 24 | 25 | 25 |
-| 營運參數 | — | — | 6 | 12 | 12 | 20 | 20 | 22 | 27 | 28 | 28 | 34 | 41 | 41 | 41 | 41 | 41 | 41 | 41 | 46 | 46 | 49 |
+| 量測 | Iteration 2 時點 | 迭代 4 完成 | 迭代 5 完成 | 迭代 6 完成 | 迭代 7 完成 | 迭代 9 完成 | 迭代 10 完成 | 迭代 14.5 完成 | 迭代 17 完成 | 迭代 18.1 完成 | 迭代 19 完成 | 迭代 21 完成 | 迭代 22 完成 | 迭代 23 完成 | 迭代 24 完成 | 迭代 25 完成 | 迭代 26 完成 | 迭代 28 完成 | 迭代 29 完成 | 迭代 30 完成 | 迭代 31 完成 | 迭代 32 完成 | 迭代 33 完成 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| API 路由 | 43 | 78 | 90 | 107 | 109 | 116 | 117 | 124 | 136 | 158 | 181 | 197 | 203 | 209 | 210 | 214 | 221 | 222 | 224 | 224 | 226 | 228 | 230 |
+| 資料表 | 10 | 29 | 36 | 39 | 40 | 54 | 54 | 56 | 58 | 67 | 77 | 86 | 86 | 90 | 91 | 92 | 97 | 98 | 100 | 100 | 101 | 102 | 102 |
+| 稽核動作 | 32 | 52 | 66 | 68 | 74 | 82 | 84 | 90 | 109 | 121 | 141 | 145 | 147 | 150 | 150 | 151 | 157 | 158 | 158 | 158 | 159 | 163 | 165 |
+| 權限碼 | 9 | 17 | 20 | 21 | 21 | 23 | 23 | 23 | 23 | 23 | 30 | 30 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 |
+| 角色 | 3 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 |
+| 功能開關 | — | 10 | 10 | 10 | 10 | 11 | 11 | 12 | 12 | 14 | 14 | 20 | 22 | 23 | 23 | 23 | 23 | 23 | 24 | 24 | 25 | 25 | 26 |
+| 營運參數 | — | — | 6 | 12 | 12 | 20 | 20 | 22 | 27 | 28 | 28 | 34 | 41 | 41 | 41 | 41 | 41 | 41 | 41 | 46 | 46 | 49 | 50 |
 
 （迭代 21 那一欄含迭代 20：遊戲化兩個迭代合起來多 16 條路由、9 張表、4 種稽核動作（迭代 21 的送花與種花刻意不寫稽核，每一步在 `game_events`）、6 個功能開關、6 個營運參數。迭代 22 沒有新表，`game_events` 加十二欄。迭代 23 四張表、3 種稽核動作、1 個功能開關，沒有新的營運參數（共同記憶沿用迭代 21 的兩個門檻）。）
 
