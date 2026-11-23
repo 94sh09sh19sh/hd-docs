@@ -1,6 +1,6 @@
 # 血液透析平板照護輔助系統 — 資料字典
 
-**範圍**：目前資料庫實際蒐集的全部資料 — 102 張表、1068 個欄位、34 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`、`iteration32_1_stale_alert_hours`、`iteration33_help_countdown`）
+**範圍**：目前資料庫實際蒐集的全部資料 — 106 張表、1110 個欄位、35 個 migration（`init`、`iteration3_closed_network`、`iteration4_ai_content`、`iteration5_help_resolution_shifts_baseline`、`iteration6_carousel_file_import`、`iteration7_update_runs`、`iteration9_navigation_content`、`iteration9_help_category_label`、`iteration10_kiosk_foreground`、`iteration12_kiosk_shell_version`、`iteration14_beds`、`iteration15_hospital_api`、`iteration17_marquee_approval`、`iteration17_7_device_targets`、`iteration17_8_nursing_record_format`、`iteration18_rule_engine`、`iteration18_1_rule_gate`、`iteration19_performance_rewards_external`、`iteration20_gamification_existing`、`iteration21_garden_gifts_shared`、`iteration22_mahjong_trends`、`iteration23_memory_album`、`iteration24_seed_bag_visitors`、`iteration25_emergency_quick_view`、`iteration26_1_dashboard_data`、`iteration26_3_handler_declarations`、`iteration27_1_patient_task_timing`、`iteration28_export_runs`、`iteration29_connect_dots`、`iteration30_4_connect_dots_part_b`、`iteration31_connect_dots_norm`、`iteration32_hospital_files`、`iteration32_1_stale_alert_hours`、`iteration33_help_countdown`、`iteration34_push_to_talk`）
 
 **來源**：`apps/api/prisma/schema.prisma`、`apps/api/prisma/migrations/`、`packages/shared/src/constants.ts`、`packages/shared/src/platform.ts`、`packages/shared/src/education.ts`、`packages/shared/src/nursing.ts`、`packages/shared/src/operations.ts`、`packages/shared/src/carousel.ts`、`packages/shared/src/rules.ts`、`packages/shared/src/gamification.ts`、`packages/shared/src/mahjong.ts`、`packages/shared/src/patient-detail.ts`、`packages/shared/src/album.ts`、`packages/shared/src/connect-dots.ts`、`packages/shared/src/performance.ts`、`packages/shared/src/data-export.ts`（匯出分類）
 
@@ -8,10 +8,10 @@
 
 ## 摘要
 
-- 目前資料庫實際蒐集的全部資料：102 張表、1068 個欄位、34 個遷移（迭代 27.1 與 32.1 的兩個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
+- 目前資料庫實際蒐集的全部資料：106 張表、1110 個欄位、35 個遷移（迭代 27.1 與 32.1 的兩個只改兩個營運參數的值，不動欄位）；寫的是現況，與 `schema.prisma` 不一致時以後者為準
 - 每個欄位兩欄說明：給人看的（在真實世界是什麼、為什麼蒐集）、給 Agent 的（合法值、誰填、動了會踩到什麼）；1027 起每欄多一格「匯出分類」（研究用資料取出時怎麼處理，第三十一章）
 - 第一～五章是核心：帳號與憑證、主檔、排班與綁定、病人自述內容、稽核軌跡
-- 第六章起依迭代分章，從迭代 3 的系統治理一路到第三十二章迭代 29、30 的連點成畫；迭代 31 的常模對照寫在第二十一章（規則引擎）與第二章（病人的教育年數）
+- 第六章起依迭代分章，從迭代 3 的系統治理一路到第三十三章迭代 34 的按住說話與錄音同意；迭代 31 的常模對照寫在第二十一章（規則引擎）與第二章（病人的教育年數）
 - 有兩列不是人的帳號（「院方資料同步」「隨版本帶入」），登入不了，不要刪、不要改狀態
 - 附錄 A 寫資料不流向哪裡，附錄 B 是 Agent 動 schema 前的自我檢查；改欄位前先讀《資料庫使用規範》第 6 條與第 16 條
 
@@ -2263,6 +2263,76 @@ ______________________________________________________________________
 **不寫稽核軌跡**：每一下都在這張表，與麻將、相簿同一個判斷。護理端「本月連點成畫 N 盤」在病人詳細資訊裡，那一次調閱照舊寫 `PATIENT_DETAIL_VIEWED`。
 
 ______________________________________________________________________
+
+## 三十三、按住說話與錄音同意（迭代 34）
+
+**蒐集的意義**：1124 迭代 34（SRS FR-P20、FR-N22、FR-S20；實作規格書 4.34；《[緊急求助的語音說明](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help/index.md)》第 3.2、5、7 節）。「其他」兩類求助送出之後，病人可以按住說話，轉寫接進那一則的說明。**這是本系統第一次收可識別的聲音**：原音認得出是誰，屬個資法的特種個資範圍；錄音前要有病人的同意登記，**原音轉寫完不刪**（1110 醫師：之後訓練透析場景的台語語音模型），留存與研究用途照《資料庫使用規範》8.2 與清冊 Q-39。轉寫的字同時寫進 `help_requests.message`（說明），所以那一欄也可能是病人說的話。
+
+### `speech_consents` — 錄音同意登記（8 欄）
+
+一位病人同時只有一份有效的（`withdrawn_at` 為空）；撤回後再簽是新的一列，舊的照留。
+
+| 欄位               | 型別                | 給人看的說明       | 給 Agent 的說明                                                          | 匯出分類 |
+| ------------------ | ------------------- | ------------------ | ------------------------------------------------------------------------ | -------- |
+| `id`               | `TEXT`              | 內部識別碼         | 主鍵                                                                     | 一般     |
+| `patient_id`       | `TEXT` → `patients` | 哪一位病人         | 與 `withdrawn_at` 有索引；「有沒有有效同意」查 `withdrawn_at IS NULL`    | 一般     |
+| `consented_at`     | `TS`                | 病人簽同意書的時間 | 護理師填，沒填是登記當下；不得晚於現在                                   | 一般     |
+| `form_reference`   | `TEXT?`             | 同意書的版本或編號 | 格式待院方（Q-41 第 2 題），先收自由文字，最多 100 字                    | 自由文字 |
+| `registered_by_id` | `TEXT` → `nurses`   | 誰登記的           | 求助處理權限的護理師以上                                                 | 一般     |
+| `registered_at`    | `TS`                | 登記的時間         | 預設現在                                                                 | 一般     |
+| `withdrawn_at`     | `TS?`               | 撤回的時間         | 撤回之後首頁不畫按鈕、錄音端點回 403；**已收的不刪**（照同意書寫的處理） | 一般     |
+| `withdrawn_by_id`  | `TEXT?` → `nurses`  | 誰登記撤回的       |                                                                          | 一般     |
+
+### `help_voice_recordings` — 按住說話，每按一次一列（20 欄）
+
+| 欄位              | 型別                     | 給人看的說明           | 給 Agent 的說明                                                                                                                                                 | 匯出分類 |
+| ----------------- | ------------------------ | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `id`              | `TEXT`                   | 內部識別碼             | 主鍵                                                                                                                                                            | 一般     |
+| `client_id`       | `TEXT`                   | 平板產生的識別碼       | 唯一；重送「按下」拿回同一列                                                                                                                                    | 一般     |
+| `help_request_id` | `TEXT` → `help_requests` | 哪一則求助             | 只收「其他」兩類（`is_other`）、這台平板這次綁定、還沒結案的；求助刪除時連帶刪除                                                                                | 一般     |
+| `patient_id`      | `TEXT`                   | 哪一位病人             | 沒有外鍵，與 `started_at` 有索引                                                                                                                                | 一般     |
+| `device_id`       | `TEXT`                   | 哪一台平板             | 沒有外鍵；之後的段與「放開」只收同一台                                                                                                                          | 一般     |
+| `take`            | `INT`                    | 第幾次                 | 1～3；`TOO_SHORT` 不算次數，下一次沿用同一個號碼                                                                                                                | 一般     |
+| `status`          | `TEXT`                   | 結果                   | `HelpVoiceStatus`：`RECORDING` 按著、`DONE` 已轉寫、`NO_SPEECH` 沒有聽到說話、`TOO_SHORT` 只碰一下（0.6 秒以內，不送辨識）、`FAILED` 語音閘道不通或平板沒送放開 | 一般     |
+| `started_at`      | `TS`                     | 平板上按下的時間       | 平板時鐘差一分鐘以上就用收到的時間                                                                                                                              | 一般     |
+| `ended_at`        | `TS?`                    | 放開的時間             | 讀不懂、早於按下或晚於現在一分鐘的用收到的時間                                                                                                                  | 一般     |
+| `received_at`     | `TS`                     | 後端收到「按下」的時間 | 還在 `RECORDING` 超過 45 秒，下一次按下時收成 `FAILED`                                                                                                          | 一般     |
+| `chunk_count`     | `INT`                    | 收到幾段               | 一秒一段，最多 31 段                                                                                                                                            | 一般     |
+| `duration_ms`     | `INT?`                   | 原音多長               | 由位元組數換算（32 位元組一毫秒）                                                                                                                               | 一般     |
+| `rms`             | `INT?`                   | 整段的平均音量         | 16 位元刻度的 RMS；語音閘道判斷「幾乎沒聲音」用同一種算式                                                                                                       | 一般     |
+| `transcript`      | `TEXT?`                  | 轉寫出來的字           | 防幻覺之後留下的句子串起來；`DONE` 才有，同時接進那一則的 `message`                                                                                             | 自由文字 |
+| `asr_model`       | `TEXT?`                  | 採用的是哪一個辨識模型 | 語音閘道設定裡端點的名稱，例如 `breeze-asr-26`                                                                                                                  | 一般     |
+| `confidence`      | `REAL?`                  | 採用那一個的分數       | 各句 `avg_logprob` 依長度加權，小於等於 0，**不是 0～1 的機率**                                                                                                 | 一般     |
+| `lexicon_hits`    | `TEXT?`                  | 詞庫命中的詞           | JSON 陣列；沒有命中為空                                                                                                                                         | 一般     |
+| `transcribed_at`  | `TS?`                    | 轉寫完成的時間         | `DONE`、`NO_SPEECH` 才有                                                                                                                                        | 一般     |
+| `failure_reason`  | `TEXT?`                  | 失敗原因               | 給系統管理看，不含音訊與字（例如「語音閘道回 502」「平板沒有送出『放開』」）                                                                                    | 一般     |
+| `updated_at`      | `TS`                     | 最後更新               |                                                                                                                                                                 | 一般     |
+
+### `help_voice_chunks` — 原音，一秒一段（6 欄）
+
+16 kHz、單聲道、16 位元小端 PCM，不壓縮（訓練用語料要無損；一次最長 30 秒約 0.96 MB，一則三次約 2.9 MB）。**每一種結果的原音都留著**，轉寫完不刪。
+
+| 欄位           | 型別                             | 給人看的說明 | 給 Agent 的說明                                                                           | 匯出分類 |
+| -------------- | -------------------------------- | ------------ | ----------------------------------------------------------------------------------------- | -------- |
+| `id`           | `TEXT`                           | 內部識別碼   | 主鍵                                                                                      | 一般     |
+| `recording_id` | `TEXT` → `help_voice_recordings` | 哪一次       | 與 `seq` 唯一；同一個序號重送不再存                                                       | 一般     |
+| `seq`          | `INT`                            | 第幾段       | 0～30                                                                                     | 一般     |
+| `audio`        | `BLOB`                           | 原音         | 最多 32000 位元組、偶數；**聲音認得出是誰**，假名化級換成代號、完整級才照原值（十六進位） | 直接識別 |
+| `byte_length`  | `INT`                            | 幾個位元組   | 與 `audio` 相同，查大小不必讀 BLOB                                                        | 一般     |
+| `received_at`  | `TS`                             | 收到的時間   |                                                                                           | 一般     |
+
+### `help_voice_segments` — 轉寫的句子（8 欄）
+
+| 欄位             | 型別                             | 給人看的說明                 | 給 Agent 的說明              | 匯出分類 |
+| ---------------- | -------------------------------- | ---------------------------- | ---------------------------- | -------- |
+| `id`             | `TEXT`                           | 內部識別碼                   | 主鍵                         | 一般     |
+| `recording_id`   | `TEXT` → `help_voice_recordings` | 哪一次                       | 與 `seq` 唯一                | 一般     |
+| `seq`            | `INT`                            | 第幾句                       | 從 0 起                      | 一般     |
+| `start_ms`       | `INT`                            | 從這一次的開頭算起幾毫秒開始 | 語音閘道回的時間             | 一般     |
+| `end_ms`         | `INT`                            | 幾毫秒結束                   |                              | 一般     |
+| `text`           | `TEXT`                           | 這一句的字                   | 已經過語音閘道的防幻覺       | 自由文字 |
+| `avg_logprob`    | `REAL?`                          | 辨識的分數                   | whisper.cpp 的 `avg_logprob` | 一般     |
+| `no_speech_prob` | `REAL?`                          | 「沒有語音」的機率           | 高於閘道門檻的句子已被丟掉   | 一般     |
 
 ## 附錄 A：資料不流向哪裡
 

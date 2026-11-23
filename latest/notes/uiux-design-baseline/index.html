@@ -5630,6 +5630,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 34 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -10851,7 +10879,7 @@
 <tr>
 <td>P-5</td>
 <td><strong>不要有需要精準的操作</strong></td>
-<td>觸控目標最小 64×64px，彼此間距至少 12px；沒有長按、沒有滑動手勢、沒有雙擊</td>
+<td>觸控目標最小 64×64px，彼此間距至少 12px；沒有長按、沒有滑動手勢、沒有雙擊。<strong>唯一的例外（1124 迭代 34）</strong>：「其他」說明框旁的「按住說話」——按住才錄是需求本身（SRS FR-P20），見 2.4</td>
 </tr>
 <tr>
 <td>P-6</td>
@@ -11008,6 +11036,7 @@
 <li><strong>內容多到一頁放不下時分頁，不捲動</strong>（M-4）。衛教內文以欄分頁（<code>PagedText</code>），版面尺寸變了自動重算頁數</li>
 <li><strong>求助的類別也一樣</strong>（0929，迭代 14.2）：依畫面實際大小分頁，一個框放不完就接到下一頁，框照樣分開畫（M-2）；每一格同高，一頁放幾列才算得出來。只做到「不捲動」而不分頁，結果是放不下的類別被切掉、病人看不到</li>
 <li><strong>求助一點送出與倒數</strong>（1124，迭代 33，FR-P06 1123 改寫；開關「求助倒數自動送出」預設關，關著時與上一條完全一樣）：類別頁上方一列是倒數——一個圓圈（<code>--icon-option</code> 大小、線寬 6、一般色 <code>--c-accent</code>、底圈 <code>--c-line</code>）加一句 <code>--t-lead</code>「還沒選也沒關係，N 秒後會自動通知護理站」；<strong>圈一秒短一格，沒有轉場、動畫、閃爍與聲音，也不是紅色</strong>（紅色只給求助），不能點。點一個類別就送出，換到「已經通知護理站」（完成色加 <code>circle-check</code>）＋類別＋三顆急迫度，<strong>現在那一級框線加粗到 6px、圓點換成勾</strong>（形狀不同，不只靠顏色）；三顆照樣可以點，改的是同一則。倒數跑完送出「病人還沒選」，類別格照留、上方那一列換成「已經通知護理站」。這一列佔掉的高度由類別分頁自己量，放不下就多一頁，不捲動</li>
+<li><strong>按住說話</strong>（1124，迭代 34，FR-P20；開關「按住說話」預設關，還要病人登記錄音同意、外殼 0.4.0 以上）：「其他」兩類<strong>送出之後</strong>，說明框與一顆大按鈕排同一列（<code>.note-row</code>，按鈕欄至少 15em，頁面不因此變高）；按鈕是一般的 <code>.option</code>（<code>mic</code> 圖示＋「按住說話」）。<strong>病人端唯一的「按住」</strong>（P-5 的例外）：按下就錄、放開就送，手指滑出按鈕照樣收得到放開；按著的時候換 <code>--c-accent</code> 實底、<code>--c-accent-ink</code> 字，字換成「正在聽，說完就放開」（形狀之外字也換，不只靠顏色）；<strong>沒有聲音、動畫、轉場、閃爍，也不是紅色</strong>。放開後按鈕底下一句 <code>.task-note</code>：轉寫中「正在把你說的寫下來」（<code>hourglass</code>）、只碰一下「要一直按著說話，說完再放開」、沒聽到「沒有聽清楚，可以再按住說一次，或用打的」、失敗「現在沒辦法寫下來，請用打的；護理師已經在過來的路上」、三次用完按鈕變灰「已經說過三次了，還要補充請用打的」。轉寫直接出現在說明框，不必再按送出</li>
 <li><strong>「其他」那一框（如廁、環境、口渴、機器）是功能開關，預設關閉</strong>（0929）：關閉時只剩「不舒服」一框，組尾接非臨床組的「其他，請有人過來一下」。按鈕少一半；要上廁所、機器在叫，仍然有一顆送得出去</li>
 <li>為什麼時點是營運參數不是寫死：~~療程長度因人而異，四小時是常態不是規定~~，護理部要能改。<strong>1007 更正</strong>：本透析中心透析一律四小時，是院方硬性規定；時點照舊是營運參數（問卷與衛教要在第幾分鐘出現是另一件事），療程一律在開始後四小時結束，院方資料有沒有預計結束時間都一樣（迭代 17.5）</li>
 </ul>
@@ -12640,6 +12669,11 @@
 <td>2.4 求助一點送出與倒數（1124 迭代 33）</td>
 <td><code>@hd/shared</code> 的 <code>help-countdown.ts</code>；<code>tasks/HelpTask.tsx</code> 的 <code>HelpCountdown</code>、<code>styles.css</code> 的 <code>.help-countdown</code>、<code>.severity-current</code></td>
 <td><code>verify:iteration33</code>：狀態機實際走一次（送出、更新同一則、還沒選、開了又關、失敗不重送）、開關關著照舊、倒數圈沒有動畫與紅色、現在那一級形狀不同、新字在自帶字型裡</td>
+</tr>
+<tr>
+<td>2.4 按住說話（1124 迭代 34）</td>
+<td><code>PushToTalk.tsx</code>、<code>voice-capture.ts</code>、<code>public/voice-worklet.js</code>；<code>styles.css</code> 的 <code>.note-row</code>、<code>.ptt</code>、<code>.ptt-holding</code></td>
+<td><code>verify:iteration34</code>：只在「其他」送出之後、只有這一顆用按住（pointer，沒有計時器與滑動）、按著字與底色都換、沒有動畫與紅色、外殼 0.4.0 以上才畫、新字在自帶字型裡</td>
 </tr>
 <tr>
 <td>4.10 病人平板固定橫放（1018 迭代 27）</td>
