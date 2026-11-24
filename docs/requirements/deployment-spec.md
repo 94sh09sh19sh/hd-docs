@@ -321,8 +321,8 @@ git clone 下來的原始碼（主機上，本系統自己的目錄）
 | `base_url` | Ollama 在同一台主機：`http://host.docker.internal:11434`（容器裡的 `127.0.0.1` 是容器自己；只聽主機本機介面時轉不轉得過去要實測）；在別台：那台的院內位址，**只寫進主機設定目錄與私人紀錄** |
 | `model` | 優先用對方已常駐的模型，不另外要；要換先跟對方協調，否則雙方都要等冷啟動 |
 | 併發與逾時 | 背景佇列維持一次一件、不調高；逾時先照範本實測，不夠兩個一起加大（後端比閘道大） |
-| 先問 | 實際位址、能不能共用、換模型停機會不會通知、常駐模型與 Ollama 設定、主機有沒有 GPU（清冊 Q-07 第 6～10 題）；問到之前院內範本照舊留空 |
-| 語音 | Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，不開 DEP-16 的例外（1124 使用者定：切句放辨識端點，見 DEP-16），其餘待清冊 Q-41。**1124 迭代 34**：語音閘道 `services/speech-gateway` 已做（compose 的 `ai` profile、不開埠、**不含模型**，切句交給辨識端點）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 `speech-gateway/config.yaml`，公開位址判設定有誤；後端 `SPEECH_GATEWAY_URL` 只准院內位址；`check:egress` 掃語音閘道。院內範本 `config.hospital.example.yaml` 留空等 Q-07。**辨識端點要開 whisper.cpp server 的 VAD 選項**（附 Silero VAD 模型檔），那台機器在哪、誰維運併 Q-07 第 11 題。**1125 迭代 35**：床邊對話走語音閘道的 `/v1/bedside`；語氣與聲音事件的 SenseVoiceSmall 在辨識端點那一台跑官方 `api.py`，位址寫在同一份 `config.yaml` 的 `emotion_endpoint`（一樣只准院內位址，不用就整段刪掉；不通時只少語氣兩欄、其他照回，`/health` 只回報不擋）；後端 `SPEECH_GATEWAY_BEDSIDE_TIMEOUT_SECONDS`（預設 420）要比閘道的 `bedside_timeout_seconds`（300）加語氣端點的時間大 |
+| 先問 | ~~能不能共用、換模型停機會不會通知、主機有沒有 GPU~~（**1125**：學長說那套系統目前沒在用，使用者被指定用同一個端點；應用主機沒有 GPU，語音放推論主機）；剩實際位址、常駐模型與 Ollama 設定（清冊 Q-07 第 6、9 題）；問到之前院內範本照舊留空 |
+| 語音 | Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，不開 DEP-16 的例外（1124 使用者定：切句放辨識端點，見 DEP-16），其餘待清冊 Q-41。**1124 迭代 34**：語音閘道 `services/speech-gateway` 已做（compose 的 `ai` profile、不開埠、**不含模型**，切句交給辨識端點）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 `speech-gateway/config.yaml`，公開位址判設定有誤；後端 `SPEECH_GATEWAY_URL` 只准院內位址；`check:egress` 掃語音閘道。院內範本 `config.hospital.example.yaml` 留空等 Q-07。**辨識端點要開 whisper.cpp server 的 VAD 選項**（附 Silero VAD 模型檔），那台機器 **1125 使用者定放推論主機**（院內只有部署主機與推論主機兩台，部署主機沒有 GPU、跑不動；清冊 Q-07 第 11 題）。**1125 迭代 35**：床邊對話走語音閘道的 `/v1/bedside`；語氣與聲音事件的 SenseVoiceSmall 在辨識端點那一台跑官方 `api.py`，位址寫在同一份 `config.yaml` 的 `emotion_endpoint`（一樣只准院內位址，不用就整段刪掉；不通時只少語氣兩欄、其他照回，`/health` 只回報不擋）；後端 `SPEECH_GATEWAY_BEDSIDE_TIMEOUT_SECONDS`（預設 420）要比閘道的 `bedside_timeout_seconds`（300）加語氣端點的時間大 |
 
 **正式 GPU API 若不是 Ollama**：規範的方法二（OpenAI 相容介面）涵蓋大多數推論伺服器，`config.yaml` 的 `provider` 改成相容介面那一種即可；若連相容介面都不是，改的是閘道的 `llm_factory`，仍然不動後端。
 
