@@ -10999,6 +10999,7 @@
 <hr />
 <h2 id="5-ai推論端點與-ai-閘道">5. AI：推論端點與 AI 閘道<a class="headerlink" href="#5-ai推論端點與-ai-閘道" title="Permanent link">&para;</a></h2>
 <p><strong>DEP-16｜（0926 改寫）本系統不載入模型、不需要 GPU，但包含一個 AI 閘道。</strong> 推論端點（實驗室 Ollama 或正式 GPU API）永遠在別台機器上；本系統自己跑的是一個不含模型的轉接服務。</p>
+<p><strong>語音也照這一條（使用者 1124 定，不開例外）</strong>：語音閘道（迭代 34）同樣不含模型；切句用的 Silero VAD 跟著辨識端點走，由 whisper.cpp server 自己的 VAD 選項跑，辨識端點在哪台機器、VAD 就在哪台。辨識端點與推論端點一樣在別台機器、不由本系統部署（5.3「語音」那一列）。迭代 35 的語氣模型（SenseVoiceSmall）要放哪裡，到時再問一次。</p>
 <div class="highlight"><pre><span></span><code>後端 ai 模組 ──HTTP（chat completions 相容格式）──▶ AI 閘道 ──LangChain──▶ 推論端點
 （LlmProviderPort，不變）                          （config.yaml 決定連誰）  實驗室 Ollama／正式 GPU API
 </code></pre></div>
@@ -11141,7 +11142,7 @@
 </tr>
 <tr>
 <td>語音</td>
-<td>Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，DEP-16 的例外待使用者定、其餘待清冊 Q-41。<strong>1124 迭代 34</strong>：語音閘道 <code>services/speech-gateway</code> 已做（compose 的 <code>ai</code> profile、不開埠、<strong>不含模型</strong>，切句先不放閘道）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 <code>speech-gateway/config.yaml</code>，公開位址判設定有誤；後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址；<code>check:egress</code> 掃語音閘道。院內範本 <code>config.hospital.example.yaml</code> 留空等 Q-07；DEP-16 例外的條文等使用者定了才寫（實作規格書 4.34 最後）</td>
+<td>Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，不開 DEP-16 的例外（1124 使用者定：切句放辨識端點，見 DEP-16），其餘待清冊 Q-41。<strong>1124 迭代 34</strong>：語音閘道 <code>services/speech-gateway</code> 已做（compose 的 <code>ai</code> profile、不開埠、<strong>不含模型</strong>，切句交給辨識端點）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 <code>speech-gateway/config.yaml</code>，公開位址判設定有誤；後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址；<code>check:egress</code> 掃語音閘道。院內範本 <code>config.hospital.example.yaml</code> 留空等 Q-07。<strong>辨識端點要開 whisper.cpp server 的 VAD 選項</strong>（附 Silero VAD 模型檔），那台機器在哪、誰維運併 Q-07 第 11 題</td>
 </tr>
 </tbody>
 </table>
@@ -11713,7 +11714,7 @@
 </tr>
 <tr>
 <td>Q-41</td>
-<td>求助錄音：送 AI 前遮名夠不夠、同意怎麼取得、台語詞庫（1123 新增；語音閘道算不算 DEP-16 的例外由使用者定，5.3 的 1123 段落）</td>
+<td>求助錄音：送 AI 前遮名夠不夠、同意怎麼取得、台語詞庫（1123 新增；DEP-16 不開例外，1124 使用者定，見 DEP-16）</td>
 </tr>
 </tbody>
 </table>

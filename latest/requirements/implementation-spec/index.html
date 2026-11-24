@@ -11904,7 +11904,7 @@
 <td>2</td>
 <td>「其他」按住說話（FR-P20）、語音閘道（FR-S20）</td>
 <td>語音說明第 8 節第 2 階段</td>
-<td>排成<strong>迭代 34</strong>（4.34）；開工前要有院內辨識端點（Q-07）、DEP-16 例外的決定（使用者，語音說明 9.2 第 4 題）；<strong>1124 迭代鏈開工，開發機能做的程式做完</strong>，四個決定待使用者（4.34 最後）</td>
+<td>排成<strong>迭代 34</strong>（4.34）；開工前要有院內辨識端點（Q-07）、DEP-16 例外的決定（使用者，語音說明 9.2 第 4 題）；<strong>1124 迭代鏈開工，開發機能做的程式做完</strong>，四個決定 1124 使用者定了（4.34 最後）</td>
 </tr>
 <tr>
 <td>3</td>
@@ -13561,7 +13561,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td><strong>34</strong></td>
 <td>語音之一：「其他」按住說話與語音閘道（1123 加）</td>
-<td>語音說明第 2 階段；要 33 的一點送出、院內辨識端點（Q-07）與 DEP-16 例外的決定（4.34）。<strong>1124 開發機部分完成</strong>（驗收現況在 4.34）；外殼 tag、DEP-16 例外等四個決定待使用者；對真實病人錄音要等 Q-07、Q-41</td>
+<td>語音說明第 2 階段；要 33 的一點送出、院內辨識端點（Q-07）與 DEP-16 例外的決定（4.34）。<strong>1124 開發機部分完成</strong>（驗收現況在 4.34）；四個決定 1124 定了（外殼打 <code>v0.4.0</code>、DEP-16 不開例外）；真模型的速度與準度等實驗室 3090 的使用許可；對真實病人錄音要等 Q-07、Q-41</td>
 </tr>
 <tr>
 <td><strong>35</strong></td>
@@ -13951,8 +13951,8 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td>34</td>
 <td>語音之一：「其他」按住說話與語音閘道（1123）</td>
-<td><strong>開發機部分完成（1124）</strong>，兩支腳本驗收通過；病人端 1280×800 以假語音閘道截圖已看（送出後的按鈕、按著、轉寫中、轉寫完成、碰一下）；外殼 0.4.0 已編譯、還沒打 tag</td>
-<td>外殼契約版號、DEP-16、真模型驗到哪裡、原音格式四個決定待使用者（4.34 最後）；對真實病人錄音要院內辨識端點（Q-07）與同意書格式（Q-41）</td>
+<td><strong>開發機部分完成（1124）</strong>，兩支腳本驗收通過；病人端 1280×800 以假語音閘道截圖已看（送出後的按鈕、按著、轉寫中、轉寫完成、碰一下）；外殼 1124 打 <code>v0.4.0</code>、<code>shell.pin</code> 改釘</td>
+<td>四個決定 1124 定了（4.34 最後）；真模型的速度與準度等實驗室 3090 的使用許可（測試分冊 <code>ar19</code>）；對真實病人錄音要院內辨識端點（Q-07 第 11 題）與同意書格式（Q-41）</td>
 </tr>
 </tbody>
 </table>
@@ -15534,7 +15534,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <ul>
 <li>資料字典新表：錄音、音訊段、句子、同意登記；新表一律登記資料取出的分類（FR-S19），原音歸「直接識別」</li>
 <li>《資料庫使用規範》8.2 的新列（原音、逐字稿、同意登記）與 DB 大小：一次最長 90 秒約 3 MB</li>
-<li>部署規範要加語音閘道的段落與 DEP-16 的例外（使用者定了才寫）；<code>check:egress</code> 要掃語音閘道的範本</li>
+<li>部署規範要加語音閘道的段落與 DEP-16 的例外（使用者定了才寫；1124 定不開例外，DEP-16 與 5.3 已寫）；<code>check:egress</code> 要掃語音閘道的範本</li>
 <li>《介面設計基準》與 <code>hd-uiux</code> 先登記「按住說話」的樣子（大小、按住時的回饋、無聲）</li>
 <li>驗收：語音說明第 6 節的指標（加字次數 0、靜音段生出句子 0），台語與華語分開算；<code>verify:iteration34</code>／<code>:api</code>；分冊 <code>ar</code></li>
 </ul>
@@ -15542,49 +15542,49 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <p><strong>做法（1124）</strong>：</p>
 <ul>
 <li>共用（<code>packages/shared/src/speech.ts</code>）：16 kHz、一秒一段（最多 32000 位元組）、最長 30 秒（31 段）、最多 3 次、碰一下（0.6 秒以內）不算次數；轉寫接在既有說明後面（全形空白隔開、300 字截斷，原句照樣在錄音表）；外殼 <code>0.4.0</code> 起才畫按鈕（<code>shellSupportsMicrophone</code>，一般瀏覽器由瀏覽器決定）</li>
-<li>第 1、2 列：新服務 <code>services/speech-gateway</code>（FastAPI、相依全部鎖版本、<code>config.yaml</code> 存檔即生效、紀錄檔不寫音訊與字、沒有說明頁、建置最後跑自我測試；compose 的 <code>ai</code> profile、不開埠、設定目錄唯讀）。<strong>閘道不載入任何模型</strong>：切句先不放在閘道（DEP-16 待決定），只用音量門檻（RMS）擋整段幾乎沒聲音的；並送設定裡的每一個 whisper-server 端點（<code>/inference</code>、<code>verbose_json</code>），以各段 <code>avg_logprob</code> 依長度加權取有把握的那個；<code>no_speech_prob</code> 高的段、已知幻覺句黑名單丟掉；詞庫比對。端點位址只在閘道的設定檔，<strong>公開位址判設定有誤</strong>；<code>/health</code> 要每一個端點都通</li>
+<li>第 1、2 列：新服務 <code>services/speech-gateway</code>（FastAPI、相依全部鎖版本、<code>config.yaml</code> 存檔即生效、紀錄檔不寫音訊與字、沒有說明頁、建置最後跑自我測試；compose 的 <code>ai</code> profile、不開埠、設定目錄唯讀）。<strong>閘道不載入任何模型</strong>：切句不放在閘道（1124 使用者定，由辨識端點的 whisper.cpp server 開 VAD 選項，DEP-16 不開例外），閘道只用音量門檻（RMS）擋整段幾乎沒聲音的；並送設定裡的每一個 whisper-server 端點（<code>/inference</code>、<code>verbose_json</code>），以各段 <code>avg_logprob</code> 依長度加權取有把握的那個；<code>no_speech_prob</code> 高的段、已知幻覺句黑名單丟掉；詞庫比對。端點位址只在閘道的設定檔，<strong>公開位址判設定有誤</strong>；<code>/health</code> 要每一個端點都通</li>
 <li>第 3 列：病人端 <code>PushToTalk</code>（<code>apps/patient-pwa/src/PushToTalk.tsx</code>）：開關、倒數、同意三者都成立（首頁資料 <code>behaviour.pushToTalk</code>）、而且平板錄得到時，「其他」兩類<strong>送出之後</strong>說明框旁多一顆「按住說話」；pointer 按下開始、放開或取消結束（抓住指標），鍵盤空白鍵、Enter 按著也行；按著換深綠實底、字換「正在聽，說完就放開」，沒有聲音、動畫、紅色。這是病人端唯一的「按住」（基準 2.3 的例外，介面設計基準 2.4 登記）</li>
 <li>第 4 列：<code>getUserMedia</code>（只要聲音）＋AudioWorklet（<code>public/voice-worklet.js</code>，原樣出貨：<code>?url</code> 匯入會被內嵌成 data 網址）轉 16 kHz 單聲道 16 位元 PCM；一秒一段 base64 POST，帶序號、裝置 Token；放開後補送失敗的段，後端回 409 <code>missing</code> 就補送再放開一次（最多三輪）；放開就關麥克風</li>
-<li>第 5 列：四張新表（遷移 <code>20261125120000_iteration34_push_to_talk</code>，只加表）：<code>help_voice_recordings</code>（每按一次一列：狀態、時間、長度、平均音量、轉寫、採用的模型與分數、詞庫命中、失敗原因）、<code>help_voice_chunks</code>（原音一秒一段 BLOB，同一次同一個序號只收一次）、<code>help_voice_segments</code>（轉寫的句子）、<code>speech_consents</code>。<strong>原音不壓縮</strong>（原始 PCM，90 秒約 2.9 MB；格式待使用者確認），每一種結果的原音都留著、轉寫完不刪；轉寫走迭代 33 的「改同一則」接進說明（護理端換字、不重響）；稽核「病人在『其他』按住說話」只寫第幾次、幾秒、結果與模型，<strong>不寫字</strong>；語音閘道不通只是這一次失敗，求助照常</li>
-<li>第 6 列：外殼 <code>hd-kiosk-shell</code> 0.4.0（commit <code>4adaea3</code>）：<code>RECORD_AUDIO</code>、<code>MODIFY_AUDIO_SETTINGS</code>；<code>MicrophoneChromeClient</code> 只對自家來源放行音訊擷取，鏡頭與其他一律拒絕；系統權限框只在開啟 App 時問一次。<strong>還沒打 tag、<code>shell.pin</code> 還是 v0.3.0</strong>（契約版號待決定）</li>
+<li>第 5 列：四張新表（遷移 <code>20261125120000_iteration34_push_to_talk</code>，只加表）：<code>help_voice_recordings</code>（每按一次一列：狀態、時間、長度、平均音量、轉寫、採用的模型與分數、詞庫命中、失敗原因）、<code>help_voice_chunks</code>（原音一秒一段 BLOB，同一次同一個序號只收一次）、<code>help_voice_segments</code>（轉寫的句子）、<code>speech_consents</code>。<strong>原音不壓縮</strong>（原始 PCM，90 秒約 2.9 MB；1124 使用者定），每一種結果的原音都留著、轉寫完不刪；轉寫走迭代 33 的「改同一則」接進說明（護理端換字、不重響）；稽核「病人在『其他』按住說話」只寫第幾次、幾秒、結果與模型，<strong>不寫字</strong>；語音閘道不通只是這一次失敗，求助照常</li>
+<li>第 6 列：外殼 <code>hd-kiosk-shell</code> 0.4.0（commit <code>4adaea3</code>）：<code>RECORD_AUDIO</code>、<code>MODIFY_AUDIO_SETTINGS</code>；<code>MicrophoneChromeClient</code> 只對自家來源放行音訊擷取，鏡頭與其他一律拒絕；系統權限框只在開啟 App 時問一次。<strong>1124 打 <code>v0.4.0</code>、<code>shell.pin</code> 改釘，契約仍是第 1 版</strong>（使用者定，比照 0928 QR code）</li>
 <li>第 7 列：<code>/speech-consents</code> 三支（求助處理權限）；護理端專業版「排班與指派」最下面一張「錄音同意（按住說話）」，開關開著才有；撤回要確認、已收的不刪。簡易版不放（拖曳做不到「簽了同意書」）。護理人員那一半留到迭代 35</li>
 <li>第 8 列：開關「按住說話」（<code>HELP_PUSH_TO_TALK</code>，病人端畫面那一組，預設關）：語音閘道健康檢查通過<strong>而且</strong>「求助倒數自動送出」開著才開得起來。後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址（私有 IP、本機、服務名稱、<code>.local</code>／<code>.lan</code>／<code>.internal</code>），展示環境不得設定；<code>check:egress</code> 加掃語音閘道；資料取出登記四張表，原音歸「直接識別」</li>
 </ul>
-<p><strong>驗收現況（1124）</strong>：<code>npm run verify:iteration34</code> 八步全部通過（數字與轉寫怎麼接；外殼版本；開關與首頁欄位；病人端畫面只在「其他」送出後、只有這一顆用按住、沒有動畫與紅色、新字在自帶字型裡；後端擋的條件與稽核不寫字、不刪原音、只加表；語音閘道不含模型與 compose；外殼原始碼；匯出登記、<code>check:ui:design</code>、<code>check:egress</code>、<code>check:export</code>、<code>check:ui</code> 與迭代 8、14、33）；<code>npm run verify:iteration34:api</code> 八步全部通過（自起後端與假語音閘道：開啟條件、錄音同意、只收「其他」與取消後擋下、完整一次含重送與少一段、重送放開不再轉寫、碰一下與沒有說話、閘道故障與第四次、格式與撤回與院內位址）；<code>docker build services/speech-gateway</code>（含自我測試）通過；外殼在開發機以 Gradle 8.7 編譯與 lint 通過；<code>check:all</code> 七支全綠；迭代 12、13、14-2、14-5、16、17-4、27、33、33:api 照樣通過。病人端 <code>demo:patient</code> 接假語音閘道、無頭 Chrome 假麥克風截 1280×800 五張已看，不捲動。<strong><code>verify:iteration14-1</code> 不過</strong>（外殼宣告 0.4.0、<code>shell.pin</code> 還是 v0.3.0），連帶 17-6、17-7、17-8、25 的「照樣通過」那一條，等外殼打 tag、改 <code>shell.pin</code> 就會回綠。<strong>沒驗到的</strong>：真模型的速度與準度（要院內端點或開發機 CPU 跑 Breeze，與照腳本錄的語料，測試分冊 <code>ar19</code>）、平板實機與長者（<code>ar18</code>）。</p>
-<p><strong>待使用者決定（1124 迭代鏈開工時使用者不在，四題沒有代選）</strong>：</p>
+<p><strong>驗收現況（1124）</strong>：<code>npm run verify:iteration34</code> 八步全部通過（數字與轉寫怎麼接；外殼版本；開關與首頁欄位；病人端畫面只在「其他」送出後、只有這一顆用按住、沒有動畫與紅色、新字在自帶字型裡；後端擋的條件與稽核不寫字、不刪原音、只加表；語音閘道不含模型與 compose；外殼原始碼；匯出登記、<code>check:ui:design</code>、<code>check:egress</code>、<code>check:export</code>、<code>check:ui</code> 與迭代 8、14、33）；<code>npm run verify:iteration34:api</code> 八步全部通過（自起後端與假語音閘道：開啟條件、錄音同意、只收「其他」與取消後擋下、完整一次含重送與少一段、重送放開不再轉寫、碰一下與沒有說話、閘道故障與第四次、格式與撤回與院內位址）；<code>docker build services/speech-gateway</code>（含自我測試）通過；外殼在開發機以 Gradle 8.7 編譯與 lint 通過；<code>check:all</code> 七支全綠；迭代 12、13、14-2、14-5、16、17-4、27、33、33:api 照樣通過。病人端 <code>demo:patient</code> 接假語音閘道、無頭 Chrome 假麥克風截 1280×800 五張已看，不捲動。~~<code>verify:iteration14-1</code> 不過~~ <strong>1124 外殼打 <code>v0.4.0</code>、改 <code>shell.pin</code> 後回綠</strong>：14-1 改成只要求 0.3.0 以上，14-1、17-6、17-7、17-8、25、34 重跑全部通過。<strong>沒驗到的</strong>：真模型的速度與準度（使用者 1124 定先在實驗室 3090 量，等實驗室同意；要照腳本錄的語料，測試分冊 <code>ar19</code>）、平板實機與長者（<code>ar18</code>）。</p>
+<p><strong>使用者決定（1124 迭代鏈開工時使用者不在，四題沒有代選；同日回來定了）</strong>：</p>
 <table>
 <thead>
 <tr>
 <th>#</th>
 <th>題目</th>
-<th>開發端建議</th>
-<th>現在程式的樣子</th>
+<th>決定</th>
+<th>做了什麼、還差什麼</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
 <td>DEP-16：Silero VAD 放哪裡</td>
-<td>放辨識端點：whisper.cpp server 本身有 Silero VAD 選項，語音閘道不載模型、DEP-16 不必開例外；迭代 35 要 SenseVoice 時再問一次</td>
-<td>閘道沒有 VAD，只有音量門檻；選「閘道自己跑、算例外」的話加 <code>gateway/vad.py</code> 與 onnxruntime，部署規範寫例外</td>
+<td><strong>跟著辨識端點走</strong>：whisper.cpp server 本身有 Silero VAD 選項，語音閘道不載模型、DEP-16 不開例外；迭代 35 要 SenseVoice 時再問一次</td>
+<td>程式不必改（閘道本來就只有音量門檻）；《部署規範》DEP-16 與 5.3 寫明辨識端點要開 VAD 選項。辨識端點放哪台機器問資訊室（清冊 Q-07 第 11 題）：應用主機沒有 GPU，兩個 Whisper large 級模型推估要十幾秒以上才出字、還會吃滿整台 CPU</td>
 </tr>
 <tr>
 <td>2</td>
 <td>外殼契約要不要加版號</td>
-<td>不加：比照 0928 QR code 的前例，網頁用既有的 <code>shellVersion()</code> 判斷 0.4.0 以上才畫按鈕，新舊兩個方向都不壞；加的話院內換版後舊平板全標「版本不相容」</td>
-<td>外殼 0.4.0 宣告契約第 1 版、沒打 tag；決定後打 <code>v0.4.0</code>、改 <code>shell.pin</code>（加版號的話兩邊契約改 2）</td>
+<td><strong>不加</strong>：比照 0928 QR code 的前例，網頁用既有的 <code>shellVersion()</code> 判斷 0.4.0 以上才畫按鈕；加的話院內換版後舊平板全標「版本不相容」</td>
+<td>外殼打 <code>v0.4.0</code>（commit <code>4adaea3</code>）、<code>shell.pin</code> 改釘、外殼契約第 10 節記成第 1 版的增補</td>
 </tr>
 <tr>
 <td>3</td>
 <td>辨識要驗到什麼程度</td>
-<td>自動化用假端點驗流程；真模型的速度與準度等院內端點與照腳本錄的語料</td>
-<td>已照建議做；要在開發機另跑真模型（下載官方權重自己轉 GGML、CPU 跑 whisper.cpp）要另外開口</td>
+<td><strong>先在實驗室的 3090 量真模型</strong>，不等院內</td>
+<td>實驗室規定 Ollama「只能呼叫、不可自行管理模型」，在個人 container 自己跑 whisper.cpp 與 Breeze 權重沒寫，<strong>先問實驗室學長姐同意</strong>；同意了才在 3090 上量速度與準度（測試分冊 <code>ar19</code>），順便實測 whisper.cpp 的 VAD 選項。3090 的記憶體頻寬比 DGX Spark 快，量到的速度當上限看</td>
 </tr>
 <tr>
 <td>4</td>
 <td>原音存什麼格式</td>
-<td>原始 PCM（無損、不多相依，90 秒約 2.9 MB）</td>
-<td>原始 PCM；改 FLAC 只動「放開」那一步與匯出</td>
+<td><strong>原始 PCM</strong>（無損、不多相依，90 秒約 2.9 MB）</td>
+<td>程式不必改</td>
 </tr>
 </tbody>
 </table>
