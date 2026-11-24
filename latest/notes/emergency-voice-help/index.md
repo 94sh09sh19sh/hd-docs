@@ -2,7 +2,7 @@
 
 版本：v0.6　文件狀態：規劃中（2026-10-25 開立；1026 依使用者指出的前提重寫；1026 第 9 節第 1～3 題答覆後再修；1026 加入鏡頭與完整流程；1026 鏡頭依使用者三點再修、第 10、11 題定案；1110 醫師答覆原音留存、鏡頭移交另一位同學）　適用讀者：護理部、資訊室、FDE 工程團隊
 
-子文件：《[之一：開源專案與模型的選型](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-models/index.md)》、《[之二：根本判斷——語音該不該拿來解「按不完三下」](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-analysis/index.md)》、《[之三：鏡頭能做到哪些事](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-camera/index.md)》、《[之四：從按下求助到完成護理紀錄的完整流程](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-flow/index.md)》、《[之五：「按住說話」的錄音腳本](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-recording-script/index.md)》
+子文件：《[之一：開源專案與模型的選型](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-models/index.md)》、《[之二：根本判斷——語音該不該拿來解「按不完三下」](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-analysis/index.md)》、《[之三：鏡頭能做到哪些事](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-camera/index.md)》、《[之四：從按下求助到完成護理紀錄的完整流程](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-flow/index.md)》、《[之五：「按住說話」的錄音腳本](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-recording-script/index.md)》、《[之六：「按住說話」在實驗室 3090 的實測](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-lab-trial/index.md)》
 
 ______________________________________________________________________
 
@@ -212,7 +212,7 @@ ______________________________________________________________________
   ▼
 語音閘道 speech-gateway（新服務，compose 的 ai profile）
   │ Silero VAD 切句 → 辨識 → 詞庫比對 → 語氣與聲音事件 → 經 AI 閘道挑句子、標護理師的句子
-  ├─▶ 辨識端點：whisper.cpp server（Breeze-ASR-26、Breeze-ASR-25）
+  ├─▶ 辨識端點：whisper.cpp server（Breeze-ASR-26；1125 起不再並跑 25）
   ├─▶ 語氣：SenseVoiceSmall（CPU）
   └─▶ AI 閘道（既有）：挑句子、建議歸段
 ```
@@ -221,7 +221,7 @@ ______________________________________________________________________
 - **傳輸**：沿用裝置 Token 的 HTTPS POST。錄音期間就陸續送上去，平板斷線或重開也不會整段遺失
 - **後端**：音訊以 BLOB 存在 SQLite（《資料庫使用規範》1.3 不准另開檔案當第二個資料來源）；**1110 起原音轉寫完也保留**（第 9 節第 3 題）。16 kHz、16 位元 PCM 每分鐘約 1.9 MB，一則最多錄 10 分鐘約 19 MB，資料庫與備份都會明顯變大；存之前要不要壓縮（例如 Opus，約每分鐘 0.1 MB，但訓練用語料一般要求無損）實作時定；逐字稿與語氣結果寫進資料表、不刪；停止條件裡的「3 分鐘沒有人說話」用自寫的音量判斷，不需要模型
 - **語音閘道**：照 AI 閘道的寫法（FastAPI、相依鎖版本、`config.yaml`、紀錄檔不寫內容）；Silero VAD 約 2 MB、SenseVoiceSmall 約 2.3 億參數，都在 CPU 上跑，跟 DEP-16「不自行載入模型」相衝（第 9 節第 4 題）。**1124 定**：VAD 不放閘道，由辨識端點的 whisper.cpp server 自己跑，閘道不載模型；SenseVoiceSmall 迭代 35 再問
-- **辨識**：每一句同時送 Breeze-ASR-26（台語、台華混用）與 Breeze-ASR-25（華語），取有把握的那個；驗證後決定要不要只留一個。床邊對話是病人說台語、護理師多半說華語，兩個模型並跑正好對上
+- **辨識**：~~每一句同時送 Breeze-ASR-26（台語、台華混用）與 Breeze-ASR-25（華語），取有把握的那個；驗證後決定要不要只留一個~~ **1125 實測後只留 Breeze-ASR-26**（之六第 2 節）：台語只有它聽得懂，華語跟 25 一樣準，並跑取有把握的沒有比較準、還選錯過一次。床邊對話（病人說台語、護理師多半說華語）也用它；語音閘道仍支援多個端點，床邊對話的語料錄了再看要不要加回來
 - **語氣**：SenseVoiceSmall 每一句跑一次；它本身也會辨識，但不支援台語，文字一律以 Breeze 的結果為準，SenseVoice 只取情緒與事件標籤
 - **防幻覺**：VAD 沒判定為說話的不送；「沒有語音」機率高的丟掉；已知幻覺句列黑名單；挑句子時信心低的不挑
 - **批次的好處**：不必串流、延遲目標是分鐘級，院內主機 CPU 跑量化模型也可能來得及（之一第 6 節；第 6 節實測）。只有 3.2 的按住說話要在幾秒內出來，那一項要等院內 GPU
@@ -231,7 +231,7 @@ ______________________________________________________________________
 
 ## 6. 驗證
 
-- **語料**：開發團隊、護理師、長者志工照腳本錄——病人說台語、華語、混著講，護理師用華語回應；小聲、有氣無力、邊喘邊說；背景有透析機、鄰床說話、機器警報；平板距離 50 與 100 公分。**不用病人的錄音**（上線前的驗證；1110 起上線後保留的病人原音是訓練語料，第 3.3 節）。「其他」按住說話的腳本在《[之五](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-recording-script/index.md)》（1124），床邊對話的之後另寫
+- **語料**：開發團隊、護理師、長者志工照腳本錄——病人說台語、華語、混著講，護理師用華語回應；小聲、有氣無力、邊喘邊說；背景有透析機、鄰床說話、機器警報；平板距離 50 與 100 公分。**不用病人的錄音**（上線前的驗證；1110 起上線後保留的病人原音是訓練語料，第 3.3 節）。「其他」按住說話的腳本在《[之五](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-recording-script/index.md)》（1124），床邊對話的之後另寫。**1125 照之五在實驗室 3090 量過一輪**（沒混背景聲），結果在《[之六](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-lab-trial/index.md)》：VAD 開著靜音生出句子 0 次、關掉就有，閘道回字中位數約 0.3 秒；只留 Breeze-ASR-26、音量門檻改 50、詞庫改短詞；小聲有氣無力的句子最差、會錯成意思相反
 - **指標**：
 - 挑出的句子裡，**加了原句沒有的字的次數**（必須是 0）
 - 靜音與雜音段生出句子的次數（必須是 0）

@@ -726,7 +726,7 @@ ______________________________________________________________________
 - **語音不在派遣路徑上**：病人按一下就送出，護理師看到通報就出發；護理站不聽原音、不看逐字稿與語氣。原本「按不完三下」的痛點由 FR-P06 的一點送出與倒數解，不靠語音（之二）
 - **還沒選的預設急迫度是緊急**：判錯的代價不對稱。上線後每月看「還沒選」的結案結果，大多是非臨床或病人自行取消，就延長倒數或加強衛教（門檻：還沒選超過 15%、其中過半以非臨床結案）
 - **倒數秒數**：以開啟到點類別秒數的第 90 百分位調整，上下限 5～15 秒
-- **辨識選型**：Breeze-ASR-26（台語、台華混用）與 Breeze-ASR-25（華語）兩個並跑、取有把握的那個；語氣用 SenseVoiceSmall；切句用 Silero VAD。直接選用的 GitHub 專案要 MIT、千星以上，非 GitHub 的照「等同千星」判準（《[之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-models/index.md)》第 1 節）
+- **辨識選型**：~~Breeze-ASR-26（台語、台華混用）與 Breeze-ASR-25（華語）兩個並跑、取有把握的那個~~ **Breeze-ASR-26**（1125 實驗室實測：台語只有它聽得懂、華語跟 25 一樣準，《[語音說明之六](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-lab-trial/index.md)》）；語氣用 SenseVoiceSmall；切句用 Silero VAD。直接選用的 GitHub 專案要 MIT、千星以上，非 GitHub 的照「等同千星」判準（《[之一](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-voice-help-models/index.md)》第 1 節）
 - **擷取**：平板以 AudioWorklet 轉 16 kHz 單聲道 PCM，每秒一段帶序號、重送不重複；外殼 App 要加麥克風權限、契約版本加一（《外殼契約》第 9 節），不放行鏡頭
 - **不做**：按下即送出、送出前錄音、派遣時顯示逐字稿、麥克風常開聽喚醒詞、聲紋與說話者分離、平板發聲、鏡頭（第一版）、床邊拍照、錄影
 - **病人用語與台語語料**：保留的原音之後當透析場景台語語音模型的訓練語料，經資料取出（FR-S19）、照清冊 Q-39；不排進前幾個迭代，第一版只做「收下、不刪、取得出來」

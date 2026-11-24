@@ -3553,6 +3553,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/emergency-voice-help-lab-trial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    之六：「按住說話」在實驗室 3090 的實測
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -13589,7 +13617,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td><strong>34</strong></td>
 <td>語音之一：「其他」按住說話與語音閘道（1123 加）</td>
-<td>語音說明第 2 階段；要 33 的一點送出、院內辨識端點（Q-07）與 DEP-16 例外的決定（4.34）。<strong>1124 開發機部分完成</strong>（驗收現況在 4.34）；四個決定 1124 定了（外殼打 <code>v0.4.0</code>、DEP-16 不開例外）；真模型的速度與準度在實驗室 3090 量（1124 學長同意，還沒量）；對真實病人錄音要等 Q-07、Q-41</td>
+<td>語音說明第 2 階段；要 33 的一點送出、院內辨識端點（Q-07）與 DEP-16 例外的決定（4.34）。<strong>1124 開發機部分完成</strong>（驗收現況在 4.34）；四個決定 1124 定了（外殼打 <code>v0.4.0</code>、DEP-16 不開例外）；真模型 1125 在實驗室 3090 量過（只留 Breeze-ASR-26、音量門檻改 50、詞庫改短詞，4.34 最後）；對真實病人錄音要等 Q-07、Q-41</td>
 </tr>
 <tr>
 <td><strong>35</strong></td>
@@ -13980,7 +14008,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <td>34</td>
 <td>語音之一：「其他」按住說話與語音閘道（1123）</td>
 <td><strong>開發機部分完成（1124）</strong>，兩支腳本驗收通過；病人端 1280×800 以假語音閘道截圖已看（送出後的按鈕、按著、轉寫中、轉寫完成、碰一下）；外殼 1124 打 <code>v0.4.0</code>、<code>shell.pin</code> 改釘</td>
-<td>四個決定 1124 定了（4.34 最後）；真模型的速度與準度在實驗室 3090 量（1124 學長同意，還沒量）（測試分冊 <code>ar19</code>）；對真實病人錄音要院內辨識端點（Q-07 第 11 題）與同意書格式（Q-41）</td>
+<td>四個決定 1124 定了（4.34 最後）；真模型 1125 在實驗室 3090 量過（測試分冊 <code>ar19</code>、《<a href="../../notes/emergency-voice-help-lab-trial/">語音說明之六</a>》），背景聲還沒混；對真實病人錄音要院內辨識端點（Q-07 第 11 題）與同意書格式（Q-41）</td>
 </tr>
 </tbody>
 </table>
@@ -15524,7 +15552,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <tr>
 <td>2</td>
 <td>辨識端點</td>
-<td>whisper.cpp server 跑 Breeze-ASR-26 與 Breeze-ASR-25，兩個並跑取有把握的那個；端點位址只在語音閘道的設定檔；<strong>院內</strong>，不得指向院外</td>
+<td>whisper.cpp server 跑 ~~Breeze-ASR-26 與 Breeze-ASR-25，兩個並跑取有把握的那個~~ <strong>Breeze-ASR-26 一個</strong>（1125 實測後定，見 4.34 最後；閘道仍支援多個端點）；端點位址只在語音閘道的設定檔；<strong>院內</strong>，不得指向院外</td>
 </tr>
 <tr>
 <td>3</td>
@@ -15578,7 +15606,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <li>第 7 列：<code>/speech-consents</code> 三支（求助處理權限）；護理端專業版「排班與指派」最下面一張「錄音同意（按住說話）」，開關開著才有；撤回要確認、已收的不刪。簡易版不放（拖曳做不到「簽了同意書」）。護理人員那一半留到迭代 35</li>
 <li>第 8 列：開關「按住說話」（<code>HELP_PUSH_TO_TALK</code>，病人端畫面那一組，預設關）：語音閘道健康檢查通過<strong>而且</strong>「求助倒數自動送出」開著才開得起來。後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址（私有 IP、本機、服務名稱、<code>.local</code>／<code>.lan</code>／<code>.internal</code>），展示環境不得設定；<code>check:egress</code> 加掃語音閘道；資料取出登記四張表，原音歸「直接識別」</li>
 </ul>
-<p><strong>驗收現況（1124）</strong>：<code>npm run verify:iteration34</code> 八步全部通過（數字與轉寫怎麼接；外殼版本；開關與首頁欄位；病人端畫面只在「其他」送出後、只有這一顆用按住、沒有動畫與紅色、新字在自帶字型裡；後端擋的條件與稽核不寫字、不刪原音、只加表；語音閘道不含模型與 compose；外殼原始碼；匯出登記、<code>check:ui:design</code>、<code>check:egress</code>、<code>check:export</code>、<code>check:ui</code> 與迭代 8、14、33）；<code>npm run verify:iteration34:api</code> 八步全部通過（自起後端與假語音閘道：開啟條件、錄音同意、只收「其他」與取消後擋下、完整一次含重送與少一段、重送放開不再轉寫、碰一下與沒有說話、閘道故障與第四次、格式與撤回與院內位址）；<code>docker build services/speech-gateway</code>（含自我測試）通過；外殼在開發機以 Gradle 8.7 編譯與 lint 通過；<code>check:all</code> 七支全綠；迭代 12、13、14-2、14-5、16、17-4、27、33、33:api 照樣通過。病人端 <code>demo:patient</code> 接假語音閘道、無頭 Chrome 假麥克風截 1280×800 五張已看，不捲動。~~<code>verify:iteration14-1</code> 不過~~ <strong>1124 外殼打 <code>v0.4.0</code>、改 <code>shell.pin</code> 後回綠</strong>：14-1 改成只要求 0.3.0 以上，14-1、17-6、17-7、17-8、25、34 重跑全部通過。<strong>沒驗到的</strong>：真模型的速度與準度（使用者 1124 定先在實驗室 3090 量，1124 學長同意；要照腳本錄的語料，測試分冊 <code>ar19</code>）、平板實機與長者（<code>ar18</code>）。</p>
+<p><strong>驗收現況（1124）</strong>：<code>npm run verify:iteration34</code> 八步全部通過（數字與轉寫怎麼接；外殼版本；開關與首頁欄位；病人端畫面只在「其他」送出後、只有這一顆用按住、沒有動畫與紅色、新字在自帶字型裡；後端擋的條件與稽核不寫字、不刪原音、只加表；語音閘道不含模型與 compose；外殼原始碼；匯出登記、<code>check:ui:design</code>、<code>check:egress</code>、<code>check:export</code>、<code>check:ui</code> 與迭代 8、14、33）；<code>npm run verify:iteration34:api</code> 八步全部通過（自起後端與假語音閘道：開啟條件、錄音同意、只收「其他」與取消後擋下、完整一次含重送與少一段、重送放開不再轉寫、碰一下與沒有說話、閘道故障與第四次、格式與撤回與院內位址）；<code>docker build services/speech-gateway</code>（含自我測試）通過；外殼在開發機以 Gradle 8.7 編譯與 lint 通過；<code>check:all</code> 七支全綠；迭代 12、13、14-2、14-5、16、17-4、27、33、33:api 照樣通過。病人端 <code>demo:patient</code> 接假語音閘道、無頭 Chrome 假麥克風截 1280×800 五張已看，不捲動。~~<code>verify:iteration14-1</code> 不過~~ <strong>1124 外殼打 <code>v0.4.0</code>、改 <code>shell.pin</code> 後回綠</strong>：14-1 改成只要求 0.3.0 以上，14-1、17-6、17-7、17-8、25、34 重跑全部通過。~~<strong>沒驗到的</strong>：真模型的速度與準度（使用者 1124 定先在實驗室 3090 量，1124 學長同意；要照腳本錄的語料，測試分冊 <code>ar19</code>）~~ <strong>1125 在實驗室 3090 量過</strong>（照腳本錄的 67 個檔、手機錄、沒混背景聲，《<a href="../../notes/emergency-voice-help-lab-trial/">語音說明之六</a>》）：開 VAD 閘道回字中位數約 0.3 秒、最長 0.42 秒，不講話的兩段生出句子 0 次（關 VAD 兩段都生出整句）；台語正常說話 Breeze-ASR-26 16/20、Breeze-ASR-25 1/20，華語兩個一樣準，並跑沒有比較準；音量門檻 200 擋掉 14 句真的說話；小聲有氣無力台語 2/5、華語 0/5。同日語音閘道改三個預設值（下表第 5～7 列），<code>python -m gateway.selftest</code> 與 <code>verify:iteration34</code> 照樣通過。<strong>沒驗到的</strong>：背景聲、平板實機與長者（<code>ar18</code>）、院內辨識端點的速度。</p>
 <p><strong>使用者決定（1124 迭代鏈開工時使用者不在，四題沒有代選；同日回來定了）</strong>：</p>
 <table>
 <thead>
@@ -15606,13 +15634,31 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <td>3</td>
 <td>辨識要驗到什麼程度</td>
 <td><strong>先在實驗室的 3090 量真模型</strong>，不等院內</td>
-<td>實驗室規定 Ollama「只能呼叫、不可自行管理模型」，在個人 container 自己跑 whisper.cpp 與 Breeze 權重沒寫，~~先問實驗室學長姐同意~~ <strong>1124 學長同意</strong>；在 3090 上量速度與準度（測試分冊 <code>ar19</code>），順便實測 whisper.cpp 的 VAD 選項。3090 的記憶體頻寬比 DGX Spark 快，量到的速度當上限看</td>
+<td>實驗室規定 Ollama「只能呼叫、不可自行管理模型」，在個人 container 自己跑 whisper.cpp 與 Breeze 權重沒寫，~~先問實驗室學長姐同意~~ <strong>1124 學長同意</strong>；在 3090 上量速度與準度（測試分冊 <code>ar19</code>），順便實測 whisper.cpp 的 VAD 選項。3090 的記憶體頻寬比 DGX Spark 快，量到的速度當上限看；<strong>1125 量了</strong>，結果見下面第 5～7 列與《<a href="../../notes/emergency-voice-help-lab-trial/">語音說明之六</a>》</td>
 </tr>
 <tr>
 <td>4</td>
 <td>原音存什麼格式</td>
 <td><strong>原始 PCM</strong>（無損、不多相依，90 秒約 2.9 MB）</td>
 <td>程式不必改</td>
+</tr>
+<tr>
+<td>5</td>
+<td>辨識端點留幾個（1125 加）</td>
+<td><strong>只留 Breeze-ASR-26</strong></td>
+<td>實測台語只有它聽得懂（正常說話 16/20，25 是 1/20），華語兩個一樣準，並跑取有把握的沒有比較準、還選錯過一次；GPU 用量減半。閘道照樣支援多個端點，兩份範本改成一個</td>
+</tr>
+<tr>
+<td>6</td>
+<td>音量門檻（1125 加）</td>
+<td><strong><code>min_rms</code> 200 改 50</strong>，平板實機再量</td>
+<td>手機錄音靜音 24、100 公分說話 152～318、小聲 105～362、敲桌子 790：200 擋掉真的說話卻擋不住雜音，擋雜音靠辨識端點的 VAD。程式預設值與兩份範本一起改</td>
+</tr>
+<tr>
+<td>7</td>
+<td>詞庫（1125 加）</td>
+<td><strong>改成短詞</strong>（暈、吐、喘、悶、痛、疼、抽筋、冷、發抖、無力、沒力、不舒服、難受、廁所），台語寫法照留</td>
+<td>原本的詞對不上「我頭很暈」，Breeze-ASR-26 又輸出華文字，65 句只有 18 句命中；改了之後意思對的 53 句全部命中。程式預設值、兩份範本與自我測試一起改；病人常用的台語說法仍等護理部</td>
 </tr>
 </tbody>
 </table>
