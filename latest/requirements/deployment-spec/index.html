@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1125 — 1118 開會答了四小時、床位代號與病人告知；目標脫水量填錯照醫師建議改成放行
+    1125 — 床位代號問清楚、目標脫水量填錯改成放行；求助的錄音三段在開發機做完
   
 
     
@@ -5634,6 +5634,34 @@
     
   
     迭代 34 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 35 分冊
   
 
     
@@ -11055,7 +11083,7 @@
 <hr />
 <h2 id="5-ai推論端點與-ai-閘道">5. AI：推論端點與 AI 閘道<a class="headerlink" href="#5-ai推論端點與-ai-閘道" title="Permanent link">&para;</a></h2>
 <p><strong>DEP-16｜（0926 改寫）本系統不載入模型、不需要 GPU，但包含一個 AI 閘道。</strong> 推論端點（實驗室 Ollama 或正式 GPU API）永遠在別台機器上；本系統自己跑的是一個不含模型的轉接服務。</p>
-<p><strong>語音也照這一條（使用者 1124 定，不開例外）</strong>：語音閘道（迭代 34）同樣不含模型；切句用的 Silero VAD 跟著辨識端點走，由 whisper.cpp server 自己的 VAD 選項跑，辨識端點在哪台機器、VAD 就在哪台。辨識端點與推論端點一樣在別台機器、不由本系統部署（5.3「語音」那一列）。迭代 35 的語氣模型（SenseVoiceSmall）要放哪裡，到時再問一次。</p>
+<p><strong>語音也照這一條（使用者 1124 定，不開例外）</strong>：語音閘道（迭代 34）同樣不含模型；切句用的 Silero VAD 跟著辨識端點走，由 whisper.cpp server 自己的 VAD 選項跑，辨識端點在哪台機器、VAD 就在哪台。辨識端點與推論端點一樣在別台機器、不由本系統部署（5.3「語音」那一列）。~~迭代 35 的語氣模型（SenseVoiceSmall）要放哪裡，到時再問一次。~~ <strong>語氣模型也一樣（使用者 1125 定）</strong>：SenseVoiceSmall 跟著辨識端點走，在辨識端點那一台跑官方的 <code>api.py</code>；語音閘道只多一個 <code>emotion_endpoint</code> 去連它，自己仍不載模型。</p>
 <div class="highlight"><pre><span></span><code>後端 ai 模組 ──HTTP（chat completions 相容格式）──▶ AI 閘道 ──LangChain──▶ 推論端點
 （LlmProviderPort，不變）                          （config.yaml 決定連誰）  實驗室 Ollama／正式 GPU API
 </code></pre></div>
@@ -11198,7 +11226,7 @@
 </tr>
 <tr>
 <td>語音</td>
-<td>Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，不開 DEP-16 的例外（1124 使用者定：切句放辨識端點，見 DEP-16），其餘待清冊 Q-41。<strong>1124 迭代 34</strong>：語音閘道 <code>services/speech-gateway</code> 已做（compose 的 <code>ai</code> profile、不開埠、<strong>不含模型</strong>，切句交給辨識端點）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 <code>speech-gateway/config.yaml</code>，公開位址判設定有誤；後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址；<code>check:egress</code> 掃語音閘道。院內範本 <code>config.hospital.example.yaml</code> 留空等 Q-07。<strong>辨識端點要開 whisper.cpp server 的 VAD 選項</strong>（附 Silero VAD 模型檔），那台機器在哪、誰維運併 Q-07 第 11 題</td>
+<td>Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，不開 DEP-16 的例外（1124 使用者定：切句放辨識端點，見 DEP-16），其餘待清冊 Q-41。<strong>1124 迭代 34</strong>：語音閘道 <code>services/speech-gateway</code> 已做（compose 的 <code>ai</code> profile、不開埠、<strong>不含模型</strong>，切句交給辨識端點）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 <code>speech-gateway/config.yaml</code>，公開位址判設定有誤；後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址；<code>check:egress</code> 掃語音閘道。院內範本 <code>config.hospital.example.yaml</code> 留空等 Q-07。<strong>辨識端點要開 whisper.cpp server 的 VAD 選項</strong>（附 Silero VAD 模型檔），那台機器在哪、誰維運併 Q-07 第 11 題。<strong>1125 迭代 35</strong>：床邊對話走語音閘道的 <code>/v1/bedside</code>；語氣與聲音事件的 SenseVoiceSmall 在辨識端點那一台跑官方 <code>api.py</code>，位址寫在同一份 <code>config.yaml</code> 的 <code>emotion_endpoint</code>（一樣只准院內位址，不用就整段刪掉；不通時只少語氣兩欄、其他照回，<code>/health</code> 只回報不擋）；後端 <code>SPEECH_GATEWAY_BEDSIDE_TIMEOUT_SECONDS</code>（預設 420）要比閘道的 <code>bedside_timeout_seconds</code>（300）加語氣端點的時間大</td>
 </tr>
 </tbody>
 </table>
@@ -11770,7 +11798,7 @@
 </tr>
 <tr>
 <td>Q-41</td>
-<td>求助錄音：送 AI 前遮名夠不夠、同意怎麼取得、台語詞庫（1123 新增；DEP-16 不開例外，1124 使用者定，見 DEP-16）</td>
+<td>求助錄音：送 AI 前遮名夠不夠、同意怎麼取得、台語詞庫（1123 新增；DEP-16 不開例外，1124、1125 使用者定，見 DEP-16）</td>
 </tr>
 </tbody>
 </table>
