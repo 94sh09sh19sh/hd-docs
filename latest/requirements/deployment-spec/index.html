@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1125 — 床位代號問清楚、目標脫水量填錯改成放行；求助的錄音三段在開發機做完
+    1125 — 目標脫水量放行的程式改好；求助的錄音三段在開發機做完
   
 
     
@@ -11222,11 +11222,11 @@
 </tr>
 <tr>
 <td>先問</td>
-<td>實際位址、能不能共用、換模型停機會不會通知、常駐模型與 Ollama 設定、主機有沒有 GPU（清冊 Q-07 第 6～10 題）；問到之前院內範本照舊留空</td>
+<td>~~能不能共用、換模型停機會不會通知、主機有沒有 GPU~~（<strong>1125</strong>：學長說那套系統目前沒在用，使用者被指定用同一個端點；應用主機沒有 GPU，語音放推論主機）；剩實際位址、常駐模型與 Ollama 設定（清冊 Q-07 第 6、9 題）；問到之前院內範本照舊留空</td>
 </tr>
 <tr>
 <td>語音</td>
-<td>Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，不開 DEP-16 的例外（1124 使用者定：切句放辨識端點，見 DEP-16），其餘待清冊 Q-41。<strong>1124 迭代 34</strong>：語音閘道 <code>services/speech-gateway</code> 已做（compose 的 <code>ai</code> profile、不開埠、<strong>不含模型</strong>，切句交給辨識端點）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 <code>speech-gateway/config.yaml</code>，公開位址判設定有誤；後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址；<code>check:egress</code> 掃語音閘道。院內範本 <code>config.hospital.example.yaml</code> 留空等 Q-07。<strong>辨識端點要開 whisper.cpp server 的 VAD 選項</strong>（附 Silero VAD 模型檔），那台機器在哪、誰維運併 Q-07 第 11 題。<strong>1125 迭代 35</strong>：床邊對話走語音閘道的 <code>/v1/bedside</code>；語氣與聲音事件的 SenseVoiceSmall 在辨識端點那一台跑官方 <code>api.py</code>，位址寫在同一份 <code>config.yaml</code> 的 <code>emotion_endpoint</code>（一樣只准院內位址，不用就整段刪掉；不通時只少語氣兩欄、其他照回，<code>/health</code> 只回報不擋）；後端 <code>SPEECH_GATEWAY_BEDSIDE_TIMEOUT_SECONDS</code>（預設 420）要比閘道的 <code>bedside_timeout_seconds</code>（300）加語氣端點的時間大</td>
+<td>Ollama 不提供語音辨識；求助錄音（SRS FR-S20）的辨識端點另計，不開 DEP-16 的例外（1124 使用者定：切句放辨識端點，見 DEP-16），其餘待清冊 Q-41。<strong>1124 迭代 34</strong>：語音閘道 <code>services/speech-gateway</code> 已做（compose 的 <code>ai</code> profile、不開埠、<strong>不含模型</strong>，切句交給辨識端點）；辨識端點（whisper.cpp server）位址只寫在設定目錄的 <code>speech-gateway/config.yaml</code>，公開位址判設定有誤；後端 <code>SPEECH_GATEWAY_URL</code> 只准院內位址；<code>check:egress</code> 掃語音閘道。院內範本 <code>config.hospital.example.yaml</code> 留空等 Q-07。<strong>辨識端點要開 whisper.cpp server 的 VAD 選項</strong>（附 Silero VAD 模型檔），那台機器 <strong>1125 使用者定放推論主機</strong>（院內只有部署主機與推論主機兩台，部署主機沒有 GPU、跑不動；清冊 Q-07 第 11 題）。<strong>1125 迭代 35</strong>：床邊對話走語音閘道的 <code>/v1/bedside</code>；語氣與聲音事件的 SenseVoiceSmall 在辨識端點那一台跑官方 <code>api.py</code>，位址寫在同一份 <code>config.yaml</code> 的 <code>emotion_endpoint</code>（一樣只准院內位址，不用就整段刪掉；不通時只少語氣兩欄、其他照回，<code>/health</code> 只回報不擋）；後端 <code>SPEECH_GATEWAY_BEDSIDE_TIMEOUT_SECONDS</code>（預設 420）要比閘道的 <code>bedside_timeout_seconds</code>（300）加語氣端點的時間大</td>
 </tr>
 </tbody>
 </table>

@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1125 — 床位代號問清楚、目標脫水量填錯改成放行；求助的錄音三段在開發機做完
+    1125 — 目標脫水量放行的程式改好；求助的錄音三段在開發機做完
   
 
     
@@ -12000,7 +12000,7 @@
 <td>4</td>
 <td>AI 推論端點（FR-S13 補）</td>
 <td>Q-07：院內端點未架設</td>
-<td>同主機另一套系統用院內 Ollama；<strong>不排迭代</strong>：程式不改，問到 Q-07 第 6～10 題後改閘道院內範本 <code>config.hospital.example.yaml</code> 的預設值與部署規範 5.3，即可在下一次進院接上（3.4 的 1123 補）</td>
+<td>同主機另一套系統用院內 Ollama；<strong>不排迭代</strong>：程式不改，問到 Q-07 第 6、9 題（實際位址、模型；1125 學長答那套系統沒在用、使用者被指定共用）後改閘道院內範本 <code>config.hospital.example.yaml</code> 的預設值與部署規範 5.3，即可在下一次進院接上（3.4 的 1123 補）</td>
 </tr>
 <tr>
 <td>5</td>
@@ -12476,7 +12476,7 @@
 <p><strong>1123 補（院內推論端點的線索）</strong>：同一台院內主機上另一套系統直接連院內的 Ollama（原生介面、沒有金鑰；《<a href="../../notes/ai-endpoint-reference-survey/">同主機 RAG 系統參考調查</a>》）。閘道的 <code>provider: ollama</code> 就是這一種，<strong>不改程式</strong>：</p>
 <ul>
 <li>院內那份 <code>config.yaml</code> 填 <code>provider: ollama</code>、<code>base_url</code>、<code>model</code>；Ollama 在同一台主機時 <code>base_url</code> 寫 <code>http://host.docker.internal:11434</code>（容器裡的 <code>127.0.0.1</code> 是容器自己），在別台就寫那台的院內位址（只進主機設定目錄與私人紀錄）</li>
-<li>範本 <code>services/ai-gateway/config.hospital.example.yaml</code> 現在預設 <code>provider: openai</code>、位址與模型留空；<strong>問到 Q-07 第 6～10 題後再改範本</strong>（改範本是動 <code>services/</code>，照常先問使用者）</li>
+<li>範本 <code>services/ai-gateway/config.hospital.example.yaml</code> 現在預設 <code>provider: openai</code>、位址與模型留空；<strong>問到 Q-07 第 6、9 題（實際位址、模型）後再改範本</strong>（1125：能共用，學長說那套系統目前沒在用、使用者被指定用同一個端點）（改範本是動 <code>services/</code>，照常先問使用者）</li>
 <li>共用端點時：優先用對方已常駐的模型、不另外要模型（避免把對方的模型換出去）；背景佇列維持一次一件、不調高併發；逾時先照範本（閘道 120、後端 150 秒）實測，不夠兩個一起加大</li>
 <li>Ollama 不提供語音辨識；迭代 34 的辨識端點另計（4.34）</li>
 </ul>
@@ -14036,13 +14036,13 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <td>34</td>
 <td>語音之一：「其他」按住說話與語音閘道（1123）</td>
 <td><strong>開發機部分完成（1124）</strong>，兩支腳本驗收通過；病人端 1280×800 以假語音閘道截圖已看（送出後的按鈕、按著、轉寫中、轉寫完成、碰一下）；外殼 1124 打 <code>v0.4.0</code>、<code>shell.pin</code> 改釘</td>
-<td>四個決定 1124 定了（4.34 最後）；真模型 1125 在實驗室 3090 量過（測試分冊 <code>ar19</code>、《<a href="../../notes/emergency-voice-help-lab-trial/">語音說明之六</a>》），背景聲還沒混；對真實病人錄音要院內辨識端點（Q-07 第 11 題）與同意書格式（Q-41）</td>
+<td>四個決定 1124 定了（4.34 最後）；真模型 1125 在實驗室 3090 量過（測試分冊 <code>ar19</code>、《<a href="../../notes/emergency-voice-help-lab-trial/">語音說明之六</a>》），背景聲還沒混；對真實病人錄音要院內辨識端點（1125 定放推論主機，還沒架）與同意書格式（Q-41）</td>
 </tr>
 <tr>
 <td>35</td>
 <td>語音之二：床邊對話轉成護理紀錄的句子（1123）</td>
 <td><strong>開發機部分完成（1125）</strong>，兩支腳本驗收通過、語音閘道自我測試通過；病人端錄音那一列還沒在 1280×800 截圖確認</td>
-<td>兩個決定 1125 定了（4.35 最後）；SenseVoiceSmall 與挑句子的真模型沒量過（分冊 <code>as</code>）；對真實病人與護理師錄音要院內辨識端點（Q-07 第 11 題）、遮名夠不夠與兩邊的同意（Q-41 第 1、2 題）</td>
+<td>兩個決定 1125 定了（4.35 最後）；SenseVoiceSmall 與挑句子的真模型沒量過（分冊 <code>as</code>）；對真實病人與護理師錄音要院內辨識端點（1125 定放推論主機，還沒架）、遮名夠不夠與兩邊的同意（Q-41 第 1、2 題）</td>
 </tr>
 </tbody>
 </table>
@@ -15656,7 +15656,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <td>1</td>
 <td>DEP-16：Silero VAD 放哪裡</td>
 <td><strong>跟著辨識端點走</strong>：whisper.cpp server 本身有 Silero VAD 選項，語音閘道不載模型、DEP-16 不開例外；迭代 35 要 SenseVoice 時再問一次（<strong>1125 定跟著辨識端點走</strong>，4.35 最後）</td>
-<td>程式不必改（閘道本來就只有音量門檻）；《部署規範》DEP-16 與 5.3 寫明辨識端點要開 VAD 選項。辨識端點放哪台機器問資訊室（清冊 Q-07 第 11 題）：應用主機沒有 GPU，兩個 Whisper large 級模型推估要十幾秒以上才出字、還會吃滿整台 CPU</td>
+<td>程式不必改（閘道本來就只有音量門檻）；《部署規範》DEP-16 與 5.3 寫明辨識端點要開 VAD 選項。~~辨識端點放哪台機器問資訊室~~ <strong>1125 使用者定放推論主機、不必問</strong>（清冊 Q-07 第 11 題）：應用主機沒有 GPU，兩個 Whisper large 級模型推估要十幾秒以上才出字、還會吃滿整台 CPU</td>
 </tr>
 <tr>
 <td>2</td>
@@ -15799,7 +15799,7 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <p><strong>與上面範圍表不同的地方</strong>：</p>
 <ul>
 <li>第 2 列寫「求助狀態那一塊」：首頁那一列已經滿了，改放在外框多一列（內容區與求助區之間），求助區位置與尺寸照舊；介面設計基準 2.4 登記</li>
-<li>第 3 列寫 SenseVoiceSmall 用 CPU：1125 定跟著辨識端點走（上表第 1 題），在哪一台、用不用 GPU 跟著辨識端點問資訊室（清冊 Q-07 第 11 題）</li>
+<li>第 3 列寫 SenseVoiceSmall 用 CPU：1125 定跟著辨識端點走（上表第 1 題），跟著辨識端點放推論主機（1125 使用者定，清冊 Q-07 第 11 題）</li>
 <li>按住說話（迭代 34）的轉寫沒有放進建議欄：範圍表只列床邊對話；按住說話的字本來就進那一則求助的說明</li>
 </ul>
 <hr />

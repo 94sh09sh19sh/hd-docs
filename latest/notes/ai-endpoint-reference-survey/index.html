@@ -402,7 +402,7 @@
   <span class="md-ellipsis">
     
   
-    1125 — 床位代號問清楚、目標脫水量填錯改成放行；求助的錄音三段在開發機做完
+    1125 — 目標脫水量放行的程式改好；求助的錄音三段在開發機做完
   
 
     
@@ -10203,7 +10203,7 @@
 <li>它直接連 <strong>Ollama</strong>：位址一個環境變數（<code>OLLAMA_BASE_URL</code>），沒有金鑰；主回答 <code>gpt-oss:120b</code>、輕量工作 <code>gpt-oss:20b</code>、看圖 <code>qwen3-vl:30b</code>，都經 LangChain 呼叫（第 3 節）</li>
 <li>它踩過的坑跟本系統會遇到的一樣：<strong>同一個 Ollama 一次只讓一件大工作跑</strong>、看圖冷啟動要 60 秒以上所以逾時給 180 秒、串流每 5 秒送心跳（第 3.3、3.4 節）</li>
 <li>用在本專案：<strong>程式一行都不用改</strong>，AI 閘道本來就照這種接法設計；要做的只有院內那一份 <code>config.yaml</code> 填上同一個端點與模型（第 5 節）</li>
-<li>但現在只有那套系統的公開程式碼，<strong>院內實際連到哪裡、能不能共用、裝了哪些模型都還不知道</strong>，要先問（第 6 節）；問到之前 Q-07 照舊不結案</li>
+<li>但現在只有那套系統的公開程式碼，<strong>院內實際連到哪裡、裝了哪些模型都還不知道</strong>（第 6 節）；<strong>1125 學長說那套系統目前沒在用，使用者被指定用同一個端點</strong>，能不能共用不必再問；問到位址與模型之前 Q-07 照舊不結案</li>
 <li>語音：它在主機 CPU 上跑 <code>whisper-small</code> 轉文字，證明這台主機 CPU 跑得動小型辨識模型，但不懂台語，取代不了本系統選的 Breeze（第 5.5 節）</li>
 <li>參考程式的網址、作者與院內實際位址不寫進本文件，在私人 repo 的 <code>deploy/records/1123-ai-ref-system/</code></li>
 </ul>
@@ -10615,6 +10615,7 @@
 </tr>
 </tbody>
 </table>
+<p><strong>1125 答覆</strong>：第 2、3 題學長答——那套系統目前沒有在用，使用者被指定用同一個推論端點，不會跟它搶 GPU、也不必跟它協調；第 5 題不必問——院內只有部署主機與推論主機兩台，部署主機跑不動的語音辨識就放推論主機（使用者定）。剩第 1、4 題（實際位址、裝了哪些模型），即清冊 Q-07 第 6、9 題。</p>
 <p>~~這些題目要不要併進《<a href="../../requirements/open-questions/">待確認事項清冊</a>》的 Q-07 或另開一題，跟需求文件一起改時決定。~~ <strong>1123 併進 Q-07 第 6～10 題</strong>；SRS FR-S13、實作規格書 3.4、《部署規範》5.3 同日補上本文件的結論。院內範本 <code>config.hospital.example.yaml</code> 照第 5.1 節等問到再改。</p>
 <h2 id="7-公開文件的界線">7. 公開文件的界線<a class="headerlink" href="#7-公開文件的界線" title="Permanent link">&para;</a></h2>
 <ul>
