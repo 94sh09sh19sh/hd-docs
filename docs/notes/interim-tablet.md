@@ -21,7 +21,7 @@
 > 醫院買的 15 台平板還沒來，醫生說先用一台舊的。在我更新資訊前，正式使用都是只有這一台平板。
 
 - 效力：部署、佈建、實機驗收、截圖，一律以這台為準，直到使用者更新本文件。
-- 15 台到貨後：改寫本文件（或另開一份），同時回頭改 [Q-33](../requirements/open-questions.md#q-33-目標平板的型號與解析度) 與 [Q-11](../requirements/open-questions.md#q-11-android-enterprise-管理權限)。
+- 15 台到貨後：改寫本文件（或另開一份），同時回頭改 [Q-33](../requirements/open-questions/q-33.md) 與 [Q-11](../requirements/open-questions/q-11.md)。
 - 序號、Wi-Fi 名稱、IP 不寫進本文件（文件會同步到公開站台）。
 
 ## 1. 規格

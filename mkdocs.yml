@@ -105,7 +105,7 @@ hooks:
 
 # 這份 nav 是「有哪些文件」的唯一清單。列序照首頁那兩張表的讀者思考順序，不要重排
 # （規則見 .claude/skills/hd-docs/references/homepage.md）。
-# 「每週紀錄」與「手動測試」的分冊由 npm run docs:gen 產生，不手改；其他新文件要手動加一列，
+# 「每週紀錄」與「手動測試」的分冊、`# docs:gen <資料夾> <標題前綴>` 標記底下的子資料夾文件由 npm run docs:gen 產生，不手改；其他新文件要手動加一列，
 # 漏了 npm run docs:check 會抓出來。
 nav:
   - 進度首頁: index.md
@@ -138,14 +138,127 @@ nav:
           - 之一：迭代 1～23 的完成範圍: reports/progress-technical-iterations-1-23.md
   - 需求文件:
       - FDE 數位化評估報告: requirements/fde-assessment.md
-      - 軟體需求規格書（SRS）: requirements/srs.md
+      - 軟體需求規格書（SRS）:
+          - 軟體需求規格書（SRS）: requirements/srs.md
+          # docs:gen requirements/srs 軟體需求規格書
+          - 5.1 病人端: requirements/srs/5-1-patient.md
+          - 5.2 護理端: requirements/srs/5-2-nurse.md
+          - 5.3 管理與營運（0910 新增，對應新增任務一之 1～3）: requirements/srs/5-3-management.md
+          - 5.4 對外揭露（0910 新增，對應新增任務一之 4）: requirements/srs/5-4-disclosure.md
+          - 5.5 系統與整合: requirements/srs/5-5-system.md
+          - 5.6 高風險功能控制（0910 新增）: requirements/srs/5-6-high-risk.md
+          - 附錄 C：院方授權採用的預設選項與題庫（0919 新增）: requirements/srs/appendix-c.md
+          - 異動紀錄（第 0 章、附錄 A）: requirements/srs/changes.md
       - 資料庫使用規範: requirements/database-policy.md
       - 實作規格書:
           - 實作規格書: requirements/implementation-spec.md
           - 之一：既有驗收腳本的刻意改動紀錄: requirements/implementation-spec-script-changes.md
-          - 之二：迭代 3～23 的規格與實作結果: requirements/implementation-spec-iterations-3-23.md
+          # docs:gen requirements/implementation-spec 實作規格書
+          - 異動紀錄（0.1～0.13）: requirements/implementation-spec/changes.md
+          - 第 8 章：這四個迭代會用到的工具（0919 備妥）: requirements/implementation-spec/tools-0919.md
+          - 第 3 章 關鍵機制:
+              # docs:gen requirements/implementation-spec/mechanisms 實作規格書
+              - 3.1 護理端身分驗證（沿用，補上新角色）: requirements/implementation-spec/mechanisms/3-01-nurse-auth.md
+              - 3.2 裝置綁定與 Session Token（沿用）: requirements/implementation-spec/mechanisms/3-02-device-session.md
+              - 3.3 裝置管控：免 MDM（0919 改寫）: requirements/implementation-spec/mechanisms/3-03-device-control.md
+              - 3.4 模型供應者介面層 `LlmProviderPort`（改寫）: requirements/implementation-spec/mechanisms/3-04-llm-provider.md
+              - 3.5 臨床資料來源介面層 `ClinicalDataSourcePort`（新增）: requirements/implementation-spec/mechanisms/3-05-clinical-data-source.md
+              - 3.6 規則引擎（新增）: requirements/implementation-spec/mechanisms/3-06-rule-engine.md
+              - 3.7 功能開關中心（新增）: requirements/implementation-spec/mechanisms/3-07-feature-flags.md
+              - 3.8 即時通知與常駐總覽螢幕（改寫，取代推播）: requirements/implementation-spec/mechanisms/3-08-realtime-overview.md
+              - 3.9 SQLite 連線與運作設定（取代原 Supabase 連線資訊）: requirements/implementation-spec/mechanisms/3-09-sqlite-settings.md
+              - 3.10 績效資料分級的實作方式（新增）: requirements/implementation-spec/mechanisms/3-10-performance-tiers.md
+              - 3.11 部署環境（0926 改寫：容器＋git clone）: requirements/implementation-spec/mechanisms/3-11-deployment-env.md
+              - 3.12 介面設計基準（0919 新增）: requirements/implementation-spec/mechanisms/3-12-ui-baseline.md
+              - 3.13 導覽版位與功能可設定（FR-S11，0919 新增）: requirements/implementation-spec/mechanisms/3-13-nav-slots.md
+              - 3.14 選項與題庫改為資料（0919 新增）: requirements/implementation-spec/mechanisms/3-14-options-as-data.md
+              - 3.15 已知缺陷：解除綁定在某些條件下找不到入口（0919，**當日修正**）: requirements/implementation-spec/mechanisms/3-15-unbind-defect.md
+          - 第 4 章 迭代:
+              # docs:gen requirements/implementation-spec/iterations 實作規格書
+              - 4.18、4.0：迭代一覽與排序原則: requirements/implementation-spec/iterations/4-00-overview.md
+              - 4.0.1～4.0.5：迭代編號重排與各週的順序: requirements/implementation-spec/iterations/4-00-renumbering.md
+              - 4.1 迭代 3：封閉網路化與資料層遷移: requirements/implementation-spec/iterations/4-01-iteration-03.md
+              - 4.2 迭代 4：AI 輔助內容與護理記錄: requirements/implementation-spec/iterations/4-02-iteration-04.md
+              - 4.3 迭代 5：求助處理完整紀錄、護理師班表與成效基準 —— 已完成（2026-09-11）: requirements/implementation-spec/iterations/4-03-iteration-05.md
+              - 4.4 迭代 6：閒置輪播 —— 已完成（2026-09-12）: requirements/implementation-spec/iterations/4-04-iteration-06.md
+              - 4.5 迭代 7：擋住上線的缺陷與資料安全（0919 新增，本週）: requirements/implementation-spec/iterations/4-05-iteration-07.md
+              - 4.6 迭代 8：介面重新設計（0919 新增，本週）: requirements/implementation-spec/iterations/4-06-iteration-08.md
+              - 4.7 迭代 9：導覽版位、功能開關與內容資料化（0919 新增，本週）: requirements/implementation-spec/iterations/4-07-iteration-09.md
+              - 4.8 迭代 10：打包、平板佈建與部署演練（0919 新增，本週）: requirements/implementation-spec/iterations/4-08-iteration-10.md
+              - 4.9 迭代 11：部署改為 Docker ＋ git clone（0926 新增，本週）: requirements/implementation-spec/iterations/4-09-iteration-11.md
+              - 4.10 迭代 12：外殼 App 獨立 repo 與整合（0926 新增，本週）: requirements/implementation-spec/iterations/4-10-iteration-12.md
+              - 4.11 迭代 13：AI 閘道與實驗室實際測試（0926 新增，本週）: requirements/implementation-spec/iterations/4-11-iteration-13.md
+              - 4.12 迭代 14：介面極簡重設計（含 14.1～14.5）: requirements/implementation-spec/iterations/4-12-iteration-14.md
+              - 4.13 迭代 15：院方 API 介接與自動化（1005 新增）: requirements/implementation-spec/iterations/4-13-iteration-15.md
+              - 4.14 迭代 16：病人端「本次透析」面板與跑馬燈（1005 新增）: requirements/implementation-spec/iterations/4-14-iteration-16.md
+              - 4.15 迭代 17：跑馬燈內容由 AI 生成、護理師核准（含 17.1～17.8）: requirements/implementation-spec/iterations/4-15-iteration-17.md
+              - 4.16 迭代 18：規則引擎與三項高風險功能（含 18.1）: requirements/implementation-spec/iterations/4-16-iteration-18.md
+              - 4.17 迭代 19：管理儀表板、獎勵制度與對外揭露（原迭代 8 → 12 → 16，1005 再順延）: requirements/implementation-spec/iterations/4-17-iteration-19.md
+              - 4.19 第三次進院（1005 新增）: requirements/implementation-spec/iterations/4-19-third-visit.md
+              - 4.20 迭代 20：遊戲化之一——平板現有功能的遊戲化（1010 新增）: requirements/implementation-spec/iterations/4-20-iteration-20.md
+              - 4.21 迭代 21：遊戲化之二——透析小花園、送花、匿名彙總（1010 新增）: requirements/implementation-spec/iterations/4-21-iteration-21.md
+              - 4.22 迭代 22：遊戲化之三——麻將連連看、狀態評估彙整、社工與醫師（1010 新增）: requirements/implementation-spec/iterations/4-22-iteration-22.md
+              - 4.23 迭代 23：遊戲化之四——老台灣記憶相簿（1010 新增）: requirements/implementation-spec/iterations/4-23-iteration-23.md
+              - 4.24 迭代 24：遊戲化之五——花園與相簿的擴充（1015 新增）: requirements/implementation-spec/iterations/4-24-iteration-24.md
+              - 4.25 迭代 25：緊急通報——頂端橫幅、床邊前速覽、護理紀錄連動（1015 新增）: requirements/implementation-spec/iterations/4-25-iteration-25.md
+              - 4.26 迭代 26：管理儀表板、獎勵制度與對外揭露的更新與修正（1017 新增）: requirements/implementation-spec/iterations/4-26-iteration-26.md
+              - 4.27 迭代 27：病人平板固定橫放（含 27.1～27.2）: requirements/implementation-spec/iterations/4-27-iteration-27.md
+              - 4.28 迭代 28：蒐集資料的完整取出（1026 新增）: requirements/implementation-spec/iterations/4-28-iteration-28.md
+              - 4.29 迭代 29：連點成畫之一——遊戲模式（1026 新增）: requirements/implementation-spec/iterations/4-29-iteration-29.md
+              - 4.30 迭代 30：連點成畫之二（含 30.4～30.5）: requirements/implementation-spec/iterations/4-30-iteration-30.md
+              - 4.31 迭代 31：連點成畫之三——常模對照（1026 新增）: requirements/implementation-spec/iterations/4-31-iteration-31.md
+              - 4.32 迭代 32：院方資料改讀檔（含 32.1～32.3）: requirements/implementation-spec/iterations/4-32-iteration-32.md
+              - 4.33 迭代 33：求助一點送出與倒數自動送出（1123 新增，1124 完成）: requirements/implementation-spec/iterations/4-33-iteration-33.md
+              - 4.34 迭代 34：語音之一——「其他」按住說話與語音閘道（1123 新增，1124 開發機部分完成）: requirements/implementation-spec/iterations/4-34-iteration-34.md
+              - 4.35 迭代 35：語音之二——床邊對話轉成護理紀錄的句子（1123 新增，1125 開發機部分完成）: requirements/implementation-spec/iterations/4-35-iteration-35.md
+              - 4.36 迭代 36：護理端意見表單連結（含 36.1）: requirements/implementation-spec/iterations/4-36-iteration-36.md
       - 部署規範: requirements/deployment-spec.md
-      - 尚待確認事項清冊: requirements/open-questions.md
+      - 尚待確認事項清冊:
+          - 尚待確認事項清冊: requirements/open-questions.md
+          # docs:gen requirements/open-questions 尚待確認事項清冊
+          - 第 6 章：按要問的人分組: requirements/open-questions/by-person.md
+          - Q-01 成效基準的量測人力與時程: requirements/open-questions/q-01.md
+          - Q-02 三項高風險功能的 TFDA 分類書面確認: requirements/open-questions/q-02.md
+          - Q-03 三項功能的規則門檻值與所依據的 protocol 條文: requirements/open-questions/q-03.md
+          - Q-04 護理師個人層級績效資料是否需經員工代表同意: requirements/open-questions/q-04.md
+          - Q-05 資料留存期限: requirements/open-questions/q-05.md
+          - Q-06 去識別化資料可用於院內 AI 推論的同意範圍: requirements/open-questions/q-06.md
+          - Q-07 院內 AI 伺服器的資源額度與推論服務歸屬: requirements/open-questions/q-07.md
+          - Q-08 實驗室 API 的取得時程與端點格式: requirements/open-questions/q-08.md
+          - Q-09 輪播第三層臨床數值的來源與欄位: requirements/open-questions/q-09.md
+          - Q-10 常駐總覽螢幕的位置與硬體: requirements/open-questions/q-10.md
+          - Q-11 Android Enterprise 管理權限: requirements/open-questions/q-11.md
+          - Q-12 透析區 Wi-Fi 覆蓋與穩定度: requirements/open-questions/q-12.md
+          - Q-13 求助處理方式與處理結果的選項清單: requirements/open-questions/q-13.md
+          - Q-14 醫院的勞動條件規定: requirements/open-questions/q-14.md
+          - Q-15 護理師班表的現行格式: requirements/open-questions/q-15.md
+          - Q-16 護理師工作 ID 格式: requirements/open-questions/q-16.md
+          - Q-17 醫院真實的透析 SOP 文件: requirements/open-questions/q-17.md
+          - Q-18 症狀問卷題目審閱: requirements/open-questions/q-18.md
+          - Q-19 求助分派表確認: requirements/open-questions/q-19.md
+          - Q-20 獎勵指標的定義與權重: requirements/open-questions/q-20.md
+          - Q-21 對外報表的核准角色: requirements/open-questions/q-21.md
+          - Q-22 平板共用的消毒 SOP: requirements/open-questions/q-22.md
+          - Q-23 衛教主題與測驗題庫審閱: requirements/open-questions/q-23.md
+          - Q-24 情緒／滿意度回饋的題目與「趨勢偏離」判定: requirements/open-questions/q-24.md
+          - Q-25 事件記錄快速範本的事件類型與欄位: requirements/open-questions/q-25.md
+          - Q-26 透析適足性的計算公式與輸入來源: requirements/open-questions/q-26.md
+          - Q-27 正式主機的容器執行方式與映像檔傳入管道: requirements/open-questions/q-27.md
+          - Q-28 輪播第二層的衛教與公告內容: requirements/open-questions/q-28.md
+          - Q-29 外來儲存媒體、掃毒流程與更新時段: requirements/open-questions/q-29.md
+          - Q-30 護理師的行動裝置: requirements/open-questions/q-30.md
+          - Q-31 介面改版的現場試用人選: requirements/open-questions/q-31.md
+          - Q-32 院內主機對外連線的範圍與穩定性: requirements/open-questions/q-32.md
+          - Q-33 目標平板的型號與解析度: requirements/open-questions/q-33.md
+          - Q-34 透析室的床位數、床號與療程時段: requirements/open-questions/q-34.md
+          - Q-35 院方透析清單 API 的使用報備與連線: requirements/open-questions/q-35.md
+          - Q-36 衛教要不要維持三種: requirements/open-questions/q-36.md
+          - Q-37 護理紀錄的現行形式與如何接上現有作業: requirements/open-questions/q-37.md
+          - Q-38 要不要立案建立本院透析病人的認知遊戲參考值: requirements/open-questions/q-38.md
+          - Q-39 研究與後續計畫的資料取出：核准流程與取出之後的去處: requirements/open-questions/q-39.md
+          - Q-40 連點成畫的常模來源、自製版面的法務確認與病人告知: requirements/open-questions/q-40.md
+          - Q-41 求助錄音的遮名、同意與台語詞庫: requirements/open-questions/q-41.md
+          - Q-42 護理師回饋的管道與聯絡人: requirements/open-questions/q-42.md
       - 架構圖: requirements/architecture-diagrams.md
   - 參考:
       - 資料字典: reference/data-dictionary.md

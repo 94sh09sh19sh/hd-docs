@@ -295,8 +295,8 @@ TLS 正常驗證、沒有警告、Service Worker 正常運作。**不必購買�
 
 | 編號 | 主題 |
 |---|---|
-| [Q-11](../requirements/open-questions.md#q-11-android-enterprise-管理權限) | 平板型號、側載政策與憑證簽發（縮小後，見 8.3） |
-| [Q-12](../requirements/open-questions.md#q-12-透析區-wi-fi-覆蓋與穩定度) | 透析區 Wi-Fi 覆蓋，影響逸出偵測的回報可靠度 |
+| [Q-11](../requirements/open-questions/q-11.md) | 平板型號、側載政策與憑證簽發（縮小後，見 8.3） |
+| [Q-12](../requirements/open-questions/q-12.md) | 透析區 Wi-Fi 覆蓋，影響逸出偵測的回報可靠度 |
 
 ---
 
