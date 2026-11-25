@@ -34,7 +34,7 @@ C-1～C-4、C-6～C-8、C-12、C-13、C-15 已照建議做進 `hd-hospital-fetch
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1125 | 2026-11-25 | 剩下的 D-1、E-5 在 1118 開會由醫師答了，沒有還沒答的題目 |
+| [1125](https://94sh09sh19sh.github.io/hd-docs/1125/notes/hospital-api-fetch-methods-questions/) | 2026-11-25 | 剩下的 D-1、E-5 在 1118 開會由醫師答了，沒有還沒答的題目 |
 | [1118](https://94sh09sh19sh.github.io/hd-docs/1118/notes/hospital-api-fetch-methods-questions/) | 2026-11-18 | 系列 1116 改名為「院方 API 介接」；改成只列還沒答的 2 題（D-1、1116 新增的 E-5），1114 答的 15 題移到之二之一；加不必回的說明一節 |
 | [1111](https://94sh09sh19sh.github.io/hd-docs/1111/notes/hospital-api-fetch-methods-questions/) | 2026-11-11 | 首次定版。給學長的問題清單：從本系統每一個用到院方資料的地方反推、分組；1109 起只列沒答的題，1111 改成只有題目與選項的簡易版（已發給學長）、I 組刪 |
 

@@ -174,7 +174,7 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1125 | 2026-11-25 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-35 分冊） |
+| [1125](https://94sh09sh19sh.github.io/hd-docs/1125/testing/iteration-6/) | 2026-11-25 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-35 分冊） |
 | [1028](https://94sh09sh19sh.github.io/hd-docs/1028/testing/iteration-6/) | 2026-10-28 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-31 分冊） |
 | [1021](https://94sh09sh19sh.github.io/hd-docs/1021/testing/iteration-6/) | 2026-10-21 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-27 分冊） |
 | [1014](https://94sh09sh19sh.github.io/hd-docs/1014/testing/iteration-6/) | 2026-10-14 | 前置的 §13 連結改指分冊索引的新標題（迭代 3-23 分冊） |

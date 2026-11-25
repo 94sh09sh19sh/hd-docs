@@ -108,7 +108,7 @@
 
 | 定版 | 日期 | 異動 |
 |---|---|---|
-| 1125 | 2026-11-25 | 補 1118 醫師說明：目標脫水量那 3 次是護理師填錯；床位代號的意思（`E` 開頭待再確認） |
+| [1125](https://94sh09sh19sh.github.io/hd-docs/1125/notes/hospital-api-fetch-methods-app-team/) | 2026-11-25 | 補 1118 醫師說明：目標脫水量那 3 次是護理師填錯；床位代號的意思（`E` 開頭待再確認） |
 | [1118](https://94sh09sh19sh.github.io/hd-docs/1118/notes/hospital-api-fetch-methods-app-team/) | 2026-11-18 | 首次定版。1116 建立：給 APP 組的讀檔說明——留底檔 1116 起改在 C 槽的 API_Fetch 底下、新腳本每 3 分鐘只寫這一輪新的或變了的列、要整天清單怎麼把段落合起來 |
 
 [← 回上層文件](hospital-api-fetch-methods.md)　[← 回進度首頁](../index.md)
