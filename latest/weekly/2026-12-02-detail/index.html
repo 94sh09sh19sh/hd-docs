@@ -404,7 +404,7 @@
   <span class="md-ellipsis">
     
   
-    1202 — 照醫師建議，護理端放意見表單連結（排成迭代 36）；紙卡先併行
+    1202 — 照醫師建議，護理端放了意見表單連結（等院內換版）；紙卡先併行
   
 
     
@@ -898,10 +898,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-照醫師建議護理端放意見表單連結排成迭代-36" class="md-nav__link">
+  <a href="#1-照醫師建議護理端放了意見表單連結" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. 照醫師建議，護理端放意見表單連結，排成迭代 36
+        1. 照醫師建議，護理端放了意見表單連結
       
     </span>
   </a>
@@ -5354,6 +5354,34 @@
     
   
     迭代 35 分冊
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/iteration-36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迭代 36 分冊
   
 
     
@@ -9853,10 +9881,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-照醫師建議護理端放意見表單連結排成迭代-36" class="md-nav__link">
+  <a href="#1-照醫師建議護理端放了意見表單連結" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. 照醫師建議，護理端放意見表單連結，排成迭代 36
+        1. 照醫師建議，護理端放了意見表單連結
       
     </span>
   </a>
@@ -9979,14 +10007,15 @@
 <blockquote>
 <p>主文件只寫醫師需要知道的事；這一份放主文件放不下的細節。第 1～3 節對應主文件完成內容的同號節，第 4 節是 1125 醫師的答覆（醫師已知，主文件不放），之後是文件異動、對應 commit。</p>
 </blockquote>
-<h2 id="1-照醫師建議護理端放意見表單連結排成迭代-36">1. 照醫師建議，護理端放意見表單連結，排成迭代 36<a class="headerlink" href="#1-照醫師建議護理端放意見表單連結排成迭代-36" title="Permanent link">&para;</a></h2>
+<h2 id="1-照醫師建議護理端放了意見表單連結">1. 照醫師建議，護理端放了意見表單連結<a class="headerlink" href="#1-照醫師建議護理端放了意見表單連結" title="Permanent link">&para;</a></h2>
 <ul>
 <li>需求：SRS FR-N23 分兩段（0.12）；第一段「表單連結」排成迭代 36，第二段（系統內完整表單，三個大按鈕、資料留在院內主機）照舊候選、不給編號</li>
 <li>範圍（實作規格書 4.36）：營運參數「意見表單網址」（預設空白、只收 <code>https://</code>）；專業版導覽列最右側固定區、簡易版登出旁一項「意見」，網址空白就不出現；新分頁開、不帶任何參數；病人端沒有</li>
 <li>零院外連線：網址只存在營運參數，程式、<code>.env</code> 範本、映像檔裡都沒有；系統不預覽、不檢查連不連得上；點了是護理站電腦的瀏覽器去開，FR-S07、DEP-14 不受影響，<code>check:egress</code> 照舊 0 筆</li>
 <li>院內主機對外連線沒限制（清冊 Q-32），護理站電腦沒測過（第一次進院紀錄 C-22、C-23 只測到連主機）；改成清冊 Q-42 第 5 題，開不了就不填網址、入口不出現，不必回退</li>
-<li>驗收預定：<code>verify:iteration36</code>、<code>verify:iteration36:api</code>；測試手冊分冊預定 <code>at</code></li>
-<li>使用者開口才做；什麼時候做、表單由誰建是《護理師回饋》第 9 節要使用者決定的兩題</li>
+<li><strong>1125 使用者開口、同日做完</strong>（實作規格書 4.36「做法」與「驗收現況」）：營運參數多一組文字參數，存在 <code>operational_settings</code> 新加的 <code>text_value</code> 欄（只加一欄的遷移）；系統管理「營運參數與選項清單」最上面一張「意見表單網址」卡；專業版「意見」放在「系統管理」與「變更密碼」之間、簡易版登出旁，只用字不加圖示；唯讀角色也拿得到；後端讀出來再檢查一次，壞網址不出現</li>
+<li>驗收：<code>verify:iteration36</code> 七步、<code>verify:iteration36:api</code> 五步全部通過；回歸 <code>verify:iteration14:api</code>、<code>17-8:api</code>、<code>27-1:api</code>、<code>33:api</code>、<code>check:all</code> 通過；護理端 1366×768（兩版）、1280×800（簡易版）截圖看過，簡易版不捲動；手動測試分冊《<a href="../../testing/iteration-36/">迭代 36</a>》（<code>at1</code>～<code>at12</code>）</li>
+<li>表單由誰建是《護理師回饋》第 9 節要使用者決定的那一題，照舊</li>
 </ul>
 <h2 id="2-開發端判斷紙卡先併行連結上線滿一個月再決定留不留">2. 開發端判斷：紙卡先併行，連結上線滿一個月再決定留不留<a class="headerlink" href="#2-開發端判斷紙卡先併行連結上線滿一個月再決定留不留" title="Permanent link">&para;</a></h2>
 <ul>
@@ -10050,6 +10079,8 @@
 <h2 id="5-文件異動">5. 文件異動<a class="headerlink" href="#5-文件異動" title="Permanent link">&para;</a></h2>
 <ul>
 <li>1125 開會答覆：《護理師回饋》v0.2（摘要、第 1、3、4 節、新 4.4、第 5 節、第 6 節拆成 6.1／6.2、第 8 節答覆表、新 8.1、8.2、第 9 節）；清冊 Q-42（總表、狀態、第 5～7 題、1125 答覆表、按人分組）、Q-34（總表、狀態、第 5 題、1125 答覆表、按人分組）、第 1 章「1125 開會」表；SRS 0.12（新）、FR-N23 分兩段、FR-S15 對照表的下機列、0.11 最後一條；實作規格書 0.13（新）、0.11 第 5 列、0.12 第 5 列、1.2、4.0.5 與 4.18 各加迭代 36、4.36（新）；院內主機現況摘要與 ST-32</li>
+<li>迭代 36 收尾：實作規格書 4.36（做法、驗收現況、與範圍表不同的地方）、0.13、迭代總表、驗收現況表、4.0.5 字母；新測試分冊《迭代 36》（<code>at1</code>～<code>at12</code>）、主手冊對應版本與 §13（3-36，錨點跟著改）、API 路由表 248 條（照啟動清單重數）；SRS FR-N23 與 0.12 第 1 列；《護理師回饋》第 1、4、6.1、8、9 節；清冊 Q-42；介面設計基準 3.2 與 <code>hd-uiux</code>（「意見」那一項）；資料字典 <code>operational_settings</code>（8 欄、37 個遷移）；兩份進度報告；技術棧說明檔頭；院內主機現況 ST-25</li>
+<li>迭代 36 沒動到的：架構圖（「意見」是護理站電腦的瀏覽器直接開外部表單，系統內沒有新的元件或連線）、部署手冊總覽（換版照現有步驟，<code>.env</code> 不必加）、外殼契約（病人端沒變）</li>
 </ul>
 <h2 id="6-對應-commit">6. 對應 commit<a class="headerlink" href="#6-對應-commit" title="Permanent link">&para;</a></h2>
 <ul>
