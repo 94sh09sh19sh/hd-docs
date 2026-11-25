@@ -4,12 +4,13 @@
 
 ## 摘要
 
-這一冊驗四件事（項次 `at1`～`at12`，自動化另跑 `npm run verify:iteration36` 與 `npm run verify:iteration36:api`）：
+這一冊驗五件事（項次 `at1`～`at17`，自動化另跑 `npm run verify:iteration36` 與 `npm run verify:iteration36:api`）：
 
 - 系統管理「營運參數與選項清單」多一張「意見表單網址」卡：預設空白；只收 `https://`、500 字以內；改的時候要理由、寫稽核
 - 護理端入口：專業版右上角、簡易版登出旁一項「意見」；網址空白就不出現；新分頁開、不帶任何參數
 - 誰看得到：所有登入的護理端帳號（含唯讀角色）；病人端沒有；系統本身不連那個網址
 - 兩支驗收腳本
+- 迭代 36.1（§36.4，`at13`～`at17`）：常駐容器 `restart: always`，Quit Docker Desktop 再開服務自己回來；`stop` 暫停之後 Docker 重新啟動也會回來，`down` 才不會
 
 | 標記         | 意思                                                                                                                      |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------- |
@@ -23,6 +24,7 @@
 | §36.1 | 填網址與檢查                   | 🛠 🖥      | 4.36 第 1 列    |
 | §36.2 | 護理端的「意見」               | 🖥        | 4.36 第 2、3 列 |
 | §36.3 | 誰看得到、不連院外、自動化驗收 | 🖥 🛠      | 4.36 第 4、5 列 |
+| §36.4 | 迭代 36.1：容器的重新啟動策略  | 🛠        | 4.36.1          |
 
 **前置**：主手冊 §01 走完、`npm run dev` 起得來。測試網址用 `https://forms.feedback.internal/r/test`（開發機開不了沒關係，只看會不會開新分頁、網址對不對）。
 
@@ -48,6 +50,16 @@ ______________________________________________________________________
 - `at10` **［護理端］** 🖥 網址填回去。分別以一般護理師與唯讀角色（醫院管理層、社工或醫師其中一個）登入。 → 都看得到「意見」、點得開；一般護理師的系統管理沒有營運參數那一頁，直接打 `PUT /api/operational-text-settings/NURSE_FEEDBACK_FORM_URL` 回 403。病人端任何畫面都沒有「意見」。
 - `at11` **［開發機］** 🛠 填了網址之後跑 `npm run check:egress`，並在後端日誌與網路監看（例如瀏覽器開發者工具的網路分頁）看填網址、儲存、重新整理的時候。 → 0 筆院外連線；後端與頁面都沒有去連那個網址（沒有預覽、沒有檢查連不連得上），只有點「意見」時新分頁才開它。
 - `at12` **［開發機］** 🛠 跑 `npm run verify:iteration36`（不需要後端，先 `npm run build -w @hd/shared`；七步：網址檢查、文字與整數參數分開、入口、系統管理、零院外連線、病人端拿不到、遷移與既有檢查）與 `npm run verify:iteration36:api`（要 Prisma，不需要開發機的後端，自己起後端；五步：預設空白、不合格的擋下、存了之後的稽核與護理端拿到的網址、各角色拿不拿得到、壞網址與清空）。 → 兩支都全部通過。
+
+## §36.4 迭代 36.1：容器的重新啟動策略
+
+對應《實作規格書》4.36.1：常駐容器的 `restart` 由 `unless-stopped` 改成 `always`。要開發機的 Docker Desktop 與一套模擬部署（容器路線，`v0.5.0` 以後的映像檔都可以，策略寫在 compose 檔、不在映像檔裡）；做完 `down` 並刪掉演練用的資料卷。這幾項會關掉整個 Docker，**同機有別的容器時先講好**。
+
+- `at13` **［開發機］** 🛠 跑 `npm run check:container`。 → 有一行「常駐服務的重新啟動策略都是 always」，底下列 `api`、`nurse-web`、`patient-web`、`ai-gateway`、`speech-gateway`、`hospital-api-sim`；`data-export` 那一行照舊通過（它是 `"no"`）。`npm run verify:iteration32-3` 照樣通過（第 3 步比的是 32.3 那一個 commit 與開工前，不看現在的 compose）。
+- `at14` **［開發機］** 🛠 模擬部署 `up -d` 之後，`docker inspect <容器> --format "{{.HostConfig.RestartPolicy.Name}}"` 看三個服務；再以 `docker compose run -d --rm --no-deps api …` 起一個一次性容器看同一欄。 → 三個服務都是 `always`；一次性容器是 `no`（`db-update`、遷移照舊跑完就結束，不會自己再起來）。
+- `at15` **［開發機］** 🛠 從通知區 Docker 圖示 Quit Docker Desktop（或 `docker desktop stop`），再開啟 Docker Desktop，**不下任何 `up`**。 → 三個服務自己回來、`/api/health` 回 200、護理端紅框消失；記下從 Docker 起來到健康檢查通過幾秒。**1116 `v0.5.0` 在這一步是全部 `Exited`**。
+- `at16` **［開發機］** 🛠 `docker compose stop`，等 20 秒。 → 全部 `Exited`，不會自己回來。接著 Quit 再開 Docker Desktop。 → **三個服務回來了**：這是 `always` 的代價，暫停期間 Docker 一重新啟動就會回來（《[備份、還原與關服務](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-backup-shutdown/index.md)》0.2）。
+- `at17` **［開發機］** 🛠 `docker compose down`，Quit 再開 Docker Desktop。 → 沒有任何 `hd-tablet-care` 容器；要 `up -d` 才回來。這就是「要它不回來一律 `down`」。
 
 ## 版本歷程
 

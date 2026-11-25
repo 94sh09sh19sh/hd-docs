@@ -10279,7 +10279,7 @@ git clone → docker build（下載基底映像、npm 套件、Prisma 引擎）�
 </code></pre></div>
 <ul>
 <li>程式在映像檔裡；資料庫在具名資料卷 <code>hd-tablet-care-data</code>（WSL2 的虛擬磁碟內）；備份掛主機目錄</li>
-<li>常駐方式是 Docker 的重新啟動策略 <code>unless-stopped</code></li>
+<li>常駐方式是 Docker 的重新啟動策略 <code>unless-stopped</code>（1126 迭代 36.1 改成 <code>always</code>：<code>unless-stopped</code> 在 Quit Docker Desktop 再開之後不會把服務帶回來，實作規格書 4.36.1）</li>
 <li>手冊：<a href="../../deployment/visit-1-system-docker/">第一次進院之四～之八</a></li>
 </ul>
 <blockquote>
@@ -10344,7 +10344,7 @@ git clone → docker build（下載基底映像、npm 套件、Prisma 引擎）�
 <td>7</td>
 <td>倒下後自動重新啟動</td>
 <td>排程工作每分鐘重試，最多三次</td>
-<td><code>unless-stopped</code>，一直重試</td>
+<td><code>unless-stopped</code>（1126 起 <code>always</code>），一直重試</td>
 <td>容器略好</td>
 </tr>
 <tr>

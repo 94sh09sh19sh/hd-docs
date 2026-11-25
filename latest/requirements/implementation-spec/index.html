@@ -2185,6 +2185,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#4361-迭代-361容器的重新啟動策略改成-always1126-新增1126-完成" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.36.1 迭代 36.1：容器的重新啟動策略改成 always（1126 新增，1126 完成）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -11299,6 +11310,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#4361-迭代-361容器的重新啟動策略改成-always1126-新增1126-完成" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.36.1 迭代 36.1：容器的重新啟動策略改成 always（1126 新增，1126 完成）
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -12158,7 +12180,7 @@
 <td>9</td>
 <td><code>restart: always</code>（ST-24）</td>
 <td>院內重開機實測後再議</td>
-<td><strong>不變</strong>，照舊等 ST-09</td>
+<td><strong>不變</strong>，照舊等 ST-09。<strong>1126 使用者改定不等院內實測</strong>，排成<strong>迭代 36.1</strong>（4.36.1），同日做完；院內重新開機實測（ST-09）照舊要做</td>
 </tr>
 <tr>
 <td>10</td>
@@ -13823,6 +13845,11 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <td>護理端意見表單連結（1125 加）</td>
 <td>1125 開會醫師建議；FR-N23 第一段，沒有相依（4.36）。<strong>1125 完成</strong>（驗收現況在 4.36），做好進下一個 tag</td>
 </tr>
+<tr>
+<td><strong>36.1</strong></td>
+<td>容器的重新啟動策略改成 <code>always</code>（1126 加）</td>
+<td>1116 第五次進院前演練 SY-07：Quit Docker Desktop 再開，服務沒有自己回來；1126 使用者定不等院內重開機實測（0.12 第 9 列、ST-24）。只改部署檔，不是新的範圍，沒有相依（4.36.1）。<strong>1126 完成</strong>（驗收現況在 4.36.1），做好進下一個 tag</td>
+</tr>
 </tbody>
 </table>
 <p><strong>週三前的預期</strong>：17.8、18、19 做完；遊戲化做到哪裡就停在哪裡，<strong>每一個迭代各自完整驗收</strong>，不留半個迭代。做不完的照順序帶到下週。</p>
@@ -14220,6 +14247,12 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <td>護理端意見表單連結（1125）</td>
 <td><strong>完成（1125）</strong>，兩支腳本驗收通過；護理端 1366×768 與 1280×800 截圖看過</td>
 <td>不擋上線；院內能不能用看護理站電腦開不開得了外部表單（Q-42 第 5 題），開不了就不填網址</td>
+</tr>
+<tr>
+<td>36.1</td>
+<td>容器的重新啟動策略改成 <code>always</code>（1126）</td>
+<td><strong>完成（1126）</strong>，<code>check:container</code>、<code>verify:iteration32-3</code> 通過；開發機停了再開 Docker Desktop 服務自己回來（<code>unless-stopped</code> 對照組照舊不回來）</td>
+<td>不擋實作；院內要換到含 36.1 的 tag 才生效。<code>always</code> 管不到「沒人登入 Windows，Docker Desktop 不會起來」（部署規範 DEP-21 第 4 項），院內重新開機實測（ST-09）照舊</td>
 </tr>
 </tbody>
 </table>
@@ -16044,6 +16077,148 @@ BACKUP_DIR=                # 備份輸出目錄，須與資料庫檔案同機
 <li>第 2 列寫「使用者名稱旁」：專業版右上角原本的順序是名稱、系統管理、變更密碼、登出，「意見」放在系統管理與變更密碼之間（還是那一區）</li>
 <li>第 5 列寫「所有登入的護理端角色」：唯讀角色（醫院管理層、稽核、社工、醫師）的端點預設全擋，這一支明確放行（回應只有網址，沒有病人資料）</li>
 </ul>
+<h3 id="4361-迭代-361容器的重新啟動策略改成-always1126-新增1126-完成">4.36.1 迭代 36.1：容器的重新啟動策略改成 <code>always</code>（1126 新增，1126 完成）<a class="headerlink" href="#4361-迭代-361容器的重新啟動策略改成-always1126-新增1126-完成" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>來源：1116 第五次進院前的開發機演練 SY-07（《<a href="../../notes/deployment-drills/">部署演練紀錄</a>》11.2）：Quit Docker Desktop 再開，<code>docker ps -a</code> 全是 <code>Exited</code>，服務沒有自己回來。Docker Desktop 在 Quit 時先逐一停掉容器、引擎才關，容器被當成「手動停止」，<code>restart: unless-stopped</code> 就不再啟動它。1116 定為已知限制、<code>v0.5.0</code> 照帶，等院內重新開機實測（ST-09）再議；院內 1116 沒做重新開機。<strong>1126 使用者改定不等實測</strong>（0.12 第 9 列、《<a href="../../deployment/ref-status/">院內主機現況</a>》ST-24）。</p>
+</blockquote>
+<p><strong>範圍</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>改什麼</th>
+<th>現況</th>
+<th>36.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>常駐服務的 <code>restart</code></td>
+<td><code>docker-compose.yml</code> 的共用區塊 <code>x-app</code>（<code>api</code>、<code>nurse-web</code>、<code>patient-web</code>，與只在模擬部署起的 <code>hospital-api-sim</code>）、<code>ai-gateway</code>、<code>speech-gateway</code> 都是 <code>unless-stopped</code></td>
+<td>全部改成 <strong><code>always</code></strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>一次性工作</td>
+<td><code>data-export</code>、<code>shell-builder</code> 是 <code>"no"</code></td>
+<td><strong>不動</strong>（<code>check:container</code> 照舊要求 <code>data-export</code> 是 <code>"no"</code>）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>檢查</td>
+<td><code>check:container</code> 只查 <code>data-export</code> 的 <code>restart</code></td>
+<td>加一條：上面六個常駐服務一定是 <code>always</code>，寫錯擋下</td>
+</tr>
+<tr>
+<td>4</td>
+<td>部署手冊的常備參考</td>
+<td>寫 <code>unless-stopped</code> 與「暫停之後不會自己起來」</td>
+<td>照 36.1 改寫；已發出的進院冊與紀錄不改（是既成紀錄）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>兩種策略差在哪裡</strong>（Docker 的規則；第 2、3 列要在開發機實測）：</p>
+<table>
+<thead>
+<tr>
+<th>情形</th>
+<th><code>unless-stopped</code>（<code>v0.5.0</code>）</th>
+<th><code>always</code>（36.1）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 容器自己當掉</td>
+<td>重新啟動</td>
+<td>重新啟動</td>
+</tr>
+<tr>
+<td>2 Quit Docker Desktop 再開、重新開機後有人登入 Windows</td>
+<td><strong>不回來</strong>（1116 實測）</td>
+<td>回來</td>
+</tr>
+<tr>
+<td>3 <code>docker compose stop</code> 暫停之後，Docker 重新啟動</td>
+<td>不回來</td>
+<td><strong>回來</strong></td>
+</tr>
+<tr>
+<td>4 <code>docker compose stop</code> 暫停之後，Docker 沒重新啟動</td>
+<td>不回來</td>
+<td>不回來</td>
+</tr>
+<tr>
+<td>5 <code>docker compose down</code> 之後</td>
+<td>不回來（容器刪掉了）</td>
+<td>不回來（容器刪掉了）</td>
+</tr>
+<tr>
+<td>6 沒人登入 Windows</td>
+<td>不回來</td>
+<td>不回來（Docker Desktop 根本沒起來，DEP-21 第 4 項）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>實作時要確認的</strong>：</p>
+<ul>
+<li>第 3 列的情形：暫停（備份、還原、資料修補、換版）期間主機重新開機或 Docker Desktop 重開、自己更新，<code>api</code> 會在作業做到一半時回來。《<a href="../../deployment/ref-backup-shutdown/">備份、還原與關服務</a>》0.2 的「暫停」那一列照改，暫停期間不要重開 Docker Desktop；要它不回來一律 <code>down</code>（0.2「停用」本來就是 <code>down</code>）</li>
+<li><code>db-update</code>、資料庫遷移是 <code>docker compose run --rm</code> 的一次性容器，<code>run</code> 不套服務的 <code>restart</code>；實測時 <code>docker inspect</code> 確認</li>
+<li>迭代 32.3 的驗收腳本比對 compose「註解以外一行都沒動」，36.1 改了 <code>restart</code>，要讓它照樣通過（做法見本節最後）</li>
+<li>驗收：<code>check:container</code> 新規則；開發機重做 SY-07（Quit Docker Desktop 再開，三個服務自己回來、護理端紅框消失，量幾分鐘）與上表第 3～5 列；測試手冊沿用迭代 36 的分冊 <code>at</code>，接 <code>at13</code> 起</li>
+</ul>
+<p><strong>排在哪裡</strong>：沒有相依，做好進下一個 tag（與 32.2～36 同一個）。院內換版後 SY-07 照部署手冊重做；院內重新開機實測（ST-09）照舊要院方准，結果寫進交接紙。</p>
+<p><strong>做法（1126）</strong>：</p>
+<ul>
+<li>第 1 列：<code>docker-compose.yml</code> 的 <code>x-app</code> 與 <code>ai-gateway</code>、<code>speech-gateway</code> 三處改 <code>restart: always</code>，<code>x-app</code> 上面寫為什麼與代價；設定的其他行都沒動</li>
+<li>第 2 列：<code>data-export</code>、<code>shell-builder</code> 照舊 <code>"no"</code></li>
+<li>第 3 列：<code>check:container</code> 加一條「常駐服務的重新啟動策略都是 always」，六個服務（含只在設定檔裡的 <code>ai-gateway</code>、<code>speech-gateway</code>、<code>hospital-api-sim</code>）任一個不是 <code>always</code> 或不見了就擋</li>
+<li>第 4 列：常備參考與 <code>notes/</code> 的部署路線比較照改；已發出的進院冊與紀錄沒動</li>
+<li>迭代 32.3 的驗收腳本：第 3 步原本拿<strong>現在的</strong> compose 比 32.3 開工前，迭代 34 加語音閘道之後這一步就一直沒過（1126 才發現，不是 36.1 造成的）；改成比 32.3 那一個 commit（<code>a95ece2</code>）與開工前，驗的還是「32.3 只改註解」</li>
+</ul>
+<p><strong>驗收現況（1126）</strong>：<code>check:container</code> 沒有阻擋項、新的那一條通過；<code>verify:iteration32-3</code> 四步全部通過。開發機實測（Docker Desktop 29.6.1，<code>v0.5.0</code> 映像檔配 master 的 compose，模擬部署三個服務；做完 <code>down</code>、刪掉演練用的資料卷）：</p>
+<table>
+<thead>
+<tr>
+<th>上面那張表</th>
+<th>怎麼做</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 2 列</td>
+<td><code>docker desktop stop</code> 再 <code>docker desktop start</code>，不下 <code>up</code></td>
+<td><strong>三個服務自己回來</strong>，Docker 起來 12 秒後 <code>/api/health</code> 回 200</td>
+</tr>
+<tr>
+<td>第 2 列對照</td>
+<td>同一套加一份把 <code>restart</code> 蓋回 <code>unless-stopped</code> 的設定檔，同樣停了再開</td>
+<td>全部 <code>Exited (0)</code>，與 1116 相同：差別在策略，不在停 Docker 的方法</td>
+</tr>
+<tr>
+<td>第 4 列</td>
+<td><code>docker compose stop</code>，等 20 秒</td>
+<td>全部 <code>Exited (0)</code>，沒回來</td>
+</tr>
+<tr>
+<td>第 3 列</td>
+<td>接著停了再開 Docker Desktop</td>
+<td><strong>三個服務回來了</strong>（<code>always</code> 的代價，照預期）</td>
+</tr>
+<tr>
+<td>第 5 列</td>
+<td><code>docker compose down</code>，停了再開 Docker Desktop</td>
+<td>沒有任何容器</td>
+</tr>
+<tr>
+<td>一次性容器</td>
+<td><code>docker compose run -d --rm --no-deps api …</code> 時 <code>docker inspect</code></td>
+<td>策略 <code>no</code>、<code>AutoRemove=true</code>：<code>db-update</code>、遷移不受影響</td>
+</tr>
+</tbody>
+</table>
+<p>沒做的：從通知區按 Quit（這次用的是 <code>docker desktop stop</code>，同樣是先停容器再關引擎，對照組的結果與 1116 按 Quit 相同）；Windows 真的重新開機（ST-09，院內）；護理端紅框消失的時間沒量，只量後端健康檢查。手動測試在《<a href="../../testing/iteration-36/">迭代 36</a>》§36.4（<code>at13</code>～<code>at17</code>）。院內換到含 36.1 的 tag 才生效。</p>
 <hr />
 <h2 id="5-每次迭代開始前agent-應自我檢查">5. 每次迭代開始前，Agent 應自我檢查<a class="headerlink" href="#5-每次迭代開始前agent-應自我檢查" title="Permanent link">&para;</a></h2>
 <p>在動工前確認：</p>

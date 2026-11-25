@@ -12634,7 +12634,7 @@ database is locked
 </table>
 <p><strong>待決</strong>：</p>
 <ul>
-<li>院內真的重新開機時服務會不會自己回來：這一趟院方准就實測；下一個 tag 考慮把 compose 的 <code>restart</code> 改成 <code>always</code></li>
+<li>院內真的重新開機時服務會不會自己回來：這一趟院方准就實測；下一個 tag 考慮把 compose 的 <code>restart</code> 改成 <code>always</code>。<strong>1126</strong>：院內 1116 沒做重新開機；使用者定不等實測，排成迭代 36.1、同日改完。開發機同一個方法停了再開 Docker Desktop：<code>always</code> 三個服務自己回來、12 秒後健康檢查通過，蓋回 <code>unless-stopped</code> 全是 <code>Exited</code>（實作規格書 4.36.1 驗收現況）。含 36.1 的 tag 換版時重做 SY-07</li>
 <li><code>verify:iteration11</code> 的繫結掛載檢查還不認得「院方資料資料夾，唯讀」這個例外，讀檔開著時一定 ✗</li>
 </ul>
 <p><strong>判定</strong>：<code>v0.5.0</code> <strong>可以</strong>帶進院，11 月 16 日。SY-07 ✗ 是使用者 1116 定的已知限制（照帶，院內實測）；SY-M2 的兩個 ✗ 是誤判。SY-M4 其餘十項（含第 11 項紙本圈起來的地方）都 ✓。第五次進院排在 1116 14:00，出發前檢查見《<a href="../../deployment/visit-5-system-prep/">第五次進院任務二之三</a>》第 9 節。</p>

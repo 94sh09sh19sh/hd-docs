@@ -10123,7 +10123,7 @@
 <hr />
 <h3 id="v-19-重新開機測試">V-19 重新開機測試<a class="headerlink" href="#v-19-重新開機測試" title="Permanent link">&para;</a></h3>
 <p>對應：N-18、W-18</p>
-<p><code>restart: unless-stopped</code> 只管 Docker 起來之後；Docker Desktop 要有人登入 Windows 才會啟動。<strong>這一條決定這條路線在院內能不能用。</strong></p>
+<p>compose 的 <code>restart</code>（<code>v0.5.0</code> 以前 <code>unless-stopped</code>，迭代 36.1 起 <code>always</code>）只管 Docker 起來之後；Docker Desktop 要有人登入 Windows 才會啟動。<strong>這一條決定這條路線在院內能不能用。</strong></p>
 <p><strong>做什麼</strong>：🏥 重新開機 → <strong>以平常登入的帳號登入</strong>（1007 答覆：斷電後由護理長重新登入，不設自動登入；這一步就是在模擬護理長）→ <strong>之後什麼都不碰</strong>，等三分鐘 → 開一個新的 PowerShell，先輸入開工三行，再：</p>
 <div class="highlight"><pre><span></span><code><span class="n">docker</span> <span class="n">compose</span> <span class="p">-</span><span class="n">-env</span><span class="o">-file</span> <span class="nv">$cfg</span> <span class="nb">ps</span>
 <span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-s</span> <span class="n">http</span><span class="p">://</span><span class="n">localhost</span><span class="p">:</span><span class="n">13000</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">health</span>
@@ -10135,7 +10135,7 @@
 <p>⚠️ 🏥 主機上還有另一個專案的容器在跑。重新開機會一起中斷它，<strong>先問資訊室可不可以、挑什麼時候</strong>。</p>
 <p>📍 <strong>1001</strong>：未測。1029、1116 也都沒做（院方還沒准），院內主機到 1116 為止<strong>沒有驗過重新開機</strong>。</p>
 </blockquote>
-<p><strong>1116 開發機實測</strong>：Quit Docker Desktop 再開，<strong>服務沒有自己回來</strong>（<code>docker ps -a</code> 全是 <code>Exited</code>）：Docker Desktop 在 Quit 時先逐一停掉容器，容器被當成「手動停止」，<code>restart: unless-stopped</code> 就不會再啟動它。院內真的重新開機時會不會一樣還沒驗過；<code>v0.5.0</code> 照帶，列為已知限制，下一個 tag 預計把 compose 的 <code>restart</code> 改成 <code>always</code> 後重驗。</p>
+<p><strong>1116 開發機實測</strong>：Quit Docker Desktop 再開，<strong>服務沒有自己回來</strong>（<code>docker ps -a</code> 全是 <code>Exited</code>）：Docker Desktop 在 Quit 時先逐一停掉容器，容器被當成「手動停止」，<code>restart: unless-stopped</code> 就不會再啟動它。院內真的重新開機時會不會一樣還沒驗過；<code>v0.5.0</code> 照帶，列為已知限制。<strong>1126 迭代 36.1 改成 <code>restart: always</code></strong>（實作規格書 4.36.1）：開發機停了再開 Docker Desktop，三個服務自己回來、12 秒後健康檢查通過；同一套蓋回 <code>unless-stopped</code> 照舊不回來。含 36.1 的 tag 換版後在院內重驗這一步。</p>
 <blockquote>
 <p>🧪 <strong>模擬部署</strong>：可以跳過。開發機是你自己登入的，驗不出院內「沒人登入」的情形。要練的話：工作列右下角通知區的 Docker 鯨魚圖示（藏在 <code>^</code> 裡就先點 <code>^</code>）按右鍵 → <strong>Quit Docker Desktop</strong> → 從開始選單再開 → 等三分鐘；<strong>關掉 Docker Desktop 的視窗不算</strong>，視窗關了引擎照跑。量到的分鐘數只當參考。</p>
 </blockquote>

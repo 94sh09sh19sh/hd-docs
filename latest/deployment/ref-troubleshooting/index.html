@@ -10446,7 +10446,7 @@
 </tr>
 <tr>
 <td><strong>容器路線</strong></td>
-<td>✗ 不適用：三個服務各自一個容器，各自重新啟動（<code>restart: unless-stopped</code>），不會一起停。<code>docker ps</code> 看哪一個不是 <code>Up</code>，看它的 <code>logs</code></td>
+<td>✗ 不適用：三個服務各自一個容器，各自重新啟動（<code>v0.5.0</code> 以前 <code>restart: unless-stopped</code>，迭代 36.1 起 <code>always</code>），不會一起停。<code>docker ps</code> 看哪一個不是 <code>Up</code>，看它的 <code>logs</code></td>
 </tr>
 </tbody>
 </table>
@@ -10504,7 +10504,7 @@
 </tr>
 <tr>
 <td><strong>容器路線</strong></td>
-<td>仍然只在重新開機時發作，原因換了：Docker Desktop 是隨使用者登入啟動的程式，<strong>沒人登入 Windows，容器就不會起來</strong>（院方答覆：斷電後由護理長以平常的帳號重新登入）。1116 模擬實測：Quit Docker Desktop 再開，容器全是 <code>Exited</code>、沒有自己回來（<code>unless-stopped</code> 把它們當成手動停的）；院內真的重開機會不會一樣還沒驗過（1116 沒做重新開機）。處置：記下 Docker Desktop 有沒有隨登入起來、「Start Docker Desktop when you sign in」有沒有勾；手動開 Docker Desktop、等變綠、<code>docker compose --env-file $cfg up -d</code>。<strong>不要改院方的登入或開機設定</strong>，寫進交接的已知限制，交資訊室決定。下一個 tag 預定改 compose 的 <code>restart</code>。步驟見《<a href="../ref-fresh-install-detail-2/">從零部署本系統之二：容器路線的原冊</a>》W-18</td>
+<td>仍然只在重新開機時發作，原因換了：Docker Desktop 是隨使用者登入啟動的程式，<strong>沒人登入 Windows，容器就不會起來</strong>（院方答覆：斷電後由護理長以平常的帳號重新登入）。1116 模擬實測：Quit Docker Desktop 再開，容器全是 <code>Exited</code>、沒有自己回來（<code>unless-stopped</code> 把它們當成手動停的）；院內真的重開機會不會一樣還沒驗過（1116 沒做重新開機）。處置：記下 Docker Desktop 有沒有隨登入起來、「Start Docker Desktop when you sign in」有沒有勾；手動開 Docker Desktop、等變綠、<code>docker compose --env-file $cfg up -d</code>。<strong>不要改院方的登入或開機設定</strong>，寫進交接的已知限制，交資訊室決定。<strong>迭代 36.1（1126）起 compose 是 <code>restart: always</code></strong>，換到含 36.1 的 tag 之後 Docker 起來容器就會跟著回來；還是全是 <code>Exited</code> 的話先看 <code>docker inspect &lt;容器&gt; --format "{{.HostConfig.RestartPolicy.Name}}"</code> 是不是 <code>always</code>（不是就是還在舊版）。步驟見《<a href="../ref-fresh-install-detail-2/">從零部署本系統之二：容器路線的原冊</a>》W-18</td>
 </tr>
 </tbody>
 </table>

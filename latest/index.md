@@ -15,6 +15,7 @@ ______________________________________________________________________
 - **照醫師建議，護理端放了意見表單連結（1125 做完）**：護理站電腦上點「意見」就開表單，網址沒填不出現；要院內換版才有
 - **開發端判斷：紙卡先併行**，連結上線滿一個月再決定留不留；**請醫師答紙卡誰收**
 - **回饋要用在論文：問卷、訪談、跟班紀錄先送審**，核准前收的只用來改系統；**請醫師答要不要與錄音同意書併成同一次修正**
+- **斷電重開、護理長登入之後，服務會自己回來（1126 改好）**：院內換版後才生效；院內真的重新開機還沒驗過，要院方准
 
 ### [1125 — 目標脫水量放行的程式改好；求助的錄音三段在開發機做完](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-11-25/index.md)
 
@@ -47,7 +48,7 @@ ______________________________________________________________________
 | 要查資料庫蒐集了哪些資料           | [資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md) — 102 張表 1065 個欄位逐欄說明                                                                                                                                                                                                                                                                                        | 1125 · 修訂中 |
 | 沒有技術背景，想聽懂會議上那些詞   | [這套系統是用什麼蓋的](https://94sh09sh19sh.github.io/hd-docs/latest/reference/tech-stack-explained/index.md)                                                                                                                                                                                                                                                                                                      | 1125 · 修訂中 |
 | 要改外殼 App，或查它與系統怎麼對接 | [病人端外殼 App 契約](https://94sh09sh19sh.github.io/hd-docs/latest/reference/kiosk-shell-contract/index.md) — 外殼在另一個私人 repo，兩邊只靠這一份帶版本號的契約對齊                                                                                                                                                                                                                                             | 1125          |
-| 要動手驗收                         | [完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md) — 主手冊加迭代 3～36 五十本分冊，1719 項逐條驗證                                                                                                                                                                                                                                                              | 1125 · 修訂中 |
+| 要動手驗收                         | [完整手動測試手冊](https://94sh09sh19sh.github.io/hd-docs/latest/testing/manual-test-guide/index.md) — 主手冊加迭代 3～36 五十本分冊，1724 項逐條驗證                                                                                                                                                                                                                                                              | 1125 · 修訂中 |
 | 要進醫院部署                       | [部署手冊](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/index.md) — 目錄分三類：**演練並進院**（一次進院一個任務一冊，主文件簡易版只寫做什麼與怎樣算成功、子文件詳細版；開發機演練與院內正式主機的差異逐步標出）、**離院紀錄**（一次進院一冊，0922 失敗到 1116 讀檔上線五次）、**常備參考**（按未來參考價值排；院內主機現況與未完成事項排第一，安裝包路線排最後）；1117 整套重寫，舊冊號對照在目錄最後 | 1125 · 修訂中 |
 
 ## 需求文件
@@ -60,7 +61,7 @@ ______________________________________________________________________
 | [軟體需求規格書（SRS）](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)         | 功能需求來源（FR 編號出處）                        | 1125 · 修訂中 |
 | [資料庫使用規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/database-policy/index.md)    | 資料治理強制規則，優先權等同實作規格書             | 1125          |
 | [實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)    | 範圍與技術選型，**衝突時以此為準**                 | 1125 · 修訂中 |
-| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1125          |
+| [部署規範](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/deployment-spec/index.md)          | 部署形態、環境界線與交付方式，優先權等同實作規格書 | 1125 · 修訂中 |
 | [尚待確認事項清冊](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/index.md)   | 卡住進度的問題總表，其餘文件不再各自維護           | 1125 · 修訂中 |
 
 每份文件末尾都有「版本歷程」，記錄歷次定版與異動摘要；要回頭對帳哪一版談定了什麼，從那裡找。

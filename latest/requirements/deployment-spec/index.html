@@ -11025,8 +11025,8 @@
 </tr>
 <tr>
 <td>4</td>
-<td><strong>開機後 Docker Desktop 會自己起來</strong>。<strong>1007 答覆</strong>：不設開機自動登入；斷電後護理端出現警示，<strong>護理長會到主機重新登入</strong>。所以要做到的是「護理長登入之後不必再做任何事」：Docker Desktop 勾「登入時啟動」、容器 <code>restart: unless-stopped</code>；交接文件寫給護理長看的步驟</td>
-<td>Docker Desktop 是隨使用者登入啟動的程式，不是系統服務。沒有人登入，容器就不會起來，<code>restart: unless-stopped</code> 也救不了（Q-27）</td>
+<td><strong>開機後 Docker Desktop 會自己起來</strong>。<strong>1007 答覆</strong>：不設開機自動登入；斷電後護理端出現警示，<strong>護理長會到主機重新登入</strong>。所以要做到的是「護理長登入之後不必再做任何事」：Docker Desktop 勾「登入時啟動」、容器 <code>restart: always</code>（<strong>1126 由 <code>unless-stopped</code> 改</strong>，實作規格書 4.36.1：1116 演練 Quit Docker Desktop 再開，<code>unless-stopped</code> 把 Docker 關機時停掉的容器當成手動停止、不再啟動）；交接文件寫給護理長看的步驟</td>
+<td>Docker Desktop 是隨使用者登入啟動的程式，不是系統服務。沒有人登入，容器就不會起來，<code>restart</code> 寫什麼都救不了（Q-27）。<code>always</code> 的代價：<code>docker compose stop</code> 暫停的服務，Docker 一重新啟動（重開機、Docker Desktop 重開或自己更新）就會回來，要它不回來一律 <code>down</code></td>
 </tr>
 <tr>
 <td>5</td>

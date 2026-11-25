@@ -5335,6 +5335,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#364-迭代-361容器的重新啟動策略" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §36.4 迭代 36.1：容器的重新啟動策略
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9895,6 +9906,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#364-迭代-361容器的重新啟動策略" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §36.4 迭代 36.1：容器的重新啟動策略
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#版本歷程" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9927,12 +9949,13 @@
 <p>《<a href="../manual-test-guide/">完整手動測試手冊</a>》的分冊之一，對應《實作規格書》4.36 節。共用的環境準備、啟動與疑難排解都在主手冊，這一冊只寫迭代 36 的部分。為什麼做、表單怎麼建在《<a href="../../notes/nurse-feedback-plan/">護理師回饋</a>》第 4、6.1 節；需求是 SRS FR-N23 第一段。測試用的網址不必真的開得了，<strong>不要填任何真的表單網址到開發機以外的環境</strong>；院內要先在護理站電腦點一次網址，確定開得了再填（清冊 Q-42 第 5 題）。</p>
 </blockquote>
 <h2 id="摘要">摘要<a class="headerlink" href="#摘要" title="Permanent link">&para;</a></h2>
-<p>這一冊驗四件事（項次 <code>at1</code>～<code>at12</code>，自動化另跑 <code>npm run verify:iteration36</code> 與 <code>npm run verify:iteration36:api</code>）：</p>
+<p>這一冊驗五件事（項次 <code>at1</code>～<code>at17</code>，自動化另跑 <code>npm run verify:iteration36</code> 與 <code>npm run verify:iteration36:api</code>）：</p>
 <ul>
 <li>系統管理「營運參數與選項清單」多一張「意見表單網址」卡：預設空白；只收 <code>https://</code>、500 字以內；改的時候要理由、寫稽核</li>
 <li>護理端入口：專業版右上角、簡易版登出旁一項「意見」；網址空白就不出現；新分頁開、不帶任何參數</li>
 <li>誰看得到：所有登入的護理端帳號（含唯讀角色）；病人端沒有；系統本身不連那個網址</li>
 <li>兩支驗收腳本</li>
+<li>迭代 36.1（§36.4，<code>at13</code>～<code>at17</code>）：常駐容器 <code>restart: always</code>，Quit Docker Desktop 再開服務自己回來；<code>stop</code> 暫停之後 Docker 重新啟動也會回來，<code>down</code> 才不會</li>
 </ul>
 <table>
 <thead>
@@ -9981,6 +10004,12 @@
 <td>🖥 🛠</td>
 <td>4.36 第 4、5 列</td>
 </tr>
+<tr>
+<td>§36.4</td>
+<td>迭代 36.1：容器的重新啟動策略</td>
+<td>🛠</td>
+<td>4.36.1</td>
+</tr>
 </tbody>
 </table>
 <p><strong>前置</strong>：主手冊 §01 走完、<code>npm run dev</code> 起得來。測試網址用 <code>https://forms.feedback.internal/r/test</code>（開發機開不了沒關係，只看會不會開新分頁、網址對不對）。</p>
@@ -10005,6 +10034,15 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at10</code> <strong>［護理端］</strong> 🖥 網址填回去。分別以一般護理師與唯讀角色（醫院管理層、社工或醫師其中一個）登入。 → 都看得到「意見」、點得開；一般護理師的系統管理沒有營運參數那一頁，直接打 <code>PUT /api/operational-text-settings/NURSE_FEEDBACK_FORM_URL</code> 回 403。病人端任何畫面都沒有「意見」。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at11</code> <strong>［開發機］</strong> 🛠 填了網址之後跑 <code>npm run check:egress</code>，並在後端日誌與網路監看（例如瀏覽器開發者工具的網路分頁）看填網址、儲存、重新整理的時候。 → 0 筆院外連線；後端與頁面都沒有去連那個網址（沒有預覽、沒有檢查連不連得上），只有點「意見」時新分頁才開它。</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at12</code> <strong>［開發機］</strong> 🛠 跑 <code>npm run verify:iteration36</code>（不需要後端，先 <code>npm run build -w @hd/shared</code>；七步：網址檢查、文字與整數參數分開、入口、系統管理、零院外連線、病人端拿不到、遷移與既有檢查）與 <code>npm run verify:iteration36:api</code>（要 Prisma，不需要開發機的後端，自己起後端；五步：預設空白、不合格的擋下、存了之後的稽核與護理端拿到的網址、各角色拿不拿得到、壞網址與清空）。 → 兩支都全部通過。</li>
+</ul>
+<h2 id="364-迭代-361容器的重新啟動策略">§36.4 迭代 36.1：容器的重新啟動策略<a class="headerlink" href="#364-迭代-361容器的重新啟動策略" title="Permanent link">&para;</a></h2>
+<p>對應《實作規格書》4.36.1：常駐容器的 <code>restart</code> 由 <code>unless-stopped</code> 改成 <code>always</code>。要開發機的 Docker Desktop 與一套模擬部署（容器路線，<code>v0.5.0</code> 以後的映像檔都可以，策略寫在 compose 檔、不在映像檔裡）；做完 <code>down</code> 並刪掉演練用的資料卷。這幾項會關掉整個 Docker，<strong>同機有別的容器時先講好</strong>。</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at13</code> <strong>［開發機］</strong> 🛠 跑 <code>npm run check:container</code>。 → 有一行「常駐服務的重新啟動策略都是 always」，底下列 <code>api</code>、<code>nurse-web</code>、<code>patient-web</code>、<code>ai-gateway</code>、<code>speech-gateway</code>、<code>hospital-api-sim</code>；<code>data-export</code> 那一行照舊通過（它是 <code>"no"</code>）。<code>npm run verify:iteration32-3</code> 照樣通過（第 3 步比的是 32.3 那一個 commit 與開工前，不看現在的 compose）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at14</code> <strong>［開發機］</strong> 🛠 模擬部署 <code>up -d</code> 之後，<code>docker inspect &lt;容器&gt; --format "{{.HostConfig.RestartPolicy.Name}}"</code> 看三個服務；再以 <code>docker compose run -d --rm --no-deps api …</code> 起一個一次性容器看同一欄。 → 三個服務都是 <code>always</code>；一次性容器是 <code>no</code>（<code>db-update</code>、遷移照舊跑完就結束，不會自己再起來）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at15</code> <strong>［開發機］</strong> 🛠 從通知區 Docker 圖示 Quit Docker Desktop（或 <code>docker desktop stop</code>），再開啟 Docker Desktop，<strong>不下任何 <code>up</code></strong>。 → 三個服務自己回來、<code>/api/health</code> 回 200、護理端紅框消失；記下從 Docker 起來到健康檢查通過幾秒。<strong>1116 <code>v0.5.0</code> 在這一步是全部 <code>Exited</code></strong>。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at16</code> <strong>［開發機］</strong> 🛠 <code>docker compose stop</code>，等 20 秒。 → 全部 <code>Exited</code>，不會自己回來。接著 Quit 再開 Docker Desktop。 → <strong>三個服務回來了</strong>：這是 <code>always</code> 的代價，暫停期間 Docker 一重新啟動就會回來（《<a href="../../deployment/ref-backup-shutdown/">備份、還原與關服務</a>》0.2）。</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>at17</code> <strong>［開發機］</strong> 🛠 <code>docker compose down</code>，Quit 再開 Docker Desktop。 → 沒有任何 <code>hd-tablet-care</code> 容器；要 <code>up -d</code> 才回來。這就是「要它不回來一律 <code>down</code>」。</li>
 </ul>
 <h2 id="版本歷程">版本歷程<a class="headerlink" href="#版本歷程" title="Permanent link">&para;</a></h2>
 <table>
