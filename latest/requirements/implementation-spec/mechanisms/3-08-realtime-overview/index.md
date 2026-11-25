@@ -1,0 +1,12 @@
+# 實作規格書 3.8 即時通知與常駐總覽螢幕（改寫，取代推播）
+
+上層文件：《[實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)》第 3 章
+
+**推播服務整條移除。** 現有實作為護理端 SSE 長連線加病人端輪詢，維持不變，並補上兩件事：
+
+1. **FR-N12 常駐總覽螢幕模式**：護理端的一個獨立路由，特徵為不進入休眠、字級放大、可從數公尺外辨讀、新通報有聲音提示、斷線時明顯示警並自動重連。這是 P0——推播沒了以後，這台螢幕是唯一保證通報被看見的地方。
+1. **FR-S07 零院外連線盤點**：迭代 3 要跑一次全專案盤點，確認沒有任何程式、套件設定、Service Worker 或前端資源指向院外網域（含字型、CDN、分析工具）。這一項要寫成可重複執行的檢查腳本，而不是一次性人工檢視。
+
+______________________________________________________________________
+
+[← 回實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)　[← 回進度首頁](https://94sh09sh19sh.github.io/hd-docs/latest/index.md)

@@ -28,7 +28,7 @@ ______________________________________________________________________
 
 ### 0.1 兩個前提
 
-- **護理師手上沒有平板或手機**（《尚待確認事項清冊》[Q-30](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/#q-30-%E8%AD%B7%E7%90%86%E5%B8%AB%E7%9A%84%E8%A1%8C%E5%8B%95%E8%A3%9D%E7%BD%AE)）。護理端只開在護理站的一兩台電腦上，常常是一個人登入、大家輪流用；緊急的時候沒有人會先登出再登入。《[緊急通報的處理流程與護理紀錄連動](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-handling-redesign/index.md)》0.1 節整份規畫都從這一點出發，這一份的第 4 節也是
+- **護理師手上沒有平板或手機**（《尚待確認事項清冊》[Q-30](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/q-30/index.md)）。護理端只開在護理站的一兩台電腦上，常常是一個人登入、大家輪流用；緊急的時候沒有人會先登出再登入。《[緊急通報的處理流程與護理紀錄連動](https://94sh09sh19sh.github.io/hd-docs/latest/notes/emergency-handling-redesign/index.md)》0.1 節整份規畫都從這一點出發，這一份的第 4 節也是
 - **迭代 25 先做**：處理者身分（第 4 節）要放在迭代 25.2 的「床邊前速覽」裡，速覽還沒做之前沒有地方放
 
 ______________________________________________________________________

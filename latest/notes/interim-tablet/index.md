@@ -21,7 +21,7 @@ ______________________________________________________________________
 > 醫院買的 15 台平板還沒來，醫生說先用一台舊的。在我更新資訊前，正式使用都是只有這一台平板。
 
 - 效力：部署、佈建、實機驗收、截圖，一律以這台為準，直到使用者更新本文件。
-- 15 台到貨後：改寫本文件（或另開一份），同時回頭改 [Q-33](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/#q-33-%E7%9B%AE%E6%A8%99%E5%B9%B3%E6%9D%BF%E7%9A%84%E5%9E%8B%E8%99%9F%E8%88%87%E8%A7%A3%E6%9E%90%E5%BA%A6) 與 [Q-11](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/#q-11-android-enterprise-%E7%AE%A1%E7%90%86%E6%AC%8A%E9%99%90)。
+- 15 台到貨後：改寫本文件（或另開一份），同時回頭改 [Q-33](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/q-33/index.md) 與 [Q-11](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/q-11/index.md)。
 - 序號、Wi-Fi 名稱、IP 不寫進本文件（文件會同步到公開站台）。
 
 ## 1. 規格

@@ -16,7 +16,7 @@ ______________________________________________________________________
 - 功能需求來源仍是《[軟體需求規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)》，本文件不新增任何功能需求
 - 範圍與技術選型仍以《[實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)》為準（4.12.5 節是本文件的摘要）
 - 介面規則仍以《[介面設計基準](https://94sh09sh19sh.github.io/hd-docs/latest/notes/uiux-design-baseline/index.md)》為準；本次改 4.1、4.5、4.10 三處
-- 平板型號仍未定：[Q-33](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/#q-33-%E7%9B%AE%E6%A8%99%E5%B9%B3%E6%9D%BF%E7%9A%84%E5%9E%8B%E8%99%9F%E8%88%87%E8%A7%A3%E6%9E%90%E5%BA%A6) 0930 部分回覆（尺寸 10 吋），型號與面板解析度仍待回覆
+- 平板型號仍未定：[Q-33](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/q-33/index.md) 0930 部分回覆（尺寸 10 吋），型號與面板解析度仍待回覆
 - 與需求文件衝突時，以需求文件為準
 
 **為什麼叫 14.5 而不是迭代 15。** 兩項都只動病人端的設計語彙（一個色票檔、一個樣式表），後端與護理端一行都沒動，迭代 15（規則引擎）的內容一項都沒動。

@@ -15,7 +15,7 @@ ______________________________________________________________________
 - 功能需求來源仍是《[軟體需求規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/srs/index.md)》：FR-R08「系統應以設定強制此限制，而非僅寫在文件裡」一字未改，改的是**設定放在哪裡**
 - 範圍與技術選型仍以《[實作規格書](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/implementation-spec/index.md)》為準（4.16.1 節是本文件的摘要；1.1 記下**第十二次**改動既有驗收腳本；4.16 的開發端判斷第一列依使用者指示推翻）
 - 新增的資料表寫在《[資料字典](https://94sh09sh19sh.github.io/hd-docs/latest/reference/data-dictionary/index.md)》第二十一節；部署子手冊《[`.env` 怎麼填](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-env/index.md)》《[之一](https://94sh09sh19sh.github.io/hd-docs/latest/deployment/ref-env-simulation/index.md)》拿掉那一個變數
-- 四條規則的門檻要請醫師確認，問法寫在《[1014 週報](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-10-14/index.md)》的待決事項，答覆收在清冊 [Q-03](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/#q-03-%E4%B8%89%E9%A0%85%E5%8A%9F%E8%83%BD%E7%9A%84%E8%A6%8F%E5%89%87%E9%96%80%E6%AA%BB%E5%80%BC%E8%88%87%E6%89%80%E4%BE%9D%E6%93%9A%E7%9A%84-protocol-%E6%A2%9D%E6%96%87)
+- 四條規則的門檻要請醫師確認，問法寫在《[1014 週報](https://94sh09sh19sh.github.io/hd-docs/latest/weekly/2026-10-14/index.md)》的待決事項，答覆收在清冊 [Q-03](https://94sh09sh19sh.github.io/hd-docs/latest/requirements/open-questions/q-03/index.md)
 - 與需求文件衝突時，以需求文件為準
 
 **為什麼叫 18.1 而不是迭代 19。** 兩件都是改迭代 18 剛做好的東西：閘門換一個地方放、預設規則換一組數字。沒有新的功能需求；迭代 19（管理儀表板）的內容一項都沒動。
