@@ -98,7 +98,7 @@ curl.exe -i http://localhost:<API_PORT>/api/health  # 後端本身活著嗎
 |---|---|
 | **設計上** | 任何一個倒下就三個一起停——**壞掉要壞得看得出來** |
 | **處置** | 看到 1～2 個多半是正在收尾。等幾秒再查一次；還在的話看紀錄檔找真正的錯 |
-| **容器路線** | ✗ 不適用：三個服務各自一個容器，各自重新啟動（`restart: unless-stopped`），不會一起停。`docker ps` 看哪一個不是 `Up`，看它的 `logs` |
+| **容器路線** | ✗ 不適用：三個服務各自一個容器，各自重新啟動（`v0.5.0` 以前 `restart: unless-stopped`，迭代 36.1 起 `always`），不會一起停。`docker ps` 看哪一個不是 `Up`，看它的 `logs` |
 
 ### X-10 後端拒絕啟動，說時區不符
 
@@ -117,7 +117,7 @@ curl.exe -i http://localhost:<API_PORT>/api/health  # 後端本身活著嗎
 | **常見原因** | 服務帳號密碼已變更或到期；帳號缺「以批次工作登入」的權限；開機時埠被別的專案先佔走 |
 | **處置** | 密碼問題請資訊室處理；埠被佔就換一個並重新登記 |
 | **記下來** | 這一類問題**只在重新開機時發作**，測試階段一次都不會出現 |
-| **容器路線** | 仍然只在重新開機時發作，原因換了：Docker Desktop 是隨使用者登入啟動的程式，**沒人登入 Windows，容器就不會起來**（院方答覆：斷電後由護理長以平常的帳號重新登入）。1116 模擬實測：Quit Docker Desktop 再開，容器全是 `Exited`、沒有自己回來（`unless-stopped` 把它們當成手動停的）；院內真的重開機會不會一樣還沒驗過（1116 沒做重新開機）。處置：記下 Docker Desktop 有沒有隨登入起來、「Start Docker Desktop when you sign in」有沒有勾；手動開 Docker Desktop、等變綠、`docker compose --env-file $cfg up -d`。**不要改院方的登入或開機設定**，寫進交接的已知限制，交資訊室決定。下一個 tag 預定改 compose 的 `restart`。步驟見《[從零部署本系統之二：容器路線的原冊](ref-fresh-install-detail-2.md)》W-18 |
+| **容器路線** | 仍然只在重新開機時發作，原因換了：Docker Desktop 是隨使用者登入啟動的程式，**沒人登入 Windows，容器就不會起來**（院方答覆：斷電後由護理長以平常的帳號重新登入）。1116 模擬實測：Quit Docker Desktop 再開，容器全是 `Exited`、沒有自己回來（`unless-stopped` 把它們當成手動停的）；院內真的重開機會不會一樣還沒驗過（1116 沒做重新開機）。處置：記下 Docker Desktop 有沒有隨登入起來、「Start Docker Desktop when you sign in」有沒有勾；手動開 Docker Desktop、等變綠、`docker compose --env-file $cfg up -d`。**不要改院方的登入或開機設定**，寫進交接的已知限制，交資訊室決定。**迭代 36.1（1126）起 compose 是 `restart: always`**，換到含 36.1 的 tag 之後 Docker 起來容器就會跟著回來；還是全是 `Exited` 的話先看 `docker inspect <容器> --format "{{.HostConfig.RestartPolicy.Name}}"` 是不是 `always`（不是就是還在舊版）。步驟見《[從零部署本系統之二：容器路線的原冊](ref-fresh-install-detail-2.md)》W-18 |
 
 ## C. 資料庫
 

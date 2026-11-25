@@ -62,7 +62,7 @@
 
 對應：N-18、W-18
 
-`restart: unless-stopped` 只管 Docker 起來之後；Docker Desktop 要有人登入 Windows 才會啟動。**這一條決定這條路線在院內能不能用。**
+compose 的 `restart`（`v0.5.0` 以前 `unless-stopped`，迭代 36.1 起 `always`）只管 Docker 起來之後；Docker Desktop 要有人登入 Windows 才會啟動。**這一條決定這條路線在院內能不能用。**
 
 **做什麼**：🏥 重新開機 → **以平常登入的帳號登入**（1007 答覆：斷電後由護理長重新登入，不設自動登入；這一步就是在模擬護理長）→ **之後什麼都不碰**，等三分鐘 → 開一個新的 PowerShell，先輸入開工三行，再：
 
@@ -81,7 +81,7 @@ curl.exe -s http://localhost:13000/api/health
 
 > 📍 **1001**：未測。1029、1116 也都沒做（院方還沒准），院內主機到 1116 為止**沒有驗過重新開機**。
 
-**1116 開發機實測**：Quit Docker Desktop 再開，**服務沒有自己回來**（`docker ps -a` 全是 `Exited`）：Docker Desktop 在 Quit 時先逐一停掉容器，容器被當成「手動停止」，`restart: unless-stopped` 就不會再啟動它。院內真的重新開機時會不會一樣還沒驗過；`v0.5.0` 照帶，列為已知限制，下一個 tag 預計把 compose 的 `restart` 改成 `always` 後重驗。
+**1116 開發機實測**：Quit Docker Desktop 再開，**服務沒有自己回來**（`docker ps -a` 全是 `Exited`）：Docker Desktop 在 Quit 時先逐一停掉容器，容器被當成「手動停止」，`restart: unless-stopped` 就不會再啟動它。院內真的重新開機時會不會一樣還沒驗過；`v0.5.0` 照帶，列為已知限制。**1126 迭代 36.1 改成 `restart: always`**（實作規格書 4.36.1）：開發機停了再開 Docker Desktop，三個服務自己回來、12 秒後健康檢查通過；同一套蓋回 `unless-stopped` 照舊不回來。含 36.1 的 tag 換版後在院內重驗這一步。
 
 > 🧪 **模擬部署**：可以跳過。開發機是你自己登入的，驗不出院內「沒人登入」的情形。要練的話：工作列右下角通知區的 Docker 鯨魚圖示（藏在 `^` 裡就先點 `^`）按右鍵 → **Quit Docker Desktop** → 從開始選單再開 → 等三分鐘；**關掉 Docker Desktop 的視窗不算**，視窗關了引擎照跑。量到的分鐘數只當參考。
 
