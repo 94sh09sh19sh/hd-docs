@@ -217,7 +217,7 @@ request to https://binaries.prisma.sh/... failed, reason: getaddrinfo ENOTFOUND 
 
 ## 5. 每次迭代開始前，Agent 應自我檢查
 
-在動工前確認：
+在動工前確認（下面寫「跑檢查腳本」「跑盤點」的，指令見第 8 章；驗收時 `npm run check:all` 要全綠）：
 
 - [ ] 本次要新增的資料表／欄位是否已對照 SRS 需求與稽核軌跡欄位需求
 - [ ] 是否有任何前端程式碼企圖直接碰資料庫檔案（禁止，《資料庫使用規範》第 2 條）
@@ -288,9 +288,9 @@ request to https://binaries.prisma.sh/... failed, reason: getaddrinfo ENOTFOUND 
 
 ---
 
-## 8. 這四個迭代會用到的工具（0919 備妥）
+## 8. 盤點腳本（check:*）
 
-收在《[這四個迭代會用到的工具（0919 備妥）](implementation-spec/tools-0919.md)》（8.1～8.4）。
+收在《[盤點腳本](implementation-spec/checks.md)》：七支盤點各管什麼、共同設計（8.1）、`check:ui` 的界線（8.2）、`check:offline` 抓過的浮動版本（8.3）、腳本涵蓋不到的事（8.4）。0919 原名「這四個迭代會用到的工具」，1126 改成涵蓋全部盤點。
 
 ## 版本歷程
 
